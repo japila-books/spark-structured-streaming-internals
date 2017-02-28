@@ -2,7 +2,7 @@
 
 . link:book-intro.adoc[Introduction]
 
-. link:README.adoc[Spark Structured Streaming -- Streaming Datasets]
+. link:spark-structured-streaming.adoc[Spark Structured Streaming -- Streaming Datasets]
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader]
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter]
 

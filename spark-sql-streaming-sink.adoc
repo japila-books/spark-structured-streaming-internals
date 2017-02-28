@@ -18,7 +18,15 @@
 | `memory`
 | link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 
-| `parquet`
+a| Any `FileFormat`
+
+* `csv`
+* `hive`
+* `json`
+* `libsvm`
+* `orc`
+* `parquet`
+* `text`
 | link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
 |===
 
