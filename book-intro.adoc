@@ -1,6 +1,6 @@
-== Mastering Apache Spark 2
+== Spark Structured Streaming
 
-Welcome to Mastering Apache Spark 2 (aka #SparkLikePro)!
+Welcome to Spark Structured Streaming!
 
 I'm https://pl.linkedin.com/in/jaceklaskowski[Jacek Laskowski], an *independent consultant* who is passionate about *Apache Spark*, Apache Kafka, Scala, sbt (with some flavour of Apache Mesos, Hadoop YARN, and DC/OS). I lead http://www.meetup.com/WarsawScala/[Warsaw Scala Enthusiasts] and http://www.meetup.com/Warsaw-Spark[Warsaw Spark] meetups in Warsaw, Poland.
 

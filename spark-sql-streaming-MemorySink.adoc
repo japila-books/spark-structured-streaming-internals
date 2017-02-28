@@ -1,12 +1,24 @@
 == [[MemorySink]] MemorySink
 
-`MemorySink` is an memory-based `Sink` particularly useful for testing. It stores the results in memory.
+`MemorySink` is a streaming link:spark-sql-streaming-sink.adoc[Sink] that <<addBatch, stores records in memory>>. It is particularly useful for testing.
 
-It is available as `memory` format that requires a query name (by `queryName` method or `queryName` option).
+`MemorySink` is used for `memory` format and requires a query name (by `queryName` method or `queryName` option).
 
-TIP: See the example in link:spark-sql-streaming-MemoryStream.adoc[MemoryStream].
+[source, scala]
+----
+val spark: SparkSession = ???
+val logs = spark.readStream.textFile("logs/*.out")
 
-NOTE: It was introduced in the https://github.com/apache/spark/pull/12119[pull request for [SPARK-14288\][SQL\] Memory Sink for streaming].
+scala> val outStream = logs.writeStream
+  .format("memory")
+  .queryName("logs")
+  .start()
+outStream: org.apache.spark.sql.streaming.StreamingQuery = org.apache.spark.sql.execution.streaming.StreamingQueryWrapper@690337df
+
+scala> sql("select * from logs").show(truncate = false)
+----
+
+NOTE: `MemorySink` was introduced in the https://github.com/apache/spark/pull/12119[pull request for [SPARK-14288\][SQL\] Memory Sink for streaming].
 
 Use `toDebugString` to see the batches.
 
@@ -20,18 +32,6 @@ Finally, when no `spark.sql.streaming.checkpointLocation` is set, a temporary di
 
 NOTE: The directory is cleaned up at shutdown using `ShutdownHookManager.registerShutdownDeleteDir`.
 
-[source, scala]
-----
-val nums = spark.range(10).withColumnRenamed("id", "num")
-
-scala> val outStream = nums.writeStream
-  .format("memory")
-  .queryName("memStream")
-  .start()
-16/04/11 19:37:05 INFO HiveSqlParser: Parsing command: memStream
-outStream: org.apache.spark.sql.StreamingQuery = Continuous Query - memStream [state = ACTIVE]
-----
-
 It creates `MemorySink` instance based on the schema of the DataFrame it operates on.
 
 It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created earlier and registers it as a temporary table (using link:spark-sql-dataframe.adoc#registerTempTable[DataFrame.registerTempTable] method).
@@ -40,4 +40,63 @@ NOTE: At this point you can query the table as if it were a regular non-streamin
 
 A new link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] is started (using link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[StreamingQueryManager.startQuery]) and returned.
 
-CAUTION: FIXME Describe `else` part.
+[[internal-registries]]
+.MemorySink's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[batches]] `batches`
+| FIXME
+
+Used when...FIXME
+|===
+
+[TIP]
+====
+Enable `DEBUG` logging level for `org.apache.spark.sql.execution.streaming.MemorySink` logger to see what happens in `MemorySink`.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.MemorySink=DEBUG
+```
+
+Refer to link:spark-logging.adoc[Logging].
+====
+
+=== [[addBatch]] `addBatch` Method
+
+[source, scala]
+----
+addBatch(batchId: Long, data: DataFrame): Unit
+----
+
+NOTE: `addBatch` is a part of link:spark-sql-streaming-sink.adoc#contract[Sink contract].
+
+`addBatch` checks if `batchId` has already been committed (i.e. added to <<batches, batches>> internal registry).
+
+If `batchId` was already committed, you should see the following DEBUG message in the logs:
+
+```
+DEBUG Skipping already committed batch: [batchId]
+```
+
+Otherwise, if the `batchId` is not already committed, you should see the following DEBUG message in the logs:
+
+```
+DEBUG Committing batch [batchId] to [this]
+```
+
+For `Append` and `Update` output modes, `addBatch` collects records from `data` and registers `batchId` (i.e. adds to <<batches, batches>> internal registry).
+
+NOTE: `addBatch` uses `DataFrame.collect` operator to collect records. It is when the records "downloaded" to memory.
+
+For `Complete` output mode, `addBatch` collects records (as for the other output modes), but before registering `batchId` clears <<batches, batches>> internal registry.
+
+When the output mode is invalid, `addBatch` reports a `IllegalArgumentException` with the following error message.
+
+```
+Output mode [outputMode] is not supported by MemorySink
+```

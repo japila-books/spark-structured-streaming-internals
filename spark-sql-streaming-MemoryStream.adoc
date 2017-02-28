@@ -1,14 +1,14 @@
-== MemoryStream
+== [[MemoryStream]] MemoryStream
 
-`MemoryStream` is a link:spark-sql-streaming-source.adoc[streaming source] that produces values (of type `T`) stored in memory.
+`MemoryStream` is a streaming  link:spark-sql-streaming-source.adoc[Source] that produces values to memory.
 
-It uses the internal <<batches, batches>> collection of link:spark-sql-dataset.adoc[datasets].
+`MemoryStream` uses the internal <<batches, batches>> collection of link:spark-sql-dataset.adoc[datasets].
 
 [CAUTION]
 ====
 This source is *not* for production use due to design contraints, e.g. infinite in-memory collection of lines read and no fault recovery.
 
-It is designed primarily for unit tests, tutorials and debugging.
+`MemoryStream` is designed primarily for unit tests, tutorials and debugging.
 ====
 
 [source, scala]
