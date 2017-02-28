@@ -6,19 +6,22 @@
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader]
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter]
 
-. link:spark-sql-streaming-source.adoc[Streaming Sources]
+. link:spark-sql-streaming-source.adoc[Streaming Source]
 .. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
 .. link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
 .. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 .. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
-. link:spark-sql-streaming-sink.adoc[Streaming Sinks]
+. link:spark-sql-streaming-sink.adoc[Streaming Sink]
 .. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink]
+.. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
 .. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
+.. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 
 . link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Source Provider]
 .. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]
 .. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
+
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 . link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
