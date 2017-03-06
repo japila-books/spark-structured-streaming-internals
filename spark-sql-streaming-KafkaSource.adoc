@@ -52,6 +52,43 @@ val fromKafkaTopic1ToConsole = spark.readStream
 fromKafkaTopic1ToConsole.stop
 ----
 
+[[internal-registries]]
+.KafkaSource's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[initialPartitionOffsets]] `initialPartitionOffsets`
+| FIXME
+
+Used when...FIXME
+|===
+
+=== [[getBatch]] `getBatch` Method
+
+CAUTION: FIXME
+
+NOTE: `getBatch` is a part of link:spark-sql-streaming-source.adoc#getBatch[Source Contract] to...FIXME
+
+=== [[fetchAndVerify]] `fetchAndVerify` Internal Method
+
+CAUTION: FIXME
+
+NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` <<creating-instance, is created>> (namely when <<initialPartitionOffsets, initialPartitionOffsets>> is initialized).
+
+=== [[reportDataLoss]] `reportDataLoss` Internal Method
+
+CAUTION: FIXME
+
+[NOTE]
+====
+`reportDataLoss` is used when `KafkaSource` does the following:
+
+* <<fetchAndVerify, fetchAndVerify>>
+* <<getBatch, getBatch>>
+====
+
 === [[creating-instance]] Creating KafkaSource Instance
 
 `KafkaSource` takes the following when created:
@@ -62,6 +99,6 @@ fromKafkaTopic1ToConsole.stop
 * [[sourceOptions]] Collection of key-value options
 * [[metadataPath]] The path to metadata...FIXME
 * [[startingOffsets]] `KafkaOffsetRangeLimit`
-* [[failOnDataLoss]] Flag whether to...FIXME
+* [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a `IllegalStateException` on data loss>>.
 
 `KafkaSource` initializes the <<internal-registries, internal registries and counters>>.

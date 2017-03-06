@@ -23,10 +23,23 @@ There are the following `Source` implementations available:
 
 === [[contract]] Source Contract
 
-`Source` contract requires that the streaming sources provide the following features:
+[source, scala]
+----
+trait Source {
+  def schema: StructType
+  def getOffset: Option[Offset]
+  def getBatch(start: Option[Offset], end: Offset): DataFrame
+  def commit(end: Offset) : Unit = {}
+  def stop(): Unit
+}
+----
 
-1. The link:spark-sql-schema.adoc[schema] of the datasets using `schema` method.
+.Source Contract
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
 
-2. The maximum *offset* (of type `Offset`) using `getOffset` method.
-
-3. A *batch* for start and end offsets (of type link:spark-sql-dataframe.adoc[DataFrame]).
+| [[getBatch]] `getBatch`
+| Used when...
+|===

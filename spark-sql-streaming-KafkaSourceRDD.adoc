@@ -1,0 +1,13 @@
+== [[KafkaSourceRDD]] KafkaSourceRDD
+
+CAUTION: FIXME
+
+=== [[creating-instance]] Creating KafkaSourceRDD Instance
+
+`KafkaSourceRDD` takes the following when created:
+
+* KafkaSourceRDD
+
+`KafkaSourceRDD` initializes the <<internal-registries, internal registries and counters>>.
+
+NOTE: `KafkaSourceRDD` is created when
