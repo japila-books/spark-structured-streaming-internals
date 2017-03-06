@@ -2,6 +2,9 @@
     "structure": {
         "readme": "book-intro.adoc"
     },
+    "variables": {
+       "spark.version": "2.1.0"
+     },
     "plugins": ["ga"],
     "pluginsConfig": {
         "ga": {
