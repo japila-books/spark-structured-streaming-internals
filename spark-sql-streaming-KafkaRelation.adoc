@@ -1,0 +1,7 @@
+== [[KafkaRelation]] KafkaRelation
+
+CAUTION: FIXME
+
+=== [[buildScan]] `buildScan` Method
+
+CAUTION: FIXME

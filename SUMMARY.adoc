@@ -9,7 +9,9 @@
 .. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
 
 .. link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
+... link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation]
 ... link:spark-sql-streaming-KafkaSourceRDD.adoc[KafkaSourceRDD]
+... link:spark-sql-streaming-CachedKafkaConsumer.adoc[CachedKafkaConsumer]
 
 .. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 .. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]

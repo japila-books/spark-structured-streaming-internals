@@ -1,13 +1,39 @@
 == [[KafkaSourceRDD]] KafkaSourceRDD
 
+`KafkaSourceRDD` is an `RDD` of Kafka's https://kafka.apache.org/0102/javadoc/org/apache/kafka/clients/consumer/ConsumerRecords.html[ConsumerRecords] (with keys and values being collections of bytes, i.e. `Array[Byte]`).
+
+`KafkaSourceRDD` is created when:
+
+* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[buildScan]
+* `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#getBatch[getBatch]
+
+=== [[getPreferredLocations]] `getPreferredLocations` Method
+
+CAUTION: FIXME
+
+=== [[compute]] `compute` Method
+
+CAUTION: FIXME
+
+=== [[getPartitions]] `getPartitions` Method
+
+CAUTION: FIXME
+
+=== [[persist]] `persist` Method
+
 CAUTION: FIXME
 
 === [[creating-instance]] Creating KafkaSourceRDD Instance
 
 `KafkaSourceRDD` takes the following when created:
 
-* KafkaSourceRDD
+* [[sc]] `SparkContext`
+* [[executorKafkaParams]] Collection of key-value settings for executors reading records from Kafka topics
+* [[offsetRanges]] Collection of `KafkaSourceRDDOffsetRange` offsets
+* [[pollTimeoutMs]] Timeout (in milliseconds) to poll data from Kafka
++
+Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offsets) and in turn link:spark-sql-streaming-CachedKafkaConsumer.adoc#poll[requests `CachedKafkaConsumer` to poll for Kafka's `ConsumerRecords`].
+* [[failOnDataLoss]] Flag to...FIXME
+* [[reuseKafkaConsumer]] Flag to...FIXME
 
 `KafkaSourceRDD` initializes the <<internal-registries, internal registries and counters>>.
-
-NOTE: `KafkaSourceRDD` is created when
