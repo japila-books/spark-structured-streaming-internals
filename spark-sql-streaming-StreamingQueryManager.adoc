@@ -1,4 +1,4 @@
-== StreamingQueryManager -- Streaming Query Management
+== [[StreamingQueryManager]] StreamingQueryManager -- Streaming Query Management
 
 NOTE: `StreamingQueryManager` is an experimental feature of Spark 2.0.0.
 
@@ -12,6 +12,10 @@ You can access `StreamingQueryManager` for the current link:spark-sql-sqlcontext
 ----
 val queries = spark.streams
 ----
+
+=== [[createQuery]] `createQuery` Internal Method
+
+CAUTION: FIXME
 
 === Initialization
 
