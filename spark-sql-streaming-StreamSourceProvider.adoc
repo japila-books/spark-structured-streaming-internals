@@ -16,8 +16,8 @@ NOTE: `StreamSourceProvider` is used when `DataSource` is requested for the link
 
 `StreamSourceProvider` contract defines two methods:
 
-1. <<sourceSchema, sourceSchema>> that returns the name and link:spark-sql-schema.adoc[schema] of the link:spark-sql-streaming-source.adoc[Source].
-2. <<createSource, createSource>> that produces a streaming link:spark-sql-streaming-source.adoc[Source] (to continually read data).
+1. <<sourceSchema, sourceSchema>> that returns the name and link:spark-sql-schema.adoc[schema] of the link:spark-sql-streaming-Source.adoc[Source].
+2. <<createSource, createSource>> that produces a streaming link:spark-sql-streaming-Source.adoc[Source] (to continually read data).
 
 ==== [[sourceSchema]] `sourceSchema` Method
 

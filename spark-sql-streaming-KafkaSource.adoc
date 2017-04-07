@@ -1,6 +1,6 @@
 == [[KafkaSource]] KafkaSource
 
-`KafkaSource` is a streaming link:spark-sql-streaming-source.adoc[Source] to _"continuously"_ read data from Apache Kafka.
+`KafkaSource` is a streaming link:spark-sql-streaming-Source.adoc[Source] to _"continuously"_ read data from Apache Kafka.
 
 NOTE: _continuously_ is to mean that Kafka topics are checked for new records every link:spark-sql-streaming-trigger.adoc[trigger] (and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them).
 
@@ -60,22 +60,39 @@ fromKafkaTopic1ToConsole.stop
 | Description
 
 | [[initialPartitionOffsets]] `initialPartitionOffsets`
-| FIXME
+a| Kafka's `TopicPartitions` with offsets.
 
-Used when...FIXME
+Lazily set when `KafkaSource` <<getOffset, gets maximum available offset>> and used for <<getBatch, fetching records for a batch>>.
+
+When initialized, `initialPartitionOffsets` creates a `HDFSMetadataLog` (for `KafkaSourceOffset`) and takes the 0th batch's metadata (as `KafkaSourceOffset`) if available. If not, it uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
+
+You should see the following INFO message in the logs:
+
+```
+INFO Initial offsets: [offsets]
+```
+
+NOTE: The 0th batch is persisted in the streaming metadata log if not available initially.
+
 |===
 
-=== [[getBatch]] `getBatch` Method
+=== [[getOffset]] Getting Maximum Available Offset -- `getOffset` Method
 
 CAUTION: FIXME
 
-NOTE: `getBatch` is a part of link:spark-sql-streaming-source.adoc#getBatch[Source Contract] to...FIXME
+NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getOffset[Source Contract] to...FIXME
+
+=== [[getBatch]] Fetching Records for Batch -- `getBatch` Method
+
+CAUTION: FIXME
+
+NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getBatch[Source Contract] to...FIXME
 
 === [[fetchAndVerify]] `fetchAndVerify` Internal Method
 
 CAUTION: FIXME
 
-NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` <<creating-instance, is created>> (namely when <<initialPartitionOffsets, initialPartitionOffsets>> is initialized).
+NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` reads <<initialPartitionOffsets, initialPartitionOffsets>>.
 
 === [[reportDataLoss]] `reportDataLoss` Internal Method
 

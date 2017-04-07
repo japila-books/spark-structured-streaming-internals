@@ -87,7 +87,7 @@ res2: Boolean = false
 
 With structured streaming, Spark 2.0 aims at simplifying *streaming analytics* with little to no need to reason about effective data streaming. It is that Spark 2.0 tries to hide the unnecessary complexity in your streaming analytics architectures with Spark.
 
-Structured streaming introduces the *streaming datasets* that are _infinite datasets_ with primitives like input link:spark-sql-streaming-source.adoc[streaming sources] and output link:spark-sql-streaming-sink.adoc[streaming sinks], *event time*, *windowing*, and *sessions*. You can specify link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[output mode] of a streaming dataset which is what gets written to a streaming sink when there is new data available.
+Structured streaming introduces the *streaming datasets* that are _infinite datasets_ with primitives like input link:spark-sql-streaming-Source.adoc[streaming sources] and output link:spark-sql-streaming-sink.adoc[streaming sinks], *event time*, *windowing*, and *sessions*. You can specify link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[output mode] of a streaming dataset which is what gets written to a streaming sink when there is new data available.
 
 [TIP]
 ====
@@ -97,7 +97,7 @@ A link:spark-sql-dataset.adoc[Dataset] is *streaming* when its link:spark-sql-Lo
 Structured streaming is defined by the following data abstractions in `org.apache.spark.sql.streaming` package:
 
 1. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
-2. link:spark-sql-streaming-source.adoc[Streaming Source]
+2. link:spark-sql-streaming-Source.adoc[Streaming Source]
 3. link:spark-sql-streaming-sink.adoc[Streaming Sink]
 4. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 

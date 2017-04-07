@@ -1,6 +1,6 @@
 == TextSocketSource
 
-`TextSocketSource` is a link:spark-sql-streaming-source.adoc[streaming source] that reads lines from a socket at the `host` and `port` (defined by parameters).
+`TextSocketSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that reads lines from a socket at the `host` and `port` (defined by parameters).
 
 It uses <<lines, lines>> internal in-memory buffer to keep all of the lines that were read from a socket forever.
 
@@ -62,7 +62,7 @@ lines: ArrayBuffer[(String, Timestamp)]
 
 === [[getOffset]] Maximum Available Offset (getOffset method)
 
-NOTE: `getOffset` is a part of the link:spark-sql-streaming-source.adoc#contract[Streaming Source Contract].
+NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.adoc#contract[Streaming Source Contract].
 
 ``TextSocketSource``'s offset can either be none or `LongOffset` of the number of lines in the internal <<lines, lines>> buffer.
 

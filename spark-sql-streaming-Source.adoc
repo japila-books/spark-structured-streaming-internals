@@ -42,4 +42,7 @@ trait Source {
 
 | [[getBatch]] `getBatch`
 | Used when...
+
+| [[getOffset]] `getOffset`
+| Used when...
 |===
