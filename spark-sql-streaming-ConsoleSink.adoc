@@ -1,21 +1,37 @@
 == [[ConsoleSink]] ConsoleSink
 
-`ConsoleSink` is a streaming sink that is <<ConsoleSinkProvider, registered>> as the `console` format.
+`ConsoleSink` is a link:spark-sql-streaming-sink.adoc[streaming sink] that <<ConsoleSinkProvider, ConsoleSinkProvider>> registers as the `console` format.
+
+[[options]]
+.ConsoleSink's Options
+[cols="1,1,2",options="header",width="100%"]
+|===
+| Name
+| Default Value
+| Description
+
+| [[numRows]] `numRows`
+| `20`
+| Number of rows to display
+
+| [[truncate]] `truncate`
+| `true`
+| Truncate the data to display to 20 characters
+|===
 
 [source, scala]
 ----
+import org.apache.spark.sql.SparkSession
 val spark: SparkSession = ...
-spark.readStream
-  .format("text")
-  .load("server-logs/*.out")
-  .as[String]
-  .writeStream
-  .queryName("server-logs processor")
-  .format("console")  // <-- uses ConsoleSink
-  .start
-
-scala> spark.streams.active.foreach(println)
-Streaming Query - server-logs processor [state = ACTIVE]
+spark.
+  readStream.
+  format("text").
+  load("server-logs/*.out").
+  as[String].
+  writeStream.
+  queryName("server-logs processor").
+  format("console").  // <-- uses ConsoleSink
+  start
 
 // in another terminal
 $ echo hello > server-logs/hello.out
@@ -33,4 +49,6 @@ Batch: 0
 
 === [[ConsoleSinkProvider]] ConsoleSinkProvider
 
-`ConsoleSinkProvider` is a link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider] for <<ConsoleSink, ConsoleSink>>. As a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister], it registers the `ConsoleSink` streaming sink as `console` format.
+`ConsoleSinkProvider` is a link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider] for <<ConsoleSink, ConsoleSink>>.
+
+`ConsoleSinkProvider` is a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister] that registers the `ConsoleSink` streaming sink as `console` format.
