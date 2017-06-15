@@ -7,16 +7,10 @@
 [width="100%",cols="1,2",options="header"]
 |===
 | Format / Operator
-| Sink
+| Name
 
 | `console`
 | link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink]
-
-| link:spark-sql-streaming-DataStreamWriter.adoc#foreach[foreach] operator
-| link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
-
-| `memory`
-| link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 
 a| Any `FileFormat`
 
@@ -28,6 +22,15 @@ a| Any `FileFormat`
 * `parquet`
 * `text`
 | link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
+
+| link:spark-sql-streaming-DataStreamWriter.adoc#foreach[foreach] operator
+| link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
+
+| `kafka`
+| link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
+
+| `memory`
+| link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 |===
 
 TIP: You can create your own streaming format implementing link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider].

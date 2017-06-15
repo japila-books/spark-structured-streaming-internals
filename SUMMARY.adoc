@@ -22,6 +22,7 @@
 .. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink]
 .. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
 .. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
+.. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 .. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 
 . link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Source Provider]

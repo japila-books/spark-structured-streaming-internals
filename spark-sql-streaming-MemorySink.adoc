@@ -73,8 +73,6 @@ Refer to link:spark-logging.adoc[Logging].
 addBatch(batchId: Long, data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-sink.adoc#contract[Sink contract].
-
 `addBatch` checks if `batchId` has already been committed (i.e. added to <<batches, batches>> internal registry).
 
 If `batchId` was already committed, you should see the following DEBUG message in the logs:
@@ -100,3 +98,5 @@ When the output mode is invalid, `addBatch` reports a `IllegalArgumentException`
 ```
 Output mode [outputMode] is not supported by MemorySink
 ```
+
+NOTE: `addBatch` is a part of link:spark-sql-streaming-sink.adoc#contract[Sink contract].
