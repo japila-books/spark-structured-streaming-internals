@@ -6,7 +6,7 @@ The semantics of the Structured Streaming model is as follows (see the article h
 
 > At any time, the output of a continuous application is equivalent to executing a batch job on a prefix of the data.
 
-Structured streaming is an attempt to unify streaming, interactive, and batch queries that paves the way for continuous applications like continuous aggregations using link:spark-sql-dataset.adoc#groupBy[groupBy] operator or continuous windowed aggregations using `groupBy` operator with link:spark-sql-functions.adoc#window[window] function.
+Structured streaming is an attempt to unify streaming, interactive, and batch queries that paves the way for continuous applications like continuous aggregations using `groupBy` operator or continuous window aggregations using `groupBy` operator with `window` function.
 
 [source, scala]
 ----
@@ -19,6 +19,9 @@ val schema = StructType(
   StructField("id", LongType, false) ::
   StructField("name", StringType, false) ::
   StructField("city", StringType, false) :: Nil)
+
+// or even using the Schema DSL
+
 
 // ...but is error-prone and time-consuming, isn't it?
 import org.apache.spark.sql.Encoders
@@ -38,14 +41,18 @@ res0: Boolean = true
 val population = people.groupBy('city).agg(count('city) as "population")
 
 // Start the streaming query
-// print the result out to the console
-// Only Complete output mode supported for groupBy
+// Write the result using console format, i.e. print to the console
+// Only Complete output mode supported by groupBy
 import org.apache.spark.sql.streaming.OutputMode.Complete
-val populationStream = population.writeStream
-  .format("console")
-  .outputMode(Complete)
-  .queryName("Population")
-  .start
+import org.apache.spark.sql.streaming.ProcessingTime
+import scala.concurrent.duration._
+val populationStream = population.
+  writeStream.
+  queryName("textStream").
+  outputMode(Complete).
+  trigger(ProcessingTime(10.seconds)).
+  format("console").
+  start
 
 scala> populationStream.explain(extended = true)
 == Parsed Logical Plan ==

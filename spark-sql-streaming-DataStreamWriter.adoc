@@ -1,26 +1,57 @@
 == DataStreamWriter
 
-`DataStreamWriter` is a part of link:spark-structured-streaming.adoc[Structured Streaming] that is responsible for writing the output of streaming queries to sinks and therefore starting their execution.
+`DataStreamWriter` is an interface to write the result of executing a streaming query to a link:spark-sql-streaming-sink.adoc[streaming sink].
+
+NOTE: A streaming query is a link:spark-sql-Dataset.adoc[Dataset] with a link:spark-sql-LogicalPlan.adoc#isStreaming[streaming logical plan].
+
+`DataStreamWriter` is available using `writeStream` method of a streaming `Dataset`.
 
 [source, scala]
 ----
-val people: Dataset[Person] = ...
+import org.apache.spark.sql.streaming.DataStreamWriter
+import org.apache.spark.sql.Row
 
-import org.apache.spark.sql.streaming.ProcessingTime
-import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.OutputMode.Complete
-df.writeStream
-  .queryName("textStream")
-  .outputMode(Complete)
-  .trigger(ProcessingTime(10.seconds))
-  .format("console")
-  .start
+val streamingQuery: Dataset[Long] = ...
+val writer: DataStreamWriter[Row] = streamingQuery.writeStream
 ----
 
-1. <<queryName, queryName>> to set the name of a query
-2. <<outputMode, outputMode>> to specify output mode.
-3. <<trigger, trigger>> to set the link:spark-sql-streaming-trigger.adoc[Trigger] for a stream query.
-4. <<start, start>> to start continuous writing to a sink.
+Like the batch `DataFrameWriter`, `DataStreamWriter` has a direct support for many <<writing-dataframes-to-files, file formats>> and <<format, an extension point to plug in new formats>>.
+
+[source, scala]
+----
+// see above for writer definition
+
+// Save dataset in JSON format
+writer.format("json")
+----
+
+In the end, you start the actual continuous writing of the result of executing a `Dataset` to a sink using <<start, start>> operator.
+
+[source, scala]
+----
+writer.save
+----
+
+Beside the above operators, there are the following ones working with a `Dataset` as a whole.
+
+[[methods]]
+.SparkSession's Class and Instance Methods
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| <<outputMode, outputMode>>
+| Specifies the output mode
+
+| <<queryName, queryName>>
+| Assigns the name of a query
+
+| <<trigger, trigger>>
+| Sets the link:spark-sql-streaming-trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
+|===
+
+NOTE: `DataFrameWriter` is responsible for writing in a batch fashion.
 
 === [[outputMode]] Specifying Output Mode -- `outputMode` method
 
