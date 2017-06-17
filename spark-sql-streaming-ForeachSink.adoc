@@ -1,15 +1,18 @@
 == ForeachSink
 
-`ForeachSink` is a typed <<Sink, Sink>> that passes records (of the type `T`) to <<ForeachWriter, ForeachWriter>> (one record at a time per partition).
+`ForeachSink` is a typed link:spark-sql-streaming-sink.adoc[streaming sink] that passes rows (of the type `T`) to link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] (one record at a time per partition).
 
-It is used exclusively in link:spark-sql-streaming-DataStreamWriter.adoc#foreach[foreach] operator.
+NOTE: `ForeachSink` is assigned a `ForeachWriter` when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
+
+`ForeachSink` is used exclusively in link:spark-sql-streaming-DataStreamWriter.adoc#foreach[foreach] operator.
 
 [source, scala]
 ----
-val records = spark.readStream
-  .format("text")
-  .load("server-logs/*.out")
-  .as[String]
+val records = spark.
+  readStream
+  format("text").
+  load("server-logs/*.out").
+  as[String]
 
 import org.apache.spark.sql.ForeachWriter
 val writer = new ForeachWriter[String] {
@@ -31,12 +34,8 @@ Internally, `addBatch` (the only method from the <<contract, Sink Contract>>) ta
 addBatch(batchId: Long, data: DataFrame): Unit
 ----
 
-It then opens the constructor's <<ForeachWriter, ForeachWriter>> (for the link:spark-taskscheduler-taskcontext.adoc#getPartitionId[current partition] and the input batch) and passes the records to process (one at a time per partition).
+`addBatch` then opens the constructor's link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] (for the link:spark-taskscheduler-taskcontext.adoc#getPartitionId[current partition] and the input batch) and passes the records to process (one at a time per partition).
 
 CAUTION: FIXME Why does Spark track whether the writer failed or not? Why couldn't it `finally` and do `close`?
 
 CAUTION: FIXME Can we have a constant for `"foreach"` for `source` in `DataStreamWriter`?
-
-=== [[ForeachWriter]] ForeachWriter
-
-CAUTION: FIXME

@@ -1,17 +1,31 @@
 == [[StreamingQueryManager]] StreamingQueryManager -- Streaming Query Management
 
-NOTE: `StreamingQueryManager` is an experimental feature of Spark 2.0.0.
+`StreamingQueryManager` is the management interface for link:spark-sql-streaming-StreamingQuery.adoc[continuous queries] (per `SparkSession`).
 
-A `StreamingQueryManager` is the Management API for link:spark-sql-streaming-StreamingQuery.adoc[continuous queries] per `SQLContext`.
-
-NOTE: There is a single `StreamingQueryManager` instance per `SQLContext` session.
-
-You can access `StreamingQueryManager` for the current link:spark-sql-sqlcontext.adoc[SQLContext] using link:spark-sql-sqlcontext.adoc#accessing-StreamingQueryManager[SQLContext.streams] method. It is lazily created when a `SQLContext` instance starts.
+`StreamingQueryManager` manages all continuous structured queries per `SparkSession` that is available using `SparkSession.streams` operator.
 
 [source, scala]
 ----
+val spark: SparkSession = ...
 val queries = spark.streams
 ----
+
+[[internal-registries]]
+.StreamingQueryManager's Internal Registries and Counters (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[activeQueries]] `activeQueries`
+| Registry of `StreamingQueryWrapper` per id
+
+Used in <<active, active>>, <<get, get>>, <<startQuery, startQuery>> and <<notifyQueryTermination, notifyQueryTermination>>.
+|===
+
+=== [[notifyQueryTermination]] `notifyQueryTermination` Internal Method
+
+CAUTION: FIXME
 
 === [[createQuery]] `createQuery` Internal Method
 
@@ -25,30 +39,46 @@ CAUTION: FIXME
 * link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus] (as `listenerBus`)
 * `activeQueries` which is a mutable mapping between query names and `StreamingQuery` objects.
 
-=== [[startQuery]] startQuery
+=== [[startQuery]] Starting Execution of Streaming Query -- `startQuery` Internal Method
 
 [source, scala]
 ----
-startQuery(name: String,
-  checkpointLocation: String,
+startQuery(
+  userSpecifiedName: Option[String],
+  userSpecifiedCheckpointLocation: Option[String],
   df: DataFrame,
   sink: Sink,
-  trigger: Trigger = ProcessingTime(0)): StreamingQuery
+  outputMode: OutputMode,
+  useTempCheckpointLocation: Boolean = false,
+  recoverFromCheckpointLocation: Boolean = true,
+  trigger: Trigger = ProcessingTime(0),
+  triggerClock: Clock = new SystemClock()): StreamingQuery
 ----
 
-`startQuery` is a `private[sql]` method to start a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery].
+`startQuery` starts a link:spark-sql-streaming-StreamingQuery.adoc[streaming query].
 
-NOTE: It is called exclusively by link:spark-sql-streaming-DataStreamWriter.adoc#start[DataStreamWriter.start].
+NOTE: `trigger` defaults to `0` milliseconds (as link:spark-sql-streaming-trigger.adoc#ProcessingTime[ProcessingTime(0)]).
 
-NOTE: By default, `trigger` is link:spark-sql-streaming-trigger.adoc#ProcessingTime[ProcessingTime(0)].
+Internally, `startQuery` first <<createQuery, creates a streaming query>>, registers it in <<activeQueries, activeQueries>> internal registry and link:spark-sql-streaming-StreamExecution.adoc#start[starts the query].
 
-`startQuery` makes sure that `activeQueries` internal registry does not contain the query under `name`. It throws an `IllegalArgumentException` if it does.
+In the end, `startQuery` returns the query (as part of the fluent API so you can chain operators) or reports the exception that was reported when starting the query.
 
-It transforms the link:spark-sql-LogicalPlan.adoc[LogicalPlan] of the input DataFrame `df` so all link:spark-sql-streaming-streamingrelation.adoc[StreamingRelation] "nodes" become link:spark-sql-streaming-streamingrelation.adoc#StreamingExecutionRelation[StreamingExecutionRelation]. It uses link:spark-sql-datasource.adoc#createSource[DataSource.createSource(metadataPath)] where `metadataPath` is `$checkpointLocation/sources/$nextSourceId`. Otherwise, it returns the `LogicalPlan` untouched.
+`startQuery` reports a `IllegalArgumentException` when there is another query registered under `name`. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
 
-It finally creates link:spark-sql-streaming-streamexecution.adoc[StreamExecution] and starts it. It also registers the `StreamExecution` instance in `activeQueries` internal registry.
+```
+Cannot start query with name [name] as a query with that name is already active
+```
 
-=== [[StreamingQueryManager-active]] Return All Active Continuous Queries per SQLContext
+`startQuery` reports a `IllegalStateException` when a query is started again from checkpoint. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
+
+```
+Cannot start query with id [id] as another query with same id is already active.
+Perhaps you are attempting to restart a query from checkpoint that is already active.
+```
+
+NOTE: `startQuery` is used exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
+
+=== [[active]] Return All Active Continuous Queries per SQLContext
 
 [source, scala]
 ----
@@ -57,7 +87,7 @@ active: Array[StreamingQuery]
 
 `active` method returns a collection of link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] instances for the current `SQLContext`.
 
-=== [[StreamingQueryManager-get]] Getting Active Continuous Query By Name
+=== [[get]] Getting Active Continuous Query By Name
 
 [source, scala]
 ----
@@ -114,4 +144,4 @@ It is set in:
 * `resetTerminated()` resets `lastTerminatedQuery`, i.e. sets it to `null`.
 * `notifyQueryTermination(terminatedQuery: StreamingQuery)` sets `lastTerminatedQuery` to be `terminatedQuery` and notifies all the threads that wait on `awaitTerminationLock`.
 +
-It is called from link:spark-sql-streaming-streamexecution.adoc#runBatches[StreamExecution.runBatches].
+It is called from link:spark-sql-streaming-StreamExecution.adoc#runBatches[StreamExecution.runBatches].

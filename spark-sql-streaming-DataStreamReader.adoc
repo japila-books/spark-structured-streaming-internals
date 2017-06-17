@@ -10,17 +10,21 @@
 ----
 val spark: SparkSession = ...
 
-val schema = spark.read
-  .format("csv")
-  .option("header", true)
-  .option("inferSchema", true)
-  .load("csv-logs/*.csv")
-  .schema
+// infer schema for the streaming query over CSV files using batch query
+val schema = spark.
+  read.
+  format("csv").
+  option("header", true).
+  option("inferSchema", true).
+  load("csv-logs/*.csv").
+  schema
 
-val df = spark.readStream
-  .format("csv")
-  .schema(schema)
-  .load("csv-logs/*.csv")
+// start a streaming query over CSV files
+val df = spark.
+  readStream
+  format("csv").
+  schema(schema).
+  load("csv-logs/*.csv")
 ----
 
 === [[format]] format

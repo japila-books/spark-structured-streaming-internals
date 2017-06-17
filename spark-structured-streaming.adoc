@@ -10,27 +10,35 @@ Structured streaming is an attempt to unify streaming, interactive, and batch qu
 
 [source, scala]
 ----
-// business object
-case class Person(id: Long, name: String, city: String)
+// The following example executes a streaming query over CSV files
+// CSV format requires a schema before you can start the query
 
-// you could build your schema manually
+// You could build your schema manually
 import org.apache.spark.sql.types._
 val schema = StructType(
   StructField("id", LongType, false) ::
-  StructField("name", StringType, false) ::
-  StructField("city", StringType, false) :: Nil)
+  StructField("name", StringType, true) ::
+  StructField("city", StringType, true) :: Nil)
 
-// or even using the Schema DSL
-
+// ...or using the Schema DSL
+val schema = new StructType().
+  add($"long".long.copy(nullable = false)).
+  add($"name".string).
+  add($"city".string)
 
 // ...but is error-prone and time-consuming, isn't it?
+
+// Use the business object that describes the dataset
+case class Person(id: Long, name: String, city: String)
+
 import org.apache.spark.sql.Encoders
 val schema = Encoders.product[Person].schema
 
-val people = spark.readStream
-  .schema(schema)
-  .csv("in/*.csv")
-  .as[Person]
+val people = spark.
+  readStream.
+  schema(schema).
+  csv("in/*.csv").
+  as[Person]
 
 // people has this additional capability of being streaming
 scala> people.isStreaming
@@ -38,7 +46,9 @@ res0: Boolean = true
 
 // ...but it is still a Dataset.
 // (Almost) any Dataset operation is available
-val population = people.groupBy('city).agg(count('city) as "population")
+val population = people.
+  groupBy('city).
+  agg(count('city) as "population")
 
 // Start the streaming query
 // Write the result using console format, i.e. print to the console
@@ -53,6 +63,9 @@ val populationStream = population.
   trigger(ProcessingTime(10.seconds)).
   format("console").
   start
+
+scala> populationStream.isActive
+res1: Boolean = true
 
 scala> populationStream.explain(extended = true)
 == Parsed Logical Plan ==
@@ -80,13 +93,7 @@ scala> spark.streams.active.foreach(println)
 Streaming Query - Population [state = ACTIVE]
 
 // You may eventually want to stop the streaming query
-// spark.streams.active.head.stop
-
-// ...or be more explicit about the right query to stop
-scala> populationStream.isActive
-res1: Boolean = true
-
-scala> populationStream.stop
+populationStream.stop
 
 scala> populationStream.isActive
 res2: Boolean = false

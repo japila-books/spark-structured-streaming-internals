@@ -19,6 +19,22 @@ NOTE: The time between batches - 10 milliseconds - is fixed (i.e. not configurab
 * `ACTIVE` when batches are pulled from the sources.
 * `TERMINATED` when batches were successfully processed or the query stopped.
 
+[[internal-registries]]
+.StreamExecution's Internal Registries and Counters (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[microBatchThread]] `microBatchThread`
+|
+
+| [[startLatch]] `startLatch`
+| Java's `java.util.concurrent.CountDownLatch` with count `1`.
+
+Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` <<runBatches, posts a QueryStartedEvent>>.
+|===
+
 [TIP]
 ====
 Enable `DEBUG` logging level for `org.apache.spark.sql.execution.streaming.StreamExecution` to see what happens inside.
@@ -31,6 +47,29 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 
 Refer to link:spark-logging.adoc[Logging].
 ====
+
+=== [[start]] `start` Method
+
+[source, scala]
+----
+start(): Unit
+----
+
+Internally, when called, `start` prints the following INFO message to the logs:
+
+```
+INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+```
+
+`start` then sets <<microBatchThread, microBatchThread>> as a daemon thread and starts it.
+
+NOTE: `start` uses Java's `java.lang.Thread.start` to start the query.
+
+NOTE: When started, streaming query runs in its own thread on JVM.
+
+In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero which is...
+
+NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[start a streaming query].
 
 === [[runBatches]] `runBatches` Internal Method
 

@@ -12,6 +12,10 @@ import org.apache.spark.sql.streaming.DataStreamWriter
 import org.apache.spark.sql.Row
 
 val streamingQuery: Dataset[Long] = ...
+
+scala> streamingQuery.isStreaming
+res0: Boolean = true
+
 val writer: DataStreamWriter[Row] = streamingQuery.writeStream
 ----
 
@@ -35,14 +39,38 @@ writer.save
 Beside the above operators, there are the following ones working with a `Dataset` as a whole.
 
 [[methods]]
-.SparkSession's Class and Instance Methods
+.DataStreamWriter's Methods
 [cols="1,2",options="header",width="100%"]
 |===
 | Method
 | Description
 
+| [[format]] `format`
+a| Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-sink.adoc[streaming sink] to write the rows to)
+
+Internally, `format` is referred to as a _source_ (as in the output data _source_).
+
+Recognized "special" output data sources (in the code):
+
+* `hive`
+* `memory`
+* <<foreach, foreach>>
+* `console`
+
+| <<foreach, foreach>>
+| Sets link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] in the full control of streaming writes.
+
+| `option`
+|
+
+| `options`
+|
+
 | <<outputMode, outputMode>>
 | Specifies the output mode
+
+| `partitionBy`
+|
 
 | <<queryName, queryName>>
 | Assigns the name of a query
@@ -50,6 +78,8 @@ Beside the above operators, there are the following ones working with a `Dataset
 | <<trigger, trigger>>
 | Sets the link:spark-sql-streaming-trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
 |===
+
+NOTE: `hive` <<start, is not supported>> for streaming writing (and leads to a `AnalysisException`).
 
 NOTE: `DataFrameWriter` is responsible for writing in a batch fashion.
 
@@ -94,24 +124,78 @@ The default trigger is link:spark-sql-streaming-trigger.adoc#ProcessingTime[Proc
 
 TIP: Consult link:spark-sql-streaming-trigger.adoc[Trigger] to learn about `Trigger` and `ProcessingTime` types.
 
-=== [[start]] Starting Continuous Writing to Sink -- `start` methods
+=== [[start]] Starting Continuous Writing to Sink -- `start` Method
 
 [source, scala]
 ----
 start(): StreamingQuery
 start(path: String): StreamingQuery  // <1>
 ----
-<1> Sets `path` option to `path` and calls `start()`
+<1> Sets `path` option to `path` and passes the call on to `start()`
 
-`start` methods start a streaming query and return a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] object to continually write data.
+`start` starts a streaming query.
 
-NOTE: Whether or not you have to specify `path` option depends on the link:spark-sql-datasource.adoc[DataSource] in use.
+`start` gives a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] to control the execution of the continuous query.
 
-Recognized options:
+NOTE: Whether or not you have to specify `path` option depends on the streaming sink in use.
 
-* `queryName` is the name of active streaming query.
-* `checkpointLocation` is the directory for checkpointing.
+Internally, `start` branches off per `source`.
+
+* `memory`
+* `foreach`
+* other formats
+
+...FIXME
+
+[[start-options]]
+.start's Options
+[cols="1,2",options="header",width="100%"]
+|===
+| Option
+| Description
+
+| `queryName`
+| Name of active streaming query
+
+| `checkpointLocation`
+| Directory for checkpointing.
+|===
+
+`start` reports a `AnalysisException` when `source` is `hive`.
+
+[source, scala]
+----
+val q =  spark.
+  readStream.
+  text("server-logs/*").
+  writeStream.
+  format("hive") <-- hive format used as a streaming sink
+scala> q.start
+org.apache.spark.sql.AnalysisException: Hive data source can only be used with tables, you can not write files of Hive data source directly.;
+  at org.apache.spark.sql.streaming.DataStreamWriter.start(DataStreamWriter.scala:234)
+  ... 48 elided
+----
 
 NOTE: Define options using <<option, option>> or <<options, options>> methods.
 
-=== [[foreach]] `foreach` method
+=== [[foreach]] Making ForeachWriter in Charge of Streaming Writes -- `foreach` method
+
+[source, scala]
+----
+foreach(writer: ForeachWriter[T]): DataStreamWriter[T]
+----
+
+`foreach` sets the input link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] to be in control of streaming writes.
+
+Internally, `foreach` sets the streaming output <<format, format>> as `foreach` and `foreachWriter` as the input `writer`.
+
+NOTE: `foreach` uses `SparkSession` to access `SparkContext` to clean the `ForeachWriter`.
+
+[NOTE]
+====
+`foreach` reports an `IllegalArgumentException` when `writer` is `null`.
+
+```
+foreach writer cannot be null
+```
+====

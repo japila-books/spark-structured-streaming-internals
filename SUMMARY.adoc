@@ -17,6 +17,7 @@
 .. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter]
+.. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
 
 . link:spark-sql-streaming-sink.adoc[Streaming Sink]
 .. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink]
@@ -33,7 +34,7 @@
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 . link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
 . link:spark-sql-streaming-trigger.adoc[Trigger]
-. link:spark-sql-streaming-streamexecution.adoc[StreamExecution]
+. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution]
 . link:spark-sql-streaming-streamingrelation.adoc[StreamingRelation]
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 . link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
