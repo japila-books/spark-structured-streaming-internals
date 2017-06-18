@@ -26,18 +26,46 @@ NOTE: The time between batches - 10 milliseconds - is fixed (i.e. not configurab
 | Name
 | Description
 
+| [[currentDurationsMs]] `currentDurationsMs`
+|
+
+| [[id]] `id`
+|
+
+| [[initializationLatch]] `initializationLatch`
+|
+
 | [[microBatchThread]] `microBatchThread`
+|
+
+| [[offsetSeqMetadata]] `offsetSeqMetadata`
+|
+
+| [[runId]] `runId`
 |
 
 | [[startLatch]] `startLatch`
 | Java's `java.util.concurrent.CountDownLatch` with count `1`.
 
 Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` <<runBatches, posts a QueryStartedEvent>>.
+
+| [[state]] `state`
+a| Java's `java.util.concurrent.atomic.AtomicReference` for the three different states a streaming query execution can be:
+
+* `INITIALIZING` (default)
+* `ACTIVE` (after the first <<runBatches, runBatches>>)
+* `TERMINATED`
+
+| [[streamMetadata]] `streamMetadata`
+|
+
+| [[uniqueSources]] `uniqueSources`
+|
 |===
 
 [TIP]
 ====
-Enable `DEBUG` logging level for `org.apache.spark.sql.execution.streaming.StreamExecution` to see what happens inside.
+Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.execution.streaming.StreamExecution` to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
@@ -47,6 +75,132 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 
 Refer to link:spark-logging.adoc[Logging].
 ====
+
+=== [[runBatches]] `runBatches` Internal Method
+
+[source, scala]
+----
+runBatches(): Unit
+----
+
+`runBatches` runs streaming batches of data (that represents datasets from a streaming source).
+
+```
+import org.apache.spark.sql.streaming.Trigger.ProcessingTime
+import scala.concurrent.duration._
+
+val out = spark.
+  readStream.
+  text("server-logs").
+  writeStream.
+  format("console").
+  queryName("debug").
+  trigger(ProcessingTime(10.seconds))
+scala> val debugStream = out.start
+INFO StreamExecution: Starting debug [id = 8b57b0bd-fc4a-42eb-81a3-777d7ba5e370, runId = 920b227e-6d02-4a03-a271-c62120258cea]. Use file:///private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-274f9ae1-1238-4088-b4a1-5128fc520c1f to store the query checkpoint.
+debugStream: org.apache.spark.sql.streaming.StreamingQuery = org.apache.spark.sql.execution.streaming.StreamingQueryWrapper@58a5b69c
+
+// Enable the log level to see the INFO and DEBUG messages
+// log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
+
+17/06/18 21:21:07 INFO StreamExecution: Starting new streaming query.
+17/06/18 21:21:07 DEBUG StreamExecution: getOffset took 5 ms
+17/06/18 21:21:07 DEBUG StreamExecution: Stream running from {} to {}
+17/06/18 21:21:07 DEBUG StreamExecution: triggerExecution took 9 ms
+17/06/18 21:21:07 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
+17/06/18 21:21:07 INFO StreamExecution: Streaming query made progress: {
+  "id" : "8b57b0bd-fc4a-42eb-81a3-777d7ba5e370",
+  "runId" : "920b227e-6d02-4a03-a271-c62120258cea",
+  "name" : "debug",
+  "timestamp" : "2017-06-18T19:21:07.693Z",
+  "numInputRows" : 0,
+  "processedRowsPerSecond" : 0.0,
+  "durationMs" : {
+    "getOffset" : 5,
+    "triggerExecution" : 9
+  },
+  "stateOperators" : [ ],
+  "sources" : [ {
+    "description" : "FileStreamSource[file:/Users/jacek/dev/oss/spark/server-logs]",
+    "startOffset" : null,
+    "endOffset" : null,
+    "numInputRows" : 0,
+    "processedRowsPerSecond" : 0.0
+  } ],
+  "sink" : {
+    "description" : "org.apache.spark.sql.execution.streaming.ConsoleSink@2460208a"
+  }
+}
+17/06/18 21:21:10 DEBUG StreamExecution: Starting Trigger Calculation
+17/06/18 21:21:10 DEBUG StreamExecution: getOffset took 3 ms
+17/06/18 21:21:10 DEBUG StreamExecution: triggerExecution took 3 ms
+17/06/18 21:21:10 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
+```
+
+Internally, `runBatches` sets the job group as <<runId, runId>>, <<getBatchDescriptionString, getBatchDescriptionString>> and `interruptOnCancel` flag enabled.
+
+NOTE: `runBatches` uses <<sparkSession, SparkSession>> to access `SparkContext` and set the job group.
+
+`runBatches` registers a metric source when `spark.sql.streaming.metricsEnabled` property is enabled (which is disabled by default).
+
+`runBatches` notifies `StreamingQueryListeners` that a streaming query has been started (by <<postListenerEvent, posting a QueryStartedEvent>> with <<id, id>>, <<runId, runId>> and <<name, name>>).
+
+`runBatches` unblocks the <<start, starting thread>> (by decrementing the count of <<startLatch, startLatch>> that goes to `0` and lets the starting thread finish).
+
+CAUTION: FIXME A picture with two parallel lanes for the starting thread and daemon one for the query.
+
+`runBatches` <<updateStatusMessage, updates status message>> to *Initializing sources*.
+
+`runBatches` then materializes the lazy <<logicalPlan, logicalPlan>>.
+
+`runBatches` disables adaptive query execution (using `spark.sql.adaptive.enabled` property which is disabled by default) as it could change the number of shuffle partitions.
+
+`runBatches` sets <<offsetSeqMetadata, offsetSeqMetadata>> variable.
+
+In the end, `runBatches` sets <<state, state>> to `ACTIVE` state.
+
+NOTE: `runBatches` does the work only when first started (i.e. when <<state, state>> is `INITIALIZING`).
+
+CAUTION: FIXME Continue if you don't mind.
+
+=== [[updateStatusMessage]] `updateStatusMessage` Internal Method
+
+CAUTION: FIXME
+
+=== [[postListenerEvent]] `postListenerEvent` Internal Method
+
+CAUTION: FIXME
+
+=== [[getBatchDescriptionString]] `getBatchDescriptionString` Internal Method
+
+[source, scala]
+----
+getBatchDescriptionString: String
+----
+
+CAUTION: FIXME
+
+=== [[toDebugString]] `toDebugString` Method
+
+You can call `toDebugString` on `StreamExecution` to learn about the internals.
+
+```
+scala> out.asInstanceOf[StreamExecution].toDebugString
+res3: String =
+"
+=== Continuous Query ===
+Name: memStream
+Current Offsets: {FileSource[hello]: #0}
+
+Current State: ACTIVE
+Thread State: RUNNABLE
+
+Logical Plan:
+FileSource[hello]
+
+
+     "
+```
 
 === [[start]] `start` Method
 
@@ -70,49 +224,3 @@ NOTE: When started, streaming query runs in its own thread on JVM.
 In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero which is...
 
 NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[start a streaming query].
-
-=== [[runBatches]] `runBatches` Internal Method
-
-[source, scala]
-----
-runBatches(): Unit
-----
-
-CAUTION: FIXME
-
-```
-scala> val out = in.write
-  .format("memory")
-  .queryName("memStream")
-  .startStream()
-out: org.apache.spark.sql.StreamingQuery = Continuous Query - memStream [state = ACTIVE]
-16/04/16 00:48:47 INFO StreamExecution: Starting new continuous query.
-
-scala> 16/04/16 00:48:47 INFO StreamExecution: Committed offsets for batch 1.
-16/04/16 00:48:47 DEBUG StreamExecution: Stream running from {} to {FileSource[hello]: #0}
-16/04/16 00:48:47 DEBUG StreamExecution: Retrieving data from FileSource[hello]: None -> #0
-16/04/16 00:48:47 DEBUG StreamExecution: Optimized batch in 163.940239ms
-16/04/16 00:48:47 INFO StreamExecution: Completed up to {FileSource[hello]: #0} in 703.573981ms
-```
-
-=== [[toDebugString]] `toDebugString` Method
-
-You can call `toDebugString` on `StreamExecution` to learn about the internals.
-
-```
-scala> out.asInstanceOf[StreamExecution].toDebugString
-res3: String =
-"
-=== Continuous Query ===
-Name: memStream
-Current Offsets: {FileSource[hello]: #0}
-
-Current State: ACTIVE
-Thread State: RUNNABLE
-
-Logical Plan:
-FileSource[hello]
-
-
-     "
-```
