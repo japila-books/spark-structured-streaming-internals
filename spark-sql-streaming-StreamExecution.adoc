@@ -76,6 +76,10 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 Refer to link:spark-logging.adoc[Logging].
 ====
 
+=== [[constructNextBatch]] `constructNextBatch` Internal Method
+
+CAUTION: FIXME
+
 === [[runBatches]] `runBatches` Internal Method
 
 [source, scala]

@@ -1,0 +1,7 @@
+== [[KafkaOffsetReader]] KafkaOffsetReader
+
+CAUTION: FIXME
+
+=== [[fetchLatestOffsets]] `fetchLatestOffsets` Method
+
+CAUTION: FIXME

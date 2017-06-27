@@ -128,11 +128,22 @@ NOTE: The 0th batch is persisted in the streaming metadata log if not available 
 
 |===
 
-=== [[getOffset]] Getting Maximum Available Offset -- `getOffset` Method
+[TIP]
+====
+Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaSource` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=DEBUG
+```
+
+Refer to link:spark-logging.adoc[Logging].
+====
+
+=== [[rateLimit]] `rateLimit` Internal Method
 
 CAUTION: FIXME
-
-NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getOffset[Source Contract] to...FIXME
 
 === [[getBatch]] Fetching Records for Batch -- `getBatch` Method
 
@@ -158,12 +169,55 @@ CAUTION: FIXME
 * <<getBatch, getBatch>>
 ====
 
+=== [[getOffset]] Getting Maximum Available Offsets -- `getOffset` Method
+
+[source, scala]
+----
+getOffset: Option[Offset]
+----
+
+Internally, `getOffset` <<initialPartitionOffsets, initializes partition offsets>>.
+
+NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called.
+
+`getOffset` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetchLatestOffsets] (known later as `latest`).
+
+`getOffset` then calculates <<currentPartitionOffsets, currentPartitionOffsets>> being offsets per <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>>.
+
+.getOffset's Offset Calculation per maxOffsetsPerTrigger
+[cols="1,1",options="header",width="100%"]
+|===
+| maxOffsetsPerTrigger
+| Offsets
+
+| Unspecified (i.e. `None`)
+| `latest`
+
+| Defined with <<currentPartitionOffsets, currentPartitionOffsets>> undefined
+| <<rateLimit, rateLimit>> with `limit` limit, <<initialPartitionOffsets, initialPartitionOffsets>> as `from`, `until` as `latest`
+
+| Defined with <<currentPartitionOffsets, currentPartitionOffsets>> defined
+| <<rateLimit, rateLimit>> with `limit` limit, <<initialPartitionOffsets, initialPartitionOffsets>> as `from`, `until` as `latest`
+|===
+
+`getOffset` sets <<currentPartitionOffsets, currentPartitionOffsets>> as the `offsets` calculated above.
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG KafkaSource: GetOffset: [offsets]
+```
+
+In the end, `getOffset` creates a `KafkaSourceOffset` with `offsets`.
+
+NOTE: `getOffset` is a part of link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
+
 === [[creating-instance]] Creating KafkaSource Instance
 
 `KafkaSource` takes the following when created:
 
 * [[sqlContext]] link:spark-sql-sqlcontext.adoc[SQLContext]
-* [[kafkaReader]] `KafkaOffsetReader`
+* [[kafkaReader]] link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
 * [[executorKafkaParams]] Parameters of executors (reading from Kafka)
 * [[sourceOptions]] Collection of key-value options
 * [[metadataPath]] `metadataPath` -- streaming metadata log directory where `KafkaSource` persists `KafkaSourceOffset` offsets in JSON format.
