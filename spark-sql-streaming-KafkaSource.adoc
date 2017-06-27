@@ -1,8 +1,8 @@
 == [[KafkaSource]] KafkaSource
 
-`KafkaSource` is a streaming link:spark-sql-streaming-Source.adoc[Source] to _"continuously"_ read data from Apache Kafka.
+`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] to _"continuously"_ read datasets from Apache Kafka.
 
-NOTE: _continuously_ is to mean that Kafka topics are checked for new records every link:spark-sql-streaming-trigger.adoc[trigger] (and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them).
+NOTE: _"continuously"_ means that Kafka topics are checked for new records every link:spark-sql-streaming-trigger.adoc[trigger] (and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them).
 
 `KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]).
 
@@ -15,10 +15,10 @@ spark.readStream.format("kafka")
 ====
 Structured Streaming support for Kafka is in a separate link:spark-sql-streaming-KafkaSourceProvider.adoc#spark-sql-kafka-0-10[spark-sql-kafka-0-10 module] (aka _library dependency_).
 
-`spark-sql-kafka-0-10` module is not included by default so you have to start `spark-submit` (and "derivatives" like `spark-shell`) with link:spark-submit.adoc#packages[--packages command-line option].
+`spark-sql-kafka-0-10` module is not included by default so you have to start `spark-submit` (and "derivatives" like `spark-shell`) with `--packages` command-line option.
 
 ```
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.1.0
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.1.1
 ```
 ====
 
@@ -40,7 +40,7 @@ val fromKafkaTopic1ToConsole = spark.readStream
   .option("kafka.bootstrap.servers", "localhost:9092")
   .option("startingoffsets", "earliest")  // latest, earliest or JSON with {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
   .load
-  .select($"key" cast "string", $"value" cast "string") // deserialize records
+  .select('key cast "string", 'value cast "string") // deserialize records
   .as[(String, String)]
   .writeStream
   .option("checkpointLocation", "target/kafka-checkpoint") // used for keeping state of writing side
@@ -51,6 +51,57 @@ val fromKafkaTopic1ToConsole = spark.readStream
   .start
 
 fromKafkaTopic1ToConsole.stop
+----
+
+[[schema]]
+The schema of datasets is predefined and cannot be changed.
+
+.KafkaSource's Dataset Schema (in the positional order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Type
+
+| `key`
+| `BinaryType`
+
+| `value`
+| `BinaryType`
+
+| `topic`
+| `StringType`
+
+| `partition`
+| `IntegerType`
+
+| `offset`
+| `LongType`
+
+| `timestamp`
+| `TimestampType`
+
+| `timestampType`
+| `IntegerTyp`
+
+|===
+
+[source, scala]
+----
+val topic1 = spark
+  .read
+  .format("kafka")
+  .option("subscribe", "topic1")
+  .option("kafka.bootstrap.servers", "localhost:9092")
+  .load
+scala> topic1.printSchema
+root
+ |-- key: binary (nullable = true)
+ |-- value: binary (nullable = true)
+ |-- topic: string (nullable = true)
+ |-- partition: integer (nullable = true)
+ |-- offset: long (nullable = true)
+ |-- timestamp: timestamp (nullable = true)
+ |-- timestampType: integer (nullable = true)
 ----
 
 [[internal-registries]]
