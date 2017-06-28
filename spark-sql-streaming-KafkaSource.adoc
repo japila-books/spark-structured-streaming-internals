@@ -147,9 +147,12 @@ CAUTION: FIXME
 
 === [[getBatch]] Fetching Records for Batch -- `getBatch` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+getBatch(start: Option[Offset], end: Offset): DataFrame
+----
 
-NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getBatch[Source Contract] to...FIXME
+NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getBatch[Source Contract].
 
 === [[fetchAndVerify]] `fetchAndVerify` Internal Method
 

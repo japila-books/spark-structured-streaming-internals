@@ -35,11 +35,39 @@ NOTE: The time between batches - 10 milliseconds - is fixed (i.e. not configurab
 | [[initializationLatch]] `initializationLatch`
 |
 
-| [[microBatchThread]] `microBatchThread`
+| [[logicalPlan]] `logicalPlan`
 |
+
+| [[microBatchThread]] `microBatchThread`
+a| Thread of execution to run a streaming query concurrently with the name as `stream execution thread for [prettyIdString]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
+
+When started, `microBatchThread` sets the so-called call site and <<runBatches, runs batches>>.
+
+NOTE: `microBatchThread` is Java's https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread].
+
+[TIP]
+====
+Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
+
+```
+$ jstack 13056 | grep -i "stream execution thread"
+"stream execution thread for kafka-topic1 [id = 609c5ea3-3e0b-4da9-9814-d0ad336dcadd, runId = 0717993d-e3f4-4e4b-81f5-f4c8a67e44b7]" #175 daemon prio=5 os_prio=31 tid=0x00007fe784978000 nid=0xc723 waiting on condition [0x0000000127cf0000]
+```
+====
 
 | [[offsetSeqMetadata]] `offsetSeqMetadata`
 |
+
+| [[prettyIdString]] `prettyIdString`
+a| Pretty-identified string for identification in logs (with <<name, name>> if defined).
+
+```
+// query name set
+queryName [id = xyz, runId = abc]
+
+// no query name
+[id = xyz, runId = abc]
+```
 
 | [[runId]] `runId`
 |
@@ -76,6 +104,17 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 Refer to link:spark-logging.adoc[Logging].
 ====
 
+=== [[runBatch]] `runBatch` Internal Method
+
+[source, scala]
+----
+runBatch(sparkSessionToRunBatch: SparkSession): Unit
+----
+
+CAUTION: FIXME
+
+NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs batches>>.
+
 === [[constructNextBatch]] `constructNextBatch` Internal Method
 
 CAUTION: FIXME
@@ -87,9 +126,10 @@ CAUTION: FIXME
 runBatches(): Unit
 ----
 
-`runBatches` runs streaming batches of data (that represents datasets from a streaming source).
+`runBatches` runs streaming batches of data (that are datasets from every streaming source used).
 
-```
+[source, scala]
+----
 import org.apache.spark.sql.streaming.Trigger.ProcessingTime
 import scala.concurrent.duration._
 
@@ -139,7 +179,7 @@ debugStream: org.apache.spark.sql.streaming.StreamingQuery = org.apache.spark.sq
 17/06/18 21:21:10 DEBUG StreamExecution: getOffset took 3 ms
 17/06/18 21:21:10 DEBUG StreamExecution: triggerExecution took 3 ms
 17/06/18 21:21:10 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
-```
+----
 
 Internally, `runBatches` sets the job group as <<runId, runId>>, <<getBatchDescriptionString, getBatchDescriptionString>> and `interruptOnCancel` flag enabled.
 
@@ -166,6 +206,8 @@ In the end, `runBatches` sets <<state, state>> to `ACTIVE` state.
 NOTE: `runBatches` does the work only when first started (i.e. when <<state, state>> is `INITIALIZING`).
 
 CAUTION: FIXME Continue if you don't mind.
+
+NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<microBatchThread, execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
 
 === [[updateStatusMessage]] `updateStatusMessage` Internal Method
 
@@ -206,25 +248,28 @@ FileSource[hello]
      "
 ```
 
-=== [[start]] `start` Method
+=== [[start]] Starting Streaming Query (on Execution Thread) -- `start` Method
 
 [source, scala]
 ----
 start(): Unit
 ----
 
-Internally, when called, `start` prints the following INFO message to the logs:
+When called, `start` prints the following INFO message to the logs:
 
 ```
 INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
 ```
 
+.StreamExecution's Starting Streaming Query (on Execution Thread)
+image::images/StreamExecution-start.png[align="center"]
+
 `start` then sets <<microBatchThread, microBatchThread>> as a daemon thread and starts it.
 
-NOTE: `start` uses Java's `java.lang.Thread.start` to start the query.
+NOTE: `start` uses Java's link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#start--++[java.lang.Thread.start] to run the streaming query on a separate execution thread.
 
-NOTE: When started, streaming query runs in its own thread on JVM.
+NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
-In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero which is...
+In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero (which is when `StreamExecution` <<runBatches, starts running batches>> so there is some pause in the main thread's execution to wait till the streaming query execution thread starts).
 
 NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[start a streaming query].
