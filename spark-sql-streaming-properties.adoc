@@ -1,0 +1,27 @@
+== Configuration Properties
+
+The following list are the properties that you can use to fine-tune Spark Structured Streaming applications.
+
+You can set them in a link:spark-sql-SparkSession.adoc[SparkSession] upon instantiation using link:spark-sql-sparksession-builder.adoc#config[config] method.
+
+[source, scala]
+----
+import org.apache.spark.sql.SparkSession
+val spark: SparkSession = SparkSession.builder
+  .master("local[*]")
+  .appName("My Spark Application")
+  .config("spark.sql.streaming.metricsEnabled", true)
+  .getOrCreate
+----
+
+.Structured Streaming's Properties (in alphabetical order)
+[cols="1,1,2",options="header",width="100%"]
+|===
+| Name
+| Default
+| Description
+
+| [[spark.sql.streaming.metricsEnabled]] `spark.sql.streaming.metricsEnabled`
+| `false`
+| Flag whether Dropwizard CodaHale metrics will be reported for active streaming queries
+|===

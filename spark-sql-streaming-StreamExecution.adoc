@@ -1,4 +1,4 @@
-== [[StreamExecution]] StreamExecution
+== [[StreamExecution]] StreamExecution -- Execution Environment for Streaming Query
 
 `StreamExecution` manages execution of a streaming query for a `SQLContext` and a link:spark-sql-streaming-sink.adoc[Sink]. It requires a link:spark-sql-LogicalPlan.adoc[LogicalPlan] to know the `Source` objects from which records are periodically pulled down.
 
@@ -9,7 +9,10 @@
 * link:spark-sql-streaming-sink.adoc[Sink]
 * `Trigger`
 
-It starts an internal thread (`microBatchThread`) to periodically (every 10 milliseconds) poll for new records in the sources and create a batch.
+`StreamExecution` <<start, starts a thread of execution>> that runs a streaming query concurrently (and <<runBatches, polls for new records in the sources to create a batch>>).
+
+.StreamExecution's Starting Streaming Query (on Execution Thread)
+image::images/StreamExecution-start.png[align="center"]
 
 NOTE: The time between batches - 10 milliseconds - is fixed (i.e. not configurable).
 
@@ -50,7 +53,7 @@ NOTE: `microBatchThread` is Java's https://docs.oracle.com/javase/8/docs/api/jav
 Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
 
 ```
-$ jstack 13056 | grep -i "stream execution thread"
+$ jstack 13056 \| grep -e "stream execution thread"
 "stream execution thread for kafka-topic1 [id = 609c5ea3-3e0b-4da9-9814-d0ad336dcadd, runId = 0717993d-e3f4-4e4b-81f5-f4c8a67e44b7]" #175 daemon prio=5 os_prio=31 tid=0x00007fe784978000 nid=0xc723 waiting on condition [0x0000000127cf0000]
 ```
 ====
@@ -73,12 +76,12 @@ queryName [id = xyz, runId = abc]
 |
 
 | [[startLatch]] `startLatch`
-| Java's `java.util.concurrent.CountDownLatch` with count `1`.
+| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
 
-Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` <<runBatches, posts a QueryStartedEvent>>.
+Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` <<runBatches, has posted a QueryStartedEvent>>.
 
 | [[state]] `state`
-a| Java's `java.util.concurrent.atomic.AtomicReference` for the three different states a streaming query execution can be:
+a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the three different states a streaming query execution can be:
 
 * `INITIALIZING` (default)
 * `ACTIVE` (after the first <<runBatches, runBatches>>)
@@ -104,6 +107,17 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 Refer to link:spark-logging.adoc[Logging].
 ====
 
+=== [[constructNextBatch]] `constructNextBatch` Internal Method
+
+[source, scala]
+----
+constructNextBatch(): Unit
+----
+
+CAUTION: FIXME
+
+NOTE: `constructNextBatch` is used...FIXME
+
 === [[runBatch]] `runBatch` Internal Method
 
 [source, scala]
@@ -114,10 +128,6 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 CAUTION: FIXME
 
 NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs batches>>.
-
-=== [[constructNextBatch]] `constructNextBatch` Internal Method
-
-CAUTION: FIXME
 
 === [[runBatches]] `runBatches` Internal Method
 
@@ -185,11 +195,13 @@ Internally, `runBatches` sets the job group as <<runId, runId>>, <<getBatchDescr
 
 NOTE: `runBatches` uses <<sparkSession, SparkSession>> to access `SparkContext` and set the job group.
 
-`runBatches` registers a metric source when `spark.sql.streaming.metricsEnabled` property is enabled (which is disabled by default).
+`runBatches` registers a metric source when link:spark-sql-streaming-properties.adoc#spark.sql.streaming.metricsEnabled[spark.sql.streaming.metricsEnabled] property is enabled (which is disabled by default).
 
-`runBatches` notifies `StreamingQueryListeners` that a streaming query has been started (by <<postListenerEvent, posting a QueryStartedEvent>> with <<id, id>>, <<runId, runId>> and <<name, name>>).
+CAUTION: FIXME Metrics
 
-`runBatches` unblocks the <<start, starting thread>> (by decrementing the count of <<startLatch, startLatch>> that goes to `0` and lets the starting thread finish).
+`runBatches` notifies `StreamingQueryListeners` that a streaming query has been started (by <<postEvent, posting a QueryStartedEvent>> with <<id, id>>, <<runId, runId>> and <<name, name>>).
+
+`runBatches` unblocks the <<start, main starting thread>> (by decrementing the count of <<startLatch, startLatch>> that goes to `0` and lets the starting thread continue).
 
 CAUTION: FIXME A picture with two parallel lanes for the starting thread and daemon one for the query.
 
@@ -201,19 +213,88 @@ CAUTION: FIXME A picture with two parallel lanes for the starting thread and dae
 
 `runBatches` sets <<offsetSeqMetadata, offsetSeqMetadata>> variable.
 
-In the end, `runBatches` sets <<state, state>> to `ACTIVE` state.
+`runBatches` sets <<state, state>> to `ACTIVE` (only when the current state is `INITIALIZING` that prevents from repeating the initialization)
 
 NOTE: `runBatches` does the work only when first started (i.e. when <<state, state>> is `INITIALIZING`).
 
-CAUTION: FIXME Continue if you don't mind.
+`runBatches` decrements the count of <<initializationLatch, initializationLatch>>.
+
+CAUTION: FIXME `initializationLatch` so what?
+
+`runBatches` requests <<triggerExecutor, TriggerExecutor>> to execute a so-called <<batch-runner, batch runner>>.
 
 NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<microBatchThread, execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
+
+==== [[batch-runner]] Batch Runner
+
+*Batch Runner* (aka `batchRunner`) is an executable block executed by <<triggerExecutor, triggerExecutor>>.
+
+`batchRunner` <<startTrigger, starts trigger calculation>>.
+
+If <<state, state>> is not `TERMINATED` (which means that the streaming query should be executed), `batchRunner`  executes the current batch and <<reportTimeTaken, reports time taken>>.
+
+The current batch branches off per <<currentBatchId, currentBatchId>>.
+
+.Current Batch Execution per currentBatchId
+[cols="1,1",options="header",width="100%"]
+|===
+| currentBatchId < 0
+| currentBatchId >= 0
+
+a|
+
+1. <<populateStartOffsets, populateStartOffsets>>
+1. Setting Job Description as <<getBatchDescriptionString, getBatchDescriptionString>>
+
+```
+DEBUG Stream running from [committedOffsets] to [availableOffsets]
+```
+
+| 1. <<constructNextBatch, constructNextBatch>>
+|===
+
+If there is <<dataAvailable, data available>>, `batchRunner` marks <<currentStatus, currentStatus>> with `isDataAvailable` enabled.
+
+[NOTE]
+====
+You can check out the status of a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] using link:spark-sql-streaming-StreamingQuery.adoc#status[status] method.
+
+[source, scala]
+----
+scala> spark.streams.active(0).status
+res1: org.apache.spark.sql.streaming.StreamingQueryStatus =
+{
+  "message" : "Waiting for next trigger",
+  "isDataAvailable" : false,
+  "isTriggerActive" : false
+}
+----
+====
+
+`batchRunner` then <<updateStatusMessage, updates the status message>> to "Processing new data" and <<runBatch, runs the batch>>.
+
+.StreamExecution's Running Batches (on Execution Thread)
+image::images/StreamExecution-runBatches.png[align="center"]
+
+CAUTION: FIXME Finish me...`finishTrigger(dataAvailable)`
+
+=== [[dataAvailable]] `dataAvailable` Internal Method
+
+CAUTION: FIXME
+
+=== [[populateStartOffsets]] `populateStartOffsets` Internal Method
+
+CAUTION: FIXME
+
+=== [[reportTimeTaken]] `reportTimeTaken` Internal Method
+
+CAUTION: FIXME
 
 === [[updateStatusMessage]] `updateStatusMessage` Internal Method
 
 CAUTION: FIXME
 
-=== [[postListenerEvent]] `postListenerEvent` Internal Method
+=== [[postEvent]] `postEvent` Internal Method
 
 CAUTION: FIXME
 
@@ -260,9 +341,6 @@ When called, `start` prints the following INFO message to the logs:
 ```
 INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
 ```
-
-.StreamExecution's Starting Streaming Query (on Execution Thread)
-image::images/StreamExecution-start.png[align="center"]
 
 `start` then sets <<microBatchThread, microBatchThread>> as a daemon thread and starts it.
 
