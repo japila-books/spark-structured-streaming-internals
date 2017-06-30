@@ -1,0 +1,80 @@
+== [[RateStreamSource]] RateStreamSource
+
+`RateStreamSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that...
+
+`RateStreamSource` <<creating-instance, is created>> for *rate* format (that is registered by link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]).
+
+[source, scala]
+----
+scala> val rateSource = spark.readStream.format("rate").load
+rateSource: org.apache.spark.sql.DataFrame = [timestamp: timestamp, value: bigint]
+----
+
+[[schema]]
+The schema of datasets is predefined and cannot be changed.
+
+.RateStreamSource's Dataset Schema (in the positional order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Type
+
+| `timestamp`
+| `TimestampType`
+
+| `value`
+| `LongType`
+|===
+
+[[internal-registries]]
+.RateStreamSource's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[clock]] `clock`
+|
+
+| [[lastTimeMs]] `lastTimeMs`
+|
+
+| [[maxSeconds]] `maxSeconds`
+|
+
+| [[startTimeMs]] `startTimeMs`
+|
+|===
+
+=== [[getBatch]] Fetching Records for Batch -- `getBatch` Method
+
+[source, scala]
+----
+getBatch(start: Option[Offset], end: Offset): DataFrame
+----
+
+NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getBatch[Source Contract].
+
+=== [[getOffset]] Getting Maximum Available Offsets -- `getOffset` Method
+
+[source, scala]
+----
+getOffset: Option[Offset]
+----
+
+CAUTION: FIXME
+
+NOTE: `getOffset` is a part of link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
+
+=== [[creating-instance]] Creating RateStreamSource Instance
+
+`RateStreamSource` takes the following when created:
+
+* [[sqlContext]] `SQLContext`
+* [[metadataPath]] Path to the metadata
+* [[rowsPerSecond]] Rows per second
+* [[rampUpTimeSeconds]] RampUp time in seconds
+* [[numPartitions]] Number of partitions
+* [[useManualClock]] Flag to whether to use `ManualClock` (`true`) or `SystemClock` (`false`)
+
+`RateStreamSource` initializes the <<internal-registries, internal registries and counters>>.

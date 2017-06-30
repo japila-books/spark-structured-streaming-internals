@@ -2,8 +2,9 @@
 
 `KafkaSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider] for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that acts as the source for *kafka* format).
 
-`KafkaSourceProvider` is a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister], too.
+NOTE: `KafkaSourceProvider` is also a `DataSourceRegister`.
 
+[[shortName]]
 The short name of the data source is *kafka*.
 
 `KafkaSourceProvider` requires the following options (that you can set using `option` method):

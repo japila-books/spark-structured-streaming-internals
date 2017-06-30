@@ -82,7 +82,6 @@ The schema of datasets is predefined and cannot be changed.
 
 | `timestampType`
 | `IntegerTyp`
-
 |===
 
 [source, scala]

@@ -15,6 +15,7 @@
 ... link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
 
 .. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
+.. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
 .. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter]
@@ -29,6 +30,7 @@
 
 . link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Source Provider]
 .. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]
+.. link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]
 .. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
 
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
