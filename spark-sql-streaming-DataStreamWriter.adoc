@@ -1,6 +1,6 @@
 == [[DataStreamWriter]] DataStreamWriter
 
-`DataStreamWriter` is an interface to describe how the result of executing a streaming query is written to a link:spark-sql-streaming-sink.adoc[streaming sink].
+`DataStreamWriter` is an interface to describe how the result of executing a streaming query is written to a link:spark-sql-streaming-Sink.adoc[streaming sink].
 
 NOTE: A streaming query is a link:spark-sql-Dataset.adoc[Dataset] with a link:spark-sql-LogicalPlan.adoc#isStreaming[streaming logical plan].
 
@@ -46,7 +46,7 @@ Beside the above operators, there are the following ones working with a `Dataset
 | Description
 
 | [[format]] `format`
-a| Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-sink.adoc[streaming sink] to write the rows to)
+a| Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-Sink.adoc[streaming sink] to write the rows to)
 
 Internally, `format` is referred to as a _source_ (as in the output data _source_).
 
@@ -76,7 +76,7 @@ Recognized "special" output data sources (in the code):
 | Assigns the name of a query
 
 | <<trigger, trigger>>
-| Sets the link:spark-sql-streaming-trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
+| Sets the link:spark-sql-streaming-Trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
 |===
 
 NOTE: `hive` <<start, is not supported>> for streaming writing (and leads to a `AnalysisException`).
@@ -90,7 +90,7 @@ NOTE: `DataFrameWriter` is responsible for writing in a batch fashion.
 outputMode(outputMode: OutputMode): DataStreamWriter[T]
 ----
 
-`outputMode` specifies *output mode* of a streaming link:spark-sql-dataset.adoc[Dataset] which is what gets written to a link:spark-sql-streaming-sink.adoc[streaming sink] when there is a new data available.
+`outputMode` specifies *output mode* of a streaming link:spark-sql-dataset.adoc[Dataset] which is what gets written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is a new data available.
 
 Currently, the following output modes are supported:
 
@@ -118,11 +118,11 @@ trigger(trigger: Trigger): DataStreamWriter[T]
 
 `trigger` method sets the time interval of the *trigger* (batch) for a streaming query.
 
-NOTE: `Trigger` specifies how often results should be produced by a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]. See link:spark-sql-streaming-trigger.adoc[Trigger].
+NOTE: `Trigger` specifies how often results should be produced by a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]. See link:spark-sql-streaming-Trigger.adoc[Trigger].
 
-The default trigger is link:spark-sql-streaming-trigger.adoc#ProcessingTime[ProcessingTime(0L)] that runs a streaming query as often as possible.
+The default trigger is link:spark-sql-streaming-Trigger.adoc#ProcessingTime[ProcessingTime(0L)] that runs a streaming query as often as possible.
 
-TIP: Consult link:spark-sql-streaming-trigger.adoc[Trigger] to learn about `Trigger` and `ProcessingTime` types.
+TIP: Consult link:spark-sql-streaming-Trigger.adoc[Trigger] to learn about `Trigger` and `ProcessingTime` types.
 
 === [[start]] Starting Continuous Writing to Sink -- `start` Method
 

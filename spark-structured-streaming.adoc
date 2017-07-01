@@ -101,7 +101,7 @@ res2: Boolean = false
 
 With structured streaming, Spark 2.0 aims at simplifying *streaming analytics* with little to no need to reason about effective data streaming. It is that Spark 2.0 tries to hide the unnecessary complexity in your streaming analytics architectures with Spark.
 
-Structured streaming introduces the *streaming datasets* that are _infinite datasets_ with primitives like input link:spark-sql-streaming-Source.adoc[streaming sources] and output link:spark-sql-streaming-sink.adoc[streaming sinks], *event time*, *windowing*, and *sessions*. You can specify link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[output mode] of a streaming dataset which is what gets written to a streaming sink when there is new data available.
+Structured streaming introduces the *streaming datasets* that are _infinite datasets_ with primitives like input link:spark-sql-streaming-Source.adoc[streaming sources] and output link:spark-sql-streaming-Sink.adoc[streaming sinks], *event time*, *windowing*, and *sessions*. You can specify link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[output mode] of a streaming dataset which is what gets written to a streaming sink when there is new data available.
 
 [TIP]
 ====
@@ -112,10 +112,10 @@ Structured streaming is defined by the following data abstractions in `org.apach
 
 1. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
 2. link:spark-sql-streaming-Source.adoc[Streaming Source]
-3. link:spark-sql-streaming-sink.adoc[Streaming Sink]
+3. link:spark-sql-streaming-Sink.adoc[Streaming Sink]
 4. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 
-With link:spark-sql-dataset.adoc[Datasets] being Spark SQL's view of structured data, structured streaming checks input sources for new data every link:spark-sql-streaming-trigger.adoc[trigger] (time) and executes the (continuous) queries.
+With link:spark-sql-dataset.adoc[Datasets] being Spark SQL's view of structured data, structured streaming checks input sources for new data every link:spark-sql-streaming-Trigger.adoc[trigger] (time) and executes the (continuous) queries.
 
 TIP: Watch https://issues.apache.org/jira/browse/SPARK-8360[SPARK-8360 Streaming DataFrames] to track progress of the feature.
 

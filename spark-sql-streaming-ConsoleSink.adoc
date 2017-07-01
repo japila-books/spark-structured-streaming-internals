@@ -1,6 +1,6 @@
 == [[ConsoleSink]] ConsoleSink
 
-`ConsoleSink` is a link:spark-sql-streaming-sink.adoc[streaming sink] that <<ConsoleSinkProvider, ConsoleSinkProvider>> registers as the `console` format.
+`ConsoleSink` is a link:spark-sql-streaming-Sink.adoc[streaming sink] that <<ConsoleSinkProvider, ConsoleSinkProvider>> registers as the `console` format.
 
 [[options]]
 .ConsoleSink's Options

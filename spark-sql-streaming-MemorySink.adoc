@@ -1,6 +1,6 @@
 == [[MemorySink]] MemorySink
 
-`MemorySink` is a streaming link:spark-sql-streaming-sink.adoc[Sink] that <<addBatch, stores records in memory>>. It is particularly useful for testing.
+`MemorySink` is a streaming link:spark-sql-streaming-Sink.adoc[Sink] that <<addBatch, stores records in memory>>. It is particularly useful for testing.
 
 `MemorySink` is used for `memory` format and requires a query name (by `queryName` method or `queryName` option).
 
@@ -99,4 +99,4 @@ When the output mode is invalid, `addBatch` reports a `IllegalArgumentException`
 Output mode [outputMode] is not supported by MemorySink
 ```
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-sink.adoc#contract[Sink contract].
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#contract[Sink contract].

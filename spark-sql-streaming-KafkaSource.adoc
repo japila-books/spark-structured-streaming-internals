@@ -2,7 +2,7 @@
 
 `KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] to _"continuously"_ read datasets from Apache Kafka.
 
-NOTE: _"continuously"_ means that Kafka topics are checked for new records every link:spark-sql-streaming-trigger.adoc[trigger] (and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them).
+NOTE: _"continuously"_ means that Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.adoc[trigger] (and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them).
 
 `KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]).
 

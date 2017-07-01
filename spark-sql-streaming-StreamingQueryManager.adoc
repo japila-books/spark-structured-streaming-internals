@@ -75,7 +75,7 @@ startQuery(
 
 `startQuery` starts a link:spark-sql-streaming-StreamingQuery.adoc[streaming query].
 
-NOTE: `trigger` defaults to `0` milliseconds (as link:spark-sql-streaming-trigger.adoc#ProcessingTime[ProcessingTime(0)]).
+NOTE: `trigger` defaults to `0` milliseconds (as link:spark-sql-streaming-Trigger.adoc#ProcessingTime[ProcessingTime(0)]).
 
 Internally, `startQuery` first <<createQuery, creates a streaming query>>, registers it in <<activeQueries, activeQueries>> internal registry and link:spark-sql-streaming-StreamExecution.adoc#start[starts the query].
 

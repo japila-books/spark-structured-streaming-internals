@@ -88,7 +88,7 @@ a| Qualified path of checkpoint directory (as defined using <<checkpointRoot, ch
 
 Used in <<checkpointFile, checkpointFile>> and when <<runBatches, runBatches>> finishes.
 
-Used in <<logicalPlan, logicalPlan>> (where every link:spark-sql-streaming-streamingrelation.adoc[StreamingRelation] stores its own checkpointing metadata).
+Used in <<logicalPlan, logicalPlan>> (where every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] stores its own checkpointing metadata).
 
 [NOTE]
 ====
@@ -391,8 +391,8 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 * [[name]] Name
 * [[checkpointRoot]] Path to the checkpoint root directory
 * [[analyzedPlan]] Analyzed logical plan
-* [[sink]] link:spark-sql-streaming-sink.adoc[Streaming sink]
-* [[trigger]] link:spark-sql-streaming-trigger.adoc[Trigger]
+* [[sink]] link:spark-sql-streaming-Sink.adoc[Streaming sink]
+* [[trigger]] link:spark-sql-streaming-Trigger.adoc[Trigger]
 * [[triggerClock]] `Clock`
 * [[outputMode]] `OutputMode`
 * [[deleteCheckpointOnStop]] Flag where to delete the checkpoint on stop
