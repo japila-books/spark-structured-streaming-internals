@@ -76,6 +76,33 @@ queryName [id = xyz, runId = abc]
 [id = xyz, runId = abc]
 ```
 
+| [[resolvedCheckpointRoot]] `resolvedCheckpointRoot`
+a| Qualified path of checkpoint directory (as defined using <<checkpointRoot, checkpointRoot>>).
+
+[NOTE]
+====
+<<checkpointRoot, checkpointRoot>> is defined using `checkpointLocation` option or link:spark-sql-streaming-properties.adoc#spark-sql-streaming-properties.adoc[spark.sql.streaming.checkpointLocation] property with `queryName` option.
+
+`checkpointLocation` and `queryName` options are passed in when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[creates the streaming query].
+====
+
+Used in <<checkpointFile, checkpointFile>> and when <<runBatches, runBatches>> finishes.
+
+Used in <<logicalPlan, logicalPlan>> (where every link:spark-sql-streaming-streamingrelation.adoc[StreamingRelation] stores its own checkpointing metadata).
+
+[NOTE]
+====
+You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` is <<start, started>>.
+
+```
+INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+```
+====
+
+Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path` for <<checkpointRoot, checkpointRoot>> and makes it qualified.
+
+NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for a Hadoop configuration.
+
 | [[runId]] `runId`
 |
 
@@ -362,7 +389,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 
 * [[sparkSession]] `SparkSession`
 * [[name]] Name
-* [[checkpointRoot]] Checkpoint root
+* [[checkpointRoot]] Path to the checkpoint root directory
 * [[analyzedPlan]] Analyzed logical plan
 * [[sink]] link:spark-sql-streaming-sink.adoc[Streaming sink]
 * [[trigger]] link:spark-sql-streaming-trigger.adoc[Trigger]
@@ -371,3 +398,16 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 * [[deleteCheckpointOnStop]] Flag where to delete the checkpoint on stop
 
 `StreamExecution` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[checkpointFile]] `checkpointFile` Internal Method
+
+[source, scala]
+----
+checkpointFile(name: String): String
+----
+
+`checkpointFile` gives the path of a file with `name` in <<resolvedCheckpointRoot, checkpoint directory>>.
+
+NOTE: `checkpointFile` uses Hadoop's `org.apache.hadoop.fs.Path`.
+
+NOTE: `checkpointFile` is used for <<streamMetadata, streamMetadata>>, <<offsetLog, offsetLog>>, <<batchCommitLog, batchCommitLog>>, and <<lastExecution, lastExecution>> (for <<runBatch, runBatch>>).

@@ -29,7 +29,23 @@ CAUTION: FIXME
 
 === [[createQuery]] `createQuery` Internal Method
 
+[source, scala]
+----
+createQuery(
+  userSpecifiedName: Option[String],
+  userSpecifiedCheckpointLocation: Option[String],
+  df: DataFrame,
+  sink: Sink,
+  outputMode: OutputMode,
+  useTempCheckpointLocation: Boolean,
+  recoverFromCheckpointLocation: Boolean,
+  trigger: Trigger,
+  triggerClock: Clock): StreamingQueryWrapper
+----
+
 CAUTION: FIXME
+
+NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 
 NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a  streaming query>>.
 

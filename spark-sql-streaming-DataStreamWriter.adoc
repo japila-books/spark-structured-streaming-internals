@@ -1,4 +1,4 @@
-== DataStreamWriter
+== [[DataStreamWriter]] DataStreamWriter
 
 `DataStreamWriter` is an interface to describe how the result of executing a streaming query is written to a link:spark-sql-streaming-sink.adoc[streaming sink].
 
