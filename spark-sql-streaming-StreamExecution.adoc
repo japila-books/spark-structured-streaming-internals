@@ -1,13 +1,17 @@
 == [[StreamExecution]] StreamExecution -- Execution Environment for Streaming Query
 
-`StreamExecution` manages execution of a streaming query for a `SQLContext` and a link:spark-sql-streaming-sink.adoc[Sink]. It requires a link:spark-sql-LogicalPlan.adoc[LogicalPlan] to know the `Source` objects from which records are periodically pulled down.
+`StreamExecution` represents the execution environment to execute a streaming query continuously (every <<trigger, trigger>>) and write the result to a <<sink, streaming sink>>.
 
-`StreamExecution` is a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] with additional attributes:
+NOTE: The streaming query is a streaming `Dataset` that is described using <<logicalPlan, analyzed logical plan>>.
 
-* [[checkpointRoot]] `checkpointRoot`
-* link:spark-sql-LogicalPlan.adoc[LogicalPlan]
-* link:spark-sql-streaming-sink.adoc[Sink]
-* `Trigger`
+`StreamExecution` is also a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery].
+
+`StreamExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
+
+.Creating Instance of StreamExecution
+image::images/StreamExecution-creating-instance.png[align="center"]
+
+NOTE: link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter] describes how the result of executing a streaming query is written to a streaming sink.
 
 `StreamExecution` <<start, starts a thread of execution>> that runs a streaming query concurrently (and <<runBatches, polls for new records in the sources to create a batch>>).
 
@@ -351,3 +355,19 @@ NOTE: When started, a streaming query runs in its own execution thread on JVM.
 In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero (which is when `StreamExecution` <<runBatches, starts running batches>> so there is some pause in the main thread's execution to wait till the streaming query execution thread starts).
 
 NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[start a streaming query].
+
+=== [[creating-instance]] Creating StreamExecution Instance
+
+`StreamExecution` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+* [[name]] Name
+* [[checkpointRoot]] Checkpoint root
+* [[analyzedPlan]] Analyzed logical plan
+* [[sink]] link:spark-sql-streaming-sink.adoc[Streaming sink]
+* [[trigger]] link:spark-sql-streaming-trigger.adoc[Trigger]
+* [[triggerClock]] `Clock`
+* [[outputMode]] `OutputMode`
+* [[deleteCheckpointOnStop]] Flag where to delete the checkpoint on stop
+
+`StreamExecution` initializes the <<internal-registries, internal registries and counters>>.

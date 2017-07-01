@@ -31,6 +31,8 @@ CAUTION: FIXME
 
 CAUTION: FIXME
 
+NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a  streaming query>>.
+
 === Initialization
 
 `StreamingQueryManager` manages the following instances:
