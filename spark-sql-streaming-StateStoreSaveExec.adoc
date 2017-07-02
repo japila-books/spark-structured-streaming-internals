@@ -1,0 +1,25 @@
+== [[StateStoreSaveExec]] StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates
+
+`StateStoreSaveExec` is a unary physical operator (aka `UnaryExecNode`) with `StateStoreWriter` and `WatermarkSupport`.
+
+`StateStoreSaveExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` plans a streaming aggregation query (using `AggUtils.planStreamingAggregation`).
+
+[[output]]
+The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
+
+[[outputPartitioning]]
+The output partitioning of `StateStoreSaveExec` is exactly the <<child, child>>'s output partitioning.
+
+=== [[doExecute]] `doExecute` Method
+
+CAUTION: FIXME
+
+=== [[creating-instance]] Creating StateStoreSaveExec Instance
+
+`StateStoreSaveExec` takes the following when created:
+
+* [[keyExpressions]] Expressions for keys
+* [[stateInfo]] Optional `StatefulOperatorStateInfo`
+* [[outputMode]] Optional link:spark-sql-streaming-OutputMode.adoc[output mode]
+* [[eventTimeWatermark]] Optional event time watermark
+* [[child]] Child physical plan (aka `SparkPlan`)
