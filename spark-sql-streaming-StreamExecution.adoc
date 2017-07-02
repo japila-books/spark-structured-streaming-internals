@@ -1,6 +1,6 @@
 == [[StreamExecution]] StreamExecution -- Execution Environment for Streaming Query
 
-`StreamExecution` represents the execution environment to execute a streaming query continuously (every <<trigger, trigger>>) and write the result to a <<sink, streaming sink>>.
+`StreamExecution` represents the execution environment for continuous execution of a streaming query (every <<trigger, trigger>>) and writing the result to a <<sink, streaming sink>>.
 
 NOTE: The streaming query is a streaming `Dataset` that is described using <<logicalPlan, analyzed logical plan>>.
 
@@ -13,12 +13,10 @@ image::images/StreamExecution-creating-instance.png[align="center"]
 
 NOTE: link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter] describes how the result of executing a streaming query is written to a streaming sink.
 
-`StreamExecution` <<start, starts a thread of execution>> that runs a streaming query concurrently (and <<runBatches, polls for new records in the sources to create a batch>>).
+`StreamExecution` <<start, starts a thread of execution>> that runs a streaming query continuously and concurrently (and <<runBatches, polls for new records in the sources to create a batch>>).
 
 .StreamExecution's Starting Streaming Query (on Execution Thread)
 image::images/StreamExecution-start.png[align="center"]
-
-NOTE: The time between batches - 10 milliseconds - is fixed (i.e. not configurable).
 
 `StreamExecution` can be in three states:
 
@@ -32,6 +30,15 @@ NOTE: The time between batches - 10 milliseconds - is fixed (i.e. not configurab
 |===
 | Name
 | Description
+
+| [[currentBatchId]] `currentBatchId`
+a| Current batch number
+
+* `-1` when `StreamExecution` is <<creating-instance, created>>
+
+* `0` when `StreamExecution` <<populateStartOffsets, populateStartOffsets>> (when <<offsetLog, offsetLog>> is empty)
+
+* Incremented when `StreamExecution` <<runBatches, runBatches>>
 
 | [[currentDurationsMs]] `currentDurationsMs`
 |
@@ -61,6 +68,9 @@ $ jstack 13056 \| grep -e "stream execution thread"
 "stream execution thread for kafka-topic1 [id = 609c5ea3-3e0b-4da9-9814-d0ad336dcadd, runId = 0717993d-e3f4-4e4b-81f5-f4c8a67e44b7]" #175 daemon prio=5 os_prio=31 tid=0x00007fe784978000 nid=0xc723 waiting on condition [0x0000000127cf0000]
 ```
 ====
+
+| [[offsetLog]] `offsetLog`
+|
 
 | [[offsetSeqMetadata]] `offsetSeqMetadata`
 |
@@ -147,7 +157,7 @@ constructNextBatch(): Unit
 
 CAUTION: FIXME
 
-NOTE: `constructNextBatch` is used...FIXME
+NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatches>> and <<populateStartOffsets, populateStartOffsets>>.
 
 === [[runBatch]] `runBatch` Internal Method
 
@@ -315,7 +325,14 @@ CAUTION: FIXME
 
 === [[populateStartOffsets]] `populateStartOffsets` Internal Method
 
+[source, scala]
+----
+populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
+----
+
 CAUTION: FIXME
+
+NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, triggerExecutor>> executes a trigger for the first time (when <<currentBatchId, currentBatchId>> is negative).
 
 === [[reportTimeTaken]] `reportTimeTaken` Internal Method
 
@@ -360,6 +377,8 @@ FileSource[hello]
      "
 ```
 
+NOTE: `toDebugString` is used exclusively when `StreamExecution` <<runBatches, runBatches>> (when a streaming query terminated with exception).
+
 === [[start]] Starting Streaming Query (on Execution Thread) -- `start` Method
 
 [source, scala]
@@ -388,13 +407,13 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 `StreamExecution` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[name]] Name
+* [[name]] Query name
 * [[checkpointRoot]] Path to the checkpoint root directory
 * [[analyzedPlan]] Analyzed logical plan
 * [[sink]] link:spark-sql-streaming-Sink.adoc[Streaming sink]
 * [[trigger]] link:spark-sql-streaming-Trigger.adoc[Trigger]
 * [[triggerClock]] `Clock`
-* [[outputMode]] `OutputMode`
+* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
 * [[deleteCheckpointOnStop]] Flag where to delete the checkpoint on stop
 
 `StreamExecution` initializes the <<internal-registries, internal registries and counters>>.

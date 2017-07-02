@@ -1,0 +1,44 @@
+== [[OutputMode]] OutputMode
+
+*Output mode* (`OutputMode`) describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in a streaming Dataset.
+
+[source, scala]
+----
+val inputStream = spark.
+  readStream.
+  format("rate").
+  load
+
+import org.apache.spark.sql.streaming.OutputMode
+import org.apache.spark.sql.streaming.Trigger
+val consoleOutput = inputStream.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  queryName("rate-console").
+  option("checkpointLocation", "checkpoint").
+  outputMode(OutputMode.Update).  // <-- update output mode
+  start
+----
+
+NOTE: The link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[default output mode] is <<Append, Append>> output mode that you can change using link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[DataStreamWriter.outputMode] method.
+
+[[available-output-modes]]
+.Available Output Modes
+[cols="1,2",options="header",width="100%"]
+|===
+| OutputMode
+| Behaviour
+
+| [[Append]] `Append`
+| link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes new rows only
+
+| [[Complete]] `Complete`
+| Write all rows (every time there are updates)
+
+Supported only for streaming queries with aggregations.
+
+| [[Update]] `Update`
+| Write the rows that were updated (every time there are updates). If the query does not contain aggregations, it is equivalent to <<Append, Append>> mode.
+|===

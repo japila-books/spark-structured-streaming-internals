@@ -17,6 +17,6 @@ val out = in.writeStream
   .start()
 ----
 
-`FileStreamSink` supports link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[`Append` output mode] only.
+`FileStreamSink` supports link:spark-sql-streaming-OutputMode.adoc#Append[Append output mode] only.
 
 It uses link:spark-sql-SQLConf.adoc#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)

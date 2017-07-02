@@ -41,5 +41,6 @@
 . link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation]
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 . link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
+. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
