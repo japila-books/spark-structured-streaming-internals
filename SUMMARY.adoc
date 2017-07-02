@@ -44,5 +44,6 @@
 . link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution for Streaming Datasets]
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
+. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]

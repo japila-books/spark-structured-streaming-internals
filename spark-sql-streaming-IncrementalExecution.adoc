@@ -25,7 +25,7 @@ StreamingRelation rate, [timestamp#639, value#640L]
 | [[planner]] `planner`
 a| `SparkPlanner` with extra planning strategies:
 
-* `StatefulAggregationStrategy`
+* link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy]
 * `FlatMapGroupsWithStateStrategy`
 * `StreamingRelationStrategy`
 * `StreamingDeduplicationStrategy`

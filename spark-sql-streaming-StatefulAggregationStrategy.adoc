@@ -1,0 +1,7 @@
+== [[StatefulAggregationStrategy]] StatefulAggregationStrategy
+
+`StatefulAggregationStrategy` is a `Strategy` that <<apply, plans>> `EventTimeWatermark` and `Aggregate` logical operators for streaming Datasets.
+
+=== [[apply]] `apply` Method
+
+CAUTION: FIXME
