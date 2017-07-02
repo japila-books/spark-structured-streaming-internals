@@ -1,0 +1,61 @@
+== [[EventTimeWatermark]] EventTimeWatermark Logical Operator
+
+`EventTimeWatermark` is a logical operator (aka `LogicalPlan`) that is <<creating-instance, created>> as the result of `Dataset.withWatermark` operator.
+
+[source, scala]
+----
+val q = spark.
+  readStream.
+  format("rate").
+  load.
+  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds")
+scala> q.explain(extended = true)
+== Parsed Logical Plan ==
+'EventTimeWatermark 'timestamp, interval 10 seconds
++- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@6f609eb3,rate,List(),None,List(),None,Map(path -> csvs),None), rate, [timestamp#660, value#661L]
+
+== Analyzed Logical Plan ==
+timestamp: timestamp, value: bigint
+EventTimeWatermark timestamp#660: timestamp, interval 10 seconds
++- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@6f609eb3,rate,List(),None,List(),None,Map(path -> csvs),None), rate, [timestamp#660, value#661L]
+
+== Optimized Logical Plan ==
+EventTimeWatermark timestamp#660: timestamp, interval 10 seconds
++- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@6f609eb3,rate,List(),None,List(),None,Map(path -> csvs),None), rate, [timestamp#660, value#661L]
+
+== Physical Plan ==
+EventTimeWatermark timestamp#660: timestamp, interval 10 seconds
++- StreamingRelation rate, [timestamp#660, value#661L]
+----
+
+[[output]]
+`output`...FIXME
+
+[[children]]
+`children`...FIXME
+
+[NOTE]
+====
+`EventTimeWatermark` is removed (by `EliminateEventTimeWatermark`) from a logical plan if <<child, child>> logical plan is not streaming, i.e. when `withWatermark` is used on a batch query.
+
+[source, scala]
+----
+val q = spark.
+  read. // <-- batch query
+  format("text").
+  load("logs").
+  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds")
+scala> println(q.queryExecution.logical.numberedTreeString)
+00 Relation[value#669] text
+----
+====
+
+NOTE: `EventTimeWatermark` is mapped to `EventTimeWatermarkExec` physical operator in `StatefulAggregationStrategy` strategy.
+
+=== [[creating-instance]] Creating EventTimeWatermark Instance
+
+`EventTimeWatermark` takes the following when created:
+
+* [[eventTime]] Event time column
+* [[delay]] Delay `CalendarInterval`
+* [[child]] Child logical plan
