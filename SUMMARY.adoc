@@ -49,7 +49,7 @@
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 . link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation]
 
-=== Execution Planning
+=== Structured Streaming's Planning and Execution
 
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution for Streaming Datasets]
 
@@ -61,3 +61,5 @@
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
 
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
+
+. link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]

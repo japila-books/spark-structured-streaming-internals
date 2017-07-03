@@ -45,7 +45,7 @@ image::images/StreamExecution-start.png[align="center"]
 | Description
 
 | [[availableOffsets]] `availableOffsets`
-| `StreamProgress` with the streaming sources for which there are offsets available (i.e. unprocessed yet).
+| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] with the streaming sources for which there are offsets available (i.e. unprocessed yet).
 
 Used in <<constructNextBatch, constructNextBatch>> (to add the sources with offsets available) and...FIXME
 
