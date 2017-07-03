@@ -57,5 +57,5 @@ trait Source {
 | Used when...
 
 | [[getOffset]] `getOffset`
-| Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[run batches] (using link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructNextBatch])
+| Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[run batches] (while link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructing next batch])
 |===

@@ -1,12 +1,23 @@
-== [[StreamExecution]] StreamExecution -- Execution Environment for Streaming Query
+== [[StreamExecution]] StreamExecution -- Execution Environment for Streaming Datasets
 
-`StreamExecution` represents the execution environment for continuous execution of a streaming query (every <<trigger, trigger>>) and writing the result to a <<sink, streaming sink>>.
+`StreamExecution` represents the execution environment for continuous execution of streaming datasets (i.e. continuous execution of their streaming queries) every <<trigger, trigger>> and writing the result to a <<sink, streaming sink>>.
 
-NOTE: The streaming query is a streaming `Dataset` that is described using <<logicalPlan, analyzed logical plan>>.
-
-`StreamExecution` is also a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery].
+NOTE: The *streaming query* and *streaming Dataset* are synonyms and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> to represent them.
 
 `StreamExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
+
+[source, scala]
+----
+import org.apache.spark.sql.streaming.Trigger
+val query = spark.
+  readStream.
+  format("rate").
+  load.
+  writeStream.
+  format("console").
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  start
+----
 
 .Creating Instance of StreamExecution
 image::images/StreamExecution-creating-instance.png[align="center"]
@@ -24,12 +35,22 @@ image::images/StreamExecution-start.png[align="center"]
 * `ACTIVE` when batches are pulled from the sources.
 * `TERMINATED` when batches were successfully processed or the query stopped.
 
+`StreamExecution` is also a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery].
+
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
 [cols="1,2",options="header",width="100%"]
 |===
 | Name
 | Description
+
+| [[availableOffsets]] `availableOffsets`
+| `StreamProgress` with the streaming sources for which there are offsets available (i.e. unprocessed yet).
+
+Used in <<constructNextBatch, constructNextBatch>> (to add the sources with offsets available) and...FIXME
+
+| [[awaitBatchLock]] `awaitBatchLock`
+| Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
 
 | [[currentBatchId]] `currentBatchId`
 a| Current batch number
@@ -63,11 +84,18 @@ NOTE: `microBatchThread` is Java's https://docs.oracle.com/javase/8/docs/api/jav
 ====
 Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
 
-```
+[options="wrap"]
+----
 $ jstack 13056 \| grep -e "stream execution thread"
 "stream execution thread for kafka-topic1 [id = 609c5ea3-3e0b-4da9-9814-d0ad336dcadd, runId = 0717993d-e3f4-4e4b-81f5-f4c8a67e44b7]" #175 daemon prio=5 os_prio=31 tid=0x00007fe784978000 nid=0xc723 waiting on condition [0x0000000127cf0000]
-```
+----
+
 ====
+
+| [[noNewData]] `noNewData`
+| Flag whether there are any new offsets available for processing or not.
+
+Turned on (i.e. enabled) in <<constructNextBatch, constructNextBatch>> when no new offsets are available.
 
 | [[offsetLog]] `offsetLog`
 |
@@ -132,7 +160,9 @@ a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/
 |
 
 | [[uniqueSources]] `uniqueSources`
-|
+| Collection of unique link:spark-sql-streaming-Source.adoc[streaming sources]
+
+Used in <<constructNextBatch, constructNextBatch>> (to get offsets for every source) and...FIXME
 |===
 
 [TIP]
@@ -148,12 +178,44 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 Refer to link:spark-logging.adoc[Logging].
 ====
 
-=== [[constructNextBatch]] `constructNextBatch` Internal Method
+=== [[constructNextBatch]] Constructing Next Batch -- `constructNextBatch` Internal Method
 
 [source, scala]
 ----
 constructNextBatch(): Unit
 ----
+
+`constructNextBatch` is made up of the two parts for when there is any data to process (and so where the next batch is constructed) and no data is available.
+
+==== Checking Whether New Data Is Available (by Requesting New Offsets from Sources)
+
+`constructNextBatch` firstly checks whether new data is available. It first acquires <<awaitBatchLock, awaitBatchLock>> and gets the offsets for <<uniqueSources, every streaming source used>>.
+
+`constructNextBatch` <<updateStatusMessage, updates status message>> to the following for every source.
+
+```
+Getting offsets from [source]
+```
+
+`constructNextBatch` <<reportTimeTaken, reports the time>> for link:spark-sql-streaming-Source.adoc#getOffset[getting the offset per source].
+
+`constructNextBatch` prints out the following DEBUG message in the logs:
+
+```
+DEBUG StreamExecution: getOffset took [time] ms
+```
+
+`constructNextBatch` adds the sources and their unprocessed offsets to <<availableOffsets, availableOffsets>>.
+
+If there is no <<dataAvailable, data available>> (i.e. no offsets unprocessed in any of the sources), `constructNextBatch` turns <<noNewData, noNewData>> flag on.
+
+In the end (of this block), `constructNextBatch` releases <<awaitBatchLock, awaitBatchLock>>
+
+==== New Data Available
+
+CAUTION: FIXME
+
+==== No New Data Available
 
 CAUTION: FIXME
 

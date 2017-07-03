@@ -8,9 +8,7 @@ val inputStream = spark.
   readStream.
   format("rate").
   load
-
-import org.apache.spark.sql.streaming.OutputMode
-import org.apache.spark.sql.streaming.Trigger
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val consoleOutput = inputStream.
   writeStream.
   format("console").

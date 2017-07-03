@@ -34,7 +34,7 @@
 .. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 . link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
-. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Query]
+. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Datasets]
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]

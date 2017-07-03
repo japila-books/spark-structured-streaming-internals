@@ -7,14 +7,15 @@ CAUTION: FIXME
 [source, scala]
 ----
 import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.{OutputMode, ProcessingTime}
-val out = in.writeStream
-  .format("parquet")
-  .option("path", "parquet-output-dir")
-  .option("checkpointLocation", "checkpoint-dir")
-  .trigger(ProcessingTime(5.seconds))
-  .outputMode(OutputMode.Append)
-  .start()
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val out = in.
+  writeStream.
+  format("parquet").
+  option("path", "parquet-output-dir").
+  option("checkpointLocation", "checkpoint-dir").
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  outputMode(OutputMode.Append).
+  start
 ----
 
 `FileStreamSink` supports link:spark-sql-streaming-OutputMode.adoc#Append[Append output mode] only.
