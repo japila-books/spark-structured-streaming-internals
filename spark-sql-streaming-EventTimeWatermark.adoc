@@ -50,7 +50,7 @@ scala> println(q.queryExecution.logical.numberedTreeString)
 ----
 ====
 
-NOTE: `EventTimeWatermark` is mapped to `EventTimeWatermarkExec` physical operator in `StatefulAggregationStrategy` strategy.
+NOTE: `EventTimeWatermark` is converted (aka planned) to link:link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec] physical operator in link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy.
 
 === [[creating-instance]] Creating EventTimeWatermark Instance
 

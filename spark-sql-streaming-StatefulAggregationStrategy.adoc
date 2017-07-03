@@ -1,7 +1,66 @@
-== [[StatefulAggregationStrategy]] StatefulAggregationStrategy
+== [[StatefulAggregationStrategy]] StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators
 
-`StatefulAggregationStrategy` is a `Strategy` that <<apply, plans>> `EventTimeWatermark` and `Aggregate` logical operators for streaming Datasets.
+`StatefulAggregationStrategy` is an execution planning strategy (aka `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `EventTimeWatermark` and `Aggregate` logical operators for streaming Datasets.
 
-=== [[apply]] `apply` Method
+[[apply]]
+[[selection-requirements]]
+.StatefulAggregationStrategy's Logical to Physical Operator Conversions
+[cols="1,2",options="header",width="100%"]
+|===
+| Logical Operator
+| Physical Operator
+
+| link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark]
+| link:link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
+
+| `Aggregate`
+a|
+
+In the order of preference:
+
+1. `HashAggregateExec`
+1. `ObjectHashAggregateExec`
+1. `SortAggregateExec`
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-SparkStrategy-Aggregation.html[Aggregation Execution Planning Strategy for Aggregate Physical Operators] in *Mastering Apache Spark 2* gitbook.
+|===
+
+[source, scala]
+----
+val counts = spark.
+  readStream.
+  format("rate").
+  load.
+  groupBy(window($"timestamp", "5 seconds") as "group").
+  agg(count("value") as "count").
+  orderBy("group")  // <-- supported only in Complete output mode
+scala> counts.explain
+== Physical Plan ==
+*Sort [group#6 ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(group#6 ASC NULLS FIRST, 200)
+   +- *HashAggregate(keys=[window#13], functions=[count(value#1L)])
+      +- StateStoreSave [window#13], StatefulOperatorStateInfo(<unknown>,736d67c2-6daa-4c4c-9c4b-c12b15af20f4,0,0), Append, 0
+         +- *HashAggregate(keys=[window#13], functions=[merge_count(value#1L)])
+            +- StateStoreRestore [window#13], StatefulOperatorStateInfo(<unknown>,736d67c2-6daa-4c4c-9c4b-c12b15af20f4,0,0)
+               +- *HashAggregate(keys=[window#13], functions=[merge_count(value#1L)])
+                  +- Exchange hashpartitioning(window#13, 200)
+                     +- *HashAggregate(keys=[window#13], functions=[partial_count(value#1L)])
+                        +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#13, value#1L]
+                           +- *Filter isnotnull(timestamp#0)
+                              +- StreamingRelation rate, [timestamp#0, value#1L]
+
+import org.apache.spark.sql.streaming.OutputMode
+import org.apache.spark.sql.streaming.Trigger
+val consoleOutput = counts.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  queryName("counts").
+  outputMode(OutputMode.Complete).
+  start
+----
+
+=== [[planStreamingAggregation]][[AggUtils-planStreamingAggregation]] Selecting Aggregate Physical Operator Given Aggregate Expressions — `AggUtils.planStreamingAggregation` Internal Method
 
 CAUTION: FIXME

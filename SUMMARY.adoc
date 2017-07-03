@@ -20,6 +20,8 @@
 
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter]
 .. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
+.. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
+.. link:spark-sql-streaming-Trigger.adoc[Trigger]
 
 . link:spark-sql-streaming-Sink.adoc[Streaming Sink]
 .. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink]
@@ -36,15 +38,14 @@
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 . link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
-. link:spark-sql-streaming-Trigger.adoc[Trigger]
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Query]
 . link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation]
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 . link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
-. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution for Streaming Datasets]
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
-. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy]
+. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 . link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator]
+. link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
