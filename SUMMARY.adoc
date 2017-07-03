@@ -3,6 +3,9 @@
 . link:book-intro.adoc[Introduction]
 
 . link:spark-structured-streaming.adoc[Spark Structured Streaming -- Streaming Datasets]
+
+=== Using Structured Streaming
+
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader]
 
 . link:spark-sql-streaming-Source.adoc[Streaming Source]
@@ -29,6 +32,14 @@
 .. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
 .. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 .. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
+. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
+. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
+. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Query]
+. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
+
+. link:spark-sql-streaming-properties.adoc[Configuration Properties]
+
+=== Extending Structured Streaming
 
 . link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Source Provider]
 .. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]
@@ -36,16 +47,17 @@
 .. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
 
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
-. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
-. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
-. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Query]
 . link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation]
-. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
-. link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
+
+=== Execution Planning
+
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution for Streaming Datasets]
-. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
-. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
+
 . link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator]
+. link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
+
 . link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator]
 
-. link:spark-sql-streaming-properties.adoc[Configuration Properties]
+. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
+
+. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]

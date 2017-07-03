@@ -28,7 +28,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-
 [source, scala]
 ----
 val counts = spark.
-  readStream.
+  readStream.       // <-- create a streaming Dataset
   format("rate").
   load.
   groupBy(window($"timestamp", "5 seconds") as "group").

@@ -1,1 +1,48 @@
 == [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator
+
+`EventTimeWatermarkExec` is an unary physical operator (aka `UnaryExecNode`) that is <<creating-instance, created>> when link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy plans a `EventTimeWatermark` logical operator for execution.
+
+NOTE: link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is created as the result of `Dataset.withWatermark` operator.
+
+[source, scala]
+----
+val counts = spark.
+  readStream.
+  format("rate").
+  load.
+  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds") // <-- use EventTimeWatermark logical operator
+scala> counts.explain
+== Physical Plan ==
+EventTimeWatermark timestamp#36: timestamp, interval 10 seconds
++- StreamingRelation rate, [timestamp#36, value#37L]
+----
+
+[[internal-registries]]
+.EventTimeWatermarkExec's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[delayMs]] `delayMs`
+| FIXME
+
+Used when...FIXME
+
+| [[eventTimeStats]] `eventTimeStats`
+| <<EventTimeStatsAccum, EventTimeStatsAccum>> to track...FIXME
+|===
+
+=== [[creating-instance]] Creating EventTimeWatermarkExec Instance
+
+`EventTimeWatermarkExec` takes the following when created:
+
+* [[eventTime]] Name of the event time column
+* [[delay]] Delay `CalendarInterval`
+* [[child]] Child physical plan
+
+`EventTimeWatermarkExec` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[EventTimeStatsAccum]] EventTimeStatsAccum Accumulator
+
+`EventTimeStatsAccum`...FIXME
