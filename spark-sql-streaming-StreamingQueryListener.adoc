@@ -1,0 +1,75 @@
+== [[StreamingQueryListener]] StreamingQueryListener
+
+`StreamingQueryListener` is the <<contract, interface>> for notifications about lifecycle events of streaming query.
+
+[[contract]]
+[source, scala]
+----
+package org.apache.spark.sql.streaming
+
+abstract class StreamingQueryListener {
+  def onQueryStarted(event: QueryStartedEvent): Unit
+  def onQueryProgress(event: QueryProgressEvent): Unit
+  def onQueryTerminated(event: QueryTerminatedEvent): Unit
+}
+----
+
+You can register a `StreamingQueryListener` using link:spark-sql-streaming-StreamingQueryManager.adoc#addListener[StreamingQueryManager.addListener] method.
+
+[source, scala]
+----
+val queryListener: StreamingQueryListener = ...
+spark.streams.addListener(queryListener)
+----
+
+You can remove a `StreamingQueryListener` using link:spark-sql-streaming-StreamingQueryManager.adoc#removeListener[StreamingQueryManager.removeListener] method.
+
+[source, scala]
+----
+val queryListener: StreamingQueryListener = ...
+spark.streams.removeListener(queryListener)
+----
+
+=== [[onQueryStarted]] `onQueryStarted` Callback
+
+[source, scala]
+----
+onQueryStarted(event: QueryStartedEvent): Unit
+----
+
+`onQueryStarted` handles link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvents].
+
+.StreamingQueryListener Notified about Query's Start (onQueryStarted)
+image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
+
+NOTE: Used internally to unblock the link:spark-sql-streaming-StreamExecution.adoc#start[starting thread] (of `StreamExecution`).
+
+NOTE: `onQueryStarted` is triggered right after `StreamExecution` has started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches].
+
+=== [[onQueryProgress]] `onQueryProgress` Callback
+
+[source, scala]
+----
+onQueryProgress(event: QueryProgressEvent): Unit
+----
+
+`onQueryProgress` handles link:spark-sql-streaming-QueryProgressEvent.adoc[QueryProgressEvents].
+
+.StreamingQueryListener Notified about Query's Progress (onQueryProgress)
+image::images/StreamingQueryListener-onQueryProgress.png[align="center"]
+
+NOTE: `onQueryProgress` is triggered when `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[updates query progress] (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] and a trigger has finished).
+
+=== [[onQueryTerminated]] `onQueryTerminated` Callback
+
+[source, scala]
+----
+onQueryTerminated(event: QueryTerminatedEvent): Unit
+----
+
+`onQueryTerminated` handles link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvents].
+
+.StreamingQueryListener Notified about Query's Termination (onQueryTerminated)
+image::images/StreamingQueryListener-onQueryTerminated.png[align="center"]
+
+NOTE: `onQueryTerminated` is triggered right before `StreamExecution` finishes link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches] (regardless of whether an exception was reported or not).

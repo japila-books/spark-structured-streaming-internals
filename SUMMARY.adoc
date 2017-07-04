@@ -32,9 +32,14 @@
 .. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
 .. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 .. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
+
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 . link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
-. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
+
+. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener]
+.. link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent]
+.. link:spark-sql-streaming-QueryProgressEvent.adoc[QueryProgressEvent]
+.. link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvent]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
@@ -63,6 +68,8 @@
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
 
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
+
+. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
 === Varia
 

@@ -147,7 +147,7 @@ NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for 
 | [[startLatch]] `startLatch`
 | Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
 
-Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` <<runBatches, has posted a QueryStartedEvent>>.
+Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` has started <<runBatches, running batches>>.
 
 | [[state]] `state`
 a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the three different states a streaming query execution can be:
@@ -460,7 +460,7 @@ NOTE: `start` uses Java's link:++https://docs.oracle.com/javase/8/docs/api/java/
 
 NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
-In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero (which is when `StreamExecution` <<runBatches, starts running batches>> so there is some pause in the main thread's execution to wait till the streaming query execution thread starts).
+In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero (which is right after `StreamExecution` has started <<runBatches, running batches>> so there is some pause in the main thread's execution to wait till the streaming query execution thread starts).
 
 NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[start a streaming query].
 
