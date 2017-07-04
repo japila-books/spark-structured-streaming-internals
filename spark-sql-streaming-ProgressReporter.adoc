@@ -98,13 +98,12 @@ Internally, `finishTrigger` sets <<currentTriggerEndTimestamp, currentTriggerEnd
 
 `finishTrigger` <<extractExecutionStats, extractExecutionStats>>.
 
-`finishTrigger` calculates the *processing time* (in seconds) as the difference between the <<currentTriggerEndTimestamp, end>> and <<currentTriggerStartTimestamp, start timestamps>>.
+`finishTrigger` calculates the *processing time* (in seconds) as the difference between the <<currentTriggerEndTimestamp, end>> and <<currentTriggerStartTimestamp, start>> timestamps.
 
-CAUTION: FIXME Picture me
+`finishTrigger` calculates the *input time* (in seconds) as the difference between the start time of the <<currentTriggerStartTimestamp, current>> and <<lastTriggerStartTimestamp, last>> triggers.
 
-`finishTrigger` calculates the *input time* (in seconds) as the difference between the start time of the <<currentTriggerStartTimestamp, current>> and <<lastTriggerStartTimestamp, last triggers>>.
-
-CAUTION: FIXME Picture me
+.ProgressReporter's finishTrigger and Timestamps
+image::images/ProgressReporter-finishTrigger-timestamps.png[align="center"]
 
 `finishTrigger` prints out the following DEBUG message to the logs:
 
@@ -233,3 +232,26 @@ INFO StreamExecution: Streaming query made progress: [newProgress]
 NOTE: `updateProgress` synchronizes concurrent access to <<progressBuffer, progressBuffer>>.
 
 NOTE: `updateProgress` is used exclusively when `ProgressReporter` <<finishTrigger, finishes a trigger>>.
+
+=== [[startTrigger]] Setting State For New Trigger -- `startTrigger` Method
+
+[source, scala]
+----
+startTrigger(): Unit
+----
+
+When called, `startTrigger` prints out the following DEBUG message to the logs:
+
+```
+DEBUG StreamExecution: Starting Trigger Calculation
+```
+
+`startTrigger` sets <<lastTriggerStartTimestamp, lastTriggerStartTimestamp>> as <<currentTriggerStartTimestamp, currentTriggerStartTimestamp>>.
+
+`startTrigger` sets <<currentTriggerStartTimestamp, currentTriggerStartTimestamp>> using <<triggerClock, triggerClock>>.
+
+`startTrigger` enables `isTriggerActive` flag of <<currentStatus, currentStatus>>.
+
+`startTrigger` clears <<currentDurationsMs, currentDurationsMs>>.
+
+NOTE: `startTrigger` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner (as part of `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches]).
