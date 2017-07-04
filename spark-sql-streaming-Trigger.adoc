@@ -1,23 +1,102 @@
-== Trigger
+== [[Trigger]] Trigger
 
-`Trigger` is used to define how often a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] should be executed to produce results.
+`Trigger` defines how often a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] should be executed and therefore produce results.
 
-NOTE: `Trigger` is a `sealed trait` so all available implementations are in the same file https://github.com/apache/spark/blob/master/sql/core/src/main/scala/org/apache/spark/sql/Trigger.scala[Trigger.scala].
+NOTE: A trigger is also called a *batch* (as in the older Spark Streaming).
 
-NOTE: A trigger can also be considered a batch (as in Spark Streaming).
+[[available-triggers]]
+.Available Triggers (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Trigger
+| Constructor
 
-Import `org.apache.spark.sql` to work with `Trigger` and the only implementation <<ProcessingTime, ProcessingTime>>.
+.3+.^| <<ProcessingTime, ProcessingTime>>
+| `ProcessingTime(long intervalMs)`
+| `ProcessingTime(Duration interval)`
+| `ProcessingTime(String interval)`
+
+| `Once`
+| `OneTimeTrigger`
+|===
+
+NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#trigger[trigger]
 
 [source, scala]
 ----
-import org.apache.spark.sql._
+import org.apache.spark.sql.streaming.Trigger
+val query = spark.
+  readStream.
+  format("rate").
+  load.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.Once). // <-- execute once and stop
+  queryName("rate-once").
+  start
+
+scala> query.isActive
+res0: Boolean = false
+
+scala> println(query.lastProgress)
+{
+  "id" : "2ae4b0a4-434f-4ca7-a523-4e859c07175b",
+  "runId" : "24039ce5-906c-4f90-b6e7-bbb3ec38a1f5",
+  "name" : "rate-once",
+  "timestamp" : "2017-07-04T18:39:35.998Z",
+  "numInputRows" : 0,
+  "processedRowsPerSecond" : 0.0,
+  "durationMs" : {
+    "addBatch" : 1365,
+    "getBatch" : 29,
+    "getOffset" : 0,
+    "queryPlanning" : 285,
+    "triggerExecution" : 1742,
+    "walCommit" : 40
+  },
+  "stateOperators" : [ ],
+  "sources" : [ {
+    "description" : "RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8]",
+    "startOffset" : null,
+    "endOffset" : 0,
+    "numInputRows" : 0,
+    "processedRowsPerSecond" : 0.0
+  } ],
+  "sink" : {
+    "description" : "org.apache.spark.sql.execution.streaming.ConsoleSink@7dbf277"
+  }
+}
 ----
 
-NOTE: It was introduced in https://github.com/apache/spark/commit/855ed44ed31210d2001d7ce67c8fa99f8416edd3[the commit for [SPARK-14176\][SQL\] Add DataFrameWriter.trigger to set the stream batch period].
+NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` will refuse them and report an `IllegalStateException`.
+
+[source, scala]
+----
+case object MyTrigger extends Trigger
+scala> val query = spark.
+  readStream.
+  format("rate").
+  load.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(MyTrigger). // <-- use custom trigger
+  queryName("rate-once").
+  start
+java.lang.IllegalStateException: Unknown type of trigger: MyTrigger
+  at org.apache.spark.sql.execution.streaming.StreamExecution.<init>(StreamExecution.scala:178)
+  at org.apache.spark.sql.streaming.StreamingQueryManager.createQuery(StreamingQueryManager.scala:240)
+  at org.apache.spark.sql.streaming.StreamingQueryManager.startQuery(StreamingQueryManager.scala:278)
+  at org.apache.spark.sql.streaming.DataStreamWriter.start(DataStreamWriter.scala:284)
+  ... 57 elided
+----
+
+NOTE: `Trigger` was introduced in https://github.com/apache/spark/commit/855ed44ed31210d2001d7ce67c8fa99f8416edd3[the commit for [SPARK-14176\][SQL\] Add DataFrameWriter.trigger to set the stream batch period].
 
 === [[ProcessingTime]] ProcessingTime
 
-`ProcessingTime` is the only available implementation of `Trigger` sealed trait. It assumes that milliseconds is the minimum time unit.
+`ProcessingTime` is a `Trigger` that assumes that milliseconds is the minimum time unit.
 
 You can create an instance of `ProcessingTime` using the following constructors:
 
