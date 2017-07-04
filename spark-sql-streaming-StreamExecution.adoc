@@ -45,9 +45,9 @@ image::images/StreamExecution-start.png[align="center"]
 | Description
 
 | [[availableOffsets]] `availableOffsets`
-| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] with the streaming sources for which there are offsets available (i.e. unprocessed yet).
+a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] with the streaming sources for which there are offsets available (i.e. unprocessed yet).
 
-Used in <<constructNextBatch, constructNextBatch>> (to add the sources with offsets available) and...FIXME
+NOTE: `availableOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#availableOffsets[ProgressReporter Contract].
 
 | [[awaitBatchLock]] `awaitBatchLock`
 | Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
@@ -205,7 +205,7 @@ Getting offsets from [source]
 DEBUG StreamExecution: getOffset took [time] ms
 ```
 
-`constructNextBatch` adds the sources and their unprocessed offsets to <<availableOffsets, availableOffsets>>.
+`constructNextBatch` adds the sources and the available offsets to <<availableOffsets, availableOffsets>>.
 
 If there is no <<dataAvailable, data available>> (i.e. no offsets unprocessed in any of the sources), `constructNextBatch` turns <<noNewData, noNewData>> flag on.
 
@@ -232,7 +232,7 @@ CAUTION: FIXME
 
 NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs batches>>.
 
-=== [[runBatches]] `runBatches` Internal Method
+=== [[runBatches]] Running Batches -- `runBatches` Internal Method
 
 [source, scala]
 ----

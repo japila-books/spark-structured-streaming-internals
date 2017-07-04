@@ -1,0 +1,193 @@
+== [[ProgressReporter]] ProgressReporter
+
+`ProgressReporter` is a <<contract, contract>> for...FIXME
+
+[source, scala]
+----
+import org.apache.spark.sql.streaming.Trigger
+val sampleQuery = spark.
+  readStream.
+  format("rate").
+  load.
+  writeStream.
+  format("console").
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  start
+
+// Using public API
+import org.apache.spark.sql.streaming.SourceProgress
+scala> sampleQuery.
+     |   lastProgress.
+     |   sources.
+     |   map { case sp: SourceProgress =>
+     |     s"source = ${sp.description} => endOffset = ${sp.endOffset}" }.
+     |   foreach(println)
+source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => endOffset = 663
+
+scala> println(sampleQuery.lastProgress.sources(0))
+res40: org.apache.spark.sql.streaming.SourceProgress =
+{
+  "description" : "RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8]",
+  "startOffset" : 333,
+  "endOffset" : 343,
+  "numInputRows" : 10,
+  "inputRowsPerSecond" : 0.9998000399920015,
+  "processedRowsPerSecond" : 200.0
+}
+
+
+// With a hack
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val offsets = sampleQuery.asInstanceOf[StreamingQueryWrapper].streamingQuery.availableOffsets
+scala> offsets.map { case (source, offset) => s"source = $source => offset = $offset" }.foreach(println)
+source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => offset = 293
+----
+
+[[internal-registries]]
+.ProgressReporter's Internal Registries and Counters (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[currentDurationsMs]] `currentDurationsMs`
+| Durations of...FIXME
+
+| [[currentStatus]] `currentStatus`
+| `StreamingQueryStatus`
+
+| [[currentTriggerEndTimestamp]] `currentTriggerEndTimestamp`
+| Timestamp of when the current batch/trigger has ended
+
+| [[currentTriggerStartTimestamp]] `currentTriggerStartTimestamp`
+| Timestamp of when the current batch/trigger has started
+
+| [[noDataProgressEventInterval]] `noDataProgressEventInterval`
+| FIXME
+
+| [[lastNoDataProgressEventTime]] `lastNoDataProgressEventTime`
+| FIXME
+
+| [[lastTriggerStartTimestamp]] `lastTriggerStartTimestamp`
+| Timestamp of when the last batch/trigger started
+|===
+
+=== [[contract]] ProgressReporter Contract
+
+[source, scala]
+----
+package org.apache.spark.sql.execution.streaming
+
+trait ProgressReporter {
+  // only required methods that have no implementation
+  def availableOffsets: StreamProgress
+}
+----
+
+.(Subset of) ProgressReporter Contract (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| [[availableOffsets]] `availableOffsets`
+a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
+
+Used when:
+
+* `ProgressReporter` is requested to <<finishTrigger, finishTrigger>> (for the JSON-ified offsets of every streaming source when reporting progress)
+
+* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches], link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch], link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructs the next batch], etc.
+
+| [[committedOffsets]] `committedOffsets`
+a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
+
+Used when:
+
+* FIXME
+
+| [[currentBatchId]] `currentBatchId`
+| Id of the current batch
+
+| [[id]] `id`
+| UUID of...FIXME
+
+| [[name]] `name`
+| Name of...FIXME
+
+| [[runId]] `runId`
+| UUID of...FIXME
+
+| [[sink]] `sink`
+| link:spark-sql-streaming-Sink.adoc[Streaming sink]
+
+| [[sources]] `sources`
+| link:spark-sql-streaming-Source.adoc[Streaming sources]
+
+| [[triggerClock]] `triggerClock`
+| `Clock` to track the time
+|===
+
+=== [[updateProgress]] `updateProgress` Internal Method
+
+CAUTION: FIXME
+
+=== [[extractExecutionStats]] `extractExecutionStats` Internal Method
+
+[source, scala]
+----
+extractExecutionStats(hasNewData: Boolean): ExecutionStats
+----
+
+CAUTION: FIXME
+
+=== [[finishTrigger]] `finishTrigger` Method
+
+[source, scala]
+----
+finishTrigger(hasNewData: Boolean): Unit
+----
+
+Internally, `finishTrigger` sets <<currentTriggerEndTimestamp, currentTriggerEndTimestamp>> (using <<triggerClock, triggerClock>>).
+
+`finishTrigger` <<extractExecutionStats, extractExecutionStats>>.
+
+`finishTrigger` calculates the *processing time* (in seconds) as the difference between the <<currentTriggerEndTimestamp, end>> and <<currentTriggerStartTimestamp, start timestamps>>.
+
+CAUTION: FIXME Picture me
+
+`finishTrigger` calculates the *input time* (in seconds) as the difference between the start time of the <<currentTriggerStartTimestamp, current>> and <<lastTriggerStartTimestamp, last triggers>>.
+
+CAUTION: FIXME Picture me
+
+`finishTrigger` prints out the following DEBUG message to the logs:
+
+```
+DEBUG Execution stats: [executionStats]
+```
+
+`finishTrigger` creates a <<SourceProgress, SourceProgress>> (aka source statistics) for <<sources, every source used>>.
+
+`finishTrigger` creates a <<SinkProgress, SinkProgress>> (aka sink statistics) for the <<sink, sink>>.
+
+`finishTrigger` creates <<StreamingQueryProgress, StreamingQueryProgress>>.
+
+If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updateProgress>>.
+
+Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updateProgress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
+
+In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, currentStatus>>.
+
+NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches].
+
+=== [[SourceProgress]] SourceProgress
+
+CAUTION: FIXME
+
+=== [[SinkProgress]] SinkProgress
+
+CAUTION: FIXME
+
+=== [[StreamingQueryProgress]] StreamingQueryProgress
+
+CAUTION: FIXME
