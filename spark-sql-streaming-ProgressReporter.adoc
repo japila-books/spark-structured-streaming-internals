@@ -72,6 +72,10 @@ source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => of
 
 | [[progressBuffer]] `progressBuffer`
 | Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.Queue[scala.collection.mutable.Queue] of <<StreamingQueryProgress, StreamingQueryProgress>>
+
+Elements are added and removed when `ProgressReporter` <<updateProgress, updates progress>>.
+
+Used when `ProgressReporter` does `lastProgress` or `recentProgress`.
 |===
 
 === [[extractExecutionStats]] `extractExecutionStats` Internal Method
