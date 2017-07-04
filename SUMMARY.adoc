@@ -64,4 +64,7 @@
 
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 
+=== Varia
+
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
+. link:spark-sql-streaming-logging.adoc[Logging]

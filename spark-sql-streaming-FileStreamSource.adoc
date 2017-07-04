@@ -60,7 +60,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSource=TRACE
 ```
 
-Refer to link:spark-logging.adoc[Logging].
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
 === [[options]] Options

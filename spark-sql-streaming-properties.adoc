@@ -23,9 +23,13 @@ val spark: SparkSession = SparkSession.builder
 
 | [[spark.sql.streaming.checkpointLocation]] `spark.sql.streaming.checkpointLocation`
 | (empty)
-| The default checkpoint directory for storing checkpoint data for streaming queries.
+| Default checkpoint directory for storing checkpoint data for streaming queries.
 
 | [[spark.sql.streaming.metricsEnabled]] `spark.sql.streaming.metricsEnabled`
 | `false`
 | Flag whether Dropwizard CodaHale metrics will be reported for active streaming queries
+
+| [[spark.sql.streaming.numRecentProgressUpdates]] `spark.sql.streaming.numRecentProgressUpdates`
+| `100`
+| Number of link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[progress updates to retain] for a streaming query
 |===

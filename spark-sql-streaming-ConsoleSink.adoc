@@ -23,20 +23,18 @@
 ----
 import org.apache.spark.sql.SparkSession
 val spark: SparkSession = ...
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 spark.
   readStream.
-  format("text").
-  load("server-logs/*.out").
-  as[String].
+  format("rate").
+  load.
   writeStream.
-  queryName("server-logs processor").
   format("console").  // <-- uses ConsoleSink
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  queryName("rate-console").
   start
 
-// in another terminal
-$ echo hello > server-logs/hello.out
-
-// in the terminal with Spark
 -------------------------------------------
 Batch: 0
 -------------------------------------------

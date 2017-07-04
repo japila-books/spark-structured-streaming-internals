@@ -35,7 +35,6 @@ res40: org.apache.spark.sql.streaming.SourceProgress =
   "processedRowsPerSecond" : 200.0
 }
 
-
 // With a hack
 import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
 val offsets = sampleQuery.asInstanceOf[StreamingQueryWrapper].streamingQuery.availableOffsets
@@ -70,67 +69,10 @@ source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => of
 
 | [[lastTriggerStartTimestamp]] `lastTriggerStartTimestamp`
 | Timestamp of when the last batch/trigger started
+
+| [[progressBuffer]] `progressBuffer`
+| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.Queue[scala.collection.mutable.Queue] of <<StreamingQueryProgress, StreamingQueryProgress>>
 |===
-
-=== [[contract]] ProgressReporter Contract
-
-[source, scala]
-----
-package org.apache.spark.sql.execution.streaming
-
-trait ProgressReporter {
-  // only required methods that have no implementation
-  def availableOffsets: StreamProgress
-}
-----
-
-.(Subset of) ProgressReporter Contract (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
-|===
-| Method
-| Description
-
-| [[availableOffsets]] `availableOffsets`
-a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
-
-Used when:
-
-* `ProgressReporter` is requested to <<finishTrigger, finishTrigger>> (for the JSON-ified offsets of every streaming source when reporting progress)
-
-* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches], link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch], link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructs the next batch], etc.
-
-| [[committedOffsets]] `committedOffsets`
-a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
-
-Used when:
-
-* FIXME
-
-| [[currentBatchId]] `currentBatchId`
-| Id of the current batch
-
-| [[id]] `id`
-| UUID of...FIXME
-
-| [[name]] `name`
-| Name of...FIXME
-
-| [[runId]] `runId`
-| UUID of...FIXME
-
-| [[sink]] `sink`
-| link:spark-sql-streaming-Sink.adoc[Streaming sink]
-
-| [[sources]] `sources`
-| link:spark-sql-streaming-Source.adoc[Streaming sources]
-
-| [[triggerClock]] `triggerClock`
-| `Clock` to track the time
-|===
-
-=== [[updateProgress]] `updateProgress` Internal Method
-
-CAUTION: FIXME
 
 === [[extractExecutionStats]] `extractExecutionStats` Internal Method
 
@@ -191,3 +133,99 @@ CAUTION: FIXME
 === [[StreamingQueryProgress]] StreamingQueryProgress
 
 CAUTION: FIXME
+
+=== [[contract]] ProgressReporter Contract
+
+[source, scala]
+----
+package org.apache.spark.sql.execution.streaming
+
+trait ProgressReporter {
+  // only required methods that have no implementation
+  def availableOffsets: StreamProgress
+  def committedOffsets: StreamProgress
+  def currentBatchId: Long
+  def id: UUID
+  def name: String
+  def postEvent(event: StreamingQueryListener.Event): Unit
+  def runId: UUID
+  def sink: Sink
+  def sources: Seq[Source]
+  def triggerClock: Clock
+}
+----
+
+.(Subset of) ProgressReporter Contract (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| [[availableOffsets]] `availableOffsets`
+a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
+
+Used when:
+
+* `ProgressReporter` is requested to <<finishTrigger, finishTrigger>> (for the JSON-ified offsets of every streaming source when reporting progress)
+
+* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches], link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch], link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructs the next batch], etc.
+
+| [[committedOffsets]] `committedOffsets`
+a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
+
+Used when:
+
+* FIXME
+
+| [[currentBatchId]] `currentBatchId`
+| Id of the current batch
+
+| [[id]] `id`
+| UUID of...FIXME
+
+| [[name]] `name`
+| Name of...FIXME
+
+| [[postEvent]] `postEvent`
+| FIXME
+
+| [[runId]] `runId`
+| UUID of...FIXME
+
+| [[sink]] `sink`
+| link:spark-sql-streaming-Sink.adoc[Streaming sink]
+
+| [[sources]] `sources`
+| link:spark-sql-streaming-Source.adoc[Streaming sources]
+
+| [[triggerClock]] `triggerClock`
+| `Clock` to track the time
+|===
+
+=== [[updateProgress]] Updating Progress -- `updateProgress` Internal Method
+
+[source, scala]
+----
+updateProgress(newProgress: StreamingQueryProgress): Unit
+----
+
+`updateProgress` records `StreamingQueryProgress` and posts `QueryProgressEvent`.
+
+.ProgressReporter's Updating Progress
+image::images/ProgressReporter-updateProgress.png[align="center"]
+
+`updateProgress` adds the input `newProgress` to <<progressBuffer, progressBuffer>>.
+
+`updateProgress` removes elements from <<progressBuffer, progressBuffer>> if their number is or exceeds the value of link:spark-sql-streaming-properties.adoc#spark.sql.streaming.numRecentProgressUpdates[spark.sql.streaming.numRecentProgressUpdates] property.
+
+`updateProgress` <<postEvent, posts>> `QueryProgressEvent` (with the input `newProgress`).
+
+`updateProgress` prints out the following INFO message to the logs:
+
+```
+INFO StreamExecution: Streaming query made progress: [newProgress]
+```
+
+NOTE: `updateProgress` synchronizes concurrent access to <<progressBuffer, progressBuffer>>.
+
+NOTE: `updateProgress` is used exclusively when `ProgressReporter` <<finishTrigger, finishes a trigger>>.

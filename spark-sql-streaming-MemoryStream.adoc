@@ -98,7 +98,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.MemoryStream=DEBUG
 ```
 
-Refer to link:spark-logging.adoc[Logging].
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
 === [[creating-instance]] Creating MemoryStream Instance
