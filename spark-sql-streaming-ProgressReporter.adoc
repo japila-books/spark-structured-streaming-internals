@@ -94,7 +94,7 @@ CAUTION: FIXME
 finishTrigger(hasNewData: Boolean): Unit
 ----
 
-Internally, `finishTrigger` sets <<currentTriggerEndTimestamp, currentTriggerEndTimestamp>> (using <<triggerClock, triggerClock>>).
+Internally, `finishTrigger` sets <<currentTriggerEndTimestamp, currentTriggerEndTimestamp>> to the current time (using <<triggerClock, triggerClock>>).
 
 `finishTrigger` <<extractExecutionStats, extractExecutionStats>>.
 
@@ -117,9 +117,9 @@ DEBUG Execution stats: [executionStats]
 
 `finishTrigger` creates <<StreamingQueryProgress, StreamingQueryProgress>>.
 
-If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updateProgress>>.
+If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updates query progress>>.
 
-Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updateProgress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
+Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updates query progress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
 
 In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, currentStatus>>.
 
@@ -205,7 +205,7 @@ Used when:
 | `Clock` to track the time
 |===
 
-=== [[updateProgress]] Updating Progress -- `updateProgress` Internal Method
+=== [[updateProgress]] Updating Query Progress -- `updateProgress` Internal Method
 
 [source, scala]
 ----
@@ -254,4 +254,4 @@ DEBUG StreamExecution: Starting Trigger Calculation
 
 `startTrigger` clears <<currentDurationsMs, currentDurationsMs>>.
 
-NOTE: `startTrigger` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner (as part of `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches]).
+NOTE: `startTrigger` is used exclusively when `StreamExecution` starts link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches] (as part of link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] executing a batch runner).

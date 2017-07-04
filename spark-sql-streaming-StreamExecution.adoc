@@ -159,6 +159,17 @@ a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/
 | [[streamMetadata]] `streamMetadata`
 |
 
+| [[triggerExecutor]] `triggerExecutor`
+a| link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor] per <<trigger, Trigger>>:
+
+* `ProcessingTimeExecutor` for `ProcessingTime`
+* `OneTimeExecutor` for `OneTimeTrigger`
+
+Used when `StreamExecution` starts <<runBatches, running batches>>.
+
+NOTE: `StreamExecution` reports a `IllegalStateException` when `TriggerExecutor` is different from the link:spark-sql-streaming-TriggerExecutor.adoc#available-implementations[two built-in implementations]: `OneTimeExecutor`
+or `ProcessingTimeExecutor`.
+
 | [[uniqueSources]] `uniqueSources`
 | Collection of unique link:spark-sql-streaming-Source.adoc[streaming sources]
 
@@ -324,13 +335,13 @@ NOTE: `runBatches` does the work only when first started (i.e. when <<state, sta
 
 CAUTION: FIXME `initializationLatch` so what?
 
-`runBatches` requests <<triggerExecutor, TriggerExecutor>> to execute a so-called <<batch-runner, batch runner>>.
+`runBatches` requests <<triggerExecutor, TriggerExecutor>> to execute a <<batch-runner, batch runner>>.
 
 NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<microBatchThread, execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
 
 ==== [[batch-runner]] Batch Runner
 
-*Batch Runner* (aka `batchRunner`) is an executable block executed by <<triggerExecutor, triggerExecutor>>.
+*Batch Runner* (aka `batchRunner`) is an executable block executed by <<triggerExecutor, TriggerExecutor>>.
 
 `batchRunner` <<startTrigger, starts trigger calculation>>.
 
@@ -394,7 +405,7 @@ populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
 
 CAUTION: FIXME
 
-NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, triggerExecutor>> executes a trigger for the first time (when <<currentBatchId, currentBatchId>> is negative).
+NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (when <<currentBatchId, currentBatchId>> is negative).
 
 === [[reportTimeTaken]] `reportTimeTaken` Internal Method
 

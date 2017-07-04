@@ -58,6 +58,8 @@
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Datasets]
 .. link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter]
 
+. link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor]
+
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution for Streaming Datasets]
 
 . link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator]

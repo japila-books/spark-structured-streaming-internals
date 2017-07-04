@@ -1,6 +1,6 @@
 == [[DataStreamWriter]] DataStreamWriter
 
-`DataStreamWriter` is an interface to describe how the result of executing a streaming query is written to a link:spark-sql-streaming-Sink.adoc[streaming sink].
+`DataStreamWriter` is the interface to describe how the result of executing a streaming query is written to a link:spark-sql-streaming-Sink.adoc[streaming sink].
 
 NOTE: A streaming query is a link:spark-sql-Dataset.adoc[Dataset] with a link:spark-sql-LogicalPlan.adoc#isStreaming[streaming logical plan].
 
@@ -112,7 +112,7 @@ Internally, it is just an additional <<option, option>> with the key `queryName`
 trigger(trigger: Trigger): DataStreamWriter[T]
 ----
 
-`trigger` method sets the time interval of the *trigger* (batch) for a streaming query.
+`trigger` method sets the time interval of the *trigger* (that executes a batch runner) for a streaming query.
 
 NOTE: `Trigger` specifies how often results should be produced by a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]. See link:spark-sql-streaming-Trigger.adoc[Trigger].
 
