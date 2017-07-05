@@ -163,7 +163,7 @@ a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/
 a| link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor] per <<trigger, Trigger>>:
 
 * `ProcessingTimeExecutor` for `ProcessingTime`
-* `OneTimeExecutor` for `OneTimeTrigger`
+* `OneTimeExecutor` for `OneTimeTrigger` (aka link:spark-sql-streaming-Trigger.adoc#Once[Once] trigger)
 
 Used when `StreamExecution` starts <<runBatches, running batches>>.
 

@@ -1,6 +1,6 @@
 == [[Trigger]] Trigger
 
-`Trigger` defines how often a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] should be executed and therefore produce results.
+`Trigger` defines how often a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] should be executed and therefore produce results (which `StreamExecution` uses to link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[resolve a TriggerExecutor]).
 
 NOTE: A trigger is also called a *batch* (as in the older Spark Streaming).
 
@@ -9,15 +9,15 @@ NOTE: A trigger is also called a *batch* (as in the older Spark Streaming).
 [cols="1,2",options="header",width="100%"]
 |===
 | Trigger
-| Constructor
+| Creating Instance
 
 .3+.^| <<ProcessingTime, ProcessingTime>>
-| `ProcessingTime(long intervalMs)`
-| `ProcessingTime(Duration interval)`
-| `ProcessingTime(String interval)`
+| `Trigger.ProcessingTime(long intervalMs)`
+| `Trigger.ProcessingTime(Duration interval)`
+| `Trigger.ProcessingTime(String interval)`
 
-| `Once`
-| `OneTimeTrigger`
+| [[Once]] `Once`
+| `Trigger.Once`
 |===
 
 NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#trigger[trigger]
@@ -69,7 +69,7 @@ scala> println(query.lastProgress)
 }
 ----
 
-NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` will refuse them and report an `IllegalStateException`.
+NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[will refuse them] and report an `IllegalStateException`.
 
 [source, scala]
 ----
