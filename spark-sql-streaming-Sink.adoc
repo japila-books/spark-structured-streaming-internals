@@ -2,12 +2,12 @@
 
 `Sink` <<contract, adds batches>> (of records) to a storage (while writing streaming datasets).
 
-[[sinks]]
-.Sinks (in alphabetical order)
+[[available-implementations]]
+.Sinks
 [width="100%",cols="1,2",options="header"]
 |===
 | Format / Operator
-| Name
+| Sink
 
 | `console`
 | link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink]

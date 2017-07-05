@@ -12,26 +12,34 @@ import org.apache.spark.sql.execution.streaming.Source
 ----
 
 [[available-implementations]]
-.Source's Available Implementations
+.Sources
 [cols="1,2",options="header",width="100%"]
 |===
+| Format
 | Source
-| Description
 
+a| Any `FileFormat`
+
+* `csv`
+* `hive`
+* `json`
+* `libsvm`
+* `orc`
+* `parquet`
+* `text`
 | link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
-|
 
+| `kafka`
 | link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
-|
 
+| `memory`
 | link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
-|
 
+| `rate`
 | link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
-|
 
+| `socket`
 | link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
-|
 |===
 
 === [[contract]] Source Contract
