@@ -1,0 +1,5 @@
+== [[ConsoleSinkProvider]] ConsoleSinkProvider
+
+`ConsoleSinkProvider` is a link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider] for link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink].
+
+`ConsoleSinkProvider` is a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister] that registers the `ConsoleSink` streaming sink as `console` format.

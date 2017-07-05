@@ -51,6 +51,8 @@
 .. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
 
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
+.. link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
+
 . link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation]
 
 === Structured Streaming's Planning and Execution

@@ -1,6 +1,8 @@
 == [[ConsoleSink]] ConsoleSink
 
-`ConsoleSink` is a link:spark-sql-streaming-Sink.adoc[streaming sink] that <<ConsoleSinkProvider, ConsoleSinkProvider>> registers as the `console` format.
+`ConsoleSink` is a link:spark-sql-streaming-Sink.adoc[streaming sink] that shows the records to the console.
+
+`ConsoleSink` is registered as *console* format (by link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]).
 
 [[options]]
 .ConsoleSink's Options
@@ -22,13 +24,14 @@
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-spark.
+val query = spark.
   readStream.
   format("rate").
   load.
   writeStream.
-  format("console").  // <-- uses ConsoleSink
+  format("console").  // <-- use ConsoleSink
   option("truncate", false).
+  option("numRows", 10).
   trigger(Trigger.ProcessingTime("10 seconds")).
   queryName("rate-console").
   start
@@ -42,9 +45,3 @@ Batch: 0
 |hello|
 +-----+
 ----
-
-=== [[ConsoleSinkProvider]] ConsoleSinkProvider
-
-`ConsoleSinkProvider` is a link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider] for <<ConsoleSink, ConsoleSink>>.
-
-`ConsoleSinkProvider` is a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister] that registers the `ConsoleSink` streaming sink as `console` format.

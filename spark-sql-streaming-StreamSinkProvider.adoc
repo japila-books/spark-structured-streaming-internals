@@ -1,9 +1,11 @@
-== StreamSinkProvider
+== [[StreamSinkProvider]] StreamSinkProvider
 
-`StreamSinkProvider` is an interface for objects that can create <<contract, streaming sinks>> for a specific format or system, e.g. link:spark-sql-streaming-ConsoleSink.adoc#ConsoleSinkProvider[ConsoleSinkProvider] for `console` format.
+`StreamSinkProvider` is the <<contract, interface>> for entities that can create <<contract, streaming sinks>> for a specific format or system.
 
-It defines the one and only method `createSink` that creates a link:spark-sql-streaming-Sink.adoc[Sink].
+`StreamSinkProvider` defines the one and only <<createSink, createSink>> method that creates a link:spark-sql-streaming-Sink.adoc[streaming sink].
 
+[[createSink]]
+[[contract]]
 [source, scala]
 ----
 package org.apache.spark.sql.sources
