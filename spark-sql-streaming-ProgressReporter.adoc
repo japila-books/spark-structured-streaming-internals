@@ -87,44 +87,6 @@ extractExecutionStats(hasNewData: Boolean): ExecutionStats
 
 CAUTION: FIXME
 
-=== [[finishTrigger]] `finishTrigger` Method
-
-[source, scala]
-----
-finishTrigger(hasNewData: Boolean): Unit
-----
-
-Internally, `finishTrigger` sets <<currentTriggerEndTimestamp, currentTriggerEndTimestamp>> to the current time (using <<triggerClock, triggerClock>>).
-
-`finishTrigger` <<extractExecutionStats, extractExecutionStats>>.
-
-`finishTrigger` calculates the *processing time* (in seconds) as the difference between the <<currentTriggerEndTimestamp, end>> and <<currentTriggerStartTimestamp, start>> timestamps.
-
-`finishTrigger` calculates the *input time* (in seconds) as the difference between the start time of the <<currentTriggerStartTimestamp, current>> and <<lastTriggerStartTimestamp, last>> triggers.
-
-.ProgressReporter's finishTrigger and Timestamps
-image::images/ProgressReporter-finishTrigger-timestamps.png[align="center"]
-
-`finishTrigger` prints out the following DEBUG message to the logs:
-
-```
-DEBUG Execution stats: [executionStats]
-```
-
-`finishTrigger` creates a <<SourceProgress, SourceProgress>> (aka source statistics) for <<sources, every source used>>.
-
-`finishTrigger` creates a <<SinkProgress, SinkProgress>> (aka sink statistics) for the <<sink, sink>>.
-
-`finishTrigger` creates <<StreamingQueryProgress, StreamingQueryProgress>>.
-
-If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updates query progress>>.
-
-Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updates query progress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
-
-In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, currentStatus>>.
-
-NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches].
-
 === [[SourceProgress]] SourceProgress
 
 CAUTION: FIXME
@@ -255,3 +217,41 @@ DEBUG StreamExecution: Starting Trigger Calculation
 `startTrigger` clears <<currentDurationsMs, currentDurationsMs>>.
 
 NOTE: `startTrigger` is used exclusively when `StreamExecution` starts link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches] (as part of link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] executing a batch runner).
+
+=== [[finishTrigger]] Finishing Trigger (by Updating Progress and Marking Current Status As Trigger Inactive) -- `finishTrigger` Method
+
+[source, scala]
+----
+finishTrigger(hasNewData: Boolean): Unit
+----
+
+Internally, `finishTrigger` sets <<currentTriggerEndTimestamp, currentTriggerEndTimestamp>> to the current time (using <<triggerClock, triggerClock>>).
+
+`finishTrigger` <<extractExecutionStats, extractExecutionStats>>.
+
+`finishTrigger` calculates the *processing time* (in seconds) as the difference between the <<currentTriggerEndTimestamp, end>> and <<currentTriggerStartTimestamp, start>> timestamps.
+
+`finishTrigger` calculates the *input time* (in seconds) as the difference between the start time of the <<currentTriggerStartTimestamp, current>> and <<lastTriggerStartTimestamp, last>> triggers.
+
+.ProgressReporter's finishTrigger and Timestamps
+image::images/ProgressReporter-finishTrigger-timestamps.png[align="center"]
+
+`finishTrigger` prints out the following DEBUG message to the logs:
+
+```
+DEBUG StreamExecution: Execution stats: [executionStats]
+```
+
+`finishTrigger` creates a <<SourceProgress, SourceProgress>> (aka source statistics) for <<sources, every source used>>.
+
+`finishTrigger` creates a <<SinkProgress, SinkProgress>> (aka sink statistics) for the <<sink, sink>>.
+
+`finishTrigger` creates <<StreamingQueryProgress, StreamingQueryProgress>>.
+
+If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updates query progress>>.
+
+Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updates query progress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
+
+In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, currentStatus>> (i.e. sets it to `false`).
+
+NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] (after link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor has finished executing the batch runner]).

@@ -132,9 +132,11 @@ Used in <<logicalPlan, logicalPlan>> (where every link:spark-sql-streaming-Strea
 ====
 You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` is <<start, started>>.
 
-```
+[options="wrap"]
+----
 INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
-```
+----
+
 ====
 
 Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path` for <<checkpointRoot, checkpointRoot>> and makes it qualified.
