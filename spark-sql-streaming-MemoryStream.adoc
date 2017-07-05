@@ -27,15 +27,14 @@ val ints = intsIn.toDF
   .groupBy(window($"t", "5 minutes") as "window")
   .agg(count("*") as "total")
 
-import org.apache.spark.sql.streaming.OutputMode
-import org.apache.spark.sql.streaming.ProcessingTime
-import scala.concurrent.duration._
-val totalsOver5mins = ints.writeStream
-  .format("memory")
-  .queryName("totalsOver5mins")
-  .outputMode(OutputMode.Append)
-  .trigger(ProcessingTime(30.seconds))
-  .start
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val totalsOver5mins = ints.
+  writeStream.
+  format("memory").
+  queryName("totalsOver5mins").
+  outputMode(OutputMode.Append).
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  start
 
 scala> val zeroOffset = intsIn.addData(0, 1, 2)
 zeroOffset: org.apache.spark.sql.execution.streaming.Offset = #0

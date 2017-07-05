@@ -53,14 +53,12 @@ val population = people.
 // Start the streaming query
 // Write the result using console format, i.e. print to the console
 // Only Complete output mode supported by groupBy
-import org.apache.spark.sql.streaming.OutputMode.Complete
-import org.apache.spark.sql.streaming.ProcessingTime
-import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val populationStream = population.
   writeStream.
   queryName("textStream").
-  outputMode(Complete).
-  trigger(ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Complete).
+  trigger(Trigger.ProcessingTime("10 seconds")).
   format("console").
   start
 
@@ -203,14 +201,15 @@ println("Is the query streaming" + in.isStreaming)
 println("Are there any streaming queries?" + spark.streams.active.isEmpty)
 
 import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.ProcessingTime
-import org.apache.spark.sql.streaming.OutputMode.Append
-val out = in.writeStream
-  .format("console")
-  .trigger(ProcessingTime(5.seconds))
-  .queryName("consoleStream")
-  .outputMode(Append)
-  .start()
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val out = in.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime("5 seconds")).
+  queryName("consoleStream").
+  outputMode(Output.Append).
+  start
 
 16/07/13 12:32:11 TRACE FileStreamSource: Listed 3 file(s) in 4.274022 ms
 16/07/13 12:32:11 TRACE FileStreamSource: Files are:

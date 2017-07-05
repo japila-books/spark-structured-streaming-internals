@@ -49,8 +49,7 @@ scala> counts.explain
                            +- *Filter isnotnull(timestamp#0)
                               +- StreamingRelation rate, [timestamp#0, value#1L]
 
-import org.apache.spark.sql.streaming.OutputMode
-import org.apache.spark.sql.streaming.Trigger
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val consoleOutput = counts.
   writeStream.
   format("console").
