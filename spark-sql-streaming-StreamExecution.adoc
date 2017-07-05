@@ -61,9 +61,6 @@ a| Current batch number
 
 * Incremented when `StreamExecution` <<runBatches, runBatches>>
 
-| [[currentDurationsMs]] `currentDurationsMs`
-|
-
 | [[id]] `id`
 |
 

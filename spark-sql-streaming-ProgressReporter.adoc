@@ -1,6 +1,6 @@
 == [[ProgressReporter]] ProgressReporter
 
-`ProgressReporter` is a <<contract, contract>> for...FIXME
+`ProgressReporter` is the <<contract, contract>> that link:spark-sql-streaming-StreamExecution.adoc[StreamExecution] uses to report query progress.
 
 [source, scala]
 ----
@@ -37,8 +37,13 @@ res40: org.apache.spark.sql.streaming.SourceProgress =
 
 // With a hack
 import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
-val offsets = sampleQuery.asInstanceOf[StreamingQueryWrapper].streamingQuery.availableOffsets
-scala> offsets.map { case (source, offset) => s"source = $source => offset = $offset" }.foreach(println)
+val offsets = sampleQuery.
+  asInstanceOf[StreamingQueryWrapper].
+  streamingQuery.
+  availableOffsets.
+  map { case (source, offset) =>
+    s"source = $source => offset = $offset" }
+scala> offsets.foreach(println)
 source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => offset = 293
 ----
 
@@ -50,7 +55,29 @@ source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => of
 | Description
 
 | [[currentDurationsMs]] `currentDurationsMs`
-| Durations of...FIXME
+a| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap[scala.collection.mutable.HashMap] of action names and their cumulative times (in milliseconds).
+
+The action names can be as follows:
+
+* `addBatch`
+* `getBatch`
+* `getOffset`
+* `queryPlanning`
+* `triggerExecution`
+* `walCommit` when writing offsets to log
+
+Starts empty when `ProgressReporter` <<startTrigger, sets the state for new trigger>> with new entries added or updated when <<reportTimeTaken, recording execution time>> (of an action).
+
+[TIP]
+====
+You can see the current value of `currentDurationsMs` in progress reports under `durationMs`.
+
+[options="wrap"]
+----
+scala> query.lastProgress.durationMs
+res3: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBatch=5, getOffset=0, addBatch=30, walCommit=23}
+----
+====
 
 | [[currentStatus]] `currentStatus`
 | `StreamingQueryStatus`
@@ -255,3 +282,30 @@ Otherwise, when no data was available (using the input `hasNewData` flag), `fini
 In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, currentStatus>> (i.e. sets it to `false`).
 
 NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] (after link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor has finished executing the batch runner]).
+
+=== [[reportTimeTaken]] Recording Execution Time -- `reportTimeTaken` Method
+
+[source, scala]
+----
+reportTimeTaken[T](triggerDetailKey: String)(body: => T): T
+----
+
+`reportTimeTaken` measures the time to execute `body` and records it in <<currentDurationsMs, currentDurationsMs>>.
+
+In the end, `reportTimeTaken` prints out the following DEBUG message to the logs and returns the result of executing `body`.
+
+```
+DEBUG StreamExecution: [triggerDetailKey] took [time] ms
+```
+
+[NOTE]
+====
+`reportTimeTaken` is used when `StreamExecution` wants to record the time taken for (as `triggerDetailKey` in the DEBUG message above):
+
+* `addBatch`
+* `getBatch`
+* `getOffset`
+* `queryPlanning`
+* `triggerExecution`
+* `walCommit` when writing offsets to log
+====
