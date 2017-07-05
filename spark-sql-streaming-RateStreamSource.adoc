@@ -1,6 +1,6 @@
 == [[RateStreamSource]] RateStreamSource
 
-`RateStreamSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that...
+`RateStreamSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that generates <<schema, consecutive numbers with timestamp>> that can mostly be useful for testing and PoCs.
 
 `RateStreamSource` <<creating-instance, is created>> for *rate* format (that is registered by link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]).
 
@@ -9,6 +9,27 @@
 scala> val rateSource = spark.readStream.format("rate").load
 rateSource: org.apache.spark.sql.DataFrame = [timestamp: timestamp, value: bigint]
 ----
+
+[[options]]
+.RateStreamSource's Options
+[cols="1,1,2",options="header",width="100%"]
+|===
+| Name
+| Default Value
+| Description
+
+| [[numPartitions]] `numPartitions`
+| (default parallelism)
+| Number of partitions to use
+
+| [[rampUpTime]] `rampUpTime`
+| `0` (seconds)
+|
+
+| [[rowsPerSecond]] `rowsPerSecond`
+| `1`
+| Number of rows to generate per second (has to be greater than `0`)
+|===
 
 [[schema]]
 The schema of datasets is predefined and cannot be changed.
@@ -45,6 +66,19 @@ The schema of datasets is predefined and cannot be changed.
 | [[startTimeMs]] `startTimeMs`
 |
 |===
+
+[TIP]
+====
+Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.execution.streaming.RateStreamSource` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.RateStreamSource=DEBUG
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
 
 === [[getBatch]] Fetching Records for Batch -- `getBatch` Method
 
