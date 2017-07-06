@@ -1,22 +1,43 @@
-== StreamingRelation
+== [[StreamingRelation]] StreamingRelation Logical Plan
 
-`StreamingRelation` is the link:spark-sql-LogicalPlan.adoc[LogicalPlan] of the DataFrame being the result of executing link:spark-sql-dataframereader.adoc#stream[DataFrameReader.stream] method.
+`StreamingRelation` is a leaf logical plan (aka `LogicalPlan`) that is <<creating-instance, created>> when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.adoc#load[load] dataset in streaming fashion (and create a streaming `Dataset`).
+
+NOTE: `StreamingRelation` is link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[resolved] (aka _converted_) to link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] (right after `StreamExecution` started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches]).
 
 [source, scala]
 ----
-val reader = spark.readStream
-val helloDF = reader.stream("hello")
-
-scala> helloDF.explain(true)
-== Parsed Logical Plan ==
-FileSource[hello]
-== Analyzed Logical Plan ==
-id: bigint
-FileSource[hello]
-== Optimized Logical Plan ==
-FileSource[hello]
-== Physical Plan ==
-java.lang.AssertionError: assertion failed: No plan for FileSource[hello]
+val rate = spark.
+  readStream.
+  format("rate").
+  load("hello")
+scala> println(rate.queryExecution.logical.numberedTreeString)
+00 StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4e5dcc50,rate,List(),None,List(),None,Map(path -> hello),None), rate, [timestamp#0, value#1L]
 ----
 
-=== StreamingExecutionRelation
+[[isStreaming]]
+`isStreaming` is enabled (i.e. `true`).
+
+[source, scala]
+----
+import org.apache.spark.sql.execution.streaming.StreamingRelation
+val relation = rate.queryExecution.logical.asInstanceOf[StreamingRelation]
+scala> relation.isStreaming
+res1: Boolean = true
+----
+
+[[toString]]
+`toString` gives the <<sourceName, source name>>.
+
+[source, scala]
+----
+scala> println(relation)
+rate
+----
+
+=== [[creating-instance]] Creating StreamingRelation Instance
+
+`StreamingRelation` takes the following when created:
+
+* [[dataSource]] `DataSource`
+* [[sourceName]] Source name
+* [[output]] Output attributes

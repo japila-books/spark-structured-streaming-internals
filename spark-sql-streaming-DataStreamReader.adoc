@@ -1,4 +1,4 @@
-== DataStreamReader
+== [[DataStreamReader]] DataStreamReader
 
 `DataStreamReader` is an interface for <<load, reading>> streaming data in link:spark-sql-dataframe.adoc[DataFrame] from data sources with specified <<format, format>>, <<schema, schema>> and <<options, options>>.
 
@@ -27,7 +27,7 @@ val df = spark.
   load("csv-logs/*.csv")
 ----
 
-=== [[format]] format
+=== [[format]] `format` Method
 
 [source, scala]
 ----
@@ -36,7 +36,7 @@ format(source: String): DataStreamReader
 
 `format` specifies the `source` format of the streaming data source.
 
-=== [[schema]] schema
+=== [[schema]] `schema` Method
 
 [source, scala]
 ----
@@ -45,7 +45,7 @@ schema(schema: StructType): DataStreamReader
 
 `schema` specifies the `schema` of the streaming data source.
 
-=== [[option]] option Methods
+=== [[option]] `option` Method
 
 [source, scala]
 ----
@@ -61,7 +61,7 @@ There is support for values of `String`, `Boolean`, `Long`, and `Double` types f
 
 NOTE: You can also set options in bulk using <<options, options>> method. You have to do the type conversion yourself, though.
 
-=== [[options]] options
+=== [[options]] `options` Method
 
 [source, scala]
 ----
@@ -72,7 +72,7 @@ options(options: scala.collection.Map[String, String]): DataStreamReader
 
 NOTE: You can also set options one by one using <<option, option>> method.
 
-=== [[load]] load Methods
+=== [[load]] `load` Method
 
 [source, scala]
 ----

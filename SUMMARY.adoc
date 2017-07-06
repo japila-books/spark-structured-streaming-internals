@@ -53,8 +53,6 @@
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 .. link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
 
-. link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation]
-
 === Structured Streaming's Planning and Execution
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Datasets]
@@ -74,6 +72,9 @@
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
+
+. link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation Logical Plan]
+. link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation]
 
 === Varia
 

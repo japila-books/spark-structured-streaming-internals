@@ -68,7 +68,9 @@ a| Current batch number
 |
 
 | [[logicalPlan]] `logicalPlan`
-|
+| Lazily-created logical plan (aka `LogicalPlan`) for a streaming query.
+
+Initialized right after `StreamExecution` started <<runBatches, running batches>>.
 
 | [[microBatchThread]] `microBatchThread`
 a| Thread of execution to run a streaming query concurrently with the name as `stream execution thread for [prettyIdString]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
