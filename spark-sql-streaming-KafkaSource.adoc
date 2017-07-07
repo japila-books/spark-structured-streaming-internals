@@ -145,7 +145,7 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 
 CAUTION: FIXME
 
-=== [[getBatch]] Fetching Records for Batch -- `getBatch` Method
+=== [[getBatch]] Generating DataFrame for Batch -- `getBatch` Method
 
 [source, scala]
 ----

@@ -127,7 +127,7 @@ You should see the following DEBUG message in the logs:
 DEBUG MemoryStream: Adding ds: [ds]
 ```
 
-=== [[getBatch]] Getting Next Batch (getBatch method)
+=== [[getBatch]] Getting Next Batch -- `getBatch` Method
 
 NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#contract[Streaming Source contract].
 

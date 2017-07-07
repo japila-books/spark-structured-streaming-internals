@@ -1,4 +1,4 @@
-== FileStreamSource
+== [[FileStreamSource]] FileStreamSource
 
 `FileStreamSource` is a link:spark-sql-streaming-Source.adoc[Source] that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
 
@@ -65,13 +65,13 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 
 === [[options]] Options
 
-==== [[maxFilesPerTrigger]] maxFilesPerTrigger
+==== [[maxFilesPerTrigger]] `maxFilesPerTrigger`
 
 `maxFilesPerTrigger` option specifies the maximum number of files per trigger (batch). It limits the file stream source to read the `maxFilesPerTrigger` number of files specified at a time and hence enables rate limiting.
 
 It allows for a static set of files be used like a stream for testing as the file set is processed `maxFilesPerTrigger` number of files at a time.
 
-=== [[schema]] schema
+=== [[schema]] `schema`
 
 If the schema is specified at instantiation time (using optional `dataSchema` constructor parameter) it is returned.
 
@@ -81,7 +81,7 @@ When there is at least one file the schema is calculated using `dataFrameBuilder
 
 NOTE: *text* as the value of `providerName` constructor parameter denotes *text file stream provider*.
 
-=== [[getOffset]] getOffset
+=== [[getOffset]] `getOffset` Method
 
 The maximum offset (`getOffset`) is calculated by fetching all the files in `path` excluding files that start with `_` (underscore).
 
@@ -101,7 +101,7 @@ new file: $file
 old file: $file
 ```
 
-=== [[getBatch]] getBatch
+=== [[getBatch]] Generating DataFrame for Batch -- `getBatch` Method
 
 `FileStreamSource.getBatch` asks <<metadataLog, metadataLog>> for the batch.
 
@@ -114,7 +114,7 @@ DEBUG Streaming ${files.mkString(", ")}
 
 The method to create a result batch is given at instantiation time (as `dataFrameBuilder` constructor parameter).
 
-=== [[metadataLog]] metadataLog
+=== [[metadataLog]] `metadataLog`
 
 `metadataLog` is a metadata storage using `metadataPath` path (which is a constructor parameter).
 
