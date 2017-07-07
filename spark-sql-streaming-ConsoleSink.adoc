@@ -1,6 +1,6 @@
-== [[ConsoleSink]] ConsoleSink
+== [[ConsoleSink]] ConsoleSink -- Showing DataFrames to Console
 
-`ConsoleSink` is a link:spark-sql-streaming-Sink.adoc[streaming sink] that shows the records to the console.
+`ConsoleSink` is a link:spark-sql-streaming-Sink.adoc[streaming sink] that <<addBatch, shows the DataFrame (for a batch) to the console>>.
 
 `ConsoleSink` is registered as *console* format (by link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]).
 
@@ -45,3 +45,28 @@ Batch: 0
 |hello|
 +-----+
 ----
+
+=== [[addBatch]] Adding Batch (by Showing DataFrame to Console) -- `addBatch` Method
+
+[source, scala]
+----
+addBatch(batchId: Long, data: DataFrame): Unit
+----
+
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract].
+
+Internally, `addBatch` records the input `batchId` in <<lastBatchId, lastBatchId>> internal property.
+
+`addBatch` collects the input `data` `DataFrame` and creates a brand new DataFrame that it then shows (per <<numRowsToShow, numRowsToShow>> and <<isTruncated, isTruncated>> properties).
+
+```
+-------------------------------------------
+Batch: [batchId]
+-------------------------------------------
++---------+-----+
+|timestamp|value|
++---------+-----+
++---------+-----+
+```
+
+NOTE: You may see `Rerun batch:` instead if the input `batchId` is below <<lastBatchId, lastBatchId>> (likely due to a batch failure).

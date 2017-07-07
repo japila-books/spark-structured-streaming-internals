@@ -53,5 +53,7 @@ trait Sink {
 | Description
 
 | [[addBatch]] `addBatch`
-| Used when...
+| Adds a batch of data to this sink, i.e. adds a `DataFrame` for `batchId` batch.
+
+Used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch].
 |===
