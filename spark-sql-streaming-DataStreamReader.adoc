@@ -1,13 +1,15 @@
-== [[DataStreamReader]] DataStreamReader
+== [[DataStreamReader]] DataStreamReader -- Loading Datasets from Streaming Data Sources
 
-`DataStreamReader` is an interface for <<load, reading>> streaming data in link:spark-sql-dataframe.adoc[DataFrame] from data sources with specified <<format, format>>, <<schema, schema>> and <<options, options>>.
+`DataStreamReader` is an interface for <<load, loading>> a dataset from a streaming data source given <<format, format>>, <<schema, schema>> and <<options, options>>.
 
-`DataStreamReader` offers support for the built-in formats: <<json, json>>, <<csv, csv>>, <<parquet, parquet>>, <<text, text>>. `parquet` format is the default data source as configured using link:spark-sql-settings.adoc#spark.sql.sources.default[spark.sql.sources.default] setting.
+.DataStreamReader and The Others
+image::images/DataStreamReader-SparkSession-StreamingRelation.png[align="center"]
 
-`DataStreamReader` is available using link:spark-sql-sparksession.adoc#readStream[SparkSession.readStream] method.
+You can access `DataStreamReader` using `SparkSession.readStream` method.
 
 [source, scala]
 ----
+import org.apache.spark.sql.SparkSession
 val spark: SparkSession = ...
 
 // infer schema for the streaming query over CSV files using batch query
@@ -20,32 +22,109 @@ val schema = spark.
   schema
 
 // start a streaming query over CSV files
-val df = spark.
-  readStream
+val logs = spark.
+  readStream  // <-- Access DataStreamReader
   format("csv").
   schema(schema).
   load("csv-logs/*.csv")
 ----
 
-=== [[format]] `format` Method
+[[methods]]
+.DataStreamReader's Methods
+[cols="1,2",options="header",width="100%"]
+|===
+| Method | Description
+
+| <<csv, csv>>
+| Sets `csv` as the source <<format, format>>
+
+| <<format, format>>
+| Sets the format of datasets
+
+| <<json, json>>
+| Sets `json` as the source <<format, format>>
+
+| <<load, load>>
+| Loads a streaming dataset
+
+| <<option, option>>
+| Sets a loading option
+
+| <<options, options>>
+| Sets one or more loading options
+
+| <<parquet, parquet>>
+| Sets `parquet` as the source <<format, format>>
+
+| <<schema, schema>>
+| Sets the schema of datasets
+
+| <<text, text>>
+| Sets `text` as the source <<format, format>>
+
+| <<textFile, textFile>>
+| Returns `Dataset[String]` (not `DataFrame`)
+|===
+
+`DataStreamReader` supports many <<format, source formats>> natively and offers the <<format, interface to define custom formats>>:
+
+* <<json, json>>
+* <<csv, csv>>
+* <<parquet, parquet>>
+* <<text, text>>
+
+NOTE: `DataStreamReader` assumes <<parquet, parquet>> file format by default that you can change using `spark.sql.sources.default` property.
+
+NOTE: `hive` source format is not supported.
+
+After you have described the *streaming pipeline* to read datasets from an external streaming data source, you eventually trigger the loading using format-agnostic <<load, load>> or format-specific (e.g. <<json, json>>, <<csv, csv>>) operators.
+
+[[internal-properties]]
+.DataStreamReader's Internal Properties (in alphabetical order)
+[cols="1,1,2",options="header",width="100%"]
+|===
+| Name
+| Initial Value
+| Description
+
+| [[source]] `source`
+| `spark.sql.sources.default` property
+| Source format of datasets in a streaming data source
+
+| [[userSpecifiedSchema]] `userSpecifiedSchema`
+| (empty)
+| Optional user-defined schema
+
+| [[extraOptions]] `extraOptions`
+| (empty)
+| Collection of key-value configuration options
+|===
+
+=== [[format]] Specifying Format -- `format` Method
 
 [source, scala]
 ----
 format(source: String): DataStreamReader
 ----
 
-`format` specifies the `source` format of the streaming data source.
+`format` specifies the `source` format of datasets in a streaming data source.
 
-=== [[schema]] `schema` Method
+Internally, `schema` sets <<source, source>> internal property.
+
+=== [[schema]] Specifying Schema -- `schema` Method
 
 [source, scala]
 ----
 schema(schema: StructType): DataStreamReader
+schema(schemaString: String): DataStreamReader  // <1>
 ----
+<1> Uses the input DDL-formatted string
 
 `schema` specifies the `schema` of the streaming data source.
 
-=== [[option]] `option` Method
+Internally, `schema` sets <<userSpecifiedSchema, userSpecifiedSchema>> internal property.
+
+=== [[option]] Specifying Loading Options -- `option` Method
 
 [source, scala]
 ----
@@ -59,9 +138,11 @@ option(key: String, value: Double): DataStreamReader
 
 There is support for values of `String`, `Boolean`, `Long`, and `Double` types for user convenience, and internally are converted to `String` type.
 
+Internally, `option` sets <<extraOptions, extraOptions>> internal property.
+
 NOTE: You can also set options in bulk using <<options, options>> method. You have to do the type conversion yourself, though.
 
-=== [[options]] `options` Method
+=== [[options]] Specifying Loading Options -- `options` Method
 
 [source, scala]
 ----
@@ -72,20 +153,20 @@ options(options: scala.collection.Map[String, String]): DataStreamReader
 
 NOTE: You can also set options one by one using <<option, option>> method.
 
-=== [[load]] `load` Method
+=== [[load]] Loading Streaming Dataset -- `load` Method
 
 [source, scala]
 ----
 load(): DataFrame
 load(path: String): DataFrame // <1>
 ----
-<1> Specifies `path` option before passing calls to `load()`
+<1> Specifies `path` option before passing the call to parameterless `load()`
 
-`load` loads streaming input data as link:spark-sql-dataframe.adoc[DataFrame].
+`load` loads a streaming dataset.
 
-Internally, `load` creates a `DataFrame` from the current link:spark-sql-sparksession.adoc[SparkSession] and a link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] (of a link:spark-sql-datasource.adoc[DataSource] based on <<schema, schema>>, <<format, format>>, and <<options, options>>).
+Internally, `load` first creates a `DataSource` (using <<userSpecifiedSchema, userSpecifiedSchema>>, <<source, source>> and <<extraOptions, extraOptions>>) followed by creating a `DataFrame` with a link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] (for the `DataSource`).
 
-=== [[builtin-formats]][[json]][[csv]][[parquet]][[text]] Built-in Formats
+=== [[builtin-formats]][[json]][[csv]][[parquet]][[text]][[textFile]] Built-in Formats
 
 [source, scala]
 ----
@@ -93,13 +174,15 @@ json(path: String): DataFrame
 csv(path: String): DataFrame
 parquet(path: String): DataFrame
 text(path: String): DataFrame
+textFile(path: String): Dataset[String] // <1>
 ----
+<1> Returns `Dataset[String]` not `DataFrame`
 
-`DataStreamReader` can load streaming data from data sources of the following <<format, formats>>:
+`DataStreamReader` can load streaming datasets from data sources of the following <<format, formats>>:
 
 * `json`
 * `csv`
 * `parquet`
 * `text`
 
-The methods simply pass calls to <<format, `format`>> followed by <<load, `load(path)`>>.
+The methods simply pass calls to <<format, format>> followed by <<load, load(path)>>.

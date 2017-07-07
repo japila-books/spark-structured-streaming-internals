@@ -1,6 +1,6 @@
 == [[OutputMode]] OutputMode
 
-*Output mode* (`OutputMode`) describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in a streaming Dataset.
+*Output mode* (`OutputMode`) describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in a streaming data source.
 
 [source, scala]
 ----

@@ -92,7 +92,7 @@ outputMode(outputMode: OutputMode): DataStreamWriter[T]
 
 `outputMode` specifies the link:spark-sql-streaming-OutputMode.adoc[output mode] of the streaming `Dataset`.
 
-NOTE: link:spark-sql-streaming-OutputMode.adoc[Output mode] describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in a streaming Dataset.
+NOTE: link:spark-sql-streaming-OutputMode.adoc[Output mode] describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in a streaming data source.
 
 === [[queryName]] Setting Query Name -- `queryName` method
 
