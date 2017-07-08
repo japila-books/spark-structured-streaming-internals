@@ -2,6 +2,26 @@
 
 CAUTION: FIXME
 
-=== [[buildScan]] `buildScan` Method
+=== [[getPartitionOffsets]] `getPartitionOffsets` Internal Method
+
+[source, scala]
+----
+getPartitionOffsets(
+  kafkaReader: KafkaOffsetReader,
+  kafkaOffsets: KafkaOffsetRangeLimit): Map[TopicPartition, Long]
+----
+
+CAUTION: FIXME
+
+NOTE: `getPartitionOffsets` is used exclusively when `KafkaRelation` <<buildScan, builds RDD of rows (from the tuples)>>.
+
+=== [[buildScan]] Building RDD with Records (from Topics) -- `buildScan` Method
+
+[source, scala]
+----
+buildScan(): RDD[Row]
+----
+
+NOTE: `buildScan` is a part of `TableScan` contract.
 
 CAUTION: FIXME

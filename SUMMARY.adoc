@@ -16,6 +16,7 @@
 ... link:spark-sql-streaming-KafkaSourceRDD.adoc[KafkaSourceRDD]
 ... link:spark-sql-streaming-CachedKafkaConsumer.adoc[CachedKafkaConsumer]
 ... link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
+... link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
 
 .. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 .. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]

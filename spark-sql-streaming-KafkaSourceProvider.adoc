@@ -32,7 +32,7 @@ spark.readStream
 
 CAUTION: FIXME
 
-=== [[createSource]] `createSource` Method
+=== [[createSource]] Creating KafkaSource -- `createSource` Method
 
 [source, scala]
 ----
@@ -48,7 +48,7 @@ Internally, `createSource` first <<validateStreamOptions, validates stream optio
 
 CAUTION: FIXME
 
-NOTE: `createSource` is a part of link:spark-sql-streaming-StreamSourceProvider.adoc#createSource[StreamSourceProvider Contract] to create a streaming source for a format or system.
+NOTE: `createSource` is a part of link:spark-sql-streaming-StreamSourceProvider.adoc#createSource[StreamSourceProvider Contract] to create a streaming source for *kafka* format.
 
 === [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 Library Dependency
 

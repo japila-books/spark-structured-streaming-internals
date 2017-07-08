@@ -2,6 +2,115 @@
 
 CAUTION: FIXME
 
-=== [[fetchLatestOffsets]] `fetchLatestOffsets` Method
+`KafkaOffsetReader` is <<creating-instance, created>> when:
+
+* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[builds an RDD with rows from records]
+* `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#createSource[creates a KafkaSource] (for *kafka* format)
+
+[[options]]
+.KafkaOffsetReader's Options
+[cols="1,1,2",options="header",width="100%"]
+|===
+| Name
+| Default Value
+| Description
+
+| [[fetchOffset.numRetries]] `fetchOffset.numRetries`
+| `3`
+|
+
+| [[fetchOffset.retryIntervalMs]] `fetchOffset.retryIntervalMs`
+| `1000`
+| How long to wait before retries.
+|===
+
+[[internal-registries]]
+.KafkaOffsetReader's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[kafkaReaderThread]] `kafkaReaderThread`
+|
+
+| [[execContext]] `execContext`
+|
+
+| [[groupId]] `groupId`
+|
+
+| [[nextId]] `nextId`
+|
+
+| [[consumer]] `consumer`
+|
+
+| [[maxOffsetFetchAttempts]] `maxOffsetFetchAttempts`
+|
+
+| [[offsetFetchAttemptIntervalMs]] `offsetFetchAttemptIntervalMs`
+|
+|===
+
+=== [[createConsumer]] `createConsumer` Internal Method
+
+[source, scala]
+----
+createConsumer(): Consumer[Array[Byte], Array[Byte]]
+----
 
 CAUTION: FIXME
+
+NOTE: `createConsumer` is used when `KafkaOffsetReader` is <<creating-instance, created>>.
+
+=== [[fetchTopicPartitions]] `fetchTopicPartitions` Method
+
+[source, scala]
+----
+fetchTopicPartitions(): Set[TopicPartition]
+----
+
+CAUTION: FIXME
+
+NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#getPartitionOffsets[getPartitionOffsets].
+
+=== [[fetchEarliestOffsets]] `fetchEarliestOffsets` Method
+
+[source, scala]
+----
+fetchEarliestOffsets(newPartitions: Seq[TopicPartition]): Map[TopicPartition, Long]
+----
+
+CAUTION: FIXME
+
+NOTE: `fetchEarliestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#rateLimit[rateLimit] and link:spark-sql-streaming-KafkaSource.adoc#getBatch[generates a DataFrame for a batch].
+
+=== [[fetchLatestOffsets]] Fetching Latest Available Offsets -- `fetchLatestOffsets` Method
+
+[source, scala]
+----
+fetchLatestOffsets(): Map[TopicPartition, Long]
+----
+
+CAUTION: FIXME
+
+NOTE: `fetchLatestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#getOffset[gets offsets] or `initialPartitionOffsets` is link:spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets[initialized].
+
+=== [[withRetriesWithoutInterrupt]] `withRetriesWithoutInterrupt` Internal Method
+
+[source, scala]
+----
+withRetriesWithoutInterrupt(body: => Map[TopicPartition, Long]): Map[TopicPartition, Long]
+----
+
+=== [[creating-instance]] Creating KafkaOffsetReader Instance
+
+`KafkaOffsetReader` takes the following when created:
+
+* [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
+* [[driverKafkaParams]] Kafka parameters (as name-value pairs)
+* [[readerOptions]] Options (as name-value pairs)
+* [[driverGroupIdPrefix]] Prefix for group id
+
+`KafkaOffsetReader` initializes the <<internal-registries, internal registries and counters>>.

@@ -1,15 +1,8 @@
 == [[KafkaSource]] KafkaSource
 
-`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] to _"continuously"_ read datasets from Apache Kafka.
+`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that _"continuously"_ reads datasets of records from Apache Kafka.
 
 NOTE: _"continuously"_ means that Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.adoc[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
-
-`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]).
-
-[source, scala]
-----
-spark.readStream.format("kafka")
-----
 
 [NOTE]
 ====
@@ -22,6 +15,35 @@ Structured Streaming support for Kafka is in a separate link:spark-sql-streaming
 ```
 ====
 
+`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]).
+
+[source, scala]
+----
+val kafkaSource = spark.
+  readStream.
+  format("kafka"). // <-- use KafkaSource
+  load
+----
+
+[[options]]
+.KafkaSource's Options
+[cols="1,1,2",options="header",width="100%"]
+|===
+| Name
+| Default Value
+| Description
+
+| [[kafkaConsumer.pollTimeoutMs]] `kafkaConsumer.pollTimeoutMs`
+|
+|
+
+| [[maxOffsetsPerTrigger]] `maxOffsetsPerTrigger`
+| (empty)
+| Maximum number of offsets to fetch per trigger.
+
+If not defined, `KafkaSource` uses <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetch the latest available offsets].
+|===
+
 [source, scala]
 ----
 /**
@@ -32,13 +54,14 @@ Structured Streaming support for Kafka is in a separate link:spark-sql-streaming
     --property key.separator=,
 */
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val fromKafkaTopic1ToConsole = spark.
+val kafkaSource = spark.
   readStream.
   format("kafka").
   option("subscribe", "topic1").
   option("kafka.bootstrap.servers", "localhost:9092").
   option("startingoffsets", "earliest").  // latest, earliest or JSON with {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
-  load.
+  load
+val fromKafkaTopic1ToConsole = kafkaSource.
   select('key cast "string", 'value cast "string"). // deserialize records
   as[(String, String)].
   writeStream.
@@ -55,7 +78,21 @@ fromKafkaTopic1ToConsole.stop
 ----
 
 [[schema]]
-The schema of datasets is predefined and cannot be changed.
+`KafkaSource` uses a predefined schema that cannot be changed.
+
+[source, scala]
+----
+val schema = kafkaSource.schema
+scala> println(schema.treeString)
+root
+ |-- key: binary (nullable = true)
+ |-- value: binary (nullable = true)
+ |-- topic: string (nullable = true)
+ |-- partition: integer (nullable = true)
+ |-- offset: long (nullable = true)
+ |-- timestamp: timestamp (nullable = true)
+ |-- timestampType: integer (nullable = true)
+----
 
 .KafkaSource's Dataset Schema (in the positional order)
 [cols="1,2",options="header",width="100%"]
@@ -143,7 +180,19 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 
 === [[rateLimit]] `rateLimit` Internal Method
 
+[source, scala]
+----
+rateLimit(
+  limit: Long,
+  from: Map[TopicPartition, Long],
+  until: Map[TopicPartition, Long]): Map[TopicPartition, Long]
+----
+
+`rateLimit` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[fetchEarliestOffsets].
+
 CAUTION: FIXME
+
+NOTE: `rateLimit` is used exclusively when `KafkaSource` <<getOffset, gets available offsets>> (when <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option is specified).
 
 === [[getBatch]] Generating DataFrame for Batch -- `getBatch` Method
 
