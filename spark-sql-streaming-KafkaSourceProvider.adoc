@@ -55,7 +55,7 @@ NOTE: `createSource` is a part of link:spark-sql-streaming-StreamSourceProvider.
 The new structured streaming API for Kafka is part of the `spark-sql-kafka-0-10` artifact. Add the following dependency to sbt project to use the streaming integration:
 
 ```
-libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.0"
+libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.1"
 ```
 
 [TIP]
@@ -63,8 +63,61 @@ libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.0"
 `spark-sql-kafka-0-10` module is not included in the CLASSPATH of link:spark-shell.adoc[spark-shell] so you have to start it with link:spark-submit.adoc#packages[`--packages` command-line option].
 
 ```
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.1.0
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.1.1
 ```
 ====
 
-NOTE: Replace `2.0.1` or `2.1.0-SNAPSHOT` with available version as found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's search].
+NOTE: Replace `2.1.1` or `2.3.0-SNAPSHOT` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's Search] that matches your version of Spark.
+
+=== [[validateGeneralOptions]] Validating General Options For Kafka -- `validateGeneralOptions` Internal Method
+
+[source, scala]
+----
+validateGeneralOptions(parameters: Map[String, String]): Unit
+----
+
+NOTE: Parameters are case-insensitive, i.e. `OptioN` and `option` are equal.
+
+`validateGeneralOptions` makes sure that exactly one topic subscription strategy is used in `parameters` and can be:
+
+* `subscribe`
+* `subscribepattern`
+* `assign`
+
+`validateGeneralOptions` reports an `IllegalArgumentException` when there is no subscription strategy in use or there are more than one strategies used.
+
+`validateGeneralOptions` makes sure that the value of subscription strategies meet the requirements:
+
+* `assign` strategy starts with `{` (the opening curly brace)
+* `subscribe` strategy has at least one topic (in a comma-separated list of topics)
+* `subscribepattern` strategy has the pattern defined
+
+`validateGeneralOptions` makes sure that `group.id` has not been specified and reports an `IllegalArgumentException` otherwise.
+
+```
+Kafka option 'group.id' is not supported as user-specified consumer groups are not used to track offsets.
+```
+
+`validateGeneralOptions` makes sure that `auto.offset.reset` has not been specified and reports an `IllegalArgumentException` otherwise.
+
+[options="wrap"]
+----
+Kafka option 'auto.offset.reset' is not supported.
+Instead set the source option 'startingoffsets' to 'earliest' or 'latest' to specify where to start. Structured Streaming manages which offsets are consumed internally, rather than relying on the kafkaConsumer to do it. This will ensure that no data is missed when new topics/partitions are dynamically subscribed. Note that 'startingoffsets' only applies when a new Streaming query is started, and
+that resuming will always pick up from where the query left off. See the docs for more details.
+----
+
+`validateGeneralOptions` makes sure that the following options have not been specified and reports an `IllegalArgumentException` otherwise:
+
+* `kafka.key.deserializer`
+* `kafka.value.deserializer`
+* `kafka.enable.auto.commit`
+* `kafka.interceptor.classes`
+
+In the end, `validateGeneralOptions` makes sure that `kafka.bootstrap.servers` option was specified and reports an `IllegalArgumentException` otherwise.
+
+```
+Option 'kafka.bootstrap.servers' must be specified for configuring Kafka consumer
+```
+
+NOTE: `validateGeneralOptions` is used when `KafkaSourceProvider` validates options for <<validateStreamOptions, streaming>> and <<validateBatchOptions, batch>> modes.

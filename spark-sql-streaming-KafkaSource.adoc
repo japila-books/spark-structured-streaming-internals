@@ -1,14 +1,14 @@
 == [[KafkaSource]] KafkaSource
 
-`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that _"continuously"_ reads datasets of records from Apache Kafka.
+`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that <<getBatch, generates datasets of records>> from topics in Apache Kafka.
 
-NOTE: _"continuously"_ means that Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.adoc[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
+NOTE: Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.adoc[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
 [NOTE]
 ====
 Structured Streaming support for Kafka is in a separate link:spark-sql-streaming-KafkaSourceProvider.adoc#spark-sql-kafka-0-10[spark-sql-kafka-0-10 module] (aka _library dependency_).
 
-`spark-sql-kafka-0-10` module is not included by default so you have to start `spark-submit` (and "derivatives" like `spark-shell`) with `--packages` command-line option.
+`spark-sql-kafka-0-10` module is not included by default so you have to start `spark-submit` (and "derivatives" like `spark-shell`) with `--packages` command-line option to "install" it.
 
 ```
 ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.1.1
@@ -24,6 +24,9 @@ val kafkaSource = spark.
   format("kafka"). // <-- use KafkaSource
   load
 ----
+
+.KafkaSource Is Created for kafka Format by KafkaSourceProvider
+image::images/KafkaSource-creating-instance.png[align="center"]
 
 [[options]]
 .KafkaSource's Options
@@ -42,6 +45,24 @@ val kafkaSource = spark.
 | Maximum number of offsets to fetch per trigger.
 
 If not defined, `KafkaSource` uses <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetch the latest available offsets].
+
+| `subscribe`
+|
+a| Topic subscription strategy that...FIXME
+
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+
+| `subscribepattern`
+|
+a| Topic subscription strategy that...FIXME
+
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+
+| `assign`
+|
+a| Topic subscription strategy that...FIXME
+
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
 |===
 
 [source, scala]
@@ -194,7 +215,7 @@ CAUTION: FIXME
 
 NOTE: `rateLimit` is used exclusively when `KafkaSource` <<getOffset, gets available offsets>> (when <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option is specified).
 
-=== [[getBatch]] Generating DataFrame for Batch -- `getBatch` Method
+=== [[getBatch]] Generating DataFrame with Records From Kafka for Batch -- `getBatch` Method
 
 [source, scala]
 ----
