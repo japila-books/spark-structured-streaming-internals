@@ -62,9 +62,9 @@ trait Source {
 | Description
 
 | [[getBatch]] `getBatch`
-| Generates a `DataFrame` (with new records from a streaming source) for a given batch (described using the start and end offsets).
+| Generates a `DataFrame` (with new rows from a streaming source) for a given batch (described using the start and end offsets).
 
-Used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch].
+Used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch] and link:spark-sql-streaming-StreamExecution.adoc#populateStartOffsets[populateStartOffsets].
 
 | [[getOffset]] `getOffset`
 | Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[run batches] (while link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructing next batch])

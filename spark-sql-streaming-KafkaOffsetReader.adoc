@@ -75,7 +75,7 @@ CAUTION: FIXME
 
 NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#getPartitionOffsets[getPartitionOffsets].
 
-=== [[fetchEarliestOffsets]] `fetchEarliestOffsets` Method
+=== [[fetchEarliestOffsets]] Fetching Earliest Offsets -- `fetchEarliestOffsets` Method
 
 [source, scala]
 ----
@@ -84,7 +84,7 @@ fetchEarliestOffsets(newPartitions: Seq[TopicPartition]): Map[TopicPartition, Lo
 
 CAUTION: FIXME
 
-NOTE: `fetchEarliestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#rateLimit[rateLimit] and link:spark-sql-streaming-KafkaSource.adoc#getBatch[generates a DataFrame for a batch].
+NOTE: `fetchEarliestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#rateLimit[rateLimit] and link:spark-sql-streaming-KafkaSource.adoc#getBatch[generates a DataFrame for a batch] (when new partitions have been assigned).
 
 === [[fetchLatestOffsets]] Fetching Latest Available Offsets -- `fetchLatestOffsets` Method
 
