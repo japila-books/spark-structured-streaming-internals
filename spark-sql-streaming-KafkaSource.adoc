@@ -1,6 +1,6 @@
 == [[KafkaSource]] KafkaSource
 
-`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that <<getBatch, generates datasets of records>> from topics in Apache Kafka.
+`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that <<getBatch, generates DataFrames of records from topics in Apache Kafka>>.
 
 NOTE: Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.adoc[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
@@ -169,10 +169,15 @@ root
 | Name
 | Description
 
+| [[currentPartitionOffsets]] `currentPartitionOffsets`
+| Current partition offsets (as `Map[TopicPartition, Long]`)
+
+Initially `NONE` and set when `KafkaSource` is requested to <<getOffset, get the maximum available offsets>> or <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
+
 | [[initialPartitionOffsets]] `initialPartitionOffsets`
 a| Kafka's `TopicPartitions` with offsets.
 
-Lazily set when `KafkaSource` <<getOffset, gets maximum available offset>> and used for <<getBatch, fetching records for a batch>>.
+Lazily set when `KafkaSource` <<getOffset, gets maximum available offset>> and used for <<getBatch, generating a DataFrame with records from Kafka for a batch>>.
 
 When initialized, `initialPartitionOffsets` creates a `HDFSMetadataLog` (for `KafkaSourceOffset`) and takes the 0th batch's metadata (as `KafkaSourceOffset`) if available. If not, it uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
 
@@ -323,7 +328,7 @@ CAUTION: FIXME
 `reportDataLoss` is used when `KafkaSource` does the following:
 
 * <<fetchAndVerify, fetchAndVerify>>
-* <<getBatch, getBatch>>
+* <<getBatch, generates a DataFrame with records from Kafka for a batch>>
 ====
 
 === [[getOffset]] Getting Maximum Available Offsets -- `getOffset` Method
