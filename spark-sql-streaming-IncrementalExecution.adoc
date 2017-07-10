@@ -1,6 +1,6 @@
-== [[IncrementalExecution]] IncrementalExecution -- QueryExecution for Streaming Datasets
+== [[IncrementalExecution]] IncrementalExecution -- QueryExecution for Streaming DataFrames
 
-`IncrementalExecution` is a `QueryExecution` for streaming Datasets that allows for executing a <<logicalPlan, logical plan>> incrementally (and continuously).
+`IncrementalExecution` is a `QueryExecution` for streaming DataFrames that allows for executing a <<logicalPlan, logical plan>> incrementally (and continuously).
 
 [[preparations]]
 `IncrementalExecution` adds <<state, state>> to the parent ``QueryExecution``'s `preparations`.

@@ -83,6 +83,41 @@ NOTE: `hive` <<start, is not supported>> for streaming writing (and leads to a `
 
 NOTE: `DataFrameWriter` is responsible for writing in a batch fashion.
 
+[[internal-properties]]
+.DataStreamWriter's Internal Properties (in alphabetical order)
+[cols="1,1,2",options="header",width="100%"]
+|===
+| Name
+| Initial Value
+| Description
+
+| [[extraOptions]] `extraOptions`
+|
+|
+
+| [[foreachWriter]] `foreachWriter`
+|
+|
+
+| [[partitioningColumns]] `partitioningColumns`
+|
+|
+
+| [[source]] `source`
+|
+|
+
+| [[outputMode-property]] `outputMode`
+| `OutputMode.Append`
+| link:spark-sql-streaming-OutputMode.adoc[OutputMode] of the streaming sink
+
+Set using <<outputMode, outputMode>> method.
+
+| [[trigger-property]] `trigger`
+|
+|
+|===
+
 === [[outputMode]] Specifying Output Mode -- `outputMode` Method
 
 [source, scala]
@@ -92,7 +127,7 @@ outputMode(outputMode: OutputMode): DataStreamWriter[T]
 
 `outputMode` specifies the link:spark-sql-streaming-OutputMode.adoc[output mode] of the streaming `Dataset`.
 
-NOTE: link:spark-sql-streaming-OutputMode.adoc[Output mode] describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in a streaming data source.
+NOTE: link:spark-sql-streaming-OutputMode.adoc[Output mode] describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is a new data available in a streaming data source.
 
 === [[queryName]] Setting Query Name -- `queryName` method
 

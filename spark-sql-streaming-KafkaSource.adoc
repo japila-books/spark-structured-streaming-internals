@@ -175,11 +175,13 @@ root
 Initially `NONE` and set when `KafkaSource` is requested to <<getOffset, get the maximum available offsets>> or <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
 
 | [[initialPartitionOffsets]] `initialPartitionOffsets`
-a| Kafka's `TopicPartitions` with offsets.
+a| Initial partition offsets (as `Map[TopicPartition, Long]`).
 
-Lazily set when `KafkaSource` <<getOffset, gets maximum available offset>> and used for <<getBatch, generating a DataFrame with records from Kafka for a batch>>.
+Lazily set when `KafkaSource` <<getOffset, gets the maximum available offsets>>.
 
-When initialized, `initialPartitionOffsets` creates a `HDFSMetadataLog` (for `KafkaSourceOffset`) and takes the 0th batch's metadata (as `KafkaSourceOffset`) if available. If not, it uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
+Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
+
+When initialized, `initialPartitionOffsets` creates a `HDFSMetadataLog` (for link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and takes the ``0``th batch's metadata (as `KafkaSourceOffset`) if available. If not, it uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
 
 You should see the following INFO message in the logs:
 
@@ -187,7 +189,7 @@ You should see the following INFO message in the logs:
 INFO Initial offsets: [offsets]
 ```
 
-NOTE: The 0th batch is persisted in the streaming metadata log if not available initially.
+NOTE: The ``0``th batch is persisted in the streaming metadata log if not available initially.
 
 |===
 
