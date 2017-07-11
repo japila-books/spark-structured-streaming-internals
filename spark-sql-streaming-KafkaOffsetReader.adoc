@@ -44,7 +44,7 @@ CAUTION: FIXME
 |
 
 | [[consumer]] `consumer`
-|
+| Kafka's `Consumer[Array[Byte], Array[Byte]]`
 
 | [[maxOffsetFetchAttempts]] `maxOffsetFetchAttempts`
 |
@@ -52,6 +52,19 @@ CAUTION: FIXME
 | [[offsetFetchAttemptIntervalMs]] `offsetFetchAttemptIntervalMs`
 |
 |===
+
+[TIP]
+====
+Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaOffsetReader` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=DEBUG
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
 
 === [[createConsumer]] `createConsumer` Internal Method
 
@@ -74,17 +87,6 @@ fetchTopicPartitions(): Set[TopicPartition]
 CAUTION: FIXME
 
 NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#getPartitionOffsets[getPartitionOffsets].
-
-=== [[fetchSpecificOffsets]] `fetchSpecificOffsets` Method
-
-[source, scala]
-----
-fetchSpecificOffsets(partitionOffsets: Map[TopicPartition, Long]): Map[TopicPartition, Long]
-----
-
-CAUTION: FIXME
-
-NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#fetchAndVerify[fetchAndVerify].
 
 === [[fetchEarliestOffsets]] Fetching Earliest Offsets -- `fetchEarliestOffsets` Method
 
@@ -125,3 +127,32 @@ withRetriesWithoutInterrupt(body: => Map[TopicPartition, Long]): Map[TopicPartit
 * [[driverGroupIdPrefix]] Prefix for group id
 
 `KafkaOffsetReader` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[fetchSpecificOffsets]] Fetching Offsets for Specific TopicPartitions -- `fetchSpecificOffsets` Method
+
+[source, scala]
+----
+fetchSpecificOffsets(partitionOffsets: Map[TopicPartition, Long]): Map[TopicPartition, Long]
+----
+
+`fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> to `poll(0)`.
+
+`fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> for assigned partitions (using `Consumer.assignment()`).
+
+`fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> to `pause(partitions)`.
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG KafkaOffsetReader: Partitions assigned to consumer: [partitions]. Seeking to [partitionOffsets]
+```
+
+For every partition offset in the input `partitionOffsets`, `fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> to:
+
+* `seekToEnd` for the latest (aka `-1`)
+* `seekToBeginning` for the earliest (aka `-2`)
+* `seek` otherwise
+
+In the end, `fetchSpecificOffsets` creates a collection of Kafka's `TopicPartition` and `position` (using the <<consumer, Kafka Consumer>>).
+
+NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#fetchAndVerify[fetches and verifies specific offsets].
