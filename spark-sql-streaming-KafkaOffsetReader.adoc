@@ -75,6 +75,17 @@ CAUTION: FIXME
 
 NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#getPartitionOffsets[getPartitionOffsets].
 
+=== [[fetchSpecificOffsets]] `fetchSpecificOffsets` Method
+
+[source, scala]
+----
+fetchSpecificOffsets(partitionOffsets: Map[TopicPartition, Long]): Map[TopicPartition, Long]
+----
+
+CAUTION: FIXME
+
+NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#fetchAndVerify[fetchAndVerify].
+
 === [[fetchEarliestOffsets]] Fetching Earliest Offsets -- `fetchEarliestOffsets` Method
 
 [source, scala]

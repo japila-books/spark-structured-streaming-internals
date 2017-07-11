@@ -78,7 +78,7 @@ import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val kafkaSource = spark.
   readStream.
   format("kafka").
-  option("subscribe", "topic1").
+  option("subscribepattern", "topic*").
   option("kafka.bootstrap.servers", "localhost:9092").
   option("startingoffsets", "earliest").  // latest, earliest or JSON with {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
   load
@@ -89,7 +89,6 @@ val fromKafkaTopic1ToConsole = kafkaSource.
   format("console").
   option("truncate", false).
   trigger(Trigger.ProcessingTime("10 seconds")).
-  option("checkpointLocation", "target/kafka-checkpoint").
   queryName("from-kafka-to-console").
   outputMode(OutputMode.Append).
   start
@@ -175,7 +174,7 @@ root
 Initially `NONE` and set when `KafkaSource` is requested to <<getOffset, get the maximum available offsets>> or <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
 
 | [[initialPartitionOffsets]] `initialPartitionOffsets`
-a| Initial partition offsets (as `Map[TopicPartition, Long]`).
+a| Initial partition offsets (as `Map[TopicPartition, Long]`)
 
 Lazily set when `KafkaSource` <<getOffset, gets the maximum available offsets>>.
 
@@ -222,6 +221,22 @@ CAUTION: FIXME
 
 NOTE: `rateLimit` is used exclusively when `KafkaSource` <<getOffset, gets available offsets>> (when <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option is specified).
 
+=== [[getSortedExecutorList]] `getSortedExecutorList` Method
+
+CAUTION: FIXME
+
+=== [[reportDataLoss]] `reportDataLoss` Internal Method
+
+CAUTION: FIXME
+
+[NOTE]
+====
+`reportDataLoss` is used when `KafkaSource` does the following:
+
+* <<fetchAndVerify, fetches and verifies specific offsets>>
+* <<getBatch, generates a DataFrame with records from Kafka for a batch>>
+====
+
 === [[getBatch]] Generating DataFrame with Records From Kafka for Batch -- `getBatch` Method
 
 [source, scala]
@@ -231,7 +246,7 @@ getBatch(start: Option[Offset], end: Offset): DataFrame
 
 NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getBatch[Source Contract].
 
-`getBatch` initializes <<initialPartitionOffsets, initialPartitionOffsets>> (if not initialized already).
+`getBatch` initializes <<initialPartitionOffsets, initial partition offsets>> (unless initialized already).
 
 You should see the following INFO message in the logs:
 
@@ -239,9 +254,9 @@ You should see the following INFO message in the logs:
 INFO KafkaSource: GetBatch called with start = [start], end = [end]
 ```
 
-`getBatch` requests `KafkaSourceOffset` to link:spark-sql-streaming-KafkaSourceOffset.adoc#getPartitionOffsets[give partition offsets] for the input `end` offset (known as `untilPartitionOffsets`).
+`getBatch` requests `KafkaSourceOffset` for link:spark-sql-streaming-KafkaSourceOffset.adoc#getPartitionOffsets[end partition offsets] for the input `end` offset (known as `untilPartitionOffsets`).
 
-`getBatch` requests `KafkaSourceOffset` to link:spark-sql-streaming-KafkaSourceOffset.adoc#getPartitionOffsets[give partition offsets] for the input `start` offset if defined or uses <<initialPartitionOffsets, initialPartitionOffsets>> (known as `fromPartitionOffsets`).
+`getBatch` requests `KafkaSourceOffset` for link:spark-sql-streaming-KafkaSourceOffset.adoc#getPartitionOffsets[start partition offsets] for the input `start` offset (if defined) or uses <<initialPartitionOffsets, initial partition offsets>> (known as `fromPartitionOffsets`).
 
 `getBatch` finds the new partitions (as the difference between the topic partitions in `untilPartitionOffsets` and `fromPartitionOffsets`) and requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[fetch their earliest offsets].
 
@@ -272,7 +287,7 @@ Added partition [partition] starts from [offset] instead of 0. Some data may hav
 You should see the following DEBUG message in the logs:
 
 ```
-DEBUG TopicPartitions: [comma-separated topicPartitions]
+DEBUG KafkaSource: TopicPartitions: [comma-separated topicPartitions]
 ```
 
 `getBatch` <<getSortedExecutorList, gets the executors>> (sorted by `executorId` and `host` of the registered block managers).
@@ -282,7 +297,7 @@ IMPORTANT: That is when `getBatch` goes very low-level to allow for cached `Kafk
 You should see the following DEBUG message in the logs:
 
 ```
-DEBUG Sorted executors: [comma-separated sortedExecutors]
+DEBUG KafkaSource: Sorted executors: [comma-separated sortedExecutors]
 ```
 
 `getBatch` creates a `KafkaSourceRDDOffsetRange` per `TopicPartition`.
@@ -300,38 +315,12 @@ IMPORTANT: `getBatch` creates a `KafkaSourceRDD` with `reuseKafkaConsumer` flag 
 You should see the following INFO message in the logs:
 
 ```
-INFO GetBatch generating RDD of offset range: [comma-separated offsetRanges sorted by topicPartition]
+INFO KafkaSource: GetBatch generating RDD of offset range: [comma-separated offsetRanges sorted by topicPartition]
 ```
 
 `getBatch` sets <<currentPartitionOffsets, currentPartitionOffsets>> if it was empty (which is when...FIXME)
 
 In the end, `getBatch` creates a `DataFrame` from the RDD of `InternalRow` and <<schema, schema>>.
-
-=== [[getSortedExecutorList]] `getSortedExecutorList` Method
-
-CAUTION: FIXME
-
-=== [[reportDataLoss]] `reportDataLoss` Internal Method
-
-CAUTION: FIXME
-
-=== [[fetchAndVerify]] `fetchAndVerify` Internal Method
-
-CAUTION: FIXME
-
-NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` reads <<initialPartitionOffsets, initialPartitionOffsets>>.
-
-=== [[reportDataLoss]] `reportDataLoss` Internal Method
-
-CAUTION: FIXME
-
-[NOTE]
-====
-`reportDataLoss` is used when `KafkaSource` does the following:
-
-* <<fetchAndVerify, fetchAndVerify>>
-* <<getBatch, generates a DataFrame with records from Kafka for a batch>>
-====
 
 === [[getOffset]] Getting Maximum Available Offsets -- `getOffset` Method
 
@@ -389,3 +378,22 @@ NOTE: `getOffset` is a part of link:spark-sql-streaming-Source.adoc#getOffset[So
 * [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a `IllegalStateException` on data loss>>.
 
 `KafkaSource` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[fetchAndVerify]] Fetching and Verifying Specific Offsets -- `fetchAndVerify` Internal Method
+
+[source, scala]
+----
+fetchAndVerify(specificOffsets: Map[TopicPartition, Long]): KafkaSourceOffset
+----
+
+`fetchAndVerify` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchSpecificOffsets[fetchSpecificOffsets] for the given `specificOffsets`.
+
+`fetchAndVerify` makes sure that the starting offsets in `specificOffsets` are the same as in Kafka and <<reportDataLoss, reports a data loss>> otherwise.
+
+```
+startingOffsets for [tp] was [off] but consumer reset to [result(tp)]
+```
+
+In the end, `fetchAndVerify` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] (with the result of <<kafkaReader, KafkaOffsetReader>>).
+
+NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` initializes <<initialPartitionOffsets, initial partition offsets>>.
