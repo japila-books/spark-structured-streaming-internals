@@ -1,10 +1,8 @@
 == [[KafkaOffsetReader]] KafkaOffsetReader
 
-CAUTION: FIXME
-
 `KafkaOffsetReader` is <<creating-instance, created>> when:
 
-* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[builds an RDD with rows from records]
+* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[builds an RDD with rows] that are records from Kafka
 * `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#createSource[creates a KafkaSource] (for *kafka* format)
 
 [[options]]
@@ -66,16 +64,13 @@ log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=DEBUG
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
-=== [[createConsumer]] `createConsumer` Internal Method
-
-[source, scala]
-----
-createConsumer(): Consumer[Array[Byte], Array[Byte]]
-----
+=== [[nextGroupId]] `nextGroupId` Internal Method
 
 CAUTION: FIXME
 
-NOTE: `createConsumer` is used when `KafkaOffsetReader` is <<creating-instance, created>>.
+=== [[resetConsumer]] `resetConsumer` Internal Method
+
+CAUTION: FIXME
 
 === [[fetchTopicPartitions]] `fetchTopicPartitions` Method
 
@@ -159,3 +154,14 @@ For every partition offset in the input `partitionOffsets`, `fetchSpecificOffset
 In the end, `fetchSpecificOffsets` creates a collection of Kafka's `TopicPartition` and `position` (using the <<consumer, Kafka Consumer>>).
 
 NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#fetchAndVerify[fetches and verifies initial partition offsets].
+
+=== [[createConsumer]] Creating Kafka Consumer -- `createConsumer` Internal Method
+
+[source, scala]
+----
+createConsumer(): Consumer[Array[Byte], Array[Byte]]
+----
+
+`createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to link:spark-sql-streaming-ConsumerStrategy.adoc#createConsumer[create a Kafka Consumer] with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
+
+NOTE: `createConsumer` is used when `KafkaOffsetReader` is <<creating-instance, created>> (and initializes <<consumer, consumer>>) and <<resetConsumer, resetConsumer>>

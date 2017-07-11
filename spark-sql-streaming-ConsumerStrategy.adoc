@@ -1,3 +1,7 @@
 == [[ConsumerStrategy]] ConsumerStrategy
 
 CAUTION: FIXME
+
+=== [[createConsumer]] `createConsumer` Method
+
+CAUTION: FIXME
