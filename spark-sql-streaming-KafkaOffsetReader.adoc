@@ -135,6 +135,9 @@ withRetriesWithoutInterrupt(body: => Map[TopicPartition, Long]): Map[TopicPartit
 fetchSpecificOffsets(partitionOffsets: Map[TopicPartition, Long]): Map[TopicPartition, Long]
 ----
 
+.KafkaOffsetReader's fetchSpecificOffsets
+image::images/KafkaOffsetReader-fetchSpecificOffsets.png[align="center"]
+
 `fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> to `poll(0)`.
 
 `fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> for assigned partitions (using `Consumer.assignment()`).
@@ -151,8 +154,8 @@ For every partition offset in the input `partitionOffsets`, `fetchSpecificOffset
 
 * `seekToEnd` for the latest (aka `-1`)
 * `seekToBeginning` for the earliest (aka `-2`)
-* `seek` otherwise
+* `seek` for other offsets
 
 In the end, `fetchSpecificOffsets` creates a collection of Kafka's `TopicPartition` and `position` (using the <<consumer, Kafka Consumer>>).
 
-NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#fetchAndVerify[fetches and verifies specific offsets].
+NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#fetchAndVerify[fetches and verifies initial partition offsets].
