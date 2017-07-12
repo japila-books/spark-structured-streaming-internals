@@ -29,8 +29,19 @@
 | Name
 | Description
 
-| [[kafkaReaderThread]] `kafkaReaderThread`
-|
+| [[consumer]] `consumer`
+a| Kafka's https://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/Consumer.html[Consumer] (with keys and values of `Array[Byte]` type)
+
+<<createConsumer, Initialized>> when `KafkaOffsetReader` is <<creating-instance, created>>.
+
+Used when `KafkaOffsetReader`:
+
+* <<fetchTopicPartitions, fetchTopicPartitions>>
+* <<fetchSpecificOffsets, fetches offsets for selected TopicPartitions>>
+* <<fetchEarliestOffsets, fetchEarliestOffsets>>
+* <<fetchLatestOffsets, fetchLatestOffsets>>
+* <<resetConsumer, resetConsumer>>
+* <<close, is closed>>
 
 | [[execContext]] `execContext`
 |
@@ -38,13 +49,13 @@
 | [[groupId]] `groupId`
 |
 
-| [[nextId]] `nextId`
+| [[kafkaReaderThread]] `kafkaReaderThread`
 |
 
-| [[consumer]] `consumer`
-| Kafka's `Consumer[Array[Byte], Array[Byte]]`
-
 | [[maxOffsetFetchAttempts]] `maxOffsetFetchAttempts`
+|
+
+| [[nextId]] `nextId`
 |
 
 | [[offsetFetchAttemptIntervalMs]] `offsetFetchAttemptIntervalMs`
@@ -117,13 +128,13 @@ withRetriesWithoutInterrupt(body: => Map[TopicPartition, Long]): Map[TopicPartit
 `KafkaOffsetReader` takes the following when created:
 
 * [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
-* [[driverKafkaParams]] Kafka parameters (as name-value pairs)
+* [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
 * [[readerOptions]] Options (as name-value pairs)
 * [[driverGroupIdPrefix]] Prefix for group id
 
 `KafkaOffsetReader` initializes the <<internal-registries, internal registries and counters>>.
 
-=== [[fetchSpecificOffsets]] Fetching Offsets for Specific TopicPartitions -- `fetchSpecificOffsets` Method
+=== [[fetchSpecificOffsets]] Fetching Offsets for Selected TopicPartitions -- `fetchSpecificOffsets` Method
 
 [source, scala]
 ----
