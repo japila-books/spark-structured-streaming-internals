@@ -43,6 +43,10 @@
 .. link:spark-sql-streaming-QueryProgressEvent.adoc[QueryProgressEvent]
 .. link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvent]
 
+. link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset]
+.. link:spark-sql-streaming-GroupState.adoc[GroupState]
+.. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
+
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
 === Extending Structured Streaming
