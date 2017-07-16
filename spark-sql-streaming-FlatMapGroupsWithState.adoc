@@ -1,0 +1,34 @@
+== [[FlatMapGroupsWithState]] FlatMapGroupsWithState Unary Logical Operator
+
+`FlatMapGroupsWithState` is a unary logical operator (aka `LogicalPlan`) that is <<creating-instance, created>> to represent the following operators in link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset]:
+
+* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState]
+
+* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState]
+
+NOTE: `mapGroupsWithState` uses `flatMapGroupsWithState` for its work (and is then really its edge case).
+
+[NOTE]
+====
+`FlatMapGroupsWithState` is translated to:
+
+* `FlatMapGroupsWithStateExec` physical operator in link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]  execution planning strategy for streaming Datasets (aka streaming plans)
+
+* `MapGroupsExec` physical operator in `BasicOperators` execution planning strategy for non-streaming/batch Datasets (aka batch plans)
+====
+
+=== [[creating-instance]] Creating FlatMapGroupsWithState Instance
+
+`FlatMapGroupsWithState` takes the following when created:
+
+* [[func]] State function of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`
+* [[keyDeserializer]] Key deserializer Catalyst expression
+* [[valueDeserializer]] Value deserializer Catalyst expression
+* [[groupingAttributes]] Grouping attributes
+* [[dataAttributes]] Data attributes
+* [[outputObjAttr]] Output object attribute
+* [[stateEncoder]] State `ExpressionEncoder`
+* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode]
+* [[isMapGroupsWithState]] `isMapGroupsWithState` Flag (disabled by default)
+* [[timeout]] link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
+* [[child]] Child logical operator

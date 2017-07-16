@@ -9,7 +9,7 @@ scala> val grouped = nums.groupByKey(n => n % 2)
 grouped: org.apache.spark.sql.KeyValueGroupedDataset[Long,Long] = org.apache.spark.sql.KeyValueGroupedDataset@76c6ded8
 ----
 
-`KeyValueGroupedDataset` shines the most when it is used with streaming Datasets.
+`KeyValueGroupedDataset` shines the most when used with streaming Datasets as is then executed continuously (and you can experience how the grouping state works over time).
 
 [source, scala]
 ----
@@ -74,6 +74,10 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
   timeoutConf: GroupStateTimeout)(
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ----
+
+NOTE: `flatMapGroupsWithState` requires `Append` or `Update` link:spark-sql-streaming-OutputMode.adoc[output modes].
+
+`flatMapGroupsWithState` creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator.
 
 CAUTION: FIXME
 

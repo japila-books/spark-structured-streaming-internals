@@ -69,6 +69,7 @@
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution for Streaming Datasets]
 
 . link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator]
+. link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState Unary Logical Operator]
 . link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
 
 . link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator]
@@ -76,6 +77,7 @@
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
 
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
+. link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
