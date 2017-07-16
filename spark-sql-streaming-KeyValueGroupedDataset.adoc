@@ -1,6 +1,8 @@
-== [[KeyValueGroupedDataset]] KeyValueGroupedDataset
+== [[KeyValueGroupedDataset]] KeyValueGroupedDataset -- (Stateful) Streaming Aggregation
 
-`KeyValueGroupedDataset` is created by `Dataset.groupByKey` operator (that groups rows given condition defined by a grouping function).
+`KeyValueGroupedDataset` allows for *streaming aggregation* and represents a *grouped dataset* as a result of `Dataset.groupByKey` operator (that groups rows given condition defined by a grouping function).
+
+NOTE: `KeyValueGroupedDataset` can also be used for batch aggregations.
 
 [source, scala]
 ----
@@ -9,7 +11,7 @@ scala> val grouped = nums.groupByKey(n => n % 2)
 grouped: org.apache.spark.sql.KeyValueGroupedDataset[Long,Long] = org.apache.spark.sql.KeyValueGroupedDataset@76c6ded8
 ----
 
-`KeyValueGroupedDataset` shines the most when used with streaming Datasets as is then executed continuously (and you can experience how the grouping state works over time).
+`KeyValueGroupedDataset` shines the most when used with streaming Datasets.
 
 [source, scala]
 ----
@@ -21,6 +23,8 @@ val numGroups = spark.
   as[(Timestamp, Long)].
   groupByKey { case (time, value) => value % 2 }
 ----
+
+The most prestigious use case of `KeyValueGroupedDataset` however is *stateful streaming aggregation* that allows for accumulating *streaming state* (by means of link:spark-sql-streaming-GroupState.adoc[GroupState]) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
 
 [[methods]]
 .KeyValueGroupedDataset's Methods
