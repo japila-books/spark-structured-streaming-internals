@@ -255,7 +255,7 @@ runBatches(): Unit
 
 [source, scala]
 ----
-import org.apache.spark.sql.streaming.Trigger.ProcessingTime
+import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
 
 val out = spark.
@@ -264,7 +264,7 @@ val out = spark.
   writeStream.
   format("console").
   queryName("debug").
-  trigger(ProcessingTime(10.seconds))
+  trigger(Trigger.ProcessingTime(10.seconds))
 scala> val debugStream = out.start
 INFO StreamExecution: Starting debug [id = 8b57b0bd-fc4a-42eb-81a3-777d7ba5e370, runId = 920b227e-6d02-4a03-a271-c62120258cea]. Use file:///private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-274f9ae1-1238-4088-b4a1-5128fc520c1f to store the query checkpoint.
 debugStream: org.apache.spark.sql.streaming.StreamingQuery = org.apache.spark.sql.execution.streaming.StreamingQueryWrapper@58a5b69c
