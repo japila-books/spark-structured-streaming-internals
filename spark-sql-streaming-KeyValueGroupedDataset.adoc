@@ -41,7 +41,9 @@ val numGroups = spark.
 |
 
 | <<flatMapGroupsWithState, flatMapGroupsWithState>>
-|
+| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
+
+The difference between `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> is the state function that generates zero or more elements (that are in turn the rows in the result `Dataset`).
 
 | <<keyAs, keyAs>>
 |
@@ -53,7 +55,9 @@ val numGroups = spark.
 |
 
 | <<mapGroupsWithState, mapGroupsWithState>>
-|
+| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
+
+The difference between `mapGroupsWithState` and <<flatMapGroupsWithState, flatMapGroupsWithState>> is the state function that generates exactly one element (that is in turn the row in the result `Dataset`).
 
 | <<mapValues, mapValues>>
 |
@@ -65,7 +69,7 @@ val numGroups = spark.
 |
 |===
 
-=== [[flatMapGroupsWithState]] `flatMapGroupsWithState` Method
+=== [[flatMapGroupsWithState]] Creating Dataset with FlatMapGroupsWithState Logical Operator -- `flatMapGroupsWithState` Method
 
 [source, scala]
 ----
@@ -77,11 +81,15 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
 
 NOTE: `flatMapGroupsWithState` requires `Append` or `Update` link:spark-sql-streaming-OutputMode.adoc[output modes].
 
-`flatMapGroupsWithState` creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator.
+`flatMapGroupsWithState` creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator.
 
-CAUTION: FIXME
+`flatMapGroupsWithState` reports a `IllegalArgumentException` when the input `outputMode` is not `Append` nor `Update`.
 
-=== [[mapGroupsWithState]] `mapGroupsWithState` Method
+```
+The output mode of function should be append or update
+```
+
+=== [[mapGroupsWithState]] Creating Dataset with FlatMapGroupsWithState Logical Operator -- `mapGroupsWithState` Method
 
 [source, scala]
 ----

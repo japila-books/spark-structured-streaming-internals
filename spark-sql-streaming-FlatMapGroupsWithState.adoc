@@ -17,6 +17,28 @@ NOTE: `mapGroupsWithState` uses `flatMapGroupsWithState` for its work (and is th
 * `MapGroupsExec` physical operator in `BasicOperators` execution planning strategy for non-streaming/batch Datasets (aka batch plans)
 ====
 
+=== [[apply]] Creating SerializeFromObject with FlatMapGroupsWithState -- `apply` Factory Method
+
+[source, scala]
+----
+apply[K: Encoder, V: Encoder, S: Encoder, U: Encoder](
+  func: (Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any],
+  groupingAttributes: Seq[Attribute],
+  dataAttributes: Seq[Attribute],
+  outputMode: OutputMode,
+  isMapGroupsWithState: Boolean,
+  timeout: GroupStateTimeout,
+  child: LogicalPlan): LogicalPlan
+----
+
+`apply` creates `SerializeFromObject` object consumer (aka unary logical operator) with `FlatMapGroupsWithState` logical plan.
+
+Internally, `apply` finds `ExpressionEncoder` for the type `S` and creates a `FlatMapGroupsWithState` with `UnresolvedDeserializer` for the types `K` and `V`.
+
+In the end, `apply` creates a `SerializeFromObject` object consumer with the `FlatMapGroupsWithState`.
+
+NOTE: `apply` is used when link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] is executed.
+
 === [[creating-instance]] Creating FlatMapGroupsWithState Instance
 
 `FlatMapGroupsWithState` takes the following when created:
