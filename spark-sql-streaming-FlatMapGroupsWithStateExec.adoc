@@ -6,6 +6,7 @@ NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithStat
 
 [source, scala]
 ----
+import java.sql.Timestamp
 import org.apache.spark.sql.streaming.GroupState
 val stateFunc = (key: Long, values: Iterator[(Timestamp, Long)], state: GroupState[Long]) => {
   Iterator((key, values.size))
@@ -16,19 +17,21 @@ val rateGroups = spark.
   readStream.
   format("rate").
   load.
+  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds").  // required for EventTimeTimeout
   as[(Timestamp, Long)].  // leave DataFrame for Dataset
-  groupByKey { case (time, value) => value % 2 }.  // create two groups
-  flatMapGroupsWithState(OutputMode.Update, GroupStateTimeout.NoTimeout)(stateFunc)
+  groupByKey { case (time, value) => value % 2 }. // creates two groups
+  flatMapGroupsWithState(OutputMode.Update, GroupStateTimeout.EventTimeTimeout)(stateFunc)  // EventTimeTimeout requires watermark (defined above)
 
 // Check out the physical plan with FlatMapGroupsWithStateExec
 scala> rateGroups.explain
 == Physical Plan ==
-*SerializeFromObject [assertnotnull(input[0, scala.Tuple2, true])._1 AS _1#19L, assertnotnull(input[0, scala.Tuple2, true])._2 AS _2#20]
-+- FlatMapGroupsWithState <function3>, value#14: bigint, newInstance(class scala.Tuple2), [value#14L], [timestamp#5, value#6L], obj#18: scala.Tuple2, StatefulOperatorStateInfo(<unknown>,7d366f68-2f35-4ee3-9377-b562045f434b,0,0), class[value[0]: bigint], Update, NoTimeout, 0, 0
-   +- *Sort [value#14L ASC NULLS FIRST], false, 0
-      +- Exchange hashpartitioning(value#14L, 200)
-         +- AppendColumns <function1>, newInstance(class scala.Tuple2), [input[0, bigint, false] AS value#14L]
-            +- StreamingRelation rate, [timestamp#5, value#6L]
+*SerializeFromObject [assertnotnull(input[0, scala.Tuple2, true])._1 AS _1#35L, assertnotnull(input[0, scala.Tuple2, true])._2 AS _2#36]
++- FlatMapGroupsWithState <function3>, value#30: bigint, newInstance(class scala.Tuple2), [value#30L], [timestamp#20-T10000ms, value#21L], obj#34: scala.Tuple2, StatefulOperatorStateInfo(<unknown>,63491721-8724-4631-b6bc-3bb1edeb4baf,0,0), class[value[0]: bigint], Update, EventTimeTimeout, 0, 0
+   +- *Sort [value#30L ASC NULLS FIRST], false, 0
+      +- Exchange hashpartitioning(value#30L, 200)
+         +- AppendColumns <function1>, newInstance(class scala.Tuple2), [input[0, bigint, false] AS value#30L]
+            +- EventTimeWatermark timestamp#20: timestamp, interval 10 seconds
+               +- StreamingRelation rate, [timestamp#20, value#21L]
 
 // Execute the streaming query
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
@@ -64,7 +67,7 @@ image::images/FlatMapGroupsWithStateExec-webui-query-details.png[align="center"]
 
 `FlatMapGroupsWithStateExec` is a `StateStoreWriter` that...FIXME
 
-`FlatMapGroupsWithStateExec` has a `WatermarkSupport` that...FIXME
+`FlatMapGroupsWithStateExec` link:spark-sql-streaming-WatermarkSupport.adoc[supports watermark] which is...FIXME
 
 [NOTE]
 ====
@@ -103,6 +106,19 @@ CAUTION: FIXME Where are the optional values defined?
 | [[timestampTimeoutAttribute]] `timestampTimeoutAttribute`
 |
 |===
+
+[TIP]
+====
+Enable `INFO` logging level for `org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec=INFO
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
 
 === [[doExecute]] Executing FlatMapGroupsWithStateExec -- `doExecute` Method
 

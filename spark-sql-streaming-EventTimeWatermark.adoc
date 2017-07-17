@@ -28,6 +28,10 @@ EventTimeWatermark timestamp#660: timestamp, interval 10 seconds
 +- StreamingRelation rate, [timestamp#660, value#661L]
 ----
 
+[[watermarkDelayMs]]
+[[delayKey]]
+`EventTimeWatermark` uses `spark.watermarkDelayMs` key to hold the eventTime watermark delay.
+
 [[output]]
 `output`...FIXME
 

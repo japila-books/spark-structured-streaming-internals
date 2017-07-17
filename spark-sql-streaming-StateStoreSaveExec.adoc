@@ -1,6 +1,6 @@
 == [[StateStoreSaveExec]] StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates
 
-`StateStoreSaveExec` is a unary physical operator (aka `UnaryExecNode`) with `StateStoreWriter` and `WatermarkSupport`.
+`StateStoreSaveExec` is a unary physical operator (aka `UnaryExecNode`) with `StateStoreWriter` and link:spark-sql-streaming-WatermarkSupport.adoc[support for watermark].
 
 `StateStoreSaveExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#apply[plans a streaming aggregation query] (using `AggUtils.planStreamingAggregation`).
 

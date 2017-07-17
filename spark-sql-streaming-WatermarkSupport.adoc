@@ -1,0 +1,33 @@
+== [[WatermarkSupport]] WatermarkSupport
+
+`WatermarkSupport` is...FIXME
+
+[[properties]]
+.WatermarkSupport's (Lazily-Initialized) Properties
+[cols="1,3",options="header",width="100%"]
+|===
+| Property
+| Description
+
+| [[watermarkExpression]] `watermarkExpression`
+a| Optional Catalyst expression that matches rows older than the watermark.
+
+NOTE: Use `Dataset.withWatermark` operator to set the watermark. Refer to link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator].
+
+---
+
+When initialized, `watermarkExpression` finds link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in the child output's metadata.
+
+If found, `watermarkExpression` creates `evictionExpression` with the watermark attribute that is less than or equal <<eventTimeWatermark, eventTimeWatermark>>.
+
+The watermark attribute may or may not be of type `StructType`. If it is, `watermarkExpression` uses the first field for comparison.
+
+`watermarkExpression` prints out the following INFO message to the logs when link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute is found.
+
+```
+INFO FlatMapGroupsWithStateExec: Filtering state store on: [evictionExpression]
+```
+
+| [[watermarkPredicateForData]] `watermarkPredicateForData`
+| Optional `Predicate` that uses <<watermarkExpression, watermarkExpression>> and the child output to match rows older than the watermark.
+|===
