@@ -1,0 +1,63 @@
+== [[FlatMapGroupsWithStateExec]] FlatMapGroupsWithStateExec Unary Physical Operator
+
+`FlatMapGroupsWithStateExec` is a unary physical operator (aka `UnaryExecNode`) that is <<creating-instance, created>> when link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy] execution planning strategy plans link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator for execution.
+
+[NOTE]
+====
+`FlatMapGroupsWithStateStrategy` plans link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined <<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>>.
+
+<<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>> are defined when `IncrementalExecution` query execution pipeline is requested to apply the link:spark-sql-streaming-IncrementalExecution.adoc#preparations[physical plan preparation rules].
+====
+
+`FlatMapGroupsWithStateExec` is a `ObjectProducerExec` that...FIXME
+
+`FlatMapGroupsWithStateExec` is a `StateStoreWriter` that...FIXME
+
+`FlatMapGroupsWithStateExec` has a `WatermarkSupport` that...FIXME
+
+[[internal-registries]]
+.FlatMapGroupsWithStateExec's Internal Registries and Counters (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[isTimeoutEnabled]] `isTimeoutEnabled`
+|
+
+| [[stateAttributes]] `stateAttributes`
+|
+
+| [[stateDeserializer]] `stateDeserializer`
+|
+
+| [[stateSerializer]] `stateSerializer`
+|
+
+| [[timestampTimeoutAttribute]] `timestampTimeoutAttribute`
+|
+|===
+
+=== [[doExecute]] `doExecute` Method
+
+CAUTION: FIXME
+
+=== [[creating-instance]] Creating FlatMapGroupsWithStateExec Instance
+
+`FlatMapGroupsWithStateExec` takes the following when created:
+
+* [[func]] State function of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`
+* [[keyDeserializer]] Key deserializer Catalyst expression
+* [[valueDeserializer]] Value deserializer Catalyst expression
+* [[groupingAttributes]] Grouping attributes
+* [[dataAttributes]] Data attributes
+* [[outputObjAttr]] Output object attribute
+* [[stateInfo]] Optional `StatefulOperatorStateInfo`
+* [[stateEncoder]] State `ExpressionEncoder`
+* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode]
+* [[timeoutConf]] link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
+* [[batchTimestampMs]] Optional `batchTimestampMs`
+* [[eventTimeWatermark]] Optional `eventTimeWatermark`
+* [[child]] Child physical operator
+
+`FlatMapGroupsWithStateExec` initializes the <<internal-registries, internal registries and counters>>.

@@ -1,6 +1,6 @@
 == [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator
 
-`EventTimeWatermarkExec` is an unary physical operator (aka `UnaryExecNode`) that is <<creating-instance, created>> when link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy plans a `EventTimeWatermark` logical operator for execution.
+`EventTimeWatermarkExec` is a unary physical operator (aka `UnaryExecNode`) that is <<creating-instance, created>> when link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy plans a `EventTimeWatermark` logical operator for execution.
 
 NOTE: link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is created as the result of `Dataset.withWatermark` operator.
 

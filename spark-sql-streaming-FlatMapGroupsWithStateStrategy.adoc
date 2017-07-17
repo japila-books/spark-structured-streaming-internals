@@ -3,7 +3,7 @@
 `FlatMapGroupsWithStateStrategy` is an execution planning strategy (aka `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `FlatMapGroupsWithState` logical operators.
 
 [[apply]]
-`FlatMapGroupsWithStateStrategy` transforms link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to `FlatMapGroupsWithStateExec` physical operator (with undefined `StatefulOperatorStateInfo`, `batchTimestampMs`, and `eventTimeWatermark`).
+`FlatMapGroupsWithStateStrategy` resolves link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operator (with undefined `StatefulOperatorStateInfo`, `batchTimestampMs`, and `eventTimeWatermark`).
 
 [source, scala]
 ----

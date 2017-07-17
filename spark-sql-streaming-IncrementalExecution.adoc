@@ -3,7 +3,7 @@
 `IncrementalExecution` is a `QueryExecution` for streaming DataFrames that allows for executing a <<logicalPlan, logical plan>> incrementally (and continuously).
 
 [[preparations]]
-`IncrementalExecution` adds <<state, state>> to the parent ``QueryExecution``'s `preparations`.
+`IncrementalExecution` adds <<state, state>> to the parent ``QueryExecution``'s `preparations` that defines the state info for link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators.
 
 `IncrementalExecution` is <<creating-instance, created>> mostly when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch] (and when `ExplainCommand` is executed).
 

@@ -12,7 +12,7 @@ NOTE: `mapGroupsWithState` uses `flatMapGroupsWithState` for its work (and is th
 ====
 `FlatMapGroupsWithState` is translated to:
 
-* `FlatMapGroupsWithStateExec` physical operator in link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]  execution planning strategy for streaming Datasets (aka streaming plans)
+* link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operator in link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]  execution planning strategy for streaming Datasets (aka streaming plans)
 
 * `MapGroupsExec` physical operator in `BasicOperators` execution planning strategy for non-streaming/batch Datasets (aka batch plans)
 ====
