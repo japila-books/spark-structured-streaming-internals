@@ -1,0 +1,11 @@
+== [[StateStore]] StateStore
+
+`StateStore` is...FIXME
+
+=== [[numKeys]] `numKeys` Method
+
+CAUTION: FIXME
+
+=== [[commit]] `commit` Method
+
+CAUTION: FIXME

@@ -2,18 +2,84 @@
 
 `FlatMapGroupsWithStateExec` is a unary physical operator (aka `UnaryExecNode`) that is <<creating-instance, created>> when link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy] execution planning strategy plans link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator for execution.
 
-[NOTE]
-====
-`FlatMapGroupsWithStateStrategy` plans link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined <<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>>.
+NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator is created as the result of link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[KeyValueGroupedDataset.flatMapGroupsWithState] operator.
 
-<<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>> are defined when `IncrementalExecution` query execution pipeline is requested to apply the link:spark-sql-streaming-IncrementalExecution.adoc#preparations[physical plan preparation rules].
-====
+[source, scala]
+----
+import org.apache.spark.sql.streaming.GroupState
+val stateFunc = (key: Long, values: Iterator[(Timestamp, Long)], state: GroupState[Long]) => {
+  Iterator((key, values.size))
+}
+import java.sql.Timestamp
+import org.apache.spark.sql.streaming.{GroupState, GroupStateTimeout, OutputMode}
+val rateGroups = spark.
+  readStream.
+  format("rate").
+  load.
+  as[(Timestamp, Long)].  // leave DataFrame for Dataset
+  groupByKey { case (time, value) => value % 2 }.  // create two groups
+  flatMapGroupsWithState(OutputMode.Update, GroupStateTimeout.NoTimeout)(stateFunc)
+
+// Check out the physical plan with FlatMapGroupsWithStateExec
+scala> rateGroups.explain
+== Physical Plan ==
+*SerializeFromObject [assertnotnull(input[0, scala.Tuple2, true])._1 AS _1#19L, assertnotnull(input[0, scala.Tuple2, true])._2 AS _2#20]
++- FlatMapGroupsWithState <function3>, value#14: bigint, newInstance(class scala.Tuple2), [value#14L], [timestamp#5, value#6L], obj#18: scala.Tuple2, StatefulOperatorStateInfo(<unknown>,7d366f68-2f35-4ee3-9377-b562045f434b,0,0), class[value[0]: bigint], Update, NoTimeout, 0, 0
+   +- *Sort [value#14L ASC NULLS FIRST], false, 0
+      +- Exchange hashpartitioning(value#14L, 200)
+         +- AppendColumns <function1>, newInstance(class scala.Tuple2), [input[0, bigint, false] AS value#14L]
+            +- StreamingRelation rate, [timestamp#5, value#6L]
+
+// Execute the streaming query
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val sq = rateGroups.
+  writeStream.
+  format("console").
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Update).  // Append is not supported
+  start
+
+// Eventually...
+sq.stop
+----
+
+[[metrics]]
+.FlatMapGroupsWithStateExec's SQLMetrics
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[numTotalStateRows]] `numTotalStateRows`
+| Number of total state rows
+
+Incremented when `FlatMapGroupsWithStateExec` is <<doExecute, executed>> (and the iterator has generated all the rows).
+|===
+
+.FlatMapGroupsWithStateExec in web UI (Details for Query)
+image::images/FlatMapGroupsWithStateExec-webui-query-details.png[align="center"]
 
 `FlatMapGroupsWithStateExec` is a `ObjectProducerExec` that...FIXME
 
 `FlatMapGroupsWithStateExec` is a `StateStoreWriter` that...FIXME
 
 `FlatMapGroupsWithStateExec` has a `WatermarkSupport` that...FIXME
+
+[NOTE]
+====
+`FlatMapGroupsWithStateStrategy` converts link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined <<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>>.
+
+<<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>> are defined when `IncrementalExecution` query execution pipeline is requested to apply the link:spark-sql-streaming-IncrementalExecution.adoc#preparations[physical plan preparation rules].
+====
+
+When <<doExecute, executed>>, `FlatMapGroupsWithStateExec` requires that the optional values are properly defined given <<timeoutConf, timeoutConf>>:
+
+* <<batchTimestampMs, batchTimestampMs>> for `ProcessingTimeTimeout`
+
+* <<eventTimeWatermark, eventTimeWatermark>> and <<watermarkExpression, watermarkExpression>> for `EventTimeTimeout`
+
+CAUTION: FIXME Where are the optional values defined?
 
 [[internal-registries]]
 .FlatMapGroupsWithStateExec's Internal Registries and Counters (in alphabetical order)
@@ -38,9 +104,24 @@
 |
 |===
 
-=== [[doExecute]] `doExecute` Method
+=== [[doExecute]] Executing FlatMapGroupsWithStateExec -- `doExecute` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+doExecute(): RDD[InternalRow]
+----
+
+NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
+
+Internally, `doExecute` initializes the metrics (i.e. `StateStoreWriter.metrics`).
+
+`doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[mapPartitionsWithStateStore] with `storeUpdateFunction` that:
+
+1. Creates a link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
+1. Applies `watermarkPredicateForData` to `Iterator[InternalRow]` (only if `watermarkPredicateForData` is defined and <<timeoutConf, timeoutConf>> is `EventTimeTimeout`)
+1. Generates an output `Iterator[InternalRow]` with elements from ``StateStoreUpdater``'s link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForKeysWithData[updateStateForKeysWithData] and link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForTimedOutKeys[updateStateForTimedOutKeys]
+
+In the end, `doExecute` creates a `CompletionIterator` that executes a completion method after it has successfully iterated through all the elements (i.e. when a client has consumed the elements). The completion method requests `StateStore` to link:spark-sql-streaming-StateStore.adoc#commit[commit] followed by updating `numTotalStateRows` metric with the link:spark-sql-streaming-StateStore.adoc#numKeys[number of keys in the state store].
 
 === [[creating-instance]] Creating FlatMapGroupsWithStateExec Instance
 

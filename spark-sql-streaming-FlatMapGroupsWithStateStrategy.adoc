@@ -7,11 +7,12 @@
 
 [source, scala]
 ----
+import org.apache.spark.sql.streaming.GroupState
 val stateFunc = (key: Long, values: Iterator[(Timestamp, Long)], state: GroupState[Long]) => {
   Iterator((key, values.size))
 }
 import java.sql.Timestamp
-import org.apache.spark.sql.streaming.{GroupState, GroupStateTimeout, OutputMode}
+import org.apache.spark.sql.streaming.{GroupStateTimeout, OutputMode}
 val numGroups = spark.
   readStream.
   format("rate").

@@ -1,0 +1,28 @@
+== [[StateStoreOps]] StateStoreOps
+
+`StateStoreOps` is...FIXME
+
+=== [[mapPartitionsWithStateStore]] `mapPartitionsWithStateStore` Method
+
+[source, scala]
+----
+mapPartitionsWithStateStore[U](
+  stateInfo: StatefulOperatorStateInfo,
+  keySchema: StructType,
+  valueSchema: StructType,
+  indexOrdinal: Option[Int],
+  sessionState: SessionState,
+  storeCoordinator: Option[StateStoreCoordinatorRef])(
+  storeUpdateFunction: (StateStore, Iterator[T]) => Iterator[U]): StateStoreRDD[T, U]
+----
+
+`mapPartitionsWithStateStore`...FIXME
+
+[NOTE]
+====
+`mapPartitionsWithStateStore` is used when:
+
+* `FlatMapGroupsWithStateExec` is link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[executed]
+
+* ...FIXME
+====
