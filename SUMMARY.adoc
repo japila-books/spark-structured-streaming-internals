@@ -79,7 +79,7 @@
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Streaming Aggregates]
 . link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec]
 
-. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport]
+. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport -- Contract for Watermark Support in Unary Physical Operators]
 
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 . link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]

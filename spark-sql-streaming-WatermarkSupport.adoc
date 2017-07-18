@@ -1,6 +1,13 @@
-== [[WatermarkSupport]] WatermarkSupport
+== [[WatermarkSupport]] WatermarkSupport -- Contract for Watermark Support in Unary Physical Operators
 
-`WatermarkSupport` is...FIXME
+`WatermarkSupport` is a <<contract, contract>> for unary physical operators (i.e. `UnaryExecNode`) to have support for watermark.
+
+[NOTE]
+====
+*Watermark* (aka *"allowed lateness"*) allows to specify the threshold of late data, and lets the engine automatically track the current event time in the data to clean up old state accordingly.
+
+Read the official documentation of Spark in http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#handling-late-data-and-watermarking[Handling Late Data and Watermarking].
+====
 
 [[properties]]
 .WatermarkSupport's (Lazily-Initialized) Properties
@@ -30,4 +37,39 @@ INFO FlatMapGroupsWithStateExec: Filtering state store on: [evictionExpression]
 
 | [[watermarkPredicateForData]] `watermarkPredicateForData`
 | Optional `Predicate` that uses <<watermarkExpression, watermarkExpression>> and the child output to match rows older than the watermark.
+
+| [[watermarkPredicateForKeys]] `watermarkPredicateForKeys`
+| Optional `Predicate` that uses <<keyExpressions, keyExpressions>> to match rows older than the watermark.
 |===
+
+=== [[contract]] WatermarkSupport Contract
+
+[source, scala]
+----
+package org.apache.spark.sql.execution.streaming
+
+trait WatermarkSupport extends UnaryExecNode {
+  // only required methods that have no implementation
+  def keyExpressions: Seq[Attribute]
+  def eventTimeWatermark: Option[Long]
+}
+----
+
+.WatermarkSupport Contract
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| [[eventTimeWatermark]] `eventTimeWatermark`
+| Used mainly in <<watermarkExpression, watermarkExpression>> to create a `LessThanOrEqual` Catalyst binary expression that matches rows older than the watermark.
+
+| [[keyExpressions]] `keyExpressions`
+| Used mainly in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Predicate` to match rows older than the watermark.
+
+Used also in link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec] and link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] physical operators.
+|===
+
+=== [[removeKeysOlderThanWatermark]] `removeKeysOlderThanWatermark` Internal Method
+
+CAUTION: FIXME
