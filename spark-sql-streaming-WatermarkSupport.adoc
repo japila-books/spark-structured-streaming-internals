@@ -1,6 +1,6 @@
 == [[WatermarkSupport]] WatermarkSupport -- Contract for Watermark Support in Unary Physical Operators
 
-`WatermarkSupport` is a <<contract, contract>> for unary physical operators (i.e. `UnaryExecNode`) to have support for watermark.
+`WatermarkSupport` is a <<contract, contract>> for unary physical operators (i.e. `UnaryExecNode`) that want to support watermark.
 
 [NOTE]
 ====
@@ -19,7 +19,7 @@ Read the official documentation of Spark in http://spark.apache.org/docs/latest/
 | [[watermarkExpression]] `watermarkExpression`
 a| Optional Catalyst expression that matches rows older than the watermark.
 
-NOTE: Use `Dataset.withWatermark` operator to set the watermark. Refer to link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator].
+NOTE: Use `Dataset.withWatermark` operator to set the watermark. Read link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator].
 
 ---
 
@@ -27,7 +27,7 @@ When initialized, `watermarkExpression` finds link:spark-sql-streaming-EventTime
 
 If found, `watermarkExpression` creates `evictionExpression` with the watermark attribute that is less than or equal <<eventTimeWatermark, eventTimeWatermark>>.
 
-The watermark attribute may or may not be of type `StructType`. If it is, `watermarkExpression` uses the first field for comparison.
+The watermark attribute may be of type `StructType`. If it is, `watermarkExpression` uses the first field as the watermark.
 
 `watermarkExpression` prints out the following INFO message to the logs when link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute is found.
 
@@ -50,8 +50,8 @@ package org.apache.spark.sql.execution.streaming
 
 trait WatermarkSupport extends UnaryExecNode {
   // only required methods that have no implementation
-  def keyExpressions: Seq[Attribute]
   def eventTimeWatermark: Option[Long]
+  def keyExpressions: Seq[Attribute]
 }
 ----
 
@@ -72,4 +72,20 @@ Used also in link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec
 
 === [[removeKeysOlderThanWatermark]] `removeKeysOlderThanWatermark` Internal Method
 
-CAUTION: FIXME
+[source, scala]
+----
+removeKeysOlderThanWatermark(store: StateStore): Unit
+----
+
+`removeKeysOlderThanWatermark` requests the input `store` for link:spark-sql-streaming-StateStore.adoc#getRange[all rows].
+
+`removeKeysOlderThanWatermark` then uses <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to link:spark-sql-streaming-StateStore.adoc#remove[remove matching rows from the store].
+
+[NOTE]
+====
+`removeKeysOlderThanWatermark` is used when:
+
+* `StateStoreSaveExec` link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Update[is executed] (for link:spark-sql-streaming-OutputMode.adoc#Update[Update] output mode only)
+
+* `StreamingDeduplicateExec` link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[is executed]
+====

@@ -2,6 +2,14 @@
 
 `StateStore` is...FIXME
 
+=== [[remove]] `remove` Method
+
+CAUTION: FIXME
+
+=== [[getRange]] `getRange` Method
+
+CAUTION: FIXME
+
 === [[numKeys]] `numKeys` Method
 
 CAUTION: FIXME
