@@ -2,6 +2,14 @@
 
 `StateStore` is...FIXME
 
+=== [[iterator]] `iterator` Method
+
+CAUTION: FIXME
+
+=== [[put]] `put` Method
+
+CAUTION: FIXME
+
 === [[remove]] `remove` Method
 
 CAUTION: FIXME

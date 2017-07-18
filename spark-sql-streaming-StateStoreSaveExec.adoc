@@ -16,7 +16,7 @@ val counts = spark.
   withWatermark(eventTime = "timestamp", delayThreshold = "20 seconds").
   groupBy(window($"timestamp", "5 seconds") as "group").
   agg(count("value") as "value_count").
-  orderBy("group")
+  orderBy($"value_count".asc)
 
 scala> counts.printSchema
 root
@@ -27,19 +27,62 @@ root
 
 scala> counts.explain
 == Physical Plan ==
-*Sort [group#28 ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(group#28 ASC NULLS FIRST, 200)
-   +- *HashAggregate(keys=[window#35-T20000ms], functions=[count(value#22L)])
-      +- StateStoreSave [window#35-T20000ms], StatefulOperatorStateInfo(<unknown>,d8b8d5cd-6c4c-4fa3-8db1-2932a2c8036a,0,0), Append, 0
-         +- *HashAggregate(keys=[window#35-T20000ms], functions=[merge_count(value#22L)])
-            +- StateStoreRestore [window#35-T20000ms], StatefulOperatorStateInfo(<unknown>,d8b8d5cd-6c4c-4fa3-8db1-2932a2c8036a,0,0)
-               +- *HashAggregate(keys=[window#35-T20000ms], functions=[merge_count(value#22L)])
-                  +- Exchange hashpartitioning(window#35-T20000ms, 200)
-                     +- *HashAggregate(keys=[window#35-T20000ms], functions=[partial_count(value#22L)])
-                        +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#35, value#22L]
-                           +- *Filter isnotnull(timestamp#21-T20000ms)
-                              +- EventTimeWatermark timestamp#21: timestamp, interval 20 seconds
-                                 +- StreamingRelation rate, [timestamp#21, value#22L]
+*Sort [value_count#13L ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(value_count#13L ASC NULLS FIRST, 200)
+   +- *HashAggregate(keys=[window#14-T20000ms], functions=[count(value#1L)])
+      +- StateStoreSave [window#14-T20000ms], StatefulOperatorStateInfo(<unknown>,68f9eff5-baa8-47e2-85e6-a54cea5c7bc9,0,0), Append, 0
+         +- *HashAggregate(keys=[window#14-T20000ms], functions=[merge_count(value#1L)])
+            +- StateStoreRestore [window#14-T20000ms], StatefulOperatorStateInfo(<unknown>,68f9eff5-baa8-47e2-85e6-a54cea5c7bc9,0,0)
+               +- *HashAggregate(keys=[window#14-T20000ms], functions=[merge_count(value#1L)])
+                  +- Exchange hashpartitioning(window#14-T20000ms, 200)
+                     +- *HashAggregate(keys=[window#14-T20000ms], functions=[partial_count(value#1L)])
+                        +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#14, value#1L]
+                           +- *Filter isnotnull(timestamp#0-T20000ms)
+                              +- EventTimeWatermark timestamp#0: timestamp, interval 20 seconds
+                                 +- StreamingRelation rate, [timestamp#0, value#1L]
+
+// Start the query and hence StateStoreSaveExec
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val sq = counts.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Complete).
+  start
+
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+-----------+
+|group|value_count|
++-----+-----------+
++-----+-----------+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++---------------------------------------------+-----------+
+|group                                        |value_count|
++---------------------------------------------+-----------+
+|[2017-07-18 14:46:40.0,2017-07-18 14:46:45.0]|1          |
+|[2017-07-18 14:46:35.0,2017-07-18 14:46:40.0]|3          |
++---------------------------------------------+-----------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++---------------------------------------------+-----------+
+|group                                        |value_count|
++---------------------------------------------+-----------+
+|[2017-07-18 14:46:35.0,2017-07-18 14:46:40.0]|3          |
+|[2017-07-18 14:46:45.0,2017-07-18 14:46:50.0]|4          |
+|[2017-07-18 14:46:40.0,2017-07-18 14:46:45.0]|5          |
++---------------------------------------------+-----------+
+
+// In the end...
+sq.stop
 ----
 
 `StateStoreSaveExec` is updated with optional (and undefined initially) iteration-specific execution properties (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, OutputMode>>, and <<eventTimeWatermark, eventTimeWatermark>>) when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution].
@@ -47,7 +90,33 @@ scala> counts.explain
 .StateStoreSaveExec and IncrementalExecution
 image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
 
+[[metrics]]
+.StateStoreSaveExec's SQLMetrics
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[allUpdatesTimeMs]] `allUpdatesTimeMs`
+|
+
+| [[numUpdatedStateRows]] `numUpdatedStateRows`
+|
+
+| [[allRemovalsTimeMs]] `allRemovalsTimeMs`
+|
+
+| [[commitTimeMs]] `commitTimeMs`
+|
+
+| [[numOutputRows]] `numOutputRows`
+|
+|===
+
 When <<doExecute, executed>>, `StateStoreSaveExec`...FIXME
+
+.StateStoreSaveExec in web UI (Details for Query)
+image::images/StateStoreSaveExec-webui-query-details.png[align="center"]
 
 [[output]]
 The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
@@ -55,7 +124,7 @@ The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s outp
 [[outputPartitioning]]
 The output partitioning of `StateStoreSaveExec` is exactly the <<child, child>>'s output partitioning.
 
-=== [[doExecute]] `doExecute` Method
+=== [[doExecute]] Executing StateStoreSaveExec -- `doExecute` Method
 
 [source, scala]
 ----
@@ -66,11 +135,13 @@ NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a p
 
 Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
 
-NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is specified (that happens when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming aggregation for execution]).
+NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should happen when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming aggregation for execution]).
 
-`doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[mapPartitionsWithStateStore] with `storeUpdateFunction` that generates an unsafe projection (for <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[mapPartitionsWithStateStore] with `storeUpdateFunction` that:
 
-In the end, `doExecute` branches off per <<outputMode, OutputMode>>.
+1. Generates an unsafe projection (for <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+
+1. Branches off per <<outputMode, output mode>>.
 
 [[doExecute-branches]]
 .doExecute's Behaviour per Output Mode
@@ -80,13 +151,49 @@ In the end, `doExecute` branches off per <<outputMode, OutputMode>>.
 | doExecute's Behaviour
 
 | [[doExecute-Append]] `Append`
-|
+a|
+
+1. Uses link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermarkPredicateForData] predicate to exclude matching rows and (like in <<doExecute-Complete, Complete>> output mode) link:spark-sql-streaming-StateStore.adoc#put[stores all the remaining rows] in `StateStore`.
+
+1. (like in <<doExecute-Complete, Complete>> output mode) While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
+
+1. link:spark-sql-streaming-StateStore.adoc#getRange[Takes all the rows] from `StateStore` and returns a `NextIterator` that:
+
+* In `getNext`, finds the first row that matches link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForKeys[watermarkPredicateForKeys] predicate, link:spark-sql-streaming-StateStore.adoc#remove[removes it] from `StateStore`, and returns it back.
++
+If no row was found, `getNext` also marks the iterator as finished.
+
+* In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, link:spark-sql-streaming-StateStore.adoc#commit[commits the updates] to `StateStore`, records the time in <<commitTimeMs, commitTimeMs>> metric and `setStoreMetrics`.
 
 | [[doExecute-Complete]] `Complete`
-|
+a|
+
+1. link:spark-sql-streaming-StateStore.adoc#put[Stores all the rows] (as `UnsafeRow`) in `StateStore`.
+
+1. While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
+
+1. Records `0` in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
+
+1. link:spark-sql-streaming-StateStore.adoc#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
+
+1. `setStoreMetrics`
+
+1. In the end, link:spark-sql-streaming-StateStore.adoc#iterator[takes all the rows stored] in `StateStore` and increments <<numOutputRows, numOutputRows>> metric.
 
 | [[doExecute-Update]] `Update`
-|
+a| Returns `Iterator` of rows that uses link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermarkPredicateForData] predicate to exclude unmatching rows.
+
+In `hasNext`, when rows are no longer available:
+
+1. Records the total time to iterate over all the rows in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
+
+1. link:spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark[removeKeysOlderThanWatermark] and records the time in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
+
+1. link:spark-sql-streaming-StateStore.adoc#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
+
+1. `setStoreMetrics`
+
+In `next`, link:spark-sql-streaming-StateStore.adoc#put[stores a row] in `StateStore` and increments <<numOutputRows, numOutputRows>> and <<numUpdatedStateRows, numUpdatedStateRows>> metrics.
 |===
 
 `doExecute` reports a `UnsupportedOperationException` when executed with an invalid output mode.
