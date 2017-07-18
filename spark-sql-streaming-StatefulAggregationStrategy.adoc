@@ -2,6 +2,13 @@
 
 `StatefulAggregationStrategy` is an execution planning strategy (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `EventTimeWatermark` and `Aggregate` logical operators for streaming Datasets.
 
+`StatefulAggregationStrategy` is available using `SessionState`.
+
+[source, scala]
+----
+spark.sessionState.planner.StatefulAggregationStrategy
+----
+
 [[apply]]
 [[selection-requirements]]
 .StatefulAggregationStrategy's Logical to Physical Operator Conversions
@@ -73,7 +80,7 @@ planStreamingAggregation(
 
 `planStreamingAggregation` takes the grouping attributes (from `groupingExpressions`).
 
-NOTE: `groupingExpressions` corresponds to `Dataset.groupBy` operator.
+NOTE: `groupingExpressions` corresponds to the grouping function in `Dataset.groupBy` operator.
 
 `planStreamingAggregation` creates a partial aggregate.
 

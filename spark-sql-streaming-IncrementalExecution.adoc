@@ -3,7 +3,7 @@
 `IncrementalExecution` is a `QueryExecution` for streaming DataFrames that allows for executing a <<logicalPlan, logical plan>> incrementally (and continuously).
 
 [[preparations]]
-`IncrementalExecution` adds <<state, state>> to the parent ``QueryExecution``'s `preparations` that defines the state info for link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators.
+`IncrementalExecution` defines <<state, state>> preparation rule to the parent ``QueryExecution``'s `preparations` that prepares streaming physical plans (using iteration-specific execution properties).
 
 `IncrementalExecution` is <<creating-instance, created>> mostly when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch] (and when `ExplainCommand` is executed).
 
@@ -31,7 +31,9 @@ a| `SparkPlanner` with extra planning strategies:
 * `StreamingDeduplicationStrategy`
 
 | [[state]] `state`
-|
+| State preparation rule that transforms streaming physical plans (i.e. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec]) to add missing properties that are iteration-specific, i.e. the current batch.
+
+Used when `IncrementalExecution` <<preparations, prepares a physical plan>> (i.e. `SparkPlan`) for execution.
 
 | [[statefulOperatorId]] `statefulOperatorId`
 a| Java's `AtomicInteger`

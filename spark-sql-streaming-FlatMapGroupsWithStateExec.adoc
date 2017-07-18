@@ -129,7 +129,7 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
-Internally, `doExecute` initializes the metrics (i.e. `StateStoreWriter.metrics`).
+Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
 
 `doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[mapPartitionsWithStateStore] with `storeUpdateFunction` that:
 

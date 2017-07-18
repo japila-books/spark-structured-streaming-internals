@@ -1,8 +1,11 @@
-== [[StateStoreSaveExec]] StateStoreSaveExec -- Unary Physical Operator for Saving Streaming Aggregates
+== [[StateStoreSaveExec]] StateStoreSaveExec -- Unary Physical Operator for Saving State of Streaming Aggregates
 
 `StateStoreSaveExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[writes state to StateStore] and link:spark-sql-streaming-WatermarkSupport.adoc[supports streaming watermark].
 
 `StateStoreSaveExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#apply[plans a streaming aggregation].
+
+.StateStoreSaveExec and StatefulAggregationStrategy
+image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
 
 [source, scala]
 ----
@@ -10,37 +13,87 @@ val counts = spark.
   readStream.
   format("rate").
   load.
+  withWatermark(eventTime = "timestamp", delayThreshold = "20 seconds").
   groupBy(window($"timestamp", "5 seconds") as "group").
-  agg(count("value") as "count").
+  agg(count("value") as "value_count").
   orderBy("group")
 
+scala> counts.printSchema
+root
+ |-- group: struct (nullable = false)
+ |    |-- start: timestamp (nullable = true)
+ |    |-- end: timestamp (nullable = true)
+ |-- value_count: long (nullable = false)
+
+scala> counts.explain
+== Physical Plan ==
+*Sort [group#28 ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(group#28 ASC NULLS FIRST, 200)
+   +- *HashAggregate(keys=[window#35-T20000ms], functions=[count(value#22L)])
+      +- StateStoreSave [window#35-T20000ms], StatefulOperatorStateInfo(<unknown>,d8b8d5cd-6c4c-4fa3-8db1-2932a2c8036a,0,0), Append, 0
+         +- *HashAggregate(keys=[window#35-T20000ms], functions=[merge_count(value#22L)])
+            +- StateStoreRestore [window#35-T20000ms], StatefulOperatorStateInfo(<unknown>,d8b8d5cd-6c4c-4fa3-8db1-2932a2c8036a,0,0)
+               +- *HashAggregate(keys=[window#35-T20000ms], functions=[merge_count(value#22L)])
+                  +- Exchange hashpartitioning(window#35-T20000ms, 200)
+                     +- *HashAggregate(keys=[window#35-T20000ms], functions=[partial_count(value#22L)])
+                        +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#21-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#35, value#22L]
+                           +- *Filter isnotnull(timestamp#21-T20000ms)
+                              +- EventTimeWatermark timestamp#21: timestamp, interval 20 seconds
+                                 +- StreamingRelation rate, [timestamp#21, value#22L]
 ----
 
-`StateStoreSaveExec` is...FIXME...`IncrementalExecution#state`
+`StateStoreSaveExec` is updated with optional (and undefined initially) iteration-specific execution properties (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, OutputMode>>, and <<eventTimeWatermark, eventTimeWatermark>>) when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution].
+
+.StateStoreSaveExec and IncrementalExecution
+image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
+
+When <<doExecute, executed>>, `StateStoreSaveExec`...FIXME
 
 [[output]]
 The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
 
-[source, scala]
-----
-...FIXME
-----
-
 [[outputPartitioning]]
 The output partitioning of `StateStoreSaveExec` is exactly the <<child, child>>'s output partitioning.
 
-[source, scala]
-----
-...FIXME
-----
-
 === [[doExecute]] `doExecute` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+doExecute(): RDD[InternalRow]
+----
 
-==== [[doExecute-Update]] Update Output Mode
+NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
-CAUTION: FIXME
+Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
+
+NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is specified (that happens when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming aggregation for execution]).
+
+`doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[mapPartitionsWithStateStore] with `storeUpdateFunction` that generates an unsafe projection (for <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+
+In the end, `doExecute` branches off per <<outputMode, OutputMode>>.
+
+[[doExecute-branches]]
+.doExecute's Behaviour per Output Mode
+[cols="1,2",options="header",width="100%"]
+|===
+| Output Mode
+| doExecute's Behaviour
+
+| [[doExecute-Append]] `Append`
+|
+
+| [[doExecute-Complete]] `Complete`
+|
+
+| [[doExecute-Update]] `Update`
+|
+|===
+
+`doExecute` reports a `UnsupportedOperationException` when executed with an invalid output mode.
+
+```
+Invalid output mode: [outputMode]
+```
 
 === [[creating-instance]] Creating StateStoreSaveExec Instance
 

@@ -1,3 +1,7 @@
 == [[StateStoreWriter]] StateStoreWriter
 
 `StateStoreWriter` is...FIXME
+
+=== [[metrics]] `metrics` Lazy Property
+
+CAUTION: FIXME
