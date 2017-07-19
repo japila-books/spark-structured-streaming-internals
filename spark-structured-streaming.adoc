@@ -276,9 +276,14 @@ scala> spark.streams.active(0).explain
 
 === [[i-want-more]] Further reading or watching
 
-* https://databricks.com/blog/2016/07/28/structured-streaming-in-apache-spark.html[Structured Streaming In Apache Spark]
+* (article) https://databricks.com/blog/2016/07/28/structured-streaming-in-apache-spark.html[Structured Streaming In Apache Spark]
 
-* (video) https://youtu.be/oXkxXDG0gNk[The Future of Real Time in Spark] from Spark Summit East 2016 in which Reynold Xin presents the concept of *Streaming DataFrames* to the public.
+* (video) https://youtu.be/oXkxXDG0gNk[The Future of Real Time in Spark] from Spark Summit East 2016 in which Reynold Xin presents the concept of *Streaming DataFrames* to the public
+
 * (video) https://youtu.be/i7l3JQRx7Qw?t=19m15s[Structuring Spark: DataFrames, Datasets, and Streaming]
-* http://www.infoworld.com/article/3052924/analytics/what-sparks-structured-streaming-really-means.html[What Spark's Structured Streaming really means]
+
+* (article) http://www.infoworld.com/article/3052924/analytics/what-sparks-structured-streaming-really-means.html[What Spark's Structured Streaming really means]
+
 * (video) https://youtu.be/rl8dIzTpxrI[A Deep Dive Into Structured Streaming] by Tathagata "TD" Das from Spark Summit 2016
+
+* (video) https://youtu.be/rl8dIzTpxrI[Arbitrary Stateful Aggregations in Structured Streaming in Apache Spark] by Burak Yavuz
