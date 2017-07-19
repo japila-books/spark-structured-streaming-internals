@@ -16,6 +16,13 @@ CAUTION: FIXME
 | Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 |===
 
-=== [[doExecute]] `doExecute` Method
+=== [[doExecute]] Executing StreamingDeduplicateExec -- `doExecute` Method
+
+[source, scala]
+----
+doExecute(): RDD[InternalRow]
+----
+
+NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
 CAUTION: FIXME

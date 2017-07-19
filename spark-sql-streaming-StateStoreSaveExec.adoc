@@ -124,7 +124,7 @@ image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
 .StateStoreSaveExec in web UI (Details for Query)
 image::images/StateStoreSaveExec-webui-query-details.png[align="center"]
 
-When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and `mapPartitionsWithStateStore` per output mode.
+When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] (with `storeUpdateFunction` specific to the output mode).
 
 [[output]]
 The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
@@ -145,7 +145,7 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 
 NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should happen when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming aggregation for execution]).
 
-`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[mapPartitionsWithStateStore] with `storeUpdateFunction` that:
+`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
 1. Generates an unsafe projection (for <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 

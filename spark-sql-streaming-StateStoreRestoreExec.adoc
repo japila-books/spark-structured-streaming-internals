@@ -20,7 +20,14 @@ The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child
 ...FIXME
 ----
 
-=== [[doExecute]] `doExecute` Method
+=== [[doExecute]] Executing StateStoreRestoreExec -- `doExecute` Method
+
+[source, scala]
+----
+doExecute(): RDD[InternalRow]
+----
+
+NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
 CAUTION: FIXME
 

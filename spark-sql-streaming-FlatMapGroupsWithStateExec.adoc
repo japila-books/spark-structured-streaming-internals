@@ -135,7 +135,7 @@ NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a p
 
 Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
 
-`doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[mapPartitionsWithStateStore] with `storeUpdateFunction` that:
+`doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
 1. Creates a link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 1. Applies `watermarkPredicateForData` to `Iterator[InternalRow]` (only if `watermarkPredicateForData` is defined and <<timeoutConf, timeoutConf>> is `EventTimeTimeout`)

@@ -86,7 +86,7 @@
 . link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
-.. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps]
+.. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
 
