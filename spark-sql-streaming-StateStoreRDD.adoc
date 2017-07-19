@@ -1,0 +1,62 @@
+== [[StateStoreRDD]] StateStoreRDD
+
+`StateStoreRDD` is a custom `RDD` that allows <<compute, computations>> to be executed using link:spark-sql-streaming-StateStore.adoc[StateStore].
+
+`StateStoreRDD` is <<creating-instance, created>> exclusively when link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[physical operators are executed] (i.e. `FlatMapGroupsWithStateExec`, `StateStoreRestoreExec`, `StateStoreSaveExec`, `StreamingDeduplicateExec`).
+
+[[getPartitions]]
+`getPartitions` is exactly the partitions of the <<dataRDD, data RDD>>.
+
+[[internal-registries]]
+.StateStoreRDD's Internal Registries and Counters (in alphabetical order)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[hadoopConfBroadcast]] `hadoopConfBroadcast`
+|
+
+| [[storeConf]] `storeConf`
+|
+|===
+
+=== [[compute]] Computing Partition (in TaskContext) -- `compute` Method
+
+[source, scala]
+----
+compute(partition: Partition, ctxt: TaskContext): Iterator[U]
+----
+
+NOTE: `compute` is a part of the RDD Contract to compute a given partition in a `TaskContext`.
+
+CAUTION: FIXME
+
+=== [[getPreferredLocations]] Getting Placement Preferences of Partition -- `getPreferredLocations` Method
+
+[source, scala]
+----
+getPreferredLocations(partition: Partition): Seq[String]
+----
+
+NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement preferences (aka _preferred task locations_), i.e. where tasks should be executed to be as close to the data as possible.
+
+CAUTION: FIXME
+
+=== [[creating-instance]] Creating StateStoreRDD Instance
+
+`StateStoreRDD` takes the following when created:
+
+* [[dataRDD]] The data `RDD` (of records of type `T`)
+* [[storeUpdateFunction]] `storeUpdateFunction` (i.e. `(StateStore, Iterator[T]) => Iterator[U]`)
+* [[checkpointLocation]] The path to the checkpoint location
+* [[queryRunId]] `queryRunId`
+* [[operatorId]] Operator id
+* [[storeVersion]] Store version
+* [[keySchema]] Schema of the keys
+* [[valueSchema]] Schema of the values
+* [[indexOrdinal]] Optional index
+* [[sessionState]] `SessionState`
+* [[storeCoordinator]] Optional `StateStoreCoordinatorRef`
+
+`StateStoreRDD` initializes the <<internal-registries, internal registries and counters>>.

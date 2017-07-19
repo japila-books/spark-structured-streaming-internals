@@ -87,8 +87,10 @@
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
+.. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
+.. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 

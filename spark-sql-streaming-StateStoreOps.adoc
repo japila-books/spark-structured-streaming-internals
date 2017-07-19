@@ -44,7 +44,7 @@ NOTE: *Function Cleaning* is to clean a closure from unreferenced variables befo
 
 NOTE: `mapPartitionsWithStateStore` uses `TaskCompletionListener` to be notified when a task has finished.
 
-`mapPartitionsWithStateStore` returns a `StateStoreRDD`.
+`mapPartitionsWithStateStore` returns a link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD].
 
 [NOTE]
 ====
