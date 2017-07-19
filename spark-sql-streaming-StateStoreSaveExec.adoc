@@ -7,6 +7,8 @@
 .StateStoreSaveExec and StatefulAggregationStrategy
 image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
 
+NOTE: `StateStoreSaveExec` <<doExecute, works>> differently per output mode.
+
 [source, scala]
 ----
 val counts = spark.
@@ -85,7 +87,7 @@ Batch: 2
 sq.stop
 ----
 
-`StateStoreSaveExec` is updated with optional (and undefined initially) iteration-specific execution properties (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, OutputMode>>, and <<eventTimeWatermark, eventTimeWatermark>>) when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution].
+The optional properties, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, OutputMode>>, and <<eventTimeWatermark, eventTimeWatermark>>, are undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold their iteration-specific values every time `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution].
 
 .StateStoreSaveExec and IncrementalExecution
 image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
@@ -119,10 +121,10 @@ image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
 | Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 |===
 
-When <<doExecute, executed>>, `StateStoreSaveExec`...FIXME
-
 .StateStoreSaveExec in web UI (Details for Query)
 image::images/StateStoreSaveExec-webui-query-details.png[align="center"]
+
+When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and `mapPartitionsWithStateStore` per output mode.
 
 [[output]]
 The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
