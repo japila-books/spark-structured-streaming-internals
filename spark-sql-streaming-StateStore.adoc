@@ -2,6 +2,10 @@
 
 `StateStore` is...FIXME
 
+=== [[metrics]] `metrics` Method
+
+CAUTION: FIXME
+
 === [[iterator]] `iterator` Method
 
 CAUTION: FIXME

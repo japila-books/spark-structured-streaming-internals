@@ -55,9 +55,13 @@ sq.stop
 | Description
 
 | [[numTotalStateRows]] `numTotalStateRows`
-| Number of total state rows
+| Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
 
-Incremented when `FlatMapGroupsWithStateExec` is <<doExecute, executed>> (and the iterator has generated all the rows).
+Incremented when `FlatMapGroupsWithStateExec` is <<doExecute, executed>> (and the iterator has finished generating the rows).
+
+| [[stateMemory]] `stateMemory`
+| Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
+
 |===
 
 .FlatMapGroupsWithStateExec in web UI (Details for Query)

@@ -100,9 +100,6 @@ image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
 | [[allUpdatesTimeMs]] `allUpdatesTimeMs`
 |
 
-| [[numUpdatedStateRows]] `numUpdatedStateRows`
-|
-
 | [[allRemovalsTimeMs]] `allRemovalsTimeMs`
 |
 
@@ -111,6 +108,15 @@ image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
 
 | [[numOutputRows]] `numOutputRows`
 |
+
+| [[numTotalStateRows]] `numTotalStateRows`
+| Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
+
+| [[numUpdatedStateRows]] `numUpdatedStateRows`
+|
+
+| [[stateMemory]] `stateMemory`
+| Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 |===
 
 When <<doExecute, executed>>, `StateStoreSaveExec`...FIXME
@@ -163,7 +169,7 @@ a|
 +
 If no row was found, `getNext` also marks the iterator as finished.
 
-* In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, link:spark-sql-streaming-StateStore.adoc#commit[commits the updates] to `StateStore`, records the time in <<commitTimeMs, commitTimeMs>> metric and `setStoreMetrics`.
+* In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, link:spark-sql-streaming-StateStore.adoc#commit[commits the updates] to `StateStore` followed by recording the time in <<commitTimeMs, commitTimeMs>> metric and link:spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics[recording StateStore metrics].
 
 | [[doExecute-Complete]] `Complete`
 a|
@@ -176,7 +182,7 @@ a|
 
 1. link:spark-sql-streaming-StateStore.adoc#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
 
-1. `setStoreMetrics`
+1. link:spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics[Records StateStore metrics].
 
 1. In the end, link:spark-sql-streaming-StateStore.adoc#iterator[takes all the rows stored] in `StateStore` and increments <<numOutputRows, numOutputRows>> metric.
 
@@ -191,7 +197,7 @@ In `hasNext`, when rows are no longer available:
 
 1. link:spark-sql-streaming-StateStore.adoc#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
 
-1. `setStoreMetrics`
+1. link:spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics[Records StateStore metrics].
 
 In `next`, link:spark-sql-streaming-StateStore.adoc#put[stores a row] in `StateStore` and increments <<numOutputRows, numOutputRows>> and <<numUpdatedStateRows, numUpdatedStateRows>> metrics.
 |===

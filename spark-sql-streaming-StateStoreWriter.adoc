@@ -1,7 +1,59 @@
-== [[StateStoreWriter]] StateStoreWriter
+== [[StateStoreWriter]] StateStoreWriter -- Recording Metrics For Writing to StateStore
 
-`StateStoreWriter` is...FIXME
+`StateStoreWriter` is a contract for physical operators (i.e. `SparkPlan`) to record <<metrics, metrics>> when writing to a link:spark-sql-streaming-StateStore.adoc[StateStore].
 
-=== [[metrics]] `metrics` Lazy Property
+[[metrics]]
+.StateStoreWriter's SQLMetrics
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
 
-CAUTION: FIXME
+| [[numOutputRows]] `numOutputRows`
+| Number of output rows
+
+| [[numTotalStateRows]] `numTotalStateRows`
+| number of total state rows
+
+| [[numUpdatedStateRows]] `numUpdatedStateRows`
+| number of updated state rows
+
+| [[allUpdatesTimeMs]] `allUpdatesTimeMs`
+| total time to update rows
+
+| [[allRemovalsTimeMs]] `allRemovalsTimeMs`
+| total time to remove rows
+
+| [[commitTimeMs]] `commitTimeMs`
+| time to commit changes
+
+| [[stateMemory]] `stateMemory`
+| memory used by state (store)
+
+|===
+
+=== [[setStoreMetrics]] Recording StateStore Metrics for Physical Operator -- `setStoreMetrics` Method
+
+[source, scala]
+----
+setStoreMetrics(store: StateStore): Unit
+----
+
+`setStoreMetrics` requests `store` for link:spark-sql-streaming-StateStore.adoc#metrics[metrics] to use them to record the following metrics of a physical operator:
+
+* `numTotalStateRows` as `StateStore.numKeys`
+
+* `stateMemory` as `StateStore.memoryUsedBytes`
+
+`setStoreMetrics` records the implementation-specific metrics.
+
+[NOTE]
+====
+`setStoreMetrics` is used when:
+
+* `FlatMapGroupsWithStateExec` link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[is executed]
+
+* `StateStoreSaveExec` link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[is executed]
+
+* `StreamingDeduplicateExec` link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[is executed]
+====

@@ -84,10 +84,11 @@
 
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 . link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
-.. link:spark-sql-streaming-StateStore.adoc[StateStore]
+
+. link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
-.. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter]
+.. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
