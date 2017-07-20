@@ -1,14 +1,19 @@
 == [[StateStoreRDD]] StateStoreRDD
 
-`StateStoreRDD` is a custom `RDD` that allows <<compute, computations>> to be executed using link:spark-sql-streaming-StateStore.adoc[StateStore].
+`StateStoreRDD` is a specialized `RDD` for <<compute, computations>> using link:spark-sql-streaming-StateStore.adoc[StateStore].
 
-`StateStoreRDD` is <<creating-instance, created>> exclusively when link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[physical operators are executed] (i.e. `FlatMapGroupsWithStateExec`, `StateStoreRestoreExec`, `StateStoreSaveExec`, `StreamingDeduplicateExec`).
+`StateStoreRDD` is <<creating-instance, created>> as the result of link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[executing physical operators] (i.e. `FlatMapGroupsWithStateExec`, `StateStoreRestoreExec`, `StateStoreSaveExec`, `StreamingDeduplicateExec`).
+
+`StateStoreRDD` uses `StateStoreCoordinator` for <<getPreferredLocations, preferred locations>> for job scheduling.
+
+.StateStoreRDD and StateStoreCoordinator
+image::images/StateStoreRDD-StateStoreCoordinator.png[align="center"]
 
 [[getPartitions]]
 `getPartitions` is exactly the partitions of the <<dataRDD, data RDD>>.
 
 [[internal-registries]]
-.StateStoreRDD's Internal Registries and Counters (in alphabetical order)
+.StateStoreRDD's Internal Registries and Counters
 [cols="1,2",options="header",width="100%"]
 |===
 | Name
@@ -18,7 +23,7 @@
 |
 
 | [[storeConf]] `storeConf`
-|
+| Configuration parameters (as `StateStoreConf`) using the current `SQLConf` (from `SessionState`)
 |===
 
 === [[compute]] Computing Partition (in TaskContext) -- `compute` Method
@@ -41,7 +46,13 @@ getPreferredLocations(partition: Partition): Seq[String]
 
 NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement preferences (aka _preferred task locations_), i.e. where tasks should be executed to be as close to the data as possible.
 
-CAUTION: FIXME
+`getPreferredLocations` creates a `StateStoreProviderId` with `StateStoreId` (using <<checkpointLocation, checkpointLocation>>, <<operatorId, operatorId>> and the index of the input `partition`) and <<queryRunId, queryRunId>>.
+
+NOTE: <<checkpointLocation, checkpointLocation>> and <<operatorId, operatorId>> are shared across different partitions and so the only difference in `StateStoreProviderIds` is the partition index.
+
+In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the location of the state store for `StateStoreProviderId`.
+
+NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] coordinates instances of `StateStore` across all the executors, and tracks their locations for job scheduling.
 
 === [[creating-instance]] Creating StateStoreRDD Instance
 
