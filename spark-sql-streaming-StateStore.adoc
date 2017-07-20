@@ -2,6 +2,10 @@
 
 `StateStore` is...FIXME
 
+=== [[get]] `get` Method
+
+CAUTION: FIXME
+
 === [[hasCommitted]] `hasCommitted` Method
 
 CAUTION: FIXME

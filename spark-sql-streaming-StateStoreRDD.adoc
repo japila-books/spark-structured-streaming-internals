@@ -35,7 +35,13 @@ compute(partition: Partition, ctxt: TaskContext): Iterator[U]
 
 NOTE: `compute` is a part of the RDD Contract to compute a given partition in a `TaskContext`.
 
-CAUTION: FIXME
+`compute` computes <<dataRDD, dataRDD>> and passing the result on to <<storeUpdateFunction, storeUpdateFunction>> (with a configured link:spark-sql-streaming-StateStore.adoc[StateStore]).
+
+Internally, (and similarly to <<getPreferredLocations, getPreferredLocations>>) `compute` creates a `StateStoreProviderId` with `StateStoreId` (using <<checkpointLocation, checkpointLocation>>, <<operatorId, operatorId>> and the index of the input `partition`) and <<queryRunId, queryRunId>>.
+
+`compute` then requests `StateStore` for link:spark-sql-streaming-StateStore.adoc#get[the store for the StateStoreProviderId].
+
+In the end, `compute` computes <<dataRDD, dataRDD>> (using the input `partition` and `ctxt`) followed by executing <<storeUpdateFunction, storeUpdateFunction>> (with the store and the result).
 
 === [[getPreferredLocations]] Getting Placement Preferences of Partition -- `getPreferredLocations` Method
 
