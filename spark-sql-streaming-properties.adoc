@@ -32,4 +32,8 @@ val spark: SparkSession = SparkSession.builder
 | [[spark.sql.streaming.numRecentProgressUpdates]] `spark.sql.streaming.numRecentProgressUpdates`
 | `100`
 | Number of link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[progress updates to retain] for a streaming query
+
+| [[spark.sql.streaming.stateStore.maintenanceInterval]] `spark.sql.streaming.stateStore.maintenanceInterval`
+| `60s`
+|
 |===

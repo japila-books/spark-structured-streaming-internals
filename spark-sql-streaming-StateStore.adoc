@@ -75,7 +75,7 @@ trait StateStore {
 Used in...FIXME
 |===
 
-=== [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Method
+=== [[MaintenanceTask]] MaintenanceTask
 
 CAUTION: FIXME
 
@@ -110,3 +110,16 @@ Internally, `get` looks the `StateStoreProvider` (for `storeProviderId`) up in <
 In the end, `get` link:spark-sql-streaming-StateStoreProvider.adoc#getStore[gets] the `StateStore` (for the `version`).
 
 NOTE: `get` is used exclusively when `StateStoreRDD` link:spark-sql-streaming-StateStoreRDD.adoc#compute[is computed].
+
+=== [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Method
+
+[source, scala]
+----
+startMaintenanceIfNeeded(): Unit
+----
+
+`startMaintenanceIfNeeded` schedules <<MaintenanceTask, MaintenanceTask>> to start after and every link:spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval[spark.sql.streaming.stateStore.maintenanceInterval] (defaults to `60s`).
+
+NOTE: `startMaintenanceIfNeeded` does nothing when the maintenance task has already been started and is still running.
+
+NOTE: `startMaintenanceIfNeeded` is used exclusively when `StateStore` is requested to <<get, find the StateStore by StateStoreProviderId>>.
