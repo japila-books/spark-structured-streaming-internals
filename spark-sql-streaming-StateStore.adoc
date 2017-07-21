@@ -1,32 +1,85 @@
 == [[StateStore]] StateStore
 
-`StateStore` is...FIXME
+`StateStore` is a <<contract, contract>> for...FIXME
 
-=== [[get]] `get` Method
+[[contract]]
+[source, scala]
+----
+package org.apache.spark.sql.execution.streaming.state
+
+trait StateStore {
+  def abort(): Unit
+  def commit(): Long
+  def get(key: UnsafeRow): UnsafeRow
+  def getRange(start: Option[UnsafeRow], end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
+  def hasCommitted: Boolean
+  def id: StateStoreId
+  def iterator(): Iterator[UnsafeRowPair]
+  def metrics: StateStoreMetrics
+  def put(key: UnsafeRow, value: UnsafeRow): Unit
+  def remove(key: UnsafeRow): Unit
+  def version: Long
+}
+----
+
+.StateStore Contract
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| [[abort]] `abort`
+|
+
+| [[commit]] `commit`
+|
+
+| [[get]] `get`
+|
+
+| [[getRange]] `getRange`
+|
+
+| [[hasCommitted]] `hasCommitted`
+|
+
+| [[id]] `id`
+|
+
+| [[iterator]] `iterator`
+|
+
+| [[metrics]] `metrics`
+|
+
+| [[put]] `put`
+|
+
+| [[remove]] `remove`
+|
+
+| [[version]] `version`
+|
+|===
+
+[[internal-registries]]
+.StateStore's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[loadedProviders]] `loadedProviders`
+| Registry of link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProviders] per `StateStoreProviderId`
+
+Used in...FIXME
+|===
+
+=== [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Method
 
 CAUTION: FIXME
 
-=== [[hasCommitted]] `hasCommitted` Method
-
-CAUTION: FIXME
-
-=== [[metrics]] `metrics` Method
-
-CAUTION: FIXME
-
-=== [[iterator]] `iterator` Method
-
-CAUTION: FIXME
-
-=== [[put]] `put` Method
-
-CAUTION: FIXME
-
-=== [[remove]] `remove` Method
-
-CAUTION: FIXME
-
-=== [[getRange]] `getRange` Method
+=== [[reportActiveStoreInstance]] Announcing New StateStoreProvider -- `reportActiveStoreInstance` Internal Method
 
 CAUTION: FIXME
 
@@ -34,6 +87,26 @@ CAUTION: FIXME
 
 CAUTION: FIXME
 
-=== [[commit]] `commit` Method
+=== [[get]] Finding StateStore by StateStoreProviderId -- `get` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+get(
+  storeProviderId: StateStoreProviderId,
+  keySchema: StructType,
+  valueSchema: StructType,
+  indexOrdinal: Option[Int],
+  version: Long,
+  storeConf: StateStoreConf,
+  hadoopConf: Configuration): StateStore
+----
+
+`get` finds `StateStore` for `StateStoreProviderId`.
+
+Internally, `get` looks the `StateStoreProvider` (for `storeProviderId`) up in <<loadedProviders, loadedProviders>> registry. If not found, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
+
+`get` will also <<startMaintenanceIfNeeded, start the periodic maintenance task>> (unless already started) and <<reportActiveStoreInstance, announce the new StateStoreProvider>>.
+
+In the end, `get` link:spark-sql-streaming-StateStoreProvider.adoc#getStore[gets] the `StateStore` (for the `version`).
+
+NOTE: `get` is used exclusively when `StateStoreRDD` link:spark-sql-streaming-StateStoreRDD.adoc#compute[is computed].

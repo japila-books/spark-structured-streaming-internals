@@ -91,6 +91,7 @@
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
 .. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
+.. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
