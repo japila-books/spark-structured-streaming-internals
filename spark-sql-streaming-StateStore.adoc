@@ -75,7 +75,11 @@ trait StateStore {
 Used in...FIXME
 |===
 
-=== [[MaintenanceTask]] MaintenanceTask
+=== [[unload]] Removing StateStoreProvider From Provider Registry -- `unload` Internal Method
+
+CAUTION: FIXME
+
+=== [[verifyIfStoreInstanceActive]] `verifyIfStoreInstanceActive` Internal Method
 
 CAUTION: FIXME
 
@@ -123,3 +127,36 @@ startMaintenanceIfNeeded(): Unit
 NOTE: `startMaintenanceIfNeeded` does nothing when the maintenance task has already been started and is still running.
 
 NOTE: `startMaintenanceIfNeeded` is used exclusively when `StateStore` is requested to <<get, find the StateStore by StateStoreProviderId>>.
+
+=== [[MaintenanceTask]] `MaintenanceTask` Daemon Thread
+
+`MaintenanceTask` is a daemon thread that <<doMaintenance, triggers maintenance work of every registered StateStoreProvider>>.
+
+When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProviders>> registry.
+
+`MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool.
+
+NOTE: Use link:spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval[spark.sql.streaming.stateStore.maintenanceInterval] Spark property (default: `60s`) to control the initial delay and how often the thread should be executed.
+
+=== [[doMaintenance]] Triggering Maintenance of Registered StateStoreProviders -- `doMaintenance` Internal Method
+
+[source, scala]
+----
+doMaintenance(): Unit
+----
+
+Internally, `doMaintenance` prints the following DEBUG message to the logs:
+
+```
+DEBUG Doing maintenance
+```
+
+`doMaintenance` then requests every link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider] (registered in <<loadedProviders, loadedProviders>>) to link:spark-sql-streaming-StateStoreProvider.adoc#doMaintenance[do its own internal maintenance] (only when a `StateStoreProvider` <<verifyIfStoreInstanceActive, is still active>>).
+
+When a `StateStoreProvider` is <<verifyIfStoreInstanceActive, inactive>>, `doMaintenance` <<unload, removes it from the provider registry>> and prints the following INFO message to the logs:
+
+```
+INFO Unloaded [provider]
+```
+
+NOTE: `doMaintenance` is used exclusively in <<MaintenanceTask, MaintenanceTask daemon thread>>.

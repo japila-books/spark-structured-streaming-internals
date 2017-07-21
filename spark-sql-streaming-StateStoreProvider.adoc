@@ -2,6 +2,10 @@
 
 `StateStoreProvider` is...FIXME
 
+=== [[doMaintenance]] `doMaintenance` Method
+
+CAUTION: FIXME
+
 === [[createAndInit]] `createAndInit` Method
 
 CAUTION: FIXME

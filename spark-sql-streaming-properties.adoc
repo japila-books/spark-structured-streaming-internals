@@ -35,5 +35,5 @@ val spark: SparkSession = SparkSession.builder
 
 | [[spark.sql.streaming.stateStore.maintenanceInterval]] `spark.sql.streaming.stateStore.maintenanceInterval`
 | `60s`
-|
+| The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.adoc#MaintenanceTask[maintenance task].
 |===
