@@ -1,0 +1,19 @@
+== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef -- RpcEndpointRef to StateStoreCoordinator
+
+`StateStoreCoordinatorRef` is...FIXME
+
+=== [[forDriver]] `forDriver` Method
+
+CAUTION: FIXME
+
+=== [[forExecutor]] `forExecutor` Method
+
+CAUTION: FIXME
+
+=== [[reportActiveInstance]] `reportActiveInstance` Method
+
+CAUTION: FIXME
+
+=== [[getLocation]] `getLocation` Method
+
+CAUTION: FIXME

@@ -53,7 +53,7 @@ NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuer
 
 `StreamingQueryManager` manages the following instances:
 
-* `StateStoreCoordinatorRef` (as `stateStoreCoordinator`)
+* link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] (as `stateStoreCoordinator`)
 * link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus] (as `listenerBus`)
 * `activeQueries` which is a mutable mapping between query names and `StreamingQuery` objects.
 

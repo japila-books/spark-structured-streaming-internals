@@ -56,7 +56,7 @@ NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement
 
 NOTE: <<checkpointLocation, checkpointLocation>> and <<operatorId, operatorId>> are shared across different partitions and so the only difference in `StateStoreProviderIds` is the partition index.
 
-In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the location of the state store for `StateStoreProviderId`.
+In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#getLocation[location of the state store] for `StateStoreProviderId`.
 
 NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] coordinates instances of `StateStore` across all the executors, and tracks their locations for job scheduling.
 
@@ -74,6 +74,6 @@ NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 * [[valueSchema]] Schema of the values
 * [[indexOrdinal]] Optional index
 * [[sessionState]] `SessionState`
-* [[storeCoordinator]] Optional `StateStoreCoordinatorRef`
+* [[storeCoordinator]] Optional link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef]
 
 `StateStoreRDD` initializes the <<internal-registries, internal registries and counters>>.
