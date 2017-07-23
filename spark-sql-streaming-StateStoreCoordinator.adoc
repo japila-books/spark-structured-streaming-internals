@@ -1,3 +1,76 @@
-== [[StateStoreCoordinator]] StateStoreCoordinator
+== [[StateStoreCoordinator]] StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD
 
-`StateStoreCoordinator` is...FIXME
+`StateStoreCoordinator` keeps track of link:spark-sql-streaming-StateStore.adoc[StateStores] loaded in Spark executors across the cluster.
+
+NOTE: The main purpose of `StateStoreCoordinator` is for `StateStoreRDD` to link:spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations[know the location preferences for partitions].
+
+[[instances]]
+`StateStoreCoordinator` uses `instances` internal registry of link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProviders] by their ids and `ExecutorCacheTaskLocations`.
+
+`StateStoreCoordinator` is a `ThreadSafeRpcEndpoint` RPC endpoint that manipulates <<instances, instances>> registry through <<messages, RPC messages>>.
+
+[[messages]]
+.StateStoreCoordinator RPC Endpoint's Messages and Message Handlers (in alphabetical order)
+[width="100%",cols="1,2",options="header"]
+|===
+| Message
+| Message Handler
+
+| [[DeactivateInstances]] `DeactivateInstances`
+a| Removes `StateStoreProviderIds` (from <<instances, instances>>) with `queryRunId` as `runId`
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG Deactivating instances related to checkpoint location [runId]: [comma-separated storeIdsToRemove]
+```
+
+| [[GetLocation]] `GetLocation`
+a| Gives the location of `StateStoreProviderId` (from <<instances, instances>>) with the host and an executor id on that host.
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG Got location of the state store [id]: [executorId]
+```
+
+| [[ReportActiveInstance]] `ReportActiveInstance`
+a| Registers `StateStoreProviderId` that is active on an executor (given host and port).
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG Reported state store [id] is active at [executorId]
+```
+
+| [[StopCoordinator]] `StopCoordinator`
+a| Stops `StateStoreCoordinator` RPC Endpoint
+
+You should see the following DEBUG message in the logs:
+
+```
+INFO StateStoreCoordinator stopped
+```
+
+| [[VerifyIfInstanceActive]] `VerifyIfInstanceActive`
+a| Verifies if `StateStoreProviderId` is registered (in <<instances, instances>>) on `executorId`
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG Verified that state store [id] is active: [response]
+```
+|===
+
+[TIP]
+====
+Enable `INFO` or `DEBUG` logging level for `org.apache.spark.sql.execution.streaming.state.StateStoreCoordinator` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.state.StateStoreCoordinator=TRACE
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====

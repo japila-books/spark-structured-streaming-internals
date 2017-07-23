@@ -90,7 +90,7 @@
 .. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
-.. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
+.. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
 ... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef -- Interface for Communication with StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 

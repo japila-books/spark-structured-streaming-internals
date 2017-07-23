@@ -58,7 +58,7 @@ NOTE: <<checkpointLocation, checkpointLocation>> and <<operatorId, operatorId>> 
 
 In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#getLocation[location of the state store] for `StateStoreProviderId`.
 
-NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] coordinates instances of `StateStore` across all the executors, and tracks their locations for job scheduling.
+NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] coordinates instances of `StateStores` across Spark executors in the cluster, and tracks their locations for job scheduling.
 
 === [[creating-instance]] Creating StateStoreRDD Instance
 
