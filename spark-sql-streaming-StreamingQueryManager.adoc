@@ -10,12 +10,20 @@ val spark: SparkSession = ...
 val queries = spark.streams
 ----
 
+`StreamingQueryManager` is created when...FIXME
+
 [[internal-registries]]
 .StreamingQueryManager's Internal Registries and Counters (in alphabetical order)
 [cols="1,2",options="header",width="100%"]
 |===
 | Name
 | Description
+
+| [[stateStoreCoordinator]] `stateStoreCoordinator`
+|
+
+| [[listenerBus]] `listenerBus`
+|
 
 | [[activeQueries]] `activeQueries`
 | Registry of `StreamingQueryWrapper` per id
@@ -163,3 +171,11 @@ It is set in:
 * `notifyQueryTermination(terminatedQuery: StreamingQuery)` sets `lastTerminatedQuery` to be `terminatedQuery` and notifies all the threads that wait on `awaitTerminationLock`.
 +
 It is called from link:spark-sql-streaming-StreamExecution.adoc#runBatches[StreamExecution.runBatches].
+
+=== [[creating-instance]] Creating StreamingQueryManager Instance
+
+`StreamingQueryManager` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+
+`StreamingQueryManager` initializes the <<internal-registries, internal registries and counters>>.

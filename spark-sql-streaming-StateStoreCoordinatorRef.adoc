@@ -1,19 +1,55 @@
-== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef -- RpcEndpointRef to StateStoreCoordinator
+== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef -- Interface for Communication with StateStoreCoordinator
 
-`StateStoreCoordinatorRef` is...FIXME
+[[rpcEndpointRef]]
+`StateStoreCoordinatorRef` allows for <<messages, communication>> with link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] (through `rpcEndpointRef` reference).
+
+[[messages]]
+.StateStoreCoordinatorRef's Methods and Underlying RPC Messages (in alphabetical order)
+[width="100%",cols="1,1,2",options="header"]
+|===
+| Method
+| RPC Message
+| Description
+
+| [[deactivateInstances]] `deactivateInstances`
+| `DeactivateInstances`
+|
+
+| [[getLocation]] `getLocation`
+| `GetLocation`
+|
+
+| [[reportActiveInstance]] `reportActiveInstance`
+| `ReportActiveInstance`
+|
+
+| [[stop]] `stop`
+| `StopCoordinator`
+|
+
+| [[verifyIfInstanceActive]] `verifyIfInstanceActive`
+| `VerifyIfInstanceActive`
+|
+|===
 
 === [[forDriver]] `forDriver` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+forDriver(env: SparkEnv): StateStoreCoordinatorRef
+----
+
+`forDriver`...FIXME
+
+NOTE: `forDriver` is used exclusively when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#creating-instance[is created].
 
 === [[forExecutor]] `forExecutor` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+forExecutor(env: SparkEnv): StateStoreCoordinatorRef
+----
 
-=== [[reportActiveInstance]] `reportActiveInstance` Method
+`forExecutor`...FIXME
 
-CAUTION: FIXME
-
-=== [[getLocation]] `getLocation` Method
-
-CAUTION: FIXME
+NOTE: `forExecutor` is used exclusively when `StateStore` link:spark-sql-streaming-StateStore.adoc#coordinatorRef[creates a StateStoreCoordinatorRef (for executors)].

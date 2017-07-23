@@ -80,7 +80,7 @@ Used in...FIXME
 Used in...FIXME
 |===
 
-=== [[coordinatorRef]] `coordinatorRef` Internal Method
+=== [[coordinatorRef]] Creating StateStoreCoordinatorRef (for Executors) -- `coordinatorRef` Internal Method
 
 CAUTION: FIXME
 
