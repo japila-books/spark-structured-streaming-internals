@@ -2,6 +2,19 @@
 
 `StatefulAggregationStrategy` is an execution planning strategy (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `EventTimeWatermark` and `Aggregate` logical operators for streaming Datasets.
 
+[NOTE]
+====
+link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is the result of `Dataset.withWatermark` operator.
+
+`Aggregate` logical operator is the result of:
+
+* SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
+
+* `RelationalGroupedDataset` aggregations, i.e. `agg` and  `pivot` operators
+
+* `KeyValueGroupedDataset` aggregations, i.e. `mapGroups`, `flatMapGroups`, `mapGroupsWithState`, `flatMapGroupsWithState`, `reduceGroups`, and `agg`, `cogroup` operators
+====
+
 `StatefulAggregationStrategy` is available using `SessionState`.
 
 [source, scala]
@@ -40,7 +53,7 @@ val counts = spark.
   load.
   groupBy(window($"timestamp", "5 seconds") as "group").
   agg(count("value") as "count").
-  orderBy("group")  // <-- supported only in Complete output mode
+  orderBy("group")
 scala> counts.explain
 == Physical Plan ==
 *Sort [group#6 ASC NULLS FIRST], true, 0
@@ -57,14 +70,18 @@ scala> counts.explain
                               +- StreamingRelation rate, [timestamp#0, value#1L]
 
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
 val consoleOutput = counts.
   writeStream.
   format("console").
   option("truncate", false).
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.seconds)).
   queryName("counts").
-  outputMode(OutputMode.Complete).
+  outputMode(OutputMode.Complete).  // <-- required for groupBy
   start
+
+// Eventually...
+consoleOutput.stop
 ----
 
 === [[planStreamingAggregation]][[AggUtils-planStreamingAggregation]] Selecting Aggregate Physical Operator Given Aggregate Expressions — `AggUtils.planStreamingAggregation` Internal Method
@@ -82,24 +99,56 @@ planStreamingAggregation(
 
 NOTE: `groupingExpressions` corresponds to the grouping function in `Dataset.groupBy` operator.
 
-`planStreamingAggregation` creates a partial aggregate.
+[[partialAggregate]]
+`planStreamingAggregation` creates an aggregate physical operator (called `partialAggregate`) with:
 
-CAUTION: FIXME Describe `partialAggregate`
+* `requiredChildDistributionExpressions` undefined (i.e. `None`)
+* `initialInputBufferOffset` as `0`
+* `functionsWithoutDistinct` in `Partial` mode
+* `child` operator as the input `child`
 
-`planStreamingAggregation` creates a partial merge (before `StateStoreRestoreExec`).
+[NOTE]
+====
+`planStreamingAggregation` creates one of the following aggregate physical operators (in the order of preference):
 
-CAUTION: FIXME Describe `partialMerged1`
+1. `HashAggregateExec`
+1. `ObjectHashAggregateExec`
+1. `SortAggregateExec`
 
-`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreRestoreExec.adoc#creating-instance[StateStoreRestoreExec] with the grouping attributes, no `StatefulOperatorStateInfo`, and the partial merge physical operator.
+`planStreamingAggregation` uses `AggUtils.createAggregate` method to select an aggregate physical operator that you can read about in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-SparkStrategy-Aggregation.html#AggUtils-createAggregate[Selecting Aggregate Physical Operator Given Aggregate Expressions -- `AggUtils.createAggregate` Internal Method] in *Mastering Apache Spark 2* gitbook.
+====
 
-`planStreamingAggregation` creates a partial merge (with `StateStoreRestoreExec` as the child physical operator).
+[[partialMerged1]]
+`planStreamingAggregation` creates an aggregate physical operator (called `partialMerged1`) with:
 
-CAUTION: FIXME Describe `partialMerged2`
+* `requiredChildDistributionExpressions` based on the input `groupingExpressions`
+* `initialInputBufferOffset` as the length of `groupingExpressions`
+* `functionsWithoutDistinct` in `PartialMerge` mode
+* `child` operator as <<partialAggregate, partialAggregate>> aggregate physical operator created above
 
-`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreSaveExec.adoc#creating-instance[StateStoreSaveExec] with the grouping attributes and the partial merge physical operator (with `StateStoreRestoreExec` as the child physical operator and other properties undefined, i.e. `StatefulOperatorStateInfo`, output mode and eventTimeWatermark).
+[[restored]]
+`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreRestoreExec.adoc#creating-instance[StateStoreRestoreExec] with the grouping attributes, no `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
 
-In the end, `planStreamingAggregation` creates the final complete aggregate.
+[[partialMerged2]]
+`planStreamingAggregation` creates an aggregate physical operator (called `partialMerged2`) with:
 
-CAUTION: FIXME Describe `finalAndCompleteAggregate`
+* `child` operator as <<restored, StateStoreRestoreExec>> physical operator created above
+
+NOTE: The only difference between <<partialMerged1, partialMerged1>> and <<partialMerged2, partialMerged2>> steps is the child physical operator.
+
+[[saved]]
+`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreSaveExec.adoc#creating-instance[StateStoreSaveExec] with:
+
+* the grouping attributes based on the input `groupingExpressions`
+* No `stateInfo`, `outputMode` and `eventTimeWatermark`
+* `child` operator as <<partialMerged2, partialMerged2>> aggregate physical operator created above
+
+[[finalAndCompleteAggregate]]
+In the end, `planStreamingAggregation` creates the final aggregate physical operator (called `finalAndCompleteAggregate`) with:
+
+* `requiredChildDistributionExpressions` based on the input `groupingExpressions`
+* `initialInputBufferOffset` as the length of `groupingExpressions`
+* `functionsWithoutDistinct` in `Final` mode
+* `child` operator as <<saved, StateStoreSaveExec>> physical operator created above
 
 NOTE: `planStreamingAggregation` is used exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#apply[plans a streaming aggregation].
