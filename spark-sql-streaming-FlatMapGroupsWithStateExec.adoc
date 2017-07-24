@@ -158,7 +158,7 @@ In the end, `doExecute` creates a `CompletionIterator` that executes a completio
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 * [[timeoutConf]] link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 * [[batchTimestampMs]] Optional `batchTimestampMs`
-* [[eventTimeWatermark]] Optional `eventTimeWatermark`
+* [[eventTimeWatermark]] Optional event time watermark
 * [[child]] Child physical operator
 
 `FlatMapGroupsWithStateExec` initializes the <<internal-registries, internal registries and counters>>.

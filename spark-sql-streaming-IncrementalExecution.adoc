@@ -28,7 +28,7 @@ a| `SparkPlanner` with extra planning strategies:
 * link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy]
 * link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]
 * `StreamingRelationStrategy`
-* `StreamingDeduplicationStrategy`
+* link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy]
 
 | [[state]] `state`
 | State preparation rule that transforms streaming physical plans (i.e. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec]) to add missing properties that are iteration-specific, i.e. the current batch.

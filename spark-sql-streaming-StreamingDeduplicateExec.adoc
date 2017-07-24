@@ -1,6 +1,8 @@
 == [[StreamingDeduplicateExec]] StreamingDeduplicateExec
 
-CAUTION: FIXME
+`StreamingDeduplicateExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[writes state to StateStore] and link:spark-sql-streaming-WatermarkSupport.adoc[supports streaming watermark].
+
+`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc#apply[plans Deduplicate unary logical operators].
 
 [[metrics]]
 .StreamingDeduplicateExec's SQLMetrics
@@ -16,6 +18,12 @@ CAUTION: FIXME
 | Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 |===
 
+[[output]]
+The output schema of `StreamingDeduplicateExec` is exactly the <<child, child>>'s output schema.
+
+[[outputPartitioning]]
+The output partitioning of `StreamingDeduplicateExec` is exactly the <<child, child>>'s output partitioning.
+
 === [[doExecute]] Executing StreamingDeduplicateExec -- `doExecute` Method
 
 [source, scala]
@@ -26,3 +34,12 @@ doExecute(): RDD[InternalRow]
 NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
 CAUTION: FIXME
+
+=== [[creating-instance]] Creating StreamingDeduplicateExec Instance
+
+`StreamingDeduplicateExec` takes the following when created:
+
+* [[keyExpressions]] Attributes for key
+* [[child]] Child physical plan (i.e. `SparkPlan`)
+* [[stateInfo]] Optional `StatefulOperatorStateInfo`
+* [[eventTimeWatermark]] Optional event time watermark

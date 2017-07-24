@@ -82,8 +82,9 @@
 
 . link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport -- Contract for Streaming Watermark in Unary Physical Operators]
 
-. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 . link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
+. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
+. link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
