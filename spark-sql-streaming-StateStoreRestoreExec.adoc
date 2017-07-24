@@ -4,21 +4,100 @@
 
 `StateStoreRestoreExec` is <<creating-instance, created>> mainly when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#apply[plans a streaming aggregation].
 
+[source, scala]
+----
+val counts = spark.
+  readStream.
+  format("rate").
+  load.
+  withWatermark(eventTime = "timestamp", delayThreshold = "20 seconds").
+  groupBy(window($"timestamp", "5 seconds") as "group").
+  agg(count("value") as "value_count").
+  orderBy($"value_count".asc)
+
+scala> counts.explain
+== Physical Plan ==
+*Sort [value_count#13L ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(value_count#13L ASC NULLS FIRST, 200)
+   +- *HashAggregate(keys=[window#14-T20000ms], functions=[count(value#1L)])
+      +- StateStoreSave [window#14-T20000ms], OperatorStateId(<unknown>,0,0), Append, 0
+         +- *HashAggregate(keys=[window#14-T20000ms], functions=[merge_count(value#1L)])
+            +- StateStoreRestore [window#14-T20000ms], OperatorStateId(<unknown>,0,0)
+               +- *HashAggregate(keys=[window#14-T20000ms], functions=[merge_count(value#1L)])
+                  +- Exchange hashpartitioning(window#14-T20000ms, 200)
+                     +- *HashAggregate(keys=[window#14-T20000ms], functions=[partial_count(value#1L)])
+                        +- *Project [window#14-T20000ms, value#1L]
+                           +- *Filter (((isnotnull(timestamp#0-T20000ms) && isnotnull(window#14-T20000ms)) && (timestamp#0-T20000ms >= window#14-T20000ms.start)) && (timestamp#0-T20000ms < window#14-T20000ms.end))
+                              +- *Expand [List(named_struct(start, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 0) - 1) * 5000000) + 0), end, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 0) - 1) * 5000000) + 5000000)), timestamp#0-T20000ms, value#1L), List(named_struct(start, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 1) - 1) * 5000000) + 0), end, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 1) - 1) * 5000000) + 5000000)), timestamp#0-T20000ms, value#1L)], [window#14-T20000ms, timestamp#0-T20000ms, value#1L]
+                                 +- EventTimeWatermark timestamp#0: timestamp, interval 20 seconds
+                                    +- StreamingRelation rate, [timestamp#0, value#1L]
+
+// Start the query and hence StateStoreRestoreExec
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val sq = counts.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Complete).
+  start
+
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+-----------+
+|group|value_count|
++-----+-----------+
++-----+-----------+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++---------------------------------------------+-----------+
+|group                                        |value_count|
++---------------------------------------------+-----------+
+|[2017-07-24 21:37:20.0,2017-07-24 21:37:25.0]|3          |
+|[2017-07-24 21:37:25.0,2017-07-24 21:37:30.0]|4          |
++---------------------------------------------+-----------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++---------------------------------------------+-----------+
+|group                                        |value_count|
++---------------------------------------------+-----------+
+|[2017-07-24 21:37:20.0,2017-07-24 21:37:25.0]|3          |
+|[2017-07-24 21:37:35.0,2017-07-24 21:37:40.0]|4          |
+|[2017-07-24 21:37:25.0,2017-07-24 21:37:30.0]|5          |
+|[2017-07-24 21:37:30.0,2017-07-24 21:37:35.0]|5          |
++---------------------------------------------+-----------+
+
+// In the end...
+sq.stop
+----
+
+[[metrics]]
+.StateStoreRestoreExec's SQLMetrics
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[numOutputRows]] `numOutputRows`
+|
+|===
+
+.StateStoreRestoreExec in web UI (Details for Query)
+image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
+
+When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that restores the current saved state per key in a row.
+
 [[output]]
 The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s output schema.
 
-[source, scala]
-----
-...FIXME
-----
-
 [[outputPartitioning]]
 The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child>>'s output partitioning.
-
-[source, scala]
-----
-...FIXME
-----
 
 === [[doExecute]] Executing StateStoreRestoreExec -- `doExecute` Method
 
@@ -29,7 +108,19 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
-CAUTION: FIXME
+`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+
+1. Generates an unsafe projection to access key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+
+1. For every row (as `InternalRow`)
+
+* extracts the key from the row (using the unsafe projection above)
+
+* link:spark-sql-streaming-StateStore.adoc#get[gets the saved state] in `StateStore` for the key
+
+* Increments <<numOutputRows, numOutputRows>> metric
+
+* Generates collection of the current row followed by optional state (there could be no state for the key)
 
 === [[creating-instance]] Creating StateStoreRestoreExec Instance
 

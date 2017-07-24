@@ -147,7 +147,7 @@ NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at th
 
 `doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
-1. Generates an unsafe projection (for <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+1. Generates an unsafe projection to access key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 
 1. Branches off per <<outputMode, output mode>>.
 
