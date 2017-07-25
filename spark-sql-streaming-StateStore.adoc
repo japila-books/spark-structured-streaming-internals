@@ -53,7 +53,7 @@ trait StateStore {
 |
 
 | [[put]] `put`
-|
+| Stores a state (as `UnsafeRow`) for a key (as `UnsafeRow`)
 
 | [[remove]] `remove`
 |

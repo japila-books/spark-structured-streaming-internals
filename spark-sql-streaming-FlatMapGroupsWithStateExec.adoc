@@ -138,10 +138,12 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 `doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
 1. Creates a link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
-1. Applies `watermarkPredicateForData` to `Iterator[InternalRow]` (only if `watermarkPredicateForData` is defined and <<timeoutConf, timeoutConf>> is `EventTimeTimeout`)
+
+1. Filters out rows from `Iterator[InternalRow]` that match `watermarkPredicateForData` (when defined and <<timeoutConf, timeoutConf>> is `EventTimeTimeout`)
+
 1. Generates an output `Iterator[InternalRow]` with elements from ``StateStoreUpdater``'s link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForKeysWithData[updateStateForKeysWithData] and link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForTimedOutKeys[updateStateForTimedOutKeys]
 
-In the end, `doExecute` creates a `CompletionIterator` that executes a completion method after it has successfully iterated through all the elements (i.e. when a client has consumed the elements). The completion method requests `StateStore` to link:spark-sql-streaming-StateStore.adoc#commit[commit] followed by updating `numTotalStateRows` metric with the link:spark-sql-streaming-StateStore.adoc#numKeys[number of keys in the state store].
+1. In the end, `storeUpdateFunction` creates a `CompletionIterator` that executes a completion function (aka `completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests `StateStore` to link:spark-sql-streaming-StateStore.adoc#commit[commit] followed by updating `numTotalStateRows` metric with the link:spark-sql-streaming-StateStore.adoc#numKeys[number of keys in the state store].
 
 === [[creating-instance]] Creating FlatMapGroupsWithStateExec Instance
 

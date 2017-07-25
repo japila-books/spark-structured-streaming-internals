@@ -1,6 +1,6 @@
 == [[StreamingDeduplicateExec]] StreamingDeduplicateExec
 
-`StreamingDeduplicateExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[writes state to StateStore] and link:spark-sql-streaming-WatermarkSupport.adoc[supports streaming watermark].
+`StreamingDeduplicateExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[writes state to StateStore] with link:spark-sql-streaming-WatermarkSupport.adoc[support for streaming watermark].
 
 `StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc#apply[plans Deduplicate unary logical operators].
 
@@ -11,8 +11,26 @@
 | Name
 | Description
 
+| [[allUpdatesTimeMs]] `allUpdatesTimeMs`
+|
+
+| [[allRemovalsTimeMs]] `allRemovalsTimeMs`
+|
+
+| [[commitTimeMs]] `commitTimeMs`
+|
+
 | [[numTotalStateRows]] `numTotalStateRows`
 | Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
+
+| [[numOutputRows]] `numOutputRows`
+|
+
+| [[numTotalStateRows]] `numTotalStateRows`
+| Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
+
+| [[numUpdatedStateRows]] `numUpdatedStateRows`
+|
 
 | [[stateMemory]] `stateMemory`
 | Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
@@ -33,7 +51,35 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
-CAUTION: FIXME
+Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
+
+`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+
+1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+
+1. Filters out rows from `Iterator[InternalRow]` that match `watermarkPredicateForData` (when defined and <<timeoutConf, timeoutConf>> is `EventTimeTimeout`)
+
+1. For every row (as `InternalRow`)
+
+* Extracts the key from the row (using the unsafe projection above)
+
+* link:spark-sql-streaming-StateStore.adoc#get[Gets the saved state] in `StateStore` for the key
+
+* (when there was a state for the key in the row) Filters out (aka _drops_) the row
+
+* (when there was _no_ state for the key in the row) Stores a new (and empty) state for the key and increments <<numUpdatedStateRows, numUpdatedStateRows>> and <<numOutputRows, numOutputRows>> metrics.
+
+1. In the end, `storeUpdateFunction` creates a `CompletionIterator` that executes a completion function (aka `completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows).
++
+The completion function does the following:
+
+* Updates <<allUpdatesTimeMs, allUpdatesTimeMs>> metric (that is the total time to execute `storeUpdateFunction`)
+
+* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to link:spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark[remove keys older than the watermark from the StateStore]
+
+* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to link:spark-sql-streaming-StateStore.adoc#commit[commit the changes to the StateStore]
+
+* link:spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics[Sets StateStore-specific metrics]
 
 === [[creating-instance]] Creating StreamingDeduplicateExec Instance
 

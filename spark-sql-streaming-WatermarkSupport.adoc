@@ -70,7 +70,7 @@ trait WatermarkSupport extends UnaryExecNode {
 Used also in link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec] and link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] physical operators.
 |===
 
-=== [[removeKeysOlderThanWatermark]] `removeKeysOlderThanWatermark` Internal Method
+=== [[removeKeysOlderThanWatermark]] Removing Keys Older Than Watermark From StateStore -- `removeKeysOlderThanWatermark` Internal Method
 
 [source, scala]
 ----

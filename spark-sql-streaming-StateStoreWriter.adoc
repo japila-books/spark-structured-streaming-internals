@@ -32,7 +32,7 @@
 
 |===
 
-=== [[setStoreMetrics]] Recording StateStore Metrics for Physical Operator -- `setStoreMetrics` Method
+=== [[setStoreMetrics]] Setting StateStore-Specific Metrics for Physical Operator -- `setStoreMetrics` Method
 
 [source, scala]
 ----

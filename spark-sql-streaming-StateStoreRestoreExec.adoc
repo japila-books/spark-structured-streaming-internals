@@ -110,13 +110,13 @@ NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a p
 
 `doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
-1. Generates an unsafe projection to access key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 
 1. For every row (as `InternalRow`)
 
-* extracts the key from the row (using the unsafe projection above)
+* Extracts the key from the row (using the unsafe projection above)
 
-* link:spark-sql-streaming-StateStore.adoc#get[gets the saved state] in `StateStore` for the key
+* link:spark-sql-streaming-StateStore.adoc#get[Gets the saved state] in `StateStore` for the key
 
 * Increments <<numOutputRows, numOutputRows>> metric
 
