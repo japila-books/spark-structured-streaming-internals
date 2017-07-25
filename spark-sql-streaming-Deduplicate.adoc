@@ -2,12 +2,48 @@
 
 `Deduplicate` is a unary logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> to represent `Dataset.dropDuplicates` operator (that drops duplicate rows, considering only the subset of columns).
 
+`Deduplicate` has <<streaming, streaming>> flag enabled for streaming Datasets.
+
 [source, scala]
 ----
-FIXME
+val uniqueRates = spark.
+  readStream.
+  format("rate").
+  load.
+  dropDuplicates("value")  // <-- creates Deduplicate logical operator
+// Note the streaming flag
+scala> println(uniqueRates.queryExecution.logical.numberedTreeString)
+00 Deduplicate [value#33L], true  // <-- streaming flag enabled
+01 +- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4785f176,rate,List(),None,List(),None,Map(),None), rate, [timestamp#32, value#33L]
 ----
 
-NOTE: `Dataset.dropDuplicates` is not supported after aggregation on streaming Datasets and checked in `UnsupportedOperationChecker.checkForStreaming`.
+[NOTE]
+====
+`UnsupportedOperationChecker` ensures that `Dataset.dropDuplicates` is not used after aggregation on streaming Datasets (in `UnsupportedOperationChecker.checkForStreaming`).
+
+The following code is not supported in Structured Streaming and results in an `AnalysisException`.
+
+[source, scala]
+----
+val counts = spark.
+  readStream.
+  format("rate").
+  load.
+  groupBy(window($"timestamp", "5 seconds") as "group").
+  agg(count("value") as "value_count").
+  dropDuplicates  // <-- after groupBy
+
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val sq = counts.
+  writeStream.
+  format("console").
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Complete).
+  start
+org.apache.spark.sql.AnalysisException: dropDuplicates is not supported after aggregation on a streaming DataFrame/Dataset;;
+----
+====
 
 [NOTE]
 ====
