@@ -1,3 +1,30 @@
 == [[Deduplicate]] Deduplicate Unary Logical Operator
 
-`Deduplicate` is...FIXME
+`Deduplicate` is a unary logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> to represent `Dataset.dropDuplicates` operator (that drops duplicate rows, considering only the subset of columns).
+
+[source, scala]
+----
+FIXME
+----
+
+NOTE: `Dataset.dropDuplicates` is not supported after aggregation on streaming Datasets and checked in `UnsupportedOperationChecker.checkForStreaming`.
+
+[NOTE]
+====
+`Deduplicate` logical operator is translated (aka _planned_) to:
+
+* link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] physical operator in link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy] execution planning strategy for streaming Datasets (aka _streaming plans_)
+
+* `Aggregate` physical operator in `ReplaceDeduplicateWithAggregate` execution planning strategy for non-streaming/batch Datasets (aka _batch plans_)
+====
+
+[[output]]
+The output schema of `Deduplicate` is exactly the <<child, child>>'s output schema.
+
+=== [[creating-instance]] Creating Deduplicate Instance
+
+`Deduplicate` takes the following when created:
+
+* [[keys]] Attributes for keys
+* [[child]] Child logical operator (i.e. `LogicalPlan`)
+* [[streaming]] Flag whether the logical operator is for streaming (enabled) or batch (disabled) mode

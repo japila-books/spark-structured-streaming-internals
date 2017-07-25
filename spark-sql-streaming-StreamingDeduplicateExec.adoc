@@ -4,6 +4,21 @@
 
 `StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc#apply[plans Deduplicate unary logical operators].
 
+.StreamingDeduplicateExec and StreamingDeduplicationStrategy
+image::images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png[align="center"]
+
+[source, scala]
+----
+val counts = spark.
+  readStream.
+  format("rate").
+  load.
+  withWatermark(eventTime = "timestamp", delayThreshold = "20 seconds").
+  groupBy(window($"timestamp", "5 seconds") as "group").
+  agg(count("value") as "value_count").
+  orderBy($"value_count".asc)
+----
+
 [[metrics]]
 .StreamingDeduplicateExec's SQLMetrics
 [cols="1,2",options="header",width="100%"]

@@ -1,6 +1,6 @@
 == [[FlatMapGroupsWithState]] FlatMapGroupsWithState Unary Logical Operator
 
-`FlatMapGroupsWithState` is a unary logical operator (aka `LogicalPlan`) that is <<creating-instance, created>> to represent the following operators in link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset]:
+`FlatMapGroupsWithState` is a unary logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> to represent the following operators in link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset]:
 
 * link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState]
 

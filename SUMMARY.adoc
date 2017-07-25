@@ -72,6 +72,7 @@
 
 . link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator]
 . link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState Unary Logical Operator]
+. link:spark-sql-streaming-Deduplicate.adoc[Deduplicate Unary Logical Operator]
 . link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
 
 . link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator]

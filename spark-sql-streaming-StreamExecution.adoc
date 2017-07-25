@@ -68,7 +68,7 @@ a| Current batch number
 |
 
 | [[logicalPlan]] `logicalPlan`
-| Lazily-created logical plan (aka `LogicalPlan`) for a streaming query.
+| Lazily-created logical plan (i.e. `LogicalPlan`) for a streaming query.
 
 Initialized right after `StreamExecution` started <<runBatches, running batches>>.
 
