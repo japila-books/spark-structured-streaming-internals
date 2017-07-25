@@ -15,22 +15,31 @@ val counts = spark.
   agg(count("value") as "value_count").
   orderBy($"value_count".asc)
 
+// Logical plan with Aggregate logical operator
+scala> println(counts.queryExecution.logical.numberedTreeString)
+00 'Sort ['value_count ASC NULLS FIRST], true
+01 +- Aggregate [window#66-T20000ms], [window#66-T20000ms AS group#59, count(value#53L) AS value_count#65L]
+02    +- Filter isnotnull(timestamp#52-T20000ms)
+03       +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#66, timestamp#52-T20000ms, value#53L]
+04          +- EventTimeWatermark timestamp#52: timestamp, interval 20 seconds
+05             +- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4785f176,rate,List(),None,List(),None,Map(),None), rate, [timestamp#52, value#53L]
+
+// Physical plan with StateStoreRestoreExec (as StateStoreRestore in the output)
 scala> counts.explain
 == Physical Plan ==
-*Sort [value_count#13L ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(value_count#13L ASC NULLS FIRST, 200)
-   +- *HashAggregate(keys=[window#14-T20000ms], functions=[count(value#1L)])
-      +- StateStoreSave [window#14-T20000ms], OperatorStateId(<unknown>,0,0), Append, 0
-         +- *HashAggregate(keys=[window#14-T20000ms], functions=[merge_count(value#1L)])
-            +- StateStoreRestore [window#14-T20000ms], OperatorStateId(<unknown>,0,0)
-               +- *HashAggregate(keys=[window#14-T20000ms], functions=[merge_count(value#1L)])
-                  +- Exchange hashpartitioning(window#14-T20000ms, 200)
-                     +- *HashAggregate(keys=[window#14-T20000ms], functions=[partial_count(value#1L)])
-                        +- *Project [window#14-T20000ms, value#1L]
-                           +- *Filter (((isnotnull(timestamp#0-T20000ms) && isnotnull(window#14-T20000ms)) && (timestamp#0-T20000ms >= window#14-T20000ms.start)) && (timestamp#0-T20000ms < window#14-T20000ms.end))
-                              +- *Expand [List(named_struct(start, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 0) - 1) * 5000000) + 0), end, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 0) - 1) * 5000000) + 5000000)), timestamp#0-T20000ms, value#1L), List(named_struct(start, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 1) - 1) * 5000000) + 0), end, ((((CEIL((cast((precisetimestamp(timestamp#0-T20000ms) - 0) as double) / 5000000.0)) + 1) - 1) * 5000000) + 5000000)), timestamp#0-T20000ms, value#1L)], [window#14-T20000ms, timestamp#0-T20000ms, value#1L]
-                                 +- EventTimeWatermark timestamp#0: timestamp, interval 20 seconds
-                                    +- StreamingRelation rate, [timestamp#0, value#1L]
+*Sort [value_count#65L ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(value_count#65L ASC NULLS FIRST, 200)
+   +- *HashAggregate(keys=[window#66-T20000ms], functions=[count(value#53L)])
+      +- StateStoreSave [window#66-T20000ms], StatefulOperatorStateInfo(<unknown>,c4a68192-b90b-40cc-b2c5-d996584eb0da,0,0), Append, 0
+         +- *HashAggregate(keys=[window#66-T20000ms], functions=[merge_count(value#53L)])
+            +- StateStoreRestore [window#66-T20000ms], StatefulOperatorStateInfo(<unknown>,c4a68192-b90b-40cc-b2c5-d996584eb0da,0,0)
+               +- *HashAggregate(keys=[window#66-T20000ms], functions=[merge_count(value#53L)])
+                  +- Exchange hashpartitioning(window#66-T20000ms, 200)
+                     +- *HashAggregate(keys=[window#66-T20000ms], functions=[partial_count(value#53L)])
+                        +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#52-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#66, value#53L]
+                           +- *Filter isnotnull(timestamp#52-T20000ms)
+                              +- EventTimeWatermark timestamp#52: timestamp, interval 20 seconds
+                                 +- StreamingRelation rate, [timestamp#52, value#53L]
 
 // Start the query and hence StateStoreRestoreExec
 import scala.concurrent.duration._
@@ -73,7 +82,7 @@ Batch: 2
 |[2017-07-24 21:37:30.0,2017-07-24 21:37:35.0]|5          |
 +---------------------------------------------+-----------+
 
-// In the end...
+// Eventually...
 sq.stop
 ----
 

@@ -1,4 +1,4 @@
-== [[StreamingDeduplicateExec]] StreamingDeduplicateExec
+== [[StreamingDeduplicateExec]] StreamingDeduplicateExec -- Unary Physical Operator for Streaming Deduplication
 
 `StreamingDeduplicateExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[writes state to StateStore] with link:spark-sql-streaming-WatermarkSupport.adoc[support for streaming watermark].
 
@@ -9,14 +9,78 @@ image::images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png[align=
 
 [source, scala]
 ----
-val counts = spark.
+val uniqueValues = spark.
   readStream.
   format("rate").
   load.
-  withWatermark(eventTime = "timestamp", delayThreshold = "20 seconds").
-  groupBy(window($"timestamp", "5 seconds") as "group").
-  agg(count("value") as "value_count").
-  orderBy($"value_count".asc)
+  dropDuplicates("value")  // <-- creates Deduplicate logical operator
+
+scala> println(uniqueValues.queryExecution.logical.numberedTreeString)
+00 Deduplicate [value#214L], true
+01 +- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4785f176,rate,List(),None,List(),None,Map(),None), rate, [timestamp#213, value#214L]
+
+scala> uniqueValues.explain
+== Physical Plan ==
+StreamingDeduplicate [value#214L], StatefulOperatorStateInfo(<unknown>,5a65879c-67bc-4e77-b417-6100db6a52a2,0,0), 0
++- Exchange hashpartitioning(value#214L, 200)
+   +- StreamingRelation rate, [timestamp#213, value#214L]
+
+// Start the query and hence StreamingDeduplicateExec
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val sq = uniqueValues.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Update).
+  start
+
+// sorting not supported for non-aggregate queries
+// and so values are unsorted
+
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++---------+-----+
+|timestamp|value|
++---------+-----+
++---------+-----+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----------------------+-----+
+|timestamp              |value|
++-----------------------+-----+
+|2017-07-25 22:12:03.018|0    |
+|2017-07-25 22:12:08.018|5    |
+|2017-07-25 22:12:04.018|1    |
+|2017-07-25 22:12:06.018|3    |
+|2017-07-25 22:12:05.018|2    |
+|2017-07-25 22:12:07.018|4    |
++-----------------------+-----+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----------------------+-----+
+|timestamp              |value|
++-----------------------+-----+
+|2017-07-25 22:12:10.018|7    |
+|2017-07-25 22:12:09.018|6    |
+|2017-07-25 22:12:12.018|9    |
+|2017-07-25 22:12:13.018|10   |
+|2017-07-25 22:12:15.018|12   |
+|2017-07-25 22:12:11.018|8    |
+|2017-07-25 22:12:14.018|11   |
+|2017-07-25 22:12:16.018|13   |
+|2017-07-25 22:12:17.018|14   |
+|2017-07-25 22:12:18.018|15   |
++-----------------------+-----+
+
+// Eventually...
+sq.stop
 ----
 
 [[metrics]]
@@ -50,6 +114,9 @@ val counts = spark.
 | [[stateMemory]] `stateMemory`
 | Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 |===
+
+.StreamingDeduplicateExec in web UI (Details for Query)
+image::images/StreamingDeduplicateExec-webui-query-details.png[align="center"]
 
 [[output]]
 The output schema of `StreamingDeduplicateExec` is exactly the <<child, child>>'s output schema.
