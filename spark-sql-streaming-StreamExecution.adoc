@@ -45,12 +45,17 @@ image::images/StreamExecution-start.png[align="center"]
 | Description
 
 | [[availableOffsets]] `availableOffsets`
-a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] with the streaming sources for which there are offsets available (i.e. unprocessed yet).
+a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the link:spark-sql-streaming-Source.adoc[streaming sources] and the available offsets (i.e. unprocessed yet).
 
 NOTE: `availableOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#availableOffsets[ProgressReporter Contract].
 
 | [[awaitBatchLock]] `awaitBatchLock`
 | Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
+
+| [[committedOffsets]] `committedOffsets`
+a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the link:spark-sql-streaming-Source.adoc[streaming sources] and the committed offsets (i.e. processed already).
+
+NOTE: `committedOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#committedOffsets[ProgressReporter Contract].
 
 | [[currentBatchId]] `currentBatchId`
 a| Current batch number
@@ -219,7 +224,7 @@ constructNextBatch(): Unit
 Getting offsets from [source]
 ```
 
-`constructNextBatch` <<reportTimeTaken, reports the time>> for link:spark-sql-streaming-Source.adoc#getOffset[getting the offset per source].
+`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] for link:spark-sql-streaming-Source.adoc#getOffset[getting the offset per source].
 
 `constructNextBatch` prints out the following DEBUG message in the logs:
 
@@ -243,16 +248,75 @@ CAUTION: FIXME
 
 NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatches>> and <<populateStartOffsets, populateStartOffsets>>.
 
-=== [[runBatch]] Running Streaming Batch -- `runBatch` Internal Method
+=== [[runBatch]] Running Single Streaming Batch -- `runBatch` Internal Method
 
 [source, scala]
 ----
 runBatch(sparkSessionToRunBatch: SparkSession): Unit
 ----
 
-CAUTION: FIXME
+`runBatch` performs the following steps:
 
-NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs batches>>.
+1. <<runBatch-getBatch, Requesting Unprocessed Data From Streaming Sources>>
+1. <<runBatch-withNewSources, Transforming StreamingExecutionRelations (in Logical Plan) With New Data>>
+1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions (in Logical Plan) With New Data>>
+1. <<runBatch-queryPlanning, Creating IncrementalExecution>>
+1. <<runBatch-nextBatch, Creating Dataset with New Data and IncrementalExecution Query Execution>>
+1. <<runBatch-addBatch, Adding New Batch>>
+1. <<runBatch-awaitBatchLock, Waking Up Threads Waiting For Stream to Progress>>
+
+NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>>.
+
+==== [[runBatch-getBatch]] Requesting Unprocessed Data From Streaming Sources
+
+Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (as `newData`).
+
+`runBatch` executes `getBatch` action while link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[tracking the time taken] (under `getBatch` as `triggerDetailKey` that is later available in link:spark-sql-streaming-ProgressReporter.adoc#currentDurationsMs[currentDurationsMs])
+
+The `getBatch` action takes <<availableOffsets, available offsets per source>> and processes the offsets that <<committedOffsets, have not been committed already>>.
+
+`runBatch` then requests link:spark-sql-streaming-Source.adoc#getBatch[every source for the data] (as `DataFrame` with the new records).
+
+NOTE: `runBatch` requests the streaming sources for new DataFrames sequentially, source by source.
+
+.StreamExecution's Running Single Streaming Batch
+image::images/StreamExecution-runBatch.png[align="center"]
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG StreamExecution: Retrieving data from [source]: [current] -> [available]
+```
+
+You should then see the following DEBUG message in the logs:
+
+```
+DEBUG StreamExecution: getBatch took [timeTaken] ms
+```
+
+==== [[runBatch-withNewSources]] Transforming StreamingExecutionRelations (in Logical Plan) With New Data
+
+CAUTION: FIXME Describe `withNewSources`
+
+==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions (in Logical Plan) With New Data
+
+CAUTION: FIXME Describe `triggerLogicalPlan`
+
+==== [[runBatch-queryPlanning]] Creating IncrementalExecution
+
+CAUTION: FIXME Describe `queryPlanning` block (with `lastExecution`)
+
+==== [[runBatch-nextBatch]] Creating Dataset with New Data and IncrementalExecution Query Execution
+
+CAUTION: FIXME Describe `nextBatch`
+
+==== [[runBatch-addBatch]] Adding New Batch
+
+CAUTION: FIXME Describe `addBatch`
+
+==== [[runBatch-awaitBatchLock]] Waking Up Threads Waiting For Stream to Progress
+
+CAUTION: FIXME Describe `awaitBatchLock` and later
 
 === [[runBatches]] Running Streaming Batches -- `runBatches` Internal Method
 
@@ -356,7 +420,7 @@ NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<micro
 
 `batchRunner` <<startTrigger, starts trigger calculation>>.
 
-If <<state, state>> is not `TERMINATED` (which means that the streaming query should be executed), `batchRunner`  executes the current batch and <<reportTimeTaken, reports time taken>>.
+If <<state, state>> is not `TERMINATED` (which means that the streaming query should be executed), `batchRunner`  executes the current batch and link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken].
 
 The current batch branches off per <<currentBatchId, currentBatchId>>.
 
@@ -417,10 +481,6 @@ populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
 CAUTION: FIXME
 
 NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (when <<currentBatchId, currentBatchId>> is negative).
-
-=== [[reportTimeTaken]] `reportTimeTaken` Internal Method
-
-CAUTION: FIXME
 
 === [[updateStatusMessage]] `updateStatusMessage` Internal Method
 

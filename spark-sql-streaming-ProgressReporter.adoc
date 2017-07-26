@@ -56,18 +56,18 @@ source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => of
 | Description
 
 | [[currentDurationsMs]] `currentDurationsMs`
-a| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap[scala.collection.mutable.HashMap] of action names and their cumulative times (in milliseconds).
+a| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap[scala.collection.mutable.HashMap] of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
 
 The action names can be as follows:
 
 * `addBatch`
-* `getBatch`
+* `getBatch` (when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a streaming batch])
 * `getOffset`
 * `queryPlanning`
 * `triggerExecution`
 * `walCommit` when writing offsets to log
 
-Starts empty when `ProgressReporter` <<startTrigger, sets the state for new trigger>> with new entries added or updated when <<reportTimeTaken, recording execution time>> (of an action).
+Starts empty when `ProgressReporter` <<startTrigger, sets the state for a new trigger>> with new entries added or updated when <<reportTimeTaken, reporting execution time>> (of an action).
 
 [TIP]
 ====
@@ -169,7 +169,7 @@ a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
 
 Used when:
 
-* FIXME
+* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches], ...FIXME
 
 | [[currentBatchId]] `currentBatchId`
 | Id of the current batch
@@ -288,7 +288,7 @@ In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, 
 
 NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] (after link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor has finished executing the batch runner]).
 
-=== [[reportTimeTaken]] Recording Execution Time -- `reportTimeTaken` Method
+=== [[reportTimeTaken]] Tracking and Recording Execution Time -- `reportTimeTaken` Method
 
 [source, scala]
 ----

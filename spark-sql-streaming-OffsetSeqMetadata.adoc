@@ -1,6 +1,6 @@
 == [[OffsetSeqMetadata]] OffsetSeqMetadata
 
-`OffsetSeqMetadata` holds the following as the metadata for...FIXME:
+`OffsetSeqMetadata` holds the metadata for...FIXME:
 
 * [[batchWatermarkMs]] `batchWatermarkMs` - the current event time watermark in milliseconds (used to bound the lateness of data that will processed)
 
