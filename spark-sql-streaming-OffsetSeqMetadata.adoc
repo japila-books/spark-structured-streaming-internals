@@ -1,3 +1,11 @@
 == [[OffsetSeqMetadata]] OffsetSeqMetadata
 
-`OffsetSeqMetadata` is...FIXME
+`OffsetSeqMetadata` holds the following as the metadata for...FIXME:
+
+* [[batchWatermarkMs]] `batchWatermarkMs` - the current event time watermark in milliseconds (used to bound the lateness of data that will processed)
+
+* [[batchTimestampMs]] `batchTimestampMs` - the current batch processing timestamp in milliseconds
+
+* [[conf]] `conf` - batch configuration with `spark.sql.shuffle.partitions` and `spark.sql.streaming.stateStore.providerClass` Spark properties
+
+NOTE: `OffsetSeqMetadata` is used mainly when `IncrementalExecution` is link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[created].

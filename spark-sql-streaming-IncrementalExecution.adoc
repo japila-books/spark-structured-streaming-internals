@@ -1,6 +1,6 @@
 == [[IncrementalExecution]] IncrementalExecution -- QueryExecution for Streaming DataFrames
 
-`IncrementalExecution` is a `QueryExecution` for streaming DataFrames that allows for executing a <<logicalPlan, logical plan>> incrementally (and continuously).
+`IncrementalExecution` is a `QueryExecution` for streaming Datasets that allows for executing a <<logicalPlan, logical plan>> incrementally (and continuously).
 
 [[preparations]]
 `IncrementalExecution` defines <<state, state>> preparation rule to the parent ``QueryExecution``'s `preparations` that prepares streaming physical plans (using iteration-specific execution properties).
@@ -9,7 +9,10 @@
 
 [source, scala]
 ----
-val q = spark.readStream.format("rate").load
+val q = spark.
+  readStream.
+  format("rate").
+  load
 scala> q.explain
 == Physical Plan ==
 StreamingRelation rate, [timestamp#639, value#640L]
