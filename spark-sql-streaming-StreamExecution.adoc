@@ -233,7 +233,7 @@ CAUTION: FIXME
 
 NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatches>> and <<populateStartOffsets, populateStartOffsets>>.
 
-=== [[runBatch]] Running Batch -- `runBatch` Internal Method
+=== [[runBatch]] Running Streaming Batch -- `runBatch` Internal Method
 
 [source, scala]
 ----

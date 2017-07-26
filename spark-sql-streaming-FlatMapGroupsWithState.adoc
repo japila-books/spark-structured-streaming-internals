@@ -31,7 +31,9 @@ apply[K: Encoder, V: Encoder, S: Encoder, U: Encoder](
   child: LogicalPlan): LogicalPlan
 ----
 
-`apply` creates `SerializeFromObject` object consumer (aka unary logical operator) with `FlatMapGroupsWithState` logical plan.
+`apply` <<creating-instance, creates>> a `SerializeFromObject` logical operator with a `FlatMapGroupsWithState` as its child logical operator.
+
+Internally, `apply` creates `SerializeFromObject` object consumer (aka unary logical operator) with `FlatMapGroupsWithState` logical plan.
 
 Internally, `apply` finds `ExpressionEncoder` for the type `S` and creates a `FlatMapGroupsWithState` with `UnresolvedDeserializer` for the types `K` and `V`.
 
