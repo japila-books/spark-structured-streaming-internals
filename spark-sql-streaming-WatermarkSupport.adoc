@@ -4,7 +4,7 @@
 
 [NOTE]
 ====
-*Watermark* (aka *"allowed lateness"*) is a moving threshold that trails behind *max seen event time* and specifies what data to consider for aggregations, i.e. the threshold of late data so the engine can automatically drop incoming late data and clean up old state accordingly.
+*Watermark* (aka *"allowed lateness"*) is a moving threshold of *event time* and specifies what data to consider for aggregations, i.e. the threshold of late data so the engine can automatically drop incoming late data given event time and clean up old state accordingly.
 
 Read the official documentation of Spark in http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#handling-late-data-and-watermarking[Handling Late Data and Watermarking].
 ====

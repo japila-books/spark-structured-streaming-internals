@@ -140,6 +140,7 @@ trait ProgressReporter {
   def currentBatchId: Long
   def id: UUID
   def name: String
+  def offsetSeqMetadata: OffsetSeqMetadata
   def postEvent(event: StreamingQueryListener.Event): Unit
   def runId: UUID
   def sink: Sink
@@ -178,6 +179,9 @@ Used when:
 
 | [[name]] `name`
 | Name of...FIXME
+
+| [[offsetSeqMetadata]] `offsetSeqMetadata`
+|
 
 | [[postEvent]] `postEvent`
 | FIXME

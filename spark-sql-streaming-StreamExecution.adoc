@@ -94,13 +94,23 @@ $ jstack 13056 \| grep -e "stream execution thread"
 | [[noNewData]] `noNewData`
 | Flag whether there are any new offsets available for processing or not.
 
-Turned on (i.e. enabled) in <<constructNextBatch, constructNextBatch>> when no new offsets are available.
+Turned on (i.e. enabled) when <<constructNextBatch, constructing next streaming batch>> when no new offsets are available.
 
 | [[offsetLog]] `offsetLog`
 |
 
 | [[offsetSeqMetadata]] `offsetSeqMetadata`
-|
+a| link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
+
+NOTE: `offsetSeqMetadata` is a part of link:spark-sql-streaming-ProgressReporter.adoc#offsetSeqMetadata[ProgressReporter Contract].
+
+* Initialized with `0` for `batchWatermarkMs` and `batchTimestampMs` when `StreamExecution` is <<creating-instance, created>>.
+
+* Updated with `0` for `batchWatermarkMs` and `batchTimestampMs` and `SparkSession` with `spark.sql.adaptive.enabled` disabled when `StreamExecution` <<runBatches, runs streaming batches>>.
+
+* Used in...FIXME
+
+* Copied with `batchTimestampMs` updated with the current time (in milliseconds) when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>>.
 
 | [[prettyIdString]] `prettyIdString`
 a| Pretty-identified string for identification in logs (with <<name, name>> if defined).
@@ -190,7 +200,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
-=== [[constructNextBatch]] Constructing Next Batch -- `constructNextBatch` Internal Method
+=== [[constructNextBatch]] Constructing Next Streaming Batch -- `constructNextBatch` Internal Method
 
 [source, scala]
 ----
@@ -244,7 +254,7 @@ CAUTION: FIXME
 
 NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs batches>>.
 
-=== [[runBatches]] Running Batches -- `runBatches` Internal Method
+=== [[runBatches]] Running Streaming Batches -- `runBatches` Internal Method
 
 [source, scala]
 ----
@@ -365,7 +375,7 @@ a|
 DEBUG Stream running from [committedOffsets] to [availableOffsets]
 ```
 
-| 1. <<constructNextBatch, constructNextBatch>>
+| 1. <<constructNextBatch, Constructing next streaming batch>>
 |===
 
 If there is <<dataAvailable, data available>>, `batchRunner` marks <<currentStatus, currentStatus>> with `isDataAvailable` enabled.
