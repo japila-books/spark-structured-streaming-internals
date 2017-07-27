@@ -82,8 +82,19 @@ val kafkaSource = spark.
   option("kafka.bootstrap.servers", "localhost:9092").
   option("startingoffsets", "earliest").  // latest, earliest or JSON with {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
   load
+
+scala> kafkaSource.printSchema
+root
+ |-- key: binary (nullable = true)
+ |-- value: binary (nullable = true)
+ |-- topic: string (nullable = true)
+ |-- partition: integer (nullable = true)
+ |-- offset: long (nullable = true)
+ |-- timestamp: timestamp (nullable = true)
+ |-- timestampType: integer (nullable = true)
+
 val fromKafkaTopic1ToConsole = kafkaSource.
-  select('key cast "string", 'value cast "string"). // deserialize records
+  select('key cast "string", 'value cast "string"). // deserialize keys and values
   as[(String, String)].
   writeStream.
   format("console").

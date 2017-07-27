@@ -124,6 +124,65 @@ The output schema of `StreamingDeduplicateExec` is exactly the <<child, child>>'
 [[outputPartitioning]]
 The output partitioning of `StreamingDeduplicateExec` is exactly the <<child, child>>'s output partitioning.
 
+[source, scala]
+----
+/**
+// Start spark-shell with debugging and Kafka support
+  SPARK_SUBMIT_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" \
+  ./bin/spark-shell \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
+*/
+// Reading
+val topic1 = spark.
+  readStream.
+  format("kafka").
+  option("subscribe", "topic1").
+  option("kafka.bootstrap.servers", "localhost:9092").
+  option("startingoffsets", "earliest").
+  load
+
+// Processing with deduplication
+// Don't use watermark
+// The following won't work due to https://issues.apache.org/jira/browse/SPARK-21546
+/**
+val records = topic1.
+  withColumn("eventtime", 'timestamp).  // <-- just to put the right name given the purpose
+  withWatermark(eventTime = "eventtime", delayThreshold = "30 seconds"). // <-- use the renamed eventtime column
+  dropDuplicates("value").  // dropDuplicates will use watermark
+                            // only when eventTime column exists
+  // include the watermark column => internal design leak?
+  select('key cast "string", 'value cast "string", 'eventtime).
+  as[(String, String, java.sql.Timestamp)]
+*/
+
+val records = topic1.
+  dropDuplicates("value").
+  select('key cast "string", 'value cast "string").
+  as[(String, String)]
+
+scala> records.explain
+== Physical Plan ==
+*Project [cast(key#0 as string) AS key#249, cast(value#1 as string) AS value#250]
++- StreamingDeduplicate [value#1], StatefulOperatorStateInfo(<unknown>,68198b93-6184-49ae-8098-006c32cc6192,0,0), 0
+   +- Exchange hashpartitioning(value#1, 200)
+      +- *Project [key#0, value#1]
+         +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
+
+// Writing
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val sq = records.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime("10 seconds")).
+  queryName("from-kafka-topic1-to-console").
+  outputMode(OutputMode.Update).
+  start
+
+// Eventually...
+sq.stop
+----
+
 === [[doExecute]] Executing StreamingDeduplicateExec -- `doExecute` Method
 
 [source, scala]

@@ -86,9 +86,9 @@ The most prestigious use case of `KeyValueGroupedDataset` however is *stateful s
 |
 
 | <<flatMapGroupsWithState, flatMapGroupsWithState>>
-| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
+a| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
 
-The difference between `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> is the state function that generates zero or more elements (that are in turn the rows in the result `Dataset`).
+NOTE: The difference between `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> is the state function that generates zero or more elements (that are in turn the rows in the result `Dataset`).
 
 | <<keyAs, keyAs>>
 |
@@ -100,9 +100,9 @@ The difference between `flatMapGroupsWithState` and <<mapGroupsWithState, mapGro
 |
 
 | <<mapGroupsWithState, mapGroupsWithState>>
-| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
+a| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
 
-The difference between `mapGroupsWithState` and <<flatMapGroupsWithState, flatMapGroupsWithState>> is the state function that generates exactly one element (that is in turn the row in the result `Dataset`).
+NOTE: The difference between `mapGroupsWithState` and <<flatMapGroupsWithState, flatMapGroupsWithState>> is the state function that generates exactly one element (that is in turn the row in the result `Dataset`).
 
 | <<mapValues, mapValues>>
 |
