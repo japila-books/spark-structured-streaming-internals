@@ -8,32 +8,29 @@ val q = spark.
   readStream.
   format("rate").
   load.
-  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds")
+  withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds")
 scala> q.explain(extended = true)
 == Parsed Logical Plan ==
-'EventTimeWatermark 'timestamp, interval 10 seconds
-+- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@6f609eb3,rate,List(),None,List(),None,Map(path -> csvs),None), rate, [timestamp#660, value#661L]
+'EventTimeWatermark 'timestamp, interval 30 seconds
++- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@3d97b0a,rate,List(),None,List(),None,Map(),None), rate, [timestamp#10, value#11L]
 
 == Analyzed Logical Plan ==
 timestamp: timestamp, value: bigint
-EventTimeWatermark timestamp#660: timestamp, interval 10 seconds
-+- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@6f609eb3,rate,List(),None,List(),None,Map(path -> csvs),None), rate, [timestamp#660, value#661L]
+EventTimeWatermark timestamp#10: timestamp, interval 30 seconds
++- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@3d97b0a,rate,List(),None,List(),None,Map(),None), rate, [timestamp#10, value#11L]
 
 == Optimized Logical Plan ==
-EventTimeWatermark timestamp#660: timestamp, interval 10 seconds
-+- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@6f609eb3,rate,List(),None,List(),None,Map(path -> csvs),None), rate, [timestamp#660, value#661L]
+EventTimeWatermark timestamp#10: timestamp, interval 30 seconds
++- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@3d97b0a,rate,List(),None,List(),None,Map(),None), rate, [timestamp#10, value#11L]
 
 == Physical Plan ==
-EventTimeWatermark timestamp#660: timestamp, interval 10 seconds
-+- StreamingRelation rate, [timestamp#660, value#661L]
+EventTimeWatermark timestamp#10: timestamp, interval 30 seconds
++- StreamingRelation rate, [timestamp#10, value#11L]
 ----
 
 [[watermarkDelayMs]]
 [[delayKey]]
 `EventTimeWatermark` uses `spark.watermarkDelayMs` key to hold the eventTime watermark delay.
-
-[[output]]
-`output`...FIXME
 
 [[children]]
 `children`...FIXME
@@ -48,13 +45,38 @@ val q = spark.
   read. // <-- batch query
   format("text").
   load("logs").
-  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds")
+  withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds")
 scala> println(q.queryExecution.logical.numberedTreeString)
-00 Relation[value#669] text
+00 Relation[value#6] text
 ----
 ====
 
 NOTE: `EventTimeWatermark` is converted (aka planned) to link:link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec] physical operator in link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy.
+
+=== [[output]] `output` Property
+
+[source, scala]
+----
+output: Seq[Attribute]
+----
+
+NOTE: `output` is a part of the `QueryPlan` Contract to describe the attributes of (the schema of) the output.
+
+`output` finds <<eventTime, eventTime>> column in the <<child, child>>'s output schema and updates the `Metadata` of the column with <<delayKey, spark.watermarkDelayMs>> key and the milliseconds for the delay.
+
+`output` removes <<delayKey, spark.watermarkDelayMs>> key from the other columns.
+
+[source, scala]
+----
+// See q created above
+// FIXME How to access/show the eventTime column with the metadata updated to include spark.watermarkDelayMs?
+import org.apache.spark.sql.catalyst.plans.logical.EventTimeWatermark
+val etw = q.queryExecution.logical.asInstanceOf[EventTimeWatermark]
+scala> etw.output.toStructType.printTreeString
+root
+ |-- timestamp: timestamp (nullable = true)
+ |-- value: long (nullable = true)
+----
 
 === [[creating-instance]] Creating EventTimeWatermark Instance
 
