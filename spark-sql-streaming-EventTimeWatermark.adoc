@@ -1,6 +1,6 @@
-== [[EventTimeWatermark]] EventTimeWatermark Logical Operator
+== [[EventTimeWatermark]] EventTimeWatermark Unary Logical Operator
 
-`EventTimeWatermark` is a logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> as the result of `Dataset.withWatermark` operator.
+`EventTimeWatermark` is a unary logical operator (i.e. `UnaryNode`) that is <<creating-instance, created>> as the result of `Dataset.withWatermark` operator.
 
 [source, scala]
 ----
@@ -8,7 +8,7 @@ val q = spark.
   readStream.
   format("rate").
   load.
-  withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds")
+  withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds") // <-- creates EventTimeWatermark
 scala> q.explain(extended = true)
 == Parsed Logical Plan ==
 'EventTimeWatermark 'timestamp, interval 30 seconds
@@ -30,24 +30,29 @@ EventTimeWatermark timestamp#10: timestamp, interval 30 seconds
 
 [[watermarkDelayMs]]
 [[delayKey]]
-`EventTimeWatermark` uses `spark.watermarkDelayMs` key to hold the eventTime watermark delay.
+`EventTimeWatermark` uses `spark.watermarkDelayMs` key (in `Metadata` in <<output, output>>) to hold the event-time watermark delay.
 
-[[children]]
-`children`...FIXME
+NOTE: The *event-time watermark delay* is used to calculate the difference between the event time of an event (that is modelled as a row in the Dataset for a streaming batch) and the time in the past.
 
 [NOTE]
 ====
-`EventTimeWatermark` is removed (by `EliminateEventTimeWatermark`) from a logical plan if <<child, child>> logical plan is not streaming, i.e. when `withWatermark` is used on a batch query.
+`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if <<child, child>> logical operator is not streaming, i.e. when `withWatermark` is used on a batch query.
 
 [source, scala]
 ----
-val q = spark.
-  read. // <-- batch query
+val logs = spark.
+  read. // <-- batch non-streaming query that makes `EliminateEventTimeWatermark` rule applicable
   format("text").
-  load("logs").
-  withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds")
-scala> println(q.queryExecution.logical.numberedTreeString)
-00 Relation[value#6] text
+  load("logs")
+
+// logs is a batch Dataset
+scala> logs.isStreaming
+res0: Boolean = false
+
+val q = logs.
+  withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds") // <-- creates EventTimeWatermark
+scala> println(q.queryExecution.logical.numberedTreeString) // <-- no EventTimeWatermark as it was removed immediately
+00 Relation[value#0] text
 ----
 ====
 

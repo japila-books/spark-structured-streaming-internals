@@ -79,7 +79,7 @@
 
 === Logical Operators
 
-. link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator]
+. link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Unary Logical Operator]
 . link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState Unary Logical Operator]
 . link:spark-sql-streaming-Deduplicate.adoc[Deduplicate Unary Logical Operator]
 
