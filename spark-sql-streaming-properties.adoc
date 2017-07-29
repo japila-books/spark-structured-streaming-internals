@@ -36,4 +36,8 @@ val spark: SparkSession = SparkSession.builder
 | [[spark.sql.streaming.stateStore.maintenanceInterval]] `spark.sql.streaming.stateStore.maintenanceInterval`
 | `60s`
 | The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.adoc#MaintenanceTask[maintenance task].
+
+| [[spark.sql.streaming.unsupportedOperationCheck]] `spark.sql.streaming.unsupportedOperationCheck`
+| `true`
+| (internal) When enabled (i.e. `true`), `StreamingQueryManager` link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[makes sure that the logical plan for a streaming query uses supported operations only].
 |===

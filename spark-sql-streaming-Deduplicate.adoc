@@ -19,7 +19,7 @@ scala> println(uniqueRates.queryExecution.logical.numberedTreeString)
 
 [NOTE]
 ====
-`UnsupportedOperationChecker` ensures that `Dataset.dropDuplicates` is not used after aggregation on streaming Datasets (in `UnsupportedOperationChecker.checkForStreaming`).
+`UnsupportedOperationChecker` link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[ensures] that `Dataset.dropDuplicates` is not used after aggregation on streaming Datasets.
 
 The following code is not supported in Structured Streaming and results in an `AnalysisException`.
 

@@ -35,7 +35,7 @@ Used in <<active, active>>, <<get, get>>, <<startQuery, startQuery>> and <<notif
 
 CAUTION: FIXME
 
-=== [[createQuery]] `createQuery` Internal Method
+=== [[createQuery]] Creating StreamingQueryWrapper -- `createQuery` Internal Method
 
 [source, scala]
 ----
@@ -55,7 +55,7 @@ CAUTION: FIXME
 
 NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 
-NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a  streaming query>>.
+NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a streaming query>>.
 
 === Initialization
 

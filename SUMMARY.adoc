@@ -36,6 +36,7 @@
 .. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
+.. link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
 . link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
 
 . link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener]

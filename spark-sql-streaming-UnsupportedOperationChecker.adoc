@@ -1,0 +1,23 @@
+== [[UnsupportedOperationChecker]] UnsupportedOperationChecker
+
+`UnsupportedOperationChecker` is a helper object with just a single <<checkForStreaming, checkForStreaming>> method to make sure that the logical plan for a streaming query uses supported operations only.
+
+NOTE: `UnsupportedOperationChecker` is used exclusively when the internal link:spark-sql-streaming-properties.adoc#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
+
+[NOTE]
+====
+`UnsupportedOperationChecker` comes actually with two methods, i.e. `checkForBatch` and <<checkForStreaming, checkForStreaming>>, whose names reveal the different flavours of Spark SQL (as of 2.0), i.e. batch and streaming, respectively.
+
+The Spark Structured Streaming gitbook is solely focused on <<checkForStreaming, checkForStreaming>> method.
+====
+
+=== [[checkForStreaming]] `checkForStreaming` Method
+
+[source, scala]
+----
+checkForStreaming(plan: LogicalPlan, outputMode: OutputMode): Unit
+----
+
+`checkForStreaming`...FIXME
+
+NOTE: `checkForStreaming` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[create a StreamingQueryWrapper] (for executing a streaming query), but only when the internal link:spark-sql-streaming-properties.adoc#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
