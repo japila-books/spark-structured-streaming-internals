@@ -68,4 +68,14 @@ Used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBat
 
 | [[getOffset]] `getOffset`
 | Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[run batches] (while link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructing next batch])
+
+| [[schema]] `schema`
+a| Schema of the data from this source
+
+Used when:
+
+* `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#getBatch[generates a DataFrame with records from Kafka for a streaming batch]
+* `FileStreamSource` link:spark-sql-streaming-FileStreamSource.adoc#getBatch[generates a DataFrame for a streaming batch]
+* `RateStreamSource` link:spark-sql-streaming-RateStreamSource.adoc#getBatch[generates a DataFrame for a streaming batch]
+* `StreamingExecutionRelation` link:spark-sql-streaming-StreamingExecutionRelation.adoc#apply[is created] (for link:spark-sql-streaming-MemoryStream.adoc#logicalPlan[MemoryStream])
 |===

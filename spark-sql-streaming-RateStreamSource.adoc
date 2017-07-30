@@ -102,7 +102,7 @@ CAUTION: FIXME
 
 NOTE: `getOffset` is a part of link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
 
-=== [[getBatch]] Generating DataFrame for Batch -- `getBatch` Method
+=== [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method
 
 [source, scala]
 ----

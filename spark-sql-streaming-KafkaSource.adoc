@@ -248,7 +248,7 @@ CAUTION: FIXME
 * <<getBatch, generates a DataFrame with records from Kafka for a batch>>
 ====
 
-=== [[getBatch]] Generating DataFrame with Records From Kafka for Batch -- `getBatch` Method
+=== [[getBatch]] Generating DataFrame with Records From Kafka for Streaming Batch -- `getBatch` Method
 
 [source, scala]
 ----

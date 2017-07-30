@@ -101,7 +101,7 @@ new file: $file
 old file: $file
 ```
 
-=== [[getBatch]] Generating DataFrame for Batch -- `getBatch` Method
+=== [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method
 
 `FileStreamSource.getBatch` asks <<metadataLog, metadataLog>> for the batch.
 
