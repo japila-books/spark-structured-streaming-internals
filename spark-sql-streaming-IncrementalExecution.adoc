@@ -30,7 +30,7 @@ a| `SparkPlanner` with extra planning strategies:
 
 * link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy]
 * link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]
-* `StreamingRelationStrategy`
+* link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy]
 * link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy]
 
 | [[state]] `state`

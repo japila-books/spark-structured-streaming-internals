@@ -74,15 +74,14 @@
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
-. link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
-. link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation Logical Plan]
-. link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation]
-
 === Logical Operators
 
 . link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Unary Logical Operator]
 . link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState Unary Logical Operator]
 . link:spark-sql-streaming-Deduplicate.adoc[Deduplicate Unary Logical Operator]
+. link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
+. link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation Leaf Logical Operator]
+. link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation Leaf Logical Operator to Represent Source At Execution]
 
 === Physical Operators
 
@@ -91,6 +90,7 @@
 . link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec -- Unary Physical Operator for Restoring Streaming Aggregates]
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Saving State of Streaming Aggregates]
 . link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec -- Unary Physical Operator for Streaming Deduplication]
+. link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec]
 
 . link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport -- Contract for Streaming Watermark in Unary Physical Operators]
 
@@ -99,6 +99,7 @@
 . link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
+. link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
 === StateStore for Stateful Stream Processing
 

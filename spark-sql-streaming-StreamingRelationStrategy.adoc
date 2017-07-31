@@ -1,0 +1,3 @@
+== [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
+
+`StreamingRelationStrategy` is...FIXME
