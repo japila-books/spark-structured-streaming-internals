@@ -139,6 +139,7 @@ trait ProgressReporter {
   def committedOffsets: StreamProgress
   def currentBatchId: Long
   def id: UUID
+  def logicalPlan: LogicalPlan
   def name: String
   def offsetSeqMetadata: OffsetSeqMetadata
   def postEvent(event: StreamingQueryListener.Event): Unit
@@ -176,6 +177,9 @@ Used when:
 
 | [[id]] `id`
 | UUID of...FIXME
+
+| [[logicalPlan]] `logicalPlan`
+| Logical plan (i.e. LogicalPlan) of a streaming Dataset that...FIXME
 
 | [[name]] `name`
 | Name of...FIXME

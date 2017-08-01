@@ -1,8 +1,8 @@
 == [[StreamExecution]] StreamExecution -- Execution Environment for Streaming Datasets
 
-`StreamExecution` represents the execution environment for continuous execution of streaming datasets (i.e. continuous execution of their streaming queries) every <<trigger, trigger>> and writing the result to a <<sink, streaming sink>>.
+`StreamExecution` represents the execution environment for continuous execution of a streaming Dataset every <<trigger, trigger>> and writing the result to a <<sink, streaming sink>>.
 
-NOTE: The *streaming query* and *streaming Dataset* are synonyms and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> to represent them.
+NOTE: *Streaming queries* and *streaming Datasets* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> to refer to them.
 
 `StreamExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
 
@@ -73,9 +73,19 @@ a| Current batch number
 |
 
 | [[logicalPlan]] `logicalPlan`
-| Lazily-created logical plan (i.e. `LogicalPlan`) for a streaming query.
+a| Lazily-generated logical plan (i.e. `LogicalPlan`) of the streaming Dataset
 
-Initialized right after `StreamExecution` started <<runBatches, running batches>>.
+NOTE: `logicalPlan` is a part of link:spark-sql-streaming-ProgressReporter.adoc#logicalPlan[ProgressReporter Contract].
+
+Initialized right after `StreamExecution` starts <<runBatches, running batches>> (which is when <<microBatchThread, stream execution thread>> is started).
+
+While initializing, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>> so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] is replaced with a link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation]. `logicalPlan` link:link:spark-sql-streaming-StreamingExecutionRelation.adoc#creating-instance[creates] a `StreamingExecutionRelation` with `source` created using a metadata path as `/sources/[nextSourceId]` under the <<resolvedCheckpointRoot, checkpoint directory>>.
+
+NOTE: `nextSourceId` is the unique identifier of every `StreamingRelation` in <<analyzedPlan, analyzed logical plan>> starting from `0`.
+
+NOTE: `logicalPlan` uses `DataSource.createSource` factory method to create a link:spark-sql-streaming-Source.adoc[streaming Source] that assumes link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider] or `FileFormat` as the implementations of the streaming data sources for reading.
+
+While initializing, `logicalPlan` also initializes <<sources, sources>> and <<uniqueSources, uniqueSources>> registries.
 
 | [[microBatchThread]] `microBatchThread`
 a| Thread of execution to run a streaming query concurrently with the name as `stream execution thread for [prettyIdString]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
@@ -160,6 +170,9 @@ NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for 
 | [[runId]] `runId`
 |
 
+| [[sources]] `sources`
+| All link:spark-sql-streaming-Source.adoc[streaming Sources] in <<logicalPlan, logical query plan>> (that are the link:spark-sql-streaming-StreamingExecutionRelation.adoc#source[sources] from `StreamingExecutionRelation`).
+
 | [[startLatch]] `startLatch`
 | Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
 
@@ -187,7 +200,7 @@ NOTE: `StreamExecution` reports a `IllegalStateException` when `TriggerExecutor`
 or `ProcessingTimeExecutor`.
 
 | [[uniqueSources]] `uniqueSources`
-| Collection of unique link:spark-sql-streaming-Source.adoc[streaming sources]
+| Unique link:spark-sql-streaming-Source.adoc[streaming Sources] (in the <<logicalPlan, logical query plan>>).
 
 Used in <<constructNextBatch, constructNextBatch>> (to get offsets for every source) and...FIXME
 |===
@@ -553,7 +566,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 * [[sparkSession]] `SparkSession`
 * [[name]] Query name
 * [[checkpointRoot]] Path to the checkpoint root directory
-* [[analyzedPlan]] Analyzed logical plan
+* [[analyzedPlan]] Analyzed logical plan (i.e. `LogicalPlan`)
 * [[sink]] link:spark-sql-streaming-Sink.adoc[Streaming sink]
 * [[trigger]] link:spark-sql-streaming-Trigger.adoc[Trigger]
 * [[triggerClock]] `Clock`
