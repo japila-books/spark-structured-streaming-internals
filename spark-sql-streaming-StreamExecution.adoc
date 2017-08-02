@@ -9,13 +9,14 @@ NOTE: *Streaming queries* and *streaming Datasets* are synonyms, and `StreamExec
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.Trigger
-val query = spark.
+import scala.concurrent.duration._
+val q = spark.
   readStream.
   format("rate").
   load.
   writeStream.
   format("console").
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.minutes)).
   start
 ----
 
@@ -78,6 +79,10 @@ a| Lazily-generated logical plan (i.e. `LogicalPlan`) of the streaming Dataset
 NOTE: `logicalPlan` is a part of link:spark-sql-streaming-ProgressReporter.adoc#logicalPlan[ProgressReporter Contract].
 
 Initialized right after `StreamExecution` starts <<runBatches, running batches>> (which is when <<microBatchThread, stream execution thread>> is started).
+
+Used mainly when `StreamExecution` <<runBatch-withNewSources, transforms StreamingExecutionRelations in a logical query plan with new data>> that has arrived since the last batch.
+
+---
 
 While initializing, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>> so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] is replaced with a link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation]. `logicalPlan` link:link:spark-sql-streaming-StreamingExecutionRelation.adoc#creating-instance[creates] a `StreamingExecutionRelation` with `source` created using a metadata path as `/sources/[nextSourceId]` under the <<resolvedCheckpointRoot, checkpoint directory>>.
 

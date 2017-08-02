@@ -1,6 +1,6 @@
 == [[StreamingRelation]] StreamingRelation Leaf Logical Operator
 
-`StreamingRelation` is a leaf logical plan (i.e. `LogicalPlan`) that is <<creating-instance, created>> when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.adoc#load[load] dataset in streaming fashion (and create a streaming `Dataset`).
+`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.adoc#load[load] dataset in streaming fashion (and create a streaming `Dataset`).
 
 NOTE: `StreamingRelation` is link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[resolved] (aka _converted_) to link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] (right after `StreamExecution` started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches]).
 
@@ -15,7 +15,7 @@ scala> println(rate.queryExecution.logical.numberedTreeString)
 ----
 
 [[isStreaming]]
-`isStreaming` is enabled (i.e. `true`).
+`isStreaming` is always enabled (i.e. `true`).
 
 [source, scala]
 ----

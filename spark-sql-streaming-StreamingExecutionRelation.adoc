@@ -1,6 +1,8 @@
 == [[StreamingExecutionRelation]] StreamingExecutionRelation Leaf Logical Operator to Represent Source At Execution
 
-`StreamingExecutionRelation` is a leaf logical plan (i.e. `LogicalPlan`) that is <<creating-instance, created>> to represent a link:spark-sql-streaming-Source.adoc[source] when...FIXME
+`StreamingExecutionRelation` is a leaf logical plan (i.e. `LogicalPlan`) that is <<creating-instance, created>> to represent a link:spark-sql-streaming-Source.adoc[streaming data source] in a link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[logical query plan] (of `StreamExecution` of a streaming Dataset).
+
+NOTE: `StreamingExecutionRelation` is <<creating-instance, created>> when the link:spark-sql-streaming-StreamExecution.adoc#microBatchThread[stream execution thread] of `StreamExecution` starts running streaming batches.
 
 NOTE: `StreamingExecutionRelation` is resolved (aka _planned_) to link:link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec] physical operator in link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy] execution planning strategy.
 

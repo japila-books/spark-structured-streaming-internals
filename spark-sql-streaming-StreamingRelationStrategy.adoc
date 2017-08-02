@@ -1,3 +1,43 @@
 == [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
 
-`StreamingRelationStrategy` is...FIXME
+`StreamingRelationStrategy` is an execution planning strategy (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `StreamingRelation` and `StreamingExecutionRelation` logical operators in streaming Datasets.
+
+[NOTE]
+====
+link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is the result of link:spark-sql-streaming-DataStreamReader.adoc#load[loading] a dataset in streaming fashion (and create a streaming Dataset).
+
+link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator is used internally to represent a streaming data source in a link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[logical query plan] (of `StreamExecution` of a streaming Dataset).
+====
+
+`StreamingRelationStrategy` is available using `SessionState`.
+
+[source, scala]
+----
+spark.sessionState.planner.StreamingRelationStrategy
+----
+
+[[apply]]
+`StreamingRelationStrategy` converts link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] and link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operators to link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec] physical operator (with corresponding `sourceName` and `output` schema).
+
+[source, scala]
+----
+val rates = spark.
+  readStream.
+  format("rate").
+  load
+
+// StreamingRelation logical operator
+scala> println(rates.queryExecution.logical.numberedTreeString)
+00 StreamingRelation DataSource(org.apache.spark.sql.SparkSession@31ba0af0,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
+
+// StreamingRelationExec physical operator (shown without "Exec" suffix)
+scala> rates.explain
+== Physical Plan ==
+StreamingRelation rate, [timestamp#0, value#1L]
+
+// Let's do the planning manually
+import spark.sessionState.planner.StreamingRelationStrategy
+val physicalPlan = StreamingRelationStrategy.apply(rates.queryExecution.logical).head
+scala> println(physicalPlan.numberedTreeString)
+00 StreamingRelation rate, [timestamp#0, value#1L]
+----
