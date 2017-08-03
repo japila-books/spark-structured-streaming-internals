@@ -111,6 +111,15 @@ $ jstack 13056 \| grep -e "stream execution thread"
 
 ====
 
+| [[newData]] `newData`
+a| The most recent input data (as `DataFrame`) for every link:spark-sql-streaming-Source.adoc[streaming source] in <<logicalPlan, logical query plan>>.
+
+NOTE: `newData` is a part of link:spark-sql-streaming-ProgressReporter.adoc#newData[ProgressReporter Contract].
+
+Set exclusively when `StreamExecution` <<runBatch-getBatch, requests unprocessed data from streaming sources>> (as part of <<runBatch, running a single streaming batch>>).
+
+Used exclusively when `StreamExecution` <<runBatch-withNewSources, transforms StreamingExecutionRelations (in logical plan) with new data>> (as part of <<runBatch, running a single streaming batch>>).
+
 | [[noNewData]] `noNewData`
 | Flag whether there are any new offsets available for processing or not.
 
@@ -285,9 +294,9 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 
 NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>>.
 
-==== [[runBatch-getBatch]] Requesting Unprocessed Data From Streaming Sources
+==== [[runBatch-getBatch]] Requesting New (and Hence Unprocessed) Data From Streaming Sources
 
-Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (as `newData`).
+Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>>).
 
 `runBatch` executes `getBatch` action while link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[tracking the time taken] (under `getBatch` as `triggerDetailKey` that is later available in link:spark-sql-streaming-ProgressReporter.adoc#currentDurationsMs[currentDurationsMs])
 

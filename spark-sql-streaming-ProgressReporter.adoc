@@ -141,6 +141,7 @@ trait ProgressReporter {
   def id: UUID
   def logicalPlan: LogicalPlan
   def name: String
+  def newData: Map[Source, DataFrame]
   def offsetSeqMetadata: OffsetSeqMetadata
   def postEvent(event: StreamingQueryListener.Event): Unit
   def runId: UUID
@@ -187,6 +188,13 @@ Used when:
 
 | [[name]] `name`
 | Name of...FIXME
+
+| [[newData]] `newData`
+a| link:spark-sql-streaming-Source.adoc[Streaming sources] with the new data as a DataFrame.
+
+Used when:
+
+* `ProgressReporter` <<extractExecutionStats, extracts statistics from the most recent query execution>> (to calculate the so-called `inputRows`)
 
 | [[offsetSeqMetadata]] `offsetSeqMetadata`
 |
