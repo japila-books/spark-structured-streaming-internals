@@ -50,6 +50,12 @@ a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the link:spar
 
 NOTE: `availableOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#availableOffsets[ProgressReporter Contract].
 
+NOTE: link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] is an enhanced `immutable.Map` from Scala with streaming sources as keys and their `Offsets` as values.
+
+Set when `StreamExecution` <<populateStartOffsets, populates start offsets>> or <<constructNextBatch, constructing a next streaming batch>>.
+
+Used when...FIXME
+
 | [[awaitBatchLock]] `awaitBatchLock`
 | Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
 
@@ -63,7 +69,7 @@ a| Current batch number
 
 * `-1` when `StreamExecution` is <<creating-instance, created>>
 
-* `0` when `StreamExecution` <<populateStartOffsets, populateStartOffsets>> (when <<offsetLog, offsetLog>> is empty)
+* `0` when `StreamExecution` <<populateStartOffsets, populates start offsets>> (when <<offsetLog, OffsetSeqLog>> is empty)
 
 * Incremented when `StreamExecution` <<runBatches, runBatches>>
 
@@ -126,7 +132,9 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, transforms St
 Turned on (i.e. enabled) when <<constructNextBatch, constructing next streaming batch>> when no new offsets are available.
 
 | [[offsetLog]] `offsetLog`
-|
+| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, checkpoint directory>>
+
+Used when `StreamExecution` <<populateStartOffsets, populates start offsets>> and <<constructNextBatch, constructs a next streaming batch>>.
 
 | [[offsetSeqMetadata]] `offsetSeqMetadata`
 a| link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
@@ -498,16 +506,26 @@ CAUTION: FIXME Finish me...`finishTrigger(dataAvailable)`
 
 CAUTION: FIXME
 
-=== [[populateStartOffsets]] `populateStartOffsets` Internal Method
+=== [[populateStartOffsets]] Populating Start Offsets -- `populateStartOffsets` Internal Method
 
 [source, scala]
 ----
 populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
 ----
 
-CAUTION: FIXME
+`populateStartOffsets` requests <<offsetLog, OffsetSeqLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest batch id and its metadata].
 
-NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (when <<currentBatchId, currentBatchId>> is negative).
+CAUTION: FIXME Describe when batch and metadata were available.
+
+When no batch if and metadata were available, it is assumed that the streaming query is started for the first time. You should see the following INFO message in the logs:
+
+```
+INFO StreamExecution: Starting new streaming query.
+```
+
+`populateStartOffsets` sets <<currentBatchId, currentBatchId>> to `0` and <<constructNextBatch, constructs a next streaming batch>>.
+
+NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (i.e. <<currentBatchId, currentBatchId>> is negative).
 
 === [[updateStatusMessage]] `updateStatusMessage` Internal Method
 
@@ -589,14 +607,14 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 
 `StreamExecution` initializes the <<internal-registries, internal registries and counters>>.
 
-=== [[checkpointFile]] `checkpointFile` Internal Method
+=== [[checkpointFile]] Checkpoint Directory -- `checkpointFile` Internal Method
 
 [source, scala]
 ----
 checkpointFile(name: String): String
 ----
 
-`checkpointFile` gives the path of a file with `name` in <<resolvedCheckpointRoot, checkpoint directory>>.
+`checkpointFile` gives the path of a directory with `name` in <<resolvedCheckpointRoot, checkpoint directory>>.
 
 NOTE: `checkpointFile` uses Hadoop's `org.apache.hadoop.fs.Path`.
 

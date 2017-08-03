@@ -1,0 +1,3 @@
+== [[MetadataLog]] MetadataLog
+
+`MetadataLog` is...FIXME

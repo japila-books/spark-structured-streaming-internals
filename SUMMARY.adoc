@@ -114,5 +114,8 @@
 
 == Varia
 
+. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
+.. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
+.. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
 . link:spark-sql-streaming-logging.adoc[Logging]

@@ -1,0 +1,7 @@
+== [[HDFSMetadataLog]] HDFSMetadataLog
+
+`HDFSMetadataLog` is...FIXME
+
+=== [[getLatest]] `getLatest` Method
+
+CAUTION: FIXME

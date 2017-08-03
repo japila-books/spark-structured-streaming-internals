@@ -10,11 +10,16 @@ A link:spark-sql-dataset.adoc[Dataset] is *streaming* when its link:spark-sql-Lo
 
 [source, scala]
 ----
-val batchQuery = spark.read.csv("sales")
+val batchQuery = spark.
+  read. // <-- batch non-streaming query
+  csv("sales")
 scala> batchQuery.isStreaming
 res0: Boolean = false
 
-val streamingQuery = spark.readStream.format("kafka").load
+val streamingQuery = spark.
+  readStream. // <-- streaming query
+  format("rate").
+  load
 scala> streamingQuery.isStreaming
 res1: Boolean = true
 ----
@@ -28,11 +33,11 @@ From this perspective, batch queries can be considered streaming Datasets execut
 
 [source, scala]
 ----
-val batchQuery = spark.read.format("kafka").load
+val batchQuery = spark.read.format("rate").load
 scala> batchQuery.isStreaming
 res0: Boolean = false
 
-val streamingQuery = spark.readStream.format("kafka").load
+val streamingQuery = spark.readStream.format("rate").load
 scala> streamingQuery.isStreaming
 res1: Boolean = true
 ----
@@ -89,13 +94,14 @@ val population = people.
 // Start the streaming query
 // Write the result using console format, i.e. print to the console
 // Only Complete output mode supported by groupBy
+import scala.concurrent.duration._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val populationStream = population.
   writeStream.
-  queryName("textStream").
-  outputMode(OutputMode.Complete).
-  trigger(Trigger.ProcessingTime("10 seconds")).
   format("console").
+  trigger(Trigger.ProcessingTime(30.seconds)).
+  outputMode(OutputMode.Complete).
+  queryName("textStream").
   start
 
 scala> populationStream.isActive
