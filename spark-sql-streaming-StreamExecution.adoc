@@ -79,6 +79,9 @@ a| Current batch number
 | [[initializationLatch]] `initializationLatch`
 |
 
+| [[lastExecution]] `lastExecution`
+| Last link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution]
+
 | [[logicalPlan]] `logicalPlan`
 a| Lazily-generated logical plan (i.e. `LogicalPlan`) of the streaming Dataset
 
@@ -247,11 +250,23 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 constructNextBatch(): Unit
 ----
 
-`constructNextBatch` is made up of the two parts for when there is any data to process (and so where the next batch is constructed) and no data is available.
+`constructNextBatch` is made up of the following three parts:
 
-==== Checking Whether New Data Is Available (by Requesting New Offsets from Sources)
+1. Firstly, <<constructNextBatch-hasNewData, checking if there is new data available>> by requesting new offsets from every streaming source
 
-`constructNextBatch` firstly checks whether new data is available. It first acquires <<awaitBatchLock, awaitBatchLock>> and gets the offsets for <<uniqueSources, every streaming source used>>.
+1. <<constructNextBatch-hasNewData-true, There is some data to process>> (and so where the next batch is constructed)
+
+1. <<constructNextBatch-hasNewData-false, No data is available>>
+
+NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatches>> and <<populateStartOffsets, populateStartOffsets>>.
+
+==== [[constructNextBatch-hasNewData]] Checking Whether New Data Is Available (by Requesting New Offsets from Sources)
+
+`constructNextBatch` starts by checking whether a new data is available across the streaming sources (in the <<logicalPlan, logical query plan>>).
+
+`constructNextBatch` first acquires <<awaitBatchLock, awaitBatchLock>> and gets the offsets for <<uniqueSources, every streaming source used>>.
+
+NOTE: `constructNextBatch` checks out the available offsets in every streaming source sequentially, i.e. one by one.
 
 `constructNextBatch` <<updateStatusMessage, updates status message>> to the following for every source.
 
@@ -259,7 +274,10 @@ constructNextBatch(): Unit
 Getting offsets from [source]
 ```
 
-`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] for link:spark-sql-streaming-Source.adoc#getOffset[getting the offset per source].
+`constructNextBatch` link:spark-sql-streaming-Source.adoc#getOffset[gets the current offset from every streaming source] and link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken].
+
+.StreamExecution's Getting Offsets From Streaming Sources
+image::images/StreamExecution-constructNextBatch.png[align="center"]
 
 `constructNextBatch` prints out the following DEBUG message in the logs:
 
@@ -267,21 +285,40 @@ Getting offsets from [source]
 DEBUG StreamExecution: getOffset took [time] ms
 ```
 
-`constructNextBatch` adds the sources and the available offsets to <<availableOffsets, availableOffsets>>.
+`constructNextBatch` adds the streaming sources with the available offsets to <<availableOffsets, availableOffsets>>.
 
 If there is no <<dataAvailable, data available>> (i.e. no offsets unprocessed in any of the sources), `constructNextBatch` turns <<noNewData, noNewData>> flag on.
 
 In the end (of this block), `constructNextBatch` releases <<awaitBatchLock, awaitBatchLock>>
 
-==== New Data Available
+==== [[constructNextBatch-hasNewData-true]] New Data Available
 
-CAUTION: FIXME
+Firstly, `constructNextBatch` updates the eventTime watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if we find one in the <<lastExecution, last IncrementalExecution>>.
 
-==== No New Data Available
+CAUTION: FIXME Describe the eventTime watermark update
 
-CAUTION: FIXME
+[NOTE]
+====
+link:spark-sql-streaming-WatermarkSupport.adoc[Streaming watermark] can be changed between a streaming query's restarts (and be different between what is checkpointed and the current version of the query).
+====
 
-NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatches>> and <<populateStartOffsets, populateStartOffsets>>.
+CAUTION: FIXME Example of the above difference
+
+`constructNextBatch` then adds the offsets to metadata log.
+
+CAUTION: FIXME Describe the writing
+
+`constructNextBatch` commits the offsets for the batch.
+
+CAUTION: FIXME Describe the writing
+
+In the end, `constructNextBatch` purges <<offsetLog, offsetLog>> and <<batchCommitLog, batchCommitLog>>.
+
+CAUTION: FIXME Describe the purges
+
+==== [[constructNextBatch-hasNewData-false]] No New Data Available
+
+If there is no new data available, `constructNextBatch` acquires a lock on <<awaitBatchLock, awaitBatchLock>>, wakes up all waiting threads that are waiting for the stream to progress (using <<awaitBatchLockCondition, awaitBatchLockCondition>>), followed by releasing the lock on <<awaitBatchLock, awaitBatchLock>>.
 
 === [[runBatch]] Running Single Streaming Batch -- `runBatch` Internal Method
 
