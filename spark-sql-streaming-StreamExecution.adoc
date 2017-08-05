@@ -25,7 +25,7 @@ image::images/StreamExecution-creating-instance.png[align="center"]
 
 NOTE: link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter] describes how the result of executing a streaming query is written to a streaming sink.
 
-`StreamExecution` <<start, starts a thread of execution>> that runs a streaming query continuously and concurrently (and <<runBatches, polls for new records in the sources to create a batch>>).
+`StreamExecution` <<start, starts a thread of execution>> that runs a streaming query continuously and concurrently (and <<runBatches, polls for new records in the streaming data sources to create a batch>>).
 
 .StreamExecution's Starting Streaming Query (on Execution Thread)
 image::images/StreamExecution-start.png[align="center"]
@@ -35,6 +35,11 @@ image::images/StreamExecution-start.png[align="center"]
 * `INITIALIZED` when the instance was created.
 * `ACTIVE` when batches are pulled from the sources.
 * `TERMINATED` when batches were successfully processed or the query stopped.
+
+`StreamExecution` tracks streaming data sources in <<uniqueSources, uniqueSources>> internal registry.
+
+.StreamExecution's uniqueSources Registry of Streaming Data Sources
+image::images/StreamExecution-uniqueSources.png[align="center"]
 
 `StreamExecution` is also a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery].
 
@@ -225,9 +230,15 @@ NOTE: `StreamExecution` reports a `IllegalStateException` when `TriggerExecutor`
 or `ProcessingTimeExecutor`.
 
 | [[uniqueSources]] `uniqueSources`
-| Unique link:spark-sql-streaming-Source.adoc[streaming Sources] (in the <<logicalPlan, logical query plan>>).
+a| Unique link:spark-sql-streaming-Source.adoc[streaming data sources] in a streaming Dataset (after being collected as `StreamingExecutionRelation` from the corresponding <<logicalPlan, logical query plan>>).
 
-Used in <<constructNextBatch, constructNextBatch>> (to get offsets for every source) and...FIXME
+NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] is a leaf logical operator (i.e. `LogicalPlan`) that represents a streaming data source (and corresponds to a single link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] in <<analyzedPlan, analyzed logical query plan>> of a streaming Dataset).
+
+Used when `StreamExecution`:
+
+* <<constructNextBatch, Constructs the next streaming batch>> (and gets new offsets for every streaming data source)
+
+* <<stopSources, Stops all streaming data sources>>
 |===
 
 [TIP]
@@ -264,9 +275,9 @@ NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatch
 
 `constructNextBatch` starts by checking whether a new data is available across the streaming sources (in the <<logicalPlan, logical query plan>>).
 
-`constructNextBatch` first acquires <<awaitBatchLock, awaitBatchLock>> and gets the offsets for <<uniqueSources, every streaming source used>>.
+Firstly, `constructNextBatch` acquires <<awaitBatchLock, awaitBatchLock>> and link:spark-sql-streaming-Source.adoc#getOffset[gets the latest offsets] from <<uniqueSources, every streaming data source>>.
 
-NOTE: `constructNextBatch` checks out the available offsets in every streaming source sequentially, i.e. one by one.
+NOTE: `constructNextBatch` checks out the latest offsets in every streaming source sequentially, i.e. one data source at a time.
 
 `constructNextBatch` <<updateStatusMessage, updates status message>> to the following for every source.
 
@@ -319,6 +330,15 @@ CAUTION: FIXME Describe the purges
 ==== [[constructNextBatch-hasNewData-false]] No New Data Available
 
 If there is no new data available, `constructNextBatch` acquires a lock on <<awaitBatchLock, awaitBatchLock>>, wakes up all waiting threads that are waiting for the stream to progress (using <<awaitBatchLockCondition, awaitBatchLockCondition>>), followed by releasing the lock on <<awaitBatchLock, awaitBatchLock>>.
+
+=== [[stopSources]] `stopSources` Internal Method
+
+[source, scala]
+----
+stopSources(): Unit
+----
+
+CAUTION: FIXME
 
 === [[runBatch]] Running Single Streaming Batch -- `runBatch` Internal Method
 

@@ -1,15 +1,12 @@
-== [[Source]] Streaming Source
+== [[Source]] Streaming Data Source
 
-A *Streaming Source* represents a continuous stream of data for a streaming query. It generates batches of link:spark-sql-dataframe.adoc[DataFrame] for given start and end offsets. For fault tolerance, a source must be able to replay data given a start offset.
+*Streaming Data Source* is a "continuous" stream of data in a streaming Dataset and is described using the <<contract, Source Contract>>.
 
-A streaming source should be able to replay an arbitrary sequence of past data in a stream using a range of offsets. Streaming sources like Apache Kafka and Amazon Kinesis (with their per-record offsets) fit into this model nicely. This is the assumption so structured streaming can achieve end-to-end exactly-once guarantees.
+`Source` can <<getBatch, generate DataFrame>> (aka *batch*) given start and end offsets.
 
-A streaming source is described by <<contract, Source contract>> in `org.apache.spark.sql.execution.streaming` package.
+For fault tolerance, `Source` must be able to replay data given a start offset.
 
-[source, scala]
-----
-import org.apache.spark.sql.execution.streaming.Source
-----
+`Source` should be able to replay an arbitrary sequence of past data in a stream using a range of offsets. Streaming sources like Apache Kafka and Amazon Kinesis (with their per-record offsets) fit into this model nicely. This is the assumption so structured streaming can achieve end-to-end exactly-once guarantees.
 
 [[available-implementations]]
 .Sources
@@ -46,11 +43,13 @@ a| Any `FileFormat`
 
 [source, scala]
 ----
+package org.apache.spark.sql.execution.streaming
+
 trait Source {
-  def schema: StructType
-  def getOffset: Option[Offset]
-  def getBatch(start: Option[Offset], end: Offset): DataFrame
   def commit(end: Offset) : Unit = {}
+  def getBatch(start: Option[Offset], end: Offset): DataFrame
+  def getOffset: Option[Offset]
+  def schema: StructType
   def stop(): Unit
 }
 ----
@@ -62,12 +61,16 @@ trait Source {
 | Description
 
 | [[getBatch]] `getBatch`
-| Generates a `DataFrame` (with new rows from a streaming source) for a given batch (described using the start and end offsets).
+| Generates a `DataFrame` (with new rows) for a given batch (described using the optional start and end offsets).
 
 Used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch] and link:spark-sql-streaming-StreamExecution.adoc#populateStartOffsets[populateStartOffsets].
 
 | [[getOffset]] `getOffset`
-| Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[run batches] (while link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructing next batch])
+a| Finding the latest offset
+
+NOTE: link:spark-sql-streaming-Offset.adoc[Offset] is...FIXME
+
+Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs streaming batches] (and link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructing a next streaming batch] for every streaming data source in a streaming Dataset)
 
 | [[schema]] `schema`
 a| Schema of the data from this source
