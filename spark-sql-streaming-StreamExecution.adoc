@@ -273,59 +273,95 @@ NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatch
 
 ==== [[constructNextBatch-hasNewData]] Checking Whether New Data Is Available (by Requesting New Offsets from Sources)
 
-`constructNextBatch` starts by checking whether a new data is available across the streaming sources (in the <<logicalPlan, logical query plan>>).
+`constructNextBatch` starts by checking whether or not a new data is available in any of the streaming sources (in the <<logicalPlan, logical query plan>>).
 
-Firstly, `constructNextBatch` acquires <<awaitBatchLock, awaitBatchLock>> and link:spark-sql-streaming-Source.adoc#getOffset[gets the latest offsets] from <<uniqueSources, every streaming data source>>.
+`constructNextBatch` acquires <<awaitBatchLock, awaitBatchLock>> and link:spark-sql-streaming-Source.adoc#getOffset[gets the latest offset] from <<uniqueSources, every streaming data source>>.
 
-NOTE: `constructNextBatch` checks out the latest offsets in every streaming source sequentially, i.e. one data source at a time.
+NOTE: `constructNextBatch` checks out the latest offset in every streaming data source sequentially, i.e. one data source at a time.
 
-`constructNextBatch` <<updateStatusMessage, updates status message>> to the following for every source.
+.StreamExecution's Getting Offsets From Streaming Sources
+image::images/StreamExecution-constructNextBatch.png[align="center"]
+
+NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#getOffset[get the latest offset].
+
+`constructNextBatch` <<updateStatusMessage, updates status message>> to the following for every streaming data source.
 
 ```
 Getting offsets from [source]
 ```
 
-`constructNextBatch` link:spark-sql-streaming-Source.adoc#getOffset[gets the current offset from every streaming source] and link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken].
+`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] to get the offsets.
 
-.StreamExecution's Getting Offsets From Streaming Sources
-image::images/StreamExecution-constructNextBatch.png[align="center"]
-
-`constructNextBatch` prints out the following DEBUG message in the logs:
+`constructNextBatch` prints out the following DEBUG message to the logs:
 
 ```
 DEBUG StreamExecution: getOffset took [time] ms
 ```
 
-`constructNextBatch` adds the streaming sources with the available offsets to <<availableOffsets, availableOffsets>>.
+`constructNextBatch` adds the streaming sources that have the available offsets to <<availableOffsets, availableOffsets>>.
 
-If there is no <<dataAvailable, data available>> (i.e. no offsets unprocessed in any of the sources), `constructNextBatch` turns <<noNewData, noNewData>> flag on.
+If there is no <<dataAvailable, data available>> (i.e. no offsets unprocessed in any of the streaming data sources), `constructNextBatch` turns <<noNewData, noNewData>> flag on.
 
-In the end (of this block), `constructNextBatch` releases <<awaitBatchLock, awaitBatchLock>>
+In the end (of this checking-data block), `constructNextBatch` releases <<awaitBatchLock, awaitBatchLock>>
 
 ==== [[constructNextBatch-hasNewData-true]] New Data Available
 
-Firstly, `constructNextBatch` updates the eventTime watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if we find one in the <<lastExecution, last IncrementalExecution>>.
+When new data is available, `constructNextBatch` updates the eventTime watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if it finds one in the <<lastExecution, last IncrementalExecution>>.
 
-CAUTION: FIXME Describe the eventTime watermark update
+If <<lastExecution, lastExecution>> is available (which may not when `constructNextBatch` is executed the very first time), `constructNextBatch` takes the executed physical plan (i.e. `SparkPlan`) to collect all `EventTimeWatermarkExec` physical operators with the count of link:spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats[eventTimeStats] greater than `0`.
+
+NOTE: The executed physical plan is available as `executedPlan` property of link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution] (which is a custom `QueryExecution`).
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG Observed event time stats: [eventTimeStats]
+```
+
+`constructNextBatch` calculates the difference between the maximum value of `eventTimeStats` and link:spark-sql-streaming-EventTimeWatermarkExec.adoc#delayMs[delayMs] for every `EventTimeWatermarkExec` physical operator.
+
+`constructNextBatch` then takes the first difference (if available at all) and uses it as a possible new eventTime watermark.
+
+If the eventTime watermark candidate is greater than the current watermark (i.e. later time-wise), `constructNextBatch` prints out the following INFO message to the logs:
+
+```
+INFO Updating eventTime watermark to: [newWatermarkMs] ms
+```
+
+`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with the new eventTime watermark and the current time.
+
+Otherwise, if the eventTime watermark candidate is not greater than the current watermark, `constructNextBatch` simply prints out the following DEBUG message to the logs:
+
+```
+DEBUG Event time didn't move: [newWatermarkMs] <= [batchWatermarkMs]
+```
+
+`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with just the current time.
+
+NOTE: Although `constructNextBatch` collects all the `EventTimeWatermarkExec` physical operators in the executed physical plan of <<lastExecution, lastExecution>>, only the first matters if available.
+
+CAUTION: FIXME When could a physical plan have two or more `EventTimeWatermarkExec` operators?
 
 [NOTE]
 ====
 link:spark-sql-streaming-WatermarkSupport.adoc[Streaming watermark] can be changed between a streaming query's restarts (and be different between what is checkpointed and the current version of the query).
+
+FIXME True?
 ====
 
 CAUTION: FIXME Example of the above difference
 
 `constructNextBatch` then adds the offsets to metadata log.
 
-CAUTION: FIXME Describe the writing
+CAUTION: FIXME Describe the writing (after `updateStatusMessage("Writing offsets to log")`)
 
 `constructNextBatch` commits the offsets for the batch.
 
-CAUTION: FIXME Describe the writing
+CAUTION: FIXME Describe the committing (after `val prevBatchOff = offsetLog.get(currentBatchId - 1)`)
 
 In the end, `constructNextBatch` purges <<offsetLog, offsetLog>> and <<batchCommitLog, batchCommitLog>>.
 
-CAUTION: FIXME Describe the purges
+CAUTION: FIXME Describe the purges (i.e. `if (minBatchesToRetain < currentBatchId)`)
 
 ==== [[constructNextBatch-hasNewData-false]] No New Data Available
 
