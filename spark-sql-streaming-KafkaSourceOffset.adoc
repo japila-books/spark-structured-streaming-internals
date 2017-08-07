@@ -5,6 +5,10 @@ CAUTION: FIXME
 [[partitionToOffsets]]
 `KafkaSourceOffset` is created for `partitionToOffsets` collection of `TopicPartitions` and their offsets.
 
+=== [[creating-instance]] Creating KafkaSourceOffset Instance
+
+CAUTION: FIXME
+
 === [[getPartitionOffsets]] Getting Partition Offsets -- `getPartitionOffsets` Method
 
 [source, scala]

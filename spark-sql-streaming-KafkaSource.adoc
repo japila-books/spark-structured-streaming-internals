@@ -11,8 +11,10 @@ Structured Streaming support for Kafka is in a separate link:spark-sql-streaming
 `spark-sql-kafka-0-10` module is not included by default so you have to start `spark-submit` (and "derivatives" like `spark-shell`) with `--packages` command-line option to "install" it.
 
 ```
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.1.1
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
 ```
+
+Replace the version of `spark-sql-kafka-0-10` module (e.g. `2.2.0` above) with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's Search] that matches your version of Spark.
 ====
 
 `KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]).
@@ -42,9 +44,29 @@ image::images/KafkaSource-creating-instance.png[align="center"]
 
 | [[maxOffsetsPerTrigger]] `maxOffsetsPerTrigger`
 | (empty)
-| Maximum number of offsets to fetch per trigger.
+a| Number of records to fetch per trigger.
+
+NOTE: Use `maxOffsetsPerTrigger` option to limit the number of records to fetch per trigger.
+
+---
 
 If not defined, `KafkaSource` uses <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetch the latest available offsets].
+
+| `startingoffsets`
+|
+a|
+
+Possible values:
+
+* `latest`
+
+* `earliest`
+
+* JSON with topics, partitions and their offsets, e.g.
++
+```
+{"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
+```
 
 | `subscribe`
 |
@@ -74,38 +96,33 @@ NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvi
     --property parse.key=true \
     --property key.separator=,
 */
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val kafkaSource = spark.
+val records = spark.
   readStream.
   format("kafka").
-  option("subscribepattern", "topic*").
+  option("subscribe", "topic1").
   option("kafka.bootstrap.servers", "localhost:9092").
-  option("startingoffsets", "earliest").  // latest, earliest or JSON with {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
+  option("startingoffsets", "earliest").
+  option("maxOffsetsPerTrigger", 1).
   load
-
-scala> kafkaSource.printSchema
-root
- |-- key: binary (nullable = true)
- |-- value: binary (nullable = true)
- |-- topic: string (nullable = true)
- |-- partition: integer (nullable = true)
- |-- offset: long (nullable = true)
- |-- timestamp: timestamp (nullable = true)
- |-- timestampType: integer (nullable = true)
-
-val fromKafkaTopic1ToConsole = kafkaSource.
-  select('key cast "string", 'value cast "string"). // deserialize keys and values
-  as[(String, String)].
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val sq = records.
+  select(
+    $"key" cast "string",   // deserialize keys
+    $"value" cast "string", // deserialize values
+    $"topic",
+    $"partition",
+    $"offset").
   writeStream.
   format("console").
   option("truncate", false).
-  trigger(Trigger.ProcessingTime("10 seconds")).
-  queryName("from-kafka-to-console").
+  trigger(Trigger.ProcessingTime(10.seconds)).
   outputMode(OutputMode.Append).
+  queryName("from-kafka-to-console").
   start
 
-// ...after some time
-fromKafkaTopic1ToConsole.stop
+// In the end, stop the streaming query
+sq.stop
 ----
 
 [[schema]]
@@ -113,8 +130,7 @@ fromKafkaTopic1ToConsole.stop
 
 [source, scala]
 ----
-val schema = kafkaSource.schema
-scala> println(schema.treeString)
+scala> records.printSchema
 root
  |-- key: binary (nullable = true)
  |-- value: binary (nullable = true)
@@ -152,6 +168,17 @@ root
 | `timestampType`
 | `IntegerTyp`
 |===
+
+[TIP]
+====
+Use `cast` method (of `Column`) to cast `BinaryType` to a string (for `key` and `value` columns).
+
+```
+$"value" cast "string"
+```
+====
+
+`KafkaSource` also supports batch Datasets.
 
 [source, scala]
 ----
@@ -500,7 +527,9 @@ val q = records.
 
 `getOffset` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetchLatestOffsets] (known later as `latest`).
 
-`getOffset` then calculates <<currentPartitionOffsets, currentPartitionOffsets>> being offsets per <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>>.
+NOTE: (Possible performance degradation?) It is possible that `getOffset` will request the latest offsets from Kafka twice, i.e. while initializing <<initialPartitionOffsets, initialPartitionOffsets>> (when no metadata log is available and KafkaSource's <<startingOffsets, KafkaOffsetRangeLimit>> is `LatestOffsetRangeLimit`) and always as part of `getOffset` itself.
+
+`getOffset` then calculates <<currentPartitionOffsets, currentPartitionOffsets>> based on the  <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option.
 
 .getOffset's Offset Calculation per maxOffsetsPerTrigger
 [cols="1,1",options="header",width="100%"]
@@ -511,14 +540,12 @@ val q = records.
 | Unspecified (i.e. `None`)
 | `latest`
 
-| Defined with <<currentPartitionOffsets, currentPartitionOffsets>> undefined
+| Defined (but <<currentPartitionOffsets, currentPartitionOffsets>> is not available)
 | <<rateLimit, rateLimit>> with `limit` limit, <<initialPartitionOffsets, initialPartitionOffsets>> as `from`, `until` as `latest`
 
-| Defined with <<currentPartitionOffsets, currentPartitionOffsets>> defined
+| Defined (and <<currentPartitionOffsets, currentPartitionOffsets>> is available)
 | <<rateLimit, rateLimit>> with `limit` limit, <<initialPartitionOffsets, initialPartitionOffsets>> as `from`, `until` as `latest`
 |===
-
-`getOffset` sets <<currentPartitionOffsets, currentPartitionOffsets>> as the `offsets` calculated above.
 
 You should see the following DEBUG message in the logs:
 
@@ -526,7 +553,7 @@ You should see the following DEBUG message in the logs:
 DEBUG KafkaSource: GetOffset: [offsets]
 ```
 
-In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] with `offsets`.
+In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc#creating-instance[KafkaSourceOffset] with `offsets` (as `Map[TopicPartition, Long]`).
 
 === [[creating-instance]] Creating KafkaSource Instance
 

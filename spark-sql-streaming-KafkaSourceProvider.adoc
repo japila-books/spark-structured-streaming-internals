@@ -55,7 +55,7 @@ NOTE: `createSource` is a part of link:spark-sql-streaming-StreamSourceProvider.
 The new structured streaming API for Kafka is part of the `spark-sql-kafka-0-10` artifact. Add the following dependency to sbt project to use the streaming integration:
 
 ```
-libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.1"
+libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.2.0"
 ```
 
 [TIP]
@@ -63,11 +63,11 @@ libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.1"
 `spark-sql-kafka-0-10` module is not included in the CLASSPATH of link:spark-shell.adoc[spark-shell] so you have to start it with link:spark-submit.adoc#packages[`--packages` command-line option].
 
 ```
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.1.1
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
 ```
 ====
 
-NOTE: Replace `2.1.1` or `2.3.0-SNAPSHOT` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's Search] that matches your version of Spark.
+NOTE: Replace `2.2.0` or `2.3.0-SNAPSHOT` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's Search] that matches your version of Spark.
 
 === [[validateGeneralOptions]] Validating General Options For Kafka -- `validateGeneralOptions` Internal Method
 
