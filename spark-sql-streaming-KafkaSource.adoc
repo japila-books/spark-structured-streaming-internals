@@ -204,7 +204,7 @@ Otherwise, if the ``0``th batch's metadata is not available, `initialPartitionOf
 You should see the following INFO message in the logs:
 
 ```
-INFO Initial offsets: [offsets]
+INFO KafkaSource: Initial offsets: [offsets]
 ```
 
 NOTE: The ``0``th batch is persisted in the streaming metadata log unless stored already.
@@ -356,7 +356,147 @@ image::images/KafkaSource-initialPartitionOffsets.png[align="center"]
 
 NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructs the next streaming batch]).
 
-CAUTION: FIXME Examples of 1) reading offsets from the metadata log and 2) Kafka directly.
+[source, scala]
+----
+scala> spark.version
+res0: String = 2.3.0-SNAPSHOT
+
+// Case 1: Checkpoint directory undefined
+// initialPartitionOffsets read from Kafka directly
+val records = spark.
+  readStream.
+  format("kafka").
+  option("subscribe", "topic1").
+  option("kafka.bootstrap.servers", "localhost:9092").
+  load
+// Start the streaming query
+// dump records to the console every 10 seconds
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val q = records.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Update).
+  start
+// Note the temporary checkpoint directory
+17/08/07 11:09:29 INFO StreamExecution: Starting [id = 75dd261d-6b62-40fc-a368-9d95d3cb6f5f, runId = f18a5eb5-ccab-4d9d-8a81-befed41a72bd] with file:///private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-d0055630-24e4-4d9a-8f36-7a12a0f11bc0 to store the query checkpoint.
+...
+INFO KafkaSource: Initial offsets: {"topic1":{"0":1}}
+
+// Stop the streaming query
+q.stop
+
+// Case 2: Checkpoint directory defined
+// initialPartitionOffsets read from Kafka directly
+// since the checkpoint directory is not available yet
+// it will be the next time the query is started
+val records = spark.
+  readStream.
+  format("kafka").
+  option("subscribe", "topic1").
+  option("kafka.bootstrap.servers", "localhost:9092").
+  load.
+  select($"value" cast "string", $"topic", $"partition", $"offset")
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val q = records.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  option("checkpointLocation", "/tmp/checkpoint"). // <-- checkpoint directory
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Update).
+  start
+// Note the checkpoint directory in use
+17/08/07 11:21:25 INFO StreamExecution: Starting [id = b8f59854-61c1-4c2f-931d-62bbaf90ee3b, runId = 70d06a3b-f2b1-4fa8-a518-15df4cf59130] with file:///tmp/checkpoint to store the query checkpoint.
+...
+INFO KafkaSource: Initial offsets: {"topic1":{"0":1}}
+...
+INFO StreamExecution: Stored offsets for batch 0. Metadata OffsetSeqMetadata(0,1502098526848,Map(spark.sql.shuffle.partitions -> 200, spark.sql.streaming.stateStore.providerClass -> org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider))
+
+// Review the checkpoint location
+// $ ls -ltr /tmp/checkpoint/offsets
+// total 8
+// -rw-r--r--  1 jacek  wheel  248  7 sie 11:21 0
+// $ tail -2 /tmp/checkpoint/offsets/0 | jq
+
+// Produce messages to Kafka so the latest offset changes
+// And more importanly the offset gets stored to checkpoint location
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++---------------------------+------+---------+------+
+|value                      |topic |partition|offset|
++---------------------------+------+---------+------+
+|testing checkpoint location|topic1|0        |2     |
++---------------------------+------+---------+------+
+
+// and one more
+// Note the offset
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++------------+------+---------+------+
+|value       |topic |partition|offset|
++------------+------+---------+------+
+|another test|topic1|0        |3     |
++------------+------+---------+------+
+
+// See what was checkpointed
+// $ ls -ltr /tmp/checkpoint/offsets
+// total 24
+// -rw-r--r--  1 jacek  wheel  248  7 sie 11:35 0
+// -rw-r--r--  1 jacek  wheel  248  7 sie 11:37 1
+// -rw-r--r--  1 jacek  wheel  248  7 sie 11:38 2
+// $ tail -2 /tmp/checkpoint/offsets/2 | jq
+
+// Stop the streaming query
+q.stop
+
+// And start over to see what offset the query starts from
+// Checkpoint location should have the offsets
+val q = records.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  option("checkpointLocation", "/tmp/checkpoint"). // <-- checkpoint directory
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Update).
+  start
+// Whoops...console format does not support recovery (!)
+// See https://issues.apache.org/jira/browse/SPARK-16116
+// No idea why so asked on the Spark user mailing list
+org.apache.spark.sql.AnalysisException: This query does not support recovering from checkpoint location. Delete /tmp/checkpoint/offsets to start over.;
+  at org.apache.spark.sql.streaming.StreamingQueryManager.createQuery(StreamingQueryManager.scala:222)
+  at org.apache.spark.sql.streaming.StreamingQueryManager.startQuery(StreamingQueryManager.scala:278)
+  at org.apache.spark.sql.streaming.DataStreamWriter.start(DataStreamWriter.scala:284)
+  ... 61 elided
+
+// Change the sink (= output format) to JSON
+val q = records.
+  writeStream.
+  format("json").
+  option("path", "/tmp/json-sink").
+  option("checkpointLocation", "/tmp/checkpoint"). // <-- checkpoint directory
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  start
+// Note the checkpoint directory in use
+17/08/07 12:09:02 INFO StreamExecution: Starting [id = 02e00924-5f0d-4501-bcb8-80be8a8be385, runId = 5eba2576-dad6-4f95-9031-e72514475edc] with file:///tmp/checkpoint to store the query checkpoint.
+...
+17/08/07 12:09:02 INFO KafkaSource: GetBatch called with start = Some({"topic1":{"0":3}}), end = {"topic1":{"0":4}}
+17/08/07 12:09:02 INFO KafkaSource: Partitions added: Map()
+17/08/07 12:09:02 DEBUG KafkaSource: TopicPartitions: topic1-0
+17/08/07 12:09:02 DEBUG KafkaSource: Sorted executors:
+17/08/07 12:09:02 INFO KafkaSource: GetBatch generating RDD of offset range: KafkaSourceRDDOffsetRange(topic1-0,3,4,None)
+17/08/07 12:09:03 DEBUG KafkaOffsetReader: Partitions assigned to consumer: [topic1-0]. Seeking to the end.
+17/08/07 12:09:03 DEBUG KafkaOffsetReader: Got latest offsets for partition : Map(topic1-0 -> 4)
+17/08/07 12:09:03 DEBUG KafkaSource: GetOffset: ArrayBuffer((topic1-0,4))
+17/08/07 12:09:03 DEBUG StreamExecution: getOffset took 122 ms
+17/08/07 12:09:03 DEBUG StreamExecution: Resuming at batch 3 with committed offsets {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}} and available offsets {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}}
+17/08/07 12:09:03 DEBUG StreamExecution: Stream running from {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}} to {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}}
+----
 
 `getOffset` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetchLatestOffsets] (known later as `latest`).
 
