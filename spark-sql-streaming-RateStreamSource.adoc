@@ -98,9 +98,9 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 getOffset: Option[Offset]
 ----
 
-CAUTION: FIXME
+NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
 
-NOTE: `getOffset` is a part of link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
+CAUTION: FIXME
 
 === [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method
 

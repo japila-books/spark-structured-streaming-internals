@@ -187,11 +187,19 @@ Initially `NONE` and set when `KafkaSource` is requested to <<getOffset, get the
 | [[initialPartitionOffsets]] `initialPartitionOffsets`
 a| Initial partition offsets (as `Map[TopicPartition, Long]`)
 
-Lazily set when `KafkaSource` <<getOffset, gets the maximum available offsets>>.
+Set when `KafkaSource` is first requested to <<getOffset, get the available offsets>> (from metadata log or Kafka directly).
 
-Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
+Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offset is not defined).
 
-When initialized, `initialPartitionOffsets` creates a `HDFSMetadataLog` (for link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and takes the ``0``th batch's metadata (as `KafkaSourceOffset`) if available. If not, it uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
+---
+
+CAUTION: FIXME When could the start offset be not defined?
+
+---
+
+While being initialized, `initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance[creates a HDFSMetadataLog] (with link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and takes the ``0``th batch's metadata (as `KafkaSourceOffset`) if available.
+
+Otherwise, if the ``0``th batch's metadata is not available, `initialPartitionOffsets` uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
 
 You should see the following INFO message in the logs:
 
@@ -199,8 +207,7 @@ You should see the following INFO message in the logs:
 INFO Initial offsets: [offsets]
 ```
 
-NOTE: The ``0``th batch is persisted in the streaming metadata log if not available initially.
-
+NOTE: The ``0``th batch is persisted in the streaming metadata log unless stored already.
 |===
 
 [TIP]
@@ -333,16 +340,23 @@ INFO KafkaSource: GetBatch generating RDD of offset range: [comma-separated offs
 
 In the end, `getBatch` creates a `DataFrame` from the RDD of `InternalRow` and <<schema, schema>>.
 
-=== [[getOffset]] Getting Maximum Available Offsets -- `getOffset` Method
+=== [[getOffset]] Fetching Offsets (From Metadata Log or Kafka Directly) -- `getOffset` Method
 
 [source, scala]
 ----
 getOffset: Option[Offset]
 ----
 
-Internally, `getOffset` <<initialPartitionOffsets, initializes partition offsets>>.
+NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
 
-NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called.
+Internally, `getOffset` fetches the <<initialPartitionOffsets, initial partition offsets>> (from the metadata log or Kafka directly).
+
+.KafkaSource Initializing initialPartitionOffsets While Fetching Initial Offsets
+image::images/KafkaSource-initialPartitionOffsets.png[align="center"]
+
+NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructs the next streaming batch]).
+
+CAUTION: FIXME Examples of 1) reading offsets from the metadata log and 2) Kafka directly.
 
 `getOffset` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetchLatestOffsets] (known later as `latest`).
 
@@ -373,8 +387,6 @@ DEBUG KafkaSource: GetOffset: [offsets]
 ```
 
 In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] with `offsets`.
-
-NOTE: `getOffset` is a part of link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
 
 === [[creating-instance]] Creating KafkaSource Instance
 

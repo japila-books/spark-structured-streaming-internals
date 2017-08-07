@@ -5,3 +5,7 @@
 === [[getLatest]] `getLatest` Method
 
 CAUTION: FIXME
+
+=== [[creating-instance]] Creating HDFSMetadataLog Instance
+
+CAUTION: FIXME
