@@ -1,6 +1,6 @@
-== [[StreamSourceProvider]] StreamSourceProvider -- Streaming Source Provider
+== [[StreamSourceProvider]] StreamSourceProvider -- Streaming Data Source Provider
 
-`StreamSourceProvider` trait defines a <<contract, contract>> for objects that can <<createSource, create a streaming Source>> for a format (e.g. text file) or system (e.g. Apache Kafka) by their short names.
+`StreamSourceProvider` is a <<contract, contract>> for objects that can <<createSource, create a streaming data source>> for a format (e.g. text file) or system (e.g. Apache Kafka) by their short names.
 
 `StreamSourceProvider` is used when `DataSource` is requested for the link:spark-sql-datasource.adoc#sourceSchema[name and schema of a streaming source] or just link:spark-sql-datasource.adoc#createSource[creates one].
 

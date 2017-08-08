@@ -68,21 +68,43 @@ Possible values:
 {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
 ```
 
+| `assign`
+|
+a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
+
+```
+{"topicA":[0,1],"topicB":[0,1]}
+```
+
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+
 | `subscribe`
 |
-a| Topic subscription strategy that...FIXME
+a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
+
+```
+topic1,topic2,topic3
+```
 
 NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
 
 | `subscribepattern`
 |
-a| Topic subscription strategy that...FIXME
+a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+```
+topic\d
+```
 
-| `assign`
-|
-a| Topic subscription strategy that...FIXME
+[TIP]
+====
+Use Scala's tripple quotes for the regular expression for topic subscription regex pattern.
+
+[source, scala]
+----
+option("subscribepattern", """topic\d""")
+----
+====
 
 NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
 |===
@@ -99,9 +121,9 @@ NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvi
 val records = spark.
   readStream.
   format("kafka").
-  option("subscribe", "topic1").
+  option("subscribepattern", """topic\d"""). // <-- topics with a digit at the end
   option("kafka.bootstrap.servers", "localhost:9092").
-  option("startingoffsets", "earliest").
+  option("startingoffsets", "latest").
   option("maxOffsetsPerTrigger", 1).
   load
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}

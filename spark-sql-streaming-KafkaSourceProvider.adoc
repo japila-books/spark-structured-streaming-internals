@@ -1,8 +1,8 @@
-== [[KafkaSourceProvider]] KafkaSourceProvider
+== [[KafkaSourceProvider]] KafkaSourceProvider -- Data Source Provider for Apache Kafka
 
-`KafkaSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider] for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that acts as the source for *kafka* format).
+`KafkaSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[streaming data source provider] for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that is the batch and streaming data source for https://kafka.apache.org/[Apache Kafka]).
 
-NOTE: `KafkaSourceProvider` is also a `DataSourceRegister`.
+NOTE: `KafkaSourceProvider` is also a `DataSourceRegister` that allows it to be used as a batch data source.
 
 [[shortName]]
 The short name of the data source is *kafka*.
@@ -18,7 +18,7 @@ NOTE: `KafkaSourceProvider` is part of <<spark-sql-kafka-0-10, `spark-sql-kafka-
 
 [source, scala]
 ----
-// Run spark-shell with spark-sql-kafka-0-10_2.11 module
+// See the section about KafkaSource for a complete example
 val records = spark.
   readStream.
   format("kafka").  // <-- use KafkaSourceProvider
@@ -26,23 +26,7 @@ val records = spark.
   option("kafka.bootstrap.servers", "localhost:9092").
   option("startingoffsets", "earliest").
   option("maxOffsetsPerTrigger", 1).
-  load.
-  select(
-    $"key" cast "string",   // deserialize keys
-    $"value" cast "string", // deserialize values
-    $"topic",
-    $"partition",
-    $"offset")
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-import scala.concurrent.duration._
-val q = records.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Append).
-  queryName("from-kafka-to-console").
-  start
+  load
 ----
 
 === [[createRelation]] `createRelation` Method
@@ -183,7 +167,11 @@ topic1,topic2,topic3
 ```
 
 | `subscribepattern`
-| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[SubscribePatternStrategy]
+| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[SubscribePatternStrategy] with topic subscription regex pattern (that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the pattern), e.g.
+
+```
+topic\d
+```
 |===
 
 [NOTE]
