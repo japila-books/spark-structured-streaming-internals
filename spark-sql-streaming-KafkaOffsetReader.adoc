@@ -105,7 +105,7 @@ CAUTION: FIXME
 
 NOTE: `fetchEarliestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#rateLimit[rateLimit] and link:spark-sql-streaming-KafkaSource.adoc#getBatch[generates a DataFrame for a batch] (when new partitions have been assigned).
 
-=== [[fetchLatestOffsets]] Fetching Latest Available Offsets -- `fetchLatestOffsets` Method
+=== [[fetchLatestOffsets]] Fetching Latest Offsets -- `fetchLatestOffsets` Method
 
 [source, scala]
 ----

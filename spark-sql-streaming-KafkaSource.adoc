@@ -50,9 +50,9 @@ NOTE: Use `maxOffsetsPerTrigger` option to limit the number of records to fetch 
 
 ---
 
-If not defined, `KafkaSource` uses <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetch the latest available offsets].
+Unless defined, `KafkaSource` requests <<kafkaReader, KafkaOffsetReader>> for the link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[latest offsets].
 
-| `startingoffsets`
+| [[startingoffsets]] `startingoffsets`
 |
 a|
 
@@ -67,6 +67,18 @@ Possible values:
 ```
 {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
 ```
+
+[TIP]
+====
+Use Scala's tripple quotes for the JSON for topics, partitions and offsets.
+
+[source, scala]
+----
+option(
+  "startingoffsets",
+  """{"topic1":{"0":5,"4":-1},"topic2":{"0":-2}}""")
+----
+====
 
 | `assign`
 |
@@ -238,25 +250,29 @@ a| Initial partition offsets (as `Map[TopicPartition, Long]`)
 
 Set when `KafkaSource` is first requested to <<getOffset, get the available offsets>> (from metadata log or Kafka directly).
 
-Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offset is not defined).
+Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet).
 
----
+While being initialized, `initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance[creates a custom HDFSMetadataLog] (with link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and link:spark-sql-streaming-HDFSMetadataLog.adoc#get[gets] the ``0``th batch's metadata (as `KafkaSourceOffset`) if available.
 
-CAUTION: FIXME When could the start offset be not defined?
-
----
-
-While being initialized, `initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance[creates a HDFSMetadataLog] (with link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and takes the ``0``th batch's metadata (as `KafkaSourceOffset`) if available.
+NOTE: `initialPartitionOffsets` uses a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with custom `serialize` and `deserialize` methods to write to and read serialized metadata from the log.
 
 Otherwise, if the ``0``th batch's metadata is not available, `initialPartitionOffsets` uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
+
+* For `startingOffsets` as `EarliestOffsetRangeLimit` (i.e. `earliest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[requests for the earliest offsets]
+
+* For `startingOffsets` as `LatestOffsetRangeLimit` (i.e. `latest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[requests for the latest offsets]
+
+* For `startingOffsets` as `SpecificOffsetRangeLimit` (i.e. a JSON in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` <<fetchAndVerify, requests for specific offsets>>
+
+`initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets to the the metadata log] as ``0``th batch.
+
+NOTE: The ``0``th batch is persisted in the streaming metadata log unless stored already.
 
 You should see the following INFO message in the logs:
 
 ```
 INFO KafkaSource: Initial offsets: [offsets]
 ```
-
-NOTE: The ``0``th batch is persisted in the streaming metadata log unless stored already.
 |===
 
 [TIP]
@@ -403,7 +419,7 @@ Internally, `getOffset` fetches the <<initialPartitionOffsets, initial partition
 .KafkaSource Initializing initialPartitionOffsets While Fetching Initial Offsets
 image::images/KafkaSource-initialPartitionOffsets.png[align="center"]
 
-NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructs the next streaming batch]).
+NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructs a streaming batch]).
 
 [source, scala]
 ----
@@ -515,8 +531,7 @@ val q = records.
   outputMode(OutputMode.Update).
   start
 // Whoops...console format does not support recovery (!)
-// See https://issues.apache.org/jira/browse/SPARK-16116
-// No idea why so asked on the Spark user mailing list
+// Reported as https://issues.apache.org/jira/browse/SPARK-21667
 org.apache.spark.sql.AnalysisException: This query does not support recovering from checkpoint location. Delete /tmp/checkpoint/offsets to start over.;
   at org.apache.spark.sql.streaming.StreamingQueryManager.createQuery(StreamingQueryManager.scala:222)
   at org.apache.spark.sql.streaming.StreamingQueryManager.startQuery(StreamingQueryManager.scala:278)
@@ -562,11 +577,11 @@ NOTE: (Possible performance degradation?) It is possible that `getOffset` will r
 | Unspecified (i.e. `None`)
 | `latest`
 
-| Defined (but <<currentPartitionOffsets, currentPartitionOffsets>> is not available)
+| Defined (but <<currentPartitionOffsets, currentPartitionOffsets>> is empty)
 | <<rateLimit, rateLimit>> with `limit` limit, <<initialPartitionOffsets, initialPartitionOffsets>> as `from`, `until` as `latest`
 
-| Defined (and <<currentPartitionOffsets, currentPartitionOffsets>> is available)
-| <<rateLimit, rateLimit>> with `limit` limit, <<initialPartitionOffsets, initialPartitionOffsets>> as `from`, `until` as `latest`
+| Defined (and <<currentPartitionOffsets, currentPartitionOffsets>> contains partitions and offsets)
+| <<rateLimit, rateLimit>> with `limit` limit, <<currentPartitionOffsets, currentPartitionOffsets>> as `from`, `until` as `latest`
 |===
 
 You should see the following DEBUG message in the logs:
@@ -586,8 +601,8 @@ In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.ado
 * [[executorKafkaParams]] Parameters of executors (reading from Kafka)
 * [[sourceOptions]] Collection of key-value options
 * [[metadataPath]] `metadataPath` -- streaming metadata log directory where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] offsets in JSON format.
-* [[startingOffsets]] `KafkaOffsetRangeLimit`
-* [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a `IllegalStateException` on data loss>>.
+* [[startingOffsets]] `KafkaOffsetRangeLimit` (as defined using <<startingoffsets, startingoffsets>> option)
+* [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
 
 `KafkaSource` initializes the <<internal-registries, internal registries and counters>>.
 

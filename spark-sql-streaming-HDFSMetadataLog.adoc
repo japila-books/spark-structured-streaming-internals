@@ -2,6 +2,14 @@
 
 `HDFSMetadataLog` is...FIXME
 
+=== [[get]] `get` Method
+
+CAUTION: FIXME
+
+=== [[add]] `add` Method
+
+CAUTION: FIXME
+
 === [[getLatest]] `getLatest` Method
 
 CAUTION: FIXME
