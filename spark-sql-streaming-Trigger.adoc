@@ -5,7 +5,7 @@
 NOTE: A trigger is also called a *batch* (as in the older Spark Streaming).
 
 [[available-triggers]]
-.Available Triggers (in alphabetical order)
+.Available Triggers
 [cols="1,2",options="header",width="100%"]
 |===
 | Trigger

@@ -1,6 +1,25 @@
 == [[ConsumerStrategy]] ConsumerStrategy
 
-CAUTION: FIXME
+`ConsumerStrategy` is a contract for...FIXME
+
+[[available-consumerstrategies]]
+.Available ConsumerStrategies
+[cols="1,2",options="header",width="100%"]
+|===
+| ConsumerStrategy
+| createConsumer
+
+| [[AssignStrategy]] `AssignStrategy`
+|
+
+| [[SubscribeStrategy]] `SubscribeStrategy`
+|
+
+| [[SubscribePatternStrategy]] `SubscribePatternStrategy`
+a| Uses http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe(java.util.regex.Pattern,%20org.apache.kafka.clients.consumer.ConsumerRebalanceListener)[KafkaConsumer.subscribe(Pattern pattern, ConsumerRebalanceListener listener)] with `NoOpConsumerRebalanceListener`.
+
+TIP: Refer to http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the format of supported patterns.
+|====
 
 === [[createConsumer]] `createConsumer` Method
 

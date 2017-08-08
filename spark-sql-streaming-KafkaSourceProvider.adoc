@@ -7,26 +7,47 @@ NOTE: `KafkaSourceProvider` is also a `DataSourceRegister`.
 [[shortName]]
 The short name of the data source is *kafka*.
 
-`KafkaSourceProvider` requires the following options (that you can set using `option` method):
+`KafkaSourceProvider` requires the following options (that you can set using `option` method of `DataStreamReader` or `DataStreamWriter`):
 
 1. Exactly one option for `subscribe`, `subscribepattern` or `assign`
-2. `kafka.bootstrap.servers` (that corresponds to `bootstrap.servers`)
+2. `kafka.bootstrap.servers` (that becomes Kafka's `bootstrap.servers` property)
+
+TIP: Refer to link:spark-sql-streaming-KafkaSource.adoc#options[KafkaSource's Options] for the supported options.
 
 NOTE: `KafkaSourceProvider` is part of <<spark-sql-kafka-0-10, `spark-sql-kafka-0-10` Library Dependency>>.
 
 [source, scala]
 ----
 // Run spark-shell with spark-sql-kafka-0-10_2.11 module
-
-spark.readStream
-  .format("kafka")
-  .option("subscribe", "topic")
-  .option("kafka.bootstrap.servers", "localhost:9092")
-  .load
-  .writeStream
-  .format("console")
-  .start
+val records = spark.
+  readStream.
+  format("kafka").  // <-- use KafkaSourceProvider
+  option("subscribe", "topic").
+  option("kafka.bootstrap.servers", "localhost:9092").
+  option("startingoffsets", "earliest").
+  option("maxOffsetsPerTrigger", 1).
+  load.
+  select(
+    $"key" cast "string",   // deserialize keys
+    $"value" cast "string", // deserialize values
+    $"topic",
+    $"partition",
+    $"offset")
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val q = records.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Append).
+  queryName("from-kafka-to-console").
+  start
 ----
+
+=== [[createRelation]] `createRelation` Method
+
+CAUTION: FIXME
 
 === [[validateStreamOptions]] `validateStreamOptions` Internal Method
 
@@ -121,3 +142,55 @@ Option 'kafka.bootstrap.servers' must be specified for configuring Kafka consume
 ```
 
 NOTE: `validateGeneralOptions` is used when `KafkaSourceProvider` validates options for <<validateStreamOptions, streaming>> and <<validateBatchOptions, batch>> modes.
+
+=== [[strategy]] Creating ConsumerStrategy -- `strategy` Internal Method
+
+[source, scala]
+----
+strategy(caseInsensitiveParams: Map[String, String])
+----
+
+Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that are one of the following and creates a corresponding link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy].
+
+.KafkaSourceProvider.strategy's Key to ConsumerStrategy Conversion
+[cols="1,2",options="header",width="100%"]
+|===
+| Key
+| ConsumerStrategy
+
+| `assign`
+a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[AssignStrategy] with Kafka's http://kafka.apache.org/0110/javadoc/org/apache/kafka/common/TopicPartition.html[TopicPartitions].
+
+---
+
+`strategy` uses `JsonUtils.partitions` method to parse a JSON with topic names and partitions, e.g.
+
+```
+{"topicA":[0,1],"topicB":[0,1]}
+```
+
+The topic names and partitions are mapped directly to Kafka's `TopicPartition` objects.
+
+| `subscribe`
+a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[SubscribeStrategy] with topic names
+
+---
+
+`strategy` extracts topic names from a comma-separated string, e.g.
+
+```
+topic1,topic2,topic3
+```
+
+| `subscribepattern`
+| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[SubscribePatternStrategy]
+|===
+
+[NOTE]
+====
+`strategy` is used when:
+
+* `KafkaSourceProvider` <<createSource, creates a KafkaOffsetReader for KafkaSource>>.
+
+* `KafkaSourceProvider` <<createRelation, creates a KafkaRelation>>.
+====
