@@ -1,4 +1,4 @@
-== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef -- Interface for Communication with StateStoreCoordinator
+== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator
 
 [[rpcEndpointRef]]
 `StateStoreCoordinatorRef` allows for <<messages, communication>> with link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] (through `rpcEndpointRef` reference).

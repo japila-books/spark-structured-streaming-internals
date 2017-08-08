@@ -6,7 +6,7 @@
 
 == Using Structured Streaming
 
-. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Datasets from Streaming Data Sources]
+. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader for Loading Datasets from Streaming Data Sources]
 
 . link:spark-sql-streaming-Source.adoc[Streaming Source]
 .. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
@@ -16,7 +16,7 @@
 ... link:spark-sql-streaming-KafkaSourceRDD.adoc[KafkaSourceRDD]
 ... link:spark-sql-streaming-CachedKafkaConsumer.adoc[CachedKafkaConsumer]
 ... link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
-... link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy -- Contract for KafkaConsumer Providers]
+... link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy Contract for KafkaConsumer Providers]
 ... link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
 
 .. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
@@ -29,7 +29,7 @@
 .. link:spark-sql-streaming-Trigger.adoc[Trigger]
 
 . link:spark-sql-streaming-Sink.adoc[Streaming Sink]
-.. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink -- Showing DataFrames to Console]
+.. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]
 .. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
 .. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
 .. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
@@ -86,14 +86,14 @@
 
 === Physical Operators
 
-. link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator]
+. link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator for Monitoring Event Timestamps]
 . link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec Unary Physical Operator]
-. link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec -- Unary Physical Operator for Restoring Streaming Aggregates]
-. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec -- Unary Physical Operator for Saving State of Streaming Aggregates]
-. link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec -- Unary Physical Operator for Streaming Deduplication]
+. link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec Unary Physical Operator for Restoring Streaming Aggregates]
+. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec Unary Physical Operator for Saving State of Streaming Aggregates]
+. link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication]
 . link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec]
 
-. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport -- Contract for Streaming Watermark in Unary Physical Operators]
+. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport Contract for Streaming Watermark in Unary Physical Operators]
 
 === Execution Planning Strategies
 
@@ -110,7 +110,7 @@
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
 .. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
-... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef -- Interface for Communication with StateStoreCoordinator]
+... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 
 == Varia

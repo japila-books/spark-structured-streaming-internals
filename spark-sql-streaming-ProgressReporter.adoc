@@ -106,7 +106,7 @@ Elements are added and removed when `ProgressReporter` <<updateProgress, updates
 Used when `ProgressReporter` does `lastProgress` or `recentProgress`.
 |===
 
-=== [[extractExecutionStats]] `extractExecutionStats` Internal Method
+=== [[extractExecutionStats]] Creating Execution Statistics -- `extractExecutionStats` Internal Method
 
 [source, scala]
 ----

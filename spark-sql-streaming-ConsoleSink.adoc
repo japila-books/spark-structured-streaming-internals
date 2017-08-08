@@ -1,4 +1,4 @@
-== [[ConsoleSink]] ConsoleSink -- Showing DataFrames to Console
+== [[ConsoleSink]] ConsoleSink for Showing DataFrames to Console
 
 `ConsoleSink` is a link:spark-sql-streaming-Sink.adoc[streaming sink] that <<addBatch, shows the DataFrame (for a batch) to the console>>.
 

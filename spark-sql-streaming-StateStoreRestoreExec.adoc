@@ -1,4 +1,4 @@
-== [[StateStoreRestoreExec]] StateStoreRestoreExec -- Unary Physical Operator for Restoring Streaming Aggregates
+== [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator for Restoring Streaming Aggregates
 
 `StateStoreRestoreExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreReader.adoc[reads state from StateStore].
 

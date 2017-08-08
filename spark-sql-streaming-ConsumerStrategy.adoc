@@ -1,4 +1,4 @@
-== [[ConsumerStrategy]] ConsumerStrategy -- Contract for KafkaConsumer Providers
+== [[ConsumerStrategy]] ConsumerStrategy Contract for KafkaConsumer Providers
 
 `ConsumerStrategy` is a <<contract, contract>> for components that can <<createConsumer, create a KafkaConsumer>> using the given Kafka parameters.
 

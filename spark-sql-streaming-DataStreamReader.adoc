@@ -1,4 +1,4 @@
-== [[DataStreamReader]] DataStreamReader -- Loading Datasets from Streaming Data Sources
+== [[DataStreamReader]] DataStreamReader for Loading Datasets from Streaming Data Sources
 
 `DataStreamReader` is an interface for <<load, loading>> a dataset from a streaming data source given <<format, format>>, <<schema, schema>> and <<options, options>>.
 
