@@ -1,10 +1,10 @@
 == [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator for Monitoring Event Timestamps
 
-`EventTimeWatermarkExec` is a unary physical operator (aka `UnaryExecNode`) that <<doExecute, monitors>> the timestamps (that appear in <<eventTime, eventTime watermark column>>).
+`EventTimeWatermarkExec` is a unary physical operator (aka `UnaryExecNode`) that <<doExecute, accumulates>> the event time values (that appear in <<eventTime, eventTime watermark column>>).
 
 [NOTE]
 ====
-`EventTimeWatermarkExec` uses <<eventTimeStats, eventTimeStats>> accumulator to send the statistics (i.e. the maximum, minimum, average and count) for the timestamps in input data that is later used in:
+`EventTimeWatermarkExec` uses <<eventTimeStats, eventTimeStats>> accumulator to send the statistics (i.e. the maximum, minimum, average and count) for the event time column in a streaming batch that is later used in:
 
 * `ProgressReporter` for link:spark-sql-streaming-ProgressReporter.adoc#extractExecutionStats[creating execution statistics] for the most recent query execution. You should then see `max`, `min`, `avg`, and `watermark` eventTime watermark statistics.
 
@@ -41,16 +41,14 @@ EventTimeWatermark timestamp#36: timestamp, interval 10 seconds
 Used when...FIXME
 
 | [[eventTimeStats]] `eventTimeStats`
-a| <<EventTimeStatsAccum, EventTimeStatsAccum>> for...FIXME
+a| link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum] accumulator to accumulate <<eventTime, eventTime>> values from every row in a streaming batch (when `EventTimeWatermarkExec` <<doExecute, is executed>>).
 
-NOTE: `EventTimeStatsAccum` is of `AccumulatorV2[Long, EventTimeStats]` type.
+NOTE: `EventTimeStatsAccum` is a Spark accumulator of `EventTimeStats` from `Longs` (i.e. `AccumulatorV2[Long, EventTimeStats]`).
 
-Registered while `EventTimeWatermarkExec` <<creating-instance, is created>>.
-
-Used while `EventTimeWatermarkExec` <<doExecute, is executed>> to add <<eventTime, eventTime>> field from every row.
+NOTE: Every Spark accumulator has to be registered before use, and `eventTimeStats` is registered when `EventTimeWatermarkExec` <<creating-instance, is created>>.
 |===
 
-=== [[doExecute]] Executing EventTimeWatermarkExec (And Collecting Timestamps) -- `doExecute` Method
+=== [[doExecute]] Executing EventTimeWatermarkExec (And Collecting Event Times) -- `doExecute` Method
 
 [source, scala]
 ----
@@ -67,8 +65,6 @@ Internally, `doExecute` executes <<child, child>> physical operator and maps ove
 
 * Adds <<eventTime, eventTime>> to <<eventTimeStats, eventTimeStats>> acumulator
 
-NOTE: Adding <<eventTime, eventTime>> to <<eventTimeStats, eventTimeStats>> acumulator
-
 === [[creating-instance]] Creating EventTimeWatermarkExec Instance
 
 `EventTimeWatermarkExec` takes the following when created:
@@ -80,7 +76,3 @@ NOTE: Adding <<eventTime, eventTime>> to <<eventTimeStats, eventTimeStats>> acum
 While being created, `EventTimeWatermarkExec` registers <<eventTimeStats, eventTimeStats>> accumulator (with the current `SparkContext`).
 
 `EventTimeWatermarkExec` initializes the <<internal-registries, internal registries and counters>>.
-
-=== [[EventTimeStatsAccum]] EventTimeStatsAccum Accumulator
-
-`EventTimeStatsAccum`...FIXME

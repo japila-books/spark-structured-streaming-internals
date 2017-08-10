@@ -1,0 +1,9 @@
+== [[EventTimeStatsAccum]] EventTimeStatsAccum Accumulator
+
+`EventTimeStatsAccum` is a Spark accumulator of `EventTimeStats` from `Longs` (i.e. `AccumulatorV2[Long, EventTimeStats]`) that collects statistics on event time in a streaming batch.
+
+[[currentStats]]
+[[creating-instance]]
+`EventTimeStatsAccum` takes a `EventTimeStats` when created.
+
+`EventTimeStatsAccum` is used exclusively when `EventTimeWatermarkExec` is link:spark-sql-streaming-EventTimeWatermarkExec.adoc#doExecute[executed] (and accumulates `eventTime` values from every row in a streaming batch).
