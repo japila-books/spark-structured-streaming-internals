@@ -315,7 +315,7 @@ NOTE: The executed physical plan is available as `executedPlan` property of link
 You should see the following DEBUG message in the logs:
 
 ```
-DEBUG Observed event time stats: [eventTimeStats]
+DEBUG StreamExecution: Observed event time stats: [eventTimeStats]
 ```
 
 `constructNextBatch` calculates the difference between the maximum value of `eventTimeStats` and link:spark-sql-streaming-EventTimeWatermarkExec.adoc#delayMs[delayMs] for every `EventTimeWatermarkExec` physical operator.
@@ -325,7 +325,7 @@ DEBUG Observed event time stats: [eventTimeStats]
 If the eventTime watermark candidate is greater than the current watermark (i.e. later time-wise), `constructNextBatch` prints out the following INFO message to the logs:
 
 ```
-INFO Updating eventTime watermark to: [newWatermarkMs] ms
+INFO StreamExecution: Updating eventTime watermark to: [newWatermarkMs] ms
 ```
 
 `constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with the new eventTime watermark and the current time.
@@ -333,7 +333,7 @@ INFO Updating eventTime watermark to: [newWatermarkMs] ms
 Otherwise, if the eventTime watermark candidate is not greater than the current watermark, `constructNextBatch` simply prints out the following DEBUG message to the logs:
 
 ```
-DEBUG Event time didn't move: [newWatermarkMs] <= [batchWatermarkMs]
+DEBUG StreamExecution: Event time didn't move: [newWatermarkMs] <= [batchWatermarkMs]
 ```
 
 `constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with just the current time.
