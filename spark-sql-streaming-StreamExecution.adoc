@@ -76,7 +76,7 @@ a| Current batch number
 
 * `0` when `StreamExecution` <<populateStartOffsets, populates start offsets>> (when <<offsetLog, OffsetSeqLog>> is empty)
 
-* Incremented when `StreamExecution` <<runBatches, runBatches>>
+* Incremented when `StreamExecution` <<runBatches, runs streaming batches>>
 
 | [[id]] `id`
 |
@@ -92,7 +92,7 @@ a| Lazily-generated logical plan (i.e. `LogicalPlan`) of the streaming Dataset
 
 NOTE: `logicalPlan` is a part of link:spark-sql-streaming-ProgressReporter.adoc#logicalPlan[ProgressReporter Contract].
 
-Initialized right after `StreamExecution` starts <<runBatches, running batches>> (which is when <<microBatchThread, stream execution thread>> is started).
+Initialized right after `StreamExecution` starts <<runBatches, running streaming batches>> (which is when <<microBatchThread, stream execution thread>> is started).
 
 Used mainly when `StreamExecution` <<runBatch-withNewSources, transforms StreamingExecutionRelations in a logical query plan with new data>> that has arrived since the last batch.
 
@@ -109,7 +109,7 @@ While initializing, `logicalPlan` also initializes <<sources, sources>> and <<un
 | [[microBatchThread]] `microBatchThread`
 a| Thread of execution to run a streaming query concurrently with the name as `stream execution thread for [prettyIdString]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
 
-When started, `microBatchThread` sets the so-called call site and <<runBatches, runs batches>>.
+When started, `microBatchThread` sets the so-called call site and <<runBatches, runs streaming batches>>.
 
 NOTE: `microBatchThread` is Java's https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread].
 
@@ -178,7 +178,7 @@ a| Qualified path of checkpoint directory (as defined using <<checkpointRoot, ch
 `checkpointLocation` and `queryName` options are passed in when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[creates the streaming query].
 ====
 
-Used in <<checkpointFile, checkpointFile>> and when <<runBatches, runBatches>> finishes.
+Used in <<checkpointFile, checkpointFile>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
 
 Used in <<logicalPlan, logicalPlan>> (where every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] stores its own checkpointing metadata).
 
@@ -206,13 +206,13 @@ NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for 
 | [[startLatch]] `startLatch`
 | Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
 
-Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` has started <<runBatches, running batches>>.
+Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` has started <<runBatches, running streaming batches>>.
 
 | [[state]] `state`
 a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the three different states a streaming query execution can be:
 
 * `INITIALIZING` (default)
-* `ACTIVE` (after the first <<runBatches, runBatches>>)
+* `ACTIVE` (after the first execution of <<runBatches, runBatches>>)
 * `TERMINATED`
 
 | [[streamMetadata]] `streamMetadata`
@@ -224,7 +224,7 @@ a| link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor] per <<trigger,
 * `ProcessingTimeExecutor` for `ProcessingTime`
 * `OneTimeExecutor` for `OneTimeTrigger` (aka link:spark-sql-streaming-Trigger.adoc#Once[Once] trigger)
 
-Used when `StreamExecution` starts <<runBatches, running batches>>.
+Used when `StreamExecution` starts <<runBatches, running streaming batches>>.
 
 NOTE: `StreamExecution` reports a `IllegalStateException` when `TriggerExecutor` is different from the link:spark-sql-streaming-TriggerExecutor.adoc#available-implementations[two built-in implementations]: `OneTimeExecutor`
 or `ProcessingTimeExecutor`.
@@ -269,7 +269,14 @@ constructNextBatch(): Unit
 
 1. <<constructNextBatch-hasNewData-false, No data is available>>
 
-NOTE: `constructNextBatch` is used when `StreamExecution` <<runBatches, runBatches>> and <<populateStartOffsets, populateStartOffsets>>.
+[NOTE]
+====
+`constructNextBatch` is used when `StreamExecution`:
+
+* <<runBatches, Runs streaming batches>>
+
+* <<populateStartOffsets, Populates the start offsets>>
+====
 
 ==== [[constructNextBatch-hasNewData]] Checking Whether New Data Is Available (by Requesting New Offsets from Sources)
 
@@ -282,13 +289,9 @@ NOTE: `constructNextBatch` checks out the latest offset in every streaming data 
 .StreamExecution's Getting Offsets From Streaming Sources
 image::images/StreamExecution-constructNextBatch.png[align="center"]
 
-NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#getOffset[get the latest offset].
+NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#getOffset[get the latest offset] (using `Source.getOffset` method).
 
-`constructNextBatch` <<updateStatusMessage, updates status message>> to the following for every streaming data source.
-
-```
-Getting offsets from [source]
-```
+`constructNextBatch` <<updateStatusMessage, updates status message>> to *Getting offsets from [source]* for every streaming data source.
 
 `constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] to get the offsets.
 
@@ -306,9 +309,9 @@ In the end (of this checking-data block), `constructNextBatch` releases <<awaitB
 
 ==== [[constructNextBatch-hasNewData-true]] New Data Available
 
-When new data is available, `constructNextBatch` updates the eventTime watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if it finds one in the <<lastExecution, last IncrementalExecution>>.
+When new data is available, `constructNextBatch` updates the event time watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if it finds one in the <<lastExecution, last IncrementalExecution>>.
 
-If <<lastExecution, lastExecution>> is available (which may not when `constructNextBatch` is executed the very first time), `constructNextBatch` takes the executed physical plan (i.e. `SparkPlan`) to collect all `EventTimeWatermarkExec` physical operators with the count of link:spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats[eventTimeStats] greater than `0`.
+If <<lastExecution, lastExecution>> is available (which may not when `constructNextBatch` is executed the very first time), `constructNextBatch` takes the executed physical plan (i.e. `SparkPlan`) and collects all `EventTimeWatermarkExec` physical operators with the count of link:spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats[eventTimeStats] greater than `0`.
 
 NOTE: The executed physical plan is available as `executedPlan` property of link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution] (which is a custom `QueryExecution`).
 
@@ -320,15 +323,17 @@ DEBUG StreamExecution: Observed event time stats: [eventTimeStats]
 
 `constructNextBatch` calculates the difference between the maximum value of `eventTimeStats` and link:spark-sql-streaming-EventTimeWatermarkExec.adoc#delayMs[delayMs] for every `EventTimeWatermarkExec` physical operator.
 
-`constructNextBatch` then takes the first difference (if available at all) and uses it as a possible new eventTime watermark.
+NOTE: The maximum value of `eventTimeStats` is the youngest time, i.e. the time the closest to the current time.
 
-If the eventTime watermark candidate is greater than the current watermark (i.e. later time-wise), `constructNextBatch` prints out the following INFO message to the logs:
+`constructNextBatch` then takes the first difference (if available at all) and uses it as a possible new event time watermark.
+
+If the event time watermark candidate is greater than the current watermark (i.e. later time-wise), `constructNextBatch` prints out the following INFO message to the logs:
 
 ```
 INFO StreamExecution: Updating eventTime watermark to: [newWatermarkMs] ms
 ```
 
-`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with the new eventTime watermark and the current time.
+`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with the new event time watermark and the current time.
 
 Otherwise, if the eventTime watermark candidate is not greater than the current watermark, `constructNextBatch` simply prints out the following DEBUG message to the logs:
 
@@ -346,20 +351,74 @@ CAUTION: FIXME When could a physical plan have two or more `EventTimeWatermarkEx
 ====
 link:spark-sql-streaming-WatermarkSupport.adoc[Streaming watermark] can be changed between a streaming query's restarts (and be different between what is checkpointed and the current version of the query).
 
-FIXME True?
+FIXME True? Example?
 ====
-
-CAUTION: FIXME Example of the above difference
 
 `constructNextBatch` then adds the offsets to metadata log.
 
-CAUTION: FIXME Describe the writing (after `updateStatusMessage("Writing offsets to log")`)
+`constructNextBatch` <<updateStatusMessage, updates status message>> to *Writing offsets to log*.
+
+`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] (as *walCommit*) to link:spark-sql-streaming-HDFSMetadataLog.adoc#add[add offsets for the batch] to <<offsetLog, OffsetSeqLog>>.
+
+[NOTE]
+====
+While writing the offsets to the metadata log, `constructNextBatch` uses the following internal registries:
+
+* <<currentBatchId, currentBatchId>> for the current batch id
+
+* <<availableOffsets, StreamProgress>> for the available offsets
+
+* <<sources, sources>> for the streaming sources
+
+* <<offsetSeqMetadata, OffsetSeqMetadata>>
+====
+
+`constructNextBatch` reports a `AssertionError` when writing to the metadata log has failed.
+
+```
+Concurrent update to the log. Multiple streaming jobs detected for [currentBatchId]
+```
+
+[TIP]
+====
+Use link:spark-sql-streaming-StreamingQuery.adoc#lastProgress[StreamingQuery.lastProgress] to access `walCommit` time report.
+
+[source, scala]
+----
+val sq: StreamingQuery = ...
+sq.lastProgress.durationMs.get("walCommit")
+----
+====
+
+[TIP]
+====
+Enable INFO logging level for `org.apache.spark.sql.execution.streaming.StreamExecution` logger to be notified about `walCommit` duration.
+
+```
+17/08/11 09:04:17 INFO StreamExecution: Streaming query made progress: {
+  "id" : "ec8f8228-90f6-4e1f-8ad2-80222affed63",
+  "runId" : "f605c134-cfb0-4378-88c1-159d8a7c232e",
+  "name" : "rates-to-console",
+  "timestamp" : "2017-08-11T07:04:17.373Z",
+  "batchId" : 0,
+  "numInputRows" : 0,
+  "processedRowsPerSecond" : 0.0,
+  "durationMs" : {
+    "addBatch" : 38,
+    "getBatch" : 1,
+    "getOffset" : 0,
+    "queryPlanning" : 1,
+    "triggerExecution" : 62,
+    "walCommit" : 19          // <-- walCommit
+  },
+```
+====
 
 `constructNextBatch` commits the offsets for the batch.
 
-CAUTION: FIXME Describe the committing (after `val prevBatchOff = offsetLog.get(currentBatchId - 1)`)
+CAUTION: FIXME Describe the committing (after `if (currentBatchId != 0) {`)
 
-In the end, `constructNextBatch` purges <<offsetLog, offsetLog>> and <<batchCommitLog, batchCommitLog>>.
+In the end, `constructNextBatch` purges <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, batchCommitLog>>.
 
 CAUTION: FIXME Describe the purges (i.e. `if (minBatchesToRetain < currentBatchId)`)
 
@@ -588,7 +647,7 @@ res1: org.apache.spark.sql.streaming.StreamingQueryStatus =
 ----
 ====
 
-`batchRunner` then <<updateStatusMessage, updates the status message>> to "Processing new data" and <<runBatch, runs the batch>>.
+`batchRunner` then <<updateStatusMessage, updates the status message>> to *Processing new data* and <<runBatch, runs the batch>>.
 
 .StreamExecution's Running Batches (on Execution Thread)
 image::images/StreamExecution-runBatches.png[align="center"]
@@ -659,7 +718,7 @@ FileSource[hello]
      "
 ```
 
-NOTE: `toDebugString` is used exclusively when `StreamExecution` <<runBatches, runBatches>> (when a streaming query terminated with exception).
+NOTE: `toDebugString` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>> (when a streaming query terminated with exception).
 
 === [[start]] Starting Streaming Query (on Execution Thread) -- `start` Method
 
@@ -680,7 +739,7 @@ NOTE: `start` uses Java's link:++https://docs.oracle.com/javase/8/docs/api/java/
 
 NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
-In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero (which is right after `StreamExecution` has started <<runBatches, running batches>> so there is some pause in the main thread's execution to wait till the streaming query execution thread starts).
+In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero (which is right after `StreamExecution` has started <<runBatches, running streaming batches>> so there is some pause in the main thread's execution to wait till the streaming query execution thread starts).
 
 NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[start a streaming query].
 
@@ -711,4 +770,4 @@ checkpointFile(name: String): String
 
 NOTE: `checkpointFile` uses Hadoop's `org.apache.hadoop.fs.Path`.
 
-NOTE: `checkpointFile` is used for <<streamMetadata, streamMetadata>>, <<offsetLog, offsetLog>>, <<batchCommitLog, batchCommitLog>>, and <<lastExecution, lastExecution>> (for <<runBatch, runBatch>>).
+NOTE: `checkpointFile` is used for <<streamMetadata, streamMetadata>>, <<offsetLog, OffsetSeqLog>>, <<batchCommitLog, batchCommitLog>>, and <<lastExecution, lastExecution>> (for <<runBatch, runBatch>>).

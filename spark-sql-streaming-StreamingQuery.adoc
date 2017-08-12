@@ -1,10 +1,8 @@
 == [[StreamingQuery]] StreamingQuery
 
-`StreamingQuery` provides an interface for interacting with a query that executes continuously in background.
+`StreamingQuery` is a <<contract, contract>> for a streaming query that is executed continuously and concurrently (i.e. on a separate thread).
 
 NOTE: `StreamingQuery` is called *continuous query* or *stream query*.
-
-`StreamingQuery` has a name and belongs to a single link:spark-sql-sqlcontext.adoc[SQLContext].
 
 NOTE: `StreamingQuery` is a Scala trait with the only implementation being link:spark-sql-streaming-StreamExecution.adoc[StreamExecution].
 
@@ -21,6 +19,73 @@ There could only be a single link:spark-sql-streaming-Sink.adoc[Sink] for a `Str
 
 `StreamingQuery` can be stopped by `stop` or an exception.
 
-=== [[status]] `status` Method
+=== [[contract]] StreamingQuery Contract
 
-CAUTION: FIXME
+[source, scala]
+----
+package org.apache.spark.sql.streaming
+
+trait StreamingQuery {
+  def name: String
+  def id: UUID
+  def runId: UUID
+  def sparkSession: SparkSession
+  def isActive: Boolean
+  def exception: Option[StreamingQueryException]
+  def status: StreamingQueryStatus
+  def recentProgress: Array[StreamingQueryProgress]
+  def lastProgress: StreamingQueryProgress
+  def awaitTermination(): Unit
+  def awaitTermination(timeoutMs: Long): Boolean
+  def processAllAvailable(): Unit
+  def stop(): Unit
+  def explain(): Unit
+  def explain(extended: Boolean): Unit
+}
+----
+
+.StreamingQuery Contract
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| [[name]] `name`
+| Query name
+
+| [[id]] `id`
+| `UUID`
+
+| [[runId]] `runId`
+| `UUID`
+
+| [[sparkSession]] `sparkSession`
+| `SparkSession`
+
+| [[isActive]] `isActive`
+| Boolean
+
+| [[exception]] `exception`
+| `StreamingQueryException` if the query has finished due to an exception
+
+| [[status]] `status`
+| `StreamingQueryStatus`
+
+| [[recentProgress]] `recentProgress`
+| Collection of recent `StreamingQueryProgress`
+
+| [[lastProgress]] `lastProgress`
+| The last `StreamingQueryProgress`
+
+| [[awaitTermination]] `awaitTermination`
+|
+
+| [[processAllAvailable]] `processAllAvailable`
+|
+
+| [[stop]] `stop`
+|
+
+| [[explain]] `explain`
+|
+|===
