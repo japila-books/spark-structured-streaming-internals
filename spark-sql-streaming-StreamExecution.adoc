@@ -360,6 +360,8 @@ FIXME True? Example?
 
 `constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] (as *walCommit*) to link:spark-sql-streaming-HDFSMetadataLog.adoc#add[add offsets for the batch] to <<offsetLog, OffsetSeqLog>>.
 
+CAUTION: FIXME A picture with different time durations for "time takens" on a single streaming batch's timeline.
+
 [NOTE]
 ====
 While writing the offsets to the metadata log, `constructNextBatch` uses the following internal registries:
@@ -414,13 +416,25 @@ Enable INFO logging level for `org.apache.spark.sql.execution.streaming.StreamEx
 ```
 ====
 
-`constructNextBatch` commits the offsets for the batch.
+`constructNextBatch` commits the offsets for the batch (only when <<currentBatchId, currentBatchId>> is non-``0``, i.e. ...FIXME).
 
-CAUTION: FIXME Describe the committing (after `if (currentBatchId != 0) {`)
+CAUTION: FIXME When is `currentBatchId` not `0`?
 
-In the end, `constructNextBatch` purges <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, batchCommitLog>>.
+`constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#get[takes the previously-committed batch] (from <<offsetLog, OffsetSeqLog>>), extracts the stored offsets per source.
 
-CAUTION: FIXME Describe the purges (i.e. `if (minBatchesToRetain < currentBatchId)`)
+NOTE: `constructNextBatch` uses `OffsetSeq.toStreamProgress` and <<sources, sources>> registry to extract the offsets per source.
+
+`constructNextBatch` requests every streaming source to link:spark-sql-streaming-Source.adoc#commit[commit the offsets]
+
+NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#commit[commit the offsets] (using `Source.commit` method).
+
+`constructNextBatch` reports a `IllegalStateException` when <<currentBatchId, currentBatchId>> is `0`.
+
+```
+batch [currentBatchId] doesn't exist
+```
+
+In the end, `constructNextBatch` purges <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> when <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property.
 
 ==== [[constructNextBatch-hasNewData-false]] No New Data Available
 

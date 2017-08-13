@@ -29,6 +29,12 @@ val spark: SparkSession = SparkSession.builder
 | `false`
 | Flag whether Dropwizard CodaHale metrics will be reported for active streaming queries
 
+| [[spark.sql.streaming.minBatchesToRetain]] `spark.sql.streaming.minBatchesToRetain`
+| `100`
+| (internal) The minimum number of batches that must be retained and made recoverable.
+
+Used...FIXME
+
 | [[spark.sql.streaming.numRecentProgressUpdates]] `spark.sql.streaming.numRecentProgressUpdates`
 | `100`
 | Number of link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[progress updates to retain] for a streaming query
