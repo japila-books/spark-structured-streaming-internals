@@ -43,6 +43,13 @@ image::images/StreamExecution-uniqueSources.png[align="center"]
 
 `StreamExecution` is also a link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery].
 
+`StreamExecution` collects durations for the execution units of a single streaming batch.
+
+.StreamExecution's reportTimeTaken Durations
+image::images/StreamExecution-reportTimeTaken.png[align="center"]
+
+CAUTION: FIXME runBatches and triggerExecution hold the others.
+
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
 [cols="1,2",options="header",width="100%"]
@@ -345,7 +352,7 @@ DEBUG StreamExecution: Event time didn't move: [newWatermarkMs] <= [batchWaterma
 
 NOTE: Although `constructNextBatch` collects all the `EventTimeWatermarkExec` physical operators in the executed physical plan of <<lastExecution, lastExecution>>, only the first matters if available.
 
-CAUTION: FIXME When could a physical plan have two or more `EventTimeWatermarkExec` operators?
+NOTE: A physical plan has as many `EventTimeWatermarkExec` physical operators as `Dataset.withWatermark` operator was used to create a streaming query.
 
 [NOTE]
 ====
@@ -359,8 +366,6 @@ FIXME True? Example?
 `constructNextBatch` <<updateStatusMessage, updates status message>> to *Writing offsets to log*.
 
 `constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] (as *walCommit*) to link:spark-sql-streaming-HDFSMetadataLog.adoc#add[add offsets for the batch] to <<offsetLog, OffsetSeqLog>>.
-
-CAUTION: FIXME A picture with different time durations for "time takens" on a single streaming batch's timeline.
 
 [NOTE]
 ====
@@ -416,9 +421,7 @@ Enable INFO logging level for `org.apache.spark.sql.execution.streaming.StreamEx
 ```
 ====
 
-`constructNextBatch` commits the offsets for the batch (only when <<currentBatchId, currentBatchId>> is non-``0``, i.e. ...FIXME).
-
-CAUTION: FIXME When is `currentBatchId` not `0`?
+`constructNextBatch` commits the offsets for the batch (only when <<currentBatchId, currentBatchId>> is not ``0``, i.e. when the <<populateStartOffsets-currentBatchId-0, query has just been started>> and `constructNextBatch` is called the first time).
 
 `constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#get[takes the previously-committed batch] (from <<offsetLog, OffsetSeqLog>>), extracts the stored offsets per source.
 
@@ -621,7 +624,7 @@ NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<micro
 
 `batchRunner` <<startTrigger, starts trigger calculation>>.
 
-If <<state, state>> is not `TERMINATED` (which means that the streaming query should be executed), `batchRunner`  executes the current batch and link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken].
+If <<state, state>> is not `TERMINATED` (which means that the streaming query should still be executed), `batchRunner`  executes the current batch and link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken].
 
 The current batch branches off per <<currentBatchId, currentBatchId>>.
 
@@ -683,12 +686,13 @@ populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
 
 CAUTION: FIXME Describe when batch and metadata were available.
 
-When no batch if and metadata were available, it is assumed that the streaming query is started for the first time. You should see the following INFO message in the logs:
+When no batch id and metadata are available, it is assumed that the streaming query is started for the first time. You should see the following INFO message in the logs:
 
 ```
 INFO StreamExecution: Starting new streaming query.
 ```
 
+[[populateStartOffsets-currentBatchId-0]]
 `populateStartOffsets` sets <<currentBatchId, currentBatchId>> to `0` and <<constructNextBatch, constructs a next streaming batch>>.
 
 NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (i.e. <<currentBatchId, currentBatchId>> is negative).
