@@ -1,8 +1,31 @@
 == [[DataStreamWriter]] DataStreamWriter
 
-`DataStreamWriter` is the interface to describe how the result of executing a streaming query is written to a link:spark-sql-streaming-Sink.adoc[streaming sink].
+`DataStreamWriter` is the interface to describe how the result of executing (batches of) a streaming query is written to a link:spark-sql-streaming-Sink.adoc[streaming sink].
 
-NOTE: A streaming query is a link:spark-sql-Dataset.adoc[Dataset] with a link:spark-sql-LogicalPlan.adoc#isStreaming[streaming logical plan].
+[NOTE]
+====
+A streaming query is a link:spark-sql-Dataset.adoc[Dataset] with a link:spark-sql-LogicalPlan.adoc#isStreaming[streaming logical plan].
+
+[source, scala]
+----
+scala> spark.version
+res0: String = 2.3.0-SNAPSHOT
+
+import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
+import org.apache.spark.sql.DataFrame
+val rates: DataFrame = spark.
+  readStream.
+  format("rate").
+  load
+
+scala> rates.isStreaming
+res1: Boolean = true
+
+scala> rates.queryExecution.logical.isStreaming
+res2: Boolean = true
+----
+====
 
 `DataStreamWriter` is available using `writeStream` method of a streaming `Dataset`.
 
