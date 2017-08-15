@@ -64,7 +64,7 @@
 
 == Planning and Execution
 
-. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment for Streaming Datasets]
+. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment of Streaming Dataset]
 .. link:spark-sql-streaming-Offset.adoc[Offset]
 .. link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 .. link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter]
@@ -116,6 +116,7 @@
 
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
 .. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
+.. link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog]
 .. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
 
 == Varia

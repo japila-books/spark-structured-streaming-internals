@@ -164,7 +164,7 @@ Used when:
 
 * `ProgressReporter` is requested to <<finishTrigger, finishTrigger>> (for the JSON-ified offsets of every link:spark-sql-streaming-Source.adoc[streaming source] to report progress)
 
-* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs streaming batches], link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a single streaming batch], link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructs a next streaming batch], link:spark-sql-streaming-StreamExecution.adoc##populateStartOffsets[populateStartOffsets], and link:spark-sql-streaming-StreamExecution.adoc##dataAvailable[dataAvailable].
+* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs streaming batches], link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a single streaming batch], link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch[constructs the next streaming batch], link:spark-sql-streaming-StreamExecution.adoc##populateStartOffsets[populateStartOffsets], and link:spark-sql-streaming-StreamExecution.adoc##dataAvailable[dataAvailable].
 
 | [[committedOffsets]] `committedOffsets`
 a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
