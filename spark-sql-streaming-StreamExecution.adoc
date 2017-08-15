@@ -192,9 +192,13 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, transforms St
 Turned on (i.e. enabled) when <<constructNextBatch, constructing next streaming batch>> when no new offsets are available.
 
 | [[offsetLog]] `offsetLog`
-| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, checkpoint directory>>
+a| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for offsets.
 
-Used when `StreamExecution` <<populateStartOffsets, populates start offsets>> and <<constructNextBatch, constructs a next streaming batch>>.
+NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
+
+Used when `StreamExecution` <<populateStartOffsets, populates the start offsets>> and <<constructNextBatch, constructs a next streaming batch>> (first to store the current batch's offsets in a write-ahead log and retrieve the previous batch's offsets right afterwards).
+
+NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the offset metadata log>> when <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property.
 
 | [[offsetSeqMetadata]] `offsetSeqMetadata`
 a| link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
@@ -545,20 +549,22 @@ CAUTION: FIXME
 populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
 ----
 
-`populateStartOffsets` requests <<offsetLog, OffsetSeqLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest batch id and its metadata].
+`populateStartOffsets` requests <<offsetLog, OffsetSeqLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest committed batch id with its metadata if available].
 
-CAUTION: FIXME Describe when batch and metadata were available.
+NOTE: The batch id could not be available in metadata log if a streaming query started with a new metadata log or no batch was committed before.
 
-When no batch id and metadata are available, it is assumed that the streaming query is started for the first time. You should see the following INFO message in the logs:
+With the lastest committed batch id with the metadata `populateStartOffsets`...FIXME
+
+When the lastest committed batch id with the metadata could not be found, it is assumed that the streaming query is started for the first time. You should see the following INFO message in the logs:
 
 ```
 INFO StreamExecution: Starting new streaming query.
 ```
 
 [[populateStartOffsets-currentBatchId-0]]
-`populateStartOffsets` sets <<currentBatchId, currentBatchId>> to `0` and <<constructNextBatch, constructs a next streaming batch>>.
+`populateStartOffsets` sets <<currentBatchId, current batch id>> to `0` and <<constructNextBatch, constructs a next streaming batch>>.
 
-NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (i.e. <<currentBatchId, currentBatchId>> is negative).
+NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (i.e. <<currentBatchId, current batch id>> is negative).
 
 === [[updateStatusMessage]] `updateStatusMessage` Internal Method
 
@@ -830,6 +836,7 @@ NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streamin
 batch [currentBatchId] doesn't exist
 ```
 
+[[constructNextBatch-purge]]
 In the end, `constructNextBatch` purges <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> when <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property.
 
 ==== [[constructNextBatch-hasNewData-false]] No New Data Available

@@ -65,7 +65,7 @@ CAUTION: FIXME
 
 CAUTION: FIXME
 
-=== [[getLatest]] Retrieving Recently-Committed Batch Id with Metadata If Available -- `getLatest` Method
+=== [[getLatest]] Retrieving Latest Committed Batch Id with Metadata If Available -- `getLatest` Method
 
 [source, scala]
 ----
