@@ -1,6 +1,69 @@
-== [[HDFSMetadataLog]] HDFSMetadataLog
+== [[HDFSMetadataLog]] HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage
 
-`HDFSMetadataLog` is...FIXME
+`HDFSMetadataLog` is a link:spark-sql-streaming-MetadataLog.adoc[MetadataLog] that uses Hadoop HDFS for a reliable storage.
+
+NOTE: `HDFSMetadataLog` uses <<path, path>> (specified when <<creating-instance, created>>) that is created automatically unless exists already.
+
+`HDFSMetadataLog` is <<creating-instance, created>> when:
+
+* `KafkaSource` is first requested for link:spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets[initial partition offsets] (from the metadata storage)
+
+* `RateStreamSource` link:spark-sql-streaming-RateStreamSource.adoc#creating-instance[is created] (and looks up link:spark-sql-streaming-RateStreamSource.adoc#startTimeMs[startTimeMs] in the metadata storage)
+
+`HDFSMetadataLog` is <<available-implementations, further customized>> to...FIXME
+
+[[available-implementations]]
+.HDFSMetadataLog's Available Implementations
+[cols="1,2",options="header",width="100%"]
+|===
+| HDFSMetadataLog
+| Description
+
+| [[BatchCommitLog]] `BatchCommitLog`
+|
+
+| [[CompactibleFileStreamLog]] `CompactibleFileStreamLog`
+|
+
+| [[OffsetSeqLog]] `OffsetSeqLog`
+|
+|===
+
+[[internal-registries]]
+.HDFSMetadataLog's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[fileManager]] `fileManager`
+| `FileManager` that...FIXME
+
+| [[batchFilesFilter]] `batchFilesFilter`
+|
+|===
+
+=== [[createFileManager]] `createFileManager` Internal Method
+
+[source, scala]
+----
+createFileManager(): FileManager
+----
+
+CAUTION: FIXME
+
+NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creating-instance, created>> (and the internal <<fileManager, FileManager>> is created alongside).
+
+=== [[getLatest]] `getLatest` Method
+
+[source, scala]
+----
+getLatest(): Option[(Long, T)]
+----
+
+NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.adoc#getLatest[MetadataLog Contract].
+
+CAUTION: FIXME
 
 === [[get]] `get` Method
 
@@ -10,10 +73,13 @@ CAUTION: FIXME
 
 CAUTION: FIXME
 
-=== [[getLatest]] `getLatest` Method
-
-CAUTION: FIXME
-
 === [[creating-instance]] Creating HDFSMetadataLog Instance
 
-CAUTION: FIXME
+`HDFSMetadataLog` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata storage directory
+
+`HDFSMetadataLog` initializes the <<internal-registries, internal registries and counters>>.
+
+`HDFSMetadataLog` creates the <<path, path>> unless exists already.

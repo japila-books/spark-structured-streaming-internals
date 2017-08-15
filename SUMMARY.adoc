@@ -103,7 +103,7 @@
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
-=== StateStore for Stateful Stream Processing
+=== StateStore and MetadataLog for Stateful Stream Processing
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
@@ -114,10 +114,11 @@
 ... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 
+. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
+.. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
+.. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
+
 == Varia
 
-. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
-.. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
-.. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
 . link:spark-sql-streaming-logging.adoc[Logging]

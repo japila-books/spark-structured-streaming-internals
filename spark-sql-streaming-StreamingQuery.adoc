@@ -1,6 +1,6 @@
 == [[StreamingQuery]] StreamingQuery
 
-`StreamingQuery` is a <<contract, contract>> for a streaming query that is executed continuously and concurrently (i.e. on a separate thread).
+`StreamingQuery` is the <<contract, contract>> for a streaming query that is executed continuously and concurrently (i.e. on a separate thread).
 
 NOTE: `StreamingQuery` is called *continuous query* or *stream query*.
 

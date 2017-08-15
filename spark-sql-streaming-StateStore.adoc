@@ -1,6 +1,6 @@
 == [[StateStore]] StateStore
 
-`StateStore` is a <<contract, contract>> for...FIXME
+`StateStore` is the <<contract, contract>> for...FIXME
 
 [[contract]]
 [source, scala]

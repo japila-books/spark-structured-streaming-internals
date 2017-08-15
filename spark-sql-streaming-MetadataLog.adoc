@@ -1,3 +1,37 @@
 == [[MetadataLog]] MetadataLog
 
-`MetadataLog` is...FIXME
+`MetadataLog` is the <<contract, contract>> for...FIXME
+
+=== [[contract]] MetadataLog Contract
+
+[source, scala]
+----
+package org.apache.spark.sql.execution.streaming
+
+trait MetadataLog[T] {
+  def add(batchId: Long, metadata: T): Boolean
+  def get(batchId: Long): Option[T]
+  def get(startId: Option[Long], endId: Option[Long]): Array[(Long, T)]
+  def getLatest(): Option[(Long, T)]
+  def purge(thresholdBatchId: Long): Unit
+}
+----
+
+.MetadataLog Contract
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| [[add]] `add`
+|
+
+| [[get]] `get`
+|
+
+| [[getLatest]] `getLatest`
+|
+
+| [[purge]] `purge`
+|
+|===
