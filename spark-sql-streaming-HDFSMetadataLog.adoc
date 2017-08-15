@@ -40,7 +40,10 @@ NOTE: `HDFSMetadataLog` uses <<path, path>> (specified when <<creating-instance,
 | `FileManager` that...FIXME
 
 | [[batchFilesFilter]] `batchFilesFilter`
-|
+| Filter of batch files
+
+| [[metadataPath]] `metadataPath`
+| The path to metadata directory
 |===
 
 === [[createFileManager]] `createFileManager` Internal Method
@@ -54,24 +57,30 @@ CAUTION: FIXME
 
 NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creating-instance, created>> (and the internal <<fileManager, FileManager>> is created alongside).
 
-=== [[getLatest]] `getLatest` Method
-
-[source, scala]
-----
-getLatest(): Option[(Long, T)]
-----
-
-NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.adoc#getLatest[MetadataLog Contract].
-
-CAUTION: FIXME
-
-=== [[get]] `get` Method
+=== [[get]] Retrieving Metadata By Batch Id -- `get` Method
 
 CAUTION: FIXME
 
 === [[add]] `add` Method
 
 CAUTION: FIXME
+
+=== [[getLatest]] Retrieving Recently-Committed Batch Id with Metadata If Available -- `getLatest` Method
+
+[source, scala]
+----
+getLatest(): Option[(Long, T)]
+----
+
+NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.adoc#getLatest[MetadataLog Contract] to retrieve the recently-committed batch id and the corresponding metadata if available in the metadata storage.
+
+`getLatest` requests the internal <<fileManager, FileManager>> for the files in <<metadataPath, metadata directory>> that match <<batchFilesFilter, batch file filter>>.
+
+`getLatest` takes the batch ids (the batch files correspond to) and sorts the ids in reverse order.
+
+`getLatest` gives the first batch id with the metadata which <<get, could be found in the metadata storage>>.
+
+NOTE: It is possible that the batch id could be in the metadata storage, but not available for retrieval.
 
 === [[creating-instance]] Creating HDFSMetadataLog Instance
 

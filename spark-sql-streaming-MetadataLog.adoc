@@ -1,6 +1,6 @@
-== [[MetadataLog]] MetadataLog
+== [[MetadataLog]] MetadataLog -- Contract for Metadata Storage
 
-`MetadataLog` is the <<contract, contract>> for...FIXME
+`MetadataLog` is the <<contract, contract>> to store metadata.
 
 === [[contract]] MetadataLog Contract
 
@@ -30,7 +30,9 @@ trait MetadataLog[T] {
 |
 
 | [[getLatest]] `getLatest`
-|
+a| Retrieves the recently-committed batch id and the corresponding metadata if available in the metadata storage.
+
+NOTE: It is assumed (i.e. link:spark-sql-streaming-FileStreamSink.adoc#addBatch[FileStreamSink]) that the latest batch id is of the batch which has already been committed and a link:spark-sql-streaming-StreamExecution.adoc#populateStartOffsets[streaming query can start from].
 
 | [[purge]] `purge`
 |

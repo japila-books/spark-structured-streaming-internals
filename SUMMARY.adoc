@@ -114,7 +114,7 @@
 ... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 
-. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
+. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
 .. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
 .. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
 

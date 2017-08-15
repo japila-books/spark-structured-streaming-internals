@@ -21,3 +21,7 @@ val out = in.
 `FileStreamSink` supports link:spark-sql-streaming-OutputMode.adoc#Append[Append output mode] only.
 
 It uses link:spark-sql-SQLConf.adoc#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
+
+=== [[addBatch]] `addBatch` Method
+
+CAUTION: FIXME
