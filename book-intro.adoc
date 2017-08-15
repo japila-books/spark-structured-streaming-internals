@@ -1,16 +1,16 @@
-== Spark Structured Streaming
+== Spark Structured Streaming (Apache Spark 2.2+)
 
 Welcome to *Spark Structured Streaming* gitbook!
 
-I'm https://pl.linkedin.com/in/jaceklaskowski[Jacek Laskowski], an *independent consultant* who is passionate about *Apache Spark*, Apache Kafka, Scala and sbt (with some flavour of Apache Mesos, Hadoop YARN, and quite recently DC/OS). I lead http://www.meetup.com/WarsawScala/[Warsaw Scala Enthusiasts] and http://www.meetup.com/Warsaw-Spark[Warsaw Spark] meetups in Warsaw, Poland.
+I'm https://pl.linkedin.com/in/jaceklaskowski[Jacek Laskowski], an independent consultant, developer and trainer who is specializing in *Apache Spark*, Apache Kafka, Scala and sbt (with a bit of Apache Mesos, Hadoop YARN, and DC/OS). I lead http://www.meetup.com/WarsawScala/[Warsaw Scala Enthusiasts] and http://www.meetup.com/Warsaw-Spark[Warsaw Spark] meetups in Warsaw, Poland.
 
-Contact me at jacek@japila.pl or https://twitter.com/jaceklaskowski[@jaceklaskowski] to discuss Apache Spark or Apache Kafka opportunities, e.g. courses, workshops, mentoring, performance tuning or application development services.
+Contact me at jacek@japila.pl or https://twitter.com/jaceklaskowski[@jaceklaskowski] to discuss Apache Spark or Apache Kafka opportunities, e.g. customized trainings, workshops, mentoring, code reviews, performance tuning or application development services.
 
 If you like the gitbook you should seriously consider participating in my own, very hands-on, in-depth https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/slides/README.md#toc[Apache Spark Workshops and Webinars].
 
-TIP: I'm also writing https://jaceklaskowski.gitbooks.io/mastering-apache-spark[Mastering Apache Spark 2], https://jaceklaskowski.gitbooks.io/apache-kafka/[Mastering Apache Kafka] and (less often) https://jaceklaskowski.gitbooks.io/spark-streaming/[Mastering Spark Streaming].
+TIP: I'm also writing https://jaceklaskowski.gitbooks.io/mastering-apache-spark[Mastering Apache Spark 2 (Spark 2.2+)] and https://jaceklaskowski.gitbooks.io/apache-kafka/[Mastering Apache Kafka (Kafka 0.11.0.0+)].
 
-*Spark Structured Streaming* gitbook serves as the ultimate place of mine to collect all the nuts and bolts of using https://spark.apache.org[Spark Structured Streaming]. The notes aim to help me designing and developing better products with Apache Spark. It is also a viable proof of my understanding of Apache Spark. I do eventually want to reach the highest level of mastery in Apache Spark (as do you!)
+*Spark Structured Streaming* gitbook serves as the ultimate place of mine to collect all the nuts and bolts of using https://spark.apache.org[Spark Structured Streaming] in the most effective way. The notes aim to help me designing and developing better products with Apache Spark. It is also a viable proof of my current understanding of Apache Spark. I do eventually want to reach the highest level of mastery in Apache Spark (as do you!)
 
 The collection of notes serves as *the study material* for my trainings, workshops, videos and courses about Apache Spark. Follow me on twitter https://twitter.com/jaceklaskowski[@jaceklaskowski] to know it early. You will also learn about the upcoming events about Apache Spark.
 
