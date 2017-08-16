@@ -24,6 +24,7 @@
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
 val query = spark.
   readStream.
   format("rate").
@@ -32,7 +33,7 @@ val query = spark.
   format("console").  // <-- use ConsoleSink
   option("truncate", false).
   option("numRows", 10).
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.seconds)).
   queryName("rate-console").
   start
 

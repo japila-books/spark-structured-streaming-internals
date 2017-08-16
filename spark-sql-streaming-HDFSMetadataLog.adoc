@@ -46,6 +46,14 @@ NOTE: `HDFSMetadataLog` uses <<path, path>> (specified when <<creating-instance,
 | The path to metadata directory
 |===
 
+=== [[serialize]] Writing Metadata in Serialized Format -- `serialize` Method
+
+CAUTION: FIXME
+
+=== [[deserialize]] `deserialize` Method
+
+CAUTION: FIXME
+
 === [[createFileManager]] `createFileManager` Internal Method
 
 [source, scala]

@@ -95,7 +95,9 @@ scala> println(q.lastProgress)
 }
 ----
 
-`StreamExecution` uses <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> internal registries to keep track of offsets to be processed and that have already been processed, respectively.
+`StreamExecution` uses <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> metadata logs for *write-ahead log* (to record offsets to be processed) and that have already been processed, respectively.
+
+TIP: Monitor the metadata logs to know the progress of a streaming query.
 
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
@@ -201,7 +203,7 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, transforms St
 Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming batch>> when no new offsets are available.
 
 | [[offsetLog]] `offsetLog`
-a| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for offsets.
+a| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 

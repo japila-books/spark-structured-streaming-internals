@@ -13,7 +13,7 @@ val out = in.
   format("parquet").
   option("path", "parquet-output-dir").
   option("checkpointLocation", "checkpoint-dir").
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.seconds)).
   outputMode(OutputMode.Append).
   start
 ----

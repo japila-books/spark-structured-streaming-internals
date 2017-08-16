@@ -4,26 +4,39 @@
 
 NOTE: link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] is a `MetadataLog` that uses Hadoop HDFS for a reliable storage.
 
-=== [[OffsetSeq]] `OffsetSeq`
+`OffsetSeqLog` is <<creating-instance, created>> exclusively for link:spark-sql-streaming-StreamExecution.adoc#offsetLog[write-ahead log of offsets] in `StreamExecution`.
 
+[[OffsetSeq]]
 [[offsets]]
 [[metadata]]
-`OffsetSeq` holds an ordered collection of zero or more offsets and optional metadata.
-
-CAUTION: FIXME
-
-==== [[toStreamProgress]] `toStreamProgress` Method
-
-[source, scala]
-----
-toStreamProgress(sources: Seq[Source]): StreamProgress
-----
-
-CAUTION: FIXME
+`OffsetSeqLog` uses `OffsetSeq` for metadata which holds an ordered collection of zero or more offsets and optional metadata (as link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata] for keeping track of event time watermark as set up by a Spark developer and what was found in the records).
 
 === [[serialize]] `serialize` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+serialize(offsetSeq: OffsetSeq, out: OutputStream): Unit
+----
+
+NOTE: `serialize` is a part of link:spark-sql-streaming-HDFSMetadataLog.adoc#serialize[HDFSMetadataLog Contract] to write a metadata in serialized format.
+
+`serialize` writes out the version prefixed with `v` on a single line (e.g. `v1`) followed by the <<metadata, optional metadata>> in JSON format.
+
+NOTE: The version in Spark 2.2 is *1* with the charset being *UTF-8*.
+
+`serialize` then writes out the <<offsets, offsets>> in JSON format, one per line.
+
+NOTE: No offsets to write in `offsetSeq` for a streaming source is marked as *-* (a dash) in the log.
+
+```
+$ ls -tr [checkpoint-directory]/offsets
+0 1 2 3 4 5 6
+
+$ cat [checkpoint-directory]/offsets/6
+v1
+{"batchWatermarkMs":0,"batchTimestampMs":1502872590006,"conf":{"spark.sql.shuffle.partitions":"200","spark.sql.streaming.stateStore.providerClass":"org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider"}}
+51
+```
 
 === [[deserialize]] `deserialize` Method
 
@@ -40,3 +53,12 @@ CAUTION: FIXME
 
 * [[sparkSession]] `SparkSession`
 * [[path]] Path of the metadata log directory
+
+=== [[toStreamProgress]] `OffsetSeq.toStreamProgress` Method
+
+[source, scala]
+----
+toStreamProgress(sources: Seq[Source]): StreamProgress
+----
+
+`toStreamProgress` creates a link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] with the only sources that have offsets unprocessed yet.

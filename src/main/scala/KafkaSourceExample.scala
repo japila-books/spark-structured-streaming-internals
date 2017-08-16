@@ -6,6 +6,7 @@
     --property key.separator=,
 */
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
 val fromKafkaTopic1ToConsole = spark.
   readStream.
   format("kafka").
@@ -16,7 +17,7 @@ val fromKafkaTopic1ToConsole = spark.
   select($"key" cast "string", $"value" cast "string"). // deserialize records
   as[(String, String)].
   writeStream.
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.seconds)).
   queryName("from-kafka-to-console").
   outputMode(OutputMode.Append).
   format("console").

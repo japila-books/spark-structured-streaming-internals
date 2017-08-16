@@ -5,6 +5,7 @@
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
 val sampleQuery = spark.
   readStream.
   format("rate").
@@ -12,7 +13,7 @@ val sampleQuery = spark.
   writeStream.
   format("console").
   option("truncate", false).
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.seconds)).
   start
 
 // Using public API

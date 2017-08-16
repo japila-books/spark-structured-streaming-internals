@@ -28,12 +28,13 @@ val ints = intsIn.toDF
   .agg(count("*") as "total")
 
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
 val totalsOver5mins = ints.
   writeStream.
   format("memory").
   queryName("totalsOver5mins").
   outputMode(OutputMode.Append).
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.seconds)).
   start
 
 scala> val zeroOffset = intsIn.addData(0, 1, 2)

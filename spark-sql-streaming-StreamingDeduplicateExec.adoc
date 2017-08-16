@@ -170,11 +170,12 @@ scala> records.explain
 
 // Writing
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
 val sq = records.
   writeStream.
   format("console").
   option("truncate", false).
-  trigger(Trigger.ProcessingTime("10 seconds")).
+  trigger(Trigger.ProcessingTime(10.seconds)).
   queryName("from-kafka-topic1-to-console").
   outputMode(OutputMode.Update).
   start
