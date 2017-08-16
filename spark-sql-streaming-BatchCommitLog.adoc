@@ -1,3 +1,47 @@
-== [[BatchCommitLog]] BatchCommitLog
+== [[BatchCommitLog]] BatchCommitLog -- HDFSMetadataLog for Batch Completion Log
 
-`BatchCommitLog` is...FIXME
+`BatchCommitLog` is a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with metadata as regular text (i.e. `String`).
+
+NOTE: link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] is a `MetadataLog` that uses Hadoop HDFS for a reliable storage.
+
+`BatchCommitLog` is <<creating-instance, created>> exclusively for link:spark-sql-streaming-StreamExecution.adoc#batchCommitLog[batch commit log] in `StreamExecution`.
+
+=== [[serialize]] `serialize` Method
+
+[source, scala]
+----
+serialize(metadata: String, out: OutputStream): Unit
+----
+
+NOTE: `serialize` is a part of link:spark-sql-streaming-HDFSMetadataLog.adoc#serialize[HDFSMetadataLog Contract] to write a metadata in serialized format.
+
+`serialize` writes out the version prefixed with `v` on a single line (e.g. `v1`) followed by the empty JSON (i.e. `{}`).
+
+NOTE: The version in Spark 2.2 is *1* with the charset being *UTF-8*.
+
+NOTE: `serialize` always writes an empty JSON as the name of the files gives the meaning.
+
+```
+$ ls -tr [checkpoint-directory]/commits
+0 1 2 3 4 5 6 7 8 9
+
+$ cat [checkpoint-directory]/commits/8
+v1
+{}
+```
+
+=== [[deserialize]] `deserialize` Method
+
+[source, scala]
+----
+deserialize(in: InputStream): String
+----
+
+CAUTION: FIXME
+
+=== [[creating-instance]] Creating BatchCommitLog Instance
+
+`BatchCommitLog` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata log directory

@@ -20,7 +20,7 @@ serialize(offsetSeq: OffsetSeq, out: OutputStream): Unit
 
 NOTE: `serialize` is a part of link:spark-sql-streaming-HDFSMetadataLog.adoc#serialize[HDFSMetadataLog Contract] to write a metadata in serialized format.
 
-`serialize` writes out the version prefixed with `v` on a single line (e.g. `v1`) followed by the <<metadata, optional metadata>> in JSON format.
+`serialize` firstly writes out the version prefixed with `v` on a single line (e.g. `v1`) followed by the <<metadata, optional metadata>> in JSON format.
 
 NOTE: The version in Spark 2.2 is *1* with the charset being *UTF-8*.
 

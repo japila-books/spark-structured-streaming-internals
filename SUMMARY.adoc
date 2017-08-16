@@ -65,8 +65,6 @@
 == Planning and Execution
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment of Streaming Dataset]
-.. link:spark-sql-streaming-Offset.adoc[Offset]
-.. link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 .. link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter]
 
 . link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor]
@@ -103,13 +101,17 @@
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
-=== Checkpointing
+=== Offset Management and Checkpointing
 
+. link:spark-sql-streaming-Offset.adoc[Offset]
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
-.. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
-.. link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog]
+
+. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
+.. link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog -- HDFSMetadataLog for Batch Completion Log]
 .. link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
 .. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog -- HDFSMetadataLog with OffsetSeq Metadata]
+
+. link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
 === StateStore for Stateful Stream Processing
 

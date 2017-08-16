@@ -95,9 +95,9 @@ scala> println(q.lastProgress)
 }
 ----
 
-`StreamExecution` uses <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> metadata logs for *write-ahead log* (to record offsets to be processed) and that have already been processed, respectively.
+`StreamExecution` uses <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> metadata logs for *write-ahead log* (to record offsets to be processed) and that have already been processed and committed to a streaming sink, respectively.
 
-TIP: Monitor the metadata logs to know the progress of a streaming query.
+TIP: Monitor `offsets` and `commits` metadata logs to know the progress of a streaming query.
 
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
@@ -113,7 +113,7 @@ NOTE: `availableOffsets` is a part of link:spark-sql-streaming-ProgressReporter.
 
 NOTE: link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] is an enhanced `immutable.Map` from Scala with streaming sources as keys and their `Offsets` as values.
 
-Set when `StreamExecution` <<populateStartOffsets, populates start offsets>> or <<constructNextBatch, constructing the next streaming batch>>.
+Set when `StreamExecution` <<populateStartOffsets, populates the start offsets>> or <<constructNextBatch, constructing the next streaming batch>>.
 
 Used when...FIXME
 
@@ -121,11 +121,13 @@ Used when...FIXME
 | Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
 
 | [[batchCommitLog]] `batchCommitLog`
-a| link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog] with `commits` <<checkpointFile, metadata checkpoint directory>> for committed offsets.
+a| link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog] with `commits` <<checkpointFile, metadata checkpoint directory>> for completed streaming batches (with a single file per batch with a file name being the batch id).
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
-Used when...FIXME
+Used when `StreamExecution` <<runBatches, runs streaming batches>> (and records a batch that had data for processing and has finished successfully) and <<populateStartOffsets, populates the start offsets>> (by looking up what has been committed the last time the streaming query ran).
+
+NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the batch commit log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
 
 | [[committedOffsets]] `committedOffsets`
 a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the link:spark-sql-streaming-Source.adoc[streaming sources] and the committed offsets (i.e. processed already).
@@ -203,13 +205,13 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, transforms St
 Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming batch>> when no new offsets are available.
 
 | [[offsetLog]] `offsetLog`
-a| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in.
+a| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in as ready for processing.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
 Used when `StreamExecution` <<populateStartOffsets, populates the start offsets>> and <<constructNextBatch, constructs the next streaming batch>> (first to store the current batch's offsets in a write-ahead log and retrieve the previous batch's offsets right afterwards).
 
-NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the offset metadata log>> when <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property.
+NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the offset metadata log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
 
 | [[offsetSeqMetadata]] `offsetSeqMetadata`
 a| link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
