@@ -19,13 +19,13 @@ NOTE: `HDFSMetadataLog` uses <<path, path>> (specified when <<creating-instance,
 | HDFSMetadataLog
 | Description
 
-| [[BatchCommitLog]] `BatchCommitLog`
+| [[BatchCommitLog]] link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog]
 |
 
-| [[CompactibleFileStreamLog]] `CompactibleFileStreamLog`
+| [[CompactibleFileStreamLog]] link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
 |
 
-| [[OffsetSeqLog]] `OffsetSeqLog`
+| [[OffsetSeqLog]] link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
 |
 |===
 
@@ -87,7 +87,7 @@ NOTE: It is possible that the batch id could be in the metadata storage, but not
 `HDFSMetadataLog` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[path]] Path of the metadata storage directory
+* [[path]] Path of the metadata log directory
 
 `HDFSMetadataLog` initializes the <<internal-registries, internal registries and counters>>.
 

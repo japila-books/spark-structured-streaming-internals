@@ -1,3 +1,42 @@
-== [[OffsetSeqLog]] OffsetSeqLog
+== [[OffsetSeqLog]] OffsetSeqLog -- HDFSMetadataLog with OffsetSeq Metadata
 
-`OffsetSeqLog` is...FIXME
+`OffsetSeqLog` is a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with metadata as <<OffsetSeq, OffsetSeq>>.
+
+NOTE: link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] is a `MetadataLog` that uses Hadoop HDFS for a reliable storage.
+
+=== [[OffsetSeq]] `OffsetSeq`
+
+[[offsets]]
+[[metadata]]
+`OffsetSeq` holds an ordered collection of zero or more offsets and optional metadata.
+
+CAUTION: FIXME
+
+==== [[toStreamProgress]] `toStreamProgress` Method
+
+[source, scala]
+----
+toStreamProgress(sources: Seq[Source]): StreamProgress
+----
+
+CAUTION: FIXME
+
+=== [[serialize]] `serialize` Method
+
+CAUTION: FIXME
+
+=== [[deserialize]] `deserialize` Method
+
+[source, scala]
+----
+deserialize(in: InputStream): OffsetSeq
+----
+
+CAUTION: FIXME
+
+=== [[creating-instance]] Creating OffsetSeqLog Instance
+
+`OffsetSeqLog` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata log directory

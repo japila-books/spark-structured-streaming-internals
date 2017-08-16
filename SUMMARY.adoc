@@ -103,7 +103,15 @@
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
-=== StateStore and MetadataLog for Stateful Stream Processing
+=== Checkpointing
+
+. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
+.. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
+.. link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog]
+.. link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
+.. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog -- HDFSMetadataLog with OffsetSeq Metadata]
+
+=== StateStore for Stateful Stream Processing
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
@@ -113,11 +121,6 @@
 .. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
 ... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
-
-. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
-.. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
-.. link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog]
-.. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
 
 == Varia
 
