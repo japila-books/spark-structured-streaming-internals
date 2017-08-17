@@ -124,6 +124,10 @@ log4j.logger.org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
+=== [[keyExpressions]] `keyExpressions` Method
+
+CAUTION: FIXME
+
 === [[doExecute]] Executing FlatMapGroupsWithStateExec -- `doExecute` Method
 
 [source, scala]
@@ -152,7 +156,7 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 * [[func]] State function of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`
 * [[keyDeserializer]] Key deserializer Catalyst expression
 * [[valueDeserializer]] Value deserializer Catalyst expression
-* [[groupingAttributes]] Grouping attributes
+* [[groupingAttributes]] Grouping attributes (as used for grouping in link:spark-sql-streaming-KeyValueGroupedDataset.adoc#groupingAttributes[KeyValueGroupedDataset] for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
 * [[dataAttributes]] Data attributes
 * [[outputObjAttr]] Output object attribute
 * [[stateInfo]] Optional `StatefulOperatorStateInfo`

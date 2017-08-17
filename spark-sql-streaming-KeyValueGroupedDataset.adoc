@@ -217,3 +217,13 @@ Batch: 3
 // in the end
 spark.streams.active.headOption.foreach(_.stop)
 ----
+
+=== [[creating-instance]] Creating KeyValueGroupedDataset Instance
+
+`KeyValueGroupedDataset` takes the following when created:
+
+* [[kEncoder]] `Encoder` for keys
+* [[vEncoder]] `Encoder` for values
+* [[queryExecution]] `QueryExecution`
+* [[dataAttributes]] Data attributes
+* [[groupingAttributes]] Grouping attributes

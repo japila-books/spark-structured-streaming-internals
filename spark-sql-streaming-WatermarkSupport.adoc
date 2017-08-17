@@ -17,7 +17,7 @@ Read the official documentation of Spark in http://spark.apache.org/docs/latest/
 | Description
 
 | [[watermarkExpression]] `watermarkExpression`
-a| Optional Catalyst expression that matches rows older than the watermark.
+a| Optional Catalyst expression that matches rows older than the event time watermark.
 
 NOTE: Use `Dataset.withWatermark` operator to set the watermark. Read link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark Logical Operator].
 
@@ -39,7 +39,7 @@ INFO FlatMapGroupsWithStateExec: Filtering state store on: [evictionExpression]
 | Optional `Predicate` that uses <<watermarkExpression, watermarkExpression>> and the child output to match rows older than the watermark.
 
 | [[watermarkPredicateForKeys]] `watermarkPredicateForKeys`
-| Optional `Predicate` that uses <<keyExpressions, keyExpressions>> to match rows older than the watermark.
+| Optional `Predicate` that uses <<keyExpressions, keyExpressions>> to match rows older than the event time watermark.
 |===
 
 === [[contract]] WatermarkSupport Contract
@@ -65,9 +65,11 @@ trait WatermarkSupport extends UnaryExecNode {
 | Used mainly in <<watermarkExpression, watermarkExpression>> to create a `LessThanOrEqual` Catalyst binary expression that matches rows older than the watermark.
 
 | [[keyExpressions]] `keyExpressions`
-| Used mainly in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Predicate` to match rows older than the watermark.
+| Grouping keys (in link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#keyExpressions[FlatMapGroupsWithStateExec]), duplicate keys (in link:spark-sql-streaming-StreamingDeduplicateExec.adoc#keyExpressions[StreamingDeduplicateExec]) or key attributes (in link:spark-sql-streaming-StateStoreSaveExec.adoc#keyExpressions[StateStoreSaveExec]) with at most one that may have link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in metadata
 
-Used also in link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec] and link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] physical operators.
+Used in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Predicate` to match rows older than the event time watermark.
+
+Used also when link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec] and link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] physical operators are executed.
 |===
 
 === [[removeKeysOlderThanWatermark]] Removing Keys Older Than Watermark From StateStore -- `removeKeysOlderThanWatermark` Internal Method

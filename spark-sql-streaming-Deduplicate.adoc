@@ -17,6 +17,8 @@ scala> println(uniqueRates.queryExecution.logical.numberedTreeString)
 01 +- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4785f176,rate,List(),None,List(),None,Map(),None), rate, [timestamp#32, value#33L]
 ----
 
+CAUTION: FIXME Example with duplicates across batches to show that `Deduplicate` keeps state and `withWatermark` operator should also be used to limit how much is stored (to not cause OOM)
+
 [NOTE]
 ====
 `UnsupportedOperationChecker` link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[ensures] that `Dataset.dropDuplicates` is not used after aggregation on streaming Datasets.
