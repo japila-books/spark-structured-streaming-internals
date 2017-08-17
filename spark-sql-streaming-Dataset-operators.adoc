@@ -32,7 +32,117 @@ CAUTION: FIXME
 
 NOTE: For a streaming Dataset, `dropDuplicates` will keep all data across triggers as intermediate state to drop duplicates rows. You can use <<withWatermark, withWatermark>> to limit how late the duplicate data can be and system will accordingly limit the state. In addition, too late data older than watermark will be dropped to avoid any possibility of duplicates.
 
-CAUTION: FIXME Work through the note above with examples
+[source, scala]
+----
+scala> spark.version
+res0: String = 2.3.0-SNAPSHOT
+
+// Start a streaming query
+// Using old-fashioned MemoryStream (with the deprecated SQLContext)
+import org.apache.spark.sql.execution.streaming.MemoryStream
+import org.apache.spark.sql.SQLContext
+implicit val sqlContext: SQLContext = spark.sqlContext
+val source = MemoryStream[(Int, Int)]
+val ids = source.toDS.toDF("time", "id").
+  withColumn("time", $"time" cast "timestamp"). // <-- convert time column from Int to Timestamp
+  dropDuplicates("id").
+  withColumn("time", $"time" cast "long")  // <-- convert time column back from Timestamp to Int
+
+// Conversions are only for display purposes
+// Internally we need timestamps for watermark to work
+// Displaying timestamps could be too much for such a simple task
+
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val q = ids.
+  writeStream.
+  format("memory").
+  queryName("dups").
+  outputMode(OutputMode.Append).
+  trigger(Trigger.ProcessingTime(30.seconds)).
+  option("checkpointLocation", "checkpoint-dir"). // <-- use checkpointing to save state between restarts
+  start
+
+// Publish duplicate records
+source.addData(1 -> 1)
+source.addData(2 -> 1)
+source.addData(3 -> 1)
+
+q.processAllAvailable()
+
+// Check out how dropDuplicates removes duplicates
+// --> per single streaming batch (easy)
+scala> spark.table("dups").show
++----+---+
+|time| id|
++----+---+
+|   1|  1|
++----+---+
+
+source.addData(4 -> 1)
+source.addData(5 -> 2)
+
+// --> across streaming batches (harder)
+scala> spark.table("dups").show
++----+---+
+|time| id|
++----+---+
+|   1|  1|
+|   5|  2|
++----+---+
+
+// Check out the internal state
+scala> println(q.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 2,
+  "numRowsUpdated" : 1,
+  "memoryUsedBytes" : 17751
+}
+
+// You could use web UI's SQL tab instead
+// Use Details for Query
+
+source.addData(6 -> 2)
+
+scala> spark.table("dups").show
++----+---+
+|time| id|
++----+---+
+|   1|  1|
+|   5|  2|
++----+---+
+
+// Check out the internal state
+scala> println(q.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 2,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 17751
+}
+
+// Restart the streaming query
+q.stop
+
+val q = ids.
+  writeStream.
+  format("memory").
+  queryName("dups").
+  outputMode(OutputMode.Append).
+  trigger(Trigger.ProcessingTime(30.seconds)).
+  option("checkpointLocation", "checkpoint-dir"). // <-- use checkpointing to save state between restarts
+  start
+
+// Doh! MemorySink does not support checkpointing :(
+// Neither does ConsoleSink :(
+
+// Time to work on https://issues.apache.org/jira/browse/SPARK-21667
+
+// Publish duplicates
+// Check out how dropDuplicates removes duplicates
+
+// Stop the streaming query
+// Specify event time watermark to remove old duplicates
+----
 
 === [[groupBy-indepth]] Streaming Aggregation -- `groupBy` Operator
 
