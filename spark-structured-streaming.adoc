@@ -47,7 +47,7 @@ The semantics of the Structured Streaming model is as follows (see the article h
 
 > At any time, the output of a continuous application is equivalent to executing a batch job on a prefix of the data.
 
-Structured streaming is an attempt to unify streaming, interactive, and batch queries that paves the way for continuous applications like continuous aggregations using `groupBy` operator or continuous window aggregations using `groupBy` operator with `window` function.
+Structured streaming is an attempt to unify streaming, interactive, and batch queries that paves the way for continuous applications like continuous aggregations using link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator or continuous window aggregations using link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator with `window` function.
 
 [source, scala]
 ----

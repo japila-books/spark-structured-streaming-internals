@@ -4,7 +4,7 @@
 
 [NOTE]
 ====
-link:spark-sql-streaming-Deduplicate.adoc[Deduplicate] logical operator is the result of `Dataset.dropDuplicates` operator.
+link:spark-sql-streaming-Deduplicate.adoc[Deduplicate] logical operator is the result of link:spark-sql-streaming-Dataset-operators.adoc#dropDuplicates[dropDuplicates] operator.
 ====
 
 `StreamingDeduplicationStrategy` is available using `SessionState`.

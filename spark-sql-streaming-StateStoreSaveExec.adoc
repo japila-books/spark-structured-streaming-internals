@@ -214,7 +214,7 @@ Invalid output mode: [outputMode]
 
 `StateStoreSaveExec` takes the following when created:
 
-* [[keyExpressions]] Key attributes (as used for grouping in `Dataset.groupBy` operator)
+* [[keyExpressions]] Key attributes (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
 * [[stateInfo]] Optional `StatefulOperatorStateInfo`
 * [[outputMode]] Optional link:spark-sql-streaming-OutputMode.adoc[output mode]
 * [[eventTimeWatermark]] Optional event time watermark

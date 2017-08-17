@@ -1,0 +1,52 @@
+== Streaming Dataset Operators / Streaming Dataset API
+
+.Streaming Dataset Operators
+[cols="1,3",options="header",width="100%"]
+|===
+| Operator
+| Description
+
+| [[dropDuplicates]] <<dropDuplicates-indepth, dropDuplicates>>
+| Drops duplicate records (given a subset of columns)
+
+| [[groupBy]] <<groupBy-indepth, groupBy>>
+| Aggregates records by...FIXME
+
+| [[groupByKey]] <<groupByKey-indepth, groupByKey>>
+| Aggregates records by a grouping function
+
+| [[withWatermark]] <<withWatermark-indepth, withWatermark>>
+| Defines a streaming watermark on a event time column
+|===
+
+=== [[dropDuplicates-indepth]] Streaming Deduplication -- `dropDuplicates` Operators
+
+[source, scala]
+----
+dropDuplicates(): Dataset[T]
+dropDuplicates(colNames: Seq[String]): Dataset[T]
+dropDuplicates(col1: String, cols: String*): Dataset[T]
+----
+
+CAUTION: FIXME
+
+NOTE: For a streaming Dataset, `dropDuplicates` will keep all data across triggers as intermediate state to drop duplicates rows. You can use <<withWatermark, withWatermark>> to limit how late the duplicate data can be and system will accordingly limit the state. In addition, too late data older than watermark will be dropped to avoid any possibility of duplicates.
+
+CAUTION: FIXME Work through the note above with examples
+
+=== [[groupBy-indepth]] Streaming Aggregation -- `groupBy` Operator
+
+CAUTION: FIXME
+
+=== [[groupByKey-indepth]] Streaming Aggregation -- `groupByKey` Operator
+
+CAUTION: FIXME
+
+=== [[withWatermark-indepth]] Specifying Event Time Watermark -- `withWatermark` Operator
+
+[source, scala]
+----
+withWatermark(eventTime: String, delayThreshold: String): Dataset[T]
+----
+
+CAUTION: FIXME

@@ -89,7 +89,7 @@ DEBUG Committing batch [batchId] to [this]
 
 For `Append` and `Update` output modes, `addBatch` collects records from `data` and registers `batchId` (i.e. adds to <<batches, batches>> internal registry).
 
-NOTE: `addBatch` uses `DataFrame.collect` operator to collect records. It is when the records "downloaded" to memory.
+NOTE: `addBatch` uses `collect` operator to collect records. It is when the records are "downloaded" to the driver's memory.
 
 For `Complete` output mode, `addBatch` collects records (as for the other output modes), but before registering `batchId` clears <<batches, batches>> internal registry.
 

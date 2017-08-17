@@ -2,7 +2,7 @@
 
 `FlatMapGroupsWithStateExec` is a unary physical operator (aka `UnaryExecNode`) that is <<creating-instance, created>> when link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy] execution planning strategy plans link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator for execution.
 
-NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator is created as the result of link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[KeyValueGroupedDataset.flatMapGroupsWithState] operator.
+NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator is created as the result of link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operator.
 
 [source, scala]
 ----

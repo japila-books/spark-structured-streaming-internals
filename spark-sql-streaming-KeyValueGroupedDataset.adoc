@@ -1,6 +1,6 @@
 == [[KeyValueGroupedDataset]] KeyValueGroupedDataset -- (Stateful) Streaming Aggregation
 
-`KeyValueGroupedDataset` represents a *grouped dataset* as a result of `Dataset.groupByKey` operator (that groups rows given condition defined by a grouping function).
+`KeyValueGroupedDataset` represents a *grouped dataset* as a result of link:spark-sql-streaming-Dataset-operators.adoc#groupByKey[groupByKey] operator (that aggregates records by a grouping function).
 
 NOTE: `KeyValueGroupedDataset` can also be used for batch aggregations.
 

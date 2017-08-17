@@ -1,4 +1,4 @@
-== [[DataStreamWriter]] DataStreamWriter
+== [[DataStreamWriter]] DataStreamWriter -- Writing Datasets To Streaming Data Sinks
 
 `DataStreamWriter` is the interface to describe how the result of executing (batches of) a streaming query is written to a link:spark-sql-streaming-Sink.adoc[streaming sink].
 
@@ -59,7 +59,7 @@ In the end, you start the actual continuous writing of the result of executing a
 writer.save
 ----
 
-Beside the above operators, there are the following ones working with a `Dataset` as a whole.
+Beside the above operators, there are the following to work with a `Dataset` as a whole.
 
 [[methods]]
 .DataStreamWriter's Methods

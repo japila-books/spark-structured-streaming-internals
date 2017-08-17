@@ -4,7 +4,7 @@
 
 [NOTE]
 ====
-link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is the result of `Dataset.withWatermark` operator.
+link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is the result of link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator.
 
 `Aggregate` logical operator is the result of:
 
@@ -97,7 +97,7 @@ planStreamingAggregation(
 
 `planStreamingAggregation` takes the grouping attributes (from `groupingExpressions`).
 
-NOTE: `groupingExpressions` corresponds to the grouping function in `Dataset.groupBy` operator.
+NOTE: `groupingExpressions` corresponds to the grouping function in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator.
 
 [[partialAggregate]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialAggregate`) with:

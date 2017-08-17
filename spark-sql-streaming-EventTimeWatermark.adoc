@@ -1,6 +1,6 @@
 == [[EventTimeWatermark]] EventTimeWatermark Unary Logical Operator
 
-`EventTimeWatermark` is a unary logical operator (i.e. `UnaryNode`) that is <<creating-instance, created>> as the result of `Dataset.withWatermark` operator.
+`EventTimeWatermark` is a unary logical operator (i.e. `UnaryNode`) that is <<creating-instance, created>> as the result of link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator.
 
 [source, scala]
 ----
@@ -36,7 +36,7 @@ NOTE: The *event-time watermark delay* is used to calculate the difference betwe
 
 [NOTE]
 ====
-`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if <<child, child>> logical operator is not streaming, i.e. when `withWatermark` is used on a batch query.
+`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if <<child, child>> logical operator is not streaming, i.e. when link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator is used on a batch query.
 
 [source, scala]
 ----

@@ -13,7 +13,7 @@
 
 `EventTimeWatermarkExec` is <<creating-instance, created>> when link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy plans a `EventTimeWatermark` logical operator for execution.
 
-NOTE: link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is created as the result of `Dataset.withWatermark` operator.
+NOTE: link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is created as the result of link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator.
 
 [source, scala]
 ----

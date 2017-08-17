@@ -6,7 +6,7 @@
 
 == Using Structured Streaming
 
-. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader for Loading Datasets from Streaming Data Sources]
+. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Datasets from Streaming Data Sources]
 
 . link:spark-sql-streaming-Source.adoc[Streaming Source]
 .. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
@@ -23,7 +23,9 @@
 .. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
 .. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
-. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter]
+. link:spark-sql-streaming-Dataset-operators.adoc[Streaming Dataset Operators / Streaming Dataset API]
+
+. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
 .. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
 .. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 .. link:spark-sql-streaming-Trigger.adoc[Trigger]
