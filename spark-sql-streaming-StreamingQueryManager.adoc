@@ -35,7 +35,7 @@ Used in <<active, active>>, <<get, get>>, <<startQuery, startQuery>> and <<notif
 
 CAUTION: FIXME
 
-=== [[createQuery]] Creating StreamingQueryWrapper -- `createQuery` Internal Method
+=== [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) -- `createQuery` Internal Method
 
 [source, scala]
 ----
@@ -52,6 +52,19 @@ createQuery(
 ----
 
 CAUTION: FIXME
+
+[NOTE]
+====
+`recoverFromCheckpointLocation` flag corresponds to `recoverFromCheckpointLocation` flag that `StreamingQueryManager` uses to <<startQuery, start a streaming query>> and which is enabled by default (and is in fact the only place where `createQuery` is used).
+
+* `memory` sink has the flag enabled for link:spark-sql-streaming-OutputMode.adoc#Complete[Complete] output mode only
+
+* `foreach` sink has the flag always enabled
+
+* `console` sink has the flag always disabled
+
+* all other sinks have the flag always enabled
+====
 
 NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 

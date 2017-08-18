@@ -52,6 +52,13 @@ val ids = source.toDS.toDF("time", "id").
 // Internally we need timestamps for watermark to work
 // Displaying timestamps could be too much for such a simple task
 
+scala> println(ids.queryExecution.analyzed.numberedTreeString)
+00 Project [cast(time#10 as bigint) AS time#15L, id#6]
+01 +- Deduplicate [id#6], true
+02    +- Project [cast(time#5 as timestamp) AS time#10, id#6]
+03       +- Project [_1#2 AS time#5, _2#3 AS id#6]
+04          +- StreamingExecutionRelation MemoryStream[_1#2,_2#3], [_1#2, _2#3]
+
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import scala.concurrent.duration._
 val q = ids.

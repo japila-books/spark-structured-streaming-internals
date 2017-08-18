@@ -278,7 +278,7 @@ a| Qualified path of the checkpoint directory (as defined using <<checkpointRoot
 
 Used when <<checkpointFile, creating the path to the checkpoint directory>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
 
-Used for <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyzedPlan>> and replacing `StreamingRelation` logical operator to a corresponding `StreamingExecutionRelation` with the streaming data source created passing in the path to `sources` directory to store checkpointing metadata).
+Used for <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyzedPlan>> and planning `StreamingRelation` logical operators to corresponding `StreamingExecutionRelation` physical operators with the streaming data sources created passing in the path to `sources` directory to store checkpointing metadata).
 
 [NOTE]
 ====
