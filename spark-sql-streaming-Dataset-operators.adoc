@@ -127,15 +127,46 @@ val q = ids.
   writeStream.
   format("memory").
   queryName("dups").
-  outputMode(OutputMode.Append).
+  outputMode(OutputMode.Complete).  // <-- memory sink supports checkpointing for Complete output mode only
   trigger(Trigger.ProcessingTime(30.seconds)).
   option("checkpointLocation", "checkpoint-dir"). // <-- use checkpointing to save state between restarts
   start
 
-// Doh! MemorySink does not support checkpointing :(
-// Neither does ConsoleSink :(
+// Doh! MemorySink is fine, but Complete is only available with a streaming aggregation
+// Answer it if you know why --> https://stackoverflow.com/q/45756997/1305344
 
-// Time to work on https://issues.apache.org/jira/browse/SPARK-21667
+// It's a high time to work on https://issues.apache.org/jira/browse/SPARK-21667
+// to understand the low-level details (and the reason, it seems)
+
+// Disabling operation checks and starting over
+// ./bin/spark-shell -c spark.sql.streaming.unsupportedOperationCheck=false
+// it works now --> no exception!
+
+scala> spark.table("dups").show
++----+---+
+|time| id|
++----+---+
++----+---+
+
+source.addData(0 -> 1)
+// wait till the batch is triggered
+scala> spark.table("dups").show
++----+---+
+|time| id|
++----+---+
+|   0|  1|
++----+---+
+
+source.addData(1 -> 1)
+source.addData(2 -> 1)
+// wait till the batch is triggered
+scala> spark.table("dups").show
++----+---+
+|time| id|
++----+---+
++----+---+
+
+// What?! No rows?! It doesn't look as if it worked fine :(
 
 // Publish duplicates
 // Check out how dropDuplicates removes duplicates

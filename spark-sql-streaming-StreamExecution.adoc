@@ -267,18 +267,18 @@ queryName [id = xyz, runId = abc]
 ```
 
 | [[resolvedCheckpointRoot]] `resolvedCheckpointRoot`
-a| Qualified path of checkpoint directory (as defined using <<checkpointRoot, checkpointRoot>>).
+a| Qualified path of the checkpoint directory (as defined using <<checkpointRoot, checkpointRoot>> when `StreamExecution` is <<creating-instance, created>>).
 
 [NOTE]
 ====
-<<checkpointRoot, checkpointRoot>> is defined using `checkpointLocation` option or link:spark-sql-streaming-properties.adoc#spark-sql-streaming-properties.adoc[spark.sql.streaming.checkpointLocation] property with `queryName` option.
+<<checkpointRoot, checkpointRoot>> is defined using `checkpointLocation` option or link:spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property with `queryName` option.
 
-`checkpointLocation` and `queryName` options are passed in when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[creates the streaming query].
+`checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[creates a streaming query].
 ====
 
-Used in <<checkpointFile, checkpointFile>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
+Used when <<checkpointFile, creating the path to the checkpoint directory>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
 
-Used in <<logicalPlan, logicalPlan>> (where every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] stores its own checkpointing metadata).
+Used for <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyzedPlan>> and replacing `StreamingRelation` logical operator to a corresponding `StreamingExecutionRelation` with the streaming data source created passing in the path to `sources` directory to store checkpointing metadata).
 
 [NOTE]
 ====
@@ -286,7 +286,7 @@ You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` 
 
 [options="wrap"]
 ----
-INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+INFO StreamExecution: Starting [id] with [resolvedCheckpointRoot] to store the query checkpoint.
 ----
 
 ====
@@ -704,7 +704,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 
 * [[sparkSession]] `SparkSession`
 * [[name]] Query name
-* [[checkpointRoot]] Path to the checkpoint root directory
+* [[checkpointRoot]] Path to the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Analyzed logical plan (i.e. `LogicalPlan`)
 * [[sink]] link:spark-sql-streaming-Sink.adoc[Streaming sink]
 * [[trigger]] link:spark-sql-streaming-Trigger.adoc[Trigger]
@@ -714,7 +714,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 
 `StreamExecution` initializes the <<internal-registries, internal registries and counters>>.
 
-=== [[checkpointFile]] Checkpoint Directory -- `checkpointFile` Internal Method
+=== [[checkpointFile]] Creating Path to Checkpoint Directory -- `checkpointFile` Internal Method
 
 [source, scala]
 ----
