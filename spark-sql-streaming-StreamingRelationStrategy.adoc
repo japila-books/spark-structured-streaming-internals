@@ -1,10 +1,10 @@
 == [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
 
-`StreamingRelationStrategy` is an execution planning strategy (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `StreamingRelation` and `StreamingExecutionRelation` logical operators in streaming Datasets.
+`StreamingRelationStrategy` is an link:spark-sql-streaming-IncrementalExecution.adoc#extraPlanningStrategies[extra execution planning strategy] (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `StreamingRelation` and `StreamingExecutionRelation` logical operators in streaming Datasets.
 
 [NOTE]
 ====
-link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is the result of link:spark-sql-streaming-DataStreamReader.adoc#load[loading] a dataset in streaming fashion (and create a streaming Dataset).
+link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is the result of link:spark-sql-streaming-DataStreamReader.adoc#load[loading] a dataset in streaming fashion (and creating a streaming Dataset).
 
 link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator is used internally to represent a streaming data source in a link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[logical query plan] (of `StreamExecution` of a streaming Dataset).
 ====
@@ -17,7 +17,7 @@ spark.sessionState.planner.StreamingRelationStrategy
 ----
 
 [[apply]]
-`StreamingRelationStrategy` converts link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] and link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operators to link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec] physical operator (with corresponding `sourceName` and `output` schema).
+`StreamingRelationStrategy` converts link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] and link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operators to link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec] physical operator (with their `sourceName` and `output` schema).
 
 [source, scala]
 ----
