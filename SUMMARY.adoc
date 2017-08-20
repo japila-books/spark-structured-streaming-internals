@@ -48,10 +48,11 @@
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
-== Aggregation and Stateful Stream Processing
+=== Aggregation and Arbitrary Stateful Stream Processing
 
 . link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- (Stateful) Streaming Aggregation]
-.. link:spark-sql-streaming-GroupState.adoc[GroupState]
+. link:spark-sql-streaming-GroupState.adoc[GroupState -- Contract for State Per Group For Arbitrary Stateful Aggregation]
+.. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
 .. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
 == Extending Structured Streaming

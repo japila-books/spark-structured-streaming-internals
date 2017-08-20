@@ -1,3 +1,59 @@
-== [[GroupState]] GroupState
+== [[GroupState]] GroupState -- Contract for State Per Group For Arbitrary Stateful Aggregation
 
-CAUTION: FIXME
+`GroupState` is the <<contract, contract>> for working with a state (of type `S`) per group for arbitrary stateful aggregation (using link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState] or link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operators).
+
+NOTE: link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl] is the one and only implementation of `GroupState` available.
+
+=== [[contract]] GroupState Contract
+
+[source, scala]
+----
+package org.apache.spark.sql.streaming
+
+trait GroupState[S] extends LogicalGroupState[S] {
+  def exists: Boolean
+  def get: S
+  def getOption: Option[S]
+  def update(newState: S): Unit
+  def remove(): Unit
+  def hasTimedOut: Boolean
+  def setTimeoutDuration(durationMs: Long): Unit
+  def setTimeoutDuration(duration: String): Unit
+  def setTimeoutTimestamp(timestampMs: Long): Unit
+  def setTimeoutTimestamp(timestampMs: Long, additionalDuration: String): Unit
+  def setTimeoutTimestamp(timestamp: java.sql.Date): Unit
+  def setTimeoutTimestamp(timestamp: java.sql.Date, additionalDuration: String): Unit
+}
+----
+
+.GroupState Contract
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| [[exists]] `exists`
+|
+
+| [[get]] `get`
+| Gives the state
+
+| [[getOption]] `getOption`
+| Gives the state as `Some(...)` if available or `None`
+
+| [[update]] `update`
+| Replaces the state with a new state (per group)
+
+| [[remove]] `remove`
+|
+
+| [[hasTimedOut]] `hasTimedOut`
+|
+
+| [[setTimeoutDuration]]
+|
+
+| [[setTimeoutTimestamp]]
+|
+
+|===
