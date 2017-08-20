@@ -6,7 +6,7 @@ Structured Streaming is a computation model that was introduced in Apache Spark 
 
 [TIP]
 ====
-A `Dataset` is *streaming* when its logical plan is streaming.
+A `Dataset` is *streaming* (aka _continuous_) when its logical plan is streaming.
 
 [source, scala]
 ----
@@ -27,7 +27,7 @@ res1: Boolean = true
 More information about Spark SQL, Datasets and logical plans is available in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/[Mastering Apache Spark 2].
 ====
 
-Structured Streaming models a stream of data as an infinite table that may or may not be updated every streaming batch.
+Structured Streaming models a stream of data as an infinite (and hence continuous) table that could be changed every streaming batch.
 
 The semantics of the Structured Streaming model is as follows (see the article https://databricks.com/blog/2016/07/28/structured-streaming-in-apache-spark.html[Structured Streaming In Apache Spark]):
 

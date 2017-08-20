@@ -28,7 +28,7 @@
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
 .. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
 .. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
-.. link:spark-sql-streaming-Trigger.adoc[Trigger]
+.. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
 
 . link:spark-sql-streaming-Sink.adoc[Streaming Sink]
 .. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]

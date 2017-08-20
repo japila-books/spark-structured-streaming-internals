@@ -3,7 +3,7 @@
         "readme": "book-intro.adoc"
     },
     "variables": {
-       "spark.version": "2.1.0",
+       "spark.version": "2.2+",
        "sourcedir": "src/main/scala"
      },
     "plugins": ["ga"],
