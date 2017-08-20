@@ -1,5 +1,8 @@
 == Streaming Dataset Operators / Streaming Dataset API
 
+Dataset API has a set of <<operators, operators>> that are of particular use in Structured Streaming.
+
+[[operators]]
 .Streaming Dataset Operators
 [cols="1,3",options="header",width="100%"]
 |===
@@ -13,11 +16,47 @@
 | Aggregates records by...FIXME
 
 | [[groupByKey]] <<groupByKey-indepth, groupByKey>>
-| Aggregates records by a grouping function
+a| Aggregates records by a grouping function
+
+[source, scala]
+----
+groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
+----
 
 | [[withWatermark]] <<withWatermark-indepth, withWatermark>>
 | Defines a streaming watermark on a event time column
 |===
+
+[source, scala]
+----
+scala> spark.version
+res0: String = 2.3.0-SNAPSHOT
+
+// input stream
+val rates = spark.
+  readStream.
+  format("rate").
+  option("rowsPerSecond", 1).
+  load
+
+// stream processing
+rates.groupByKey
+
+// output stream
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val sq = rates.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Complete).
+  queryName("rate-console").
+  start
+
+// eventually...
+sq.stop
+----
 
 === [[dropDuplicates-indepth]] Streaming Deduplication -- `dropDuplicates` Operators
 
@@ -186,9 +225,42 @@ scala> spark.table("dups").show
 
 CAUTION: FIXME
 
-=== [[groupByKey-indepth]] Streaming Aggregation -- `groupByKey` Operator
+=== [[groupByKey-indepth]] Streaming Aggregation (using Grouping Function) -- `groupByKey` Operator
 
-CAUTION: FIXME
+[source, scala]
+----
+groupByKey[K: Encoder](func: T => K): KeyValueGroupedDataset[K, T]
+----
+
+`groupByKey` creates a link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset] with the keys unique, and the associated values are actually collections of one or more values associated with the key.
+
+NOTE: The type of the input argument of `func` is the type of rows in the Dataset (i.e. `Dataset[T]`).
+
+[source, scala]
+----
+scala> spark.version
+res0: String = 2.3.0-SNAPSHOT
+
+// input stream
+import java.sql.Timestamp
+val signals = spark.
+  readStream.
+  format("rate").
+  option("rowsPerSecond", 1).
+  load.
+  withColumn("value", $"value" % 10)  // <-- randomize the values (just for fun)
+  withColumn("deviceId", lit(util.Random.nextInt(10))). // <-- 10 devices randomly assigned to values
+  as[(Timestamp, Long, Int)] // <-- convert to a "better" type (from "unpleasant" Row)
+
+// stream processing using groupByKey operator
+// groupByKey(func: ((Timestamp, Long, Int)) => K): KeyValueGroupedDataset[K, (Timestamp, Long, Int)]
+// K becomes Int which is a device id
+val deviceId: ((Timestamp, Long, Int)) => Int = { case (_, _, deviceId) => deviceId }
+scala> val signalsByDevice = signals.groupByKey(deviceId)
+signalsByDevice: org.apache.spark.sql.KeyValueGroupedDataset[Int,(java.sql.Timestamp, Long, Int)] = org.apache.spark.sql.KeyValueGroupedDataset@19d40bc6
+----
+
+Internally,...FIXME
 
 === [[withWatermark-indepth]] Specifying Event Time Watermark -- `withWatermark` Operator
 
