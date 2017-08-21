@@ -24,6 +24,8 @@
 .. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
 . link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators / Streaming Dataset API]
+.. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator -- Streaming Deduplication]
+
 . link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
 .. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Stream Aggregation]
 

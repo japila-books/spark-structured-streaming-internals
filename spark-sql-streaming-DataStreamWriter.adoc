@@ -145,12 +145,17 @@ Set using <<outputMode, outputMode>> method.
 
 [source, scala]
 ----
+outputMode(outputMode: String): DataStreamWriter[T]
 outputMode(outputMode: OutputMode): DataStreamWriter[T]
 ----
 
-`outputMode` specifies the link:spark-sql-streaming-OutputMode.adoc[output mode] of the streaming `Dataset`.
+`outputMode` specifies the link:spark-sql-streaming-OutputMode.adoc[output mode] of a streaming `Dataset`.
 
-NOTE: link:spark-sql-streaming-OutputMode.adoc[Output mode] describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is a new data available in a streaming data source.
+NOTE: When unspecified explicitly, link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode is the default.
+
+`outputMode` can be a name or typed `OutputMode`.
+
+NOTE: link:spark-sql-streaming-OutputMode.adoc[Output mode] describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in link:spark-sql-streaming-Source.adoc[streaming data sources].
 
 === [[queryName]] Setting Query Name -- `queryName` method
 

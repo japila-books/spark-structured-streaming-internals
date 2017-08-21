@@ -1,6 +1,6 @@
 == [[UnsupportedOperationChecker]] UnsupportedOperationChecker
 
-`UnsupportedOperationChecker` is a helper object with just a single <<checkForStreaming, checkForStreaming>> method to make sure that the logical plan for a streaming query uses supported operations only.
+`UnsupportedOperationChecker` is a helper object with just a single <<checkForStreaming, checkForStreaming>> method to make sure that the logical plan of a streaming query uses supported operations only.
 
 NOTE: `UnsupportedOperationChecker` is used exclusively when the internal link:spark-sql-streaming-properties.adoc#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
 

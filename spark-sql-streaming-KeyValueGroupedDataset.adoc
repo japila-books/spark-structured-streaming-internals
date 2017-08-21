@@ -65,11 +65,11 @@ spark.streams.active.headOption.foreach(_.stop)
 The most prestigious use case of `KeyValueGroupedDataset` however is *stateful streaming aggregation* that allows for accumulating *streaming state* (by means of link:spark-sql-streaming-GroupState.adoc[GroupState]) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
 
 [[operators]]
-[[methods]]
 .KeyValueGroupedDataset's Operators
 [cols="1,2",options="header",width="100%"]
 |===
-| Method | Description
+| Operator
+| Description
 
 | <<agg, agg>>
 |
