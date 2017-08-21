@@ -19,6 +19,11 @@ dropDuplicates(colNames: Seq[String]): Dataset[T]
 dropDuplicates(col1: String, cols: String*): Dataset[T]
 ----
 
+| [[explain]] `explain`
+a| Explains execution plans
+
+CAUTION: FIXME Review `ExplainCommand` when logical plan is streaming
+
 | [[groupBy]] <<groupBy-indepth, groupBy>>
 | Aggregates records by...FIXME
 

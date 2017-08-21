@@ -1,22 +1,15 @@
-== [[IncrementalExecution]] IncrementalExecution -- QueryExecution for Streaming DataFrames
+== [[IncrementalExecution]] IncrementalExecution -- Streaming QueryExecution
 
-`IncrementalExecution` is a `QueryExecution` for streaming Datasets that allows for executing a <<logicalPlan, logical plan>> incrementally (and continuously).
+`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that allows for executing the <<logicalPlan, logical plan>> incrementally (and continuously).
 
 [[preparations]]
 `IncrementalExecution` defines <<state, state>> preparation rule to the parent ``QueryExecution``'s `preparations` that prepares streaming physical plans (using iteration-specific execution properties).
 
-`IncrementalExecution` is <<creating-instance, created>> mostly when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch] (and when `ExplainCommand` is executed).
+`IncrementalExecution` is <<creating-instance, created>> when:
 
-[source, scala]
-----
-val q = spark.
-  readStream.
-  format("rate").
-  load
-scala> q.explain
-== Physical Plan ==
-StreamingRelation rate, [timestamp#639, value#640L]
-----
+* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[runs a streaming batch] (and plans a streaming query)
+
+* `ExplainCommand` is executed (for link:spark-sql-streaming-Dataset-operators.adoc#explain[explain] operator)
 
 [[internal-registries]]
 .IncrementalExecution's Internal Registries and Counters (in alphabetical order)

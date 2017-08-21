@@ -69,7 +69,7 @@
 
 . link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor]
 
-. link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution for Streaming Datasets]
+. link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- Streaming QueryExecution]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
