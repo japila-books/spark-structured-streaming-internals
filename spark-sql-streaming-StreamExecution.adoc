@@ -415,9 +415,25 @@ CAUTION: FIXME Describe `withNewSources`
 
 CAUTION: FIXME Describe `triggerLogicalPlan`
 
-==== [[runBatch-queryPlanning]] Creating IncrementalExecution
+==== [[runBatch-queryPlanning]] Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)
 
-CAUTION: FIXME Describe `queryPlanning` block (with `lastExecution`)
+In *queryPlanning* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[creates] a new `IncrementalExecution` with the following:
+
+* <<logicalPlan, logical query plan>> transformed with the <<runBatch-withNewSources, logical plans of the data sources that have new data>> and <<runBatch-triggerLogicalPlan, attributes>>
+
+* the streaming query's <<outputMode, output mode>>
+
+* `state` <<checkpointFile, checkpoint directory>> for preserving state
+
+* <<currentBatchId, current batch id>>
+
+* <<offsetSeqMetadata, OffsetSeqMetadata>>
+
+The new `IncrementalExecution` is set to <<lastExecution, lastExecution>> property.
+
+In the end, before leaving *queryPlanning* section, `runBatch` forces preparation of the physical plan for execution (by requesting link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] of the current <<lastExecution, IncrementalExecution>>).
+
+NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] is a physical plan (i.e. `SparkPlan`) ready for execution (and after link:spark-sql-streaming-IncrementalExecution.adoc#preparations[physical optimization rules]).
 
 ==== [[runBatch-nextBatch]] Creating Dataset with New Data and IncrementalExecution Query Execution
 
@@ -888,7 +904,7 @@ Enable INFO logging level for `org.apache.spark.sql.execution.streaming.StreamEx
 ```
 ====
 
-`constructNextBatch` commits the offsets for the batch (only when <<currentBatchId, currentBatchId>> is not ``0``, i.e. when the <<populateStartOffsets-currentBatchId-0, query has just been started>> and `constructNextBatch` is called the first time).
+`constructNextBatch` commits the offsets for the batch (only when <<currentBatchId, current batch id>> is not ``0``, i.e. when the <<populateStartOffsets-currentBatchId-0, query has just been started>> and `constructNextBatch` is called the first time).
 
 `constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#get[takes the previously-committed batch] (from <<offsetLog, OffsetSeqLog>>), extracts the stored offsets per source.
 
@@ -898,7 +914,7 @@ NOTE: `constructNextBatch` uses `OffsetSeq.toStreamProgress` and <<sources, sour
 
 NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#commit[commit the offsets] (using `Source.commit` method).
 
-`constructNextBatch` reports a `IllegalStateException` when <<currentBatchId, currentBatchId>> is `0`.
+`constructNextBatch` reports a `IllegalStateException` when <<currentBatchId, current batch id>> is `0`.
 
 ```
 batch [currentBatchId] doesn't exist

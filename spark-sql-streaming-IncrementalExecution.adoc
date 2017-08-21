@@ -3,7 +3,7 @@
 `IncrementalExecution` is a `QueryExecution` of a streaming Dataset that allows for executing the <<logicalPlan, logical plan>> incrementally (and continuously).
 
 [[preparations]]
-`IncrementalExecution` defines <<state, state>> preparation rule to the parent ``QueryExecution``'s `preparations` that prepares streaming physical plans (using iteration-specific execution properties).
+`IncrementalExecution` registers <<state, state>> physical optimization rule to the parent ``QueryExecution``'s `preparations` that prepares streaming physical plans (using iteration-specific execution properties).
 
 `IncrementalExecution` is <<creating-instance, created>> when:
 
@@ -27,11 +27,12 @@ a| `SparkPlanner` with the following extra planning strategies (in the order of 
 1. link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy]
 1. link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy]
 
+[[executedPlan]]
 [NOTE]
 ====
 `planner` is used to plan (aka _convert_) an optimized logical plan into a physical plan (that is later available as `sparkPlan`).
 
-`sparkPlan` physical plan is then prepared for execution using <<preparations, preparations>> collection of physical transformation rules. The result is later available as `executedPlan` physical plan.
+`sparkPlan` physical plan is then prepared for execution using <<preparations, preparations>> physical optimization rules. The result is later available as `executedPlan` physical plan.
 ====
 
 | [[state]] `state`
