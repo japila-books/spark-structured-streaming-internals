@@ -44,10 +44,9 @@ val signals = spark.
   withColumn("value", $"value" % 10).  // <-- randomize the values (just for fun)
   withColumn("deviceId", rint(rand() * 10) cast "int"). // <-- 10 devices randomly assigned to values
   as[Signal] // <-- convert to our type (from "unpleasant" Row)
-
 scala> signals.explain
 == Physical Plan ==
-*Project [timestamp#0, (value#1L % 10) AS value#5L, cast(ROUND((rand(-664206172738708082) * 10.0)) as int) AS deviceId#9]
+*Project [timestamp#0, (value#1L % 10) AS value#5L, cast(ROUND((rand(4440296395341152993) * 10.0)) as int) AS deviceId#9]
 +- StreamingRelation rate, [timestamp#0, value#1L]
 
 // stream processing using flatMapGroupsWithState operator
@@ -62,8 +61,8 @@ case class EventsCounted(deviceId: DeviceId, count: Long)
 def countValuesPerKey(deviceId: Int, signalsPerDevice: Iterator[Signal], state: GroupState[State]): Iterator[EventsCounted] = {
   val values = signalsPerDevice.toList
   println(s"Device: $deviceId")
-  println(s"Signals:")
-  values.foreach { v => println(s"- $v") }
+  println(s"Signals (${values.size}):")
+  values.zipWithIndex.foreach { case (v, idx) => println(s"$idx. $v") }
   println(s"State: $state")
 
   // update the state with the count of elements for the key
@@ -77,7 +76,7 @@ def countValuesPerKey(deviceId: Int, signalsPerDevice: Iterator[Signal], state: 
   // you must not return as it's already consumed
   // that leads to a very subtle error where no elements are in an iterator
   // iterators are one-pass data structures
-  Seq(EventsCounted(deviceId, newValue)).toIterator
+  Iterator(EventsCounted(deviceId, newValue))
 }
 import org.apache.spark.sql.streaming.{GroupStateTimeout, OutputMode}
 val signalCounter = signalsByDevice.flatMapGroupsWithState(
@@ -102,21 +101,21 @@ Batch: 0
 +--------+-----+
 +--------+-----+
 ...
-17/08/20 20:31:58 INFO StreamExecution: Streaming query made progress: {
-  "id" : "b9fe43e8-e173-4f3b-9bb6-91828bee0cb6",
-  "runId" : "444f8c71-b769-4da4-9cb7-264f95d1b4a4",
+17/08/21 08:57:29 INFO StreamExecution: Streaming query made progress: {
+  "id" : "a43822a6-500b-4f02-9133-53e9d39eedbf",
+  "runId" : "79cb037e-0f28-4faf-a03e-2572b4301afe",
   "name" : null,
-  "timestamp" : "2017-08-20T18:31:55.858Z",
+  "timestamp" : "2017-08-21T06:57:26.719Z",
   "batchId" : 0,
   "numInputRows" : 0,
   "processedRowsPerSecond" : 0.0,
   "durationMs" : {
-    "addBatch" : 2407,
-    "getBatch" : 17,
+    "addBatch" : 2404,
+    "getBatch" : 22,
     "getOffset" : 0,
-    "queryPlanning" : 251,
-    "triggerExecution" : 2721,
-    "walCommit" : 32
+    "queryPlanning" : 141,
+    "triggerExecution" : 2626,
+    "walCommit" : 41
   },
   "stateOperators" : [ {
     "numRowsTotal" : 0,
@@ -134,47 +133,47 @@ Batch: 0
     "description" : "ConsoleSink[numRows=20, truncate=false]"
   }
 }
+17/08/21 08:57:29 DEBUG StreamExecution: batch 0 committed
 ...
 -------------------------------------------
 Batch: 1
 -------------------------------------------
-Device: 5
-Signals:
-- Signal(2017-08-20 20:31:57.82,2,5)
 Device: 3
-Signals:
-- Signal(2017-08-20 20:31:56.82,1,3)
-State: GroupState(<undefined>)
+Signals (1):
+0. Signal(2017-08-21 08:57:27.682,1,3)
 State: GroupState(<undefined>)
 Device: 8
-Signals:
-- Signal(2017-08-20 20:31:55.82,0,8)
-- Signal(2017-08-20 20:31:58.82,3,8)
+Signals (1):
+0. Signal(2017-08-21 08:57:26.682,0,8)
+State: GroupState(<undefined>)
+Device: 7
+Signals (1):
+0. Signal(2017-08-21 08:57:28.682,2,7)
 State: GroupState(<undefined>)
 +--------+-----+
 |deviceId|count|
 +--------+-----+
 |3       |1    |
-|5       |1    |
-|8       |2    |
+|8       |1    |
+|7       |1    |
 +--------+-----+
 ...
-17/08/20 20:32:01 INFO StreamExecution: Streaming query made progress: {
-  "id" : "b9fe43e8-e173-4f3b-9bb6-91828bee0cb6",
-  "runId" : "444f8c71-b769-4da4-9cb7-264f95d1b4a4",
+17/08/21 08:57:31 INFO StreamExecution: Streaming query made progress: {
+  "id" : "a43822a6-500b-4f02-9133-53e9d39eedbf",
+  "runId" : "79cb037e-0f28-4faf-a03e-2572b4301afe",
   "name" : null,
-  "timestamp" : "2017-08-20T18:32:00.000Z",
+  "timestamp" : "2017-08-21T06:57:30.004Z",
   "batchId" : 1,
-  "numInputRows" : 4,
-  "inputRowsPerSecond" : 0.9657170449058425,
-  "processedRowsPerSecond" : 2.619515389652914,
+  "numInputRows" : 3,
+  "inputRowsPerSecond" : 0.91324200913242,
+  "processedRowsPerSecond" : 2.2388059701492535,
   "durationMs" : {
-    "addBatch" : 1439,
-    "getBatch" : 24,
+    "addBatch" : 1245,
+    "getBatch" : 22,
     "getOffset" : 0,
     "queryPlanning" : 23,
-    "triggerExecution" : 1527,
-    "walCommit" : 36
+    "triggerExecution" : 1340,
+    "walCommit" : 44
   },
   "stateOperators" : [ {
     "numRowsTotal" : 3,
@@ -184,100 +183,98 @@ State: GroupState(<undefined>)
   "sources" : [ {
     "description" : "RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8]",
     "startOffset" : 0,
-    "endOffset" : 4,
-    "numInputRows" : 4,
-    "inputRowsPerSecond" : 0.9657170449058425,
-    "processedRowsPerSecond" : 2.619515389652914
+    "endOffset" : 3,
+    "numInputRows" : 3,
+    "inputRowsPerSecond" : 0.91324200913242,
+    "processedRowsPerSecond" : 2.2388059701492535
   } ],
   "sink" : {
     "description" : "ConsoleSink[numRows=20, truncate=false]"
   }
 }
+17/08/21 08:57:31 DEBUG StreamExecution: batch 1 committed
 ...
 -------------------------------------------
 Batch: 2
 -------------------------------------------
 Device: 1
-Signals:
-- Signal(2017-08-20 20:32:03.82,8,1)
-State: GroupState(<undefined>)
-Device: 6
-Signals:
-- Signal(2017-08-20 20:32:08.82,3,6)
+Signals (1):
+0. Signal(2017-08-21 08:57:36.682,0,1)
 State: GroupState(<undefined>)
 Device: 3
-Signals:
-- Signal(2017-08-20 20:32:02.82,7,3)
+Signals (2):
+0. Signal(2017-08-21 08:57:32.682,6,3)
+1. Signal(2017-08-21 08:57:35.682,9,3)
 State: GroupState(Map(3 -> 1))
 Device: 5
-Signals:
-- Signal(2017-08-20 20:32:05.82,0,5)
-State: GroupState(Map(5 -> 1))
-Device: 9
-Signals:
-- Signal(2017-08-20 20:32:04.82,9,9)
+Signals (1):
+0. Signal(2017-08-21 08:57:34.682,8,5)
+State: GroupState(<undefined>)
+Device: 4
+Signals (1):
+0. Signal(2017-08-21 08:57:29.682,3,4)
 State: GroupState(<undefined>)
 Device: 8
-Signals:
-- Signal(2017-08-20 20:32:00.82,5,8)
-- Signal(2017-08-20 20:32:01.82,6,8)
-- Signal(2017-08-20 20:32:07.82,2,8)
-State: GroupState(Map(8 -> 2))
-Device: 10
-Signals:
-- Signal(2017-08-20 20:32:06.82,1,10)
-State: GroupState(<undefined>)
-Device: 2
-Signals:
-- Signal(2017-08-20 20:31:59.82,4,2)
+Signals (2):
+0. Signal(2017-08-21 08:57:31.682,5,8)
+1. Signal(2017-08-21 08:57:33.682,7,8)
+State: GroupState(Map(8 -> 1))
+Device: 7
+Signals (2):
+0. Signal(2017-08-21 08:57:30.682,4,7)
+1. Signal(2017-08-21 08:57:37.682,1,7)
+State: GroupState(Map(7 -> 1))
+Device: 0
+Signals (1):
+0. Signal(2017-08-21 08:57:38.682,2,0)
 State: GroupState(<undefined>)
 +--------+-----+
 |deviceId|count|
 +--------+-----+
 |1       |1    |
-|6       |1    |
-|3       |2    |
-|5       |2    |
-|9       |1    |
-|8       |5    |
-|10      |1    |
-|2       |1    |
+|3       |3    |
+|5       |1    |
+|4       |1    |
+|8       |3    |
+|7       |3    |
+|0       |1    |
 +--------+-----+
 ...
-17/08/20 20:32:10 INFO StreamExecution: Streaming query made progress: {
-  "id" : "b9fe43e8-e173-4f3b-9bb6-91828bee0cb6",
-  "runId" : "444f8c71-b769-4da4-9cb7-264f95d1b4a4",
+17/08/21 08:57:41 INFO StreamExecution: Streaming query made progress: {
+  "id" : "a43822a6-500b-4f02-9133-53e9d39eedbf",
+  "runId" : "79cb037e-0f28-4faf-a03e-2572b4301afe",
   "name" : null,
-  "timestamp" : "2017-08-20T18:32:10.006Z",
+  "timestamp" : "2017-08-21T06:57:40.005Z",
   "batchId" : 2,
   "numInputRows" : 10,
-  "inputRowsPerSecond" : 0.9994003597841296,
-  "processedRowsPerSecond" : 11.26126126126126,
+  "inputRowsPerSecond" : 0.9999000099990002,
+  "processedRowsPerSecond" : 9.242144177449168,
   "durationMs" : {
-    "addBatch" : 840,
+    "addBatch" : 1032,
     "getBatch" : 8,
     "getOffset" : 0,
-    "queryPlanning" : 16,
-    "triggerExecution" : 888,
-    "walCommit" : 22
+    "queryPlanning" : 19,
+    "triggerExecution" : 1082,
+    "walCommit" : 21
   },
   "stateOperators" : [ {
-    "numRowsTotal" : 8,
-    "numRowsUpdated" : 8,
-    "memoryUsedBytes" : 19255
+    "numRowsTotal" : 7,
+    "numRowsUpdated" : 7,
+    "memoryUsedBytes" : 19023
   } ],
   "sources" : [ {
     "description" : "RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8]",
-    "startOffset" : 4,
-    "endOffset" : 14,
+    "startOffset" : 3,
+    "endOffset" : 13,
     "numInputRows" : 10,
-    "inputRowsPerSecond" : 0.9994003597841296,
-    "processedRowsPerSecond" : 11.26126126126126
+    "inputRowsPerSecond" : 0.9999000099990002,
+    "processedRowsPerSecond" : 9.242144177449168
   } ],
   "sink" : {
     "description" : "ConsoleSink[numRows=20, truncate=false]"
   }
 }
+17/08/21 08:57:41 DEBUG StreamExecution: batch 2 committed
 
 // In the end...
 sq.stop
@@ -289,21 +286,32 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
   "numRowsUpdated" : 7,
   "memoryUsedBytes" : 19023
 }
-
-scala> sq.explain
-== Physical Plan ==
-*SerializeFromObject [staticinvoke(class org.apache.spark.sql.catalyst.util.DateTimeUtils$, TimestampType, fromJavaTimestamp, assertnotnull(input[0, $line17.$read$$iw$$iw$Signal, true]).ts, true, false) AS ts#30, assertnotnull(input[0, $line17.$read$$iw$$iw$Signal, true]).value AS value#31L, assertnotnull(input[0, $line17.$read$$iw$$iw$Signal, true]).deviceId AS deviceId#32]
-+- FlatMapGroupsWithState <function3>, value#24: int, newInstance(class $line17.$read$$iw$$iw$Signal), [value#24], [ts#14, value#5L, deviceId#9], obj#29: $line17.$read$$iw$$iw$Signal, StatefulOperatorStateInfo(file:/private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-3573bdcc-2046-4b9d-8377-53eeffd1bc2e/state,4e6a392e-4c0a-48a3-99c5-e39b6522811e,0,4), class[value[0]: int], Append, NoTimeout, 1503236740004, 0
-   +- *Sort [value#24 ASC NULLS FIRST], false, 0
-      +- Exchange hashpartitioning(value#24, 200)
-         +- AppendColumns <function1>, newInstance(class $line17.$read$$iw$$iw$Signal), [input[0, int, false] AS value#24]
-            +- *Project [timestamp#236 AS ts#14, (value#237L % 10) AS value#5L, 0 AS deviceId#9]
-               +- Scan ExistingRDD[timestamp#236,value#237L]
 ----
 
 Internally, `flatMapGroupsWithState` operator creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] unary logical operator.
 
-CAUTION: FIXME Show the logical plan
+[source, scala]
+----
+scala> :type signalCounter
+org.apache.spark.sql.Dataset[EventsCounted]
+scala> println(signalCounter.queryExecution.logical.numberedTreeString)
+00 'SerializeFromObject [assertnotnull(assertnotnull(input[0, $line27.$read$$iw$$iw$EventsCounted, true])).deviceId AS deviceId#25, assertnotnull(assertnotnull(input[0, $line27.$read$$iw$$iw$EventsCounted, true])).count AS count#26L]
+01 +- 'FlatMapGroupsWithState <function3>, unresolveddeserializer(upcast(getcolumnbyordinal(0, IntegerType), IntegerType, - root class: "scala.Int"), value#20), unresolveddeserializer(newInstance(class $line17.$read$$iw$$iw$Signal), timestamp#0, value#5L, deviceId#9), [value#20], [timestamp#0, value#5L, deviceId#9], obj#24: $line27.$read$$iw$$iw$EventsCounted, class[value[0]: map<int,bigint>], Append, false, NoTimeout
+02    +- AppendColumns <function1>, class $line17.$read$$iw$$iw$Signal, [StructField(timestamp,TimestampType,true), StructField(value,LongType,false), StructField(deviceId,IntegerType,false)], newInstance(class $line17.$read$$iw$$iw$Signal), [input[0, int, false] AS value#20]
+03       +- Project [timestamp#0, value#5L, cast(ROUND((rand(4440296395341152993) * cast(10 as double))) as int) AS deviceId#9]
+04          +- Project [timestamp#0, (value#1L % cast(10 as bigint)) AS value#5L]
+05             +- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@385c6d6b,rate,List(),None,List(),None,Map(rowsPerSecond -> 1),None), rate, [timestamp#0, value#1L]
+
+scala> signalCounter.explain
+== Physical Plan ==
+*SerializeFromObject [assertnotnull(input[0, $line27.$read$$iw$$iw$EventsCounted, true]).deviceId AS deviceId#25, assertnotnull(input[0, $line27.$read$$iw$$iw$EventsCounted, true]).count AS count#26L]
++- FlatMapGroupsWithState <function3>, value#20: int, newInstance(class $line17.$read$$iw$$iw$Signal), [value#20], [timestamp#0, value#5L, deviceId#9], obj#24: $line27.$read$$iw$$iw$EventsCounted, StatefulOperatorStateInfo(<unknown>,50c7ece5-0716-4e43-9b56-09842db8baf1,0,0), class[value[0]: map<int,bigint>], Append, NoTimeout, 0, 0
+   +- *Sort [value#20 ASC NULLS FIRST], false, 0
+      +- Exchange hashpartitioning(value#20, 200)
+         +- AppendColumns <function1>, newInstance(class $line17.$read$$iw$$iw$Signal), [input[0, int, false] AS value#20]
+            +- *Project [timestamp#0, (value#1L % 10) AS value#5L, cast(ROUND((rand(4440296395341152993) * 10.0)) as int) AS deviceId#9]
+               +- StreamingRelation rate, [timestamp#0, value#1L]
+----
 
 `flatMapGroupsWithState` reports a `IllegalArgumentException` when the input `outputMode` is neither `Append` nor `Update`.
 
