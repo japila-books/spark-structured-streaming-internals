@@ -1,4 +1,4 @@
-== Streaming Dataset Operators / Streaming Dataset API
+== Streaming Operators / Streaming Dataset API
 
 Dataset API has a set of <<operators, operators>> that are of particular use in Structured Streaming.
 

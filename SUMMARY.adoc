@@ -23,7 +23,9 @@
 .. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
 .. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
-. link:spark-sql-streaming-Dataset-operators.adoc[Streaming Dataset Operators / Streaming Dataset API]
+. link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators / Streaming Dataset API]
+. link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Stream Aggregation]
 
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
 .. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
@@ -47,13 +49,6 @@
 .. link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvent]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
-
-=== Aggregation and Arbitrary Stateful Stream Processing
-
-. link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- (Stateful) Streaming Aggregation]
-. link:spark-sql-streaming-GroupState.adoc[GroupState -- Contract for State Per Group For Arbitrary Stateful Aggregation]
-.. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
-.. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
 == Extending Structured Streaming
 
@@ -116,7 +111,11 @@
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
-=== StateStore for Stateful Stream Processing
+=== Stateful Stream Processing
+
+. link:spark-sql-streaming-GroupState.adoc[GroupState -- Contract for State Per Group For Stateful Aggregation]
+.. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
+.. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
