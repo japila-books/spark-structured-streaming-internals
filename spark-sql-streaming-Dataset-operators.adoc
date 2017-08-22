@@ -19,10 +19,14 @@ dropDuplicates(colNames: Seq[String]): Dataset[T]
 dropDuplicates(col1: String, cols: String*): Dataset[T]
 ----
 
-| [[explain]] `explain`
+| [[explain]] link:spark-sql-streaming-Dataset-explain.adoc[explain]
 a| Explains execution plans
 
-CAUTION: FIXME Review `ExplainCommand` when logical plan is streaming
+[source, scala]
+----
+explain(): Unit
+explain(extended: Boolean): Unit
+----
 
 | [[groupBy]] <<groupBy-indepth, groupBy>>
 | Aggregates records by...FIXME

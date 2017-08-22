@@ -2,7 +2,7 @@
 
 `StreamExecution` represents the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end writes the result to a <<sink, streaming sink>>.
 
-NOTE: *Continuous query*, *streaming query* and *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
+NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
 `StreamExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
 
@@ -373,7 +373,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 1. <<runBatch-getBatch, Requesting Unprocessed Data From Streaming Sources>>
 1. <<runBatch-withNewSources, Transforming StreamingExecutionRelations (in Logical Plan) With New Data>>
 1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions (in Logical Plan) With New Data>>
-1. <<runBatch-queryPlanning, Creating IncrementalExecution>>
+1. <<runBatch-queryPlanning, Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)>>
 1. <<runBatch-nextBatch, Creating Dataset with New Data and IncrementalExecution Query Execution>>
 1. <<runBatch-addBatch, Adding New Batch>>
 1. <<runBatch-awaitBatchLock, Waking Up Threads Waiting For Stream to Progress>>
@@ -435,7 +435,7 @@ In the end, before leaving *queryPlanning* section, `runBatch` forces preparatio
 
 NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] is a physical plan (i.e. `SparkPlan`) ready for execution (and after link:spark-sql-streaming-IncrementalExecution.adoc#preparations[physical optimization rules]).
 
-==== [[runBatch-nextBatch]] Creating Dataset with New Data and IncrementalExecution Query Execution
+==== [[runBatch-nextBatch]] Creating Dataset with New Data (and Streaming QueryExecution)
 
 CAUTION: FIXME Describe `nextBatch`
 
@@ -725,7 +725,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 * [[sink]] link:spark-sql-streaming-Sink.adoc[Streaming sink]
 * [[trigger]] link:spark-sql-streaming-Trigger.adoc[Trigger]
 * [[triggerClock]] `Clock`
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
+* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode] (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
 * [[deleteCheckpointOnStop]] Flag where to delete the checkpoint on stop
 
 `StreamExecution` initializes the <<internal-registries, internal registries and counters>>.

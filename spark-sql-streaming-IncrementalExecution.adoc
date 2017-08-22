@@ -1,13 +1,16 @@
-== [[IncrementalExecution]] IncrementalExecution -- Streaming QueryExecution
+== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Datasets
 
-`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that allows for executing the <<logicalPlan, logical plan>> incrementally (and continuously).
+`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] uses for incremental execution of the <<logicalPlan, logical query plan>> (every trigger that, when small enough, is supposed to give the impression of continuous stream processing).
+
+.StreamExecution creates IncrementalExecution (every trigger / streaming batch)
+image::images/IncrementalExecution-StreamExecution.png[align="center"]
 
 [[preparations]]
-`IncrementalExecution` registers <<state, state>> physical optimization rule to the parent ``QueryExecution``'s `preparations` that prepares streaming physical plans (using iteration-specific execution properties).
+`IncrementalExecution` registers <<state, state>> physical optimization rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using iteration-specific execution properties).
 
 `IncrementalExecution` is <<creating-instance, created>> when:
 
-* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[runs a streaming batch] (and plans a streaming query)
+* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] (for a streaming batch)
 
 * `ExplainCommand` is executed (for link:spark-sql-streaming-Dataset-operators.adoc#explain[explain] operator)
 
@@ -53,11 +56,11 @@ a| Java's `AtomicInteger`
 `IncrementalExecution` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[logicalPlan]] Logical plan
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode]
-* [[checkpointLocation]] Checkpoint directory
+* [[logicalPlan]] Logical query plan (i.e. `LogicalPlan` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[with the logical plans of the data sources that have new data and new column attributes])
+* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] (as specified using link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[outputMode] method of `DataStreamWriter`)
+* [[checkpointLocation]] `state` checkpoint directory (as link:spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot[specified] using `checkpointLocation` option or `spark.sql.streaming.checkpointLocation` Spark property with `queryName` option)
 * [[runId]] Run id
 * [[currentBatchId]] Current batch id
-* [[offsetSeqMetadata]] `OffsetSeqMetadata`
+* [[offsetSeqMetadata]] link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
 `IncrementalExecution` initializes the <<internal-registries, internal registries and counters>>.

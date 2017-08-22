@@ -1,0 +1,11 @@
+== [[explain]] explain Operator -- Explaining Query Plan
+
+[source, scala]
+----
+explain(): Unit
+explain(extended: Boolean): Unit
+----
+
+`explain` operator...FIXME
+
+CAUTION: FIXME Review `ExplainCommand` when logical plan is streaming

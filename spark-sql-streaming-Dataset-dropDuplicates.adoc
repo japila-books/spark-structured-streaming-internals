@@ -7,7 +7,7 @@ dropDuplicates(colNames: Seq[String]): Dataset[T]
 dropDuplicates(col1: String, cols: String*): Dataset[T]
 ----
 
-CAUTION: FIXME
+`dropDuplicates` operator...FIXME
 
 NOTE: For a streaming Dataset, `dropDuplicates` will keep all data across triggers as intermediate state to drop duplicates rows. You can use <<withWatermark, withWatermark>> to limit how late the duplicate data can be and system will accordingly limit the state. In addition, too late data older than watermark will be dropped to avoid any possibility of duplicates.
 
