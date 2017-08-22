@@ -6,7 +6,7 @@
 image::images/IncrementalExecution-StreamExecution.png[align="center"]
 
 [[preparations]]
-`IncrementalExecution` registers <<state, state>> physical optimization rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using iteration-specific execution properties).
+`IncrementalExecution` registers <<state, state>> physical preparation rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using batch-specific execution properties).
 
 `IncrementalExecution` is <<creating-instance, created>> when:
 
@@ -39,7 +39,7 @@ a| `SparkPlanner` with the following extra planning strategies (in the order of 
 ====
 
 | [[state]] `state`
-| State preparation rule that transforms streaming physical plans (i.e. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec]) to add missing properties that are iteration-specific, i.e. the current batch.
+| State preparation rule that transforms streaming physical plans (i.e. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec]) to add missing properties that are batch-specific, i.e. the current batch.
 
 Used when `IncrementalExecution` <<preparations, prepares a physical plan>> (i.e. `SparkPlan`) for execution.
 

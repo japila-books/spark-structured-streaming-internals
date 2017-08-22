@@ -131,6 +131,8 @@
 ... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 
+. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
+
 == Varia
 
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
