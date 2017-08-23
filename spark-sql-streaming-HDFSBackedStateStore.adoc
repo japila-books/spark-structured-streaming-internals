@@ -1,11 +1,80 @@
 == [[HDFSBackedStateStore]] HDFSBackedStateStore
 
-`HDFSBackedStateStore` is...FIXME
+`HDFSBackedStateStore` is a link:spark-sql-streaming-StateStore.adoc[StateStore] using HDFS-compatible file system for versioned state persistence.
+
+`HDFSBackedStateStore` is created exclusively when `HDFSBackedStateStoreProvider` <<getStore, is requested for a state store>> (which is when...FIXME).
+
+`HDFSBackedStateStore` can be in the following <<state, states>>:
+
+* `UPDATING`
+* `COMMITTED`
+* `ABORTED`
+
+[[internal-registries]]
+.HDFSBackedStateStore's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[newVersion]] `newVersion`
+|
+
+| [[tempDeltaFile]] `tempDeltaFile`
+|
+
+| [[state]] `state`
+|
+
+| [[tempDeltaFileStream]] `tempDeltaFileStream`
+|
+
+| [[finalDeltaFile]] `finalDeltaFile`
+|
+|===
+
+=== [[writeUpdateToDeltaFile]] `writeUpdateToDeltaFile` Internal Method
+
+[source, scala]
+----
+writeUpdateToDeltaFile(
+  output: DataOutputStream,
+  key: UnsafeRow,
+  value: UnsafeRow): Unit
+----
+
+CAUTION: FIXME
 
 === [[put]] `put` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+put(key: UnsafeRow, value: UnsafeRow): Unit
+----
+
+NOTE: `put` is a part of link:spark-sql-streaming-StateStore.adoc#put[StateStore Contract] to...FIXME
+
+`put` stores the copies of the key and value in <<mapToUpdate, mapToUpdate>> internal registry followed by <<writeUpdateToDeltaFile, writing them to a delta file>> (using <<tempDeltaFileStream, tempDeltaFileStream>>).
+
+[NOTE]
+====
+`put` can only be used when `HDFSBackedStateStore` is in `UPDATING` state and reports a `IllegalStateException` otherwise.
+
+```
+Cannot put after already committed or aborted
+```
+====
 
 === [[commit]] `commit` Method
 
 CAUTION: FIXME
+
+=== [[creating-instance]] Creating HDFSBackedStateStore Instance
+
+`HDFSBackedStateStore` takes the following when created:
+
+* [[version]] Version
+
+* [[mapToUpdate]] Key-value registry of `UnsafeRows` (as Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html[java.util.concurrent.ConcurrentHashMap])
+
+`HDFSBackedStateStore` initializes the <<internal-registries, internal registries and counters>>.

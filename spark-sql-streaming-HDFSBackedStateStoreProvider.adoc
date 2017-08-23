@@ -1,0 +1,14 @@
+== [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider
+
+`HDFSBackedStateStoreProvider` is...FIXME
+
+=== [[getStore]] Creating HDFSBackedStateStore -- `getStore` Method
+
+[source, scala]
+----
+getStore(version: Long): StateStore
+----
+
+NOTE: `getStore` is a part of link:spark-sql-streaming-StateStoreProvider.adoc#getStore[StateStoreProvider Contract] to..FIXME.
+
+CAUTION: FIXME

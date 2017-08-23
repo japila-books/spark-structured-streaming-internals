@@ -132,6 +132,7 @@
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 
 . link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
+.. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
 
 == Varia
 

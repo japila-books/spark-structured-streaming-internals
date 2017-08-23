@@ -13,3 +13,5 @@ CAUTION: FIXME
 === [[getStore]] `getStore` Method
 
 CAUTION: FIXME
+
+NOTE: `getStore` is used when `StateStore` is link:spark-sql-streaming-StateStore.adoc#get[requested for a state store] (given a `StateStoreProviderId`).

@@ -53,7 +53,17 @@ trait StateStore {
 |
 
 | [[put]] `put`
-| Stores a state (as `UnsafeRow`) for a key (as `UnsafeRow`)
+a| Stores a value for a non-null key (both of `UnsafeRow` type)
+
+Used when:
+
+* `StateStoreSaveExec` is link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[executed] (and...FIXME)
+
+* `StreamingDeduplicateExec` is link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[executed] (and...FIXME)
+
+* `StateStoreUpdater` attempts to write the current state when rows are processed (which is when their iterator is fully consumed).
+
+CAUTION: FIXME Review StateStoreUpdater.callFunctionAndUpdateState
 
 | [[remove]] `remove`
 |
@@ -131,7 +141,7 @@ get(
 
 `get` finds `StateStore` for `StateStoreProviderId`.
 
-Internally, `get` looks the `StateStoreProvider` (for `storeProviderId`) up in <<loadedProviders, loadedProviders>> registry. If not found, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
+Internally, `get` looks up the `StateStoreProvider` (for `storeProviderId`) in <<loadedProviders, loadedProviders>> registry. If unavailable, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
 
 `get` will also <<startMaintenanceIfNeeded, start the periodic maintenance task>> (unless already started) and <<reportActiveStoreInstance, announce the new StateStoreProvider>>.
 

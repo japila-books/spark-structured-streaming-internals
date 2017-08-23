@@ -161,6 +161,12 @@ NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at th
 | [[doExecute-Append]] `Append`
 a|
 
+Filters out all late aggregate rows (per link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermark]) and link:spark-sql-streaming-StateStore.adoc#put[stores all the "young" rows in the state store] (eagerly, i.e. before returning an iterator). Returns an iterator that link:spark-sql-streaming-StateStore.adoc#remove[removes the late rows from the state store]. In the end, link:spark-sql-streaming-StateStore.adoc#commit[commits the state updates].
+
+CAUTION: FIXME Example of Append with StateStoreSaveExec (and mandatory watermark)
+
+---
+
 1. Uses link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermarkPredicateForData] predicate to exclude matching rows and (like in <<doExecute-Complete, Complete>> output mode) link:spark-sql-streaming-StateStore.adoc#put[stores all the remaining rows] in `StateStore`.
 
 1. (like in <<doExecute-Complete, Complete>> output mode) While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
@@ -176,20 +182,32 @@ If no row was found, `getNext` also marks the iterator as finished.
 | [[doExecute-Complete]] `Complete`
 a|
 
-1. link:spark-sql-streaming-StateStore.adoc#put[Stores all the rows] (as `UnsafeRow`) in `StateStore`.
+link:spark-sql-streaming-StateStore.adoc#put[Stores all rows in the state store] and link:spark-sql-streaming-StateStore.adoc#commit[commits them] (as state updates) afterwards.
+
+---
+
+1. link:spark-sql-streaming-StateStore.adoc#put[Stores all rows] (as `UnsafeRow`) in `StateStore`.
 
 1. While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
 
 1. Records `0` in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
 
-1. link:spark-sql-streaming-StateStore.adoc#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
+1. link:spark-sql-streaming-StateStore.adoc#commit[Commits the state updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
 
 1. link:spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics[Records StateStore metrics].
 
 1. In the end, link:spark-sql-streaming-StateStore.adoc#iterator[takes all the rows stored] in `StateStore` and increments <<numOutputRows, numOutputRows>> metric.
 
 | [[doExecute-Update]] `Update`
-a| Returns `Iterator` of rows that uses link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermarkPredicateForData] predicate to exclude unmatching rows.
+a|
+
+Returns an iterator that filters out late aggregate rows (per link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermark] if defined) and link:spark-sql-streaming-StateStore.adoc#put[stores the "young" rows in the state store] (one by one, i.e. every `next`). With no more rows available, that link:spark-sql-streaming-StateStore.adoc#remove[removes the late rows from the state store] (all at once) and link:spark-sql-streaming-StateStore.adoc#commit[commits the state updates].
+
+CAUTION: FIXME Example of Update with StateStoreSaveExec (and optional watermark)
+
+---
+
+Returns `Iterator` of rows that uses link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermarkPredicateForData] predicate to filter out late rows.
 
 In `hasNext`, when rows are no longer available:
 
