@@ -28,8 +28,14 @@ explain(): Unit
 explain(extended: Boolean): Unit
 ----
 
-| [[groupBy]] <<groupBy-indepth, groupBy>>
-| Aggregates records by...FIXME
+| [[groupBy]] link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy]
+a| Aggregates rows by a untyped grouping function
+
+[source, scala]
+----
+groupBy(cols: Column*): RelationalGroupedDataset
+groupBy(col1: String, cols: String*): RelationalGroupedDataset
+----
 
 | [[groupByKey]] <<groupByKey-indepth, groupByKey>>
 a| Aggregates records by a typed grouping function
@@ -73,10 +79,6 @@ val sq = rates.
 // eventually...
 sq.stop
 ----
-
-=== [[groupBy-indepth]] Streaming Aggregation -- `groupBy` Operator
-
-CAUTION: FIXME
 
 === [[groupByKey-indepth]] Streaming Aggregation (using Grouping Function) -- `groupByKey` Operator
 

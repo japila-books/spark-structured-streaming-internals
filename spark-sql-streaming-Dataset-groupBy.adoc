@@ -1,0 +1,58 @@
+== [[groupBy]] groupBy Operator -- Streaming Aggregation
+
+[source, scala]
+----
+groupBy(cols: Column*): RelationalGroupedDataset
+groupBy(col1: String, cols: String*): RelationalGroupedDataset
+----
+
+`groupBy` operator...FIXME
+
+[source, scala]
+----
+scala> spark.version
+res0: String = 2.3.0-SNAPSHOT
+
+val fromTopic1 = spark.
+  readStream.
+  format("kafka").
+  option("subscribe", "topic1").
+  option("kafka.bootstrap.servers", "localhost:9092").
+  load
+
+// extract event time et al
+// time,key,value
+/*
+2017-08-23T00:00:00.002Z,1,now
+2017-08-23T00:05:00.002Z,1,5 mins later
+2017-08-23T00:09:00.002Z,1,9 mins later
+2017-08-23T00:11:00.002Z,1,11 mins later
+2017-08-23T01:00:00.002Z,1,1 hour later
+// late event = watermark should be (1 hour - 10 minutes) already
+2017-08-23T00:49:59.002Z,1,==> SHOULD NOT BE INCLUDED in aggregation as too late <==
+
+CAUTION: FIXME SHOULD NOT BE INCLUDED is included contrary to my understanding?!
+*/
+val timedValues = fromTopic1.
+  select('value cast "string").
+  withColumn("tokens", split('value, ",")).
+  withColumn("time", to_timestamp('tokens(0))).
+  withColumn("key", 'tokens(1) cast "int").
+  withColumn("value", 'tokens(2)).
+  select("time", "key", "value")
+
+// aggregation with watermark
+val counts = timedValues.
+  withWatermark("time", "10 minutes").
+  groupBy("key").
+  agg(collect_list('value) as "values", collect_list('time) as "times")
+
+import org.apache.spark.sql.streaming._
+import scala.concurrent.duration._
+val sq = counts.writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Complete).
+  start
+----
