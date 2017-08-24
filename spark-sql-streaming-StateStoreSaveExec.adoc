@@ -7,6 +7,87 @@
 .StateStoreSaveExec and StatefulAggregationStrategy
 image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
 
+The optional properties, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, output mode>>, and <<eventTimeWatermark, event time watermark>>, are undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold their batch-specific execution properties every time `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+
+.StateStoreSaveExec and IncrementalExecution
+image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
+
+When <<doExecute, executed>>, `StateStoreSaveExec` link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that manages the `StateStore`.
+
+.StateStoreSaveExec creates StateStoreRDD
+image::images/StateStoreSaveExec-StateStoreRDD.png[align="center"]
+
+[source, scala]
+----
+scala> spark.version
+res0: String = 2.3.0-SNAPSHOT
+
+// START: Only for easier debugging
+import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 2)
+
+scala> spark.sessionState.conf.numShufflePartitions
+res3: Int = 2
+// END: Only for easier debugging
+
+val counts = spark.
+  readStream.
+  format("rate").
+  load.
+  groupBy(window($"timestamp", "5 seconds") as "group").
+  agg(count("value") as "value_count")
+
+// Start the query and hence execute StateStoreSaveExec
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val sq = counts.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(1.hour)). // <-- buying enough time for exploration
+  outputMode(OutputMode.Complete).
+  start
+
+// wait till the first batch which should happen right after start
+
+import org.apache.spark.sql.execution.streaming._
+val streamingBatch = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery.lastExecution
+
+scala> println(streamingBatch.logicalPlan.numberedTreeString)
+00 Aggregate [window#153], [window#153 AS group#146, count(value#141L) AS value_count#152L]
+01 +- Filter isnotnull(timestamp#140)
+02    +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#140, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#153, timestamp#140, value#141L]
+03       +- StreamingExecutionRelation RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8], [timestamp#140, value#141L]
+
+// Note the number of partitions
+// 200 is the default
+scala> streamingBatch.toRdd.toDebugString
+res1: String =
+(200) MapPartitionsRDD[43] at toRdd at <console>:53 []
+  |   StateStoreRDD[42] at toRdd at <console>:53 []
+  |   MapPartitionsRDD[41] at toRdd at <console>:53 []
+  |   StateStoreRDD[40] at toRdd at <console>:53 []
+  |   MapPartitionsRDD[39] at toRdd at <console>:53 []
+  |   ShuffledRowRDD[27] at start at <console>:47 []
+  +-(0) MapPartitionsRDD[26] at start at <console>:47 []
+     |  MapPartitionsRDD[25] at start at <console>:47 []
+     |  MapPartitionsRDD[24] at start at <console>:47 []
+     |  EmptyRDD[23] at start at <console>:47 []
+
+scala> spark.sessionState.conf.numShufflePartitions
+res2: Int = 200
+----
+
+.StateStoreSaveExec and StateStoreRDD (after streamingBatch.toRdd.count)
+image::images/StateStoreSaveExec-StateStoreRDD-count.png[align="center"]
+
+[NOTE]
+====
+The number of partitions of link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[StateStoreRDD] (and hence the number of Spark tasks) is what was defined for the <<child, child>> physical plan.
+
+There will be that many `StateStores` as there are partitions in `StateStoreRDD`.
+====
+
 NOTE: `StateStoreSaveExec` <<doExecute, works>> differently per output mode.
 
 [source, scala]
@@ -27,6 +108,9 @@ root
  |    |-- end: timestamp (nullable = true)
  |-- value_count: long (nullable = false)
 
+// Note that StatefulOperatorStateInfo is mostly generic
+// since no batch-specific values are currently available
+// only after the first streaming batch
 scala> counts.explain
 == Physical Plan ==
 *Sort [value_count#13L ASC NULLS FIRST], true, 0
@@ -86,11 +170,6 @@ Batch: 2
 // In the end...
 sq.stop
 ----
-
-The optional properties, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, OutputMode>>, and <<eventTimeWatermark, eventTimeWatermark>>, are undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold their batch-specific execution properties every time `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
-
-.StateStoreSaveExec and IncrementalExecution
-image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
 
 [[metrics]]
 .StateStoreSaveExec's SQLMetrics
@@ -235,5 +314,5 @@ Invalid output mode: [outputMode]
 * [[keyExpressions]] Key attributes (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
 * [[stateInfo]] `StatefulOperatorStateInfo`
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
-* [[eventTimeWatermark]] Event time watermark
+* [[eventTimeWatermark]] Event time watermark (as `long` number)
 * [[child]] Child physical plan (i.e. `SparkPlan`)

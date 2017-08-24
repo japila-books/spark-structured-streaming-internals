@@ -13,6 +13,14 @@ groupBy(col1: String, cols: String*): RelationalGroupedDataset
 scala> spark.version
 res0: String = 2.3.0-SNAPSHOT
 
+// Since I'm with SNAPSHOT
+// Remember to remove ~/.ivy2/cache/org.apache.spark
+// Make sure that ~/.ivy2/jars/org.apache.spark_spark-sql-kafka-0-10_2.11-2.3.0-SNAPSHOT.jar is the latest
+// Start spark-shell as follows
+/**
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
+*/
+
 val fromTopic1 = spark.
   readStream.
   format("kafka").
@@ -47,12 +55,47 @@ val counts = timedValues.
   groupBy("key").
   agg(collect_list('value) as "values", collect_list('time) as "times")
 
+// Note that StatefulOperatorStateInfo is mostly generic
+// since no batch-specific values are currently available
+// only after the first streaming batch
+scala> counts.explain
+== Physical Plan ==
+ObjectHashAggregate(keys=[key#27], functions=[collect_list(value#33, 0, 0), collect_list(time#22-T600000ms, 0, 0)])
++- Exchange hashpartitioning(key#27, 200)
+   +- StateStoreSave [key#27], StatefulOperatorStateInfo(<unknown>,25149816-1f14-4901-af13-896286a26d42,0,0), Append, 0
+      +- ObjectHashAggregate(keys=[key#27], functions=[merge_collect_list(value#33, 0, 0), merge_collect_list(time#22-T600000ms, 0, 0)])
+         +- Exchange hashpartitioning(key#27, 200)
+            +- StateStoreRestore [key#27], StatefulOperatorStateInfo(<unknown>,25149816-1f14-4901-af13-896286a26d42,0,0)
+               +- ObjectHashAggregate(keys=[key#27], functions=[merge_collect_list(value#33, 0, 0), merge_collect_list(time#22-T600000ms, 0, 0)])
+                  +- Exchange hashpartitioning(key#27, 200)
+                     +- ObjectHashAggregate(keys=[key#27], functions=[partial_collect_list(value#33, 0, 0), partial_collect_list(time#22-T600000ms, 0, 0)])
+                        +- EventTimeWatermark time#22: timestamp, interval 10 minutes
+                           +- *Project [cast(split(cast(value#1 as string), ,)[0] as timestamp) AS time#22, cast(split(cast(value#1 as string), ,)[1] as int) AS key#27, split(cast(value#1 as string), ,)[2] AS value#33]
+                              +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
+
 import org.apache.spark.sql.streaming._
 import scala.concurrent.duration._
 val sq = counts.writeStream.
   format("console").
   option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Complete).
+  trigger(Trigger.ProcessingTime(30.seconds)).
+  outputMode(OutputMode.Update).  // <-- only Update or Complete acceptable because of groupBy aggregation
   start
+
+// After StreamingQuery was started,
+// the physical plan is complete (with batch-specific values)
+scala> sq.explain
+== Physical Plan ==
+ObjectHashAggregate(keys=[key#27], functions=[collect_list(value#33, 0, 0), collect_list(time#22-T600000ms, 0, 0)])
++- Exchange hashpartitioning(key#27, 200)
+   +- StateStoreSave [key#27], StatefulOperatorStateInfo(file:/private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-635d6519-b6ca-4686-9b6b-5db0e83cfd51/state,855cec1c-25dc-4a86-ae54-c6cdd4ed02ec,0,0), Update, 0
+      +- ObjectHashAggregate(keys=[key#27], functions=[merge_collect_list(value#33, 0, 0), merge_collect_list(time#22-T600000ms, 0, 0)])
+         +- Exchange hashpartitioning(key#27, 200)
+            +- StateStoreRestore [key#27], StatefulOperatorStateInfo(file:/private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-635d6519-b6ca-4686-9b6b-5db0e83cfd51/state,855cec1c-25dc-4a86-ae54-c6cdd4ed02ec,0,0)
+               +- ObjectHashAggregate(keys=[key#27], functions=[merge_collect_list(value#33, 0, 0), merge_collect_list(time#22-T600000ms, 0, 0)])
+                  +- Exchange hashpartitioning(key#27, 200)
+                     +- ObjectHashAggregate(keys=[key#27], functions=[partial_collect_list(value#33, 0, 0), partial_collect_list(time#22-T600000ms, 0, 0)])
+                        +- EventTimeWatermark time#22: timestamp, interval 10 minutes
+                           +- *Project [cast(split(cast(value#76 as string), ,)[0] as timestamp) AS time#22, cast(split(cast(value#76 as string), ,)[1] as int) AS key#27, split(cast(value#76 as string), ,)[2] AS value#33]
+                              +- Scan ExistingRDD[key#75,value#76,topic#77,partition#78,offset#79L,timestamp#80,timestampType#81]
 ----
