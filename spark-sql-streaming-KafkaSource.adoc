@@ -200,7 +200,7 @@ root
 | `TimestampType`
 
 | `timestampType`
-| `IntegerTyp`
+| `IntegerType`
 |===
 
 [TIP]
