@@ -1,4 +1,4 @@
-== [[groupBy]] groupBy Operator -- Streaming Aggregation
+== [[groupBy]] groupBy Operator -- Streaming Aggregation (with Implicit State Logic)
 
 [source, scala]
 ----

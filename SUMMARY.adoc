@@ -26,10 +26,11 @@
 . link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators / Streaming Dataset API]
 .. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator -- Streaming Deduplication]
 .. link:spark-sql-streaming-Dataset-explain.adoc[explain Operator -- Explaining Query Plan]
-.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Streaming Aggregation]
+.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Streaming Aggregation (with Implicit State Logic)]
 
 . link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
-.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Stream Aggregation]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator -- Stateful Stream Aggregation (with Explicit State Logic)]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Stream Aggregation (with Explicit State Logic)]
 
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
 .. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
@@ -43,9 +44,10 @@
 .. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 .. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 
+. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
+
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 .. link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
-. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
@@ -105,7 +107,7 @@
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
-=== Offset Management and Checkpointing
+=== Offsets and Checkpointing
 
 . link:spark-sql-streaming-Offset.adoc[Offset]
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
@@ -117,7 +119,7 @@
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
-=== Stateful Stream Processing
+=== State in Stateful Stream Processing
 
 . link:spark-sql-streaming-GroupState.adoc[GroupState -- Contract for State Per Group For Stateful Aggregation]
 .. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
