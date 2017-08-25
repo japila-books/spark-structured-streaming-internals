@@ -33,7 +33,7 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark]
 | link:link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
 
-| `Aggregate`
+| [[Aggregate]] `Aggregate`
 a|
 
 In the order of preference:

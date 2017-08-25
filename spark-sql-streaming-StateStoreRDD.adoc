@@ -1,10 +1,17 @@
-== [[StateStoreRDD]] StateStoreRDD -- RDD for Updating State (in StateStore)
+== [[StateStoreRDD]] StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)
 
 `StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.adoc[StateStore] (and data from partitions of a <<dataRDD, child RDD>>).
 
-`StateStoreRDD` is <<creating-instance, created>> when link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[executing physical operators] that work with state (i.e. `FlatMapGroupsWithStateExec`, `StateStoreRestoreExec`, `StateStoreSaveExec`, `StreamingDeduplicateExec`).
+`StateStoreRDD` is <<creating-instance, created>> when link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[executing physical operators] that work with state:
 
-CAUTION: FIXME graffle with operator -> logical operator -> planner -> physical operator -> StateStoreRDD
+* link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[FlatMapGroupsWithStateExec] (for link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState] and link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operators)
+
+* link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec] and link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec] (for link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy], `rollup`, and `cube` operators)
+
+* link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] (for link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates] operator)
+
+.StateStoreRDD, Physical and Logical Plans, and operators
+image::images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png[align="center"]
 
 `StateStoreRDD` uses `StateStoreCoordinator` for <<getPreferredLocations, preferred locations>> for job scheduling.
 

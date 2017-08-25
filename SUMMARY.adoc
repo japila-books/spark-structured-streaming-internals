@@ -138,7 +138,7 @@
 . link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
 
-. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD -- RDD for Updating State (in StateStore)]
+. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)]
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 
