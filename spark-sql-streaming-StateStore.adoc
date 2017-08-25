@@ -37,6 +37,8 @@ trait StateStore {
 | [[get]] `get`
 |
 
+Used exclusively when `StateStoreRDD` link:spark-sql-streaming-StateStoreRDD.adoc#compute[is executed].
+
 | [[getRange]] `getRange`
 |
 

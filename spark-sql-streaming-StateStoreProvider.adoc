@@ -14,4 +14,4 @@ CAUTION: FIXME
 
 CAUTION: FIXME
 
-NOTE: `getStore` is used when `StateStore` is link:spark-sql-streaming-StateStore.adoc#get[requested for a state store] (given a `StateStoreProviderId`).
+NOTE: `getStore` is used exclusively when `StateStore` is link:spark-sql-streaming-StateStore.adoc#get[requested for a state store] (given a `StateStoreProviderId`).

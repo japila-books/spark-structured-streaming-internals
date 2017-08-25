@@ -1,4 +1,4 @@
-== [[GroupState]] GroupState -- Contract for State Per Group For Stateful Aggregation
+== [[GroupState]] GroupState -- State Per Group in Stateful Streaming Aggregation
 
 `GroupState` is the <<contract, contract>> for working with a state (of type `S`) per group for arbitrary stateful aggregation (using link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState] or link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operators).
 

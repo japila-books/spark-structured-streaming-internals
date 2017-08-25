@@ -1,6 +1,6 @@
 == [[HDFSBackedStateStore]] HDFSBackedStateStore
 
-`HDFSBackedStateStore` is a link:spark-sql-streaming-StateStore.adoc[StateStore] using HDFS-compatible file system for versioned state persistence.
+`HDFSBackedStateStore` is a link:spark-sql-streaming-StateStore.adoc[StateStore] that uses a HDFS-compatible file system for versioned state persistence.
 
 `HDFSBackedStateStore` is created exclusively when `HDFSBackedStateStoreProvider` <<getStore, is requested for a state store>> (which is when...FIXME).
 

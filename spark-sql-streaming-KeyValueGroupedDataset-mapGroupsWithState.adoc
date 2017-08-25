@@ -1,4 +1,4 @@
-== [[mapGroupsWithState]] mapGroupsWithState Operator -- Stateful Stream Aggregation (with Explicit State Logic)
+== [[mapGroupsWithState]] mapGroupsWithState Operator -- Stateful Streaming Aggregation (with Explicit State Logic)
 
 [source, scala]
 ----

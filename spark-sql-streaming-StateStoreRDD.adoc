@@ -1,8 +1,10 @@
-== [[StateStoreRDD]] StateStoreRDD
+== [[StateStoreRDD]] StateStoreRDD -- RDD for Updating State (in StateStore)
 
-`StateStoreRDD` is a specialized `RDD` for <<compute, computations>> using link:spark-sql-streaming-StateStore.adoc[StateStore].
+`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.adoc[StateStore] (and data from partitions of a <<dataRDD, child RDD>>).
 
-`StateStoreRDD` is <<creating-instance, created>> as the result of link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[executing physical operators] (i.e. `FlatMapGroupsWithStateExec`, `StateStoreRestoreExec`, `StateStoreSaveExec`, `StreamingDeduplicateExec`).
+`StateStoreRDD` is <<creating-instance, created>> when link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[executing physical operators] that work with state (i.e. `FlatMapGroupsWithStateExec`, `StateStoreRestoreExec`, `StateStoreSaveExec`, `StreamingDeduplicateExec`).
+
+CAUTION: FIXME graffle with operator -> logical operator -> planner -> physical operator -> StateStoreRDD
 
 `StateStoreRDD` uses `StateStoreCoordinator` for <<getPreferredLocations, preferred locations>> for job scheduling.
 

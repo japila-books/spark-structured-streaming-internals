@@ -1,4 +1,4 @@
-== [[flatMapGroupsWithState]] flatMapGroupsWithState Operator -- Arbitrary Stateful Stream Aggregation (with Explicit State Logic)
+== [[flatMapGroupsWithState]] flatMapGroupsWithState Operator -- Arbitrary Stateful Streaming Aggregation (with Explicit State Logic)
 
 [source, scala]
 ----

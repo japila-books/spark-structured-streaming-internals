@@ -29,8 +29,8 @@
 .. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Streaming Aggregation (with Implicit State Logic)]
 
 . link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
-.. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator -- Stateful Stream Aggregation (with Explicit State Logic)]
-.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Stream Aggregation (with Explicit State Logic)]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator -- Stateful Streaming Aggregation (with Explicit State Logic)]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Streaming Aggregation (with Explicit State Logic)]
 
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
 .. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
@@ -57,6 +57,10 @@
 .. link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent]
 .. link:spark-sql-streaming-QueryProgressEvent.adoc[QueryProgressEvent]
 .. link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvent]
+
+. link:spark-sql-streaming-webui.adoc[Web UI]
+
+. link:spark-sql-streaming-logging.adoc[Logging]
 
 == Extending Structured Streaming
 
@@ -119,25 +123,25 @@
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
-=== State in Stateful Stream Processing
+=== State in Stateful Streaming Aggregations
 
-. link:spark-sql-streaming-GroupState.adoc[GroupState -- Contract for State Per Group For Stateful Aggregation]
+. link:spark-sql-streaming-GroupState.adoc[GroupState -- State Per Group in Stateful Streaming Aggregation]
 .. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
 .. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
-.. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
+.. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
-.. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
-... link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
-.. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 
 . link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
 
+. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD -- RDD for Updating State (in StateStore)]
+. link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
+.. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
+
 == Varia
 
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
-. link:spark-sql-streaming-logging.adoc[Logging]
