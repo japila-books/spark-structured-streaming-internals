@@ -1,6 +1,12 @@
-== [[StateStore]] StateStore
+== [[StateStore]] StateStore -- Streaming Aggregation State Management
 
-`StateStore` is the <<contract, contract>> for...FIXME
+`StateStore` is the <<contract, contract>> of a versioned and fault-tolerant key-value store for persisting state of running aggregates across streaming batches (for link:spark-sql-streaming-Dataset-operators.adoc[aggregate operations] on streaming Datasets).
+
+TIP: Read the motivation and design in https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit[State Store for Streaming Aggregations].
+
+`StateStore` describes a key-value store that lives on every executor (across the nodes in a Spark cluster) for persistent keyed aggregates.
+
+`StateStore` is identified with the aggregating operator id and the partition id.
 
 [[contract]]
 [source, scala]
@@ -91,6 +97,8 @@ Used in...FIXME
 
 Used in...FIXME
 |===
+
+NOTE: `StateStore` was introduced in https://github.com/apache/spark/commit/8c826880f5eaa3221c4e9e7d3fece54e821a0b98[[SPARK-13809\][SQL\] State store for streaming aggregations].
 
 === [[coordinatorRef]] Creating StateStoreCoordinatorRef (for Executors) -- `coordinatorRef` Internal Method
 

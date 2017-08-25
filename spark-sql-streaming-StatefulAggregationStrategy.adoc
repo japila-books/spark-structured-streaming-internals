@@ -1,6 +1,6 @@
 == [[StatefulAggregationStrategy]] StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators
 
-`StatefulAggregationStrategy` is an execution planning strategy (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `EventTimeWatermark` and `Aggregate` logical operators in streaming Datasets.
+`StatefulAggregationStrategy` is an execution planning strategy (i.e. `Strategy`) that link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] uses to <<apply, plan>> `EventTimeWatermark` and `Aggregate` logical operators in streaming Datasets.
 
 [NOTE]
 ====
@@ -30,7 +30,7 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Logical Operator
 | Physical Operator
 
-| link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark]
+| [[EventTimeWatermark]] link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark]
 | link:link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
 
 | [[Aggregate]] `Aggregate`

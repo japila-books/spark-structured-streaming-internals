@@ -1,6 +1,6 @@
 == [[FlatMapGroupsWithStateStrategy]] FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator
 
-`FlatMapGroupsWithStateStrategy` is an execution planning strategy (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `FlatMapGroupsWithState` logical operators.
+`FlatMapGroupsWithStateStrategy` is an execution planning strategy (i.e. `Strategy`) that link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] uses to <<apply, plan>> `FlatMapGroupsWithState` logical operators.
 
 [[apply]]
 `FlatMapGroupsWithStateStrategy` resolves link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operator (with undefined `StatefulOperatorStateInfo`, `batchTimestampMs`, and `eventTimeWatermark`).

@@ -1,6 +1,6 @@
 == [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
 
-`StreamingRelationStrategy` is an link:spark-sql-streaming-IncrementalExecution.adoc#extraPlanningStrategies[extra execution planning strategy] (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `StreamingRelation` and `StreamingExecutionRelation` logical operators in streaming Datasets.
+`StreamingRelationStrategy` is an link:spark-sql-streaming-IncrementalExecution.adoc#extraPlanningStrategies[extra execution planning strategy] (i.e. `Strategy`) that link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] uses to <<apply, plan>> `StreamingRelation` and `StreamingExecutionRelation` logical operators in streaming Datasets.
 
 [NOTE]
 ====

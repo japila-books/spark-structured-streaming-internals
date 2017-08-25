@@ -43,6 +43,10 @@ Used...FIXME
 | `60s`
 | The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.adoc#MaintenanceTask[maintenance task].
 
+| [[spark.sql.streaming.stateStore.providerClass]] `spark.sql.streaming.stateStore.providerClass`
+| link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider]
+| (internal) The fully-qualified class name to manage state data in stateful streaming queries. This class must be a subclass of link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider], and must have a zero-arg constructor.
+
 | [[spark.sql.streaming.unsupportedOperationCheck]] `spark.sql.streaming.unsupportedOperationCheck`
 | `true`
 | (internal) When enabled (i.e. `true`), `StreamingQueryManager` link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[makes sure that the logical plan for a streaming query uses supported operations only].

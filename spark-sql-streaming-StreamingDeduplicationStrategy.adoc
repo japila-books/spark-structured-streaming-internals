@@ -1,6 +1,6 @@
 == [[StreamingDeduplicationStrategy]] StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator
 
-`StreamingDeduplicationStrategy` is an execution planning strategy (i.e. `Strategy`) that `SparkPlanner` uses to <<apply, plan>> `Deduplicate` logical operators in streaming Datasets.
+`StreamingDeduplicationStrategy` is an execution planning strategy (i.e. `Strategy`) that link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] uses to <<apply, plan>> `Deduplicate` logical operators in streaming Datasets.
 
 [NOTE]
 ====

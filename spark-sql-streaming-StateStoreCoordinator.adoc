@@ -1,8 +1,8 @@
 == [[StateStoreCoordinator]] StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD
 
-`StateStoreCoordinator` keeps track of link:spark-sql-streaming-StateStore.adoc[StateStores] loaded in Spark executors across the cluster.
+`StateStoreCoordinator` keeps track of link:spark-sql-streaming-StateStore.adoc[StateStores] loaded in Spark executors (across the nodes in a Spark cluster).
 
-NOTE: The main purpose of `StateStoreCoordinator` is for `StateStoreRDD` to link:spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations[know the location preferences for partitions].
+The main purpose of `StateStoreCoordinator` is for `StateStoreRDD` to link:spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations[get the location preferences for partitions] (based on the location of the stores).
 
 [[instances]]
 `StateStoreCoordinator` uses `instances` internal registry of link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProviders] by their ids and `ExecutorCacheTaskLocations`.
