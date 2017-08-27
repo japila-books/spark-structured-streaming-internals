@@ -34,15 +34,16 @@ scala> spark.version
 res0: String = 2.3.0-SNAPSHOT
 
 // START: Only for easier debugging
+// The state is then only for one partition
+// which should make monitoring it easier
 import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
-spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 2)
-
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
 scala> spark.sessionState.conf.numShufflePartitions
-res3: Int = 2
+res2: Int = 1
 // END: Only for easier debugging
 
 val counts = spark.
-  readStream. // <-- creates a streaming Dataset
+  readStream.
   format("rate").
   load.
   groupBy(window($"timestamp", "5 seconds") as "group").
@@ -50,17 +51,17 @@ val counts = spark.
 scala> counts.explain(true)
 == Parsed Logical Plan ==
 'Aggregate [timewindow('timestamp, 5000000, 5000000, 0) AS window#5 AS group#6], [timewindow('timestamp, 5000000, 5000000, 0) AS window#5 AS group#6, count('value) AS value_count#12]
-+- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@6be68eba,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
++- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@489cbbcb,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
 ...
 == Physical Plan ==
-*HashAggregate(keys=[window#22], functions=[count(value#1L)], output=[group#6, value_count#12L])
-+- StateStoreSave [window#22], StatefulOperatorStateInfo(<unknown>,8c7777a5-6590-490a-b50e-c191376e5474,0,0), Append, 0
-   +- *HashAggregate(keys=[window#22], functions=[merge_count(value#1L)], output=[window#22, count#24L])
-      +- StateStoreRestore [window#22], StatefulOperatorStateInfo(<unknown>,8c7777a5-6590-490a-b50e-c191376e5474,0,0)
-         +- *HashAggregate(keys=[window#22], functions=[merge_count(value#1L)], output=[window#22, count#24L])
-            +- Exchange hashpartitioning(window#22, 200)
-               +- *HashAggregate(keys=[window#22], functions=[partial_count(value#1L)], output=[window#22, count#24L])
-                  +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#22, value#1L]
+*HashAggregate(keys=[window#18], functions=[count(value#1L)], output=[group#6, value_count#12L])
++- StateStoreSave [window#18], StatefulOperatorStateInfo(<unknown>,9a6d381e-1066-4e2c-abd2-27884a6c2d16,0,0), Append, 0
+   +- *HashAggregate(keys=[window#18], functions=[merge_count(value#1L)], output=[window#18, count#20L])
+      +- StateStoreRestore [window#18], StatefulOperatorStateInfo(<unknown>,9a6d381e-1066-4e2c-abd2-27884a6c2d16,0,0)
+         +- *HashAggregate(keys=[window#18], functions=[merge_count(value#1L)], output=[window#18, count#20L])
+            +- Exchange hashpartitioning(window#18, 1)
+               +- *HashAggregate(keys=[window#18], functions=[partial_count(value#1L)], output=[window#18, count#20L])
+                  +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#18, value#1L]
                      +- *Filter isnotnull(timestamp#0)
                         +- StreamingRelation rate, [timestamp#0, value#1L]
 
@@ -81,28 +82,27 @@ import org.apache.spark.sql.execution.streaming._
 val streamingBatch = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery.lastExecution
 
 scala> println(streamingBatch.logical.numberedTreeString)
-00 Aggregate [window#13], [window#13 AS group#6, count(value#29L) AS value_count#12L]
-01 +- Filter isnotnull(timestamp#28)
-02    +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#28, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#13, timestamp#28, value#29L]
-03       +- LogicalRDD [timestamp#28, value#29L], true
+00 Aggregate [window#13], [window#13 AS group#6, count(value#25L) AS value_count#12L]
+01 +- Filter isnotnull(timestamp#24)
+02    +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#13, timestamp#24, value#25L]
+03       +- LogicalRDD [timestamp#24, value#25L], true
 
 // Note the number of partitions
-// 200 is the default
+// 200 is the default, but we have changed it above
 scala> println(streamingBatch.toRdd.toDebugString)
-(200) MapPartitionsRDD[20] at toRdd at <console>:40 []
-  |   StateStoreRDD[19] at toRdd at <console>:40 []
-  |   MapPartitionsRDD[18] at toRdd at <console>:40 []
-  |   StateStoreRDD[17] at toRdd at <console>:40 []
-  |   MapPartitionsRDD[16] at toRdd at <console>:40 []
-  |   ShuffledRowRDD[4] at start at <console>:35 []
-  +-(0) MapPartitionsRDD[3] at start at <console>:35 []
-     |  MapPartitionsRDD[2] at start at <console>:35 []
-     |  MapPartitionsRDD[1] at start at <console>:35 []
-     |  EmptyRDD[0] at start at <console>:35 []
+(1) MapPartitionsRDD[20] at toRdd at <console>:38 []
+ |  StateStoreRDD[19] at toRdd at <console>:38 []
+ |  MapPartitionsRDD[18] at toRdd at <console>:38 []
+ |  StateStoreRDD[17] at toRdd at <console>:38 []
+ |  MapPartitionsRDD[16] at toRdd at <console>:38 []
+ |  ShuffledRowRDD[4] at start at <console>:36 []
+ +-(0) MapPartitionsRDD[3] at start at <console>:36 []
+    |  MapPartitionsRDD[2] at start at <console>:36 []
+    |  MapPartitionsRDD[1] at start at <console>:36 []
+    |  EmptyRDD[0] at start at <console>:36 []
 
-// Unless you've changed the Spark property as described above
 scala> spark.sessionState.conf.numShufflePartitions
-res2: Int = 200
+res6: Int = 1
 ----
 
 .StateStoreSaveExec and StateStoreRDD (after streamingBatch.toRdd.count)
@@ -119,12 +119,22 @@ NOTE: `StateStoreSaveExec` <<doExecute, works>> differently per output mode.
 
 [source, scala]
 ----
-// Connect to the socket using "nc -lk 9999"
+// START: Only for easier debugging
+// The state is then only for one partition
+// which should make monitoring it easier
+import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
+scala> spark.sessionState.conf.numShufflePartitions
+res0: Int = 1
+// END: Only for easier debugging
+
+// Read datasets from a Kafka topic
+// ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
 val valuesPerGroup = spark.
   readStream.
-  format("socket").
-  option("host", "localhost").
-  option("port", 9999).
+  format("kafka").
+  option("subscribe", "topic1").
+  option("kafka.bootstrap.servers", "localhost:9092").
   load.
   withColumn("tokens", split('value, ",")).
   withColumn("group", 'tokens(0)).
@@ -139,21 +149,22 @@ val valuesPerGroup = spark.
 // only after the first streaming batch
 scala> valuesPerGroup.explain
 == Physical Plan ==
-*Sort [group#7 ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(group#7 ASC NULLS FIRST, 200)
-   +- ObjectHashAggregate(keys=[group#7], functions=[collect_list(value#12, 0, 0)])
-      +- Exchange hashpartitioning(group#7, 200)
-         +- StateStoreSave [group#7], OperatorStateId(<unknown>,0,0), Append, 0
-            +- ObjectHashAggregate(keys=[group#7], functions=[merge_collect_list(value#12, 0, 0)])
-               +- Exchange hashpartitioning(group#7, 200)
-                  +- StateStoreRestore [group#7], OperatorStateId(<unknown>,0,0)
-                     +- ObjectHashAggregate(keys=[group#7], functions=[merge_collect_list(value#12, 0, 0)])
-                        +- Exchange hashpartitioning(group#7, 200)
-                           +- ObjectHashAggregate(keys=[group#7], functions=[partial_collect_list(value#12, 0, 0)])
-                              +- *Project [split(value#0, ,)[0] AS group#7, cast(split(value#0, ,)[1] as int) AS value#12]
-                                 +- StreamingRelation textSocket, [value#0]
+*Sort [group#177 ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(group#177 ASC NULLS FIRST, 1)
+   +- ObjectHashAggregate(keys=[group#177], functions=[collect_list(value#188, 0, 0)])
+      +- Exchange hashpartitioning(group#177, 1)
+         +- StateStoreSave [group#177], StatefulOperatorStateInfo(<unknown>,128a7226-931f-41b5-a52f-10d47c5c5571,0,0), Append, 0
+            +- ObjectHashAggregate(keys=[group#177], functions=[merge_collect_list(value#188, 0, 0)])
+               +- Exchange hashpartitioning(group#177, 1)
+                  +- StateStoreRestore [group#177], StatefulOperatorStateInfo(<unknown>,128a7226-931f-41b5-a52f-10d47c5c5571,0,0)
+                     +- ObjectHashAggregate(keys=[group#177], functions=[merge_collect_list(value#188, 0, 0)])
+                        +- Exchange hashpartitioning(group#177, 1)
+                           +- ObjectHashAggregate(keys=[group#177], functions=[partial_collect_list(value#188, 0, 0)])
+                              +- *Project [split(cast(value#153 as string), ,)[0] AS group#177, cast(split(cast(value#153 as string), ,)[1] as int) AS value#188]
+                                 +- StreamingRelation kafka, [key#152, value#153, topic#154, partition#155, offset#156L, timestamp#157, timestampType#158]
 
 // Start the query and hence StateStoreSaveExec
+// Use Complete output mode
 import scala.concurrent.duration._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val sq = valuesPerGroup.
@@ -170,20 +181,38 @@ Batch: 0
 +-----+------+
 |group|values|
 +-----+------+
++-----+------+
+...
+17/08/27 22:47:48 INFO StreamExecution: Streaming query made progress: {
+...
+  "stateOperators" : [ {
+    "numRowsTotal" : 0,
+    "numRowsUpdated" : 0,
+    "memoryUsedBytes" : 12198
+  } ],
+...
+17/08/27 22:47:48 DEBUG StreamExecution: batch 0 committed
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+------+
+|group|values|
++-----+------+
 |0    |[1]   |
 +-----+------+
-
 ...
-17/08/26 21:21:03 INFO StreamExecution: Streaming query made progress: {
+17/08/27 22:48:02 INFO StreamExecution: Streaming query made progress: {
 ...
   "stateOperators" : [ {
     "numRowsTotal" : 1,
-    "numRowsUpdated" : 1
+    "numRowsUpdated" : 1,
+    "memoryUsedBytes" : 324
   } ],
 ...
 
 -------------------------------------------
-Batch: 1
+Batch: 2
 -------------------------------------------
 +-----+------+
 |group|values|
@@ -192,11 +221,32 @@ Batch: 1
 +-----+------+
 
 ...
-17/08/26 21:23:21 INFO StreamExecution: Streaming query made progress: {
+17/08/27 22:55:00 INFO StreamExecution: Streaming query made progress: {
 ...
   "stateOperators" : [ {
     "numRowsTotal" : 1,
-    "numRowsUpdated" : 1
+    "numRowsUpdated" : 1,
+    "memoryUsedBytes" : 324
+  } ],
+...
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+------+
+|group|values|
++-----+------+
+|0    |[2, 1]|
+|1    |[1]   |
++-----+------+
+
+...
+17/08/27 22:57:10 INFO StreamExecution: Streaming query made progress: {
+...
+  "stateOperators" : [ {
+    "numRowsTotal" : 2,
+    "numRowsUpdated" : 1,
+    "memoryUsedBytes" : 572
   } ],
 ...
 
