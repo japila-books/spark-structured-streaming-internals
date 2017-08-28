@@ -149,19 +149,19 @@ val valuesPerGroup = spark.
 // only after the first streaming batch
 scala> valuesPerGroup.explain
 == Physical Plan ==
-*Sort [group#177 ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(group#177 ASC NULLS FIRST, 1)
-   +- ObjectHashAggregate(keys=[group#177], functions=[collect_list(value#188, 0, 0)])
-      +- Exchange hashpartitioning(group#177, 1)
-         +- StateStoreSave [group#177], StatefulOperatorStateInfo(<unknown>,128a7226-931f-41b5-a52f-10d47c5c5571,0,0), Append, 0
-            +- ObjectHashAggregate(keys=[group#177], functions=[merge_collect_list(value#188, 0, 0)])
-               +- Exchange hashpartitioning(group#177, 1)
-                  +- StateStoreRestore [group#177], StatefulOperatorStateInfo(<unknown>,128a7226-931f-41b5-a52f-10d47c5c5571,0,0)
-                     +- ObjectHashAggregate(keys=[group#177], functions=[merge_collect_list(value#188, 0, 0)])
-                        +- Exchange hashpartitioning(group#177, 1)
-                           +- ObjectHashAggregate(keys=[group#177], functions=[partial_collect_list(value#188, 0, 0)])
-                              +- *Project [split(cast(value#153 as string), ,)[0] AS group#177, cast(split(cast(value#153 as string), ,)[1] as int) AS value#188]
-                                 +- StreamingRelation kafka, [key#152, value#153, topic#154, partition#155, offset#156L, timestamp#157, timestampType#158]
+*Sort [group#25 ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(group#25 ASC NULLS FIRST, 1)
+   +- ObjectHashAggregate(keys=[group#25], functions=[collect_list(value#36, 0, 0)])
+      +- Exchange hashpartitioning(group#25, 1)
+         +- StateStoreSave [group#25], StatefulOperatorStateInfo(<unknown>,e554670a-0866-4c62-b2c0-4c98b5f22481,0,0), Append, 0
+            +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
+               +- Exchange hashpartitioning(group#25, 1)
+                  +- StateStoreRestore [group#25], StatefulOperatorStateInfo(<unknown>,e554670a-0866-4c62-b2c0-4c98b5f22481,0,0)
+                     +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
+                        +- Exchange hashpartitioning(group#25, 1)
+                           +- ObjectHashAggregate(keys=[group#25], functions=[partial_collect_list(value#36, 0, 0)])
+                              +- *Project [split(cast(value#1 as string), ,)[0] AS group#25, cast(split(cast(value#1 as string), ,)[1] as int) AS value#36]
+                                 +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
 
 // Start the query and hence StateStoreSaveExec
 // Use Complete output mode
@@ -256,30 +256,40 @@ sq.stop
 
 [[metrics]]
 .StateStoreSaveExec's SQLMetrics
-[cols="1,2",options="header",width="100%"]
+[cols="1,1,2",options="header",width="100%"]
 |===
-| Name
+| Key
+| Name (in UI)
 | Description
 
 | [[allUpdatesTimeMs]] `allUpdatesTimeMs`
 |
+|
 
 | [[allRemovalsTimeMs]] `allRemovalsTimeMs`
+|
 |
 
 | [[commitTimeMs]] `commitTimeMs`
 |
+|
 
 | [[numOutputRows]] `numOutputRows`
 |
+|
 
 | [[numTotalStateRows]] `numTotalStateRows`
-| Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
+| number of total state rows
+| Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store]
+
+Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal`).
 
 | [[numUpdatedStateRows]] `numUpdatedStateRows`
 |
+|
 
 | [[stateMemory]] `stateMemory`
+|
 | Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 |===
 
