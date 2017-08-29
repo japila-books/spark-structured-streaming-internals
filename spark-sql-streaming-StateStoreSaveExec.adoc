@@ -263,19 +263,19 @@ sq.stop
 | Description
 
 | [[allUpdatesTimeMs]] `allUpdatesTimeMs`
-|
+| total time to update rows
 |
 
 | [[allRemovalsTimeMs]] `allRemovalsTimeMs`
-|
+| total time to remove rows
 |
 
 | [[commitTimeMs]] `commitTimeMs`
-|
+| time to commit changes
 |
 
 | [[numOutputRows]] `numOutputRows`
-|
+| number of output rows
 |
 
 | [[numTotalStateRows]] `numTotalStateRows`
@@ -285,11 +285,11 @@ sq.stop
 Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal`).
 
 | [[numUpdatedStateRows]] `numUpdatedStateRows`
-|
+| number of updated state rows
 |
 
 | [[stateMemory]] `stateMemory`
-|
+| memory used by state
 | Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 |===
 
@@ -354,7 +354,17 @@ If no row was found, `getNext` also marks the iterator as finished.
 | [[doExecute-Complete]] `Complete`
 a|
 
-link:spark-sql-streaming-StateStore.adoc#put[Stores all rows in the state store] and link:spark-sql-streaming-StateStore.adoc#commit[commits them] (as state updates) afterwards.
+1. Takes all `UnsafeRow` rows (from the parent iterator)
+
+1. link:spark-sql-streaming-StateStore.adoc#put[Stores the rows by key in the state store] eagerly (i.e. all rows that are available in the parent iterator before proceeding)
+
+1. link:spark-sql-streaming-StateStore.adoc#commit[Commits the state updates]
+
+1. In the end, `doExecute` link:spark-sql-streaming-StateStore.adoc#iterator[reads the key-row pairs from the state store] and passes the rows along (i.e. to the following physical operator)
+
+The number of keys stored in the state store is recorded in <<numUpdatedStateRows, numUpdatedStateRows>> metric.
+
+NOTE: In `Complete` output mode <<numOutputRows, numOutputRows>> metric is exactly <<numTotalStateRows, numTotalStateRows>> metric.
 
 ---
 
