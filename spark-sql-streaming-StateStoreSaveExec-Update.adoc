@@ -1,0 +1,3 @@
+== Demo: StateStoreSaveExec in Update Output Mode
+
+CAUTION: FIXME Example of Update with StateStoreSaveExec (and optional watermark)

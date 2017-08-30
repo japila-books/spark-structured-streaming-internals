@@ -1,0 +1,3 @@
+== Demo: StateStoreSaveExec in Append Output Mode
+
+CAUTION: FIXME Example of Append with StateStoreSaveExec (and mandatory watermark)

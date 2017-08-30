@@ -115,136 +115,7 @@ The number of partitions of link:spark-sql-streaming-StateStoreOps.adoc#mapParti
 There will be that many `StateStores` as there are partitions in `StateStoreRDD`.
 ====
 
-NOTE: `StateStoreSaveExec` <<doExecute, works>> differently per output mode.
-
-[source, scala]
-----
-// START: Only for easier debugging
-// The state is then only for one partition
-// which should make monitoring it easier
-import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
-spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
-scala> spark.sessionState.conf.numShufflePartitions
-res1: Int = 1
-// END: Only for easier debugging
-
-// Read datasets from a Kafka topic
-// ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
-val valuesPerGroup = spark.
-  readStream.
-  format("kafka").
-  option("subscribe", "topic1").
-  option("kafka.bootstrap.servers", "localhost:9092").
-  load.
-  withColumn("tokens", split('value, ",")).
-  withColumn("group", 'tokens(0)).
-  withColumn("value", 'tokens(1) cast "int").
-  select("group", "value").
-  groupBy($"group").
-  agg(collect_list("value") as "values").
-  orderBy($"group".asc)
-
-// valuesPerGroup is a streaming Dataset with sources (just one in this case)
-// so it knows nothing about output mode or watermark yet
-// That's why StatefulOperatorStateInfo is generic
-// and no batch-specific values are printed out
-// That will be available after the first streaming batch
-// Use sq.explain to know the runtime-specific values
-scala> valuesPerGroup.explain
-== Physical Plan ==
-*Sort [group#25 ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(group#25 ASC NULLS FIRST, 1)
-   +- ObjectHashAggregate(keys=[group#25], functions=[collect_list(value#36, 0, 0)])
-      +- Exchange hashpartitioning(group#25, 1)
-         +- StateStoreSave [group#25], StatefulOperatorStateInfo(<unknown>,899f0fd1-b202-45cd-9ebd-09101ca90fa8,0,0), Append, 0
-            +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
-               +- Exchange hashpartitioning(group#25, 1)
-                  +- StateStoreRestore [group#25], StatefulOperatorStateInfo(<unknown>,899f0fd1-b202-45cd-9ebd-09101ca90fa8,0,0)
-                     +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
-                        +- Exchange hashpartitioning(group#25, 1)
-                           +- ObjectHashAggregate(keys=[group#25], functions=[partial_collect_list(value#36, 0, 0)])
-                              +- *Project [split(cast(value#1 as string), ,)[0] AS group#25, cast(split(cast(value#1 as string), ,)[1] as int) AS value#36]
-                                 +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
-
-// Start the query and hence StateStoreSaveExec
-// Use Complete output mode
-import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val sq = valuesPerGroup.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Complete).
-  start
-
--------------------------------------------
-Batch: 0
--------------------------------------------
-+-----+------+
-|group|values|
-+-----+------+
-+-----+------+
-
-// there's only 1 stateful operator and hence 0 for the index in stateOperators
-scala> println(sq.lastProgress.stateOperators(0).prettyJson)
-{
-  "numRowsTotal" : 0,
-  "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 60
-}
-
-// publish 1 new keys and values in a single streaming batch
-// 0,1
-
--------------------------------------------
-Batch: 1
--------------------------------------------
-+-----+------+
-|group|values|
-+-----+------+
-|0    |[1]   |
-+-----+------+
-
-// it's Complete output mode so numRowsTotal is the number of keys in the state store
-// no keys were available earlier (it's just started!) and so numRowsUpdated is 0
-scala> println(sq.lastProgress.stateOperators(0).prettyJson)
-{
-  "numRowsTotal" : 1,
-  "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 324
-}
-
-// publish new key and old key in a single streaming batch
-// new keys
-// 1,1
-// updates to already-stored keys
-// 0,2
-
--------------------------------------------
-Batch: 2
--------------------------------------------
-+-----+------+
-|group|values|
-+-----+------+
-|0    |[2, 1]|
-|1    |[1]   |
-+-----+------+
-
-// it's Complete output mode so numRowsTotal is the number of keys in the state store
-// no keys were available earlier and so numRowsUpdated is...0?!
-// Think it's a BUG as it should've been 1 (for the row 0,2)
-// 8/30 Sent out a question to the Spark user mailing list
-scala> println(sq.lastProgress.stateOperators(0).prettyJson)
-{
-  "numRowsTotal" : 2,
-  "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 572
-}
-
-// In the end...
-sq.stop
-----
+NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
 
 [[metrics]]
 .StateStoreSaveExec's SQLMetrics
@@ -327,9 +198,11 @@ NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at th
 | [[doExecute-Append]] `Append`
 a|
 
+NOTE: `Append` is the link:spark-sql-streaming-OutputMode.adoc#default-output-mode[default output mode] when unspecified.
+
 Filters out all late aggregate rows (per link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermark]) and link:spark-sql-streaming-StateStore.adoc#put[stores all the "young" rows in the state store] (eagerly, i.e. before returning an iterator). Returns an iterator that link:spark-sql-streaming-StateStore.adoc#remove[removes the late rows from the state store]. In the end, link:spark-sql-streaming-StateStore.adoc#commit[commits the state updates].
 
-CAUTION: FIXME Example of Append with StateStoreSaveExec (and mandatory watermark)
+TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Append.adoc[Demo: StateStoreSaveExec in Append Output Mode] for an example of `StateStoreSaveExec` in `Append` output mode.
 
 ---
 
@@ -345,7 +218,7 @@ If no row was found, `getNext` also marks the iterator as finished.
 
 * In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, link:spark-sql-streaming-StateStore.adoc#commit[commits the updates] to `StateStore` followed by recording the time in <<commitTimeMs, commitTimeMs>> metric and link:spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics[recording StateStore metrics].
 
-| [[doExecute-Complete]] `Complete`
+| [[doExecute-Complete]] link:spark-sql-streaming-OutputMode.adoc#Complete[Complete]
 a|
 
 1. Takes all `UnsafeRow` rows (from the parent iterator)
@@ -359,6 +232,8 @@ a|
 The number of keys stored in the state store is recorded in <<numUpdatedStateRows, numUpdatedStateRows>> metric.
 
 NOTE: In `Complete` output mode <<numOutputRows, numOutputRows>> metric is exactly <<numTotalStateRows, numTotalStateRows>> metric.
+
+TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec in Complete Output Mode] for an example of `StateStoreSaveExec` in `Complete` output mode.
 
 ---
 
@@ -379,7 +254,7 @@ a|
 
 Returns an iterator that filters out late aggregate rows (per link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermark] if defined) and link:spark-sql-streaming-StateStore.adoc#put[stores the "young" rows in the state store] (one by one, i.e. every `next`). With no more rows available, that link:spark-sql-streaming-StateStore.adoc#remove[removes the late rows from the state store] (all at once) and link:spark-sql-streaming-StateStore.adoc#commit[commits the state updates].
 
-CAUTION: FIXME Example of Update with StateStoreSaveExec (and optional watermark)
+TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec in Update Output Mode] for an example of `StateStoreSaveExec` in `Update` output mode.
 
 ---
 

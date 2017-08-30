@@ -1,6 +1,6 @@
 == [[OutputMode]] OutputMode
 
-*Output mode* (`OutputMode`) describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in link:spark-sql-streaming-Source.adoc[streaming data sources].
+*Output mode* (`OutputMode`) describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in link:spark-sql-streaming-Source.adoc[streaming data sources] (in a trigger / streaming batch).
 
 Output mode of a streaming query is specified using link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[outputMode] method of `DataStreamWriter`.
 
@@ -23,8 +23,6 @@ val consoleOutput = inputStream.
   start
 ----
 
-NOTE: <<Append, Append>> output mode is the link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[default output mode].
-
 [[available-output-modes]]
 .Available Output Modes
 [cols="1,1,2",options="header",width="100%"]
@@ -35,11 +33,14 @@ NOTE: <<Append, Append>> output mode is the link:spark-sql-streaming-DataStreamW
 
 | [[Append]] `Append`
 | `append`
-| link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes new rows only
+a| link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes new rows only
 
 Required for datasets with `FileFormat` format (to create link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink])
 
 Used for link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operator
+
+[[default-output-mode]]
+NOTE: <<Append, Append>> output mode is the link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[default output mode].
 
 | [[Complete]] `Complete`
 | `complete`

@@ -20,4 +20,4 @@ checkForStreaming(plan: LogicalPlan, outputMode: OutputMode): Unit
 
 `checkForStreaming`...FIXME
 
-NOTE: `checkForStreaming` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[create a StreamingQueryWrapper] (for executing a streaming query), but only when the internal link:spark-sql-streaming-properties.adoc#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
+NOTE: `checkForStreaming` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[create a StreamingQueryWrapper] (for starting a streaming query), but only when the internal link:spark-sql-streaming-properties.adoc#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
