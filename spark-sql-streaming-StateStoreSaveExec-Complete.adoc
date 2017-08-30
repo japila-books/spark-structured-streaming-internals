@@ -15,6 +15,7 @@ res1: Int = 1
 
 // Read datasets from a Kafka topic
 // ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
+// Streaming aggregation using groupBy operator is required to have StateStoreSaveExec operator
 val valuesPerGroup = spark.
   readStream.
   format("kafka").
@@ -29,7 +30,7 @@ val valuesPerGroup = spark.
   agg(collect_list("value") as "values").
   orderBy($"group".asc)
 
-// valuesPerGroup is a streaming Dataset with sources (just one in this case)
+// valuesPerGroup is a streaming Dataset with just one source
 // so it knows nothing about output mode or watermark yet
 // That's why StatefulOperatorStateInfo is generic
 // and no batch-specific values are printed out

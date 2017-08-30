@@ -1,3 +1,80 @@
 == Demo: StateStoreSaveExec in Append Output Mode
 
+The following example is to demonstrate the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
+
 CAUTION: FIXME Example of Append with StateStoreSaveExec (and mandatory watermark)
+
+[source, scala]
+----
+// START: Only for easier debugging
+// The state is then only for one partition
+// which should make monitoring it easier
+import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
+scala> spark.sessionState.conf.numShufflePartitions
+res1: Int = 1
+// END: Only for easier debugging
+
+// Read datasets from a Kafka topic
+// ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
+// Streaming aggregation using groupBy operator is required to have StateStoreSaveExec operator
+// Since the demo uses Append output mode
+// it has to define a streaming event time watermark using withWatermark operator
+// UnsupportedOperationChecker makes sure that the requirement holds
+val valuesPerGroup = spark.
+  readStream.
+  format("kafka").
+  option("subscribe", "topic1").
+  option("kafka.bootstrap.servers", "localhost:9092").
+  load.
+  withColumn("tokens", split('value, ",")).
+  withColumn("group", 'tokens(0)).
+  withColumn("value", 'tokens(1) cast "int").
+  withColumn("event_time", (current_timestamp cast "int") - 'value cast "timestamp"). // <-- define event_time
+  withWatermark(eventTime = "event_time", delayThreshold = "10 seconds"). // <-- define watermark  select(to_date($"event_time") as "event_time", $"group", $"value").
+  groupBy($"group").
+  agg(collect_list("value") as "values", collect_list("event_time") as "event_times").
+  orderBy($"group".asc)
+
+// valuesPerGroup is a streaming Dataset with just one source
+// so it knows nothing about output mode or watermark yet
+// That's why StatefulOperatorStateInfo is generic
+// and no batch-specific values are printed out
+// That will be available after the first streaming batch
+// Use sq.explain to know the runtime-specific values
+scala> valuesPerGroup.explain
+== Physical Plan ==
+*Sort [group#25 ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(group#25 ASC NULLS FIRST, 1)
+   +- ObjectHashAggregate(keys=[group#25], functions=[collect_list(value#36, 0, 0)])
+      +- Exchange hashpartitioning(group#25, 1)
+         +- StateStoreSave [group#25], StatefulOperatorStateInfo(<unknown>,827317ef-0f7d-40c3-881e-ca57708a5ddd,0,0), Append, 0
+            +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
+               +- Exchange hashpartitioning(group#25, 1)
+                  +- StateStoreRestore [group#25], StatefulOperatorStateInfo(<unknown>,827317ef-0f7d-40c3-881e-ca57708a5ddd,0,0)
+                     +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
+                        +- Exchange hashpartitioning(group#25, 1)
+                           +- ObjectHashAggregate(keys=[group#25], functions=[partial_collect_list(value#36, 0, 0)])
+                              +- *Project [split(cast(value#1 as string), ,)[0] AS group#25, cast(split(cast(value#1 as string), ,)[1] as int) AS value#36]
+                                 +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
+
+// Start the query and hence StateStoreSaveExec
+// Use Append output mode
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val sq = valuesPerGroup.
+  writeStream.
+  format("console").
+  option("truncate", false).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  outputMode(OutputMode.Append).
+  start
+
+// FIXME
+// Leads to org.apache.spark.sql.AnalysisException: Append output mode not supported when there are streaming aggregations on streaming DataFrames/DataSets without watermark;;
+
+...
+
+// In the end...
+sq.stop
+----

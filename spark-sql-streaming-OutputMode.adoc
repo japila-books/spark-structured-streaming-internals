@@ -33,14 +33,14 @@ val consoleOutput = inputStream.
 
 | [[Append]] `Append`
 | `append`
-a| link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes new rows only
+a|
+
+[[default-output-mode]]
+link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes new rows only
 
 Required for datasets with `FileFormat` format (to create link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink])
 
 Used for link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operator
-
-[[default-output-mode]]
-NOTE: <<Append, Append>> output mode is the link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[default output mode].
 
 | [[Complete]] `Complete`
 | `complete`

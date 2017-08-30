@@ -46,7 +46,13 @@ groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
 ----
 
 | [[withWatermark]] <<withWatermark-indepth, withWatermark>>
-| Defines a streaming watermark on a event time column
+a| Defines a streaming watermark on a event time column
+
+[source, scala]
+----
+withWatermark(eventTime: String, delayThreshold: String): Dataset[T]
+----
+
 |===
 
 [source, scala]
