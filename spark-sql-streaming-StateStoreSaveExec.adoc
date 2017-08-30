@@ -125,7 +125,7 @@ NOTE: `StateStoreSaveExec` <<doExecute, works>> differently per output mode.
 import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
 spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
 scala> spark.sessionState.conf.numShufflePartitions
-res0: Int = 1
+res1: Int = 1
 // END: Only for easier debugging
 
 // Read datasets from a Kafka topic
@@ -144,19 +144,22 @@ val valuesPerGroup = spark.
   agg(collect_list("value") as "values").
   orderBy($"group".asc)
 
-// Note that StatefulOperatorStateInfo is mostly generic
-// since no batch-specific values are currently available
-// only after the first streaming batch
+// valuesPerGroup is a streaming Dataset with sources (just one in this case)
+// so it knows nothing about output mode or watermark yet
+// That's why StatefulOperatorStateInfo is generic
+// and no batch-specific values are printed out
+// That will be available after the first streaming batch
+// Use sq.explain to know the runtime-specific values
 scala> valuesPerGroup.explain
 == Physical Plan ==
 *Sort [group#25 ASC NULLS FIRST], true, 0
 +- Exchange rangepartitioning(group#25 ASC NULLS FIRST, 1)
    +- ObjectHashAggregate(keys=[group#25], functions=[collect_list(value#36, 0, 0)])
       +- Exchange hashpartitioning(group#25, 1)
-         +- StateStoreSave [group#25], StatefulOperatorStateInfo(<unknown>,e554670a-0866-4c62-b2c0-4c98b5f22481,0,0), Append, 0
+         +- StateStoreSave [group#25], StatefulOperatorStateInfo(<unknown>,899f0fd1-b202-45cd-9ebd-09101ca90fa8,0,0), Append, 0
             +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
                +- Exchange hashpartitioning(group#25, 1)
-                  +- StateStoreRestore [group#25], StatefulOperatorStateInfo(<unknown>,e554670a-0866-4c62-b2c0-4c98b5f22481,0,0)
+                  +- StateStoreRestore [group#25], StatefulOperatorStateInfo(<unknown>,899f0fd1-b202-45cd-9ebd-09101ca90fa8,0,0)
                      +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
                         +- Exchange hashpartitioning(group#25, 1)
                            +- ObjectHashAggregate(keys=[group#25], functions=[partial_collect_list(value#36, 0, 0)])
@@ -182,16 +185,17 @@ Batch: 0
 |group|values|
 +-----+------+
 +-----+------+
-...
-17/08/27 22:47:48 INFO StreamExecution: Streaming query made progress: {
-...
-  "stateOperators" : [ {
-    "numRowsTotal" : 0,
-    "numRowsUpdated" : 0,
-    "memoryUsedBytes" : 12198
-  } ],
-...
-17/08/27 22:47:48 DEBUG StreamExecution: batch 0 committed
+
+// there's only 1 stateful operator and hence 0 for the index in stateOperators
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 0,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 60
+}
+
+// publish 1 new keys and values in a single streaming batch
+// 0,1
 
 -------------------------------------------
 Batch: 1
@@ -201,15 +205,21 @@ Batch: 1
 +-----+------+
 |0    |[1]   |
 +-----+------+
-...
-17/08/27 22:48:02 INFO StreamExecution: Streaming query made progress: {
-...
-  "stateOperators" : [ {
-    "numRowsTotal" : 1,
-    "numRowsUpdated" : 1,
-    "memoryUsedBytes" : 324
-  } ],
-...
+
+// it's Complete output mode so numRowsTotal is the number of keys in the state store
+// no keys were available earlier (it's just started!) and so numRowsUpdated is 0
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 1,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 324
+}
+
+// publish new key and old key in a single streaming batch
+// new keys
+// 1,1
+// updates to already-stored keys
+// 0,2
 
 -------------------------------------------
 Batch: 2
@@ -218,37 +228,19 @@ Batch: 2
 |group|values|
 +-----+------+
 |0    |[2, 1]|
-+-----+------+
-
-...
-17/08/27 22:55:00 INFO StreamExecution: Streaming query made progress: {
-...
-  "stateOperators" : [ {
-    "numRowsTotal" : 1,
-    "numRowsUpdated" : 1,
-    "memoryUsedBytes" : 324
-  } ],
-...
-
--------------------------------------------
-Batch: 3
--------------------------------------------
-+-----+------+
-|group|values|
-+-----+------+
-|0    |[2, 1]|
 |1    |[1]   |
 +-----+------+
 
-...
-17/08/27 22:57:10 INFO StreamExecution: Streaming query made progress: {
-...
-  "stateOperators" : [ {
-    "numRowsTotal" : 2,
-    "numRowsUpdated" : 1,
-    "memoryUsedBytes" : 572
-  } ],
-...
+// it's Complete output mode so numRowsTotal is the number of keys in the state store
+// no keys were available earlier and so numRowsUpdated is...0?!
+// Think it's a BUG as it should've been 1 (for the row 0,2)
+// 8/30 Sent out a question to the Spark user mailing list
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 2,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 572
+}
 
 // In the end...
 sq.stop
@@ -282,11 +274,13 @@ sq.stop
 | number of total state rows
 | Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store]
 
-Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal`).
+Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal` for ``0``th operator).
 
 | [[numUpdatedStateRows]] `numUpdatedStateRows`
 | number of updated state rows
-|
+| Number of the state keys that link:spark-sql-streaming-StateStore.adoc#put[were stored as updates in the state store] (given keys in the result rows of the upstream physical operator)
+
+Corresponds to `numRowsUpdated` in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsUpdated` for ``0``th operator).
 
 | [[stateMemory]] `stateMemory`
 | memory used by state
