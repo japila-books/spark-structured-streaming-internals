@@ -2,7 +2,15 @@
 
 The following example is to demonstrate the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
 
-CAUTION: FIXME Example of Append with StateStoreSaveExec (and mandatory watermark)
+NOTE: Append output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator) on the event time column that is used for aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
+
+CAUTION: FIXME UnsupportedOperationChecker makes sure that the requirement holds
+
+NOTE: link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator has to be used before the aggregation (for the watermark to be used).
+
+NOTE: Sorting is not supported on streaming DataFrames/Datasets, unless it is on an aggregated Dataset in `Complete` output mode.
+
+CAUTION: FIXME Review UnsupportedOperationChecker.scala:297
 
 [source, scala]
 ----
@@ -21,48 +29,48 @@ res1: Int = 1
 // Since the demo uses Append output mode
 // it has to define a streaming event time watermark using withWatermark operator
 // UnsupportedOperationChecker makes sure that the requirement holds
-val valuesPerGroup = spark.
+val valuesPerDevice = spark.
   readStream.
   format("kafka").
   option("subscribe", "topic1").
   option("kafka.bootstrap.servers", "localhost:9092").
   load.
   withColumn("tokens", split('value, ",")).
-  withColumn("group", 'tokens(0)).
+  withColumn("device", 'tokens(0)).
   withColumn("value", 'tokens(1) cast "int").
   withColumn("event_time", (current_timestamp cast "int") - 'value cast "timestamp"). // <-- define event_time
-  withWatermark(eventTime = "event_time", delayThreshold = "10 seconds"). // <-- define watermark  select(to_date($"event_time") as "event_time", $"group", $"value").
-  groupBy($"group").
-  agg(collect_list("value") as "values", collect_list("event_time") as "event_times").
-  orderBy($"group".asc)
+  withWatermark(eventTime = "event_time", delayThreshold = "10 seconds"). // <-- define watermark (before groupBy) select(to_date($"event_time") as "event_time", $"device", $"value").
+  groupBy($"event_time"). // <-- use event_time for grouping
+  agg(collect_list("value") as "values", collect_list("device") as "devices")
 
-// valuesPerGroup is a streaming Dataset with just one source
-// so it knows nothing about output mode or watermark yet
-// That's why StatefulOperatorStateInfo is generic
+// valuesPerDevice is a streaming Dataset with just one Kafka source
+// so it knows nothing about output mode or the current streaming watermark yet
+// - Output mode is defined on writing side
+// - streaming watermark is read from rows at runtime
+// That's why StatefulOperatorStateInfo is generic (and uses the default Append for output mode)
 // and no batch-specific values are printed out
-// That will be available after the first streaming batch
-// Use sq.explain to know the runtime-specific values
-scala> valuesPerGroup.explain
+// They will be available right after the first streaming batch
+// Use explain on a streaming query to know the runtime-specific values
+scala> valuesPerDevice.explain
 == Physical Plan ==
-*Sort [group#25 ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(group#25 ASC NULLS FIRST, 1)
-   +- ObjectHashAggregate(keys=[group#25], functions=[collect_list(value#36, 0, 0)])
-      +- Exchange hashpartitioning(group#25, 1)
-         +- StateStoreSave [group#25], StatefulOperatorStateInfo(<unknown>,827317ef-0f7d-40c3-881e-ca57708a5ddd,0,0), Append, 0
-            +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
-               +- Exchange hashpartitioning(group#25, 1)
-                  +- StateStoreRestore [group#25], StatefulOperatorStateInfo(<unknown>,827317ef-0f7d-40c3-881e-ca57708a5ddd,0,0)
-                     +- ObjectHashAggregate(keys=[group#25], functions=[merge_collect_list(value#36, 0, 0)])
-                        +- Exchange hashpartitioning(group#25, 1)
-                           +- ObjectHashAggregate(keys=[group#25], functions=[partial_collect_list(value#36, 0, 0)])
-                              +- *Project [split(cast(value#1 as string), ,)[0] AS group#25, cast(split(cast(value#1 as string), ,)[1] as int) AS value#36]
-                                 +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
+ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[collect_list(value#211, 0, 0), collect_list(device#200, 0, 0)])
++- Exchange hashpartitioning(event_time#222-T10000ms, 1)
+   +- StateStoreSave [event_time#222-T10000ms], StatefulOperatorStateInfo(<unknown>,8f4602fb-731a-4e34-a843-4c2cafde7899,0,0), Append, 0
+      +- ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[merge_collect_list(value#211, 0, 0), merge_collect_list(device#200, 0, 0)])
+         +- Exchange hashpartitioning(event_time#222-T10000ms, 1)
+            +- StateStoreRestore [event_time#222-T10000ms], StatefulOperatorStateInfo(<unknown>,8f4602fb-731a-4e34-a843-4c2cafde7899,0,0)
+               +- ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[merge_collect_list(value#211, 0, 0), merge_collect_list(device#200, 0, 0)])
+                  +- Exchange hashpartitioning(event_time#222-T10000ms, 1)
+                     +- ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[partial_collect_list(value#211, 0, 0), partial_collect_list(device#200, 0, 0)])
+                        +- EventTimeWatermark event_time#222: timestamp, interval 10 seconds
+                           +- *Project [cast(split(cast(value#176 as string), ,)[1] as int) AS value#211, split(cast(value#176 as string), ,)[0] AS device#200, cast((1504155110 - cast(split(cast(value#176 as string), ,)[1] as int)) as timestamp) AS event_time#222]
+                              +- StreamingRelation kafka, [key#175, value#176, topic#177, partition#178, offset#179L, timestamp#180, timestampType#181]
 
 // Start the query and hence StateStoreSaveExec
-// Use Append output mode
+// Note Append output mode
 import scala.concurrent.duration._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val sq = valuesPerGroup.
+val sq = valuesPerDevice.
   writeStream.
   format("console").
   option("truncate", false).
@@ -70,10 +78,7 @@ val sq = valuesPerGroup.
   outputMode(OutputMode.Append).
   start
 
-// FIXME
-// Leads to org.apache.spark.sql.AnalysisException: Append output mode not supported when there are streaming aggregations on streaming DataFrames/DataSets without watermark;;
-
-...
+// FIXME events
 
 // In the end...
 sq.stop

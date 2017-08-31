@@ -1,0 +1,3 @@
+== [[window]] window Function
+
+`window` is a standard function that...FIXME
