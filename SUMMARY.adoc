@@ -26,7 +26,8 @@
 . link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators / Streaming Dataset API]
 .. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator -- Streaming Deduplication]
 .. link:spark-sql-streaming-Dataset-explain.adoc[explain Operator -- Explaining Query Plan]
-.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Streaming Aggregation (with Implicit State Logic)]
+.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Untyped Streaming Aggregation (with Implicit State Logic)]
+.. link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey Operator -- Streaming Aggregation (with Explicit State Logic)]
 
 . link:spark-sql-streaming-window.adoc[window Function]
 

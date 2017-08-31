@@ -1,6 +1,6 @@
 == Streaming Operators / Streaming Dataset API
 
-Dataset API has a set of <<operators, operators>> that are of particular use in Structured Streaming.
+Dataset API has a set of <<operators, operators>> that are of particular use in Apache Spark's Structured Streaming that together constitute so-called *Streaming Dataset API*.
 
 [[operators]]
 .Streaming Operators
@@ -37,8 +37,8 @@ groupBy(cols: Column*): RelationalGroupedDataset
 groupBy(col1: String, cols: String*): RelationalGroupedDataset
 ----
 
-| [[groupByKey]] <<groupByKey-indepth, groupByKey>>
-a| Aggregates records by a typed grouping function
+| [[groupByKey]] link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey]
+a| Aggregates rows by a typed grouping function
 
 [source, scala]
 ----
@@ -52,7 +52,6 @@ a| Defines a streaming watermark on a event time column
 ----
 withWatermark(eventTime: String, delayThreshold: String): Dataset[T]
 ----
-
 |===
 
 [source, scala]
@@ -68,7 +67,8 @@ val rates = spark.
   load
 
 // stream processing
-rates.groupByKey
+// replace [operator] with the operator of your choice
+rates.[operator]
 
 // output stream
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
@@ -85,43 +85,6 @@ val sq = rates.
 // eventually...
 sq.stop
 ----
-
-=== [[groupByKey-indepth]] Streaming Aggregation (using Grouping Function) -- `groupByKey` Operator
-
-[source, scala]
-----
-groupByKey[K: Encoder](func: T => K): KeyValueGroupedDataset[K, T]
-----
-
-`groupByKey` creates a link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset] with the keys unique, and the associated values are actually collections of one or more values associated with the key.
-
-NOTE: The type of the input argument of `func` is the type of rows in the Dataset (i.e. `Dataset[T]`).
-
-[source, scala]
-----
-scala> spark.version
-res0: String = 2.3.0-SNAPSHOT
-
-// input stream
-import java.sql.Timestamp
-val signals = spark.
-  readStream.
-  format("rate").
-  option("rowsPerSecond", 1).
-  load.
-  withColumn("value", $"value" % 10)  // <-- randomize the values (just for fun)
-  withColumn("deviceId", lit(util.Random.nextInt(10))). // <-- 10 devices randomly assigned to values
-  as[(Timestamp, Long, Int)] // <-- convert to a "better" type (from "unpleasant" Row)
-
-// stream processing using groupByKey operator
-// groupByKey(func: ((Timestamp, Long, Int)) => K): KeyValueGroupedDataset[K, (Timestamp, Long, Int)]
-// K becomes Int which is a device id
-val deviceId: ((Timestamp, Long, Int)) => Int = { case (_, _, deviceId) => deviceId }
-scala> val signalsByDevice = signals.groupByKey(deviceId)
-signalsByDevice: org.apache.spark.sql.KeyValueGroupedDataset[Int,(java.sql.Timestamp, Long, Int)] = org.apache.spark.sql.KeyValueGroupedDataset@19d40bc6
-----
-
-Internally,...FIXME
 
 === [[withWatermark-indepth]] Specifying Event Time Watermark -- `withWatermark` Operator
 
