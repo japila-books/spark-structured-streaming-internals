@@ -1,6 +1,6 @@
 == Demo: StateStoreSaveExec in Append Output Mode
 
-The following example is to demonstrate the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
+The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
 
 NOTE: Append output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator) on the event time column that is used for aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
@@ -25,7 +25,7 @@ res1: Int = 1
 
 // Read datasets from a Kafka topic
 // ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
-// Streaming aggregation using groupBy operator is required to have StateStoreSaveExec operator
+// Use streaming aggregation with groupBy operator to have StateStoreSaveExec operator
 // Since the demo uses Append output mode
 // it has to define a streaming event time watermark using withWatermark operator
 // UnsupportedOperationChecker makes sure that the requirement holds
@@ -36,12 +36,14 @@ val valuesPerDevice = spark.
   option("kafka.bootstrap.servers", "localhost:9092").
   load.
   withColumn("tokens", split('value, ",")).
-  withColumn("device", 'tokens(0)).
-  withColumn("value", 'tokens(1) cast "int").
-  withColumn("event_time", (current_timestamp cast "int") - 'value cast "timestamp"). // <-- define event_time
-  withWatermark(eventTime = "event_time", delayThreshold = "10 seconds"). // <-- define watermark (before groupBy) select(to_date($"event_time") as "event_time", $"device", $"value").
+  withColumn("seconds", 'tokens(0) cast "long").
+  withColumn("event_time", to_timestamp(from_unixtime('seconds))). // <-- Event time has to be a timestamp
+  withColumn("device", 'tokens(1)).
+  withColumn("level", 'tokens(2) cast "int").
+  withWatermark(eventTime = "event_time", delayThreshold = "10 seconds"). // <-- define watermark (before groupBy!)
   groupBy($"event_time"). // <-- use event_time for grouping
-  agg(collect_list("value") as "values", collect_list("device") as "devices")
+  agg(collect_list("level") as "levels", collect_list("device") as "devices").
+  withColumn("event_time", to_timestamp($"event_time")) // <-- convert to human-readable date
 
 // valuesPerDevice is a streaming Dataset with just one Kafka source
 // so it knows nothing about output mode or the current streaming watermark yet
@@ -53,18 +55,19 @@ val valuesPerDevice = spark.
 // Use explain on a streaming query to know the runtime-specific values
 scala> valuesPerDevice.explain
 == Physical Plan ==
-ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[collect_list(value#211, 0, 0), collect_list(device#200, 0, 0)])
-+- Exchange hashpartitioning(event_time#222-T10000ms, 1)
-   +- StateStoreSave [event_time#222-T10000ms], StatefulOperatorStateInfo(<unknown>,8f4602fb-731a-4e34-a843-4c2cafde7899,0,0), Append, 0
-      +- ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[merge_collect_list(value#211, 0, 0), merge_collect_list(device#200, 0, 0)])
-         +- Exchange hashpartitioning(event_time#222-T10000ms, 1)
-            +- StateStoreRestore [event_time#222-T10000ms], StatefulOperatorStateInfo(<unknown>,8f4602fb-731a-4e34-a843-4c2cafde7899,0,0)
-               +- ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[merge_collect_list(value#211, 0, 0), merge_collect_list(device#200, 0, 0)])
-                  +- Exchange hashpartitioning(event_time#222-T10000ms, 1)
-                     +- ObjectHashAggregate(keys=[event_time#222-T10000ms], functions=[partial_collect_list(value#211, 0, 0), partial_collect_list(device#200, 0, 0)])
-                        +- EventTimeWatermark event_time#222: timestamp, interval 10 seconds
-                           +- *Project [cast(split(cast(value#176 as string), ,)[1] as int) AS value#211, split(cast(value#176 as string), ,)[0] AS device#200, cast((1504155110 - cast(split(cast(value#176 as string), ,)[1] as int)) as timestamp) AS event_time#222]
-                              +- StreamingRelation kafka, [key#175, value#176, topic#177, partition#178, offset#179L, timestamp#180, timestampType#181]
+*Project [cast(event_time#25-T10000ms as date) AS event_time#82, levels#75, devices#77]
++- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[collect_list(level#48, 0, 0), collect_list(device#36, 0, 0)])
+   +- Exchange hashpartitioning(event_time#25-T10000ms, 1)
+      +- StateStoreSave [event_time#25-T10000ms], StatefulOperatorStateInfo(<unknown>,9c021e84-61ca-45cd-9212-92cfdc23dc77,0,0), Append, 0
+         +- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[merge_collect_list(level#48, 0, 0), merge_collect_list(device#36, 0, 0)])
+            +- Exchange hashpartitioning(event_time#25-T10000ms, 1)
+               +- StateStoreRestore [event_time#25-T10000ms], StatefulOperatorStateInfo(<unknown>,9c021e84-61ca-45cd-9212-92cfdc23dc77,0,0)
+                  +- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[merge_collect_list(level#48, 0, 0), merge_collect_list(device#36, 0, 0)])
+                     +- Exchange hashpartitioning(event_time#25-T10000ms, 1)
+                        +- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[partial_collect_list(level#48, 0, 0), partial_collect_list(device#36, 0, 0)])
+                           +- EventTimeWatermark event_time#25: timestamp, interval 10 seconds
+                              +- *Project [cast(split(cast(value#1 as string), ,)[0] as timestamp) AS event_time#25, split(cast(value#1 as string), ,)[1] AS device#36, cast(split(cast(value#1 as string), ,)[2] as int) AS level#48]
+                                 +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
 
 // Start the query and hence StateStoreSaveExec
 // Note Append output mode
@@ -78,7 +81,82 @@ val sq = valuesPerDevice.
   outputMode(OutputMode.Append).
   start
 
-// FIXME events
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++----------+------+-------+
+|event_time|levels|devices|
++----------+------+-------+
++----------+------+-------+
+
+// there's only 1 stateful operator and hence 0 for the index in stateOperators
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 0,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 77
+}
+
+// Current watermark
+// We've just started so it's the default start time
+scala> println(sq.lastProgress.eventTime.get("watermark"))
+1970-01-01T00:00:00.000Z
+
+// publish 1 new record
+// timestamp,device,value
+// delay threshold = 10 seconds
+// 1,1,1
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++----------+------+-------+
+|event_time|values|devices|
++----------+------+-------+
++----------+------+-------+
+
+// it's Append output mode so numRowsTotal is...FIXME
+// no keys were available earlier (it's just started!) and so numRowsUpdated is 0
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 1,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 381
+}
+
+// Current watermark
+// One streaming batch has passed so it's still the default start time
+// that will get changed the next streaming batch
+// watermark is always one batch behind
+scala> println(sq.lastProgress.eventTime.get("watermark"))
+1970-01-01T00:00:00.000Z
+
+// publish new key and old key in a single streaming batch
+// new key
+// 1,1
+// update the already-stored key
+// 0,2
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++----------+------+-------+
+|event_time|values|devices|
++----------+------+-------+
++----------+------+-------+
+
+// it's Append output mode so numRowsTotal is...FIXME
+// no keys were available earlier and so numRowsUpdated is...FIXME
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 3,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 965
+}
+
+// Current watermark
+scala> println(sq.lastProgress.eventTime.get("watermark"))
+2017-08-31T10:58:49.000Z
 
 // In the end...
 sq.stop

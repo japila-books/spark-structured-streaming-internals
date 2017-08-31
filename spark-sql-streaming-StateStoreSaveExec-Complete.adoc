@@ -1,6 +1,6 @@
 == Demo: StateStoreSaveExec in Complete Output Mode
 
-The following example is to demonstrate the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Complete[StateStoreSaveExec in Complete output mode].
+The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Complete[StateStoreSaveExec in Complete output mode].
 
 [source, scala]
 ----
@@ -80,7 +80,7 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
   "memoryUsedBytes" : 60
 }
 
-// publish 1 new keys and values in a single streaming batch
+// publish 1 new key-value pair in a single streaming batch
 // 0,1
 
 -------------------------------------------
