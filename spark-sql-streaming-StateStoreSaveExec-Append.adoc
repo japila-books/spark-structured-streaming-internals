@@ -55,18 +55,18 @@ val valuesPerDevice = spark.
 // Use explain on a streaming query to know the runtime-specific values
 scala> valuesPerDevice.explain
 == Physical Plan ==
-*Project [cast(event_time#25-T10000ms as date) AS event_time#82, levels#75, devices#77]
-+- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[collect_list(level#48, 0, 0), collect_list(device#36, 0, 0)])
-   +- Exchange hashpartitioning(event_time#25-T10000ms, 1)
-      +- StateStoreSave [event_time#25-T10000ms], StatefulOperatorStateInfo(<unknown>,9c021e84-61ca-45cd-9212-92cfdc23dc77,0,0), Append, 0
-         +- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[merge_collect_list(level#48, 0, 0), merge_collect_list(device#36, 0, 0)])
-            +- Exchange hashpartitioning(event_time#25-T10000ms, 1)
-               +- StateStoreRestore [event_time#25-T10000ms], StatefulOperatorStateInfo(<unknown>,9c021e84-61ca-45cd-9212-92cfdc23dc77,0,0)
-                  +- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[merge_collect_list(level#48, 0, 0), merge_collect_list(device#36, 0, 0)])
-                     +- Exchange hashpartitioning(event_time#25-T10000ms, 1)
-                        +- ObjectHashAggregate(keys=[event_time#25-T10000ms], functions=[partial_collect_list(level#48, 0, 0), partial_collect_list(device#36, 0, 0)])
-                           +- EventTimeWatermark event_time#25: timestamp, interval 10 seconds
-                              +- *Project [cast(split(cast(value#1 as string), ,)[0] as timestamp) AS event_time#25, split(cast(value#1 as string), ,)[1] AS device#36, cast(split(cast(value#1 as string), ,)[2] as int) AS level#48]
+*Project [event_time#36-T10000ms AS event_time#97, levels#90, devices#92]
++- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[collect_list(level#61, 0, 0), collect_list(device#48, 0, 0)])
+   +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
+      +- StateStoreSave [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,755d4737-58ac-4b07-9a3f-07f66a2f1374,0,0), Append, 0
+         +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(level#61, 0, 0), merge_collect_list(device#48, 0, 0)])
+            +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
+               +- StateStoreRestore [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,755d4737-58ac-4b07-9a3f-07f66a2f1374,0,0)
+                  +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(level#61, 0, 0), merge_collect_list(device#48, 0, 0)])
+                     +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
+                        +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[partial_collect_list(level#61, 0, 0), partial_collect_list(device#48, 0, 0)])
+                           +- EventTimeWatermark event_time#36: timestamp, interval 10 seconds
+                              +- *Project [cast(from_unixtime(cast(split(cast(value#1 as string), ,)[0] as bigint), yyyy-MM-dd HH:mm:ss, Some(Europe/Berlin)) as timestamp) AS event_time#36, split(cast(value#1 as string), ,)[1] AS device#48, cast(split(cast(value#1 as string), ,)[2] as int) AS level#61]
                                  +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
 
 // Start the query and hence StateStoreSaveExec
@@ -102,16 +102,18 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:00.000Z
 
-// publish 1 new record
+// publish new records
 // timestamp,device,value
 // delay threshold = 10 seconds
 // 1,1,1
+// 2,1,2
+// 3,1,3
 
 -------------------------------------------
 Batch: 1
 -------------------------------------------
 +----------+------+-------+
-|event_time|values|devices|
+|event_time|levels|devices|
 +----------+------+-------+
 +----------+------+-------+
 
@@ -119,9 +121,9 @@ Batch: 1
 // no keys were available earlier (it's just started!) and so numRowsUpdated is 0
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
-  "numRowsTotal" : 1,
-  "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 381
+  "numRowsTotal" : 3,
+  "numRowsUpdated" : 1,
+  "memoryUsedBytes" : 965
 }
 
 // Current watermark
@@ -131,17 +133,22 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:00.000Z
 
-// publish new key and old key in a single streaming batch
-// new key
-// 1,1
-// update the already-stored key
-// 0,2
+// Could be 0 if the time to update the lastProgress is short
+// FIXME Explain it in detail
+scala> println(sq.lastProgress.numInputRows)
+1
+
+// publish new record with event_time > current watermark + delayThreshold
+// i.e. 0 + 10 = 10
+// timestamp,device,value
+// delay threshold = 10 seconds
+// 11,1,4
 
 -------------------------------------------
 Batch: 2
 -------------------------------------------
 +----------+------+-------+
-|event_time|values|devices|
+|event_time|levels|devices|
 +----------+------+-------+
 +----------+------+-------+
 
@@ -149,14 +156,114 @@ Batch: 2
 // no keys were available earlier and so numRowsUpdated is...FIXME
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
-  "numRowsTotal" : 3,
-  "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 965
+  "numRowsTotal" : 4,
+  "numRowsUpdated" : 1,
+  "memoryUsedBytes" : 1277
 }
 
 // Current watermark
 scala> println(sq.lastProgress.eventTime.get("watermark"))
-2017-08-31T10:58:49.000Z
+1970-01-01T00:00:00.000Z
+
+scala> println(sq.lastProgress.numInputRows)
+1
+
+// publish new record with any event_time
+// timestamp,device,value
+// delay threshold = 10 seconds
+// 10,1,5
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-------------------+------+-------+
+|event_time         |levels|devices|
++-------------------+------+-------+
+|1970-01-01 01:00:01|[1]   |[1]    |
++-------------------+------+-------+
+
+// it's Append output mode so numRowsTotal is...FIXME
+// no keys were available earlier and so numRowsUpdated is...FIXME
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 4,
+  "numRowsUpdated" : 1,
+  "memoryUsedBytes" : 1277
+}
+
+// Current watermark
+// Updating eventTime watermark to: 1000 ms
+scala> println(sq.lastProgress.eventTime.get("watermark"))
+1970-01-01T00:00:01.000Z
+
+scala> println(sq.lastProgress.numInputRows)
+1
+
+// publish new record with quite advanced event_time
+// that will advance watermark next streaming batch
+// timestamp,device,value
+// delay threshold = 10 seconds
+// 50,1,6
+
+-------------------------------------------
+Batch: 5
+-------------------------------------------
++----------+------+-------+
+|event_time|levels|devices|
++----------+------+-------+
++----------+------+-------+
+
+// it's Append output mode so numRowsTotal is...FIXME
+// no keys were available earlier and so numRowsUpdated is...FIXME
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 5,
+  "numRowsUpdated" : 1,
+  "memoryUsedBytes" : 1557
+}
+
+// Current watermark
+// Updating eventTime watermark to: 1000 ms
+scala> println(sq.lastProgress.eventTime.get("watermark"))
+1970-01-01T00:00:01.000Z
+
+scala> println(sq.lastProgress.numInputRows)
+1
+
+// publish new record with any event_time but new key
+// Some rows should have expired event_time given the previous event_time
+// timestamp,device,value
+// delay threshold = 10 seconds
+// 30,2,1
+
+-------------------------------------------
+Batch: 6
+-------------------------------------------
++-------------------+------+-------+
+|event_time         |levels|devices|
++-------------------+------+-------+
+|1970-01-01 01:00:03|[3]   |[1]    |
+|1970-01-01 01:00:02|[2]   |[1]    |
+|1970-01-01 01:00:11|[4]   |[1]    |
+|1970-01-01 01:00:10|[5]   |[1]    |
++-------------------+------+-------+
+
+// it's Append output mode so numRowsTotal is...FIXME
+// no keys were available earlier and so numRowsUpdated is...FIXME
+scala> println(sq.lastProgress.stateOperators(0).prettyJson)
+{
+  "numRowsTotal" : 1,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 437
+}
+
+// Current watermark
+// Updating eventTime watermark to: 40000 ms
+scala> println(sq.lastProgress.eventTime.get("watermark"))
+1970-01-01T00:00:40.000Z
+
+scala> println(sq.lastProgress.numInputRows)
+1
 
 // In the end...
 sq.stop
