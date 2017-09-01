@@ -1,8 +1,27 @@
-== [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator for Restoring Streaming Aggregates
+== [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates
 
-`StateStoreRestoreExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreReader.adoc[reads state from StateStore].
+`StateStoreRestoreExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreReader.adoc[restores a streaming state from a state store] (per keys associated with input rows).
 
-`StateStoreRestoreExec` is <<creating-instance, created>> mainly when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#Aggregate[plans a streaming aggregation] (i.e. ...FIXME).
+`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#Aggregate[plans streaming aggregate operators] (aka _streaming aggregates_).
+
+.StateStoreRestoreExec and StatefulAggregationStrategy
+image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="center"]
+
+[NOTE]
+====
+`Aggregate` logical operator is the result of:
+
+* `RelationalGroupedDataset` aggregations, i.e. `agg` and  `pivot` operators
+
+* `KeyValueGroupedDataset` aggregations, i.e. `mapGroups`, `flatMapGroups`, `mapGroupsWithState`, `flatMapGroupsWithState`, `reduceGroups`, and `agg`, `cogroup` operators
+
+* SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
+====
+
+The optional property <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+
+.StateStoreRestoreExec and IncrementalExecution
+image::images/StateStoreRestoreExec-IncrementalExecution.png[align="center"]
 
 [source, scala]
 ----
@@ -88,19 +107,21 @@ sq.stop
 
 [[metrics]]
 .StateStoreRestoreExec's SQLMetrics
-[cols="1,2",options="header",width="100%"]
+[cols="1,1,2",options="header",width="100%"]
 |===
-| Name
+| Key
+| Name (in UI)
 | Description
 
 | [[numOutputRows]] `numOutputRows`
-|
+| number of output rows
+| The number of input rows from the <<child, child>> physical operator
 |===
 
 .StateStoreRestoreExec in web UI (Details for Query)
 image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 
-When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that restores the current saved state per key in a row.
+When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that restores the saved state for a key in a row if available.
 
 [[output]]
 The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s output schema.
@@ -117,24 +138,28 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
-`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+Internally, `doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that does the following per <<child, child>> operator's RDD partition:
 
-1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
+1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>> operator).
 
-1. For every row (as `InternalRow`)
+1. For every input row (as `InternalRow`)
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* link:spark-sql-streaming-StateStore.adoc#get[Gets the saved state] in `StateStore` for the key
+* link:spark-sql-streaming-StateStore.adoc#get[Gets the saved state] in `StateStore` for the key if available
 
-* Increments <<numOutputRows, numOutputRows>> metric
+* Increments <<numOutputRows, numOutputRows>> metric (that in the end is the number of rows from the <<child, child>> operator)
 
-* Generates collection of the current row followed by optional state (there could be no state for the key)
+* Generates collection of the current row possibly with the state for the key if available
+
+NOTE: The number of rows from `StateStoreRestoreExec` is the number of rows from the <<child, child>> operator with additional rows for the saved state.
+
+NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had associated state available in a state store. You would have to use the corresponding `StateStoreSaveExec` operator's link:spark-sql-streaming-StateStoreSaveExec.adoc#metrics[metrics] (most likely `number of total state rows` but that could depend on the output mode).
 
 === [[creating-instance]] Creating StateStoreRestoreExec Instance
 
 `StateStoreRestoreExec` takes the following when created:
 
-* [[keyExpressions]] Catalyst expressions for keys
-* [[stateInfo]] Optional `StatefulOperatorStateInfo`
+* [[keyExpressions]] Catalyst expressions for keys (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
+* [[stateInfo]] `StatefulOperatorStateInfo`
 * [[child]] Child physical plan (i.e. `SparkPlan`)

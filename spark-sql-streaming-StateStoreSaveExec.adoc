@@ -1,8 +1,8 @@
-== [[StateStoreSaveExec]] StateStoreSaveExec Unary Physical Operator for Saving State of Streaming Aggregates
+== [[StateStoreSaveExec]] StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates
 
-`StateStoreSaveExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[writes a streaming state to a StateStore] with link:spark-sql-streaming-WatermarkSupport.adoc[support for streaming watermark].
+`StateStoreSaveExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[saves a streaming state to a state store] with link:spark-sql-streaming-WatermarkSupport.adoc[support for streaming watermark].
 
-`StateStoreSaveExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#apply[plans streaming Aggregate logical operators] (aka _streaming aggregates_).
+`StateStoreSaveExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#Aggregate[plans streaming aggregate operators] (aka _streaming aggregates_).
 
 .StateStoreSaveExec and StatefulAggregationStrategy
 image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
@@ -18,10 +18,12 @@ image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
 * SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
 ====
 
-The optional properties, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, output mode>>, and <<eventTimeWatermark, event time watermark>>, are undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold their batch-specific execution properties every time `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+The optional properties, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, output mode>>, and <<eventTimeWatermark, event time watermark>>, are undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold their streaming batch-specific execution properties when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
 .StateStoreSaveExec and IncrementalExecution
 image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
+
+NOTE: Unlike link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec] operator, `StateStoreSaveExec` takes <<outputMode, output mode>> and <<eventTimeWatermark, event time watermark>> when <<creating-instance, created>>.
 
 When <<doExecute, executed>>, `StateStoreSaveExec` link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that manages the `StateStore`.
 
@@ -180,7 +182,7 @@ NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a p
 
 Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
 
-NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should happen when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming aggregation for execution]).
+NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should have happened when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[had prepared a streaming aggregation for execution]).
 
 `doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
@@ -295,7 +297,7 @@ Invalid output mode: [outputMode]
 
 `StateStoreSaveExec` takes the following when created:
 
-* [[keyExpressions]] Key attributes (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
+* [[keyExpressions]] Catalyst expressions for keys (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
 * [[stateInfo]] `StatefulOperatorStateInfo`
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
 * [[eventTimeWatermark]] Event time watermark (as `long` number)
