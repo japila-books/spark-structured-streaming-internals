@@ -2,15 +2,138 @@
 
 The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
 
-NOTE: Append output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator) on the event time column that is used for aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
+NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator) on the event time column that is used for aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
 CAUTION: FIXME UnsupportedOperationChecker makes sure that the requirement holds
 
 NOTE: link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator has to be used before the aggregation (for the watermark to be used).
 
+In `Append` output mode there are the following questions to ask about what to include in the output Dataset:
+
+1. What is the current watermark level (that is used to expire state rows and ignore late events)?
+
+1. Is the key that expired in the input?
+
 NOTE: Sorting is not supported on streaming DataFrames/Datasets, unless it is on an aggregated Dataset in `Complete` output mode.
 
 CAUTION: FIXME Review UnsupportedOperationChecker.scala:297
+
+[[events]]
+.Streaming Batches, Events, Watermark, Expired State and Late Events
+[cols="^m,^.^1,^.^1,^.^1",options="header",width="100%"]
+|===
+| Batch / Events
+| Event Time Watermark [ms]
+| Expired State
+| Late Events
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 1 ! 1 ! 1
+! 15 ! 1 ! 2
+!====
+
+^.^| *0*
+|
+|
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 15 ! 1 ! 3
+! 35 ! 1 ! 4
+!====
+
+^.^| *5000*
+
+(Maximum event time `15` minus the `delayThreshold` as defined using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator, i.e. `10`)
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 1 ! 1 ! 1
+!====
+
+|
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 1 ! 1 ! 5
+! 1 ! 2 ! 1
+! 15 ! 1 ! 6
+! 15 ! 2 ! 2
+! 16 ! 2 ! 3
+!====
+
+^.^| *25000*
+
+(Maximum event time from the previous batch is `35` and `10` seconds of `delayThreshold`)
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 15 ! 1 ! 2
+! 15 ! 1 ! 3
+!====
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 1 ! 1 ! 5
+! 1 ! 2 ! 1
+!====
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 36 ! 1 ! 7
+!====
+
+^.^| *25000*
+
+(Maximum event time from the previous batch is `16`)
+|
+|
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! device ! value
+! 50 ! 2 ! 4
+!====
+
+^.^| *26000*
+
+(Maximum event time from the previous batch is `36`)
+|
+|
+
+|===
+
+NOTE: Event time watermark may advance based on the maximum event time from the previous events (from the previous batch exactly as the level advances every trigger so the earlier levels are already counted in).
+
+NOTE: Event time watermark can only change when the maximum event time is bigger than the current watermark minus the `delayThreshold` (as defined using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator).
+
+[TIP]
+====
+Use the following to publish events to Kafka.
+
+```
+// 1st streaming batch
+$ cat /tmp/1
+1,1,1
+15,1,2
+
+$ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
+```
+====
 
 [source, scala]
 ----
@@ -58,10 +181,10 @@ scala> valuesPerDevice.explain
 *Project [event_time#36-T10000ms AS event_time#97, levels#90, devices#92]
 +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[collect_list(level#61, 0, 0), collect_list(device#48, 0, 0)])
    +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
-      +- StateStoreSave [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,755d4737-58ac-4b07-9a3f-07f66a2f1374,0,0), Append, 0
+      +- StateStoreSave [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,e2c5c662-1397-467a-80f4-e7a0fc7c1fcc,0,0), Append, 0
          +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(level#61, 0, 0), merge_collect_list(device#48, 0, 0)])
             +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
-               +- StateStoreRestore [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,755d4737-58ac-4b07-9a3f-07f66a2f1374,0,0)
+               +- StateStoreRestore [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,e2c5c662-1397-467a-80f4-e7a0fc7c1fcc,0,0)
                   +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(level#61, 0, 0), merge_collect_list(device#48, 0, 0)])
                      +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
                         +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[partial_collect_list(level#61, 0, 0), partial_collect_list(device#48, 0, 0)])
@@ -77,7 +200,7 @@ val sq = valuesPerDevice.
   writeStream.
   format("console").
   option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
+  trigger(Trigger.ProcessingTime(5.seconds)).
   outputMode(OutputMode.Append).
   start
 
