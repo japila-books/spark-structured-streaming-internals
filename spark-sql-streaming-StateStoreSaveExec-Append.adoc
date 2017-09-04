@@ -1,8 +1,8 @@
-== Demo: StateStoreSaveExec in Append Output Mode
+== Demo: StateStoreSaveExec with Append Output Mode
 
 The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
 
-NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used for aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
+NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
 CAUTION: FIXME UnsupportedOperationChecker makes sure that the requirement holds
 
@@ -18,6 +18,8 @@ NOTE: Sorting is not supported on streaming DataFrames/Datasets, unless it is on
 
 CAUTION: FIXME Review UnsupportedOperationChecker.scala:297
 
+CAUTION: FIXME Explore `groupBy` with a key that expired (i.e. can only be considered late) with events for the key in the batch that marked the key expired
+
 [[events]]
 .Streaming Batches, Events, Watermark, Expired State and Late Events
 [cols="^m,^.^1,^.^1,^.^1",options="header",width="100%"]
@@ -30,7 +32,7 @@ CAUTION: FIXME Review UnsupportedOperationChecker.scala:297
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 1 ! 1 ! 1
 ! 15 ! 1 ! 2
 !====
@@ -42,7 +44,7 @@ a|
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 15 ! 1 ! 3
 ! 35 ! 1 ! 4
 !====
@@ -53,7 +55,7 @@ a|
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 1 ! 1 ! 1
 !====
 
@@ -62,7 +64,7 @@ a|
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 1 ! 1 ! 5
 ! 1 ! 2 ! 1
 ! 15 ! 1 ! 6
@@ -76,7 +78,7 @@ a|
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 15 ! 1 ! 2
 ! 15 ! 1 ! 3
 !====
@@ -84,7 +86,7 @@ a|
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 1 ! 1 ! 5
 ! 1 ! 2 ! 1
 !====
@@ -92,7 +94,7 @@ a|
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 36 ! 1 ! 7
 !====
 
@@ -105,7 +107,7 @@ a|
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
-! event_time ! device ! value
+! event_time ! device ! level
 ! 50 ! 2 ! 4
 !====
 
@@ -184,10 +186,10 @@ scala> valuesPerDevice.explain
 *Project [event_time#36-T10000ms AS event_time#97, levels#90, devices#92]
 +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[collect_list(level#61, 0, 0), collect_list(device#48, 0, 0)])
    +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
-      +- StateStoreSave [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,e2c5c662-1397-467a-80f4-e7a0fc7c1fcc,0,0), Append, 0
+      +- StateStoreSave [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,375d4ba7-c948-472f-b05c-99832f47f6ec,0,0), Append, 0
          +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(level#61, 0, 0), merge_collect_list(device#48, 0, 0)])
             +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
-               +- StateStoreRestore [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,e2c5c662-1397-467a-80f4-e7a0fc7c1fcc,0,0)
+               +- StateStoreRestore [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,375d4ba7-c948-472f-b05c-99832f47f6ec,0,0)
                   +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(level#61, 0, 0), merge_collect_list(device#48, 0, 0)])
                      +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
                         +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[partial_collect_list(level#61, 0, 0), partial_collect_list(device#48, 0, 0)])
@@ -229,11 +231,7 @@ scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:00.000Z
 
 // publish new records
-// timestamp,device,value
-// delay threshold = 10 seconds
-// 1,1,1
-// 2,1,2
-// 3,1,3
+// See the events table above
 
 -------------------------------------------
 Batch: 1
@@ -247,9 +245,9 @@ Batch: 1
 // no keys were available earlier (it's just started!) and so numRowsUpdated is 0
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
-  "numRowsTotal" : 3,
-  "numRowsUpdated" : 1,
-  "memoryUsedBytes" : 965
+  "numRowsTotal" : 2,
+  "numRowsUpdated" : 2,
+  "memoryUsedBytes" : 669
 }
 
 // Current watermark
@@ -262,45 +260,13 @@ scala> println(sq.lastProgress.eventTime.get("watermark"))
 // Could be 0 if the time to update the lastProgress is short
 // FIXME Explain it in detail
 scala> println(sq.lastProgress.numInputRows)
-1
+2
 
-// publish new record with event_time > current watermark + delayThreshold
-// i.e. 0 + 10 = 10
-// timestamp,device,value
-// delay threshold = 10 seconds
-// 11,1,4
+// publish new records
+// See the events table above
 
 -------------------------------------------
 Batch: 2
--------------------------------------------
-+----------+------+-------+
-|event_time|levels|devices|
-+----------+------+-------+
-+----------+------+-------+
-
-// it's Append output mode so numRowsTotal is...FIXME
-// no keys were available earlier and so numRowsUpdated is...FIXME
-scala> println(sq.lastProgress.stateOperators(0).prettyJson)
-{
-  "numRowsTotal" : 4,
-  "numRowsUpdated" : 1,
-  "memoryUsedBytes" : 1277
-}
-
-// Current watermark
-scala> println(sq.lastProgress.eventTime.get("watermark"))
-1970-01-01T00:00:00.000Z
-
-scala> println(sq.lastProgress.numInputRows)
-1
-
-// publish new record with any event_time
-// timestamp,device,value
-// delay threshold = 10 seconds
-// 10,1,5
-
--------------------------------------------
-Batch: 4
 -------------------------------------------
 +-------------------+------+-------+
 |event_time         |levels|devices|
@@ -312,66 +278,31 @@ Batch: 4
 // no keys were available earlier and so numRowsUpdated is...FIXME
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
-  "numRowsTotal" : 4,
-  "numRowsUpdated" : 1,
-  "memoryUsedBytes" : 1277
+  "numRowsTotal" : 2,
+  "numRowsUpdated" : 2,
+  "memoryUsedBytes" : 701
 }
 
 // Current watermark
-// Updating eventTime watermark to: 1000 ms
+// Updated and thus the output for final aggregation
 scala> println(sq.lastProgress.eventTime.get("watermark"))
-1970-01-01T00:00:01.000Z
+1970-01-01T00:00:05.000Z
 
 scala> println(sq.lastProgress.numInputRows)
-1
+2
 
-// publish new record with quite advanced event_time
-// that will advance watermark next streaming batch
-// timestamp,device,value
-// delay threshold = 10 seconds
-// 50,1,6
-
+// publish new records
+// See the events table above
+// CAUTION: FIXME That's where I think is a bug
+// I'd expect the other two events for event_time=15 included
+// Reported on the Spark devs mailing list
 -------------------------------------------
-Batch: 5
--------------------------------------------
-+----------+------+-------+
-|event_time|levels|devices|
-+----------+------+-------+
-+----------+------+-------+
-
-// it's Append output mode so numRowsTotal is...FIXME
-// no keys were available earlier and so numRowsUpdated is...FIXME
-scala> println(sq.lastProgress.stateOperators(0).prettyJson)
-{
-  "numRowsTotal" : 5,
-  "numRowsUpdated" : 1,
-  "memoryUsedBytes" : 1557
-}
-
-// Current watermark
-// Updating eventTime watermark to: 1000 ms
-scala> println(sq.lastProgress.eventTime.get("watermark"))
-1970-01-01T00:00:01.000Z
-
-scala> println(sq.lastProgress.numInputRows)
-1
-
-// publish new record with any event_time but new key
-// Some rows should have expired event_time given the previous event_time
-// timestamp,device,value
-// delay threshold = 10 seconds
-// 30,2,1
-
--------------------------------------------
-Batch: 6
+Batch: 3
 -------------------------------------------
 +-------------------+------+-------+
 |event_time         |levels|devices|
 +-------------------+------+-------+
-|1970-01-01 01:00:03|[3]   |[1]    |
-|1970-01-01 01:00:02|[2]   |[1]    |
-|1970-01-01 01:00:11|[4]   |[1]    |
-|1970-01-01 01:00:10|[5]   |[1]    |
+|1970-01-01 01:00:15|[3, 2]|[1, 1] |
 +-------------------+------+-------+
 
 // it's Append output mode so numRowsTotal is...FIXME
@@ -380,16 +311,18 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
   "numRowsTotal" : 1,
   "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 437
+  "memoryUsedBytes" : 405
 }
 
 // Current watermark
-// Updating eventTime watermark to: 40000 ms
+// Updated and thus the output for final aggregation
 scala> println(sq.lastProgress.eventTime.get("watermark"))
-1970-01-01T00:00:40.000Z
+1970-01-01T00:00:25.000Z
 
 scala> println(sq.lastProgress.numInputRows)
-1
+5
+
+// and so on...
 
 // In the end...
 sq.stop

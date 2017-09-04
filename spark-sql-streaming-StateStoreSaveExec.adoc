@@ -202,6 +202,8 @@ a|
 
 NOTE: `Append` is the link:spark-sql-streaming-OutputMode.adoc#default-output-mode[default output mode] when unspecified.
 
+NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
+
 1. Finds late (aggregate) rows from <<child, child>> physical operator (that have expired per link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermark])
 
 1. link:spark-sql-streaming-StateStore.adoc#put[Stores the late rows in the state store] (and increments <<numUpdatedStateRows, numUpdatedStateRows>> metric)
@@ -212,7 +214,7 @@ NOTE: `Append` is the link:spark-sql-streaming-OutputMode.adoc#default-output-mo
 
 NOTE: <<numUpdatedStateRows, numUpdatedStateRows>> metric is the number of rows that...FIXME
 
-TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Append.adoc[Demo: StateStoreSaveExec in Append Output Mode] for an example of `StateStoreSaveExec` in `Append` output mode.
+TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Append.adoc[Demo: StateStoreSaveExec with Append Output Mode] for an example of `StateStoreSaveExec` in `Append` output mode.
 
 CAUTION: FIXME When is "Filtering state store on:" printed out?
 
@@ -247,7 +249,7 @@ The number of keys stored in the state store is recorded in <<numUpdatedStateRow
 
 NOTE: In `Complete` output mode <<numOutputRows, numOutputRows>> metric is exactly <<numTotalStateRows, numTotalStateRows>> metric.
 
-TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec in Complete Output Mode] for an example of `StateStoreSaveExec` in `Complete` output mode.
+TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode] for an example of `StateStoreSaveExec` in `Complete` output mode.
 
 ---
 
@@ -268,7 +270,7 @@ a|
 
 Returns an iterator that filters out late aggregate rows (per link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermark] if defined) and link:spark-sql-streaming-StateStore.adoc#put[stores the "young" rows in the state store] (one by one, i.e. every `next`). With no more rows available, that link:spark-sql-streaming-StateStore.adoc#remove[removes the late rows from the state store] (all at once) and link:spark-sql-streaming-StateStore.adoc#commit[commits the state updates].
 
-TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec in Update Output Mode] for an example of `StateStoreSaveExec` in `Update` output mode.
+TIP: Refer to link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode] for an example of `StateStoreSaveExec` in `Update` output mode.
 
 ---
 

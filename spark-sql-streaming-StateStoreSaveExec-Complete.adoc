@@ -1,4 +1,4 @@
-== Demo: StateStoreSaveExec in Complete Output Mode
+== Demo: StateStoreSaveExec with Complete Output Mode
 
 The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Complete[StateStoreSaveExec in Complete output mode].
 

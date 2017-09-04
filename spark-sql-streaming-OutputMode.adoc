@@ -36,7 +36,11 @@ val consoleOutput = inputStream.
 a|
 
 [[default-output-mode]]
-link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes new rows only
+link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes "new" rows only.
+
+NOTE: For streaming aggregations, "new" row is when the intermediate state is made final, i.e. when new events for the grouping key can only be considered late which is when watermark moves past the event time of the key.
+
+NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
 Required for datasets with `FileFormat` format (to create link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink])
 
