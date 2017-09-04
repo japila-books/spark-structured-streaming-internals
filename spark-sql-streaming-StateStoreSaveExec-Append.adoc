@@ -2,11 +2,11 @@
 
 The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
 
-NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator) on the event time column that is used for aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
+NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used for aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
 CAUTION: FIXME UnsupportedOperationChecker makes sure that the requirement holds
 
-NOTE: link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator has to be used before the aggregation (for the watermark to be used).
+NOTE: link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator has to be used before the aggregation (for the watermark to be used).
 
 In `Append` output mode there are the following questions to ask about what to include in the output Dataset:
 
@@ -49,7 +49,7 @@ a|
 
 ^.^| *5000*
 
-(Maximum event time `15` minus the `delayThreshold` as defined using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator, i.e. `10`)
+(Maximum event time `15` minus the `delayThreshold` as defined using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator, i.e. `10`)
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
@@ -119,7 +119,7 @@ a|
 
 NOTE: Event time watermark may advance based on the maximum event time from the previous events (from the previous batch exactly as the level advances every trigger so the earlier levels are already counted in).
 
-NOTE: Event time watermark can only change when the maximum event time is bigger than the current watermark minus the `delayThreshold` (as defined using link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator).
+NOTE: Event time watermark can only change when the maximum event time is bigger than the current watermark minus the `delayThreshold` (as defined using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator).
 
 [TIP]
 ====
@@ -131,6 +131,9 @@ $ cat /tmp/1
 1,1,1
 15,1,2
 
+$ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
+
+// Alternatively (and slower due to JVM bootup)
 $ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
 ```
 ====
@@ -201,7 +204,7 @@ val sq = valuesPerDevice.
   format("console").
   option("truncate", false).
   trigger(Trigger.ProcessingTime(5.seconds)).
-  outputMode(OutputMode.Append).
+  outputMode(OutputMode.Append). // <-- Append output mode
   start
 
 -------------------------------------------

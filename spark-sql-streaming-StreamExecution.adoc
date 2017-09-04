@@ -834,7 +834,7 @@ DEBUG StreamExecution: Event time didn't move: [newWatermarkMs] <= [batchWaterma
 
 NOTE: Although `constructNextBatch` collects all the `EventTimeWatermarkExec` physical operators in the executed physical plan of <<lastExecution, lastExecution>>, only the first matters if available.
 
-NOTE: A physical plan has as many `EventTimeWatermarkExec` physical operators as link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator was used to create a streaming query.
+NOTE: A physical plan can have as many `EventTimeWatermarkExec` physical operators as link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator was used to create a streaming query.
 
 [NOTE]
 ====

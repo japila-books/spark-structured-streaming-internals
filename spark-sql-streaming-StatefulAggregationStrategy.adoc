@@ -4,7 +4,7 @@
 
 [NOTE]
 ====
-link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is the result of link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[withWatermark] operator.
+link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is the result of link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator.
 ====
 
 [NOTE]

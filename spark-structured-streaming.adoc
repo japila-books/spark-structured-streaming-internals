@@ -12,7 +12,7 @@ Structured Streaming attempts to unify streaming, interactive, and batch queries
 
 * link:spark-sql-streaming-Dataset-operators.adoc#groupBy[Continuous streaming aggregations]
 
-* link:spark-sql-streaming-Dataset-operators.adoc#withWatermark[Event time streaming watermark]
+* link:spark-sql-streaming-Dataset-withWatermark.adoc[Streaming watermark] (for state expiration and late events)
 
 * Continuous window aggregations (aka *windowing*) using `groupBy` operator with `window` function
 

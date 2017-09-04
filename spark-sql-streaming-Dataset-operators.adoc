@@ -45,8 +45,8 @@ a| Aggregates rows by a typed grouping function
 groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
 ----
 
-| [[withWatermark]] <<withWatermark-indepth, withWatermark>>
-a| Defines a streaming watermark on a event time column
+| [[withWatermark]] link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark]
+a| Defines a streaming watermark on a column
 
 [source, scala]
 ----
@@ -85,12 +85,3 @@ val sq = rates.
 // eventually...
 sq.stop
 ----
-
-=== [[withWatermark-indepth]] Specifying Event Time Watermark -- `withWatermark` Operator
-
-[source, scala]
-----
-withWatermark(eventTime: String, delayThreshold: String): Dataset[T]
-----
-
-CAUTION: FIXME
