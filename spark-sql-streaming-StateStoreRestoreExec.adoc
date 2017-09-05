@@ -1,6 +1,6 @@
 == [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates
 
-`StateStoreRestoreExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreReader.adoc[restores a streaming state from a state store] (per keys associated with input rows).
+`StateStoreRestoreExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreReader.adoc[restores a state from a state store] (for the keys in the input rows).
 
 `StateStoreRestoreExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#Aggregate[plans streaming aggregate operators] (aka _streaming aggregates_).
 
@@ -59,50 +59,6 @@ scala> counts.explain
                            +- *Filter isnotnull(timestamp#52-T20000ms)
                               +- EventTimeWatermark timestamp#52: timestamp, interval 20 seconds
                                  +- StreamingRelation rate, [timestamp#52, value#53L]
-
-// Start the query and hence StateStoreRestoreExec
-import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val sq = counts.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Complete).
-  start
-
--------------------------------------------
-Batch: 0
--------------------------------------------
-+-----+-----------+
-|group|value_count|
-+-----+-----------+
-+-----+-----------+
-
--------------------------------------------
-Batch: 1
--------------------------------------------
-+---------------------------------------------+-----------+
-|group                                        |value_count|
-+---------------------------------------------+-----------+
-|[2017-07-24 21:37:20.0,2017-07-24 21:37:25.0]|3          |
-|[2017-07-24 21:37:25.0,2017-07-24 21:37:30.0]|4          |
-+---------------------------------------------+-----------+
-
--------------------------------------------
-Batch: 2
--------------------------------------------
-+---------------------------------------------+-----------+
-|group                                        |value_count|
-+---------------------------------------------+-----------+
-|[2017-07-24 21:37:20.0,2017-07-24 21:37:25.0]|3          |
-|[2017-07-24 21:37:35.0,2017-07-24 21:37:40.0]|4          |
-|[2017-07-24 21:37:25.0,2017-07-24 21:37:30.0]|5          |
-|[2017-07-24 21:37:30.0,2017-07-24 21:37:35.0]|5          |
-+---------------------------------------------+-----------+
-
-// Eventually...
-sq.stop
 ----
 
 [[metrics]]
@@ -115,13 +71,13 @@ sq.stop
 
 | [[numOutputRows]] `numOutputRows`
 | number of output rows
-| The number of input rows from the <<child, child>> physical operator
+| The number of input rows from the <<child, child>> physical operator (for which `StateStoreRestoreExec` tried to find the state)
 |===
 
 .StateStoreRestoreExec in web UI (Details for Query)
 image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 
-When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that restores the saved state for a key in a row if available.
+When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that restores the saved state for the keys in input rows if available.
 
 [[output]]
 The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s output schema.
@@ -146,11 +102,11 @@ Internally, `doExecute` executes <<child, child>> physical operator and link:spa
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* link:spark-sql-streaming-StateStore.adoc#get[Gets the saved state] in `StateStore` for the key if available
+* link:spark-sql-streaming-StateStore.adoc#get[Gets the saved state] in `StateStore` for the key if available (it might not be if the key appeared in the input the first time)
 
 * Increments <<numOutputRows, numOutputRows>> metric (that in the end is the number of rows from the <<child, child>> operator)
 
-* Generates collection of the current row possibly with the state for the key if available
+* Generates collection made up of the current row and possibly the state for the key if available
 
 NOTE: The number of rows from `StateStoreRestoreExec` is the number of rows from the <<child, child>> operator with additional rows for the saved state.
 
@@ -161,5 +117,5 @@ NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had a
 `StateStoreRestoreExec` takes the following when created:
 
 * [[keyExpressions]] Catalyst expressions for keys (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
-* [[stateInfo]] `StatefulOperatorStateInfo`
+* [[stateInfo]] Optional link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
 * [[child]] Child physical plan (i.e. `SparkPlan`)

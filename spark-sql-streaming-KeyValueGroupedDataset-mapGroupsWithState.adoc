@@ -81,5 +81,5 @@ Batch: 3
 +-----+
 
 // in the end
-spark.streams.active.headOption.foreach(_.stop)
+spark.streams.active.foreach(_.stop)
 ----

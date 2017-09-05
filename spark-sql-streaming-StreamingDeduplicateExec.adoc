@@ -184,6 +184,19 @@ val sq = records.
 sq.stop
 ----
 
+[TIP]
+====
+Enable `INFO` logging level for `org.apache.spark.sql.execution.streaming.StreamingDeduplicateExec` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.StreamingDeduplicateExec=INFO
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
+
 === [[doExecute]] Executing StreamingDeduplicateExec -- `doExecute` Method
 
 [source, scala]
@@ -229,5 +242,5 @@ The completion function does the following:
 
 * [[keyExpressions]] Duplicate keys (as used in link:spark-sql-streaming-Dataset-operators.adoc#dropDuplicates[dropDuplicates] operator)
 * [[child]] Child physical plan (i.e. `SparkPlan`)
-* [[stateInfo]] Optional `StatefulOperatorStateInfo`
+* [[stateInfo]] Optional link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
 * [[eventTimeWatermark]] Optional event time watermark

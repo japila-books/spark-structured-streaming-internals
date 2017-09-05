@@ -130,7 +130,7 @@ NOTE: `groupingExpressions` corresponds to the grouping function in link:spark-s
 * `child` operator as <<partialAggregate, partialAggregate>> aggregate physical operator created above
 
 [[restored]]
-`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreRestoreExec.adoc#creating-instance[StateStoreRestoreExec] with the grouping attributes, no `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
+`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreRestoreExec.adoc#creating-instance[StateStoreRestoreExec] with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
 
 [[partialMerged2]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialMerged2`) with:

@@ -32,8 +32,12 @@ The watermark attribute may be of type `StructType`. If it is, `watermarkExpress
 `watermarkExpression` prints out the following INFO message to the logs when link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute is found.
 
 ```
-INFO FlatMapGroupsWithStateExec: Filtering state store on: [evictionExpression]
+INFO [physicalOperator]Exec: Filtering state store on: [evictionExpression]
 ```
+
+NOTE: `physicalOperator` can be link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec], link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec] or link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec].
+
+TIP: Enable INFO logging level for one of the stateful physical operators to see the INFO message in the logs.
 
 | [[watermarkPredicateForData]] `watermarkPredicateForData`
 | Optional `Predicate` that uses <<watermarkExpression, watermarkExpression>> and the child output to match rows older than the watermark.

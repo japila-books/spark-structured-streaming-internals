@@ -151,8 +151,29 @@ scala> spark.sessionState.conf.numShufflePartitions
 res1: Int = 1
 // END: Only for easier debugging
 
-// Read datasets from a Kafka topic
-// ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
+/**
+TIP: Use :load command in spark-shell to load the following code
+
+:load append.txt
+*/
+
+// Reading datasets from a Kafka topic
+
+/**
+TIP: Start spark-shell with spark-sql-kafka-0-10 package
+
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
+*/
+
+/**
+TIP (only when working with SNAPSHOT version)
+Remove the SNAPSHOT package from the local cache
+
+rm -ri \
+  ~/.ivy2/cache/org.apache.spark \
+  ~/.ivy2/jars/org.apache.spark_spark-sql-kafka-0-10_2.11-2.3.0-SNAPSHOT.jar
+*/
+
 // Use streaming aggregation with groupBy operator to have StateStoreSaveExec operator
 // Since the demo uses Append output mode
 // it has to define a streaming event time watermark using withWatermark operator

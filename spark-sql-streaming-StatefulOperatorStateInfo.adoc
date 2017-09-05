@@ -1,0 +1,3 @@
+== [[StatefulOperatorStateInfo]] StatefulOperatorStateInfo
+
+`StatefulOperatorStateInfo` is...FIXME

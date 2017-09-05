@@ -89,6 +89,8 @@
 
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution of Streaming Datasets]
 
+. link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
+
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
 === Logical Operators

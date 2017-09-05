@@ -159,7 +159,7 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 * [[groupingAttributes]] Grouping attributes (as used for grouping in link:spark-sql-streaming-KeyValueGroupedDataset.adoc#groupingAttributes[KeyValueGroupedDataset] for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
 * [[dataAttributes]] Data attributes
 * [[outputObjAttr]] Output object attribute
-* [[stateInfo]] Optional `StatefulOperatorStateInfo`
+* [[stateInfo]] Optional link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
 * [[stateEncoder]] State `ExpressionEncoder`
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 * [[timeoutConf]] link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
