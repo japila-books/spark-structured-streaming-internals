@@ -6,8 +6,6 @@
 
 * link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState]
 
-NOTE: `mapGroupsWithState` uses `flatMapGroupsWithState` for its work (and is then really its edge case).
-
 [NOTE]
 ====
 `FlatMapGroupsWithState` is translated to:
@@ -52,7 +50,7 @@ NOTE: `apply` is used when link:spark-sql-streaming-KeyValueGroupedDataset.adoc#
 * [[dataAttributes]] Data attributes
 * [[outputObjAttr]] Output object attribute
 * [[stateEncoder]] State `ExpressionEncoder`
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode]
+* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
 * [[isMapGroupsWithState]] `isMapGroupsWithState` Flag (disabled by default)
 * [[timeout]] link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 * [[child]] Child logical operator
