@@ -2,29 +2,25 @@
 
 The following example code shows a link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy] streaming aggregation with link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode.
 
-A streaming aggregation with `Append` output mode is link:spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark[required] to define a watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on at least one of the grouping expressions (directly or using link:spark-sql-streaming-window.adoc[window] function).
+`Append` output mode link:spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark[requires] that a streaming aggregation defines a watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on at least one of the grouping expressions (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
-link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator has to be used before the aggregation operator (for the watermark to be used).
+NOTE: link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator has to be used before the aggregation operator (for the watermark to be used).
 
-In `Append` output mode there are the following questions to ask about what to include in the output Dataset:
+In `Append` output mode the current watermark level is used to:
 
-1. What is the current watermark level (that is used to expire state rows and ignore late events)?
+1. Output saved state rows that became expired (as *Expired state* in the below <<events, events>> table)
 
-1. Is the key that expired in the input?
+1. Drop late events, i.e. don't save them to a state store or include in aggregation (as *Late events* in the below <<events, events>> table)
 
-NOTE: Sorting is not supported on streaming DataFrames/Datasets, unless it is on an aggregated Dataset in `Complete` output mode.
-
-CAUTION: FIXME Review UnsupportedOperationChecker.scala:297
-
-CAUTION: FIXME Explore `groupBy` with a key that expired (i.e. can only be considered late) with events for the key in the batch that marked the key expired
+NOTE: Sorting is only supported on streaming aggregated Datasets with `Complete` output mode.
 
 [[events]]
-.Streaming Batches, Events, Watermark, Expired State and Late Events
+.Streaming Batches, Events, Watermark and State Rows
 [cols="^m,^.^1,^.^1",options="header",width="100%"]
 |===
 | Batch / Events
-| Event Time Watermark [ms]
-| Expired State & Late Events
+| Current Watermark Level [ms]
+| Expired State, Late Events and Saved State Rows
 
 a|
 [cols="^1 ,^1 ,^1",options="header"]
@@ -35,7 +31,16 @@ a|
 !====
 
 ^.^| *0*
-|
+a|
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 1 ! 1 ! 1
+! 15 ! 2 ! 1
+!====
 
 a|
 [cols="^1 ,^1 ,^1",options="header"]
@@ -70,6 +75,17 @@ a|
 ! 1 ! 1 ! 2
 !====
 
+---
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 15 ! 2 ! 1
+! 15 ! 2 ! 2
+! 35 ! 3 ! 2
+!====
 
 a|
 [cols="^1 ,^1 ,^1",options="header"]
@@ -85,6 +101,7 @@ a|
 
 (Maximum event time from the previous batch is `35` and `10` seconds of `delayThreshold`)
 a|
+
 *Expired State*
 
 [cols="^1 ,^1 ,^1",options="header"]
@@ -106,6 +123,17 @@ a|
 ! 20 ! 3 ! 3
 !====
 
+---
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 35 ! 3 ! 2
+! 26 ! 4 ! 3
+!====
+
 a|
 [cols="^1 ,^1 ,^1",options="header"]
 !====
@@ -116,7 +144,17 @@ a|
 ^.^| *25000*
 
 (Maximum event time from the previous batch is `26`)
-|
+a|
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 35 ! 3 ! 2
+! 26 ! 4 ! 3
+! 36 ! 1 ! 4
+!====
 
 a|
 [cols="^1 ,^1 ,^1",options="header"]
@@ -136,6 +174,18 @@ a|
 !====
 ! event_time ! id ! batch
 ! 26 ! 4 ! 3
+!====
+
+---
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 35 ! 3 ! 2
+! 36 ! 1 ! 4
+! 50 ! 1 ! 5
 !====
 
 |===
@@ -163,6 +213,27 @@ $ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list loca
 
 [source, scala]
 ----
+/**
+ * Reading datasets with records from a Kafka topic
+ */
+/**
+TIP (only when working with SNAPSHOT version)
+Remove the SNAPSHOT package from the local cache
+rm -ri \
+  ~/.ivy2/cache/org.apache.spark \
+  ~/.ivy2/jars/org.apache.spark_spark-sql-kafka-0-10_2.11-2.3.0-SNAPSHOT.jar
+*/
+
+/**
+TIP: Start spark-shell with spark-sql-kafka-0-10 package
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
+*/
+
+/**
+TIP: Copy the following code to append.txt and use :load command in spark-shell to load it
+:load append.txt
+*/
+
 // START: Only for easier debugging
 // The state is then only for one partition
 // which should make monitoring it easier
@@ -171,29 +242,6 @@ spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
 scala> spark.sessionState.conf.numShufflePartitions
 res1: Int = 1
 // END: Only for easier debugging
-
-/**
-TIP: Use :load command in spark-shell to load the following code
-
-:load append.txt
-*/
-
-// Reading datasets from a Kafka topic
-
-/**
-TIP: Start spark-shell with spark-sql-kafka-0-10 package
-
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
-*/
-
-/**
-TIP (only when working with SNAPSHOT version)
-Remove the SNAPSHOT package from the local cache
-
-rm -ri \
-  ~/.ivy2/cache/org.apache.spark \
-  ~/.ivy2/jars/org.apache.spark_spark-sql-kafka-0-10_2.11-2.3.0-SNAPSHOT.jar
-*/
 
 // Use streaming aggregation with groupBy operator to have StateStoreSaveExec operator
 // Since the demo uses Append output mode
@@ -222,7 +270,7 @@ val idsPerBatch = spark.
 // That's why StatefulOperatorStateInfo is generic (and uses the default Append for output mode)
 // and no batch-specific values are printed out
 // They will be available right after the first streaming batch
-// Use explain on a streaming query to know the runtime-specific values
+// Use explain on a streaming query to know the trigger-specific values
 scala> idsPerBatch.explain
 == Physical Plan ==
 *Project [event_time#36-T10000ms AS event_time#97, batches#90, ids#92]
@@ -272,9 +320,6 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:00.000Z
 
-// publish new records
-// See the events table above
-
 -------------------------------------------
 Batch: 1
 -------------------------------------------
@@ -304,9 +349,6 @@ scala> println(sq.lastProgress.eventTime.get("watermark"))
 scala> println(sq.lastProgress.numInputRows)
 2
 
-// publish new records
-// See the events table above
-
 -------------------------------------------
 Batch: 2
 -------------------------------------------
@@ -316,8 +358,6 @@ Batch: 2
 |1970-01-01 01:00:01|[1]    |[1]|
 +-------------------+-------+---+
 
-// it's Append output mode so numRowsTotal is...FIXME
-// no keys were available earlier and so numRowsUpdated is...FIXME
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
   "numRowsTotal" : 2,
@@ -326,18 +366,13 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 }
 
 // Current watermark
-// Updated and thus the output with the final aggregation (aka expired state)
+// Updated and so the output with the final aggregation (aka expired state)
 scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:05.000Z
 
 scala> println(sq.lastProgress.numInputRows)
 3
 
-// publish new records
-// See the events table above
-// CAUTION: FIXME That's where I think is a bug
-// I'd expect the other two events for event_time=15 included
-// Reported on the Spark devs mailing list
 -------------------------------------------
 Batch: 3
 -------------------------------------------
@@ -347,8 +382,6 @@ Batch: 3
 |1970-01-01 01:00:15|[2, 1] |[2, 2]|
 +-------------------+-------+------+
 
-// it's Append output mode so numRowsTotal is...FIXME
-// no keys were available earlier and so numRowsUpdated is...FIXME
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
   "numRowsTotal" : 2,
@@ -357,15 +390,12 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 }
 
 // Current watermark
-// Updated and thus the output with the final aggregation (aka expired state)
+// Updated and so the output with the final aggregation (aka expired state)
 scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:25.000Z
 
 scala> println(sq.lastProgress.numInputRows)
 4
-
-// publish new records
-// See the events table above
 
 -------------------------------------------
 Batch: 4
@@ -375,8 +405,6 @@ Batch: 4
 +----------+-------+---+
 +----------+-------+---+
 
-// it's Append output mode so numRowsTotal is...FIXME
-// no keys were available earlier and so numRowsUpdated is...FIXME
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
   "numRowsTotal" : 3,
@@ -384,7 +412,6 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
   "memoryUsedBytes" : 965
 }
 
-// Current watermark
 scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:25.000Z
 
@@ -403,8 +430,6 @@ Batch: 5
 |1970-01-01 01:00:26|[3]    |[4]|
 +-------------------+-------+---+
 
-// it's Append output mode so numRowsTotal is...FIXME
-// no keys were available earlier and so numRowsUpdated is...FIXME
 scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 {
   "numRowsTotal" : 3,
@@ -413,7 +438,7 @@ scala> println(sq.lastProgress.stateOperators(0).prettyJson)
 }
 
 // Current watermark
-// Updated and thus the output with the final aggregation (aka expired state)
+// Updated and so the output with the final aggregation (aka expired state)
 scala> println(sq.lastProgress.eventTime.get("watermark"))
 1970-01-01T00:00:26.000Z
 

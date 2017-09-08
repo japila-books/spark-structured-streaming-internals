@@ -151,9 +151,19 @@ Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-Pr
 
 | [[numUpdatedStateRows]] `numUpdatedStateRows`
 | number of updated state rows
-| Number of the state keys that link:spark-sql-streaming-StateStore.adoc#put[were stored as updates in the state store] (given keys in the result rows of the upstream physical operator)
+a| Number of the state keys that link:spark-sql-streaming-StateStore.adoc#put[were stored as updates in the state store] in a trigger and for the keys in the result rows of the upstream physical operator.
 
-Corresponds to `numRowsUpdated` in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsUpdated` for ``0``th operator).
+* In `Complete` output mode, `numUpdatedStateRows` is the number of input rows (which should be exactly the number of output rows from the upstream operator)
+
+CAUTION: FIXME
+
+* In `Append` output mode, `numUpdatedStateRows` is the number of input rows with keys that have not expired yet (per required watermark)
+
+* In `Update` output mode, `numUpdatedStateRows` is exactly <<numOutputRows, number of output rows>>, i.e. the number of keys that have not expired yet if watermark has been defined at all (which is optional).
+
+CAUTION: FIXME
+
+NOTE: You can see the current value as `numRowsUpdated` attribute in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (that is available as `StreamingQuery.lastProgress.stateOperators(n).numRowsUpdated` for ``n``th operator).
 
 | [[stateMemory]] `stateMemory`
 | memory used by state
