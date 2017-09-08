@@ -1,10 +1,10 @@
-== Demo: StateStoreSaveExec with Append Output Mode
+== Demo: groupBy Streaming Aggregation with Append Output Mode
 
-The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
+The following example code shows a link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy] streaming aggregation with link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode.
 
-NOTE: A streaming aggregation with `Append` output mode is link:spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark[required] to define watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on at least one of the grouping expressions (directly or using link:spark-sql-streaming-window.adoc[window] function).
+A streaming aggregation with `Append` output mode is link:spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark[required] to define a watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on at least one of the grouping expressions (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
-NOTE: link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator has to be used before the aggregation (for the watermark to be used).
+link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator has to be used before the aggregation operator (for the watermark to be used).
 
 In `Append` output mode there are the following questions to ask about what to include in the output Dataset:
 
