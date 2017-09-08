@@ -7,16 +7,7 @@
 link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is the result of link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator.
 ====
 
-[NOTE]
-====
-`Aggregate` logical operator is the result of:
-
-* `RelationalGroupedDataset` aggregations, i.e. `agg` and  `pivot` operators
-
-* `KeyValueGroupedDataset` aggregations, i.e. `mapGroups`, `flatMapGroups`, `mapGroupsWithState`, `flatMapGroupsWithState`, `reduceGroups`, and `agg`, `cogroup` operators
-
-* SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
-====
+NOTE: `Aggregate` logical operator represents link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy] and link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey] aggregations (and SQL's `GROUP BY` clause).
 
 `StatefulAggregationStrategy` is available using `SessionState`.
 

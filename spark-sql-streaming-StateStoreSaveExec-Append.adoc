@@ -2,9 +2,7 @@
 
 The following example code shows the behaviour of link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append[StateStoreSaveExec in Append output mode].
 
-NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
-
-CAUTION: FIXME UnsupportedOperationChecker makes sure that the requirement holds
+NOTE: A streaming aggregation with `Append` output mode is link:spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark[required] to define watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on at least one of the grouping expressions (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
 NOTE: link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator has to be used before the aggregation (for the watermark to be used).
 

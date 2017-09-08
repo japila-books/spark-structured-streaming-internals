@@ -18,7 +18,41 @@ The Spark Structured Streaming gitbook is solely focused on <<checkForStreaming,
 checkForStreaming(plan: LogicalPlan, outputMode: OutputMode): Unit
 ----
 
+`checkForStreaming` asserts that the following requirements hold:
+
+1. <<only-one-streaming-aggregation-allowed, Only one streaming aggregation is allowed>>
+
+1. <<streaming-aggregation-append-mode-requires-watermark, Streaming aggregation with Append output mode requires watermark>> (on the grouping expressions)
+
+1. <<multiple-flatMapGroupsWithState, Multiple flatMapGroupsWithState operators are only allowed with Append output mode>>
+
 `checkForStreaming`...FIXME
+
+`checkForStreaming` finds all streaming aggregates (i.e. `Aggregate` logical operators with streaming sources).
+
+NOTE: `Aggregate` logical operator represents link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy] and link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey] aggregations (and SQL's `GROUP BY` clause).
+
+[[only-one-streaming-aggregation-allowed]]
+`checkForStreaming` asserts that there is exactly one streaming aggregation in a streaming query.
+
+Otherwise, `checkForStreaming` reports a `AnalysisException`:
+
+[options="wrap"]
+----
+Multiple streaming aggregations are not supported with streaming DataFrames/Datasets
+----
+
+[[streaming-aggregation-append-mode-requires-watermark]]
+`checkForStreaming` asserts that link:spark-sql-streaming-Dataset-withWatermark.adoc[watermark] was defined for a streaming aggregation with link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode (on at least one of the grouping expressions).
+
+Otherwise, `checkForStreaming` reports a `AnalysisException`:
+
+[options="wrap"]
+----
+Append output mode not supported when there are streaming aggregations on streaming DataFrames/DataSets without watermark
+----
+
+CAUTION: FIXME
 
 `checkForStreaming` counts all link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators (on streaming Datasets with `isMapGroupsWithState` flag disabled).
 
