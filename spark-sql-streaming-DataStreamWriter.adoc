@@ -216,8 +216,8 @@ Internally, `start` branches off per `source`.
 | `queryName`
 | Name of active streaming query
 
-| `checkpointLocation`
-| Directory for checkpointing.
+| [[checkpointLocation]] `checkpointLocation`
+| Directory for checkpointing (and to store query metadata like offsets before and after being processed, the link:spark-sql-streaming-StreamExecution.adoc#id[query id], etc.)
 |===
 
 `start` reports a `AnalysisException` when `source` is `hive`.

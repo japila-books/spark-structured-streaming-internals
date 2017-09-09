@@ -202,7 +202,7 @@ Use the following to publish events to Kafka.
 // 1st streaming batch
 $ cat /tmp/1
 1,1,1
-15,1,2
+15,2,1
 
 $ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
 
@@ -219,7 +219,7 @@ $ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list loca
 /**
 TIP (only when working with SNAPSHOT version)
 Remove the SNAPSHOT package from the local cache
-rm -ri \
+rm -rf \
   ~/.ivy2/cache/org.apache.spark \
   ~/.ivy2/jars/org.apache.spark_spark-sql-kafka-0-10_2.11-2.3.0-SNAPSHOT.jar
 */

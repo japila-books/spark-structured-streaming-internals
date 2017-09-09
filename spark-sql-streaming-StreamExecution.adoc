@@ -1,6 +1,6 @@
 == [[StreamExecution]] StreamExecution -- Execution Environment of Streaming Dataset
 
-`StreamExecution` represents the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end writes the result to a <<sink, streaming sink>>.
+`StreamExecution` represents the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, writes the result Dataset to the sink>>.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
@@ -46,6 +46,8 @@ image::images/StreamExecution-start.png[align="center"]
 * `INITIALIZED` when the instance was created.
 * `ACTIVE` when batches are pulled from the sources.
 * `TERMINATED` when batches were successfully processed or the query stopped.
+
+`StreamExecution` is a link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter] and reports progress regularly.
 
 `StreamExecution` tracks streaming data sources in <<uniqueSources, uniqueSources>> internal registry.
 
@@ -173,7 +175,11 @@ a| Current batch number
 * Incremented when `StreamExecution` <<runBatches, runs streaming batches>>
 
 | [[id]] `id`
-|
+a| Unique identifier of the streaming query
+
+Set as the `id` of <<streamMetadata, streamMetadata>> when `StreamExecution` is <<creating-instance, created>>.
+
+NOTE: `id` can get fetched from link:spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation[checkpoint metadata] if available and thus recovered when a query is restarted (possibly due to a failure or planned maintenance).
 
 | [[initializationLatch]] `initializationLatch`
 |
@@ -314,7 +320,7 @@ a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/
 * `TERMINATED`
 
 | [[streamMetadata]] `streamMetadata`
-|
+| `StreamMetadata` from the `metadata` file from <<checkpointFile, checkpoint directory>>. If the `metadata` file is not available it is created (with a new random <<id, id>>).
 
 | [[triggerExecutor]] `triggerExecutor`
 a| link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor] per <<trigger, Trigger>>:
@@ -375,7 +381,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions (in Logical Plan) With New Data>>
 1. <<runBatch-queryPlanning, Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)>>
 1. <<runBatch-nextBatch, Creating Dataset with New Data and IncrementalExecution Query Execution>>
-1. <<runBatch-addBatch, Adding New Batch>>
+1. <<runBatch-addBatch, Adding Current Streaming Batch to Sink>>
 1. <<runBatch-awaitBatchLock, Waking Up Threads Waiting For Stream to Progress>>
 
 NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>>.
@@ -439,7 +445,7 @@ NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPl
 
 CAUTION: FIXME Describe `nextBatch`
 
-==== [[runBatch-addBatch]] Adding New Batch
+==== [[runBatch-addBatch]] Adding Current Streaming Batch to Sink
 
 CAUTION: FIXME Describe `addBatch`
 
