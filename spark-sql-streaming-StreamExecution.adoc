@@ -170,16 +170,16 @@ a| Current batch number
 
 * `-1` when `StreamExecution` is <<creating-instance, created>>
 
-* `0` when `StreamExecution` <<populateStartOffsets, populates start offsets>> (when <<offsetLog, OffsetSeqLog>> is empty)
+* `0` when `StreamExecution` <<populateStartOffsets, populates start offsets>> (and <<offsetLog, OffsetSeqLog>> is empty, i.e. no offset files in `offsets` directory in checkpoint)
 
-* Incremented when `StreamExecution` <<runBatches, runs streaming batches>>
+* Incremented when `StreamExecution` <<runBatches, runs streaming batches>> and finishes a trigger with <<dataAvailable, data available in sources>> right after committing the batch.
 
 | [[id]] `id`
 a| Unique identifier of the streaming query
 
 Set as the `id` of <<streamMetadata, streamMetadata>> when `StreamExecution` is <<creating-instance, created>>.
 
-NOTE: `id` can get fetched from link:spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation[checkpoint metadata] if available and thus recovered when a query is restarted (possibly due to a failure or planned maintenance).
+NOTE: `id` can get fetched from link:spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation[checkpoint metadata] if available and thus recovered when a query is resumed (i.e. restarted after a failure or a planned stop).
 
 | [[initializationLatch]] `initializationLatch`
 |
