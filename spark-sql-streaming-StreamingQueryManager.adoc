@@ -159,7 +159,7 @@ java.lang.IllegalArgumentException: There is no active query with name hello
 postListenerEvent(event: StreamingQueryListener.Event): Unit
 ----
 
-`postListenerEvent` posts a `StreamingQueryListener.Event` to `listenerBus`.
+`postListenerEvent` posts the input `event` to <<listenerBus, StreamingQueryListenerBus>> (in the current `SparkSession`).
 
 === [[StreamingQueryListener]] StreamingQueryListener
 

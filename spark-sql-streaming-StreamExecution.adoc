@@ -36,7 +36,7 @@ image::images/StreamExecution-creating-instance.png[align="center"]
 
 NOTE: link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter] describes how the results of executing batches of a streaming query are written to a streaming sink.
 
-`StreamExecution` <<start, starts a thread of execution>> that runs a streaming query continuously and concurrently (and <<runBatches, polls for new records in the streaming data sources to create a batch>> every trigger).
+`StreamExecution` <<start, starts a thread of execution>> that runs the streaming query continuously and concurrently (and <<runBatches, polls for new records in the streaming data sources to create a batch>> every trigger).
 
 .StreamExecution's Starting Streaming Query (on Execution Thread)
 image::images/StreamExecution-start.png[align="center"]
@@ -47,7 +47,7 @@ image::images/StreamExecution-start.png[align="center"]
 * `ACTIVE` when batches are pulled from the sources.
 * `TERMINATED` when batches were successfully processed or the query stopped.
 
-`StreamExecution` is a link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter] and reports progress regularly.
+`StreamExecution` is a link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter] and <<postEvent, reports status of the streaming query>> (i.e. when it starts, progresses and terminates) by posting `StreamingQueryListener` events.
 
 `StreamExecution` tracks streaming data sources in <<uniqueSources, uniqueSources>> internal registry.
 
@@ -673,10 +673,6 @@ NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, Trigger
 
 CAUTION: FIXME
 
-=== [[postEvent]] `postEvent` Internal Method
-
-CAUTION: FIXME
-
 === [[getBatchDescriptionString]] `getBatchDescriptionString` Internal Method
 
 [source, scala]
@@ -932,3 +928,25 @@ In the end, `constructNextBatch` purges <<offsetLog, OffsetSeqLog>> and <<batchC
 ==== [[constructNextBatch-hasNewData-false]] No New Data Available
 
 If there is no new data available, `constructNextBatch` acquires a lock on <<awaitBatchLock, awaitBatchLock>>, wakes up all waiting threads that are waiting for the stream to progress (using <<awaitBatchLockCondition, awaitBatchLockCondition>>), followed by releasing the lock on <<awaitBatchLock, awaitBatchLock>>.
+
+=== [[postEvent]] Posting StreamingQueryListener Event -- `postEvent` Method
+
+[source, scala]
+----
+postEvent(event: StreamingQueryListener.Event): Unit
+----
+
+NOTE: `postEvent` is a part of link:spark-sql-streaming-ProgressReporter.adoc#postEvent[ProgressReporter Contract].
+
+`postEvent` simply requests the `StreamingQueryManager` to link:spark-sql-streaming-StreamingQueryManager.adoc#postListenerEvent[post] the input event (to the link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus] in the current `SparkSession`).
+
+NOTE: `postEvent` uses `SparkSession` to access the current `StreamingQueryManager`.
+
+[NOTE]
+====
+`postEvent` is used when:
+
+* `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[reports update progress] (while link:link:spark-sql-streaming-ProgressReporter.adoc#finishTrigger[finishing a trigger])
+
+* `StreamExecution` <<runBatches, runs streaming batches>> (and announces starting a streaming query by posting `QueryStartedEvent` and query termination by posting `QueryTerminatedEvent`)
+====

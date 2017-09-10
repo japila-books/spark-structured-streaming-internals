@@ -216,7 +216,7 @@ Used when:
 | `Clock` to track the time
 |===
 
-=== [[updateProgress]] Updating Query Progress -- `updateProgress` Internal Method
+=== [[updateProgress]] Reporting Streaming Query Progress -- `updateProgress` Internal Method
 
 [source, scala]
 ----
