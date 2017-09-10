@@ -1,13 +1,13 @@
 == [[StreamingQueryListenerBus]] StreamingQueryListenerBus -- Notification Bus for Streaming Events
 
-`StreamingQueryListenerBus` is an event bus (i.e. `ListenerBus`) to post streaming events to link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener] event listeners.
-
-`StreamingQueryListenerBus` is also a `SparkListener` and registers itself with <<sparkListenerBus, LiveListenerBus>> to...FIXME
+`StreamingQueryListenerBus` is an event bus (i.e. `ListenerBus`) to <<post, dispatch streaming events>> to link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener] streaming event listeners.
 
 `StreamingQueryListenerBus` is created when `StreamingQueryManager` is link:spark-sql-streaming-StreamingQueryManager.adoc#creating-instance[created] (as the internal link:spark-sql-streaming-StreamingQueryManager.adoc#listenerBus[listenerBus]).
 
-.StreamingQueryListenerBus is Created Once Per SparkSession
+.StreamingQueryListenerBus is Created Once In SparkSession
 image::images/StreamingQueryListenerBus.png[align="center"]
+
+`StreamingQueryListenerBus` is also a `SparkListener` and registers itself with <<sparkListenerBus, LiveListenerBus>> to <<onOtherEvent, intercept a QueryStartedEvent>>.
 
 [[internal-registries]]
 .StreamingQueryListenerBus's Internal Registries and Counters
@@ -17,10 +17,39 @@ image::images/StreamingQueryListenerBus.png[align="center"]
 | Description
 
 | [[activeQueryRunIds]] `activeQueryRunIds`
-| Collection of active queries by their UUIDs.
+a| Collection of active streaming queries by their link:spark-sql-streaming-StreamingQuery.adoc#runId[runIds].
 
-Used when...FIXME
+* `runId` is added when `StreamingQueryListenerBus` <<post, posts a QueryStartedEvent event to LiveListenerBus>>
+
+* `runId` is removed when `StreamingQueryListenerBus` <<postToAll, postToAll a QueryTerminatedEvent event>>
+
+Used mainly when `StreamingQueryListenerBus` <<doPostEvent, dispatches an event to listeners>> (for queries started in the same `SparkSession`).
 |===
+
+=== [[post]] Posting StreamingQueryListener Events to LiveListenerBus -- `post` Method
+
+[source, scala]
+----
+post(event: StreamingQueryListener.Event): Unit
+----
+
+`post` simply posts the input `event` straight to <<sparkListenerBus, LiveListenerBus>> except link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent] events.
+
+For link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent] events, `post` adds the query's `runId` to <<activeQueryRunIds, activeQueryRunIds>> registry first before posting the event to <<sparkListenerBus, LiveListenerBus>> followed by <<postToAll, postToAll>>.
+
+NOTE: `post` is used exclusively when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#postListenerEvent[posts StreamingQueryListener event].
+
+=== [[onOtherEvent]] `onOtherEvent` Method
+
+CAUTION: FIXME
+
+=== [[doPostEvent]] `doPostEvent` Method
+
+CAUTION: FIXME
+
+=== [[postToAll]] `postToAll` Method
+
+CAUTION: FIXME
 
 === [[creating-instance]] Creating StreamingQueryListenerBus Instance
 

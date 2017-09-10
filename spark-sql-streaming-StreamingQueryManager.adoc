@@ -178,7 +178,7 @@ It is set in:
 +
 It is called from link:spark-sql-streaming-StreamExecution.adoc#runBatches[StreamExecution.runBatches].
 
-=== [[postListenerEvent]] Posting StreamingQueryListener Event -- `postListenerEvent` Method
+=== [[postListenerEvent]] Posting StreamingQueryListener Event to StreamingQueryListenerBus -- `postListenerEvent` Method
 
 [source, scala]
 ----
