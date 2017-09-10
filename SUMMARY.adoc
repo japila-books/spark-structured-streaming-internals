@@ -65,7 +65,7 @@
 
 == Monitoring
 
-. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener]
+. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Streaming Query Event Listener]
 .. link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent]
 .. link:spark-sql-streaming-QueryProgressEvent.adoc[QueryProgressEvent]
 .. link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvent]
@@ -95,7 +95,7 @@
 
 . link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
 
-. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
+. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus -- Notification Bus for Streaming Events]
 
 === Logical Operators
 

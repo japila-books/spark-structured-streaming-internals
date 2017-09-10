@@ -1,3 +1,33 @@
-== [[StreamingQueryListenerBus]] StreamingQueryListenerBus
+== [[StreamingQueryListenerBus]] StreamingQueryListenerBus -- Notification Bus for Streaming Events
 
-CAUTION: FIXME
+`StreamingQueryListenerBus` is an event bus (i.e. `ListenerBus`) to post streaming events to link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener] event listeners.
+
+`StreamingQueryListenerBus` is also a `SparkListener` and registers itself with <<sparkListenerBus, LiveListenerBus>> to...FIXME
+
+`StreamingQueryListenerBus` is created when `StreamingQueryManager` is link:spark-sql-streaming-StreamingQueryManager.adoc#creating-instance[created] (as the internal link:spark-sql-streaming-StreamingQueryManager.adoc#listenerBus[listenerBus]).
+
+.StreamingQueryListenerBus is Created Once Per SparkSession
+image::images/StreamingQueryListenerBus.png[align="center"]
+
+[[internal-registries]]
+.StreamingQueryListenerBus's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[activeQueryRunIds]] `activeQueryRunIds`
+| Collection of active queries by their UUIDs.
+
+Used when...FIXME
+|===
+
+=== [[creating-instance]] Creating StreamingQueryListenerBus Instance
+
+`StreamingQueryListenerBus` takes the following when created:
+
+* [[sparkListenerBus]] `LiveListenerBus`
+
+`StreamingQueryListenerBus` registers itself with <<sparkListenerBus, LiveListenerBus>>.
+
+`StreamingQueryListenerBus` initializes the <<internal-registries, internal registries and counters>>.

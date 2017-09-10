@@ -1,6 +1,6 @@
-== [[StreamingQueryListener]] StreamingQueryListener
+== [[StreamingQueryListener]] StreamingQueryListener -- Streaming Query Event Listener
 
-`StreamingQueryListener` is the <<contract, interface>> for notifications about the lifecycle events of streaming queries.
+`StreamingQueryListener` is the <<contract, interface>> for intercepting notifications about the lifecycle events of streaming queries, i.e. start, progress and termination of a query.
 
 [[contract]]
 [source, scala]
