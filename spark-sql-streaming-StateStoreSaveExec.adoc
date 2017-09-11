@@ -147,7 +147,7 @@ NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
 | number of total state rows
 | Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store]
 
-Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal` for ``0``th operator).
+Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal` for ``0``th operator).
 
 | [[numUpdatedStateRows]] `numUpdatedStateRows`
 | number of updated state rows
@@ -163,7 +163,7 @@ CAUTION: FIXME
 
 CAUTION: FIXME
 
-NOTE: You can see the current value as `numRowsUpdated` attribute in `stateOperators` in link:spark-sql-streaming-ProgressReporter.adoc#StreamingQueryProgress[StreamingQueryProgress] (that is available as `StreamingQuery.lastProgress.stateOperators(n).numRowsUpdated` for ``n``th operator).
+NOTE: You can see the current value as `numRowsUpdated` attribute in `stateOperators` in link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] (that is available as `StreamingQuery.lastProgress.stateOperators(n).numRowsUpdated` for ``n``th operator).
 
 | [[stateMemory]] `stateMemory`
 | memory used by state

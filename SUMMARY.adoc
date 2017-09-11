@@ -66,6 +66,7 @@
 == Monitoring
 
 . link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
+.. link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
 
 . link:spark-sql-streaming-webui.adoc[Web UI]
 

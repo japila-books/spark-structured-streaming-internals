@@ -100,7 +100,7 @@ res3: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBat
 | Timestamp of when the last batch/trigger started
 
 | [[progressBuffer]] `progressBuffer`
-| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.Queue[scala.collection.mutable.Queue] of <<StreamingQueryProgress, StreamingQueryProgress>>
+| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.Queue[scala.collection.mutable.Queue] of link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
 
 Elements are added and removed when `ProgressReporter` <<updateProgress, updates progress>>.
 
@@ -121,10 +121,6 @@ CAUTION: FIXME
 CAUTION: FIXME
 
 === [[SinkProgress]] SinkProgress
-
-CAUTION: FIXME
-
-=== [[StreamingQueryProgress]] StreamingQueryProgress
 
 CAUTION: FIXME
 
@@ -223,9 +219,9 @@ Used when:
 updateProgress(newProgress: StreamingQueryProgress): Unit
 ----
 
-`updateProgress` records `StreamingQueryProgress` and posts a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryProgressEvent[QueryProgressEvent] event.
+`updateProgress` records the input `newProgress` and posts a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryProgressEvent[QueryProgressEvent] event.
 
-.ProgressReporter's Updating Progress
+.ProgressReporter's Reporting Query Progress
 image::images/ProgressReporter-updateProgress.png[align="center"]
 
 `updateProgress` adds the input `newProgress` to <<progressBuffer, progressBuffer>>.
@@ -295,7 +291,7 @@ DEBUG StreamExecution: Execution stats: [executionStats]
 
 `finishTrigger` creates a <<SinkProgress, SinkProgress>> (aka sink statistics) for the <<sink, sink>>.
 
-`finishTrigger` creates <<StreamingQueryProgress, StreamingQueryProgress>>.
+`finishTrigger` creates a link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress].
 
 If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updates query progress>>.
 

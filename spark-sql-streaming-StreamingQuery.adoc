@@ -51,13 +51,13 @@ trait StreamingQuery {
 | Description
 
 | [[name]] `name`
-| Query name that is unique across all active queries
+| Optional query name that is unique across all active queries
 
 | [[id]] `id`
-| `UUID`
+| Unique identifier of a streaming query
 
 | [[runId]] `runId`
-| `UUID`
+| Unique identifier of the current execution of a streaming query
 
 | [[sparkSession]] `sparkSession`
 | `SparkSession`
@@ -72,10 +72,10 @@ trait StreamingQuery {
 | `StreamingQueryStatus`
 
 | [[recentProgress]] `recentProgress`
-| Collection of recent `StreamingQueryProgress`
+| Collection of recent link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] updates.
 
 | [[lastProgress]] `lastProgress`
-| The last `StreamingQueryProgress`
+| The last link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] update.
 
 | [[awaitTermination]] `awaitTermination`
 |

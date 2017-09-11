@@ -33,7 +33,7 @@ a| [[QueryStartedEvent]] `QueryStartedEvent`
 
 a| [[QueryProgressEvent]] `QueryProgressEvent`
 
-- `StreamingQueryProgress`
+- link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
 
 | [[onQueryProgress]] onQueryProgress
 | `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[reports query progress] (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] and a trigger has finished).
