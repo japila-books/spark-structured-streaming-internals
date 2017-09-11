@@ -33,9 +33,9 @@ Used mainly when `StreamingQueryListenerBus` <<doPostEvent, dispatches an event 
 post(event: StreamingQueryListener.Event): Unit
 ----
 
-`post` simply posts the input `event` straight to <<sparkListenerBus, LiveListenerBus>> except link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent] events.
+`post` simply posts the input `event` straight to <<sparkListenerBus, LiveListenerBus>> except link:spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent[QueryStartedEvent] events.
 
-For link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent] events, `post` adds the query's `runId` to <<activeQueryRunIds, activeQueryRunIds>> registry first before posting the event to <<sparkListenerBus, LiveListenerBus>> followed by <<postToAll, postToAll>>.
+For `QueryStartedEvent` events, `post` adds the query's `runId` to <<activeQueryRunIds, activeQueryRunIds>> registry first before posting the event to <<sparkListenerBus, LiveListenerBus>> followed by <<postToAll, postToAll>>.
 
 NOTE: `post` is used exclusively when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#postListenerEvent[posts StreamingQueryListener event].
 

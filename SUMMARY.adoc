@@ -65,10 +65,7 @@
 
 == Monitoring
 
-. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Streaming Query Event Listener]
-.. link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvent]
-.. link:spark-sql-streaming-QueryProgressEvent.adoc[QueryProgressEvent]
-.. link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvent]
+. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
 
 . link:spark-sql-streaming-webui.adoc[Web UI]
 

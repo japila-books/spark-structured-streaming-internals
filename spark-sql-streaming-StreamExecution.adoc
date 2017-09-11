@@ -948,5 +948,5 @@ NOTE: `postEvent` uses `SparkSession` to access the current `StreamingQueryManag
 
 * `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[reports update progress] (while link:link:spark-sql-streaming-ProgressReporter.adoc#finishTrigger[finishing a trigger])
 
-* `StreamExecution` <<runBatches, runs streaming batches>> (and announces starting a streaming query by posting `QueryStartedEvent` and query termination by posting `QueryTerminatedEvent`)
+* `StreamExecution` <<runBatches, runs streaming batches>> (and announces starting a streaming query by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent[QueryStartedEvent] and query termination by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent[QueryTerminatedEvent])
 ====

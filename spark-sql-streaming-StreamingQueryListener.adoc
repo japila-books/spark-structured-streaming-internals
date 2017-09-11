@@ -1,6 +1,6 @@
-== [[StreamingQueryListener]] StreamingQueryListener -- Streaming Query Event Listener
+== [[StreamingQueryListener]] StreamingQueryListener -- Intercepting Streaming Events
 
-`StreamingQueryListener` is the <<contract, interface>> for intercepting notifications about the lifecycle events of streaming queries, i.e. start, progress and termination of a query.
+`StreamingQueryListener` is the <<contract, interface>> for intercepting notifications about the <<events, life cycle events>> of streaming queries, i.e. start, progress and termination of a query.
 
 [[contract]]
 [source, scala]
@@ -13,6 +13,41 @@ abstract class StreamingQueryListener {
   def onQueryTerminated(event: QueryTerminatedEvent): Unit
 }
 ----
+
+[[events]]
+.StreamingQueryListener's Life Cycle Events and Callbacks
+[cols="m,m,1",options="header",width="100%"]
+|===
+| Event
+| Callback
+| When Posted
+
+a| [[QueryStartedEvent]] `QueryStartedEvent`
+
+- `id`
+- `runId`
+- `name`
+
+| [[onQueryStarted]] onQueryStarted
+| Right after `StreamExecution` has started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches].
+
+a| [[QueryProgressEvent]] `QueryProgressEvent`
+
+- `StreamingQueryProgress`
+
+| [[onQueryProgress]] onQueryProgress
+| `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[reports query progress] (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] and a trigger has finished).
+
+a| [[QueryTerminatedEvent]] `QueryTerminatedEvent`
+
+- `id`
+- `runId`
+- Optional `exception` if terminated due to an error
+
+| [[onQueryTerminated]] onQueryTerminated
+| Right before `StreamExecution` finishes link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches] (regardless of whether an exception was reported or not).
+
+|===
 
 You can register a `StreamingQueryListener` using link:spark-sql-streaming-StreamingQueryManager.adoc#addListener[StreamingQueryManager.addListener] method.
 
@@ -30,46 +65,20 @@ val queryListener: StreamingQueryListener = ...
 spark.streams.removeListener(queryListener)
 ----
 
-=== [[onQueryStarted]] `onQueryStarted` Callback
-
-[source, scala]
-----
-onQueryStarted(event: QueryStartedEvent): Unit
-----
-
-`onQueryStarted` handles link:spark-sql-streaming-QueryStartedEvent.adoc[QueryStartedEvents].
-
 .StreamingQueryListener Notified about Query's Start (onQueryStarted)
 image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
 
-NOTE: Used internally to unblock the link:spark-sql-streaming-StreamExecution.adoc#start[starting thread] (of `StreamExecution`).
-
-NOTE: `onQueryStarted` is triggered right after `StreamExecution` has started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches].
-
-=== [[onQueryProgress]] `onQueryProgress` Callback
-
-[source, scala]
-----
-onQueryProgress(event: QueryProgressEvent): Unit
-----
-
-`onQueryProgress` handles link:spark-sql-streaming-QueryProgressEvent.adoc[QueryProgressEvents].
+NOTE: `onQueryStarted` is used internally to unblock the link:spark-sql-streaming-StreamExecution.adoc#start[starting thread] of `StreamExecution`.
 
 .StreamingQueryListener Notified about Query's Progress (onQueryProgress)
 image::images/StreamingQueryListener-onQueryProgress.png[align="center"]
 
-NOTE: `onQueryProgress` is triggered when `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[updates query progress] (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] and a trigger has finished).
-
-=== [[onQueryTerminated]] `onQueryTerminated` Callback
-
-[source, scala]
-----
-onQueryTerminated(event: QueryTerminatedEvent): Unit
-----
-
-`onQueryTerminated` handles link:spark-sql-streaming-QueryTerminatedEvent.adoc[QueryTerminatedEvents].
-
 .StreamingQueryListener Notified about Query's Termination (onQueryTerminated)
 image::images/StreamingQueryListener-onQueryTerminated.png[align="center"]
 
-NOTE: `onQueryTerminated` is triggered right before `StreamExecution` finishes link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches] (regardless of whether an exception was reported or not).
+[NOTE]
+====
+You can also register a streaming event listener using the general `SparkListener` interface.
+
+Details on `SparkListener` interface can be found at the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkListener.html[Mastering Apache Spark 2] gitbook.
+====
