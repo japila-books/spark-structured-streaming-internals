@@ -1,16 +1,18 @@
 == [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Datasets
 
-`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] uses for incremental execution of the <<logicalPlan, logical query plan>> (every trigger that, when small enough, is supposed to give the impression of continuous stream processing).
+`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] uses for incremental execution of the <<logicalPlan, logical query plan>> (every trigger that, when small enough, is supposed to give the impression of near real-time continuous stream processing).
 
 .StreamExecution creates IncrementalExecution (every trigger / streaming batch)
 image::images/IncrementalExecution-StreamExecution.png[align="center"]
+
+TIP: Details on `QueryExecution` contract can be found in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-QueryExecution.html[Mastering Apache Spark 2] gitbook.
 
 [[preparations]]
 `IncrementalExecution` registers <<state, state>> physical preparation rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using batch-specific execution properties).
 
 `IncrementalExecution` is <<creating-instance, created>> when:
 
-* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] (for a streaming batch)
+* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query]
 
 * `ExplainCommand` is executed (for link:spark-sql-streaming-Dataset-operators.adoc#explain[explain] operator)
 

@@ -1,6 +1,6 @@
 == [[StreamingQueryListener]] StreamingQueryListener -- Intercepting Streaming Events
 
-`StreamingQueryListener` is the <<contract, interface>> for intercepting notifications about the <<events, life cycle events>> of streaming queries, i.e. start, progress and termination of a query.
+`StreamingQueryListener` is the <<contract, contract>> for listeners that want to intercept notifications about the <<events, life cycle events>> of streaming queries, i.e. start, progress and termination of a query.
 
 [[contract]]
 [source, scala]
@@ -80,5 +80,5 @@ image::images/StreamingQueryListener-onQueryTerminated.png[align="center"]
 ====
 You can also register a streaming event listener using the general `SparkListener` interface.
 
-Details on `SparkListener` interface can be found at the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkListener.html[Mastering Apache Spark 2] gitbook.
+Details on `SparkListener` interface can be found in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkListener.html[Mastering Apache Spark 2] gitbook.
 ====
