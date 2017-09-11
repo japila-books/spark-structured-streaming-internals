@@ -1,6 +1,6 @@
 == [[Sink]] Streaming Sink
 
-`Sink` <<contract, adds batches>> (of records) to a storage (while writing streaming datasets).
+`Sink` <<contract, adds batches>> (of records as a `Dataset`) to a storage for a trigger.
 
 [[available-implementations]]
 .Sinks

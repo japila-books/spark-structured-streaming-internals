@@ -1,6 +1,6 @@
 == [[StreamSinkProvider]] StreamSinkProvider
 
-`StreamSinkProvider` is the <<contract, interface>> for entities that can create <<contract, streaming sinks>> for a specific format or system.
+`StreamSinkProvider` is the <<contract, contract>> for creating link:spark-sql-streaming-Sink.adoc[streaming sinks] for a specific format or system.
 
 `StreamSinkProvider` defines the one and only <<createSink, createSink>> method that creates a link:spark-sql-streaming-Sink.adoc[streaming sink].
 

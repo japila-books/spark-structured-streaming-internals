@@ -172,7 +172,7 @@ a| Current batch number
 
 * `0` when `StreamExecution` <<populateStartOffsets, populates start offsets>> (and <<offsetLog, OffsetSeqLog>> is empty, i.e. no offset files in `offsets` directory in checkpoint)
 
-* Incremented when `StreamExecution` <<runBatches, runs streaming batches>> and finishes a trigger with <<dataAvailable, data available in sources>> right after committing the batch.
+* Incremented when `StreamExecution` <<runBatches, runs streaming batches>> and finishes a trigger that had <<dataAvailable, data available from sources>> (right after <<batchCommitLog, committing the batch>>).
 
 | [[id]] `id`
 a| Unique identifier of the streaming query

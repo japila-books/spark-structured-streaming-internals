@@ -1,8 +1,8 @@
 == [[Source]] Streaming Data Source
 
-*Streaming Data Source* is a "continuous" stream of data in a streaming Dataset and is described using the <<contract, Source Contract>>.
+*Streaming Data Source* is a "continuous" stream of data and is described using the <<contract, Source Contract>>.
 
-`Source` can <<getBatch, generate DataFrame>> (aka *batch*) given start and end offsets.
+`Source` can <<getBatch, generate a streaming DataFrame>> (aka *batch*) given start and end offsets in a batch.
 
 For fault tolerance, `Source` must be able to replay data given a start offset.
 
