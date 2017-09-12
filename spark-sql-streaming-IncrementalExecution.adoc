@@ -60,7 +60,7 @@ a| Java's `AtomicInteger`
 * [[sparkSession]] `SparkSession`
 * [[logicalPlan]] Logical query plan (i.e. `LogicalPlan` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[with the logical plans of the data sources that have new data and new column attributes])
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] (as specified using link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[outputMode] method of `DataStreamWriter`)
-* [[checkpointLocation]] `state` checkpoint directory (as link:spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot[specified] using `checkpointLocation` option or `spark.sql.streaming.checkpointLocation` Spark property with `queryName` option)
+* [[checkpointLocation]] `state` checkpoint directory (as link:spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot[specified] using link:spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation[checkpointLocation] option or link:spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property with `queryName` option)
 * [[runId]] Run id
 * [[currentBatchId]] Current batch id
 * [[offsetSeqMetadata]] link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]

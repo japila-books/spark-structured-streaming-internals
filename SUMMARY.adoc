@@ -62,6 +62,7 @@
 == Demos
 
 . link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[Demo: groupBy Streaming Aggregation with Append Output Mode]
+. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Demo: Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
 
 == Monitoring
 
