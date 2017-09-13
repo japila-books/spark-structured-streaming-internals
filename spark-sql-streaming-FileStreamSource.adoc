@@ -63,6 +63,10 @@ log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSource=TRACE
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
+=== [[creating-instance]] Creating FileStreamSource Instance
+
+CAUTION: FIXME
+
 === [[options]] Options
 
 ==== [[maxFilesPerTrigger]] `maxFilesPerTrigger`

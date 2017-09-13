@@ -1,20 +1,25 @@
 == [[KafkaSourceProvider]] KafkaSourceProvider -- Data Source Provider for Apache Kafka
 
-`KafkaSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[streaming data source provider] for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that is the batch and streaming data source for https://kafka.apache.org/[Apache Kafka]).
-
-NOTE: `KafkaSourceProvider` is also a `DataSourceRegister` that allows it to be used as a batch data source.
+`KafkaSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[streaming data source provider] for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that is both the batch and streaming data source for https://kafka.apache.org/[Apache Kafka]).
 
 [[shortName]]
-The short name of the data source is *kafka*.
+`KafkaSourceProvider` (as a `DataSourceRegister`) is registered as *kafka* format.
+
+[source, scala]
+----
+spark.readStream.format("kafka")
+----
 
 `KafkaSourceProvider` requires the following options (that you can set using `option` method of `DataStreamReader` or `DataStreamWriter`):
 
 1. Exactly one option for `subscribe`, `subscribepattern` or `assign`
-2. `kafka.bootstrap.servers` (that becomes Kafka's `bootstrap.servers` property)
+2. `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
 
 TIP: Refer to link:spark-sql-streaming-KafkaSource.adoc#options[KafkaSource's Options] for the supported options.
 
-NOTE: `KafkaSourceProvider` is part of <<spark-sql-kafka-0-10, `spark-sql-kafka-0-10` Library Dependency>>.
+NOTE: `endingoffsets` option <<validateStreamOptions, is not allowed>> in streaming queries.
+
+NOTE: `KafkaSourceProvider` is part of <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 Library Dependency>> and so has to be "installed" in spark-shell using `--package` command-line option.
 
 [source, scala]
 ----
@@ -22,20 +27,42 @@ NOTE: `KafkaSourceProvider` is part of <<spark-sql-kafka-0-10, `spark-sql-kafka-
 val records = spark.
   readStream.
   format("kafka").  // <-- use KafkaSourceProvider
-  option("subscribe", "topic").
+  option("subscribe", "raw-events").
   option("kafka.bootstrap.servers", "localhost:9092").
   option("startingoffsets", "earliest").
   option("maxOffsetsPerTrigger", 1).
   load
 ----
 
-=== [[createRelation]] `createRelation` Method
+=== [[sourceSchema]] `sourceSchema` Method
+
+[source, scala]
+----
+sourceSchema(
+  sqlContext: SQLContext,
+  schema: Option[StructType],
+  providerName: String,
+  parameters: Map[String, String]): (String, StructType)
+----
+
+NOTE: `sourceSchema` is a part of link:spark-sql-streaming-StreamSourceProvider.adoc#contract[StreamSourceProvider Contract].
 
 CAUTION: FIXME
 
-=== [[validateStreamOptions]] `validateStreamOptions` Internal Method
+NOTE: `sourceSchema` is used exclusively when `DataSource` is requested the link:spark-sql-streaming-DataSource.adoc#sourceSchema[name and schema of a streaming source].
 
-CAUTION: FIXME
+=== [[createRelation]] Creating KafkaRelation -- `createRelation` Method
+
+[source, scala]
+----
+createRelation(
+  sqlContext: SQLContext,
+  parameters: Map[String, String]): BaseRelation
+----
+
+`createRelation` creates a link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation].
+
+Internally, `createRelation`...FIXME
 
 === [[createSource]] Creating KafkaSource -- `createSource` Method
 
@@ -74,7 +101,7 @@ libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.2.0"
 
 NOTE: Replace `2.2.0` or `2.3.0-SNAPSHOT` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's Search] that matches your version of Spark.
 
-=== [[validateGeneralOptions]] Validating General Options For Kafka -- `validateGeneralOptions` Internal Method
+=== [[validateGeneralOptions]] Validating General Options For Batch And Streaming Queries -- `validateGeneralOptions` Internal Method
 
 [source, scala]
 ----
@@ -125,7 +152,7 @@ In the end, `validateGeneralOptions` makes sure that `kafka.bootstrap.servers` o
 Option 'kafka.bootstrap.servers' must be specified for configuring Kafka consumer
 ```
 
-NOTE: `validateGeneralOptions` is used when `KafkaSourceProvider` validates options for <<validateStreamOptions, streaming>> and <<validateBatchOptions, batch>> modes.
+NOTE: `validateGeneralOptions` is used when `KafkaSourceProvider` validates options for <<validateStreamOptions, streaming>> and <<validateBatchOptions, batch>> queries.
 
 === [[strategy]] Creating ConsumerStrategy -- `strategy` Internal Method
 
@@ -182,3 +209,20 @@ topic\d
 
 * `KafkaSourceProvider` <<createRelation, creates a KafkaRelation>>.
 ====
+
+=== [[validateStreamOptions]] Validating Kafka Options for Streaming Queries -- `validateStreamOptions` Internal Method
+
+[source, scala]
+----
+validateStreamOptions(caseInsensitiveParams: Map[String, String]): Unit
+----
+
+Firstly, `validateStreamOptions` makes sure that `endingoffsets` option is not used. Otherwise, `validateStreamOptions` reports a `IllegalArgumentException`.
+
+```
+ending offset not valid in streaming queries
+```
+
+`validateStreamOptions` then <<validateGeneralOptions, validates the general options>>.
+
+NOTE: `validateStreamOptions` is used when `KafkaSourceProvider` is requested the <<sourceSchema, schema for Kafka source>> and to <<createSource, create a KafkaSource>>.

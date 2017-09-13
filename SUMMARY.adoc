@@ -75,6 +75,8 @@
 
 == Extending Structured Streaming
 
+. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
+
 . link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
 .. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider -- Data Source Provider for Apache Kafka]
 .. link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]

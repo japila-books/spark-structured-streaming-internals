@@ -1,0 +1,37 @@
+== [[DataSource]] DataSource -- Pluggable Data Source
+
+`DataSource` is...FIXME
+
+TIP: Read https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-datasource.html[DataSource &mdash; Pluggable Data Sources] (for Spark SQL's batch queries).
+
+[[internal-registries]]
+.DataSource's Internal Registries and Counters
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[sourceInfo]] `sourceInfo`
+a| `SourceInfo` with the name, the schema, and optional partitioning columns of a source.
+
+Used when:
+
+* `DataSource` <<createSource, creates a FileStreamSource>> (that requires the schema and the optional partitioning columns)
+
+* `StreamingRelation` link:spark-sql-streaming-StreamingRelation.adoc#apply[is created] (for a `DataSource`)
+|===
+
+=== [[createSource]] `createSource` Method
+
+CAUTION: FIXME
+
+=== [[sourceSchema]] Describing Name and Schema of Streaming Source -- `sourceSchema` Internal Method
+
+[source, scala]
+----
+sourceSchema(): SourceInfo
+----
+
+`sourceSchema`...FIXME
+
+NOTE: `sourceSchema` is used exclusively when `DataSource` is requested <<sourceInfo, SourceInfo>>.

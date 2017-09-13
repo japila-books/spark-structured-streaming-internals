@@ -34,6 +34,10 @@ scala> println(relation)
 rate
 ----
 
+=== [[apply]] Creating StreamingRelation Instance for DataSource -- `apply` Factory Method
+
+CAUTION: FIXME
+
 === [[creating-instance]] Creating StreamingRelation Instance
 
 `StreamingRelation` takes the following when created:
