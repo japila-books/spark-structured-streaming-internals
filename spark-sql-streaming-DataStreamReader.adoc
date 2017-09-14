@@ -12,28 +12,15 @@ You can access `DataStreamReader` using `SparkSession.readStream` method.
 import org.apache.spark.sql.SparkSession
 val spark: SparkSession = ...
 
-// infer schema for the streaming query over CSV files using batch query
-val schema = spark.
-  read.
-  format("csv").
-  option("header", true).
-  option("inferSchema", true).
-  load("csv-logs/*.csv").
-  schema
-
-// start a streaming query over CSV files
-val logs = spark.
-  readStream  // <-- Access DataStreamReader
-  format("csv").
-  schema(schema).
-  load("csv-logs/*.csv")
+val streamReader = spark.readStream
 ----
 
 [[methods]]
 .DataStreamReader's Methods
 [cols="1,2",options="header",width="100%"]
 |===
-| Method | Description
+| Method
+| Description
 
 | <<csv, csv>>
 | Sets `csv` as the source <<format, format>>
@@ -44,8 +31,8 @@ val logs = spark.
 | <<json, json>>
 | Sets `json` as the source <<format, format>>
 
-| <<load, load>>
-| Loads a streaming dataset
+| [[load]] <<load-internals, load>>
+| Loads data from a streaming source to a streaming `Dataset`
 
 | <<option, option>>
 | Sets a loading option
@@ -153,7 +140,7 @@ options(options: scala.collection.Map[String, String]): DataStreamReader
 
 NOTE: You can also set options one by one using <<option, option>> method.
 
-=== [[load]] Loading Streaming Dataset -- `load` Method
+=== [[load-internals]] Loading Data From Streaming Source (to Streaming Dataset) -- `load` Method
 
 [source, scala]
 ----
@@ -162,9 +149,15 @@ load(path: String): DataFrame // <1>
 ----
 <1> Specifies `path` option before passing the call to parameterless `load()`
 
-`load` loads a streaming dataset.
+`load` loads data from a link:spark-sql-streaming-Source.adoc[streaming data source] to a streaming dataset.
 
-Internally, `load` first creates a `DataSource` (using <<userSpecifiedSchema, userSpecifiedSchema>>, <<source, source>> and <<extraOptions, extraOptions>>) followed by creating a `DataFrame` with a link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] (for the `DataSource`).
+Internally, `load` first link:spark-sql-streaming-DataSource.adoc#creating-instance[creates a DataSource] (using <<userSpecifiedSchema, user-specified schema>>, the <<source, name of the source>> and <<extraOptions, options>>) followed by creating a `DataFrame` with a link:spark-sql-streaming-StreamingRelation.adoc#apply[StreamingRelation] logical operator (for the `DataSource`).
+
+`load` makes sure that the name of the source is not `hive`. Otherwise, `load` reports a `AnalysisException`.
+
+```
+Hive data source can only be used with tables, you can not read files of Hive data source directly.
+```
 
 === [[builtin-formats]][[json]][[csv]][[parquet]][[text]][[textFile]] Built-in Formats
 

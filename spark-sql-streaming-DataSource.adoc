@@ -2,6 +2,8 @@
 
 `DataSource` is...FIXME
 
+`DataSource` is created when...FIXME
+
 TIP: Read https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-datasource.html[DataSource &mdash; Pluggable Data Sources] (for Spark SQL's batch queries).
 
 [[internal-registries]]
@@ -20,6 +22,14 @@ Used when:
 
 * `StreamingRelation` link:spark-sql-streaming-StreamingRelation.adoc#apply[is created] (for a `DataSource`)
 |===
+
+=== [[creating-instance]] Creating DataSource Instance
+
+`DataSource` takes the following when created:
+
+* FIXME
+
+`DataSource` initializes the <<internal-registries, internal registries and counters>>.
 
 === [[createSource]] `createSource` Method
 
