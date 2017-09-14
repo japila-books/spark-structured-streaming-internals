@@ -1,15 +1,18 @@
-== [[StreamingRelation]] StreamingRelation Leaf Logical Operator
+== [[StreamingRelation]] StreamingRelation Leaf Logical Operator for Streaming Source
 
-`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.adoc#load[load] dataset in streaming fashion (and create a streaming `Dataset`).
+`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a link:spark-sql-streaming-Source.adoc[streaming source] in a logical plan.
 
-NOTE: `StreamingRelation` is link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[resolved] (aka _converted_) to link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] (right after `StreamExecution` started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches]).
+`StreamingRelation` is <<creating-instance, created>> when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.adoc#load[load data from a streaming source] and creates a streaming `Dataset`.
+
+.StreamingRelation Represents Streaming Source
+image::images/StreamingRelation.png[align="center"]
 
 [source, scala]
 ----
 val rate = spark.
-  readStream.
+  readStream.     // <-- creates a DataStreamReader
   format("rate").
-  load("hello")
+  load("hello")   // <-- creates a StreamingRelation
 scala> println(rate.queryExecution.logical.numberedTreeString)
 00 StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4e5dcc50,rate,List(),None,List(),None,Map(path -> hello),None), rate, [timestamp#0, value#1L]
 ----
@@ -34,14 +37,25 @@ scala> println(relation)
 rate
 ----
 
-=== [[apply]] Creating StreamingRelation Instance for DataSource -- `apply` Factory Method
+NOTE: `StreamingRelation` is link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[resolved] (aka _planned_) to link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] (right after `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[starts running batches]).
 
-CAUTION: FIXME
+=== [[apply]] Creating StreamingRelation for DataSource -- `apply` Factory Method
+
+[source, scala]
+----
+apply(dataSource: DataSource): StreamingRelation
+----
+
+`apply` <<creating-instance, creates a StreamingRelation>> for the input streaming link:spark-sql-streaming-DataSource.adoc[DataSource] and the link:spark-sql-streaming-DataSource.adoc#sourceInfo[short name and the schema of the streaming source] (behind the `DataSource`).
+
+NOTE: `apply` creates a `StreamingRelation` logical operator (for the input link:spark-sql-streaming-DataSource.adoc[DataSource]) that represents a streaming source.
+
+NOTE: `apply` is used exclusively when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.adoc#load[load data from a streaming source to a streaming Dataset].
 
 === [[creating-instance]] Creating StreamingRelation Instance
 
 `StreamingRelation` takes the following when created:
 
-* [[dataSource]] `DataSource`
-* [[sourceName]] Source name
-* [[output]] Output attributes
+* [[dataSource]] link:spark-sql-streaming-DataSource.adoc[DataSource]
+* [[sourceName]] Short name of the streaming source
+* [[output]] Output attributes of the schema of the streaming source
