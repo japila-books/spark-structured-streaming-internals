@@ -22,6 +22,9 @@
 | How long to wait before retries.
 |===
 
+[[kafkaSchema]]
+`KafkaOffsetReader` defines the predefined fixed schema of link:spark-sql-streaming-KafkaSource.adoc#schema[Kafka source].
+
 [[internal-registries]]
 .KafkaOffsetReader's Internal Registries and Counters
 [cols="1,2",options="header",width="100%"]

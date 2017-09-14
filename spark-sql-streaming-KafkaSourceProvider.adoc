@@ -13,7 +13,8 @@ spark.readStream.format("kafka")
 `KafkaSourceProvider` requires the following options (that you can set using `option` method of `DataStreamReader` or `DataStreamWriter`):
 
 1. Exactly one option for `subscribe`, `subscribepattern` or `assign`
-2. `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
+
+1. `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
 
 TIP: Refer to link:spark-sql-streaming-KafkaSource.adoc#options[KafkaSource's Options] for the supported options.
 
@@ -33,23 +34,6 @@ val records = spark.
   option("maxOffsetsPerTrigger", 1).
   load
 ----
-
-=== [[sourceSchema]] `sourceSchema` Method
-
-[source, scala]
-----
-sourceSchema(
-  sqlContext: SQLContext,
-  schema: Option[StructType],
-  providerName: String,
-  parameters: Map[String, String]): (String, StructType)
-----
-
-NOTE: `sourceSchema` is a part of link:spark-sql-streaming-StreamSourceProvider.adoc#contract[StreamSourceProvider Contract].
-
-CAUTION: FIXME
-
-NOTE: `sourceSchema` is used exclusively when `DataSource` is requested the link:spark-sql-streaming-DataSource.adoc#sourceSchema[name and schema of a streaming source].
 
 === [[createRelation]] Creating KafkaRelation -- `createRelation` Method
 
@@ -209,6 +193,31 @@ topic\d
 
 * `KafkaSourceProvider` <<createRelation, creates a KafkaRelation>>.
 ====
+
+=== [[sourceSchema]] Specifying Name and Schema of Streaming Source for Kafka Format -- `sourceSchema` Method
+
+[source, scala]
+----
+sourceSchema(
+  sqlContext: SQLContext,
+  schema: Option[StructType],
+  providerName: String,
+  parameters: Map[String, String]): (String, StructType)
+----
+
+NOTE: `sourceSchema` is a part of link:spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema[StreamSourceProvider Contract] to define the name and the schema of a streaming source.
+
+`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the link:spark-sql-streaming-KafkaOffsetReader.adoc#kafkaSchema[fixed schema].
+
+Internally, `sourceSchema` <<validateStreamOptions, validates Kafka options>> and makes sure that the optional input `schema` is indeed undefined.
+
+When the input `schema` is defined, `sourceSchema` reports a `IllegalArgumentException`.
+
+```
+Kafka source has a fixed schema and cannot be set with a custom one
+```
+
+NOTE: `sourceSchema` is used exclusively when `DataSource` is requested the link:spark-sql-streaming-DataSource.adoc#sourceSchema[name and schema of a streaming source].
 
 === [[validateStreamOptions]] Validating Kafka Options for Streaming Queries -- `validateStreamOptions` Internal Method
 

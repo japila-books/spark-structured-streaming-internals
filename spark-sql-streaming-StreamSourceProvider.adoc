@@ -56,5 +56,5 @@ Used exclusively when Spark SQL's `DataSource` is requested for a `Source` for a
 TIP: Read https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-datasource.html[DataSource &mdash; Pluggable Data Sources].
 
 | [[sourceSchema]] `sourceSchema`
-| link:spark-sql-streaming-Source.adoc[Source] name and the schema of records
+| Defines the name and the schema of a link:spark-sql-streaming-Source.adoc[streaming source]
 |===
