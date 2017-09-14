@@ -6,7 +6,7 @@
 
 == Developing Continuous Applications
 
-. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Datasets from Streaming Data Sources]
+. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
 
 . link:spark-sql-streaming-Source.adoc[Streaming Source]
 .. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
