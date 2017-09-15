@@ -529,9 +529,8 @@ CAUTION: FIXME Metrics
 
 CAUTION: FIXME A picture with two parallel lanes for the starting thread and daemon one for the query.
 
-`runBatches` <<updateStatusMessage, updates status message>> to *Initializing sources*.
-
-`runBatches` then materializes the lazy <<logicalPlan, logicalPlan>>.
+[[runBatches-initializing-sources]]
+`runBatches` <<updateStatusMessage, updates status message>> to *Initializing sources* followed by initialization of the <<logicalPlan, logical plan>> (of the streaming Dataset).
 
 `runBatches` disables adaptive query execution (using `spark.sql.adaptive.enabled` property which is disabled by default) as it could change the number of shuffle partitions.
 
