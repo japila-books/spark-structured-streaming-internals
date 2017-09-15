@@ -1,6 +1,6 @@
 == [[StreamExecution]] StreamExecution -- Execution Environment of Streaming Dataset
 
-`StreamExecution` represents the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, writes the result Dataset to the sink>>.
+`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, writes the result as a Dataset to a sink>>.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 

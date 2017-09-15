@@ -1,32 +1,37 @@
 == [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
 
-`StreamingRelationStrategy` is an link:spark-sql-streaming-IncrementalExecution.adoc#extraPlanningStrategies[extra execution planning strategy] (i.e. `Strategy`) that link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] uses to <<apply, plan>> `StreamingRelation` and `StreamingExecutionRelation` logical operators in streaming Datasets.
+`StreamingRelationStrategy` is an link:spark-sql-streaming-IncrementalExecution.adoc#extraPlanningStrategies[streaming execution planning strategy] (i.e. `Strategy`) that <<apply, converts>> `StreamingRelation` and `StreamingExecutionRelation` logical operators (in the logical query plan of a streaming Dataset) to `StreamingRelationExec` physical operator.
+
+.StreamingRelationStrategy, StreamingRelation, StreamingExecutionRelation and StreamingRelationExec Operators
+image::images/StreamingRelationStrategy-apply.png[align="center"]
 
 [NOTE]
 ====
-link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is the result of link:spark-sql-streaming-DataStreamReader.adoc#load[loading] a dataset in streaming fashion (and creating a streaming Dataset).
+link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator represents a streaming source in a logical plan and is created when `DataStreamReader` link:spark-sql-streaming-DataStreamReader.adoc#load[loads data from a streaming source] (that gives a streaming Dataset).
 
-link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator is used internally to represent a streaming data source in a link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[logical query plan] (of `StreamExecution` of a streaming Dataset).
+link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator also represents a streaming source in a logical plan, but is used internally when `StreamExecution` (of a streaming Dataset) initializes the link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[logical query plan].
 ====
 
-`StreamingRelationStrategy` is available using `SessionState`.
+`StreamingRelationStrategy` is used exclusively when link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] plans the logical plan of a streaming Dataset for link:spark-sql-streaming-Dataset-explain.adoc[explain] operator.
+
+[[apply]]
+`StreamingRelationStrategy` converts link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] and link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operators in a logical query plan to a link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec] physical operator (with their `sourceName` and `output` schema) to give a corresponding physical query plan.
+
+`StreamingRelationStrategy` is available using `SessionState` (of a `SparkSession`).
 
 [source, scala]
 ----
 spark.sessionState.planner.StreamingRelationStrategy
 ----
 
-[[apply]]
-`StreamingRelationStrategy` converts link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] and link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operators to link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec] physical operator (with their `sourceName` and `output` schema).
-
 [source, scala]
 ----
 val rates = spark.
   readStream.
   format("rate").
-  load
+  load // <-- gives a streaming Dataset with a logical plan with StreamingRelation logical operator
 
-// StreamingRelation logical operator
+// StreamingRelation logical operator for the rate streaming source
 scala> println(rates.queryExecution.logical.numberedTreeString)
 00 StreamingRelation DataSource(org.apache.spark.sql.SparkSession@31ba0af0,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
 
