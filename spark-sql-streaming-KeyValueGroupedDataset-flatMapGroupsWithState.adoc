@@ -8,7 +8,7 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ----
 
-NOTE: `flatMapGroupsWithState` requires link:link:spark-sql-streaming-OutputMode.adoc#Append[Append] or link:link:spark-sql-streaming-OutputMode.adoc#Update[Update] output modes.
+NOTE: `flatMapGroupsWithState` requires link:spark-sql-streaming-OutputMode.adoc#Append[Append] or link:spark-sql-streaming-OutputMode.adoc#Update[Update] output modes.
 
 NOTE: Every time the state function `func` is executed for a key, the state (as `GroupState[S]`) is for this key only.
 

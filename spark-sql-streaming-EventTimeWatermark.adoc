@@ -56,7 +56,7 @@ scala> println(q.queryExecution.logical.numberedTreeString) // <-- no EventTimeW
 ----
 ====
 
-NOTE: `EventTimeWatermark` is converted (aka _planned_) to link:link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec] physical operator in link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy.
+NOTE: `EventTimeWatermark` is converted (aka _planned_) to link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec] physical operator in link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy.
 
 === [[output]] `output` Property
 

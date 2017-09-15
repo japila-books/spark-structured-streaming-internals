@@ -194,11 +194,11 @@ NOTE: `logicalPlan` is a part of link:spark-sql-streaming-ProgressReporter.adoc#
 
 Initialized right after `StreamExecution` starts <<runBatches, running streaming batches>> (which is when <<microBatchThread, stream execution thread>> is started).
 
-Used mainly when `StreamExecution` <<runBatch-withNewSources, transforms StreamingExecutionRelations in a logical query plan with new data>> that has arrived since the last batch.
+Used mainly when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> that has arrived since the last batch.
 
 ---
 
-While initializing, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>> so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] is replaced with a link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation]. `logicalPlan` link:link:spark-sql-streaming-StreamingExecutionRelation.adoc#creating-instance[creates] a `StreamingExecutionRelation` with `source` created using a metadata path as `/sources/[nextSourceId]` under the <<resolvedCheckpointRoot, checkpoint directory>>.
+While initializing, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>> so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] is replaced with a link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation]. `logicalPlan` link:spark-sql-streaming-StreamingExecutionRelation.adoc#creating-instance[creates] a `StreamingExecutionRelation` with `source` created using a metadata path as `/sources/[nextSourceId]` under the <<resolvedCheckpointRoot, checkpoint directory>>.
 
 NOTE: `nextSourceId` is the unique identifier of every `StreamingRelation` in <<analyzedPlan, analyzed logical plan>> starting from `0`.
 
@@ -226,13 +226,13 @@ $ jstack 13056 \| grep -e "stream execution thread"
 ====
 
 | [[newData]] `newData`
-a| The most recent input data (as `DataFrame`) for every link:spark-sql-streaming-Source.adoc[streaming source] in <<logicalPlan, logical query plan>>.
+a| The most recent input data (as `DataFrame`) for every link:spark-sql-streaming-Source.adoc[streaming source] (in <<logicalPlan, logical query plan>>) for which there is new data available.
 
 NOTE: `newData` is a part of link:spark-sql-streaming-ProgressReporter.adoc#newData[ProgressReporter Contract].
 
 Set exclusively when `StreamExecution` <<runBatch-getBatch, requests unprocessed data from streaming sources>> (as part of <<runBatch, running a single streaming batch>>).
 
-Used exclusively when `StreamExecution` <<runBatch-withNewSources, transforms StreamingExecutionRelations (in logical plan) with new data>> (as part of <<runBatch, running a single streaming batch>>).
+Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (as part of <<runBatch, running a single streaming batch>>).
 
 | [[noNewData]] `noNewData`
 | Flag whether there are any new offsets available for processing or not.
@@ -377,7 +377,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 `runBatch` performs the following steps:
 
 1. <<runBatch-getBatch, Requesting Unprocessed Data From Streaming Sources>>
-1. <<runBatch-withNewSources, Transforming StreamingExecutionRelations (in Logical Plan) With New Data>>
+1. <<runBatch-withNewSources, Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
 1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions (in Logical Plan) With New Data>>
 1. <<runBatch-queryPlanning, Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)>>
 1. <<runBatch-nextBatch, Creating Dataset with New Data and IncrementalExecution Query Execution>>
@@ -388,18 +388,18 @@ NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs s
 
 ==== [[runBatch-getBatch]] Requesting New (and Hence Unprocessed) Data From Streaming Sources
 
-Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>>).
+Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>> internal registry).
 
 `runBatch` executes `getBatch` action while link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[tracking the time taken] (under `getBatch` as `triggerDetailKey` that is later available in link:spark-sql-streaming-ProgressReporter.adoc#currentDurationsMs[currentDurationsMs])
 
-The `getBatch` action takes <<availableOffsets, available offsets per source>> and processes the offsets that <<committedOffsets, have not been committed already>>.
+The `getBatch` action goes over the <<availableOffsets, available offsets per source>> and processes the offsets that <<committedOffsets, have not been committed yet>>.
 
 `runBatch` then requests link:spark-sql-streaming-Source.adoc#getBatch[every source for the data] (as `DataFrame` with the new records).
 
 NOTE: `runBatch` requests the streaming sources for new DataFrames sequentially, source by source.
 
-.StreamExecution's Running Single Streaming Batch
-image::images/StreamExecution-runBatch.png[align="center"]
+.StreamExecution's Running Single Streaming Batch (getBatch Phase)
+image::images/StreamExecution-runBatch-getBatch.png[align="center"]
 
 You should see the following DEBUG message in the logs:
 
@@ -413,9 +413,12 @@ You should then see the following DEBUG message in the logs:
 DEBUG StreamExecution: getBatch took [timeTaken] ms
 ```
 
-==== [[runBatch-withNewSources]] Transforming StreamingExecutionRelations (in Logical Plan) With New Data
+==== [[runBatch-withNewSources]] Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation
 
 CAUTION: FIXME Describe `withNewSources`
+
+.StreamExecution's Running Single Streaming Batch (withNewSources Phase)
+image::images/StreamExecution-runBatch-withNewSources.png[align="center"]
 
 ==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions (in Logical Plan) With New Data
 
@@ -425,7 +428,7 @@ CAUTION: FIXME Describe `triggerLogicalPlan`
 
 In *queryPlanning* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[creates] a new `IncrementalExecution` with the following:
 
-* <<logicalPlan, logical query plan>> transformed with the <<runBatch-withNewSources, logical plans of the data sources that have new data>> and <<runBatch-triggerLogicalPlan, attributes>>
+* <<logicalPlan, logical query plan>> transformed with the <<runBatch-withNewSources, logical plans of the streaming sources with a new data>> and <<runBatch-triggerLogicalPlan, attributes>>
 
 * the streaming query's <<outputMode, output mode>>
 
@@ -945,7 +948,7 @@ NOTE: `postEvent` uses `SparkSession` to access the current `StreamingQueryManag
 ====
 `postEvent` is used when:
 
-* `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[reports update progress] (while link:link:spark-sql-streaming-ProgressReporter.adoc#finishTrigger[finishing a trigger])
+* `ProgressReporter` link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[reports update progress] (while link:spark-sql-streaming-ProgressReporter.adoc#finishTrigger[finishing a trigger])
 
 * `StreamExecution` <<runBatches, runs streaming batches>> (and announces starting a streaming query by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent[QueryStartedEvent] and query termination by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent[QueryTerminatedEvent])
 ====

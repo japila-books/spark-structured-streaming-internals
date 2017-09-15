@@ -25,7 +25,7 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Physical Operator
 
 | [[EventTimeWatermark]] link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark]
-| link:link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
+| link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
 
 | [[Aggregate]] `Aggregate`
 a|
