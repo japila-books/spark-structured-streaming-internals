@@ -217,22 +217,20 @@ NOTE: `microBatchThread` is Java's https://docs.oracle.com/javase/8/docs/api/jav
 ====
 Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
 
-[options="wrap"]
-----
-$ jstack 13056 \| grep -e "stream execution thread"
-"stream execution thread for kafka-topic1 [id = 609c5ea3-3e0b-4da9-9814-d0ad336dcadd, runId = 0717993d-e3f4-4e4b-81f5-f4c8a67e44b7]" #175 daemon prio=5 os_prio=31 tid=0x00007fe784978000 nid=0xc723 waiting on condition [0x0000000127cf0000]
-----
-
+```
+$ jstack <driver-pid> \| grep -e "stream execution thread"
+"stream execution thread for kafka-topic1 [id =...
+```
 ====
 
 | [[newData]] `newData`
-a| The most recent input data (as `DataFrame`) for every link:spark-sql-streaming-Source.adoc[streaming source] (in <<logicalPlan, logical query plan>>) for which there is new data available.
+a| Registry of the link:spark-sql-streaming-Source.adoc[streaming sources] (in <<logicalPlan, logical query plan>>) that have new data available in the current batch. The new data is a streaming `DataFrame`.
 
 NOTE: `newData` is a part of link:spark-sql-streaming-ProgressReporter.adoc#newData[ProgressReporter Contract].
 
-Set exclusively when `StreamExecution` <<runBatch-getBatch, requests unprocessed data from streaming sources>> (as part of <<runBatch, running a single streaming batch>>).
+Set exclusively when `StreamExecution` <<runBatch-getBatch, requests unprocessed data from streaming sources>> (while <<runBatch, running a single streaming batch>>).
 
-Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (as part of <<runBatch, running a single streaming batch>>).
+Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (while <<runBatch, running a single streaming batch>>).
 
 | [[noNewData]] `noNewData`
 | Flag whether there are any new offsets available for processing or not.
@@ -290,11 +288,9 @@ Used for <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyz
 ====
 You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` is <<start, started>>.
 
-[options="wrap"]
-----
+```
 INFO StreamExecution: Starting [id] with [resolvedCheckpointRoot] to store the query checkpoint.
-----
-
+```
 ====
 
 Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path` for <<checkpointRoot, checkpointRoot>> and makes it qualified.
@@ -374,7 +370,7 @@ CAUTION: FIXME
 runBatch(sparkSessionToRunBatch: SparkSession): Unit
 ----
 
-`runBatch` performs the following steps:
+`runBatch` performs the following steps (aka _phases_):
 
 1. <<runBatch-getBatch, Requesting Unprocessed Data From Streaming Sources>>
 1. <<runBatch-withNewSources, Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
@@ -386,7 +382,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 
 NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>>.
 
-==== [[runBatch-getBatch]] Requesting New (and Hence Unprocessed) Data From Streaming Sources
+==== [[runBatch-getBatch]] Requesting New (and Hence Unprocessed) Data From Streaming Sources (getBatch Phase)
 
 Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>> internal registry).
 
@@ -413,12 +409,32 @@ You should then see the following DEBUG message in the logs:
 DEBUG StreamExecution: getBatch took [timeTaken] ms
 ```
 
-==== [[runBatch-withNewSources]] Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation
-
-CAUTION: FIXME Describe `withNewSources`
+==== [[runBatch-withNewSources]] Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation (withNewSources Phase)
 
 .StreamExecution's Running Single Streaming Batch (withNewSources Phase)
 image::images/StreamExecution-runBatch-withNewSources.png[align="center"]
+
+In *withNewSources* phase, `runBatch` transforms <<logicalPlan, logical query plan>> and replaces every link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator with the logical plan of the `DataFrame` with the input data in a batch for the corresponding streaming source.
+
+NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator is used to represent a streaming source in the <<logicalPlan, logical query plan>> of a streaming `Dataset`.
+
+`runBatch` finds the corresponding `DataFrame` (with the input data) per streaming source in <<newData, newData>> internal registry. If found, `runBatch` takes the logical plan of the `DataFrame`. If not, `runBatch` creates a `LocalRelation` logical relation (for the output schema).
+
+NOTE: <<newData, newData>> internal registry contains entries for streaming sources that have new data available in the current batch.
+
+`runBatch` makes sure that the output schema of the streaming source with a new data in the batch has not changed. If the output schema has changed, `runBatch` reports...FIXME
+
+`runBatch` records the output schema of the streaming source from `StreamingExecutionRelation` and the `DataFrame` with the new data (in `replacements` internal buffer).
+
+`runBatch` transforms Catalyst expressions in `withNewSources` new logical plan.
+
+* Catalyst `Attribute` is replaced with one if recorded in `replacements` internal buffer (that corresponds to the attribute in the `DataFrame` with the new input data in the batch)
+
+* `CurrentTimestamp` and `CurrentDate` Catalyst expressions are replaced with `CurrentBatchTimestamp` expression (with `batchTimestampMs` from <<offsetSeqMetadata, OffsetSeqMetadata>>).
+
+NOTE: `CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` function. You can find more about `current_timestamp` function in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-functions-datetime.html#current_timestamp[Mastering Apache Spark 2] gitbook.
+
+NOTE: `CurrentDate` Catalyst expression corresponds to `current_date` function.
 
 ==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions (in Logical Plan) With New Data
 
