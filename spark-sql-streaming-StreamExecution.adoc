@@ -374,7 +374,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 
 1. <<runBatch-getBatch, Requesting Unprocessed Data From Streaming Sources>>
 1. <<runBatch-withNewSources, Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
-1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions (in Logical Plan) With New Data>>
+1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions>>
 1. <<runBatch-queryPlanning, Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)>>
 1. <<runBatch-nextBatch, Creating Dataset with New Data and IncrementalExecution Query Execution>>
 1. <<runBatch-addBatch, Adding Current Streaming Batch to Sink>>
@@ -422,11 +422,13 @@ NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutio
 
 NOTE: <<newData, newData>> internal registry contains entries for streaming sources that have new data available in the current batch.
 
+While replacing `StreamingExecutionRelation` operators, `runBatch` records the output schema of the streaming source (from `StreamingExecutionRelation`) and the `DataFrame` with the new data (in `replacements` temporary internal buffer).
+
 `runBatch` makes sure that the output schema of the streaming source with a new data in the batch has not changed. If the output schema has changed, `runBatch` reports...FIXME
 
-`runBatch` records the output schema of the streaming source from `StreamingExecutionRelation` and the `DataFrame` with the new data (in `replacements` internal buffer).
+==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions
 
-`runBatch` transforms Catalyst expressions in `withNewSources` new logical plan.
+`runBatch` transforms Catalyst expressions in `withNewSources` new logical plan (using `replacements` temporary internal buffer).
 
 * Catalyst `Attribute` is replaced with one if recorded in `replacements` internal buffer (that corresponds to the attribute in the `DataFrame` with the new input data in the batch)
 
@@ -435,10 +437,6 @@ NOTE: <<newData, newData>> internal registry contains entries for streaming sour
 NOTE: `CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` function. You can find more about `current_timestamp` function in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-functions-datetime.html#current_timestamp[Mastering Apache Spark 2] gitbook.
 
 NOTE: `CurrentDate` Catalyst expression corresponds to `current_date` function.
-
-==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions (in Logical Plan) With New Data
-
-CAUTION: FIXME Describe `triggerLogicalPlan`
 
 ==== [[runBatch-queryPlanning]] Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)
 
