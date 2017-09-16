@@ -298,7 +298,7 @@ Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path
 NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for a Hadoop configuration.
 
 | [[runId]] `runId`
-|
+| Current run id
 
 | [[sources]] `sources`
 | All link:spark-sql-streaming-Source.adoc[streaming Sources] in <<logicalPlan, logical query plan>> (that are the link:spark-sql-streaming-StreamingExecutionRelation.adoc#source[sources] from `StreamingExecutionRelation`).
@@ -375,7 +375,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 1. <<runBatch-getBatch, Requesting Unprocessed Data From Streaming Sources>>
 1. <<runBatch-withNewSources, Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
 1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions>>
-1. <<runBatch-queryPlanning, Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)>>
+1. <<runBatch-queryPlanning, Creating IncrementalExecution for Current Streaming Batch>>
 1. <<runBatch-nextBatch, Creating Dataset with New Data and IncrementalExecution Query Execution>>
 1. <<runBatch-addBatch, Adding Current Streaming Batch to Sink>>
 1. <<runBatch-awaitBatchLock, Waking Up Threads Waiting For Stream to Progress>>
@@ -426,7 +426,7 @@ While replacing `StreamingExecutionRelation` operators, `runBatch` records the o
 
 `runBatch` makes sure that the output schema of the streaming source with a new data in the batch has not changed. If the output schema has changed, `runBatch` reports...FIXME
 
-==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions
+==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions (triggerLogicalPlan Phase)
 
 `runBatch` transforms Catalyst expressions in `withNewSources` new logical plan (using `replacements` temporary internal buffer).
 
@@ -438,25 +438,30 @@ NOTE: `CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` 
 
 NOTE: `CurrentDate` Catalyst expression corresponds to `current_date` function.
 
-==== [[runBatch-queryPlanning]] Query Planning (Creating Streaming QueryExecution for Current Streaming Batch)
+==== [[runBatch-queryPlanning]] Creating IncrementalExecution for Current Streaming Batch (queryPlanning Phase)
+
+.StreamExecution's Query Planning (queryPlanning Phase)
+image::images/StreamExecution-runBatch-queryPlanning.png[align="center"]
 
 In *queryPlanning* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[creates] a new `IncrementalExecution` with the following:
 
-* <<logicalPlan, logical query plan>> transformed with the <<runBatch-withNewSources, logical plans of the streaming sources with a new data>> and <<runBatch-triggerLogicalPlan, attributes>>
+* Transformed <<logicalPlan, logical query plan>> with <<runBatch-withNewSources, logical relations>> for every streaming source and <<runBatch-triggerLogicalPlan, corresponding attributes>>
 
 * the streaming query's <<outputMode, output mode>>
 
-* `state` <<checkpointFile, checkpoint directory>> for preserving state
+* `state` <<checkpointFile, checkpoint directory>> for managing state
+
+* <<runId, current run id>>
 
 * <<currentBatchId, current batch id>>
 
 * <<offsetSeqMetadata, OffsetSeqMetadata>>
 
-The new `IncrementalExecution` is set to <<lastExecution, lastExecution>> property.
+The new `IncrementalExecution` is recorded in <<lastExecution, lastExecution>> property.
 
-In the end, before leaving *queryPlanning* section, `runBatch` forces preparation of the physical plan for execution (by requesting link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] of the current <<lastExecution, IncrementalExecution>>).
+Before leaving *queryPlanning* section, `runBatch` forces preparation of the physical plan for execution (i.e. requesting <<lastExecution, IncrementalExecution>> for link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan]).
 
-NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] is a physical plan (i.e. `SparkPlan`) ready for execution (and after link:spark-sql-streaming-IncrementalExecution.adoc#preparations[physical optimization rules]).
+NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] is a physical plan (i.e. `SparkPlan`) ready for execution with link:spark-sql-streaming-IncrementalExecution.adoc#preparations[state optimization rules] applied.
 
 ==== [[runBatch-nextBatch]] Creating Dataset with New Data (and Streaming QueryExecution)
 

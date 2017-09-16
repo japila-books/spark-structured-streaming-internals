@@ -41,9 +41,11 @@ a| `SparkPlanner` with the following extra planning strategies (in the order of 
 ====
 
 | [[state]] `state`
-| State preparation rule that transforms streaming physical plans (i.e. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec]) to add missing properties that are batch-specific, i.e. the current batch.
+| State preparation rule (i.e. `Rule[SparkPlan]`) that transforms a streaming physical plan (i.e. `SparkPlan` with link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators) to fill missing properties that are batch-specific, e.g. the current batch.
 
-Used when `IncrementalExecution` <<preparations, prepares a physical plan>> (i.e. `SparkPlan`) for execution.
+CAUTION: FIXME Describe the missing properties
+
+Used when `IncrementalExecution` <<preparations, prepares a physical plan>> (i.e. `SparkPlan`) for execution (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[runs a streaming batch and plans a streaming query]).
 
 | [[statefulOperatorId]] `statefulOperatorId`
 a| Java's `AtomicInteger`
