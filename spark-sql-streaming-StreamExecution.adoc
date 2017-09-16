@@ -1,8 +1,10 @@
 == [[StreamExecution]] StreamExecution -- Execution Environment of Streaming Dataset
 
-`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, writes the result as a Dataset to a sink>>.
+`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, adds the results to a sink>>.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
+
+NOTE: `StreamExecution` corresponds to a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] with one or more link:spark-sql-streaming-Source.adoc[streaming sources] and exactly one link:spark-sql-streaming-Sink.adoc[streaming sink].
 
 `StreamExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
 
@@ -372,17 +374,17 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 
 `runBatch` performs the following steps (aka _phases_):
 
-1. <<runBatch-getBatch, Requesting Unprocessed Data From Streaming Sources>>
-1. <<runBatch-withNewSources, Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
-1. <<runBatch-triggerLogicalPlan, Transforming Catalyst Expressions>>
-1. <<runBatch-queryPlanning, Creating IncrementalExecution for Current Streaming Batch>>
-1. <<runBatch-nextBatch, Creating Dataset with New Data and IncrementalExecution Query Execution>>
-1. <<runBatch-addBatch, Adding Current Streaming Batch to Sink>>
-1. <<runBatch-awaitBatchLock, Waking Up Threads Waiting For Stream to Progress>>
+1. <<runBatch-getBatch, getBatch Phase -- Requesting New (and Hence Unprocessed) Data From Streaming Sources>>
+1. <<runBatch-withNewSources, withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
+1. <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
+1. <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
+1. <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
+1. <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
+1. <<runBatch-awaitBatchLock, awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress>>
 
 NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>>.
 
-==== [[runBatch-getBatch]] Requesting New (and Hence Unprocessed) Data From Streaming Sources (getBatch Phase)
+==== [[runBatch-getBatch]] getBatch Phase -- Requesting New (and Hence Unprocessed) Data From Streaming Sources
 
 Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>> internal registry).
 
@@ -409,7 +411,7 @@ You should then see the following DEBUG message in the logs:
 DEBUG StreamExecution: getBatch took [timeTaken] ms
 ```
 
-==== [[runBatch-withNewSources]] Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation (withNewSources Phase)
+==== [[runBatch-withNewSources]] withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation
 
 .StreamExecution's Running Single Streaming Batch (withNewSources Phase)
 image::images/StreamExecution-runBatch-withNewSources.png[align="center"]
@@ -426,7 +428,7 @@ While replacing `StreamingExecutionRelation` operators, `runBatch` records the o
 
 `runBatch` makes sure that the output schema of the streaming source with a new data in the batch has not changed. If the output schema has changed, `runBatch` reports...FIXME
 
-==== [[runBatch-triggerLogicalPlan]] Transforming Catalyst Expressions (triggerLogicalPlan Phase)
+==== [[runBatch-triggerLogicalPlan]] triggerLogicalPlan Phase -- Transforming Catalyst Expressions
 
 `runBatch` transforms Catalyst expressions in `withNewSources` new logical plan (using `replacements` temporary internal buffer).
 
@@ -438,7 +440,7 @@ NOTE: `CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` 
 
 NOTE: `CurrentDate` Catalyst expression corresponds to `current_date` function.
 
-==== [[runBatch-queryPlanning]] Creating IncrementalExecution for Current Streaming Batch (queryPlanning Phase)
+==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch
 
 .StreamExecution's Query Planning (queryPlanning Phase)
 image::images/StreamExecution-runBatch-queryPlanning.png[align="center"]
@@ -463,15 +465,38 @@ Before leaving *queryPlanning* section, `runBatch` forces preparation of the phy
 
 NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] is a physical plan (i.e. `SparkPlan`) ready for execution with link:spark-sql-streaming-IncrementalExecution.adoc#preparations[state optimization rules] applied.
 
-==== [[runBatch-nextBatch]] Creating Dataset with New Data (and Streaming QueryExecution)
+==== [[runBatch-nextBatch]] nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)
 
-CAUTION: FIXME Describe `nextBatch`
+.StreamExecution Creates DataFrame with New Data
+image::images/StreamExecution-runBatch-nextBatch.png[align="center"]
 
-==== [[runBatch-addBatch]] Adding Current Streaming Batch to Sink
+`runBatch` creates a `DataFrame` with the new link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution] (as `QueryExecution`) and its analyzed output schema.
 
-CAUTION: FIXME Describe `addBatch`
+NOTE: The new `DataFrame` represents the result of a streaming query.
 
-==== [[runBatch-awaitBatchLock]] Waking Up Threads Waiting For Stream to Progress
+==== [[runBatch-addBatch]] addBatch Phase -- Adding Current Streaming Batch to Sink
+
+.StreamExecution Creates DataFrame with New Data
+image::images/StreamExecution-runBatch-addBatch.png[align="center"]
+
+In *addBatch* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` requests the one and only streaming <<sink, Sink>> to link:spark-sql-streaming-Sink.adoc#addBatch[add the results of a streaming query] (as the `DataFrame` created in <<runBatch-nextBatch, nextBatch Phase>>).
+
+NOTE: `runBatch` uses link:spark-sql-streaming-Sink.adoc#addBatch[Sink.addBatch] method to request the `Sink` to add the results.
+
+NOTE: `runBatch` uses `SQLExecution.withNewExecutionId` to execute and track all the Spark actions (under one execution id) that `Sink` can use when requested to add the results.
+
+NOTE: The new `DataFrame` will only be executed in `Sink.addBatch`.
+
+NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before executing `Sink.addBatch` and a `SparkListenerSQLExecutionEnd` event right afterwards.
+
+[TIP]
+====
+Register `SparkListener` to get notified about the SQL execution events.
+
+You can find more information on `SparkListener` in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkListener.html[Mastering Apache Spark 2] gitbook.
+====
+
+==== [[runBatch-awaitBatchLock]] awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress
 
 CAUTION: FIXME Describe `awaitBatchLock` and later
 
