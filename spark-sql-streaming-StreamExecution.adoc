@@ -436,9 +436,19 @@ While replacing `StreamingExecutionRelation` operators, `runBatch` records the o
 
 * `CurrentTimestamp` and `CurrentDate` Catalyst expressions are replaced with `CurrentBatchTimestamp` expression (with `batchTimestampMs` from <<offsetSeqMetadata, OffsetSeqMetadata>>).
 
-NOTE: `CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` function. You can find more about `current_timestamp` function in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-functions-datetime.html#current_timestamp[Mastering Apache Spark 2] gitbook.
+[NOTE]
+====
+`CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` function.
 
-NOTE: `CurrentDate` Catalyst expression corresponds to `current_date` function.
+Find more about `current_timestamp` function in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-functions-datetime.html#current_timestamp[Mastering Apache Spark 2] gitbook.
+====
+
+[NOTE]
+====
+`CurrentDate` Catalyst expression corresponds to `current_date` function.
+
+Find more about `current_date` function in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-functions-datetime.html#current_date[Mastering Apache Spark 2] gitbook.
+====
 
 ==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch
 
