@@ -1,6 +1,6 @@
 == [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Datasets
 
-`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] uses for incremental execution of the <<logicalPlan, logical query plan>> (every trigger that, when small enough, is supposed to give the impression of near real-time continuous stream processing).
+`IncrementalExecution` is a `QueryExecution` for streaming Datasets that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] uses for incremental execution of the <<logicalPlan, logical query plan>> (every trigger that, when small enough, is supposed to give the impression of near real-time continuous stream processing).
 
 .StreamExecution creates IncrementalExecution (every trigger / streaming batch)
 image::images/IncrementalExecution-StreamExecution.png[align="center"]
