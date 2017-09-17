@@ -1,6 +1,6 @@
 == [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Datasets
 
-`IncrementalExecution` is a `QueryExecution` for streaming Datasets that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] uses for incremental execution of the <<logicalPlan, logical query plan>> (every trigger that, when small enough, is supposed to give the impression of near real-time continuous stream processing).
+`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] creates when incrementally executing the <<logicalPlan, logical query plan>> (every trigger).
 
 .StreamExecution creates IncrementalExecution (every trigger / streaming batch)
 image::images/IncrementalExecution-StreamExecution.png[align="center"]
@@ -41,9 +41,17 @@ a| `SparkPlanner` with the following extra planning strategies (in the order of 
 ====
 
 | [[state]] `state`
-| State preparation rule (i.e. `Rule[SparkPlan]`) that transforms a streaming physical plan (i.e. `SparkPlan` with link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators) to fill missing properties that are batch-specific, e.g. the current batch.
+a| State preparation rule (i.e. `Rule[SparkPlan]`) that transforms a streaming physical plan (i.e. `SparkPlan` with link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators) and fills missing properties that are batch-specific, e.g.
 
-CAUTION: FIXME Describe the missing properties
+* `StateStoreSaveExec` and `StateStoreRestoreExec` operator pair, `state` assigns:
+
+** `StateStoreSaveExec` operator gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>, <<outputMode, OutputMode>> and <<offsetSeqMetadata, batchWatermarkMs>>
+
+** `StateStoreRestoreExec` operator gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>> that was used for `StateStoreSaveExec` operator
+
+* `StreamingDeduplicateExec` operator gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>> and <<offsetSeqMetadata, batchWatermarkMs>>
+
+* `FlatMapGroupsWithStateExec` gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>, <<offsetSeqMetadata, batchWatermarkMs>> and <<offsetSeqMetadata, batchWatermarkMs>>
 
 Used when `IncrementalExecution` <<preparations, prepares a physical plan>> (i.e. `SparkPlan`) for execution (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[runs a streaming batch and plans a streaming query]).
 
@@ -54,6 +62,19 @@ a| Java's `AtomicInteger`
 
 * Incremented...FIXME
 |===
+
+=== [[nextStatefulOperationStateInfo]] `nextStatefulOperationStateInfo` Internal Method
+
+[source, scala]
+----
+nextStatefulOperationStateInfo(): StatefulOperatorStateInfo
+----
+
+`nextStatefulOperationStateInfo` creates a `StatefulOperatorStateInfo` with <<checkpointLocation, checkpointLocation>>, <<runId, runId>>, the next <<statefulOperatorId, statefulOperatorId>> and <<currentBatchId, currentBatchId>>.
+
+NOTE: All the properties of `StatefulOperatorStateInfo` are specified when `IncrementalExecution` is <<creating-instance, created>>.
+
+NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to transform a streaming physical plan using <<state, state>> preparation rule.
 
 === [[creating-instance]] Creating IncrementalExecution Instance
 
