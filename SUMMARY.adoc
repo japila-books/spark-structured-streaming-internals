@@ -30,7 +30,7 @@
 .. link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey Operator -- Streaming Aggregation (with Explicit State Logic)]
 .. link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark Operator -- Event Time Watermark]
 
-. link:spark-sql-streaming-window.adoc[window Function]
+. link:spark-sql-streaming-window.adoc[window Function -- Stream Time Windows]
 
 . link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
 .. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator -- Stateful Streaming Aggregation (with Explicit State Logic)]
