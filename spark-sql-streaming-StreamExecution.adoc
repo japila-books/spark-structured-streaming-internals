@@ -47,7 +47,7 @@ image::images/StreamExecution-start.png[align="center"]
 
 * `INITIALIZED` when the instance was created.
 * `ACTIVE` when batches are pulled from the sources.
-* `TERMINATED` when batches were successfully processed or the query stopped.
+* `TERMINATED` when executing streaming batches has been terminated due to an error, all batches were successfully processed or `StreamExecution` <<stop, has been stopped>>.
 
 `StreamExecution` is a link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter] and <<postEvent, reports status of the streaming query>> (i.e. when it starts, progresses and terminates) by posting `StreamingQueryListener` events.
 
@@ -102,6 +102,8 @@ scala> println(q.lastProgress)
 `StreamExecution` uses <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> metadata logs for *write-ahead log* (to record offsets to be processed) and that have already been processed and committed to a streaming sink, respectively.
 
 TIP: Monitor `offsets` and `commits` metadata logs to know the progress of a streaming query.
+
+`StreamExecution` <<runBatches-batchRunner-no-data, delays polling for new data>> for 10 milliseconds (when no data was available to process in a batch). Use link:spark-sql-streaming-properties.adoc#spark.sql.streaming.pollingDelay[spark.sql.streaming.pollingDelay] Spark property to control the delay.
 
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
@@ -261,6 +263,13 @@ NOTE: `offsetSeqMetadata` is a part of link:spark-sql-streaming-ProgressReporter
 
 * Copied with `batchTimestampMs` updated with the current time (in milliseconds) when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>>.
 
+| [[pollingDelayMs]] `pollingDelayMs`
+| Time delay before polling new data again when no data was available
+
+Set to link:spark-sql-streaming-properties.adoc#spark.sql.streaming.pollingDelay[spark.sql.streaming.pollingDelay] Spark property.
+
+Used when `StreamExecution` has started <<runBatches, running streaming batches>> (and <<runBatches-batchRunner-no-data, no data was available to process in a trigger>>).
+
 | [[prettyIdString]] `prettyIdString`
 a| Pretty-identified string for identification in logs (with <<name, name>> if defined).
 
@@ -355,6 +364,10 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
+
+=== [[stop]] `stop` Method
+
+CAUTION: FIXME
 
 === [[stopSources]] `stopSources` Internal Method
 
@@ -517,7 +530,7 @@ CAUTION: FIXME Describe `awaitBatchLock` and later
 runBatches(): Unit
 ----
 
-`runBatches` runs streaming batches of data (that are datasets from every streaming source used).
+`runBatches` runs streaming batches of data (that are datasets from every <<uniqueSources, streaming source>>).
 
 [source, scala]
 ----
@@ -572,15 +585,25 @@ debugStream: org.apache.spark.sql.streaming.StreamingQuery = org.apache.spark.sq
 17/06/18 21:21:10 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
 ----
 
-Internally, `runBatches` sets the job group as <<runId, runId>>, <<getBatchDescriptionString, getBatchDescriptionString>> and `interruptOnCancel` flag enabled.
+Internally, `runBatches` assigns the group id (to all the Spark jobs started by this thread) as <<runId, runId>> (with the group description to display in web UI as <<getBatchDescriptionString, getBatchDescriptionString>> and `interruptOnCancel` flag enabled).
 
-NOTE: `runBatches` uses <<sparkSession, SparkSession>> to access `SparkContext` and set the job group.
+[NOTE]
+====
+`runBatches` uses <<sparkSession, SparkSession>> to access `SparkContext` and assign the group id.
+
+You can find the details on `SparkContext.setJobGroup` method in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkContext.html#setJobGroup[Mastering Apache Spark 2] gitbook.
+====
+
+`runBatches` sets a local property `sql.streaming.queryId` as <<id, id>>.
 
 `runBatches` registers a metric source when link:spark-sql-streaming-properties.adoc#spark.sql.streaming.metricsEnabled[spark.sql.streaming.metricsEnabled] property is enabled (which is disabled by default).
 
 CAUTION: FIXME Metrics
 
 `runBatches` notifies `StreamingQueryListeners` that a streaming query has been started (by <<postEvent, posting a QueryStartedEvent>> with <<id, id>>, <<runId, runId>> and <<name, name>>).
+
+.StreamingQueryListener Notified about Query's Start (onQueryStarted)
+image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
 
 `runBatches` unblocks the <<start, main starting thread>> (by decrementing the count of <<startLatch, startLatch>> that goes to `0` and lets the starting thread continue).
 
@@ -591,7 +614,7 @@ CAUTION: FIXME A picture with two parallel lanes for the starting thread and dae
 
 `runBatches` disables adaptive query execution (using `spark.sql.adaptive.enabled` property which is disabled by default) as it could change the number of shuffle partitions.
 
-`runBatches` sets <<offsetSeqMetadata, offsetSeqMetadata>> variable.
+`runBatches` initializes <<offsetSeqMetadata, offsetSeqMetadata>> internal variable.
 
 `runBatches` sets <<state, state>> to `ACTIVE` (only when the current state is `INITIALIZING` that prevents from repeating the initialization)
 
@@ -601,19 +624,28 @@ NOTE: `runBatches` does the work only when first started (i.e. when <<state, sta
 
 CAUTION: FIXME `initializationLatch` so what?
 
-`runBatches` requests <<triggerExecutor, TriggerExecutor>> to execute a <<batch-runner, batch runner>>.
+`runBatches` requests <<triggerExecutor, TriggerExecutor>> to start executing batches (aka _triggers_) by executing a <<batch-runner, batch runner>>.
+
+[[runBatches-stopped]]
+Once <<triggerExecutor, TriggerExecutor>> has finished executing batches, `runBatches` <<updateStatusMessage, updates status message>> to *Stopped*.
+
+NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<batch-runner, batch runner>> returns whether the streaming query is stopped or not (which is when the internal <<state, state>> is not `TERMINATED`).
+
+CAUTION: FIXME Describe `catch` block for exception handling
+
+CAUTION: FIXME Describe `finally` block for query termination
 
 NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<microBatchThread, execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
 
-==== [[batch-runner]] Batch Runner
+==== [[batch-runner]] TriggerExecutor's Batch Runner
 
-*Batch Runner* (aka `batchRunner`) is an executable block executed by <<triggerExecutor, TriggerExecutor>>.
+*Batch Runner* (aka `batchRunner`) is an executable block executed by <<triggerExecutor, TriggerExecutor>> in <<runBatches, runBatches>>.
 
 `batchRunner` <<startTrigger, starts trigger calculation>>.
 
-If <<state, state>> is not `TERMINATED` (which means that the streaming query should still be executed), `batchRunner`  executes the current batch and link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken].
+As long as the query is not stopped (i.e. <<state, state>> is not `TERMINATED`), `batchRunner` executes the streaming batch for the trigger.
 
-The current batch branches off per <<currentBatchId, currentBatchId>>.
+In *triggerExecution* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatches` branches off per <<currentBatchId, currentBatchId>>.
 
 .Current Batch Execution per currentBatchId
 [cols="1,1",options="header",width="100%"]
@@ -633,7 +665,7 @@ DEBUG Stream running from [committedOffsets] to [availableOffsets]
 | 1. <<constructNextBatch, Constructing the next streaming batch>>
 |===
 
-If there is <<dataAvailable, data available>>, `batchRunner` marks <<currentStatus, currentStatus>> with `isDataAvailable` enabled.
+If there is <<dataAvailable, data available>> in the sources, `batchRunner` marks <<currentStatus, currentStatus>> with `isDataAvailable` enabled.
 
 [NOTE]
 ====
@@ -651,12 +683,37 @@ res1: org.apache.spark.sql.streaming.StreamingQueryStatus =
 ----
 ====
 
-`batchRunner` then <<updateStatusMessage, updates the status message>> to *Processing new data* and <<runBatch, runs the batch>>.
+`batchRunner` then <<updateStatusMessage, updates the status message>> to *Processing new data* and <<runBatch, runs the current streaming batch>>.
 
 .StreamExecution's Running Batches (on Execution Thread)
 image::images/StreamExecution-runBatches.png[align="center"]
 
-CAUTION: FIXME Finish me...`finishTrigger(dataAvailable)`
+After *triggerExecution* section has finished, `batchRunner` <<finishTrigger, finishes the trigger>> (and collects query execution statistics).
+
+When there was <<dataAvailable, data available>> in the sources, `batchRunner` updates committed offsets (by link:spark-sql-streaming-BatchCommitLog.adoc#add[adding] the <<currentBatchId, current batch id>> to <<batchCommitLog, BatchCommitLog>> and adding <<availableOffsets, availableOffsets>> to <<committedOffsets, committedOffsets>>).
+
+You should see the following DEBUG message in the logs:
+
+```
+DEBUG batch $currentBatchId committed
+```
+
+`batchRunner` increments the <<currentBatchId, current batch id>> and sets the job description for all the following Spark jobs to <<getBatchDescriptionString, include the new batch id>>.
+
+[[runBatches-batchRunner-no-data]]
+When no <<dataAvailable, data was available>> in the sources to process, `batchRunner` does the following:
+
+1. Marks <<currentStatus, currentStatus>> with `isDataAvailable` disabled
+
+1. <<updateStatusMessage, Updates the status message>> to *Waiting for data to arrive*
+
+1. Sleeps the current thread for <<pollingDelayMs, pollingDelayMs>> milliseconds.
+
+`batchRunner` <<updateStatusMessage, Updates the status message>> to *Waiting for next trigger* and returns whether the query is currently active or not (so <<triggerExecutor, TriggerExecutor>> can decide whether to finish executing the batches or not)
+
+=== [[finishTrigger]] `finishTrigger` Method
+
+CAUTION: FIXME
 
 === [[dataAvailable]] Is Data Available in Sources -- `dataAvailable` Internal Method
 

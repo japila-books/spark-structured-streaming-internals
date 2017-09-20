@@ -6,6 +6,10 @@ NOTE: link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] is a `Metad
 
 `BatchCommitLog` is <<creating-instance, created>> exclusively for link:spark-sql-streaming-StreamExecution.adoc#batchCommitLog[batch commit log] in `StreamExecution`.
 
+=== [[add]] `add` Method
+
+CAUTION: FIXME
+
 === [[serialize]] `serialize` Method
 
 [source, scala]

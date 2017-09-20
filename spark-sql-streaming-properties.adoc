@@ -39,6 +39,10 @@ Used...FIXME
 | `100`
 | Number of link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[progress updates to retain] for a streaming query
 
+| [[spark.sql.streaming.pollingDelay]] `spark.sql.streaming.pollingDelay`
+| `10` (millis)
+| (internal) Time delay before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch].
+
 | [[spark.sql.streaming.stateStore.maintenanceInterval]] `spark.sql.streaming.stateStore.maintenanceInterval`
 | `60s`
 | The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.adoc#MaintenanceTask[maintenance task].
