@@ -68,7 +68,7 @@ The action names can be as follows:
 * `triggerExecution`
 * `walCommit` when writing offsets to log
 
-Starts empty when `ProgressReporter` <<startTrigger, sets the state for a new trigger>> with new entries added or updated when <<reportTimeTaken, reporting execution time>> (of an action).
+Starts empty when `ProgressReporter` <<startTrigger, sets the state for a new batch>> with new entries added or updated when <<reportTimeTaken, reporting execution time>> (of an action).
 
 [TIP]
 ====
@@ -82,7 +82,9 @@ res3: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBat
 ====
 
 | [[currentStatus]] `currentStatus`
-| `StreamingQueryStatus`
+| `StreamingQueryStatus` to track the status of a streaming query.
+
+Available using <<status, status>> method.
 
 | [[currentTriggerEndTimestamp]] `currentTriggerEndTimestamp`
 | Timestamp of when the current batch/trigger has ended
@@ -212,6 +214,17 @@ Used when:
 | `Clock` to track the time
 |===
 
+=== [[status]] `status` Method
+
+[source, scala]
+----
+status: StreamingQueryStatus
+----
+
+`status` gives the current <<currentStatus, StreamingQueryStatus>>.
+
+NOTE: `status` is used when `StreamingQueryWrapper` is requested for the current status of a streaming query (that is part of link:spark-sql-streaming-StreamingQuery.adoc#status[StreamingQuery Contract]).
+
 === [[updateProgress]] Reporting Streaming Query Progress -- `updateProgress` Internal Method
 
 [source, scala]
@@ -257,7 +270,7 @@ DEBUG StreamExecution: Starting Trigger Calculation
 
 `startTrigger` sets <<currentTriggerStartTimestamp, currentTriggerStartTimestamp>> using <<triggerClock, triggerClock>>.
 
-`startTrigger` enables `isTriggerActive` flag of <<currentStatus, currentStatus>>.
+`startTrigger` enables `isTriggerActive` flag of <<currentStatus, StreamingQueryStatus>>.
 
 `startTrigger` clears <<currentDurationsMs, currentDurationsMs>>.
 
@@ -297,9 +310,9 @@ If there was any data (using the input `hasNewData` flag), `finishTrigger` reset
 
 Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updates query progress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
 
-In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, currentStatus>> (i.e. sets it to `false`).
+In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, StreamingQueryStatus>> (i.e. sets it to `false`).
 
-NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs batches] (after link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor has finished executing the batch runner]).
+NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs streaming batches] (after link:spark-sql-streaming-StreamExecution.adoc#runBatches-batch-runner-finishTrigger[TriggerExecutor has finished executing a streaming batch for a trigger]).
 
 === [[reportTimeTaken]] Tracking and Recording Execution Time -- `reportTimeTaken` Method
 
@@ -327,3 +340,12 @@ DEBUG StreamExecution: [triggerDetailKey] took [time] ms
 * `triggerExecution`
 * `walCommit` when writing offsets to log
 ====
+
+=== [[updateStatusMessage]] `updateStatusMessage` Method
+
+[source, scala]
+----
+updateStatusMessage(message: String): Unit
+----
+
+`updateStatusMessage` updates `message` in <<currentStatus, StreamingQueryStatus>> internal registry.

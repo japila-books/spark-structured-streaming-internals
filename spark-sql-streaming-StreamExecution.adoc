@@ -401,9 +401,7 @@ NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs s
 
 Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>> internal registry).
 
-`runBatch` executes `getBatch` action while link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[tracking the time taken] (under `getBatch` as `triggerDetailKey` that is later available in link:spark-sql-streaming-ProgressReporter.adoc#currentDurationsMs[currentDurationsMs])
-
-The `getBatch` action goes over the <<availableOffsets, available offsets per source>> and processes the offsets that <<committedOffsets, have not been committed yet>>.
+In *getBatch* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` goes over the <<availableOffsets, available offsets per source>> and processes the offsets that <<committedOffsets, have not been committed yet>>.
 
 `runBatch` then requests link:spark-sql-streaming-Source.adoc#getBatch[every source for the data] (as `DataFrame` with the new records).
 
@@ -610,7 +608,7 @@ image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
 CAUTION: FIXME A picture with two parallel lanes for the starting thread and daemon one for the query.
 
 [[runBatches-initializing-sources]]
-`runBatches` <<updateStatusMessage, updates status message>> to *Initializing sources* followed by initialization of the <<logicalPlan, logical plan>> (of the streaming Dataset).
+`runBatches` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Initializing sources* followed by initialization of the <<logicalPlan, logical plan>> (of the streaming Dataset).
 
 `runBatches` disables adaptive query execution (using `spark.sql.adaptive.enabled` property which is disabled by default) as it could change the number of shuffle partitions.
 
@@ -627,9 +625,9 @@ CAUTION: FIXME `initializationLatch` so what?
 `runBatches` requests <<triggerExecutor, TriggerExecutor>> to start executing batches (aka _triggers_) by executing a <<batch-runner, batch runner>>.
 
 [[runBatches-stopped]]
-Once <<triggerExecutor, TriggerExecutor>> has finished executing batches, `runBatches` <<updateStatusMessage, updates status message>> to *Stopped*.
+Once <<triggerExecutor, TriggerExecutor>> has finished executing batches, `runBatches` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Stopped*.
 
-NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<batch-runner, batch runner>> returns whether the streaming query is stopped or not (which is when the internal <<state, state>> is not `TERMINATED`).
+NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<runBatches-batch-runner, batch runner>> returns whether the streaming query is stopped or not (which is when the internal <<state, state>> is not `TERMINATED`).
 
 CAUTION: FIXME Describe `catch` block for exception handling
 
@@ -637,7 +635,7 @@ CAUTION: FIXME Describe `finally` block for query termination
 
 NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<microBatchThread, execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
 
-==== [[batch-runner]] TriggerExecutor's Batch Runner
+==== [[runBatches-batch-runner]] TriggerExecutor's Batch Runner
 
 *Batch Runner* (aka `batchRunner`) is an executable block executed by <<triggerExecutor, TriggerExecutor>> in <<runBatches, runBatches>>.
 
@@ -683,12 +681,13 @@ res1: org.apache.spark.sql.streaming.StreamingQueryStatus =
 ----
 ====
 
-`batchRunner` then <<updateStatusMessage, updates the status message>> to *Processing new data* and <<runBatch, runs the current streaming batch>>.
+`batchRunner` then link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Processing new data* and <<runBatch, runs the current streaming batch>>.
 
 .StreamExecution's Running Batches (on Execution Thread)
 image::images/StreamExecution-runBatches.png[align="center"]
 
-After *triggerExecution* section has finished, `batchRunner` <<finishTrigger, finishes the trigger>> (and collects query execution statistics).
+[[runBatches-batch-runner-finishTrigger]]
+After *triggerExecution* section has finished, `batchRunner` link:spark-sql-streaming-ProgressReporter.adoc#finishTrigger[finishes the streaming batch for the trigger] (and collects query execution statistics).
 
 When there was <<dataAvailable, data available>> in the sources, `batchRunner` updates committed offsets (by link:spark-sql-streaming-BatchCommitLog.adoc#add[adding] the <<currentBatchId, current batch id>> to <<batchCommitLog, BatchCommitLog>> and adding <<availableOffsets, availableOffsets>> to <<committedOffsets, committedOffsets>>).
 
@@ -705,19 +704,11 @@ When no <<dataAvailable, data was available>> in the sources to process, `batchR
 
 1. Marks <<currentStatus, currentStatus>> with `isDataAvailable` disabled
 
-1. <<updateStatusMessage, Updates the status message>> to *Waiting for data to arrive*
+1. link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[Updates the status message] to *Waiting for data to arrive*
 
 1. Sleeps the current thread for <<pollingDelayMs, pollingDelayMs>> milliseconds.
 
-`batchRunner` <<updateStatusMessage, Updates the status message>> to *Waiting for next trigger* and returns whether the query is currently active or not (so <<triggerExecutor, TriggerExecutor>> can decide whether to finish executing the batches or not)
-
-=== [[finishTrigger]] `finishTrigger` Method
-
-CAUTION: FIXME
-
-=== [[dataAvailable]] Is Data Available in Sources -- `dataAvailable` Internal Method
-
-CAUTION: FIXME
+`batchRunner` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Waiting for next trigger* and returns whether the query is currently active or not (so <<triggerExecutor, TriggerExecutor>> can decide whether to finish executing the batches or not)
 
 === [[populateStartOffsets]] Populating Start Offsets -- `populateStartOffsets` Internal Method
 
@@ -781,10 +772,6 @@ INFO StreamExecution: Starting new streaming query.
 `populateStartOffsets` sets <<currentBatchId, current batch id>> to `0` and <<constructNextBatch, constructs the next streaming batch>>.
 
 NOTE: `populateStartOffsets` is used exclusively when <<triggerExecutor, TriggerExecutor>> executes a batch runner for the first time (i.e. <<currentBatchId, current batch id>> is negative).
-
-=== [[updateStatusMessage]] `updateStatusMessage` Internal Method
-
-CAUTION: FIXME
 
 === [[getBatchDescriptionString]] `getBatchDescriptionString` Internal Method
 
@@ -895,9 +882,9 @@ image::images/StreamExecution-constructNextBatch.png[align="center"]
 
 NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#getOffset[get the latest offset] (using `Source.getOffset` method).
 
-`constructNextBatch` <<updateStatusMessage, updates status message>> to *Getting offsets from [source]* for every streaming data source.
+`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Getting offsets from [source]* for every streaming data source.
 
-`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] to get the offsets (as *getOffset* entry in `durationMs` entry).
+In *getOffset* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `constructNextBatch` gets the offsets.
 
 `constructNextBatch` prints out the following DEBUG message to the logs:
 
@@ -960,9 +947,10 @@ FIXME True? Example?
 
 `constructNextBatch` then adds the offsets to metadata log.
 
-`constructNextBatch` <<updateStatusMessage, updates status message>> to *Writing offsets to log*.
+`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Writing offsets to log*.
 
-`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[reports the time taken] (as *walCommit* entry in `durationMs` entry) to link:spark-sql-streaming-HDFSMetadataLog.adoc#add[add offsets for the batch] to <<offsetLog, OffsetSeqLog>>.
+In *walCommit* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section],
+`constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets in the batch] to <<offsetLog, OffsetSeqLog>>.
 
 [NOTE]
 ====
@@ -1063,3 +1051,16 @@ NOTE: `postEvent` uses `SparkSession` to access the current `StreamingQueryManag
 
 * `StreamExecution` <<runBatches, runs streaming batches>> (and announces starting a streaming query by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent[QueryStartedEvent] and query termination by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent[QueryTerminatedEvent])
 ====
+
+=== [[dataAvailable]] Checking Whether Data Is Available in Streaming Sources -- `dataAvailable` Internal Method
+
+[source, scala]
+----
+dataAvailable: Boolean
+----
+
+`dataAvailable` finds the streaming sources in <<availableOffsets, availableOffsets>> for which the offsets committed (as recorded in <<committedOffsets, committedOffsets>>) are different or do not exist at all.
+
+If there are any differences in the number of sources or their committed offsets, `dataAvailable` is enabled (i.e. `true`).
+
+NOTE: `dataAvailable` is used when `StreamExecution` <<runBatches, runs streaming batches>> and <<constructNextBatch, constructs the next streaming batch>>.

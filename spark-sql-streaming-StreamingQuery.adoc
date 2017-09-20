@@ -69,7 +69,7 @@ trait StreamingQuery {
 | `StreamingQueryException` if the query has finished due to an exception
 
 | [[status]] `status`
-| `StreamingQueryStatus`
+| `StreamingQueryStatus` (as `StreamExecution` link:spark-sql-streaming-ProgressReporter.adoc#currentStatus[has accumulated] being a `ProgressReporter` while running a streaming query)
 
 | [[recentProgress]] `recentProgress`
 | Collection of recent link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] updates.
