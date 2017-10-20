@@ -81,7 +81,7 @@ trait StreamingQuery {
 |
 
 | [[processAllAvailable]] `processAllAvailable`
-|
+| Wait until there are no data available in sources or the query has been terminated.
 
 | [[stop]] `stop`
 |

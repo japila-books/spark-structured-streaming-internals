@@ -326,6 +326,9 @@ a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/
 * `ACTIVE` (after the first execution of <<runBatches, runBatches>>)
 * `TERMINATED`
 
+| [[streamDeathCause]] `streamDeathCause`
+| `StreamingQueryException`
+
 | [[streamMetadata]] `streamMetadata`
 | `StreamMetadata` from the `metadata` file from <<checkpointFile, checkpoint directory>>. If the `metadata` file is not available it is created (with a new random <<id, id>>).
 
@@ -519,7 +522,9 @@ You can find more information on `SparkListener` in https://jaceklaskowski.gitbo
 
 ==== [[runBatch-awaitBatchLock]] awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress
 
-CAUTION: FIXME Describe `awaitBatchLock` and later
+In *awaitBatchLock* code block (it is not a time-tracking section), `runBatch` acquires a lock on <<awaitBatchLock, awaitBatchLock>>, wakes up all waiting threads on <<awaitBatchLockCondition, awaitBatchLockCondition>> and immediatelly releases <<awaitBatchLock, awaitBatchLock>> lock.
+
+NOTE: <<awaitBatchLockCondition, awaitBatchLockCondition>> is used mainly when `StreamExecution` <<processAllAvailable, processAllAvailable>> (and also when `awaitOffset`, but that seems mainly for testing).
 
 === [[runBatches]] Running Streaming Batches -- `runBatches` Internal Method
 
@@ -1064,3 +1069,26 @@ dataAvailable: Boolean
 If there are any differences in the number of sources or their committed offsets, `dataAvailable` is enabled (i.e. `true`).
 
 NOTE: `dataAvailable` is used when `StreamExecution` <<runBatches, runs streaming batches>> and <<constructNextBatch, constructs the next streaming batch>>.
+
+=== [[processAllAvailable]] Waiting Until No Data Available in Sources or Query Has Been Terminated -- `processAllAvailable` Method
+
+[source, scala]
+----
+processAllAvailable(): Unit
+----
+
+NOTE: `processAllAvailable` is a part of link:spark-sql-streaming-StreamingQuery.adoc#processAllAvailable[StreamingQuery Contract].
+
+`processAllAvailable` reports <<streamDeathCause, streamDeathCause>> exception if defined (and returns).
+
+NOTE: <<streamDeathCause, streamDeathCause>> is defined exclusively when `StreamExecution` <<runBatches, runs streaming batches>> (and terminated with an exception).
+
+`processAllAvailable` returns when <<isActive, isActive>> flag is turned off (which is when `StreamExecution` is in `TERMINATED` state).
+
+`processAllAvailable` acquires a lock on <<awaitBatchLock, awaitBatchLock>> and turns <<noNewData, noNewData>> flag off.
+
+`processAllAvailable` keeps waiting 10 seconds for <<awaitBatchLockCondition, awaitBatchLockCondition>> until <<noNewData, noNewData>> flag is turned on or `StreamExecution` is no longer <<isActive, active>>.
+
+NOTE: <<noNewData, noNewData>> flag is turned on exclusively when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>> (and finds that <<constructNextBatch-hasNewData-false, no data is available>>).
+
+In the end, `processAllAvailable` releases <<awaitBatchLock, awaitBatchLock>> lock.

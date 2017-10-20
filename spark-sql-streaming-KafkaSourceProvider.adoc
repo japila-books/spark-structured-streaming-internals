@@ -35,19 +35,6 @@ val records = spark.
   load
 ----
 
-=== [[createRelation]] Creating KafkaRelation -- `createRelation` Method
-
-[source, scala]
-----
-createRelation(
-  sqlContext: SQLContext,
-  parameters: Map[String, String]): BaseRelation
-----
-
-`createRelation` creates a link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation].
-
-Internally, `createRelation`...FIXME
-
 === [[createSource]] Creating KafkaSource -- `createSource` Method
 
 [source, scala]
@@ -191,7 +178,7 @@ topic\d
 
 * `KafkaSourceProvider` <<createSource, creates a KafkaOffsetReader for KafkaSource>>.
 
-* `KafkaSourceProvider` <<createRelation, creates a KafkaRelation>>.
+* `KafkaSourceProvider` creates a KafkaRelation (using `createRelation` method).
 ====
 
 === [[sourceSchema]] Specifying Name and Schema of Streaming Source for Kafka Format -- `sourceSchema` Method
