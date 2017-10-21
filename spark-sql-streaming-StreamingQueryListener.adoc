@@ -1,6 +1,6 @@
 == [[StreamingQueryListener]] StreamingQueryListener -- Intercepting Streaming Events
 
-`StreamingQueryListener` is the <<contract, contract>> for listeners that want to intercept notifications about the <<events, life cycle events>> of streaming queries, i.e. start, progress and termination of a query.
+`StreamingQueryListener` is the <<contract, contract>> for listeners that want to be notified about the <<events, life cycle events>> of streaming queries, i.e. start, progress and termination of a query.
 
 [[contract]]
 [source, scala]
@@ -29,7 +29,7 @@ a| [[QueryStartedEvent]] `QueryStartedEvent`
 - `name`
 
 | [[onQueryStarted]] onQueryStarted
-| Right after `StreamExecution` has started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches].
+| Right after `StreamExecution` has started link:spark-sql-streaming-StreamExecution.adoc#runBatches[running streaming batches].
 
 a| [[QueryProgressEvent]] `QueryProgressEvent`
 
@@ -45,7 +45,7 @@ a| [[QueryTerminatedEvent]] `QueryTerminatedEvent`
 - Optional `exception` if terminated due to an error
 
 | [[onQueryTerminated]] onQueryTerminated
-| Right before `StreamExecution` finishes link:spark-sql-streaming-StreamExecution.adoc#runBatches[running batches] (regardless of whether an exception was reported or not).
+| Right before `StreamExecution` finishes link:spark-sql-streaming-StreamExecution.adoc#runBatches[running streaming batches] (due to a stop or an exception).
 
 |===
 

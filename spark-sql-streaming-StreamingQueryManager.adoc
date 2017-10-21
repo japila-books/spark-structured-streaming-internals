@@ -1,8 +1,8 @@
 == [[StreamingQueryManager]] StreamingQueryManager -- Streaming Query Management
 
-`StreamingQueryManager` is the management interface for link:spark-sql-streaming-StreamingQuery.adoc[continuous queries] (per `SparkSession`).
+`StreamingQueryManager` is the management interface of link:spark-sql-streaming-StreamingQuery.adoc[continuous streaming queries] in a single `SparkSession`.
 
-`StreamingQueryManager` manages all continuous structured queries per `SparkSession` that is available using `SparkSession.streams` operator.
+`StreamingQueryManager` is available using `streams` operator (of `SparkSession`).
 
 [source, scala]
 ----
@@ -10,7 +10,7 @@ val spark: SparkSession = ...
 val queries = spark.streams
 ----
 
-`StreamingQueryManager` is created exclusively when `SessionState` is created (that is available as `sessionState` property of `SparkSession`).
+`StreamingQueryManager` is <<creating-instance, created>> exclusively when `SessionState` is created (that is available as `sessionState` property of `SparkSession`).
 
 TIP: Refer to the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-SessionState.html[Mastering Apache Spark 2] gitbook to learn about `SessionState`.
 
@@ -31,7 +31,7 @@ Used to:
 
 * <<addListener, register>> or <<removeListener, deregister>> a `StreamingQueryListener`
 
-* <<postListenerEvent, Post a streaming event>>
+* <<postListenerEvent, Post a streaming event>> (and notify `StreamingQueryListener` listeners about streaming events)
 
 | [[activeQueries]] `activeQueries`
 | Registry of `StreamingQueryWrapper` per id
@@ -155,11 +155,6 @@ java.lang.IllegalArgumentException: There is no active query with name hello
   ... 49 elided
 ```
 
-=== [[addListener]][[removeListener]] StreamingQueryListener Management by Adding or Removing Listeners -- `addListener` and `removeListener` Methods
-
-* `addListener(listener: StreamingQueryListener): Unit` adds `listener` to the internal `listenerBus`.
-* `removeListener(listener: StreamingQueryListener): Unit` removes `listener` from the internal `listenerBus`.
-
 === [[lastTerminatedQuery]] `lastTerminatedQuery` Internal Barrier
 
 CAUTION: FIXME Why is `lastTerminatedQuery` needed?
@@ -199,3 +194,21 @@ NOTE: `postListenerEvent` is used exclusively when `StreamExecution` link:spark-
 * [[sparkSession]] `SparkSession`
 
 `StreamingQueryManager` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[addListener]] Registering StreamingQueryListener -- `addListener` Method
+
+[source, scala]
+----
+addListener(listener: StreamingQueryListener): Unit
+----
+
+`addListener` requests <<listenerBus, StreamingQueryListenerBus>> to link:spark-sql-streaming-StreamingQueryListenerBus.adoc#addListener[add] the input `listener`.
+
+=== [[removeListener]] De-Registering StreamingQueryListener -- `removeListener` Method
+
+[source, scala]
+----
+removeListener(listener: StreamingQueryListener): Unit
+----
+
+`removeListener` requests <<listenerBus, StreamingQueryListenerBus>> to link:spark-sql-streaming-StreamingQueryListenerBus.adoc#removeListener[remove] the input `listener`.
