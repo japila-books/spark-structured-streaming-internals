@@ -1,0 +1,14 @@
+== [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec
+
+`StreamingSymmetricHashJoinExec` is...FIXME
+
+=== [[doExecute]] Executing StreamingSymmetricHashJoinExec -- `doExecute` Method
+
+[source, scala]
+----
+doExecute(): RDD[InternalRow]
+----
+
+`doExecute`...FIXME
+
+NOTE: `doExecute` is used when...FIXME

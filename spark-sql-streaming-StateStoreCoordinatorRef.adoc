@@ -32,7 +32,7 @@
 |
 |===
 
-=== [[forDriver]] `forDriver` Method
+=== [[forDriver]] Creating StateStoreCoordinatorRef with StateStoreCoordinator RPC Endpoint -- `forDriver` Method
 
 [source, scala]
 ----

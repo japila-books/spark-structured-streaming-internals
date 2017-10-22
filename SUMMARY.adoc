@@ -119,6 +119,7 @@
 .. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
 . link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication]
 . link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec Leaf Physical Operator]
+. link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc[StreamingSymmetricHashJoinExec]
 
 . link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport Contract for Streaming Watermark in Unary Physical Operators]
 

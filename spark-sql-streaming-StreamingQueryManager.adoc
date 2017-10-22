@@ -2,7 +2,17 @@
 
 `StreamingQueryManager` is the management interface of link:spark-sql-streaming-StreamingQuery.adoc[continuous streaming queries] in a single `SparkSession`.
 
-`StreamingQueryManager` is available using `streams` operator (of `SparkSession`).
+`StreamingQueryManager` allows for:
+
+* <<active, Getting active structured queries>>
+
+* <<get, Getting a structured query by id>>
+
+* <<awaitAnyTermination, Waiting for any query to be terminated>>
+
+* <<addListener, Registering>> or <<removeListener, de-registering>> `StreamingQueryListeners`
+
+`StreamingQueryManager` is available using `SparkSession` and `streams` property.
 
 [source, scala]
 ----
@@ -10,7 +20,10 @@ val spark: SparkSession = ...
 val queries = spark.streams
 ----
 
-`StreamingQueryManager` is <<creating-instance, created>> exclusively when `SessionState` is created (that is available as `sessionState` property of `SparkSession`).
+`StreamingQueryManager` is <<creating-instance, created>> when `SessionState` is created.
+
+.StreamingQueryManager
+image::images/StreamingQueryManager.png[align="center"]
 
 TIP: Refer to the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-SessionState.html[Mastering Apache Spark 2] gitbook to learn about `SessionState`.
 
@@ -21,8 +34,10 @@ TIP: Refer to the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spar
 | Name
 | Description
 
-| [[stateStoreCoordinator]] `stateStoreCoordinator`
-|
+| [[activeQueries]] `activeQueries`
+| Registry of `StreamingQueryWrapper` per id
+
+Used in <<active, active>>, <<get, get>>, <<startQuery, startQuery>> and <<notifyQueryTermination, notifyQueryTermination>>.
 
 | [[listenerBus]] `listenerBus`
 a| link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus] (for the current <<sparkSession, SparkSession>>)
@@ -33,15 +48,40 @@ Used to:
 
 * <<postListenerEvent, Post a streaming event>> (and notify `StreamingQueryListener` listeners about streaming events)
 
-| [[activeQueries]] `activeQueries`
-| Registry of `StreamingQueryWrapper` per id
+| [[stateStoreCoordinator]] `stateStoreCoordinator`
+a| link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] with the *StateStoreCoordinator* RPC Endpoint
 
-Used in <<active, active>>, <<get, get>>, <<startQuery, startQuery>> and <<notifyQueryTermination, notifyQueryTermination>>.
+* link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#forDriver[Created] when `StreamingQueryManager` is <<creating-instance, created>>
+
+Used when:
+
+* <<notifyQueryTermination, notifyQueryTermination>>
+
+* Stateful operators are executed, i.e. link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[FlatMapGroupsWithStateExec], link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec], link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] and link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute[StreamingSymmetricHashJoinExec]
+
+* link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)]
 |===
+
+=== [[awaitAnyTermination]] `awaitAnyTermination` Method
+
+[source, scala]
+----
+awaitAnyTermination(): Unit
+awaitAnyTermination(timeoutMs: Long): Boolean
+----
+
+`awaitAnyTermination`...FIXME
 
 === [[notifyQueryTermination]] `notifyQueryTermination` Internal Method
 
-CAUTION: FIXME
+[source, scala]
+----
+notifyQueryTermination(terminatedQuery: StreamingQuery): Unit
+----
+
+`notifyQueryTermination`...FIXME
+
+NOTE: `notifyQueryTermination` is used when...FIXME
 
 === [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) -- `createQuery` Internal Method
 
@@ -59,7 +99,7 @@ createQuery(
   triggerClock: Clock): StreamingQueryWrapper
 ----
 
-CAUTION: FIXME
+`createQuery`
 
 [NOTE]
 ====
@@ -125,14 +165,14 @@ Perhaps you are attempting to restart a query from checkpoint that is already ac
 
 NOTE: `startQuery` is used exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
 
-=== [[active]] Return All Active Continuous Queries per SQLContext -- `active` Method
+=== [[active]] Getting All Active Streaming Queries -- `active` Method
 
 [source, scala]
 ----
 active: Array[StreamingQuery]
 ----
 
-`active` method returns a collection of link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] instances for the current `SQLContext`.
+`active` gets <<activeQueries, active queries>>.
 
 === [[get]] Getting Active Continuous Query By Name -- `get` Method
 
