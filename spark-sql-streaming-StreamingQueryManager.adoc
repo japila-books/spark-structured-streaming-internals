@@ -1,10 +1,10 @@
 == [[StreamingQueryManager]] StreamingQueryManager -- Streaming Query Management
 
-`StreamingQueryManager` is the management interface of link:spark-sql-streaming-StreamingQuery.adoc[continuous streaming queries] in a single `SparkSession`.
+`StreamingQueryManager` is the management interface for <<activeQueries, streaming queries>> in a single `SparkSession`.
 
-`StreamingQueryManager` allows for:
+`StreamingQueryManager` manages streaming queries and allows for:
 
-* <<active, Getting active structured queries>>
+* <<active, Getting all active structured queries>>
 
 * <<get, Getting a structured query by id>>
 
@@ -26,6 +26,13 @@ val queries = spark.streams
 image::images/StreamingQueryManager.png[align="center"]
 
 TIP: Refer to the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-SessionState.html[Mastering Apache Spark 2] gitbook to learn about `SessionState`.
+
+`StreamingQueryManager` is used (internally) to <<createQuery, create a StreamingQuery (with its StreamExecution)>>.
+
+.StreamingQueryManager Creates StreamingQuery (and StreamExecution)
+image::images/StreamingQueryManager-createQuery.png[align="center"]
+
+`StreamingQueryManager` is <<postListenerEvent, notified about state changes of a structured query and passes them along (to query listeners)>>.
 
 [[internal-registries]]
 .StreamingQueryManager's Internal Registries and Counters (in alphabetical order)
@@ -82,41 +89,6 @@ notifyQueryTermination(terminatedQuery: StreamingQuery): Unit
 `notifyQueryTermination`...FIXME
 
 NOTE: `notifyQueryTermination` is used when...FIXME
-
-=== [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) -- `createQuery` Internal Method
-
-[source, scala]
-----
-createQuery(
-  userSpecifiedName: Option[String],
-  userSpecifiedCheckpointLocation: Option[String],
-  df: DataFrame,
-  sink: Sink,
-  outputMode: OutputMode,
-  useTempCheckpointLocation: Boolean,
-  recoverFromCheckpointLocation: Boolean,
-  trigger: Trigger,
-  triggerClock: Clock): StreamingQueryWrapper
-----
-
-`createQuery`
-
-[NOTE]
-====
-`recoverFromCheckpointLocation` flag corresponds to `recoverFromCheckpointLocation` flag that `StreamingQueryManager` uses to <<startQuery, start a streaming query>> and which is enabled by default (and is in fact the only place where `createQuery` is used).
-
-* `memory` sink has the flag enabled for link:spark-sql-streaming-OutputMode.adoc#Complete[Complete] output mode only
-
-* `foreach` sink has the flag always enabled
-
-* `console` sink has the flag always disabled
-
-* all other sinks have the flag always enabled
-====
-
-NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
-
-NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a streaming query>>.
 
 === Initialization
 
@@ -213,14 +185,14 @@ It is set in:
 +
 It is called from link:spark-sql-streaming-StreamExecution.adoc#runBatches[StreamExecution.runBatches].
 
-=== [[postListenerEvent]] Posting StreamingQueryListener Event to StreamingQueryListenerBus -- `postListenerEvent` Method
+=== [[postListenerEvent]] Posting StreamingQueryListener Event to StreamingQueryListenerBus -- `postListenerEvent` Internal Method
 
 [source, scala]
 ----
 postListenerEvent(event: StreamingQueryListener.Event): Unit
 ----
 
-`postListenerEvent` simply posts the input `event` to <<listenerBus, StreamingQueryListenerBus>> (in the current `SparkSession`).
+`postListenerEvent` simply posts the input `event` to <<listenerBus, StreamingQueryListenerBus>>.
 
 .StreamingQueryManager Propagates StreamingQueryListener Events
 image::images/StreamingQueryManager-postListenerEvent.png[align="center"]
@@ -252,3 +224,68 @@ removeListener(listener: StreamingQueryListener): Unit
 ----
 
 `removeListener` requests <<listenerBus, StreamingQueryListenerBus>> to link:spark-sql-streaming-StreamingQueryListenerBus.adoc#removeListener[remove] the input `listener`.
+
+=== [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) with StreamExecution -- `createQuery` Internal Method
+
+[source, scala]
+----
+createQuery(
+  userSpecifiedName: Option[String],
+  userSpecifiedCheckpointLocation: Option[String],
+  df: DataFrame,
+  sink: Sink,
+  outputMode: OutputMode,
+  useTempCheckpointLocation: Boolean,
+  recoverFromCheckpointLocation: Boolean,
+  trigger: Trigger,
+  triggerClock: Clock): StreamingQueryWrapper
+----
+
+`createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapper.adoc#creating-instance[StreamingQueryWrapper] (for a link:spark-sql-streaming-StreamExecution.adoc#creating-instance[StreamExecution] per the input user-defined properties).
+
+Internally, `createQuery` first finds the name of the checkpoint directory of a query (aka *checkpoint location*) in the following order:
+
+1. Exactly the input `userSpecifiedCheckpointLocation` if defined
+
+2. link:spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property if defined for the parent directory with a subdirectory per the optional `userSpecifiedName` (or a randomly-generated UUID)
+
+3. (only when `useTempCheckpointLocation` is enabled) A temporary directory (as specified by `java.io.tmpdir` JVM property) with a subdirectory with `temporary` prefix.
+
+NOTE: `userSpecifiedCheckpointLocation` can be any path that is acceptable by Hadoop's https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/fs/Path.html[Path].
+
+If the directory name for the checkpoint location could not be found, `createQuery` reports a `AnalysisException`.
+
+```
+checkpointLocation must be specified either through option("checkpointLocation", ...) or SparkSession.conf.set("spark.sql.streaming.checkpointLocation", ...)
+```
+
+`createQuery` reports a `AnalysisException` when the input `recoverFromCheckpointLocation` flag is turned off but there is *offsets* directory in the checkpoint location.
+
+`createQuery` makes sure that the logical plan of the structured query is analyzed (i.e. no logical errors have been found).
+
+Unless link:spark-sql-streaming-properties.adoc#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is turned on, `createQuery` link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[checks the logical plan of the streaming query for unsupported operations].
+
+(only when `spark.sql.adaptive.enabled` Spark property is turned on) `createQuery` prints out a WARN message to the logs:
+
+```
+WARN spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
+```
+
+In the end, `createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapper.adoc#creating-instance[StreamingQueryWrapper] with a link:spark-sql-streaming-StreamExecution.adoc#creating-instance[StreamExecution].
+
+[NOTE]
+====
+`recoverFromCheckpointLocation` flag corresponds to `recoverFromCheckpointLocation` flag that `StreamingQueryManager` uses to <<startQuery, start a streaming query>> and which is enabled by default (and is in fact the only place where `createQuery` is used).
+
+* `memory` sink has the flag enabled for link:spark-sql-streaming-OutputMode.adoc#Complete[Complete] output mode only
+
+* `foreach` sink has the flag always enabled
+
+* `console` sink has the flag always disabled
+
+* all other sinks have the flag always enabled
+====
+
+NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
+
+NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a streaming query>>.

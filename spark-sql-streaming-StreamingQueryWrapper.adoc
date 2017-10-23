@@ -1,0 +1,13 @@
+== [[StreamingQueryWrapper]] StreamingQueryWrapper
+
+`StreamingQueryWrapper` is a wrapper around <<_streamingQuery, StreamExecution>> for...FIXME
+
+`StreamingQueryWrapper` is <<creating-instance, created>> when...FIXME
+
+=== [[creating-instance]] Creating StreamingQueryWrapper Instance
+
+`StreamingQueryWrapper` takes the following when created:
+
+* [[_streamingQuery]] link:spark-sql-streaming-StreamExecution.adoc[StreamExecution]
+
+`StreamingQueryWrapper` initializes the <<internal-registries, internal registries and counters>>.
