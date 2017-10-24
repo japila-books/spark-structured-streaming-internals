@@ -634,8 +634,12 @@ Once <<triggerExecutor, TriggerExecutor>> has finished executing batches, `runBa
 
 NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<runBatches-batch-runner, batch runner>> returns whether the streaming query is stopped or not (which is when the internal <<state, state>> is not `TERMINATED`).
 
+[[runBatches-catch-isInterruptedByStop]]
+[[runBatches-catch-IOException]]
+[[runBatches-catch-Throwable]]
 CAUTION: FIXME Describe `catch` block for exception handling
 
+[[runBatches-finally]]
 CAUTION: FIXME Describe `finally` block for query termination
 
 NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<microBatchThread, execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).

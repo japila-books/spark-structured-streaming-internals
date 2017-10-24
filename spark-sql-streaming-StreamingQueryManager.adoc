@@ -8,7 +8,7 @@
 
 * <<get, Getting a structured query by id>>
 
-* <<awaitAnyTermination, Waiting for any query to be terminated>>
+* <<awaitAnyTermination, Waiting for any streaming query to be terminated>>
 
 * <<addListener, Registering>> or <<removeListener, de-registering>> `StreamingQueryListeners`
 
@@ -46,6 +46,15 @@ image::images/StreamingQueryManager-createQuery.png[align="center"]
 
 Used in <<active, active>>, <<get, get>>, <<startQuery, startQuery>> and <<notifyQueryTermination, notifyQueryTermination>>.
 
+| [[lastTerminatedQuery]] `lastTerminatedQuery`
+a| link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] that has recently been terminated, i.e. link:spark-sql-streaming-StreamingQuery.adoc#stop[stopped] or link:spark-sql-streaming-StreamingQuery.adoc#exception[due to an exception].
+
+`null` when no streaming query has terminated yet or <<resetTerminated, resetTerminated>>.
+
+* Used in <<awaitAnyTermination, awaitAnyTermination>> to know when a streaming query has terminated
+
+* Set in <<notifyQueryTermination, notifyQueryTermination>> when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches-finally[has finished (running streaming batches)] (possibly due to an exception).
+
 | [[listenerBus]] `listenerBus`
 a| link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus] (for the current <<sparkSession, SparkSession>>)
 
@@ -69,16 +78,6 @@ Used when:
 * link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)]
 |===
 
-=== [[awaitAnyTermination]] `awaitAnyTermination` Method
-
-[source, scala]
-----
-awaitAnyTermination(): Unit
-awaitAnyTermination(timeoutMs: Long): Boolean
-----
-
-`awaitAnyTermination`...FIXME
-
 === [[notifyQueryTermination]] `notifyQueryTermination` Internal Method
 
 [source, scala]
@@ -89,53 +88,6 @@ notifyQueryTermination(terminatedQuery: StreamingQuery): Unit
 `notifyQueryTermination`...FIXME
 
 NOTE: `notifyQueryTermination` is used when...FIXME
-
-=== Initialization
-
-`StreamingQueryManager` manages the following instances:
-
-* link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] (as `stateStoreCoordinator`)
-* link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus] (as `listenerBus`)
-* `activeQueries` which is a mutable mapping between query names and `StreamingQuery` objects.
-
-=== [[startQuery]] Starting Execution of Streaming Query -- `startQuery` Internal Method
-
-[source, scala]
-----
-startQuery(
-  userSpecifiedName: Option[String],
-  userSpecifiedCheckpointLocation: Option[String],
-  df: DataFrame,
-  sink: Sink,
-  outputMode: OutputMode,
-  useTempCheckpointLocation: Boolean = false,
-  recoverFromCheckpointLocation: Boolean = true,
-  trigger: Trigger = ProcessingTime(0),
-  triggerClock: Clock = new SystemClock()): StreamingQuery
-----
-
-`startQuery` starts a link:spark-sql-streaming-StreamingQuery.adoc[streaming query].
-
-NOTE: `trigger` defaults to `0` milliseconds (as link:spark-sql-streaming-Trigger.adoc#ProcessingTime[ProcessingTime(0)]).
-
-Internally, `startQuery` first <<createQuery, creates a streaming query>>, registers it in <<activeQueries, activeQueries>> internal registry and link:spark-sql-streaming-StreamExecution.adoc#start[starts the query].
-
-In the end, `startQuery` returns the query (as part of the fluent API so you can chain operators) or reports the exception that was reported when starting the query.
-
-`startQuery` reports a `IllegalArgumentException` when there is another query registered under `name`. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
-
-```
-Cannot start query with name [name] as a query with that name is already active
-```
-
-`startQuery` reports a `IllegalStateException` when a query is started again from checkpoint. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
-
-```
-Cannot start query with id [id] as another query with same id is already active.
-Perhaps you are attempting to restart a query from checkpoint that is already active.
-```
-
-NOTE: `startQuery` is used exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
 
 === [[active]] Getting All Active Streaming Queries -- `active` Method
 
@@ -167,46 +119,6 @@ java.lang.IllegalArgumentException: There is no active query with name hello
   ... 49 elided
 ```
 
-=== [[lastTerminatedQuery]] `lastTerminatedQuery` Internal Barrier
-
-CAUTION: FIXME Why is `lastTerminatedQuery` needed?
-
-Used in:
-
-* `awaitAnyTermination`
-* `awaitAnyTermination(timeoutMs: Long)`
-
-They all wait `10` millis before doing the check of `lastTerminatedQuery` being non-null.
-
-It is set in:
-
-* `resetTerminated()` resets `lastTerminatedQuery`, i.e. sets it to `null`.
-* `notifyQueryTermination(terminatedQuery: StreamingQuery)` sets `lastTerminatedQuery` to be `terminatedQuery` and notifies all the threads that wait on `awaitTerminationLock`.
-+
-It is called from link:spark-sql-streaming-StreamExecution.adoc#runBatches[StreamExecution.runBatches].
-
-=== [[postListenerEvent]] Posting StreamingQueryListener Event to StreamingQueryListenerBus -- `postListenerEvent` Internal Method
-
-[source, scala]
-----
-postListenerEvent(event: StreamingQueryListener.Event): Unit
-----
-
-`postListenerEvent` simply posts the input `event` to <<listenerBus, StreamingQueryListenerBus>>.
-
-.StreamingQueryManager Propagates StreamingQueryListener Events
-image::images/StreamingQueryManager-postListenerEvent.png[align="center"]
-
-NOTE: `postListenerEvent` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#postEvent[posts a streaming event].
-
-=== [[creating-instance]] Creating StreamingQueryManager Instance
-
-`StreamingQueryManager` takes the following when created:
-
-* [[sparkSession]] `SparkSession`
-
-`StreamingQueryManager` initializes the <<internal-registries, internal registries and counters>>.
-
 === [[addListener]] Registering StreamingQueryListener -- `addListener` Method
 
 [source, scala]
@@ -224,6 +136,37 @@ removeListener(listener: StreamingQueryListener): Unit
 ----
 
 `removeListener` requests <<listenerBus, StreamingQueryListenerBus>> to link:spark-sql-streaming-StreamingQueryListenerBus.adoc#removeListener[remove] the input `listener`.
+
+=== [[awaitAnyTermination]] Waiting for Any Streaming Query Termination -- `awaitAnyTermination` Method
+
+[source, scala]
+----
+awaitAnyTermination(): Unit
+awaitAnyTermination(timeoutMs: Long): Boolean
+----
+
+`awaitAnyTermination` acquires a lock on <<awaitTerminationLock, awaitTerminationLock>> and waits until any streaming query has finished (i.e. <<lastTerminatedQuery, lastTerminatedQuery>> is available) or `timeoutMs` has expired.
+
+`awaitAnyTermination` re-throws the `StreamingQueryException` from <<lastTerminatedQuery, lastTerminatedQuery>> if link:spark-sql-streaming-StreamingQuery.adoc#exception[it reported one].
+
+=== [[resetTerminated]] `resetTerminated` Method
+
+[source, scala]
+----
+resetTerminated(): Unit
+----
+
+`resetTerminated` forgets about the past-terminated query (so that <<awaitAnyTermination, awaitAnyTermination>> can be used again to wait for a new streaming query termination).
+
+Internally, `resetTerminated` acquires a lock on <<awaitTerminationLock, awaitTerminationLock>> and simply resets <<lastTerminatedQuery, lastTerminatedQuery>> (i.e. sets it to `null`).
+
+=== [[creating-instance]] Creating StreamingQueryManager Instance
+
+`StreamingQueryManager` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+
+`StreamingQueryManager` initializes the <<internal-registries, internal registries and counters>>.
 
 === [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) with StreamExecution -- `createQuery` Internal Method
 
@@ -289,3 +232,56 @@ In the end, `createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapp
 NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 
 NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a streaming query>>.
+
+=== [[startQuery]] Starting Streaming Query -- `startQuery` Internal Method
+
+[source, scala]
+----
+startQuery(
+  userSpecifiedName: Option[String],
+  userSpecifiedCheckpointLocation: Option[String],
+  df: DataFrame,
+  sink: Sink,
+  outputMode: OutputMode,
+  useTempCheckpointLocation: Boolean = false,
+  recoverFromCheckpointLocation: Boolean = true,
+  trigger: Trigger = ProcessingTime(0),
+  triggerClock: Clock = new SystemClock()): StreamingQuery
+----
+
+`startQuery` starts a link:spark-sql-streaming-StreamingQuery.adoc[streaming query].
+
+NOTE: `trigger` defaults to `0` milliseconds (as link:spark-sql-streaming-Trigger.adoc#ProcessingTime[ProcessingTime(0)]).
+
+Internally, `startQuery` first <<createQuery, creates a streaming query>>, registers it in <<activeQueries, activeQueries>> internal registry and link:spark-sql-streaming-StreamExecution.adoc#start[starts the query].
+
+In the end, `startQuery` returns the query (as part of the fluent API so you can chain operators) or reports the exception that was reported when starting the query.
+
+`startQuery` reports a `IllegalArgumentException` when there is another query registered under `name`. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
+
+```
+Cannot start query with name [name] as a query with that name is already active
+```
+
+`startQuery` reports a `IllegalStateException` when a query is started again from checkpoint. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
+
+```
+Cannot start query with id [id] as another query with same id is already active.
+Perhaps you are attempting to restart a query from checkpoint that is already active.
+```
+
+NOTE: `startQuery` is used exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
+
+=== [[postListenerEvent]] Posting StreamingQueryListener Event to StreamingQueryListenerBus -- `postListenerEvent` Internal Method
+
+[source, scala]
+----
+postListenerEvent(event: StreamingQueryListener.Event): Unit
+----
+
+`postListenerEvent` simply posts the input `event` to <<listenerBus, StreamingQueryListenerBus>>.
+
+.StreamingQueryManager Propagates StreamingQueryListener Events
+image::images/StreamingQueryManager-postListenerEvent.png[align="center"]
+
+NOTE: `postListenerEvent` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#postEvent[posts a streaming event].
