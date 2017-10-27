@@ -13,7 +13,9 @@
 
 | [[deactivateInstances]] `deactivateInstances`
 | `DeactivateInstances`
-|
+a| Synchronous event to announce that `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#notifyQueryTermination[has been informed that a query terminated] (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches-finally[has finished (running streaming batches)]).
+
+NOTE: Refer to link:spark-sql-streaming-StateStoreCoordinator.adoc#DeactivateInstances[DeactivateInstances] (of `StateStoreCoordinator`) to know how the event is handled.
 
 | [[getLocation]] `getLocation`
 | `GetLocation`
