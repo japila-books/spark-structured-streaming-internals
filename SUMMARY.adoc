@@ -61,9 +61,10 @@
 
 == Demos
 
-. link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[Demo: groupBy Streaming Aggregation with Append Output Mode]
-. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Demo: Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
-. link:spark-sql-streaming-demo-current_timestamp.adoc[Demo: current_timestamp Function For Processing Time in Streaming Queries]
+. link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[groupBy Streaming Aggregation with Append Output Mode]
+. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
+. link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
+. link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
 
 == Monitoring
 

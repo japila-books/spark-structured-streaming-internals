@@ -4,7 +4,7 @@ The demo shows the steps to develop a custom link:spark-sql-streaming-Sink.adoc[
 
 [NOTE]
 ====
-The main motivation was to answer the question https://stackoverflow.com/q/46162143/1305344[Why does a single structured query run multiple SQL queries per batch?] It turned out fairly surprising.
+The main motivation was to answer the question https://stackoverflow.com/q/46162143/1305344[Why does a single structured query run multiple SQL queries per batch?] that happened to have turned out fairly surprising.
 
 You're _very_ welcome to upvote the question and answers at your earliest convenience. Thanks!
 ====
