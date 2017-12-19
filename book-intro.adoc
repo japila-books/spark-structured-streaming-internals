@@ -2,9 +2,11 @@
 
 Welcome to *Spark Structured Streaming* gitbook!
 
-I'm https://pl.linkedin.com/in/jaceklaskowski[Jacek Laskowski], an independent consultant, software engineer and trainer focusing exclusively on *Apache Spark* and Apache Kafka (with Scala and sbt, and as much as necessary with Apache Mesos, Hadoop YARN, and DC/OS). I lead the http://www.meetup.com/WarsawScala/[Warsaw Scala Enthusiasts] and http://www.meetup.com/Warsaw-Spark[Warsaw Spark] meetups in Warsaw, Poland.
+I'm https://pl.linkedin.com/in/jaceklaskowski[Jacek Laskowski], an independent consultant, developer and trainer focusing exclusively on *Apache Spark*, Apache Kafka and Kafka Streams (with Scala and sbt on Apache Mesos, Hadoop YARN and DC/OS). I offer courses, workshops, mentoring and software development services.
 
-Contact me at jacek@japila.pl or https://twitter.com/jaceklaskowski[@jaceklaskowski] to discuss Apache Spark or Apache Kafka opportunities, e.g. customized trainings, workshops, mentoring, code reviews, performance tuning or application development services.
+I lead http://www.meetup.com/WarsawScala/[Warsaw Scala Enthusiasts] and http://www.meetup.com/Warsaw-Spark[Warsaw Spark] meetups in Warsaw, Poland.
+
+Contact me at jacek@japila.pl or https://twitter.com/jaceklaskowski[@jaceklaskowski] to discuss Apache Spark and Apache Kafka opportunities, e.g. courses, workshops, mentoring or application development services.
 
 If you like the gitbook you should seriously consider participating in my own, very hands-on, in-depth https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/slides/README.md#toc[Apache Spark Workshops and Webinars] and in particular brand new and shiny https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/spark-structured-streaming-workshop.md[Spark Structured Streaming (Apache Spark 2.2) Workshop].
 
