@@ -83,10 +83,10 @@ Recognized "special" output data sources (in the code):
 | <<foreach, foreach>>
 | Sets link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] in the full control of streaming writes.
 
-| `option`
+| <<option, option>>
 |
 
-| `options`
+| [[options]] `options`
 |
 
 | <<outputMode, outputMode>>
@@ -140,6 +140,18 @@ Set using <<outputMode, outputMode>> method.
 |
 |
 |===
+
+=== [[option]] Specifying Write Option -- `option` Method
+
+[source, scala]
+----
+option(key: String, value: String): DataStreamWriter[T]
+option(key: String, value: Boolean): DataStreamWriter[T]
+option(key: String, value: Long): DataStreamWriter[T]
+option(key: String, value: Double): DataStreamWriter[T]
+----
+
+Internally, `option` adds the `key` and `value` to <<extraOptions, extraOptions>> internal option registry.
 
 === [[outputMode]] Specifying Output Mode -- `outputMode` Method
 

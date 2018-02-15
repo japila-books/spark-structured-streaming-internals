@@ -45,7 +45,7 @@
 .. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 .. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
 
-. link:spark-sql-streaming-Sink.adoc[Streaming Sink]
+. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
 .. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]
 .. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
 .. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
@@ -58,6 +58,10 @@
 .. link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
+
+== Structured Streaming V2
+
+. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport]
 
 == Demos
 
