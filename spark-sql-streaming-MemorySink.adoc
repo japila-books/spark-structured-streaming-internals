@@ -99,4 +99,4 @@ When the output mode is invalid, `addBatch` reports a `IllegalArgumentException`
 Output mode [outputMode] is not supported by MemorySink
 ```
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#contract[Sink contract].
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.

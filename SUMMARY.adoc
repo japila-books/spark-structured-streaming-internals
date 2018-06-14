@@ -47,7 +47,7 @@
 
 . link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
 .. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]
-.. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
+.. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink -- Streaming Sink for Parquet Format]
 .. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
 .. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 .. link:spark-sql-streaming-MemorySink.adoc[MemorySink]

@@ -56,7 +56,7 @@ Batch: 0
 addBatch(batchId: Long, data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract].
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.
 
 Internally, `addBatch` records the input `batchId` in <<lastBatchId, lastBatchId>> internal property.
 

@@ -4,7 +4,6 @@
 
 NOTE: `Sink` is part of the so-called *Structured Streaming V1* that is currently being rewritten to StreamWriteSupport in V2.
 
-[[addBatch]]
 [[contract]]
 `Sink` is a single-method interface with `addBatch` method.
 
@@ -17,6 +16,7 @@ trait Sink {
 }
 ----
 
+[[addBatch]]
 `addBatch` is used to "add" a batch of data to the sink (for `batchId` batch).
 
 `addBatch` is used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch].

@@ -1,8 +1,6 @@
-== [[FileStreamSink]] FileStreamSink
+== [[FileStreamSink]] FileStreamSink -- Streaming Sink for Parquet Format
 
-`FileStreamSink` is the streaming sink for the `parquet` format.
-
-CAUTION: FIXME
+`FileStreamSink` is the link:spark-sql-streaming-Sink.adoc[streaming sink] that writes out the results of a streaming query to `parquet` files.
 
 [source, scala]
 ----
@@ -18,10 +16,62 @@ val out = in.
   start
 ----
 
+`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to link:spark-sql-streaming-DataSource.adoc#createSink[create a streaming sink].
+
 `FileStreamSink` supports link:spark-sql-streaming-OutputMode.adoc#Append[Append output mode] only.
 
-It uses link:spark-sql-SQLConf.adoc#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
+`FileStreamSink` uses link:spark-sql-SQLConf.adoc#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
+
+[[toString]]
+The textual representation of `FileStreamSink` is *FileSink[path]*
+
+[[internal-registries]]
+.FileStreamSink's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| `basePath`
+| [[basePath]] FIXME
+
+Used when...FIXME
+
+| `logPath`
+| [[logPath]] FIXME
+
+Used when...FIXME
+
+| `fileLog`
+| [[fileLog]] FIXME
+
+Used when...FIXME
+
+| `hadoopConf`
+| [[hadoopConf]] FIXME
+
+Used when...FIXME
+|===
 
 === [[addBatch]] `addBatch` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+addBatch(batchId: Long, data: DataFrame): Unit
+----
+
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.
+
+`addBatch`...FIXME
+
+=== [[creating-instance]] Creating FileStreamSink Instance
+
+`FileStreamSink` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+* [[path]] Path with the <<metadataDir, metadata>> directory
+* [[fileFormat]] `FileFormat`
+* [[partitionColumnNames]] Names of the partition columns
+* [[options]] Configuration options
+
+`FileStreamSink` initializes the <<internal-registries, internal registries and counters>>.
