@@ -1,4 +1,4 @@
-== Spark Structured Streaming (Apache Spark 2.2+)
+== Spark Structured Streaming (Apache Spark {{ book.version }})
 
 Welcome to *Spark Structured Streaming* gitbook!
 
