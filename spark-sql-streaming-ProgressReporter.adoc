@@ -178,12 +178,10 @@ Used when:
 | [[id]] `id`
 | UUID of...FIXME
 
-| [[logicalPlan]] `logicalPlan`
-a| Logical plan (i.e. `LogicalPlan`) of a streaming Dataset that...FIXME
+| `logicalPlan`
+| [[logicalPlan]] Logical query plan (i.e. `LogicalPlan`) of a streaming Dataset that...FIXME
 
-Used when:
-
-* `ProgressReporter` <<extractExecutionStats, extracts statistics from the most recent query execution>> (to add `watermark` metric when link:spark-sql-streaming-EventTimeWatermark.adoc[streaming watermark] is used)
+Used when `ProgressReporter` is requested to <<extractExecutionStats, extract statistics from the most recent query execution>> (to add `watermark` metric when a <<spark-sql-streaming-EventTimeWatermark.adoc#, streaming watermark>> is used)
 
 | [[name]] `name`
 | Name of...FIXME

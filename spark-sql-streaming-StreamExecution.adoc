@@ -1,12 +1,58 @@
 == [[StreamExecution]] StreamExecution -- Execution Environment of Streaming Dataset
 
-`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, adds the results to a sink>>.
+`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can execute <<logicalPlan, structured queries>> continuously.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
-NOTE: `StreamExecution` corresponds to a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] with one or more link:spark-sql-streaming-Source.adoc[streaming sources] and exactly one link:spark-sql-streaming-Sink.adoc[streaming sink].
+[[contract]]
+[source, scala]
+----
+package org.apache.spark.sql.execution.streaming
 
-`StreamExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
+abstract class StreamExecution(...) extends ... {
+  // only required properties (vals and methods) that have no implementation
+  // the others follow
+  def logicalPlan: LogicalPlan
+  def runActivatedStream(sparkSessionForStream: SparkSession): Unit
+}
+----
+
+.(Subset of) StreamExecution Contract
+[cols="1m,2",options="header",width="100%"]
+|===
+| Property
+| Description
+
+| logicalPlan
+a| [[logicalPlan]] <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, LogicalPlan>>
+
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, ProgressReporter Contract>> to...FIXME.
+
+Used when `StreamExecution` is requested to <<runStream, runStream>> and <<toDebugString, toDebugString>>
+
+| runActivatedStream
+| [[runActivatedStream]] Running the activated streaming query
+
+Used exclusively when `StreamExecution` is requested to <<runStream, runStream>> for the very first time (when transitioning from `INITIALIZING` state to `ACTIVE`)
+|===
+
+[[extensions]]
+.StreamExecutions
+[cols="1,2",options="header",width="100%"]
+|===
+| StreamExecution
+| Description
+
+| <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>>
+| [[ContinuousExecution]]
+
+| <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>>
+| [[MicroBatchExecution]]
+|===
+
+`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, adds the results to a sink>>.
+
+NOTE: `StreamExecution` corresponds to a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] with one or more link:spark-sql-streaming-Source.adoc[streaming sources] and exactly one link:spark-sql-streaming-Sink.adoc[streaming sink].
 
 [source, scala]
 ----
@@ -112,8 +158,8 @@ TIP: Monitor `offsets` and `commits` metadata logs to know the progress of a str
 | Name
 | Description
 
-| [[availableOffsets]] `availableOffsets`
-a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the streaming sources with their available and unprocessed offsets.
+| `availableOffsets`
+a| [[availableOffsets]] link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the streaming sources with their available and unprocessed offsets.
 
 NOTE: `availableOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#availableOffsets[ProgressReporter Contract].
 
@@ -164,8 +210,11 @@ Used when `StreamExecution` <<runBatches, runs streaming batches>> (and records 
 
 NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the batch commit log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
 
-| [[committedOffsets]] `committedOffsets`
-a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the streaming sources and the committed offsets (i.e. processed already).
+| `commitLog`
+| [[commitLog]] `CommitLog` for the <<sparkSession, SparkSession>> and *commits* <<checkpointFile, checkpointFile>>
+
+| `committedOffsets`
+a| [[committedOffsets]] <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of the streaming sources and the committed offsets (i.e. processed already).
 
 NOTE: `committedOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#committedOffsets[ProgressReporter Contract].
 
@@ -800,7 +849,7 @@ toDebugString(includeLogicalPlan: Boolean): String
 
 `toDebugString`...FIXME
 
-NOTE: `toDebugString` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>> (and a streaming query terminated with exception).
+NOTE: `toDebugString` is used exclusively when `StreamExecution` is requested to <<runStream, run the underlying streaming query plan>> (and a streaming query terminated with an exception).
 
 === [[start]] Starting Streaming Query (on Execution Thread) -- `start` Method
 
@@ -832,14 +881,16 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to l
 * [[sparkSession]] `SparkSession`
 * [[name]] Query name
 * [[checkpointRoot]] Path to the checkpoint directory (aka _metadata directory_)
-* [[analyzedPlan]] Analyzed logical plan (i.e. `LogicalPlan`)
-* [[sink]] link:spark-sql-streaming-Sink.adoc[Streaming sink]
-* [[trigger]] link:spark-sql-streaming-Trigger.adoc[Trigger]
+* [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
+* [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
+* [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
 * [[triggerClock]] `Clock`
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode] (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
-* [[deleteCheckpointOnStop]] Flag where to delete the checkpoint on stop
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>> (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
+* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 
 `StreamExecution` initializes the <<internal-registries, internal registries and counters>>.
+
+NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly when the <<extensions, concrete StreamExecutions>> are.
 
 === [[checkpointFile]] Creating Path to Checkpoint Directory -- `checkpointFile` Internal Method
 
@@ -1096,3 +1147,14 @@ NOTE: <<streamDeathCause, streamDeathCause>> is defined exclusively when `Stream
 NOTE: <<noNewData, noNewData>> flag is turned on exclusively when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>> (and finds that <<constructNextBatch-hasNewData-false, no data is available>>).
 
 In the end, `processAllAvailable` releases <<awaitBatchLock, awaitBatchLock>> lock.
+
+=== [[runStream]] `runStream` Internal Method
+
+[source, scala]
+----
+runStream(): Unit
+----
+
+`runStream`...FIXME
+
+NOTE: `runStream` is used when...FIXME
