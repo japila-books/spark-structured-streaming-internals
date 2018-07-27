@@ -1,0 +1,36 @@
+== [[MicroBatchExecution]] MicroBatchExecution
+
+`MicroBatchExecution` is...FIXME
+
+=== [[populateStartOffsets]] `populateStartOffsets` Internal Method
+
+[source, scala]
+----
+populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
+----
+
+`populateStartOffsets`...FIXME
+
+NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, runActivatedStream>>.
+
+=== [[constructNextBatch]] `constructNextBatch` Internal Method
+
+[source, scala]
+----
+constructNextBatch(): Unit
+----
+
+`constructNextBatch`...FIXME
+
+NOTE: `constructNextBatch` is used when...FIXME
+
+=== [[runActivatedStream]] `runActivatedStream` Method
+
+[source, scala]
+----
+runActivatedStream(sparkSessionForStream: SparkSession): Unit
+----
+
+NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to...FIXME.
+
+`runActivatedStream`...FIXME

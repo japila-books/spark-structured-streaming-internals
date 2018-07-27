@@ -1,0 +1,14 @@
+== [[ContinuousExecution]] ContinuousExecution
+
+`ContinuousExecution` is...FIXME
+
+=== [[getStartOffsets]] `getStartOffsets` Internal Method
+
+[source, scala]
+----
+getStartOffsets(sparkSessionToRunBatches: SparkSession): OffsetSeq
+----
+
+`getStartOffsets`...FIXME
+
+NOTE: `getStartOffsets` is used when...FIXME

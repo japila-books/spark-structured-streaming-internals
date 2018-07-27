@@ -241,8 +241,8 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces Stre
 
 Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming batch>> when no new offsets are available.
 
-| [[offsetLog]] `offsetLog`
-a| link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in as ready for processing.
+| `offsetLog`
+a| [[offsetLog]] link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in when ready for processing.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
@@ -1020,7 +1020,7 @@ Enable INFO logging level for `org.apache.spark.sql.execution.streaming.StreamEx
 
 `constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#get[takes the previously-committed batch] (from <<offsetLog, OffsetSeqLog>>), extracts the stored offsets per source.
 
-NOTE: `constructNextBatch` uses `OffsetSeq.toStreamProgress` and <<sources, sources>> registry to extract the offsets per source.
+NOTE: `constructNextBatch` uses <<spark-sql-streaming-OffsetSeq.adoc#toStreamProgress, OffsetSeq.toStreamProgress>> and <<sources, sources>> registry to extract the offsets per source.
 
 `constructNextBatch` requests every streaming source to link:spark-sql-streaming-Source.adoc#commit[commit the offsets]
 

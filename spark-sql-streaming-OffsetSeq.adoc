@@ -1,0 +1,32 @@
+== [[OffsetSeq]] OffsetSeq
+
+`OffsetSeq` is...FIXME
+
+`OffsetSeq` is <<creating-instance, created>> when...MEFIXME
+
+=== [[toStreamProgress]] `toStreamProgress` Method
+
+[source, scala]
+----
+toStreamProgress(sources: Seq[BaseStreamingSource]): StreamProgress
+----
+
+`toStreamProgress` then creates a new <<spark-sql-streaming-StreamProgress.adoc#creating-instance, StreamProgress>> with the only `sources` that have the <<offsets, offsets>> defined.
+
+`toStreamProgress` throws a `AssertionError` if the number of the input `sources` does not match the <<offsets, offsets>>.
+
+[NOTE]
+====
+`toStreamProgress` is used when:
+
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populateStartOffsets>> and <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, constructNextBatch>>
+
+* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>
+====
+
+=== [[creating-instance]] Creating OffsetSeq Instance
+
+`OffsetSeq` takes the following when created:
+
+* [[offsets]] Collection of <<spark-sql-streaming-Offset.adoc#, Offsets>>
+* [[metadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> (default: `None`)

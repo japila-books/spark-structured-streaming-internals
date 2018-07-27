@@ -94,6 +94,8 @@
 == Query Planning and Execution
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Execution Environment of Streaming Dataset]
+.. link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
+.. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution]
 .. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper]
 .. link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter]
 
@@ -145,6 +147,7 @@
 .. link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog -- HDFSMetadataLog for Batch Completion Log]
 .. link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
 .. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog -- HDFSMetadataLog with OffsetSeq Metadata]
+.. link:spark-sql-streaming-OffsetSeq.adoc[OffsetSeq]
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 

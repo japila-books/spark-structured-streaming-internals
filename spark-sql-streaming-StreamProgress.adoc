@@ -1,3 +1,9 @@
 == [[StreamProgress]] StreamProgress Custom Scala Map
 
 `StreamProgress` is an extension of Scala's https://www.scala-lang.org/api/2.11.11/index.html#scala.collection.immutable.Map[scala.collection.immutable.Map] with link:spark-sql-streaming-Source.adoc[streaming sources] as keys and their `Offsets` as values.
+
+`StreamProgress` is <<creating-instance, created>> when...MEFIXME
+
+[[creating-instance]]
+[[baseMap]]
+`StreamProgress` takes a `Map` of <<spark-sql-streaming-Offset.adoc#, Offsets>> per `BaseStreamingSource` when created.
