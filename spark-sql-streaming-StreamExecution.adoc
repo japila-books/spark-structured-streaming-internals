@@ -1,6 +1,6 @@
-== [[StreamExecution]] StreamExecution -- Execution Environment of Streaming Dataset
+<<awaitProgressLock, == [[StreamExecution]] StreamExecution -- Base of Streaming Query Executions
 
-`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can execute <<logicalPlan, structured queries>> continuously.
+`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can execute <<logicalPlan, structured query>> continuously.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
@@ -198,11 +198,14 @@ Used when:
 
 NOTE: `availableOffsets` works in tandem with <<committedOffsets, committedOffsets>> registry.
 
-| [[awaitBatchLock]] `awaitBatchLock`
-| Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
+| `awaitProgressLock`
+| [[awaitProgressLock]] Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
 
-| [[batchCommitLog]] `batchCommitLog`
-a| link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog] with `commits` <<checkpointFile, metadata checkpoint directory>> for completed streaming batches (with a single file per batch with a file name being the batch id).
+| `awaitProgressLockCondition`
+| [[awaitProgressLockCondition]]
+
+| `commitLog`
+a| [[commitLog]] <<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>> for completed streaming batches (with a single file per batch with a file name being the batch id).
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
@@ -245,7 +248,7 @@ a| Lazily-generated logical plan (i.e. `LogicalPlan`) of the streaming Dataset
 
 NOTE: `logicalPlan` is a part of link:spark-sql-streaming-ProgressReporter.adoc#logicalPlan[ProgressReporter Contract].
 
-Initialized right after `StreamExecution` starts <<runBatches, running streaming batches>> (which is when <<microBatchThread, stream execution thread>> is started).
+Initialized right after `StreamExecution` starts <<runBatches, running streaming batches>> (which is when <<queryExecutionThread, stream execution thread>> is started).
 
 Used mainly when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> that has arrived since the last batch.
 
@@ -259,12 +262,12 @@ NOTE: `logicalPlan` uses `DataSource.createSource` factory method to create a li
 
 While initializing, `logicalPlan` also initializes <<sources, sources>> and <<uniqueSources, uniqueSources>> registries.
 
-| [[microBatchThread]] `microBatchThread`
-a| Thread of execution to run a streaming query concurrently with the name as `stream execution thread for [prettyIdString]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
+| `queryExecutionThread`
+a| [[queryExecutionThread]] Thread of execution to run a streaming query concurrently with the name as `stream execution thread for [prettyIdString]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
 
-When started, `microBatchThread` sets the so-called call site and <<runBatches, runs streaming batches>>.
+When started, `queryExecutionThread` sets the so-called call site and <<runBatches, runs streaming batches>>.
 
-NOTE: `microBatchThread` is Java's https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread].
+NOTE: `queryExecutionThread` is Java's https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread].
 
 [TIP]
 ====
@@ -392,8 +395,8 @@ Used when `StreamExecution` starts <<runBatches, running streaming batches>>.
 NOTE: `StreamExecution` reports a `IllegalStateException` when `TriggerExecutor` is different from the link:spark-sql-streaming-TriggerExecutor.adoc#available-implementations[two built-in implementations]: `OneTimeExecutor`
 or `ProcessingTimeExecutor`.
 
-| [[uniqueSources]] `uniqueSources`
-a| Unique link:spark-sql-streaming-Source.adoc[streaming data sources] in a streaming Dataset (after being collected as `StreamingExecutionRelation` from the corresponding <<logicalPlan, logical query plan>>).
+| `uniqueSources`
+a| [[uniqueSources]] Unique link:spark-sql-streaming-Source.adoc[streaming data sources] in a streaming Dataset (after being collected as `StreamingExecutionRelation` from the corresponding <<logicalPlan, logical query plan>>).
 
 NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] is a leaf logical operator (i.e. `LogicalPlan`) that represents a streaming data source (and corresponds to a single link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] in <<analyzedPlan, analyzed logical query plan>> of a streaming Dataset).
 
@@ -571,11 +574,11 @@ You can find more information on `SparkListener` in https://jaceklaskowski.gitbo
 
 ==== [[runBatch-awaitBatchLock]] awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress
 
-In *awaitBatchLock* code block (it is not a time-tracking section), `runBatch` acquires a lock on <<awaitBatchLock, awaitBatchLock>>, wakes up all waiting threads on <<awaitBatchLockCondition, awaitBatchLockCondition>> and immediatelly releases <<awaitBatchLock, awaitBatchLock>> lock.
+In *awaitBatchLock* code block (it is not a time-tracking section), `runBatch` acquires a lock on <<awaitProgressLock, awaitProgressLock>>, wakes up all waiting threads on <<awaitProgressLockCondition, awaitProgressLockCondition>> and immediatelly releases <<awaitProgressLock, awaitProgressLock>> lock.
 
-NOTE: <<awaitBatchLockCondition, awaitBatchLockCondition>> is used mainly when `StreamExecution` <<processAllAvailable, processAllAvailable>> (and also when `awaitOffset`, but that seems mainly for testing).
+NOTE: <<awaitProgressLockCondition, awaitProgressLockCondition>> is used mainly when `StreamExecution` <<processAllAvailable, processAllAvailable>> (and also when `awaitOffset`, but that seems mainly for testing).
 
-=== [[runBatches]] Running Streaming Batches -- `runBatches` Internal Method
+=== [[runStream]] Running Streaming Batches -- `runBatches` Internal Method
 
 [source, scala]
 ----
@@ -691,7 +694,7 @@ CAUTION: FIXME Describe `catch` block for exception handling
 [[runBatches-finally]]
 CAUTION: FIXME Describe `finally` block for query termination
 
-NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<microBatchThread, execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
+NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<queryExecutionThread, stream execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
 
 ==== [[runBatches-batch-runner]] TriggerExecutor's Batch Runner
 
@@ -747,7 +750,7 @@ image::images/StreamExecution-runBatches.png[align="center"]
 [[runBatches-batch-runner-finishTrigger]]
 After *triggerExecution* section has finished, `batchRunner` link:spark-sql-streaming-ProgressReporter.adoc#finishTrigger[finishes the streaming batch for the trigger] (and collects query execution statistics).
 
-When there was <<dataAvailable, data available>> in the sources, `batchRunner` updates committed offsets (by link:spark-sql-streaming-BatchCommitLog.adoc#add[adding] the <<currentBatchId, current batch id>> to <<batchCommitLog, BatchCommitLog>> and adding <<availableOffsets, availableOffsets>> to <<committedOffsets, committedOffsets>>).
+When there was <<dataAvailable, data available>> in the sources, `batchRunner` updates committed offsets (by link:spark-sql-streaming-CommitLog.adoc#add[adding] the <<currentBatchId, current batch id>> to <<batchCommitLog, BatchCommitLog>> and adding <<availableOffsets, availableOffsets>> to <<committedOffsets, committedOffsets>>).
 
 You should see the following DEBUG message in the logs:
 
@@ -864,7 +867,7 @@ When called, `start` prints the following INFO message to the logs:
 INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
 ```
 
-`start` then sets <<microBatchThread, microBatchThread>> as a daemon thread and starts it.
+`start` then sets the <<queryExecutionThread, queryExecutionThread>> as a daemon thread and starts it.
 
 NOTE: `start` uses Java's link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#start--++[java.lang.Thread.start] to run the streaming query on a separate execution thread.
 
@@ -933,7 +936,7 @@ constructNextBatch(): Unit
 
 `constructNextBatch` starts by checking whether or not a new data is available in any of the streaming sources (in the <<logicalPlan, logical query plan>>).
 
-`constructNextBatch` acquires <<awaitBatchLock, awaitBatchLock>> and link:spark-sql-streaming-Source.adoc#getOffset[gets the latest offset] from <<uniqueSources, every streaming data source>>.
+`constructNextBatch` acquires <<awaitProgressLock, awaitProgressLock>> and link:spark-sql-streaming-Source.adoc#getOffset[gets the latest offset] from <<uniqueSources, every streaming data source>>.
 
 NOTE: `constructNextBatch` checks out the latest offset in every streaming data source sequentially, i.e. one data source at a time.
 
@@ -956,7 +959,7 @@ DEBUG StreamExecution: getOffset took [time] ms
 
 If there is no <<dataAvailable, data available>> (i.e. no offsets unprocessed in any of the streaming data sources), `constructNextBatch` turns <<noNewData, noNewData>> flag on.
 
-In the end (of this checking-data block), `constructNextBatch` releases <<awaitBatchLock, awaitBatchLock>>
+In the end (of this checking-data block), `constructNextBatch` releases <<awaitProgressLock, awaitProgressLock>>
 
 ==== [[constructNextBatch-hasNewData-true]] New Data Available
 
@@ -1088,7 +1091,7 @@ In the end, `constructNextBatch` purges <<offsetLog, OffsetSeqLog>> and <<batchC
 
 ==== [[constructNextBatch-hasNewData-false]] No New Data Available
 
-If there is no new data available, `constructNextBatch` acquires a lock on <<awaitBatchLock, awaitBatchLock>>, wakes up all waiting threads that are waiting for the stream to progress (using <<awaitBatchLockCondition, awaitBatchLockCondition>>), followed by releasing the lock on <<awaitBatchLock, awaitBatchLock>>.
+If there is no new data available, `constructNextBatch` acquires a lock on <<awaitProgressLock, awaitProgressLock>>, wakes up all waiting threads that are waiting for the stream to progress (using <<awaitProgressLockCondition, awaitProgressLockCondition>>), followed by releasing the lock on <<awaitProgressLock, awaitProgressLock>>.
 
 === [[postEvent]] Posting StreamingQueryListener Event -- `postEvent` Method
 
@@ -1140,21 +1143,10 @@ NOTE: <<streamDeathCause, streamDeathCause>> is defined exclusively when `Stream
 
 `processAllAvailable` returns when <<isActive, isActive>> flag is turned off (which is when `StreamExecution` is in `TERMINATED` state).
 
-`processAllAvailable` acquires a lock on <<awaitBatchLock, awaitBatchLock>> and turns <<noNewData, noNewData>> flag off.
+`processAllAvailable` acquires a lock on <<awaitProgressLock, awaitProgressLock>> and turns <<noNewData, noNewData>> flag off.
 
-`processAllAvailable` keeps waiting 10 seconds for <<awaitBatchLockCondition, awaitBatchLockCondition>> until <<noNewData, noNewData>> flag is turned on or `StreamExecution` is no longer <<isActive, active>>.
+`processAllAvailable` keeps waiting 10 seconds for <<awaitProgressLockCondition, awaitProgressLockCondition>> until <<noNewData, noNewData>> flag is turned on or `StreamExecution` is no longer <<isActive, active>>.
 
 NOTE: <<noNewData, noNewData>> flag is turned on exclusively when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>> (and finds that <<constructNextBatch-hasNewData-false, no data is available>>).
 
-In the end, `processAllAvailable` releases <<awaitBatchLock, awaitBatchLock>> lock.
-
-=== [[runStream]] `runStream` Internal Method
-
-[source, scala]
-----
-runStream(): Unit
-----
-
-`runStream`...FIXME
-
-NOTE: `runStream` is used when...FIXME
+In the end, `processAllAvailable` releases <<awaitProgressLock, awaitProgressLock>> lock.

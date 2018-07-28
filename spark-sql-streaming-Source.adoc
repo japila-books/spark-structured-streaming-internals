@@ -70,7 +70,7 @@ a| Finding the latest offset
 
 NOTE: link:spark-sql-streaming-Offset.adoc[Offset] is...FIXME
 
-Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[runs streaming batches] (and link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructing the next streaming batch] for every streaming data source in a streaming Dataset)
+Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[runs streaming batches] (and link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructing the next streaming batch] for every streaming data source in a streaming Dataset)
 
 | [[schema]] `schema`
 a| Schema of the data from this source

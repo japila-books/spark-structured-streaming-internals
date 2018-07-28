@@ -1,10 +1,10 @@
-== [[BatchCommitLog]] BatchCommitLog -- HDFSMetadataLog for Batch Completion Log
+== [[CommitLog]] CommitLog -- HDFSMetadataLog for Batch Completion Log
 
-`BatchCommitLog` is a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with metadata as regular text (i.e. `String`).
+`CommitLog` is a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with metadata as regular text (i.e. `String`).
 
 NOTE: link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] is a `MetadataLog` that uses Hadoop HDFS for a reliable storage.
 
-`BatchCommitLog` is <<creating-instance, created>> exclusively for link:spark-sql-streaming-StreamExecution.adoc#batchCommitLog[batch commit log] in `StreamExecution`.
+`CommitLog` is <<creating-instance, created>> exclusively for link:spark-sql-streaming-StreamExecution.adoc#batchCommitLog[batch commit log] in `StreamExecution`.
 
 === [[add]] `add` Method
 
@@ -43,7 +43,7 @@ deserialize(in: InputStream): String
 
 CAUTION: FIXME
 
-=== [[creating-instance]] Creating BatchCommitLog Instance
+=== [[creating-instance]] Creating CommitLog Instance
 
 `BatchCommitLog` takes the following when created:
 

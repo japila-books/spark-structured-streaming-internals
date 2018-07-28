@@ -34,3 +34,15 @@ runActivatedStream(sparkSessionForStream: SparkSession): Unit
 NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to...FIXME.
 
 `runActivatedStream`...FIXME
+
+=== [[creating-instance]] Creating MicroBatchExecution Instance
+
+`MicroBatchExecution` takes the following when created:
+
+* MicroBatchExecution
+
+`MicroBatchExecution` initializes the <<internal-registries, internal registries and counters>>.
+
+`MicroBatchExecution` is <<creating-instance, created>> when...MEFIXME
+
+`MicroBatchExecution` is <<creating-instance, created>> along with...MEFIXME

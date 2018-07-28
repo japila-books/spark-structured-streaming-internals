@@ -19,7 +19,7 @@ NOTE: `HDFSMetadataLog` uses <<path, path>> (specified when <<creating-instance,
 | HDFSMetadataLog
 | Description
 
-| [[BatchCommitLog]] link:spark-sql-streaming-BatchCommitLog.adoc[BatchCommitLog]
+| [[BatchCommitLog]] link:spark-sql-streaming-CommitLog.adoc[BatchCommitLog]
 |
 
 | [[CompactibleFileStreamLog]] link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]

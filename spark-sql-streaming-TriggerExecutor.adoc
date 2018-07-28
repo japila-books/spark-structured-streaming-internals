@@ -1,6 +1,6 @@
 == [[TriggerExecutor]] TriggerExecutor
 
-`TriggerExecutor` is the <<contract, interface>> for *trigger executors* that `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[uses to execute a batch runner].
+`TriggerExecutor` is the <<contract, interface>> for *trigger executors* that `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[uses to execute a batch runner].
 
 [[batchRunner]]
 NOTE: *Batch runner* is an executable code that is executed at regular intervals. It is also called a *trigger handler*.

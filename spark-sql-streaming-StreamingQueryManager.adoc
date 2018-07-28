@@ -157,7 +157,7 @@ Internally, `resetTerminated` acquires a lock on <<awaitTerminationLock, awaitTe
 
 `StreamingQueryManager` initializes the <<internal-registries, internal registries and counters>>.
 
-=== [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) with StreamExecution -- `createQuery` Internal Method
+=== [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) with MicroBatchExecution -- `createQuery` Internal Method
 
 [source, scala]
 ----
@@ -203,7 +203,7 @@ Unless link:spark-sql-streaming-properties.adoc#spark.sql.streaming.unsupportedO
 WARN spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
 ```
 
-In the end, `createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapper.adoc#creating-instance[StreamingQueryWrapper] with a link:spark-sql-streaming-StreamExecution.adoc#creating-instance[StreamExecution].
+In the end, `createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapper.adoc#creating-instance[StreamingQueryWrapper] with a new <<spark-sql-streaming-MicroBatchExecution.adoc#creating-instance, MicroBatchExecution>>.
 
 [NOTE]
 ====

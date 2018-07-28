@@ -256,7 +256,7 @@ a| Initial partition offsets (as `Map[TopicPartition, Long]`)
 
 Set when `KafkaSource` is first requested to <<getOffset, get the available offsets>> (from metadata log or Kafka directly).
 
-Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet).
+Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet).
 
 While being initialized, `initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance[creates a custom HDFSMetadataLog] (with link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and link:spark-sql-streaming-HDFSMetadataLog.adoc#get[gets] the ``0``th batch's metadata (as `KafkaSourceOffset`) if available.
 
