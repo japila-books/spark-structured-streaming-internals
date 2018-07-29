@@ -294,4 +294,4 @@ In the end, `notifyQueryTermination` requests <<stateStoreCoordinator, StateStor
 .StreamingQueryManager's Marking Streaming Query as Terminated
 image::images/StreamingQueryManager-notifyQueryTermination.png[align="center"]
 
-NOTE: `notifyQueryTermination` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches-finally[has finished (running streaming batches)] (possibly due to an exception).
+NOTE: `notifyQueryTermination` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream-finally[has finished (running streaming batches)] (possibly due to an exception).

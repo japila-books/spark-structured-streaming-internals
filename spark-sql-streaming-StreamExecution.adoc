@@ -1,6 +1,6 @@
-<<awaitProgressLock, == [[StreamExecution]] StreamExecution -- Base of Streaming Query Executions
+== [[StreamExecution]] StreamExecution -- Base of Streaming Query Executions
 
-`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can execute <<logicalPlan, structured query>> continuously.
+`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can execute <<logicalPlan, structured query>> continuously and concurrently (as a <<queryExecutionThread, stream execution thread>>).
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
@@ -204,6 +204,9 @@ NOTE: `availableOffsets` works in tandem with <<committedOffsets, committedOffse
 | `awaitProgressLockCondition`
 | [[awaitProgressLockCondition]]
 
+| `callSite`
+| [[callSite]]
+
 | `commitLog`
 a| [[commitLog]] <<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>> for completed streaming batches (with a single file per batch with a file name being the batch id).
 
@@ -261,25 +264,6 @@ NOTE: `nextSourceId` is the unique identifier of every `StreamingRelation` in <<
 NOTE: `logicalPlan` uses `DataSource.createSource` factory method to create a link:spark-sql-streaming-Source.adoc[streaming Source] that assumes link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider] or `FileFormat` as the implementations of the streaming data sources for reading.
 
 While initializing, `logicalPlan` also initializes <<sources, sources>> and <<uniqueSources, uniqueSources>> registries.
-
-| `queryExecutionThread`
-a| [[queryExecutionThread]] *Stream execution thread*
-
-The thread of execution to run a streaming query concurrently with the name as `stream execution thread for [id]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
-
-When started, `queryExecutionThread` sets the so-called call site and <<runBatches, runs streaming batches>>.
-
-NOTE: `queryExecutionThread` is Java's https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread].
-
-[TIP]
-====
-Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
-
-```
-$ jstack <driver-pid> \| grep -e "stream execution thread"
-"stream execution thread for kafka-topic1 [id =...
-```
-====
 
 | [[newData]] `newData`
 a| Registry of the link:spark-sql-streaming-Source.adoc[streaming sources] (in <<logicalPlan, logical query plan>>) that have new data available in the current batch. The new data is a streaming `DataFrame`.
@@ -693,7 +677,7 @@ NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<run
 [[runBatches-catch-Throwable]]
 CAUTION: FIXME Describe `catch` block for exception handling
 
-[[runBatches-finally]]
+[[runStream-finally]]
 CAUTION: FIXME Describe `finally` block for query termination
 
 NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<queryExecutionThread, stream execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
@@ -1152,3 +1136,34 @@ NOTE: <<streamDeathCause, streamDeathCause>> is defined exclusively when `Stream
 NOTE: <<noNewData, noNewData>> flag is turned on exclusively when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>> (and finds that <<constructNextBatch-hasNewData-false, no data is available>>).
 
 In the end, `processAllAvailable` releases <<awaitProgressLock, awaitProgressLock>> lock.
+
+=== [[queryExecutionThread]] Stream Execution Thread -- `queryExecutionThread` Property
+
+[source, scala]
+----
+queryExecutionThread: QueryExecutionThread
+----
+
+`queryExecutionThread` is a Java thread of execution (https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread]) that <<runStream, runs a structured query>>.
+
+`queryExecutionThread` uses the name `stream execution thread for [id]` (that uses <<prettyIdString, prettyIdString>> for the id).
+
+`queryExecutionThread` is a Spark Core `UninterruptibleThread` that provides `runUninterruptibly` method that allows running a block of code without being interrupted by `Thread.interrupt()`.
+
+`queryExecutionThread` is started as a daemon thread when `StreamExecution` is requested to <<start, start>>.
+
+When started, `queryExecutionThread` sets the thread-local properties as the <<callSite, call site>> and <<runBatches, runs the streaming query>>.
+
+When `StreamExecution` finishes <<runStream-finally, running the streaming query>>, it uses `queryExecutionThread` to execute the `runUninterruptibly` code block uninterruptibly.
+
+`queryExecutionThread` is also used when `StreamExecution` is requested to <<stop, stop>>
+
+[TIP]
+====
+Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
+
+```
+$ jstack <driver-pid> \| grep -e "stream execution thread"
+"stream execution thread for kafka-topic1 [id =...
+```
+====
