@@ -18,7 +18,7 @@ image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="cente
 * SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
 ====
 
-The optional property <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+The optional property <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
 .StateStoreRestoreExec and IncrementalExecution
 image::images/StateStoreRestoreExec-IncrementalExecution.png[align="center"]

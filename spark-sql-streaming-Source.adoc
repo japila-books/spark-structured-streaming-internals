@@ -63,14 +63,14 @@ trait Source {
 | [[getBatch]] `getBatch`
 | Generates a `DataFrame` (with new rows) for a given batch (described using the optional start and end offsets).
 
-Used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch] and link:spark-sql-streaming-StreamExecution.adoc#populateStartOffsets[populateStartOffsets].
+Used when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a batch] and link:spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets[populateStartOffsets].
 
 | [[getOffset]] `getOffset`
 a| Finding the latest offset
 
 NOTE: link:spark-sql-streaming-Offset.adoc[Offset] is...FIXME
 
-Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[runs streaming batches] (and link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData[constructing the next streaming batch] for every streaming data source in a streaming Dataset)
+Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[runs streaming batches] (and link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData[constructing the next streaming batch] for every streaming data source in a streaming Dataset)
 
 | [[schema]] `schema`
 a| Schema of the data from this source

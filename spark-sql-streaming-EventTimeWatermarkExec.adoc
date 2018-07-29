@@ -8,7 +8,7 @@
 
 * `ProgressReporter` for link:spark-sql-streaming-ProgressReporter.adoc#extractExecutionStats[creating execution statistics] for the most recent query execution. You should then see `max`, `min`, `avg`, and `watermark` eventTime watermark statistics.
 
-* `StreamExecution` to observe and possibly update eventTime watermark while link:spark-sql-streaming-StreamExecution.adoc#constructNextBatch-hasNewData-true[constructing the next streaming batch].
+* `StreamExecution` to observe and possibly update eventTime watermark while link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData-true[constructing the next streaming batch].
 ====
 
 `EventTimeWatermarkExec` is <<creating-instance, created>> when link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy plans a `EventTimeWatermark` logical operator for execution.

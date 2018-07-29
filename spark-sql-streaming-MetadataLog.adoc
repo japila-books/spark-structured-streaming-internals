@@ -32,7 +32,7 @@ trait MetadataLog[T] {
 | [[getLatest]] `getLatest`
 a| Retrieves the latest-committed batch with the metadata if available from the metadata storage.
 
-NOTE: It is assumed (i.e. link:spark-sql-streaming-FileStreamSink.adoc#addBatch[FileStreamSink]) that the latest batch id is of the batch which has already been committed and a link:spark-sql-streaming-StreamExecution.adoc#populateStartOffsets[streaming query can start from].
+NOTE: It is assumed (i.e. link:spark-sql-streaming-FileStreamSink.adoc#addBatch[FileStreamSink]) that the latest batch id is of the batch which has already been committed and a link:spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets[streaming query can start from].
 
 | [[purge]] `purge`
 |

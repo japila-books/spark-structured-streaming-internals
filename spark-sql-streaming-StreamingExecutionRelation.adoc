@@ -2,13 +2,13 @@
 
 `StreamingExecutionRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a link:spark-sql-streaming-Source.adoc[streaming source] in the logical query plan of a streaming `Dataset`.
 
-The main use of `StreamingExecutionRelation` logical operator is to be a "placeholder" in a logical query plan that will be replaced with the real relation (with new data that has arrived since the last batch) or an empty `LocalRelation` when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-withNewSources[runs a single streaming batch].
+The main use of `StreamingExecutionRelation` logical operator is to be a "placeholder" in a logical query plan that will be replaced with the real relation (with new data that has arrived since the last batch) or an empty `LocalRelation` when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-withNewSources[runs a single streaming batch].
 
 `StreamingExecutionRelation` is <<creating-instance, created>> for a link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] in link:spark-sql-streaming-StreamExecution.adoc#analyzedPlan[analyzed logical query plan] (that is the execution representation of a streaming Dataset).
 
 [NOTE]
 ====
-Right after `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches-initializing-sources[has started running streaming batches] it initializes the streaming sources by transforming the analyzed logical plan of the streaming Dataset so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is replaced by the corresponding `StreamingExecutionRelation`.
+Right after `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-initializing-sources[has started running streaming batches] it initializes the streaming sources by transforming the analyzed logical plan of the streaming Dataset so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is replaced by the corresponding `StreamingExecutionRelation`.
 ====
 
 .StreamingExecutionRelation Represents Streaming Source At Execution

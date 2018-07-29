@@ -1,6 +1,6 @@
 == [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Datasets
 
-`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[StreamExecution] creates when incrementally executing the <<logicalPlan, logical query plan>> (every trigger).
+`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[StreamExecution] creates when incrementally executing the <<logicalPlan, logical query plan>> (every trigger).
 
 .StreamExecution creates IncrementalExecution (every trigger / streaming batch)
 image::images/IncrementalExecution-StreamExecution.png[align="center"]
@@ -12,7 +12,7 @@ TIP: Details on `QueryExecution` contract can be found in the https://jaceklasko
 
 `IncrementalExecution` is <<creating-instance, created>> when:
 
-* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query]
+* `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[plans a streaming query]
 
 * `ExplainCommand` is executed (for link:spark-sql-streaming-Dataset-operators.adoc#explain[explain] operator)
 
@@ -53,7 +53,7 @@ a| State preparation rule (i.e. `Rule[SparkPlan]`) that transforms a streaming p
 
 * `FlatMapGroupsWithStateExec` gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>, <<offsetSeqMetadata, batchWatermarkMs>> and <<offsetSeqMetadata, batchWatermarkMs>>
 
-Used when `IncrementalExecution` <<preparations, prepares a physical plan>> (i.e. `SparkPlan`) for execution (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[runs a streaming batch and plans a streaming query]).
+Used when `IncrementalExecution` <<preparations, prepares a physical plan>> (i.e. `SparkPlan`) for execution (which is when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[runs a streaming batch and plans a streaming query]).
 
 | [[statefulOperatorId]] `statefulOperatorId`
 a| Java's `AtomicInteger`
@@ -81,7 +81,7 @@ NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExec
 `IncrementalExecution` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[logicalPlan]] Logical query plan (i.e. `LogicalPlan` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[with the logical plans of the data sources that have new data and new column attributes])
+* [[logicalPlan]] Logical query plan (i.e. `LogicalPlan` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[with the logical plans of the data sources that have new data and new column attributes])
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] (as specified using link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[outputMode] method of `DataStreamWriter`)
 * [[checkpointLocation]] `state` checkpoint directory (as link:spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot[specified] using link:spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation[checkpointLocation] option or link:spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property with `queryName` option)
 * [[runId]] Run id

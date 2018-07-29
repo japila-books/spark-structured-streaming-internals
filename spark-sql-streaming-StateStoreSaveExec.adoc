@@ -18,7 +18,7 @@ image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
 * SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
 ====
 
-The optional properties, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, output mode>>, and <<eventTimeWatermark, event time watermark>>, are undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold their streaming batch-specific execution properties when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+The optional properties, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<outputMode, output mode>>, and <<eventTimeWatermark, event time watermark>>, are undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold their streaming batch-specific execution properties when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
 .StateStoreSaveExec and IncrementalExecution
 image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]

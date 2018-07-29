@@ -26,7 +26,7 @@ a| Timeout based on the processing time.
 ====
 `FlatMapGroupsWithStateExec` link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[requires] that `batchTimestampMs` is specified when `ProcessingTimeTimeout` is used.
 
-`batchTimestampMs` is defined when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[is created] (and so is link:spark-sql-streaming-IncrementalExecution.adoc#state[state]). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a streaming batch].
+`batchTimestampMs` is defined when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[is created] (and so is link:spark-sql-streaming-IncrementalExecution.adoc#state[state]). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a streaming batch].
 
 CAUTION: FIXME Describe `OffsetSeqMetadata` and `StreamExecution.offsetSeqMetadata`
 ====

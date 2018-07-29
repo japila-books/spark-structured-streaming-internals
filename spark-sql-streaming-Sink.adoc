@@ -19,7 +19,7 @@ trait Sink {
 [[addBatch]]
 `addBatch` is used to "add" a batch of data to the sink (for `batchId` batch).
 
-`addBatch` is used when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatch[runs a batch].
+`addBatch` is used when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a batch].
 
 [[available-implementations]]
 .Sinks

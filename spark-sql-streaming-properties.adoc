@@ -41,7 +41,7 @@ Used...FIXME
 
 | [[spark.sql.streaming.pollingDelay]] `spark.sql.streaming.pollingDelay`
 | `10` (millis)
-| (internal) Time delay before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch].
+| (internal) Time delay before `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch].
 
 | [[spark.sql.streaming.stateStore.maintenanceInterval]] `spark.sql.streaming.stateStore.maintenanceInterval`
 | `60s`

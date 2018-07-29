@@ -177,11 +177,11 @@ createQuery(
 
 Internally, `createQuery` first finds the name of the checkpoint directory of a query (aka *checkpoint location*) in the following order:
 
-1. Exactly the input `userSpecifiedCheckpointLocation` if defined
+. Exactly the input `userSpecifiedCheckpointLocation` if defined
 
-2. link:spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property if defined for the parent directory with a subdirectory per the optional `userSpecifiedName` (or a randomly-generated UUID)
+. link:spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property if defined for the parent directory with a subdirectory per the optional `userSpecifiedName` (or a randomly-generated UUID)
 
-3. (only when `useTempCheckpointLocation` is enabled) A temporary directory (as specified by `java.io.tmpdir` JVM property) with a subdirectory with `temporary` prefix.
+. (only when `useTempCheckpointLocation` is enabled) A temporary directory (as specified by `java.io.tmpdir` JVM property) with a subdirectory with `temporary` prefix.
 
 NOTE: `userSpecifiedCheckpointLocation` can be any path that is acceptable by Hadoop's https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/fs/Path.html[Path].
 
@@ -220,9 +220,9 @@ In the end, `createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapp
 
 NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 
-NOTE: `createQuery` is used exclusively when `StreamingQueryManager` <<startQuery, starts executing a streaming query>>.
+NOTE: `createQuery` is used exclusively when `StreamingQueryManager` is requested to <<startQuery, start executing a streaming query>>.
 
-=== [[startQuery]] Starting Streaming Query -- `startQuery` Internal Method
+=== [[startQuery]] Starting Streaming Query Execution -- `startQuery` Internal Method
 
 [source, scala]
 ----
