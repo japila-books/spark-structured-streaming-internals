@@ -230,7 +230,8 @@ startQuery(
   userSpecifiedName: Option[String],
   userSpecifiedCheckpointLocation: Option[String],
   df: DataFrame,
-  sink: Sink,
+  extraOptions: Map[String, String],
+  sink: BaseStreamingSink,
   outputMode: OutputMode,
   useTempCheckpointLocation: Boolean = false,
   recoverFromCheckpointLocation: Boolean = true,
@@ -242,24 +243,24 @@ startQuery(
 
 NOTE: `trigger` defaults to `0` milliseconds (as link:spark-sql-streaming-Trigger.adoc#ProcessingTime[ProcessingTime(0)]).
 
-Internally, `startQuery` first <<createQuery, creates a streaming query>>, registers it in <<activeQueries, activeQueries>> internal registry and link:spark-sql-streaming-StreamExecution.adoc#start[starts the query].
+Internally, `startQuery` first <<createQuery, creates a StreamingQueryWrapper>>, registers it in <<activeQueries, activeQueries>> internal registry (by the <<spark-sql-streaming-StreamExecution.adoc#id, id>>), requests it for the underlying <<spark-sql-streaming-StreamingQueryWrapper.adoc#streamingQuery, StreamExecution>> and <<spark-sql-streaming-StreamExecution.adoc#start, starts it>>.
 
-In the end, `startQuery` returns the query (as part of the fluent API so you can chain operators) or reports the exception that was reported when starting the query.
+In the end, `startQuery` returns the <<spark-sql-streaming-StreamingQueryWrapper.adoc#, StreamingQueryWrapper>> (as part of the fluent API so you can chain operators) or throws the exception that was reported when attempting to start the query.
 
-`startQuery` reports a `IllegalArgumentException` when there is another query registered under `name`. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
+`startQuery` throws an `IllegalArgumentException` when there is another query registered under `name`. `startQuery` looks it up in the <<activeQueries, activeQueries>> internal registry.
 
 ```
 Cannot start query with name [name] as a query with that name is already active
 ```
 
-`startQuery` reports a `IllegalStateException` when a query is started again from checkpoint. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
+`startQuery` throws an `IllegalStateException` when a query is started again from checkpoint. `startQuery` looks it up in <<activeQueries, activeQueries>> internal registry.
 
-```
-Cannot start query with id [id] as another query with same id is already active.
-Perhaps you are attempting to restart a query from checkpoint that is already active.
-```
+[options="wrap"]
+----
+Cannot start query with id [id] as another query with same id is already active. Perhaps you are attempting to restart a query from checkpoint that is already active.
+----
 
-NOTE: `startQuery` is used exclusively when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.adoc#start[started].
+NOTE: `startQuery` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>>.
 
 === [[postListenerEvent]] Posting StreamingQueryListener Event to StreamingQueryListenerBus -- `postListenerEvent` Internal Method
 

@@ -263,7 +263,9 @@ NOTE: `logicalPlan` uses `DataSource.createSource` factory method to create a li
 While initializing, `logicalPlan` also initializes <<sources, sources>> and <<uniqueSources, uniqueSources>> registries.
 
 | `queryExecutionThread`
-a| [[queryExecutionThread]] Thread of execution to run a streaming query concurrently with the name as `stream execution thread for [prettyIdString]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
+a| [[queryExecutionThread]] *Stream execution thread*
+
+The thread of execution to run a streaming query concurrently with the name as `stream execution thread for [id]` (that uses <<prettyIdString, prettyIdString>> for logging purposes).
 
 When started, `queryExecutionThread` sets the so-called call site and <<runBatches, runs streaming batches>>.
 
@@ -366,10 +368,10 @@ NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for 
 | [[sources]] `sources`
 | All link:spark-sql-streaming-Source.adoc[streaming Sources] in <<logicalPlan, logical query plan>> (that are the link:spark-sql-streaming-StreamingExecutionRelation.adoc#source[sources] from `StreamingExecutionRelation`).
 
-| [[startLatch]] `startLatch`
-| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
+| `startLatch`
+| [[startLatch]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
 
-Used when `StreamExecution` is <<start, started>> to get notified when `StreamExecution` has started <<runBatches, running streaming batches>>.
+Used when `StreamExecution` is requested to <<start, start>> to pause the main thread until `StreamExecution` was requested to <<runStream, run the streaming query>>.
 
 | [[state]] `state`
 a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the three different states a streaming query execution can be:
@@ -854,28 +856,28 @@ toDebugString(includeLogicalPlan: Boolean): String
 
 NOTE: `toDebugString` is used exclusively when `StreamExecution` is requested to <<runStream, run the underlying streaming query plan>> (and a streaming query terminated with an exception).
 
-=== [[start]] Starting Streaming Query (on Execution Thread) -- `start` Method
+=== [[start]] Starting Streaming Query (on Stream Execution Thread) -- `start` Method
 
 [source, scala]
 ----
 start(): Unit
 ----
 
-When called, `start` prints the following INFO message to the logs:
+When called, `start` prints out the following INFO message to the logs:
 
 ```
-INFO Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
 ```
 
-`start` then sets the <<queryExecutionThread, queryExecutionThread>> as a daemon thread and starts it.
+`start` then starts the <<queryExecutionThread, queryExecutionThread>> as a daemon thread.
 
 NOTE: `start` uses Java's link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#start--++[java.lang.Thread.start] to run the streaming query on a separate execution thread.
 
 NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
-In the end, `start` waits until <<startLatch, startLatch>> has counted down to zero (which is right after `StreamExecution` has started <<runBatches, running streaming batches>> so there is some pause in the main thread's execution to wait till the streaming query execution thread starts).
+In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` was requested to <<runStream, run the streaming query>>).
 
-NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[start a streaming query].
+NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#startQuery, start a streaming query>>.
 
 === [[creating-instance]] Creating StreamExecution Instance
 
