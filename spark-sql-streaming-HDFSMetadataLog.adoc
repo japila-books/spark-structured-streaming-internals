@@ -1,4 +1,4 @@
-== [[HDFSMetadataLog]] HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage
+== [[HDFSMetadataLog]] HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Reliable Storage
 
 `HDFSMetadataLog` is a link:spark-sql-streaming-MetadataLog.adoc[MetadataLog] that uses Hadoop HDFS for a reliable storage.
 

@@ -144,9 +144,9 @@
 
 . link:spark-sql-streaming-Offset.adoc[Offset]
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
-. link:spark-sql-streaming-CommitLog.adoc[CommitLog]
 
-. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Storage]
+. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Reliable Storage]
+.. link:spark-sql-streaming-CommitLog.adoc[CommitLog]
 .. link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
 .. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog -- HDFSMetadataLog with OffsetSeq Metadata]
 .. link:spark-sql-streaming-OffsetSeq.adoc[OffsetSeq]

@@ -1,14 +1,32 @@
 == [[CommitLog]] CommitLog -- HDFSMetadataLog for Batch Completion Log
 
-`CommitLog` is a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with metadata as regular text (i.e. `String`).
+`CommitLog` is a <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog>> with metadata as regular text (i.e. `String`).
 
-NOTE: link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] is a `MetadataLog` that uses Hadoop HDFS for a reliable storage.
+NOTE: <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog>> is a `MetadataLog` that uses Hadoop HDFS for a reliable storage.
 
-`CommitLog` is <<creating-instance, created>> exclusively for link:spark-sql-streaming-StreamExecution.adoc#batchCommitLog[batch commit log] in `StreamExecution`.
+`CommitLog` is <<creating-instance, created>> along with <<spark-sql-streaming-StreamExecution.adoc#commitLog, StreamExecution>>.
 
-=== [[add]] `add` Method
+=== [[add-batchId]] `add` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+add(batchId: Long): Unit
+----
+
+`add`...FIXME
+
+NOTE: `add` is used when...FIXME
+
+=== [[add-batchId-metadata]] `add` Method
+
+[source, scala]
+----
+add(batchId: Long, metadata: String): Boolean
+----
+
+NOTE: `add` is part of <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to...FIXME.
+
+`add`...FIXME
 
 === [[serialize]] `serialize` Method
 
@@ -17,7 +35,7 @@ CAUTION: FIXME
 serialize(metadata: String, out: OutputStream): Unit
 ----
 
-NOTE: `serialize` is a part of link:spark-sql-streaming-HDFSMetadataLog.adoc#serialize[HDFSMetadataLog Contract] to write a metadata in serialized format.
+NOTE: `serialize` is part of <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to write a metadata in serialized format.
 
 `serialize` writes out the version prefixed with `v` on a single line (e.g. `v1`) followed by the empty JSON (i.e. `{}`).
 
@@ -41,11 +59,13 @@ v1
 deserialize(in: InputStream): String
 ----
 
-CAUTION: FIXME
+NOTE: `deserialize` is part of <<spark-sql-streaming-HDFSMetadataLog.adoc#deserialize, HDFSMetadataLog Contract>> to...FIXME.
+
+`deserialize`...FIXME
 
 === [[creating-instance]] Creating CommitLog Instance
 
-`BatchCommitLog` takes the following when created:
+`CommitLog` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
 * [[path]] Path of the metadata log directory

@@ -102,14 +102,14 @@ constructNextBatch(): Unit
 
 NOTE: `constructNextBatch` is used when...FIXME
 
-=== [[runActivatedStream]] `runActivatedStream` Method
+=== [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
 
 [source, scala]
 ----
 runActivatedStream(sparkSessionForStream: SparkSession): Unit
 ----
 
-NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to...FIXME.
+NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated streaming query.
 
 `runActivatedStream`...FIXME
 

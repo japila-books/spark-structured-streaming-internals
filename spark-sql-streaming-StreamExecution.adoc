@@ -33,7 +33,7 @@ Used when `StreamExecution` is requested to <<runStream, runStream>> and <<toDeb
 | runActivatedStream
 | [[runActivatedStream]] Running the activated streaming query
 
-Used exclusively when `StreamExecution` is requested to <<runStream, runStream>> for the very first time (when transitioning from `INITIALIZING` state to `ACTIVE`)
+Used exclusively when `StreamExecution` is requested to <<runStream, runStream>> for the very first time (when transitioning from `INITIALIZING` to `ACTIVE` state)
 |===
 
 [[extensions]]
@@ -215,9 +215,6 @@ NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used in
 Used when `StreamExecution` <<runBatches, runs streaming batches>> (and records a batch that had data for processing and has finished successfully) and <<populateStartOffsets, populates the start offsets>> (by looking up what has been committed the last time the streaming query ran).
 
 NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the batch commit log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
-
-| `commitLog`
-| [[commitLog]] `CommitLog` for the <<sparkSession, SparkSession>> and *commits* <<checkpointFile, checkpointFile>>
 
 | `committedOffsets`
 a| [[committedOffsets]] <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of the streaming sources and the committed offsets (i.e. processed already).
