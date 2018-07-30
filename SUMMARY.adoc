@@ -8,20 +8,12 @@
 
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
 
-. link:spark-sql-streaming-Source.adoc[Streaming Source]
-.. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
+. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
+.. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
+.. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
+.. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
 
-.. link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
-... link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation]
-... link:spark-sql-streaming-KafkaSourceRDD.adoc[KafkaSourceRDD]
-... link:spark-sql-streaming-CachedKafkaConsumer.adoc[CachedKafkaConsumer]
-... link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
-... link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy Contract for KafkaConsumer Providers]
-... link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
-
-.. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
-.. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
-.. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
+. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
 
 . link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators / Streaming Dataset API]
 .. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator -- Streaming Deduplication]
@@ -40,56 +32,46 @@
 .. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
 .. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
-. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
-.. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
-.. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
-.. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
-
-. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
-.. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]
-.. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink -- Streaming Sink for Parquet Format]
-.. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
-.. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
-.. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
-
-. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
-
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager -- Streaming Query Management]
-.. link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
 
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
-== Structured Streaming V2
+=== Kafka Data Source
 
-. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport]
+. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider -- Data Source Provider for Apache Kafka]
+. link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
+. link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation]
+. link:spark-sql-streaming-KafkaSourceRDD.adoc[KafkaSourceRDD]
+. link:spark-sql-streaming-CachedKafkaConsumer.adoc[CachedKafkaConsumer]
+. link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
+. link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy Contract for KafkaConsumer Providers]
+. link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
+. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 
-== Demos
+=== Text File Data Source
 
-. link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[groupBy Streaming Aggregation with Append Output Mode]
-. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
-. link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
-. link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
+. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
+. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink -- Streaming Sink for Parquet Format]
 
-== Monitoring
+=== Rate Source
 
-. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
-.. link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
+. link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]
+. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
 
-. link:spark-sql-streaming-webui.adoc[Web UI]
+=== Text Socket Source
 
-. link:spark-sql-streaming-logging.adoc[Logging]
+. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
+. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
-== Extending Structured Streaming
+=== Memory Data Sink
 
-. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
+. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
+. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 
-. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
-.. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider -- Data Source Provider for Apache Kafka]
-.. link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]
-.. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
+=== Console Data Sink
 
-. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
-.. link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
+. link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
+. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]
 
 == Query Planning and Execution
 
@@ -140,7 +122,7 @@
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
-=== Offsets and Checkpointing
+== Offsets and Checkpointing
 
 . link:spark-sql-streaming-Offset.adoc[Offset]
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog -- Contract for Metadata Storage]
@@ -153,7 +135,7 @@
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
-=== Managing State in Stateful Streaming Aggregations
+== Managing State in Stateful Streaming Aggregations
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore -- Streaming Aggregation State Management]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
@@ -168,6 +150,38 @@
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 
+== Monitoring
+
+. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
+.. link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
+
+. link:spark-sql-streaming-webui.adoc[Web UI]
+
+. link:spark-sql-streaming-logging.adoc[Logging]
+
+== Extending Structured Streaming
+
+. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
+
+. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
+. link:spark-sql-streaming-Source.adoc[Streaming Source]
+
+. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
+. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
+.. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
+
+== Structured Streaming V2
+
+. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport]
+
+== Demos
+
+. link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[groupBy Streaming Aggregation with Append Output Mode]
+. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
+. link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
+. link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
+
 == Varia
 
+. link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]

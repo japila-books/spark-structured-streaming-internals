@@ -1,6 +1,6 @@
 == [[StreamingQueryManager]] StreamingQueryManager -- Streaming Query Management
 
-`StreamingQueryManager` is the management interface for <<activeQueries, streaming queries>> in a single <<sparkSession, SparkSession>>.
+`StreamingQueryManager` is the <<methods, management interface>> for <<activeQueries, streaming queries>> in a single <<sparkSession, SparkSession>>.
 
 [[methods]]
 .StreamingQueryManager API

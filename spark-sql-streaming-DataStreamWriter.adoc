@@ -1,6 +1,102 @@
 == [[DataStreamWriter]] DataStreamWriter -- Writing Datasets To Streaming Data Sinks
 
-`DataStreamWriter` is the interface to describe how the result of executing (batches of) a streaming query is written to a link:spark-sql-streaming-Sink.adoc[streaming sink].
+`DataStreamWriter` is the <<methods, interface>> to describe how the result of executing a streaming query is written to a <<spark-sql-streaming-Sink.adoc#, streaming sink>>.
+
+[[methods]]
+.DataStreamWriter's Methods
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| <<foreach, foreach>>
+a| Sets link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] in the full control of streaming writes.
+
+[source, scala]
+----
+foreach(writer: ForeachWriter[T]): DataStreamWriter[T]
+----
+
+| `format`
+a| [[format]] Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-Sink.adoc[streaming sink] to write the rows to)
+
+[source, scala]
+----
+format(source: String): DataStreamWriter[T]
+----
+
+Internally, `format` is referred to as a _source_ (as in the output data _source_).
+
+Recognized "special" output data sources (in the code):
+
+* `hive`
+* `memory`
+* <<foreach, foreach>>
+* `console`
+
+| <<option, option>>
+a|
+
+[source, scala]
+----
+option(key: String, value: Boolean): DataStreamWriter[T]
+option(key: String, value: Double): DataStreamWriter[T]
+option(key: String, value: Long): DataStreamWriter[T]
+option(key: String, value: String): DataStreamWriter[T]
+----
+
+| `options`
+a| [[options]]
+
+[source, scala]
+----
+options(options: scala.collection.Map[String, String]): DataStreamWriter[T]
+options(options: java.util.Map[String, String]): DataStreamWriter[T]
+----
+
+| <<outputMode, outputMode>>
+a| Specifies the output mode
+
+[source, scala]
+----
+outputMode(outputMode: OutputMode): DataStreamWriter[T]
+outputMode(outputMode: String): DataStreamWriter[T]
+----
+
+| `partitionBy`
+a|
+
+[source, scala]
+----
+partitionBy(colNames: String*): DataStreamWriter[T]
+----
+
+| <<queryName, queryName>>
+a| Assigns the name of a query
+
+[source, scala]
+----
+queryName(queryName: String): DataStreamWriter[T]
+----
+
+| <<start, start>>
+a|
+
+[source, scala]
+----
+start(): StreamingQuery
+start(path: String): StreamingQuery
+----
+
+| <<trigger, trigger>>
+a| Sets the link:spark-sql-streaming-Trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
+
+[source, scala]
+----
+trigger(trigger: Trigger): DataStreamWriter[T]
+----
+
+|===
 
 [NOTE]
 ====
@@ -60,47 +156,6 @@ writer.save
 ----
 
 Beside the above operators, there are the following to work with a `Dataset` as a whole.
-
-[[methods]]
-.DataStreamWriter's Methods
-[cols="1,2",options="header",width="100%"]
-|===
-| Method
-| Description
-
-| [[format]] `format`
-a| Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-Sink.adoc[streaming sink] to write the rows to)
-
-Internally, `format` is referred to as a _source_ (as in the output data _source_).
-
-Recognized "special" output data sources (in the code):
-
-* `hive`
-* `memory`
-* <<foreach, foreach>>
-* `console`
-
-| <<foreach, foreach>>
-| Sets link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] in the full control of streaming writes.
-
-| <<option, option>>
-|
-
-| [[options]] `options`
-|
-
-| <<outputMode, outputMode>>
-| Specifies the output mode
-
-| `partitionBy`
-|
-
-| <<queryName, queryName>>
-| Assigns the name of a query
-
-| <<trigger, trigger>>
-| Sets the link:spark-sql-streaming-Trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
-|===
 
 NOTE: `hive` <<start, is not supported>> for streaming writing (and leads to a `AnalysisException`).
 
