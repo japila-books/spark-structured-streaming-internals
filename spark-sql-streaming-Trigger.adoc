@@ -4,20 +4,24 @@
 
 NOTE: A trigger can also be called a *batch interval* (as in the older Spark Streaming).
 
+[[available-implementations]]
 [[available-triggers]]
-.Available Triggers
+.Triggers
 [cols="1,2",options="header",width="100%"]
 |===
 | Trigger
 | Creating Instance
+
+| `ContinuousTrigger`
+| [[ContinuousTrigger]]
 
 .3+.^| <<ProcessingTime, ProcessingTime>>
 | `Trigger.ProcessingTime(long intervalMs)`
 | `Trigger.ProcessingTime(Duration interval)`
 | `Trigger.ProcessingTime(String interval)`
 
-| [[Once]] `Once`
-| `Trigger.Once`
+| `OneTimeTrigger`
+| [[OneTimeTrigger]]
 |===
 
 NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#trigger[trigger] method.

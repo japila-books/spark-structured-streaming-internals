@@ -2,6 +2,38 @@
 
 `ContinuousExecution` is...FIXME
 
+`ContinuousExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>> for a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> sink and a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a serializable StreamingQuery>>).
+
+[[internal-registries]]
+.ContinuousExecution's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| continuousSources
+| [[continuousSources]] FIXME
+
+Used when...FIXME
+
+| currentEpochCoordinatorId
+| [[currentEpochCoordinatorId]] FIXME
+
+Used when...FIXME
+
+| <<logicalPlan, logicalPlan>>
+|
+
+| `triggerExecutor`
+a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
+
+* `ProcessingTimeExecutor` for `ContinuousTrigger`
+
+Used when...FIXME
+
+NOTE: `StreamExecution` throws an `IllegalStateException` when the <<trigger, Trigger>> is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>.
+|===
+
 === [[getStartOffsets]] `getStartOffsets` Internal Method
 
 [source, scala]
@@ -12,3 +44,100 @@ getStartOffsets(sparkSessionToRunBatches: SparkSession): OffsetSeq
 `getStartOffsets`...FIXME
 
 NOTE: `getStartOffsets` is used when...FIXME
+
+=== [[commit]] `commit` Method
+
+[source, scala]
+----
+commit(epoch: Long): Unit
+----
+
+`commit`...FIXME
+
+NOTE: `commit` is used when...FIXME
+
+=== [[awaitEpoch]] `awaitEpoch` Internal Method
+
+[source, scala]
+----
+awaitEpoch(epoch: Long): Unit
+----
+
+`awaitEpoch`...FIXME
+
+NOTE: `awaitEpoch` is used when...FIXME
+
+=== [[addOffset]] `addOffset` Method
+
+[source, scala]
+----
+addOffset(
+  epoch: Long,
+  reader: ContinuousReader,
+  partitionOffsets: Seq[PartitionOffset]): Unit
+----
+
+`addOffset`...FIXME
+
+NOTE: `addOffset` is used when...FIXME
+
+=== [[sources]] `sources` Method
+
+[source, scala]
+----
+sources: Seq[BaseStreamingSource]
+----
+
+NOTE: `sources` is part of <<spark-sql-streaming-ProgressReporter.adoc#sources, ProgressReporter Contract>> to...FIXME.
+
+`sources`...FIXME
+
+=== [[logicalPlan]] `logicalPlan` Value
+
+[source, scala]
+----
+logicalPlan: LogicalPlan
+----
+
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> to...FIXME.
+
+`logicalPlan`...FIXME
+
+=== [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
+
+[source, scala]
+----
+runActivatedStream(sparkSessionForStream: SparkSession): Unit
+----
+
+NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated streaming query.
+
+`runActivatedStream`...FIXME
+
+=== [[runContinuous]] `runContinuous` Internal Method
+
+[source, scala]
+----
+runContinuous(sparkSessionForQuery: SparkSession): Unit
+----
+
+`runContinuous`...FIXME
+
+NOTE: `runContinuous` is used when...FIXME
+
+=== [[creating-instance]] Creating ContinuousExecution Instance
+
+`ContinuousExecution` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+* [[name]] Query name
+* [[checkpointRoot]] Path to the checkpoint directory (aka _metadata directory_)
+* [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
+* [[sink]] <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>>
+* [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
+* [[triggerClock]] `Clock`
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
+* [[extraOptions]] Map[String, String]
+* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
+
+`ContinuousExecution` initializes the <<internal-registries, internal registries and counters>>.

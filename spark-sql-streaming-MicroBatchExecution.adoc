@@ -2,7 +2,7 @@
 
 `MicroBatchExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> that...FIXME
 
-`MicroBatchExecution` is <<creating-instance, created>> exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, creating a StreamingQueryWrapper (serializable StreamingQuery) with a MicroBatchExecution>> (which is exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>>).
+`MicroBatchExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>> for a sink that is not a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> or a trigger that is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a serializable StreamingQuery>>).
 
 [[internal-registries]]
 .MicroBatchExecution's Internal Properties (e.g. Registries, Counters and Flags)
@@ -24,7 +24,7 @@ a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecu
 
 Used when `StreamExecution` starts <<runBatches, running streaming batches>>.
 
-NOTE: `StreamExecution` throws a `IllegalStateException` when `TriggerExecutor` is not one of the <<spark-sql-streaming-TriggerExecutor.adoc#available-implementations, two built-in implementations>>: `OneTimeExecutor` or `ProcessingTimeExecutor`.
+NOTE: `StreamExecution` throws a `IllegalStateException` when the <<trigger, Trigger>> is not one of the <<spark-sql-streaming-Trigger.adoc#available-implementations, two built-in implementations>>: `OneTimeExecutor` or `ProcessingTimeExecutor`.
 
 |===
 
@@ -90,17 +90,6 @@ INFO StreamExecution: Starting new streaming query.
 `populateStartOffsets` sets <<currentBatchId, current batch id>> to `0` and <<constructNextBatch, constructs the next streaming batch>>.
 
 NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, runActivatedStream>>.
-
-=== [[constructNextBatch]] `constructNextBatch` Internal Method
-
-[source, scala]
-----
-constructNextBatch(): Unit
-----
-
-`constructNextBatch`...FIXME
-
-NOTE: `constructNextBatch` is used when...FIXME
 
 === [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
 

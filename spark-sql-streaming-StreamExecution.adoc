@@ -212,9 +212,11 @@ a| [[commitLog]] <<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commit
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
-Used when `StreamExecution` <<runBatches, runs streaming batches>> (and records a batch that had data for processing and has finished successfully) and <<populateStartOffsets, populates the start offsets>> (by looking up what has been committed the last time the streaming query ran).
+Used exclusively by the <<extensions, extensions>> for the following:
 
-NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the batch commit log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, runActivatedStream>> when data was available and the offsets need to be committed (and does <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populateStartOffsets>> or <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, constructNextBatch>>)
+
+* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>, <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>, and <<spark-sql-streaming-ContinuousExecution.adoc#awaitEpoch, awaitEpoch>>
 
 | `committedOffsets`
 a| [[committedOffsets]] <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of the streaming sources and the committed offsets (i.e. processed already).
