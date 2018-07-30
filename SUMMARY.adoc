@@ -4,7 +4,7 @@
 
 . link:spark-structured-streaming.adoc[Spark Structured Streaming -- Streaming Datasets]
 
-== Developing Continuous Applications
+== Developing Streaming Applications
 
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
 

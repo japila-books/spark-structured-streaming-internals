@@ -1,16 +1,64 @@
 == [[StreamingQueryManager]] StreamingQueryManager -- Streaming Query Management
 
-`StreamingQueryManager` is the management interface for <<activeQueries, streaming queries>> in a single `SparkSession`.
+`StreamingQueryManager` is the management interface for <<activeQueries, streaming queries>> in a single <<sparkSession, SparkSession>>.
 
-`StreamingQueryManager` manages streaming queries and allows for:
+[[methods]]
+.StreamingQueryManager API
+[cols="1,2",options="header",width="100%"]
+|===
+| Method
+| Description
 
-* <<active, Getting all active structured queries>>
+| <<active, active>>
+a| Gets all active structured queries
 
-* <<get, Getting a structured query by id>>
+[source, scala]
+----
+active: Array[StreamingQuery]
+----
 
-* <<awaitAnyTermination, Waiting for any streaming query to be terminated>>
+| <<addListener, addListener>>
+a| Registers a <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>>
 
-* <<addListener, Registering>> or <<removeListener, de-registering>> `StreamingQueryListeners`
+[source, scala]
+----
+addListener(listener: StreamingQueryListener): Unit
+----
+
+| <<awaitAnyTermination, awaitAnyTermination>>
+a| Waits for any streaming query to be terminated
+
+[source, scala]
+----
+awaitAnyTermination(): Unit
+awaitAnyTermination(timeoutMs: Long): Boolean
+----
+
+| <<get, get>>
+a| Gets a <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>> by id
+
+[source, scala]
+----
+get(id: String): StreamingQuery
+get(id: UUID): StreamingQuery
+----
+
+| <<removeListener, removeListener>>
+a| De-registering a <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>>
+
+[source, scala]
+----
+removeListener(listener: StreamingQueryListener): Unit
+----
+
+| <<resetTerminated, resetTerminated>>
+a|
+
+[source, scala]
+----
+resetTerminated(): Unit
+----
+|===
 
 `StreamingQueryManager` is available using `SparkSession` and `streams` property.
 
@@ -34,6 +82,10 @@ image::images/StreamingQueryManager-createQuery.png[align="center"]
 
 `StreamingQueryManager` is <<postListenerEvent, notified about state changes of a structured query and passes them along (to query listeners)>>.
 
+[[creating-instance]]
+[[sparkSession]]
+`StreamingQueryManager` takes a single `SparkSession` when created.
+
 [[internal-registries]]
 .StreamingQueryManager's Internal Registries and Counters (in alphabetical order)
 [cols="1,2",options="header",width="100%"]
@@ -41,13 +93,19 @@ image::images/StreamingQueryManager-createQuery.png[align="center"]
 | Name
 | Description
 
-| [[activeQueries]] `activeQueries`
-| Registry of `StreamingQueryWrapper` per id
+| `activeQueries`
+| [[activeQueries]] Registry of <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQueries>> per `UUID`
 
 Used when `StreamingQueryManager` is requested for <<active, active streaming queries>>, <<get, get a streaming query by id>>, <<startQuery, starts a streaming query>> and <<notifyQueryTermination, is notified that a streaming query has terminated>>.
 
-| [[lastTerminatedQuery]] `lastTerminatedQuery`
-a| link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] that has recently been terminated, i.e. link:spark-sql-streaming-StreamingQuery.adoc#stop[stopped] or link:spark-sql-streaming-StreamingQuery.adoc#exception[due to an exception].
+| `activeQueriesLock`
+| [[activeQueriesLock]]
+
+| `awaitTerminationLock`
+| [[awaitTerminationLock]]
+
+| `lastTerminatedQuery`
+a| [[lastTerminatedQuery]] <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>> that has recently been terminated, i.e. link:spark-sql-streaming-StreamingQuery.adoc#stop[stopped] or link:spark-sql-streaming-StreamingQuery.adoc#exception[due to an exception].
 
 `null` when no streaming query has terminated yet or <<resetTerminated, resetTerminated>>.
 
@@ -55,8 +113,8 @@ a| link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] that has recentl
 
 * Set when `StreamingQueryManager` <<notifyQueryTermination, is notified that a streaming query has terminated>>
 
-| [[listenerBus]] `listenerBus`
-a| link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus] (for the current <<sparkSession, SparkSession>>)
+| `listenerBus`
+a| [[listenerBus]] <<spark-sql-streaming-StreamingQueryListenerBus.adoc#, StreamingQueryListenerBus>> (for the current <<sparkSession, SparkSession>>)
 
 Used to:
 
@@ -64,8 +122,8 @@ Used to:
 
 * <<postListenerEvent, Post a streaming event>> (and notify `StreamingQueryListener` listeners about streaming events)
 
-| [[stateStoreCoordinator]] `stateStoreCoordinator`
-a| link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] with the *StateStoreCoordinator* RPC Endpoint
+| `stateStoreCoordinator`
+a| [[stateStoreCoordinator]] link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] with the *StateStoreCoordinator* RPC Endpoint
 
 * link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#forDriver[Created] when `StreamingQueryManager` is <<creating-instance, created>>
 
@@ -115,7 +173,7 @@ java.lang.IllegalArgumentException: There is no active query with name hello
 addListener(listener: StreamingQueryListener): Unit
 ----
 
-`addListener` requests <<listenerBus, StreamingQueryListenerBus>> to link:spark-sql-streaming-StreamingQueryListenerBus.adoc#addListener[add] the input `listener`.
+`addListener` requests the <<listenerBus, StreamingQueryListenerBus>> to <<spark-sql-streaming-StreamingQueryListenerBus.adoc#addListener, add>> the input `listener`.
 
 === [[removeListener]] De-Registering StreamingQueryListener -- `removeListener` Method
 
@@ -149,15 +207,7 @@ resetTerminated(): Unit
 
 Internally, `resetTerminated` acquires a lock on <<awaitTerminationLock, awaitTerminationLock>> and simply resets <<lastTerminatedQuery, lastTerminatedQuery>> (i.e. sets it to `null`).
 
-=== [[creating-instance]] Creating StreamingQueryManager Instance
-
-`StreamingQueryManager` takes the following when created:
-
-* [[sparkSession]] `SparkSession`
-
-`StreamingQueryManager` initializes the <<internal-registries, internal registries and counters>>.
-
-=== [[createQuery]] Creating StreamingQueryWrapper (Serializable StreamingQuery) with MicroBatchExecution -- `createQuery` Internal Method
+=== [[createQuery]] Creating Serializable StreamingQuery (StreamingQueryWrapper with StreamExecution) -- `createQuery` Internal Method
 
 [source, scala]
 ----
