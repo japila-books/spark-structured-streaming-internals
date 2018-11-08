@@ -1,6 +1,6 @@
 == [[KafkaSource]] KafkaSource
 
-`KafkaSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
+`KafkaSource` is a <<spark-sql-streaming-Source.adoc#, streaming source>> that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
 
 NOTE: Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.adoc[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
@@ -11,10 +11,10 @@ Structured Streaming support for Kafka is in a separate link:spark-sql-streaming
 `spark-sql-kafka-0-10` module is not included by default so you have to start `spark-submit` (and "derivatives" like `spark-shell`) with `--packages` command-line option to "install" it.
 
 ```
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ book.version }}
 ```
 
-Replace the version of `spark-sql-kafka-0-10` module (e.g. `2.2.0` above) with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's Search] that matches your version of Spark.
+Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ book.version }}` above) with one of the available versions found at https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12[The Central Repository's Search] that matches your version of Spark.
 ====
 
 `KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc#shortName[KafkaSourceProvider]).
@@ -34,31 +34,29 @@ image::images/KafkaSource-creating-instance.png[align="center"]
 
 [[options]]
 .KafkaSource's Options
-[cols="1,1,2",options="header",width="100%"]
+[cols="1m,1,2",options="header",width="100%"]
 |===
 | Name
 | Default Value
 | Description
 
-| [[kafkaConsumer.pollTimeoutMs]] `kafkaConsumer.pollTimeoutMs`
-|
-|
+| kafkaConsumer.pollTimeoutMs
+| `spark.network.timeout` or `120s`
+| [[kafkaConsumer.pollTimeoutMs]][[pollTimeoutMs]] The time (in milliseconds) spent waiting in `Consumer.poll` if data is not available in the buffer.
 
-| [[maxOffsetsPerTrigger]] `maxOffsetsPerTrigger`
+Used exclusively to create a <<spark-sql-streaming-KafkaSourceRDD.adoc#, KafkaSourceRDD>> when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for streaming batch>>.
+
+| maxOffsetsPerTrigger
 | (empty)
-a| Number of records to fetch per trigger.
-
-NOTE: Use `maxOffsetsPerTrigger` option to limit the number of records to fetch per trigger.
+a| [[maxOffsetsPerTrigger]] Number of records to fetch per trigger (to limit the number of records to fetch).
 
 ---
 
 Unless defined, `KafkaSource` requests <<kafkaReader, KafkaOffsetReader>> for the link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[latest offsets].
 
-| [[startingoffsets]] `startingoffsets`
+| startingoffsets
 |
-a|
-
-Possible values:
+a| [[startingoffsets]] Possible values:
 
 * `latest`
 
@@ -82,9 +80,9 @@ option(
 ----
 ====
 
-| `assign`
+| assign
 |
-a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
+a| [[assign]] link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
 
 ```
 {"topicA":[0,1],"topicB":[0,1]}
@@ -92,9 +90,9 @@ a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[Topic subscript
 
 NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
 
-| `subscribe`
+| subscribe
 |
-a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
+a| [[subscribe]] link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
 
 ```
 topic1,topic2,topic3
@@ -102,9 +100,9 @@ topic1,topic2,topic3
 
 NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
 
-| `subscribepattern`
+| subscribepattern
 |
-a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
+a| [[subscribepattern]] link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
 
 ```
 topic\d
@@ -250,35 +248,6 @@ root
 | Current partition offsets (as `Map[TopicPartition, Long]`)
 
 Initially `NONE` and set when `KafkaSource` is requested to <<getOffset, get the maximum available offsets>> or <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
-
-| [[initialPartitionOffsets]] `initialPartitionOffsets`
-a| Initial partition offsets (as `Map[TopicPartition, Long]`)
-
-Set when `KafkaSource` is first requested to <<getOffset, get the available offsets>> (from metadata log or Kafka directly).
-
-Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet).
-
-While being initialized, `initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance[creates a custom HDFSMetadataLog] (with link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and link:spark-sql-streaming-HDFSMetadataLog.adoc#get[gets] the ``0``th batch's metadata (as `KafkaSourceOffset`) if available.
-
-NOTE: `initialPartitionOffsets` uses a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with custom `serialize` and `deserialize` methods to write to and read serialized metadata from the log.
-
-Otherwise, if the ``0``th batch's metadata is not available, `initialPartitionOffsets` uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
-
-* For `startingOffsets` as `EarliestOffsetRangeLimit` (i.e. `earliest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[requests for the earliest offsets]
-
-* For `startingOffsets` as `LatestOffsetRangeLimit` (i.e. `latest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[requests for the latest offsets]
-
-* For `startingOffsets` as `SpecificOffsetRangeLimit` (i.e. a JSON in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` <<fetchAndVerify, requests for specific offsets>>
-
-`initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets to the the metadata log] as ``0``th batch.
-
-NOTE: The ``0``th batch is persisted in the streaming metadata log unless stored already.
-
-You should see the following INFO message in the logs:
-
-```
-INFO KafkaSource: Initial offsets: [offsets]
-```
 |===
 
 [TIP]
@@ -630,3 +599,38 @@ startingOffsets for [tp] was [off] but consumer reset to [result(tp)]
 In the end, `fetchAndVerify` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] (with the result of <<kafkaReader, KafkaOffsetReader>>).
 
 NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` initializes <<initialPartitionOffsets, initial partition offsets>>.
+
+=== [[initialPartitionOffsets]] Initial Partition Offsets -- `initialPartitionOffsets` Internal Lazy Property
+
+[source, scala]
+----
+initialPartitionOffsets: Map[TopicPartition, Long]
+----
+
+`initialPartitionOffsets` is the initial partition offsets.
+
+Set when `KafkaSource` is first requested to <<getOffset, get the available offsets>> (from metadata log or Kafka directly).
+
+Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet).
+
+While being initialized, `initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance[creates a custom HDFSMetadataLog] (with link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and link:spark-sql-streaming-HDFSMetadataLog.adoc#get[gets] the ``0``th batch's metadata (as `KafkaSourceOffset`) if available.
+
+NOTE: `initialPartitionOffsets` uses a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with custom `serialize` and `deserialize` methods to write to and read serialized metadata from the log.
+
+Otherwise, if the ``0``th batch's metadata is not available, `initialPartitionOffsets` uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
+
+* For `startingOffsets` as `EarliestOffsetRangeLimit` (i.e. `earliest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[requests for the earliest offsets]
+
+* For `startingOffsets` as `LatestOffsetRangeLimit` (i.e. `latest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[requests for the latest offsets]
+
+* For `startingOffsets` as `SpecificOffsetRangeLimit` (i.e. a JSON in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` <<fetchAndVerify, requests for specific offsets>>
+
+`initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets to the the metadata log] as ``0``th batch.
+
+NOTE: The ``0``th batch is persisted in the streaming metadata log unless stored already.
+
+You should see the following INFO message in the logs:
+
+```
+INFO KafkaSource: Initial offsets: [offsets]
+```
