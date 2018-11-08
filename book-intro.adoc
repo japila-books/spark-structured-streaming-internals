@@ -1,26 +1,18 @@
-== Spark Structured Streaming (Apache Spark {{ book.version }})
+== The Internals of Spark Structured Streaming (Apache Spark {{ book.version }})
 
-Welcome to *Spark Structured Streaming* gitbook!
+Welcome to *The Internals of Spark Structured Streaming* gitbook! I'm very excited to have you here and hope you will enjoy exploring the internals of Spark Structured Streaming as much as I have.
 
-I'm https://pl.linkedin.com/in/jaceklaskowski[Jacek Laskowski], an independent consultant, developer and trainer focusing exclusively on *Apache Spark*, Apache Kafka and Kafka Streams (with Scala and sbt on Apache Mesos, Hadoop YARN and DC/OS). I offer courses, workshops, mentoring and software development services.
+[quote, Flannery O'Connor]
+I write to discover what I know.
 
-I lead http://www.meetup.com/WarsawScala/[Warsaw Scala Enthusiasts] and http://www.meetup.com/Warsaw-Spark[Warsaw Spark] meetups in Warsaw, Poland.
+I'm https://pl.linkedin.com/in/jaceklaskowski[Jacek Laskowski], an independent consultant, software developer and technical instructor specializing in *Apache Spark*, Apache Kafka and Kafka Streams (with Scala, sbt, Kubernetes, DC/OS, Apache Mesos, and Hadoop YARN).
 
-Contact me at jacek@japila.pl or https://twitter.com/jaceklaskowski[@jaceklaskowski] to discuss Apache Spark and Apache Kafka opportunities, e.g. courses, workshops, mentoring or application development services.
+I offer software development and consultancy services with https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/slides/README.md#toc[very hands-on in-depth workshops] and mentoring. Reach out to me at jacek@japila.pl or https://twitter.com/jaceklaskowski[@jaceklaskowski] to discuss opportunities.
 
-If you like the gitbook you should seriously consider participating in my own, very hands-on, in-depth https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/slides/README.md#toc[Apache Spark Workshops and Webinars] and in particular brand new and shiny https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/spark-structured-streaming-workshop.md[Spark Structured Streaming (Apache Spark 2.2) Workshop].
+Consider joining me at http://www.meetup.com/WarsawScala/[Warsaw Scala Enthusiasts] and http://www.meetup.com/Warsaw-Spark[Warsaw Spark] meetups in Warsaw, Poland.
 
-[NOTE]
-====
-If you'd like to participate in https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/spark-structured-streaming-workshop.md[Spark Structured Streaming (Apache Spark 2.2) Workshop] go to https://twitter.com/jaceklaskowski/status/903517146101284864[the tweet] and like it. That's how I figure the interest in the workshop.
+TIP: I'm also writing https://bit.ly/mastering-apache-spark[Mastering Apache Spark 2], https://bit.ly/mastering-spark-sql[Mastering Spark SQL], https://bit.ly/mastering-kafka-streams[Mastering Kafka Streams], and https://bit.ly/mastering-apache-kafka[Apache Kafka Notebook] gitbooks.
 
-image::images/workshop-tweet.png[align="center"]
-====
+Expect text and code snippets from a variety of public sources. Attribution follows.
 
-*Spark Structured Streaming* gitbook serves as the ultimate place of mine to collect all the nuts and bolts of using https://spark.apache.org[Spark Structured Streaming] in the most effective way. The notes aim to help me designing and developing better products with Apache Spark. It is also a viable proof of my current understanding of Apache Spark. I do eventually want to reach the highest level of mastery in Apache Spark (as do you!)
-
-The collection of notes serves as *the study material* for my trainings, workshops, videos and courses about Apache Spark. Follow me on twitter https://twitter.com/jaceklaskowski[@jaceklaskowski] for up to date news and to learn about the upcoming events about Apache Spark.
-
-TIP: I'm also writing https://jaceklaskowski.gitbooks.io/mastering-apache-spark[Mastering Apache Spark 2 (Spark 2.2+)] and https://jaceklaskowski.gitbooks.io/apache-kafka/[Mastering Apache Kafka (Kafka 0.11.0.0+)].
-
-Expect text and code snippets from http://spark.apache.org/community.html[Spark's mailing lists], http://spark.apache.org/docs/latest/[the official documentation of Apache Spark], http://stackoverflow.com/tags/apache-spark/info[StackOverflow], blog posts, http://search.oreilly.com/?q=learning+spark[books from O'Reilly] (and other publishers), press releases, conferences, https://www.youtube.com/playlist?list=PLakV2aGPD5LnHIjF2i_bkAi7m2V96UmxJ[YouTube] or Vimeo videos, http://www.quora.com/Apache-Spark[Quora], https://github.com/apache/spark[the source code of Apache Spark], etc. Attribution follows whenever possible.
+Now, let me introduce you to <<spark-structured-streaming.adoc#, Spark Structured Streaming>>.
