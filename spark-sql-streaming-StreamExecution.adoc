@@ -649,7 +649,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <
 
 * [[sparkSession]] `SparkSession`
 * [[name]] Query name
-* [[checkpointRoot]] Path to the checkpoint directory (aka _metadata directory_)
+* [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
 * [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
 * [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>

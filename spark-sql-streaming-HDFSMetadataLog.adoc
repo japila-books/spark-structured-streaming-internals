@@ -67,7 +67,14 @@ NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creati
 
 === [[get]] Retrieving Metadata By Batch Id -- `get` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+get(batchId: Long): Option[T]
+----
+
+NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to...FIXME.
+
+`get`...FIXME
 
 === [[add]] `add` Method
 

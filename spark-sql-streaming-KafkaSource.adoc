@@ -17,6 +17,17 @@ Structured Streaming support for Kafka is in a separate link:spark-sql-streaming
 Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ book.version }}` above) with one of the available versions found at https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12[The Central Repository's Search] that matches your version of Spark.
 ====
 
+`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the <<spark-sql-streaming-StreamExecution.adoc#checkpointRoot, checkpointRoot>> (of the <<spark-sql-streaming-StreamExecution.adoc, StreamExecution>>).
+
+[NOTE]
+====
+The <<spark-sql-streaming-StreamExecution.adoc#checkpointRoot, checkpointRoot>> directory is one of the following:
+
+* `checkpointLocation` option
+
+* <<spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property
+====
+
 `KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc#shortName[KafkaSourceProvider]).
 
 [source, scala]
@@ -25,7 +36,7 @@ val kafkaSource = spark.
   readStream.
   format("kafka"). // <-- use KafkaSource
   option("subscribe", "input").
-  option("kafka.bootstrap.servers", "localhost:9092").
+  option("kafka.bootstrap.servers", ":9092").
   load
 ----
 
@@ -575,7 +586,7 @@ In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.ado
 * [[kafkaReader]] link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
 * [[executorKafkaParams]] Parameters of executors (reading from Kafka)
 * [[sourceOptions]] Collection of key-value options
-* [[metadataPath]] `metadataPath` -- streaming metadata log directory where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] offsets in JSON format.
+* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] offsets in JSON format)
 * [[startingOffsets]] `KafkaOffsetRangeLimit` (as defined using <<startingoffsets, startingoffsets>> option)
 * [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
 
@@ -600,37 +611,61 @@ In the end, `fetchAndVerify` creates a link:spark-sql-streaming-KafkaSourceOffse
 
 NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` initializes <<initialPartitionOffsets, initial partition offsets>>.
 
-=== [[initialPartitionOffsets]] Initial Partition Offsets -- `initialPartitionOffsets` Internal Lazy Property
+=== [[initialPartitionOffsets]] Initial Partition Offsets (of 0th Batch) -- `initialPartitionOffsets` Internal Lazy Property
 
 [source, scala]
 ----
 initialPartitionOffsets: Map[TopicPartition, Long]
 ----
 
-`initialPartitionOffsets` is the initial partition offsets.
+`initialPartitionOffsets` is the *initial partition offsets* for the batch `0` that were already persisted in the <<metadataPath, streaming metadata log directory>> or persisted on demand.
 
-Set when `KafkaSource` is first requested to <<getOffset, get the available offsets>> (from metadata log or Kafka directly).
+As the very first step, `initialPartitionOffsets` creates a custom <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog>> (of <<spark-sql-streaming-KafkaSourceOffset.adoc#, KafkaSourceOffsets>> metadata) in the <<metadataPath, streaming metadata log directory>>.
 
-Used when `KafkaSource` is requested to <<getBatch, generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet).
+`initialPartitionOffsets` requests the `HDFSMetadataLog` for the <<spark-sql-streaming-HDFSMetadataLog.adoc#get, metadata>> of the ``0``th batch (as `KafkaSourceOffset`).
 
-While being initialized, `initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance[creates a custom HDFSMetadataLog] (with link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]) and link:spark-sql-streaming-HDFSMetadataLog.adoc#get[gets] the ``0``th batch's metadata (as `KafkaSourceOffset`) if available.
+If the metadata is available, `initialPartitionOffsets` requests the metadata for the <<spark-sql-streaming-KafkaSourceOffset.adoc#partitionToOffsets, collection of TopicPartitions and their offsets>>.
 
-NOTE: `initialPartitionOffsets` uses a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with custom `serialize` and `deserialize` methods to write to and read serialized metadata from the log.
+If the metadata could not be found, `initialPartitionOffsets` creates a new `KafkaSourceOffset` per <<startingOffsets, KafkaOffsetRangeLimit>>:
 
-Otherwise, if the ``0``th batch's metadata is not available, `initialPartitionOffsets` uses <<kafkaReader, KafkaOffsetReader>> to fetch offsets per <<startingOffsets, KafkaOffsetRangeLimit>> input parameter.
+* For `EarliestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets, fetchEarliestOffsets>>
 
-* For `startingOffsets` as `EarliestOffsetRangeLimit` (i.e. `earliest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[requests for the earliest offsets]
+* For `LatestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets, fetchLatestOffsets>>
 
-* For `startingOffsets` as `LatestOffsetRangeLimit` (i.e. `latest` in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[requests for the latest offsets]
+* For `SpecificOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchSpecificOffsets, fetchSpecificOffsets>> (and report a data loss per the <<failOnDataLoss, failOnDataLoss>> flag)
 
-* For `startingOffsets` as `SpecificOffsetRangeLimit` (i.e. a JSON in <<startingoffsets, startingoffsets>> option), `initialPartitionOffsets` <<fetchAndVerify, requests for specific offsets>>
+`initialPartitionOffsets` requests the custom `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, add the offsets to the metadata log>> (as the metadata of the ``0``th batch).
 
-`initialPartitionOffsets` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets to the the metadata log] as ``0``th batch.
-
-NOTE: The ``0``th batch is persisted in the streaming metadata log unless stored already.
-
-You should see the following INFO message in the logs:
+`initialPartitionOffsets` prints out the following INFO message to the logs:
 
 ```
-INFO KafkaSource: Initial offsets: [offsets]
+Initial offsets: [offsets]
 ```
+
+[NOTE]
+====
+`initialPartitionOffsets` is used when `KafkaSource` is requested for the following:
+
+* <<getOffset, Fetch offsets (from metadata log or Kafka directly)>>
+
+* <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet)
+====
+
+==== [[initialPartitionOffsets-HDFSMetadataLog-serialize]] `HDFSMetadataLog.serialize`
+
+[source, scala]
+----
+serialize(metadata: KafkaSourceOffset, out: OutputStream): Unit
+----
+
+NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to...FIXME.
+
+`serialize` requests the `OutputStream` to write a zero byte (to support Spark 2.1.0 as per SPARK-19517).
+
+`serialize` creates a `BufferedWriter` over a `OutputStreamWriter` over the `OutputStream` (with `UTF_8` charset encoding).
+
+`serialize` requests the `BufferedWriter` to write the *v1* version indicator followed by a new line.
+
+`serialize` then requests the `KafkaSourceOffset` for a JSON-serialized representation and the `BufferedWriter` to write it out.
+
+In the end, `serialize` requests the `BufferedWriter` to flush (the underlying stream).

@@ -1,9 +1,10 @@
 == [[KafkaSourceOffset]] KafkaSourceOffset
 
-CAUTION: FIXME
+`KafkaSourceOffset` is a `OffsetV2` that...FIXME
 
 [[partitionToOffsets]]
-`KafkaSourceOffset` is created for `partitionToOffsets` collection of `TopicPartitions` and their offsets.
+[[creating-instance]]
+`KafkaSourceOffset` takes a collection of Kafka `TopicPartitions` and their offsets when created.
 
 === [[creating-instance]] Creating KafkaSourceOffset Instance
 
