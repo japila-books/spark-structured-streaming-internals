@@ -33,7 +33,7 @@ Used when `StreamExecution` is requested to <<runStream, runStream>> and <<toDeb
 | runActivatedStream
 | [[runActivatedStream]] Running the activated streaming query
 
-Used exclusively when `StreamExecution` is requested to <<runStream, runStream>> for the very first time (when transitioning from `INITIALIZING` to `ACTIVE` state)
+Used exclusively when `StreamExecution` is requested to <<runStream, runStream>> (when in `INITIALIZING` state)
 |===
 
 [[extensions]]
@@ -407,11 +407,11 @@ stopSources(): Unit
 
 CAUTION: FIXME
 
-=== [[runStream]] Running Streaming Batches -- `runBatches` Internal Method
+=== [[runStream]] Running Stream Processing -- `runStream` Internal Method
 
 [source, scala]
 ----
-runBatches(): Unit
+runStream(): Unit
 ----
 
 `runBatches` runs streaming batches of data (that are datasets from every <<uniqueSources, streaming source>>).
@@ -523,7 +523,7 @@ CAUTION: FIXME Describe `catch` block for exception handling
 [[runStream-finally]]
 CAUTION: FIXME Describe `finally` block for query termination
 
-NOTE: `runBatches` is used exclusively when `StreamExecution` starts the <<queryExecutionThread, stream execution thread for a streaming query>> (i.e. the thread that runs the micro-batches of this stream).
+NOTE: `runStream` is used exclusively when `StreamExecution` is requested to start the <<queryExecutionThread, stream execution thread for a streaming query>>.
 
 ==== [[runBatches-batch-runner]] TriggerExecutor's Batch Runner
 
@@ -728,11 +728,11 @@ queryExecutionThread: QueryExecutionThread
 
 `queryExecutionThread` is a Java thread of execution (https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread]) that <<runStream, runs a structured query>>.
 
-`queryExecutionThread` uses the name `stream execution thread for [id]` (that uses <<prettyIdString, prettyIdString>> for the id).
+`queryExecutionThread` uses the name *stream execution thread for [id]* (that uses <<prettyIdString, prettyIdString>> for the id).
 
-`queryExecutionThread` is a Spark Core `UninterruptibleThread` that provides `runUninterruptibly` method that allows running a block of code without being interrupted by `Thread.interrupt()`.
+`queryExecutionThread` is a <<spark-sql-streaming-QueryExecutionThread.adoc#, QueryExecutionThread>> (that is a Spark `UninterruptibleThread` with `runUninterruptibly` method for running a block of code without being interrupted by `Thread.interrupt()`).
 
-`queryExecutionThread` is started as a daemon thread when `StreamExecution` is requested to <<start, start>>.
+`queryExecutionThread` is started (as a daemon thread) when `StreamExecution` is requested to <<start, start>>.
 
 When started, `queryExecutionThread` sets the thread-local properties as the <<callSite, call site>> and <<runBatches, runs the streaming query>>.
 

@@ -110,7 +110,7 @@ NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logica
 runActivatedStream(sparkSessionForStream: SparkSession): Unit
 ----
 
-NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated streaming query.
+NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the streaming query.
 
 `runActivatedStream`...FIXME
 
@@ -123,7 +123,7 @@ runContinuous(sparkSessionForQuery: SparkSession): Unit
 
 `runContinuous`...FIXME
 
-NOTE: `runContinuous` is used when...FIXME
+NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, runActivatedStream>>.
 
 === [[creating-instance]] Creating ContinuousExecution Instance
 

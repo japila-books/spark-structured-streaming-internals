@@ -4,12 +4,15 @@
 
 . link:spark-structured-streaming.adoc[Spark Structured Streaming -- Streaming Datasets]
 
+== Structured Streaming V2
+
+. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- DataSourceV2 Sinks with Custom StreamWriter]
+
 == Developing Streaming Applications
 
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
 
 . link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
-.. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
 .. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
 .. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
 
@@ -65,6 +68,7 @@
 
 === Memory Data Sink
 
+. link:spark-sql-streaming-MemorySinkV2.adoc[MemorySinkV2]
 . link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 . link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 
@@ -72,6 +76,12 @@
 
 . link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
 . link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]
+
+=== Foreach Data Sink
+
+. link:spark-sql-streaming-ForeachWriterProvider.adoc[ForeachWriterProvider]
+. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
+. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
 
 == Query Planning and Execution
 
@@ -168,11 +178,6 @@
 
 . link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 . link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
-.. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
-
-== Structured Streaming V2
-
-. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport]
 
 == Demos
 
