@@ -1,8 +1,32 @@
-== [[ContinuousExecution]] ContinuousExecution
+== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of StreamWriteSupport Sinks with ContinuousTrigger
 
-`ContinuousExecution` is...FIXME
+`ContinuousExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> of a <<sink, StreamWriteSupport sink>> with a <<trigger, ContinuousTrigger>>.
 
-`ContinuousExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>> for a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> sink and a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a serializable StreamingQuery>>).
+[source, scala]
+----
+import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
+val q = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")
+  .trigger(Trigger.Continuous(10.seconds))
+  .queryName("rate2console")
+  .option("truncate", false)
+  .start
+
+scala> q.explain
+== Physical Plan ==
+WriteToContinuousDataSource ConsoleWriter[numRows=20, truncate=false]
++- *(1) Project [timestamp#758, value#759L]
+   +- *(1) ScanV2 rate[timestamp#758, value#759L]
+
+// q.stop
+----
+
+`ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport sink>> and a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
 [[internal-registries]]
 .ContinuousExecution's Internal Properties (e.g. Registries, Counters and Flags)
@@ -20,9 +44,6 @@ Used when...FIXME
 | [[currentEpochCoordinatorId]] FIXME
 
 Used when...FIXME
-
-| <<logicalPlan, logicalPlan>>
-|
 
 | `triggerExecutor`
 a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
@@ -114,7 +135,7 @@ NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc
 
 `runActivatedStream`...FIXME
 
-=== [[runContinuous]] `runContinuous` Internal Method
+=== [[runContinuous]] Running Streaming Query -- `runContinuous` Internal Method
 
 [source, scala]
 ----
@@ -123,21 +144,21 @@ runContinuous(sparkSessionForQuery: SparkSession): Unit
 
 `runContinuous`...FIXME
 
-NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, runActivatedStream>>.
+NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run the activated streaming query>>.
 
 === [[creating-instance]] Creating ContinuousExecution Instance
 
 `ContinuousExecution` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[name]] Query name
+* [[name]] The name of the structured query
 * [[checkpointRoot]] Path to the checkpoint directory (aka _metadata directory_)
-* [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
+* [[analyzedPlan]] Analyzed logical query plan (`LogicalPlan`)
 * [[sink]] <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>>
 * [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
 * [[triggerClock]] `Clock`
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
-* [[extraOptions]] Map[String, String]
+* [[extraOptions]] Options (`Map[String, String]`)
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 
 `ContinuousExecution` initializes the <<internal-registries, internal registries and counters>>.

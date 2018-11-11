@@ -1,22 +1,10 @@
 == [[StreamExecution]] StreamExecution -- Base of Streaming Query Executions
 
-`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can execute <<logicalPlan, structured query>> continuously and concurrently (as a <<queryExecutionThread, stream execution thread>>).
+`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can <<runActivatedStream, execute>> the <<logicalPlan, structured query>> continuously on a <<queryExecutionThread, stream execution thread>>.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
 [[contract]]
-[source, scala]
-----
-package org.apache.spark.sql.execution.streaming
-
-abstract class StreamExecution(...) extends ... {
-  // only required properties (vals and methods) that have no implementation
-  // the others follow
-  def logicalPlan: LogicalPlan
-  def runActivatedStream(sparkSessionForStream: SparkSession): Unit
-}
-----
-
 .(Subset of) StreamExecution Contract
 [cols="1m,2",options="header",width="100%"]
 |===
@@ -26,14 +14,24 @@ abstract class StreamExecution(...) extends ... {
 | logicalPlan
 a| [[logicalPlan]] <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, LogicalPlan>>
 
+[source, scala]
+----
+logicalPlan: LogicalPlan
+----
+
 NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, ProgressReporter Contract>> to...FIXME.
 
 Used when `StreamExecution` is requested to <<runStream, runStream>> and <<toDebugString, toDebugString>>
 
 | runActivatedStream
-| [[runActivatedStream]] Running the activated streaming query
+a| [[runActivatedStream]] Running the activated streaming query
 
-Used exclusively when `StreamExecution` is requested to <<runStream, runStream>> (when in `INITIALIZING` state)
+[source, scala]
+----
+runActivatedStream(sparkSessionForStream: SparkSession): Unit
+----
+
+Used exclusively when `StreamExecution` is requested to <<runStream, run the streaming query>> (when transitioning from the `INITIALIZING` state to `ACTIVE`)
 |===
 
 [[extensions]]
@@ -523,7 +521,7 @@ CAUTION: FIXME Describe `catch` block for exception handling
 [[runStream-finally]]
 CAUTION: FIXME Describe `finally` block for query termination
 
-NOTE: `runStream` is used exclusively when `StreamExecution` is requested to start the <<queryExecutionThread, stream execution thread for a streaming query>>.
+NOTE: `runStream` is used exclusively when the <<queryExecutionThread, stream execution thread>> is requested to start.
 
 ==== [[runBatches-batch-runner]] TriggerExecutor's Batch Runner
 
@@ -726,19 +724,15 @@ In the end, `processAllAvailable` releases <<awaitProgressLock, awaitProgressLoc
 queryExecutionThread: QueryExecutionThread
 ----
 
-`queryExecutionThread` is a Java thread of execution (https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread]) that <<runStream, runs a structured query>>.
+`queryExecutionThread` is a Java thread of execution (https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread]) that <<runStream, runs the structured query>> when started.
 
-`queryExecutionThread` uses the name *stream execution thread for [id]* (that uses <<prettyIdString, prettyIdString>> for the id).
+`queryExecutionThread` uses the name *stream execution thread for [id]* (that uses <<prettyIdString, prettyIdString>> for the id, i.e. `queryName [id = [id], runId = [runId]]`).
 
 `queryExecutionThread` is a <<spark-sql-streaming-QueryExecutionThread.adoc#, QueryExecutionThread>> (that is a Spark `UninterruptibleThread` with `runUninterruptibly` method for running a block of code without being interrupted by `Thread.interrupt()`).
 
 `queryExecutionThread` is started (as a daemon thread) when `StreamExecution` is requested to <<start, start>>.
 
 When started, `queryExecutionThread` sets the thread-local properties as the <<callSite, call site>> and <<runBatches, runs the streaming query>>.
-
-When `StreamExecution` finishes <<runStream-finally, running the streaming query>>, it uses `queryExecutionThread` to execute the `runUninterruptibly` code block uninterruptibly.
-
-`queryExecutionThread` is also used when `StreamExecution` is requested to <<stop, stop>>
 
 [TIP]
 ====

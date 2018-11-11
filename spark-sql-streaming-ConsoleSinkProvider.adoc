@@ -1,5 +1,22 @@
 == [[ConsoleSinkProvider]] ConsoleSinkProvider
 
-`ConsoleSinkProvider` is a link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider] for link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink].
+`ConsoleSinkProvider` is a `DataSourceV2` with <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> for <<spark-sql-streaming-ConsoleSink.adoc#< ConsoleSink>>.
 
 `ConsoleSinkProvider` is a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister] that registers the `ConsoleSink` streaming sink as `console` format.
+
+[source, scala]
+----
+import org.apache.spark.sql.streaming.Trigger
+val q = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console") // <-- requests ConsoleSinkProvider for a sink
+  .trigger(Trigger.Once)
+  .start
+scala> println(q.lastProgress.sink)
+{
+  "description" : "org.apache.spark.sql.execution.streaming.ConsoleSinkProvider@edde9bb"
+}
+----

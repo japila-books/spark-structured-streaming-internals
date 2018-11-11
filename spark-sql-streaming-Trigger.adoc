@@ -7,12 +7,12 @@ NOTE: A trigger can also be called a *batch interval* (as in the older Spark Str
 [[available-implementations]]
 [[available-triggers]]
 .Triggers
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Trigger
 | Creating Instance
 
-| `ContinuousTrigger`
+| ContinuousTrigger
 | [[ContinuousTrigger]]
 
 .3+.^| <<ProcessingTime, ProcessingTime>>
@@ -20,7 +20,7 @@ NOTE: A trigger can also be called a *batch interval* (as in the older Spark Str
 | `Trigger.ProcessingTime(Duration interval)`
 | `Trigger.ProcessingTime(String interval)`
 
-| `OneTimeTrigger`
+| OneTimeTrigger
 | [[OneTimeTrigger]]
 |===
 
