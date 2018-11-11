@@ -4,9 +4,15 @@
 
 . link:spark-structured-streaming.adoc[Spark Structured Streaming -- Streaming Datasets]
 
-== Structured Streaming V2
+== Structured Streaming V2 (Continuous Stream Processing)
 
 . link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- DataSourceV2 Sinks with Custom StreamWriter]
+. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract]
+. link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
+. link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
+. link:spark-sql-streaming-DataSourceReader.adoc[DataSourceReader Contract]
+.. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
+. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation]
 
 == Developing Streaming Applications
 
@@ -87,7 +93,7 @@
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Executions]
 .. link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
-.. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution]
+.. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of StreamWriteSupport Sink and ContinuousTrigger]
 .. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper -- Serializable StreamExecution]
 
 . link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter Contract]

@@ -1,0 +1,3 @@
+== [[ContinuousExecutionRelation]] ContinuousExecutionRelation
+
+`ContinuousExecutionRelation` is...FIXME

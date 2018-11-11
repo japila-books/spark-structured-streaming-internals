@@ -1,0 +1,3 @@
+== [[DataSourceReader]] DataSourceReader Contract
+
+`DataSourceReader` is...FIXME

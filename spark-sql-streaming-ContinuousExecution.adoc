@@ -1,4 +1,4 @@
-== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of StreamWriteSupport Sinks with ContinuousTrigger
+== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of StreamWriteSupport Sink and ContinuousTrigger
 
 `ContinuousExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> of a <<sink, StreamWriteSupport sink>> with a <<trigger, ContinuousTrigger>>.
 
@@ -29,16 +29,27 @@ WriteToContinuousDataSource ConsoleWriter[numRows=20, truncate=false]
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport sink>> and a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
 [[internal-registries]]
-.ContinuousExecution's Internal Properties (e.g. Registries, Counters and Flags)
+.ContinuousExecution's Internal Properties
 [cols="1m,2",options="header",width="100%"]
 |===
 | Name
 | Description
 
 | continuousSources
-| [[continuousSources]] FIXME
+a| [[continuousSources]]
 
-Used when...FIXME
+[source, scala]
+----
+continuousSources: Seq[ContinuousReader]
+----
+
+Collection of <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReaders>> (that are <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupports>> of the <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelations>> in the <<logicalPlan, logicalPlan>>)
+
+NOTE: Only one continuous source is currently supported (and enforced in <<addOffset, addOffset>> and <<commit, commit>>).
+
+Used when `ContinuousExecution` is requested to <<commit, commit>>, <<getStartOffsets, getStartOffsets>>, and <<runContinuous, runContinuous>>
+
+Use <<sources, sources>> to access it
 
 | currentEpochCoordinatorId
 | [[currentEpochCoordinatorId]] FIXME

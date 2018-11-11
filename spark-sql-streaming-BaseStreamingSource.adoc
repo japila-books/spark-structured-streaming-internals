@@ -1,0 +1,3 @@
+== [[BaseStreamingSource]] BaseStreamingSource Contract
+
+`BaseStreamingSource` is...FIXME

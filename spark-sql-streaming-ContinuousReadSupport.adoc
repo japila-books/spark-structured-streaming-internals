@@ -1,0 +1,3 @@
+== [[ContinuousReadSupport]] ContinuousReadSupport Contract
+
+`ContinuousReadSupport` is...FIXME

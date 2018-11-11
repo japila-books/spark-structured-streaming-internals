@@ -1,0 +1,91 @@
+== [[ContinuousReader]] ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing
+
+`ContinuousReader` is the <<contract, extension>> of the <<spark-sql-streaming-DataSourceReader.adoc#, DataSourceReader>> and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>> contracts for <<implementations, continuous readers>> that <<FIXME, FIXME>>.
+
+[[contract]]
+.ContinuousReader Contract
+[cols="1m,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| commit
+a| [[commit]]
+
+[source, java]
+----
+void commit(Offset end)
+----
+
+Used when...FIXME
+
+| deserializeOffset
+a| [[deserializeOffset]]
+
+[source, java]
+----
+Offset deserializeOffset(String json)
+----
+
+Used when...FIXME
+
+| getStartOffset
+a| [[getStartOffset]]
+
+[source, java]
+----
+Offset getStartOffset()
+----
+
+Used when...FIXME
+
+| mergeOffsets
+a| [[mergeOffsets]]
+
+[source, java]
+----
+Offset mergeOffsets(PartitionOffset[] offsets)
+----
+
+Used when...FIXME
+
+| needsReconfiguration
+a| [[needsReconfiguration]]
+
+[source, java]
+----
+boolean needsReconfiguration()
+----
+
+Used when...FIXME
+
+| setStartOffset
+a| [[setStartOffset]]
+
+[source, java]
+----
+void setStartOffset(Optional<Offset> start)
+----
+
+Used when...FIXME
+|===
+
+[[implementations]]
+.ContinuousReaders
+[cols="1,2",options="header",width="100%"]
+|===
+| ContinuousReader
+| Description
+
+| ContinuousMemoryStream
+| [[ContinuousMemoryStream]]
+
+| KafkaContinuousReader
+| [[KafkaContinuousReader]]
+
+| <<spark-sql-streaming-RateStreamContinuousReader.adoc#, RateStreamContinuousReader>>
+| [[RateStreamContinuousReader]]
+
+| TextSocketContinuousReader
+| [[TextSocketContinuousReader]]
+|===
