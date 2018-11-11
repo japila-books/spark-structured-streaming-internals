@@ -141,3 +141,14 @@ NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requeste
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 
 `ContinuousExecution` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[stop]] Stopping Streaming Query -- `stop` Method
+
+[source, scala]
+----
+stop(): Unit
+----
+
+NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop the streaming query.
+
+`stop`...FIXME

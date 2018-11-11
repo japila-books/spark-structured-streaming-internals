@@ -250,7 +250,7 @@ The default trigger is link:spark-sql-streaming-Trigger.adoc#ProcessingTime[Proc
 
 TIP: Consult link:spark-sql-streaming-Trigger.adoc[Trigger] to learn about `Trigger` and `ProcessingTime` types.
 
-=== [[start]] Starting Continuous Writing to Sink -- `start` Method
+=== [[start]] Starting Execution of Streaming Query -- `start` Method
 
 [source, scala]
 ----
