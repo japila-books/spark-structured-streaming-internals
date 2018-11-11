@@ -151,4 +151,14 @@ stop(): Unit
 
 NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop the streaming query.
 
-`stop`...FIXME
+`stop` transitions the streaming query to `TERMINATED` state.
+
+If the <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, queryExecutionThread>> is alive (i.e. it has been started and has not yet died), `stop` interrupts it and waits for this thread to die.
+
+In the end, `stop` prints out the following INFO message to the logs:
+
+```
+Query [prettyIdString] was stopped
+```
+
+NOTE: <<spark-sql-streaming-StreamExecution.adoc#prettyIdString, prettyIdString>> is in the format of `queryName [id = [id], runId = [runId]]`.
