@@ -12,7 +12,8 @@
 . link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
 . link:spark-sql-streaming-DataSourceReader.adoc[DataSourceReader Contract]
 .. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
-. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation]
+. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
+. link:spark-sql-streaming-StreamingRelationV2.adoc[StreamingRelationV2]
 
 == Developing Streaming Applications
 
