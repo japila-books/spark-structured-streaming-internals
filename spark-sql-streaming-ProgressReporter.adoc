@@ -1,6 +1,143 @@
 == [[ProgressReporter]] ProgressReporter Contract
 
-`ProgressReporter` is the <<contract, contract>> that link:spark-sql-streaming-StreamExecution.adoc[StreamExecution] uses to report query progress.
+`ProgressReporter` is the <<contract, contract>> of <<implementations, stream execution progress reporters>> that continually report statistics about the amount of data processed and the latency of a streaming query.
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> is the one and only known direct extension of the <<contract, ProgressReporter Contract>> in Spark Structured Streaming.
+
+[[contract]]
+.ProgressReporter Contract
+[cols="1m,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| currentBatchId
+a| [[currentBatchId]]
+
+[source, scala]
+----
+currentBatchId: Long
+----
+
+Id of the current batch
+
+| id
+a| [[id]]
+
+[source, scala]
+----
+id: UUID
+----
+
+UUID of...FIXME
+
+| lastExecution
+a| [[lastExecution]]
+
+[source, scala]
+----
+lastExecution: QueryExecution
+----
+
+`QueryExecution` of the streaming query
+
+| logicalPlan
+a| [[logicalPlan]]
+
+[source, scala]
+----
+logicalPlan: LogicalPlan
+----
+
+The logical query plan of the streaming query
+
+Used when `ProgressReporter` is requested for the following:
+
+* <<extractExecutionStats, extract statistics from the most recent query execution>> (to add `watermark` metric when a <<spark-sql-streaming-EventTimeWatermark.adoc#, streaming watermark>> is used)
+
+* <<extractSourceToNumInputRows, extractSourceToNumInputRows>>
+
+| name
+a| [[name]]
+
+[source, scala]
+----
+name: String
+----
+
+| newData
+a| [[newData]]
+
+[source, scala]
+----
+newData: Map[BaseStreamingSource, LogicalPlan]
+----
+
+link:spark-sql-streaming-Source.adoc[Streaming sources] with the new data as a DataFrame.
+
+Used when:
+
+* `ProgressReporter` <<extractExecutionStats, extracts statistics from the most recent query execution>> (to calculate the so-called `inputRows`)
+
+| offsetSeqMetadata
+a| [[offsetSeqMetadata]]
+
+[source, scala]
+----
+offsetSeqMetadata: OffsetSeqMetadata
+----
+
+| postEvent
+a| [[postEvent]]
+
+[source, scala]
+----
+postEvent(event: StreamingQueryListener.Event): Unit
+----
+
+| runId
+a| [[runId]]
+
+[source, scala]
+----
+runId: UUID
+----
+
+| sink
+a| [[sink]]
+
+[source, scala]
+----
+sink: BaseStreamingSink
+----
+
+| sources
+a| [[sources]]
+
+[source, scala]
+----
+sources: Seq[BaseStreamingSource]
+----
+
+| sparkSession
+a| [[sparkSession]]
+
+[source, scala]
+----
+sparkSession: SparkSession
+----
+
+| triggerClock
+a| [[triggerClock]]
+
+[source, scala]
+----
+triggerClock: Clock
+----
+
+The clock to use to track the time
+|===
 
 [source, scala]
 ----
@@ -109,15 +246,6 @@ Elements are added and removed when `ProgressReporter` <<updateProgress, updates
 Used when `ProgressReporter` does `lastProgress` or `recentProgress`.
 |===
 
-=== [[extractExecutionStats]] Creating Execution Statistics -- `extractExecutionStats` Internal Method
-
-[source, scala]
-----
-extractExecutionStats(hasNewData: Boolean): ExecutionStats
-----
-
-CAUTION: FIXME
-
 === [[SourceProgress]] SourceProgress
 
 CAUTION: FIXME
@@ -125,92 +253,6 @@ CAUTION: FIXME
 === [[SinkProgress]] SinkProgress
 
 CAUTION: FIXME
-
-=== [[contract]] ProgressReporter Contract
-
-[source, scala]
-----
-package org.apache.spark.sql.execution.streaming
-
-trait ProgressReporter {
-  // only required methods that have no implementation
-  def availableOffsets: StreamProgress
-  def committedOffsets: StreamProgress
-  def currentBatchId: Long
-  def id: UUID
-  def logicalPlan: LogicalPlan
-  def name: String
-  def newData: Map[Source, DataFrame]
-  def offsetSeqMetadata: OffsetSeqMetadata
-  def postEvent(event: StreamingQueryListener.Event): Unit
-  def runId: UUID
-  def sink: Sink
-  def sources: Seq[Source]
-  def triggerClock: Clock
-}
-----
-
-.(Subset of) ProgressReporter Contract (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
-|===
-| Method
-| Description
-
-| [[availableOffsets]] `availableOffsets`
-a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
-
-Used when:
-
-* `ProgressReporter` is requested to <<finishTrigger, finishTrigger>> (for the JSON-ified offsets of every link:spark-sql-streaming-Source.adoc[streaming source] to report progress)
-
-* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[runs streaming batches], link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a single streaming batch], link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch[constructs the next streaming batch], link:spark-sql-streaming-StreamExecution.adoc##populateStartOffsets[populateStartOffsets], and link:spark-sql-streaming-StreamExecution.adoc##dataAvailable[dataAvailable].
-
-| [[committedOffsets]] `committedOffsets`
-a| link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
-
-Used when:
-
-* `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[runs batches], ...FIXME
-
-| [[currentBatchId]] `currentBatchId`
-| Id of the current batch
-
-| [[id]] `id`
-| UUID of...FIXME
-
-| `logicalPlan`
-| [[logicalPlan]] Logical query plan (i.e. `LogicalPlan`) of a streaming Dataset that...FIXME
-
-Used when `ProgressReporter` is requested to <<extractExecutionStats, extract statistics from the most recent query execution>> (to add `watermark` metric when a <<spark-sql-streaming-EventTimeWatermark.adoc#, streaming watermark>> is used)
-
-| [[name]] `name`
-| Name of...FIXME
-
-| [[newData]] `newData`
-a| link:spark-sql-streaming-Source.adoc[Streaming sources] with the new data as a DataFrame.
-
-Used when:
-
-* `ProgressReporter` <<extractExecutionStats, extracts statistics from the most recent query execution>> (to calculate the so-called `inputRows`)
-
-| [[offsetSeqMetadata]] `offsetSeqMetadata`
-|
-
-| [[postEvent]] `postEvent`
-| FIXME
-
-| [[runId]] `runId`
-| UUID of...FIXME
-
-| [[sink]] `sink`
-| link:spark-sql-streaming-Sink.adoc[Streaming sink]
-
-| [[sources]] `sources`
-| link:spark-sql-streaming-Source.adoc[Streaming sources]
-
-| [[triggerClock]] `triggerClock`
-| `Clock` to track the time
-|===
 
 === [[status]] `status` Method
 
@@ -295,7 +337,7 @@ image::images/ProgressReporter-finishTrigger-timestamps.png[align="center"]
 `finishTrigger` prints out the following DEBUG message to the logs:
 
 ```
-DEBUG StreamExecution: Execution stats: [executionStats]
+Execution stats: [executionStats]
 ```
 
 `finishTrigger` creates a <<SourceProgress, SourceProgress>> (aka source statistics) for <<sources, every source used>>.
@@ -309,8 +351,6 @@ If there was any data (using the input `hasNewData` flag), `finishTrigger` reset
 Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updates query progress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
 
 In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, StreamingQueryStatus>> (i.e. sets it to `false`).
-
-NOTE: `finishTrigger` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[runs streaming batches] (after link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-batch-runner-finishTrigger[TriggerExecutor has finished executing a streaming batch for a trigger]).
 
 === [[reportTimeTaken]] Tracking and Recording Execution Time -- `reportTimeTaken` Method
 
@@ -347,3 +387,25 @@ updateStatusMessage(message: String): Unit
 ----
 
 `updateStatusMessage` updates `message` in <<currentStatus, StreamingQueryStatus>> internal registry.
+
+=== [[extractSourceToNumInputRows]] `extractSourceToNumInputRows` Internal Method
+
+[source, scala]
+----
+extractSourceToNumInputRows(): Map[BaseStreamingSource, Long]
+----
+
+`extractSourceToNumInputRows`...FIXME
+
+NOTE: `extractSourceToNumInputRows` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
+
+=== [[extractExecutionStats]] Creating Execution Statistics -- `extractExecutionStats` Internal Method
+
+[source, scala]
+----
+extractExecutionStats(hasNewData: Boolean): ExecutionStats
+----
+
+`extractExecutionStats`...FIXME
+
+NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finishTrigger>>.

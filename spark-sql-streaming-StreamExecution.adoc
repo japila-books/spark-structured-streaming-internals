@@ -5,21 +5,23 @@
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
 [[contract]]
-.(Subset of) StreamExecution Contract
+.StreamExecution Contract
 [cols="1m,2",options="header",width="100%"]
 |===
 | Property
 | Description
 
 | logicalPlan
-a| [[logicalPlan]] <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, LogicalPlan>>
+a| [[logicalPlan]]
 
 [source, scala]
 ----
 logicalPlan: LogicalPlan
 ----
 
-NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, ProgressReporter Contract>> to...FIXME.
+Analyzed logical plan of the streaming query
+
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, ProgressReporter Contract>> and the only purpose of the `logicalPlan` property is to change the access level from `protected` to `public`.
 
 Used when `StreamExecution` is requested to <<runStream, runStream>> and <<toDebugString, toDebugString>>
 
@@ -242,25 +244,6 @@ NOTE: `id` can get fetched from link:spark-sql-streaming-DataStreamWriter.adoc#c
 
 | [[lastExecution]] `lastExecution`
 | Last link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution]
-
-| [[logicalPlan]] `logicalPlan`
-a| Lazily-generated logical plan (i.e. `LogicalPlan`) of the streaming Dataset
-
-NOTE: `logicalPlan` is a part of link:spark-sql-streaming-ProgressReporter.adoc#logicalPlan[ProgressReporter Contract].
-
-Initialized right after `StreamExecution` starts <<runBatches, running streaming batches>> (which is when <<queryExecutionThread, stream execution thread>> is started).
-
-Used mainly when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> that has arrived since the last batch.
-
----
-
-While initializing, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>> so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] is replaced with a link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation]. `logicalPlan` link:spark-sql-streaming-StreamingExecutionRelation.adoc#creating-instance[creates] a `StreamingExecutionRelation` with `source` created using a metadata path as `/sources/[nextSourceId]` under the <<resolvedCheckpointRoot, checkpoint directory>>.
-
-NOTE: `nextSourceId` is the unique identifier of every `StreamingRelation` in <<analyzedPlan, analyzed logical plan>> starting from `0`.
-
-NOTE: `logicalPlan` uses `DataSource.createSource` factory method to create a link:spark-sql-streaming-Source.adoc[streaming Source] that assumes link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider] or `FileFormat` as the implementations of the streaming data sources for reading.
-
-While initializing, `logicalPlan` also initializes <<sources, sources>> and <<uniqueSources, uniqueSources>> registries.
 
 | [[newData]] `newData`
 a| Registry of the link:spark-sql-streaming-Source.adoc[streaming sources] (in <<logicalPlan, logical query plan>>) that have new data available in the current batch. The new data is a streaming `DataFrame`.

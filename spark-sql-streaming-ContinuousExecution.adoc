@@ -124,16 +124,26 @@ NOTE: `sources` is part of <<spark-sql-streaming-ProgressReporter.adoc#sources, 
 
 `sources`...FIXME
 
-=== [[logicalPlan]] `logicalPlan` Value
+=== [[logicalPlan]] Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
 
 [source, scala]
 ----
 logicalPlan: LogicalPlan
 ----
 
-NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> to...FIXME.
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> that is the analyzed logical plan of the streaming query.
 
-`logicalPlan`...FIXME
+`logicalPlan` resolves <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> leaf logical operators (with a <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> source) to <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> leaf logical operators.
+
+Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>> as follows:
+
+. For every <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> leaf logical operator with a <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> source, `logicalPlan` looks it up for the corresponding <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> (if available in the internal lookup registry) or creates a `ContinuousExecutionRelation` (with the `ContinuousReadSupport` source, the options and the output attributes of the `StreamingRelationV2` operator)
+
+. For any other `StreamingRelationV2`, `logicalPlan` throws an `UnsupportedOperationException`:
++
+```
+Data source [name] does not support continuous processing.
+```
 
 === [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
 
