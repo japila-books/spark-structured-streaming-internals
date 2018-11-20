@@ -4,26 +4,46 @@
 
 [[methods]]
 .DataStreamWriter's Methods
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Method
 | Description
 
 | <<foreach, foreach>>
-a| Sets link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] in the full control of streaming writes.
+a|
 
 [source, scala]
 ----
 foreach(writer: ForeachWriter[T]): DataStreamWriter[T]
 ----
 
-| `format`
-a| [[format]] Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-Sink.adoc[streaming sink] to write the rows to)
+Sets link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter] in the full control of streaming writes
+
+| foreachBatch
+a| [[foreachBatch]]
+
+[source, scala]
+----
+foreachBatch(function: (Dataset[T], Long) => Unit): DataStreamWriter[T]
+----
+
+(*New in 2.4.0*) Sets the <<source, source>> to `foreachBatch` and the <<foreachBatchWriter, foreachBatchWriter>> to the given function.
+
+As per https://issues.apache.org/jira/browse/SPARK-24565[SPARK-24565 Add API for in Structured Streaming for exposing output rows of each microbatch as a DataFrame], the purpose of the method is to expose the micro-batch output as a dataframe for the following:
+
+* Pass the output rows of each batch to a library that is designed for the batch jobs only
+* Reuse batch data sources for output whose streaming version does not exist
+* Multi-writes where the output rows are written to multiple outputs by writing twice for every batch
+
+| format
+a| [[format]]
 
 [source, scala]
 ----
 format(source: String): DataStreamWriter[T]
 ----
+
+Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-Sink.adoc[streaming sink] to write the rows to)
 
 Internally, `format` is referred to as a _source_ (as in the output data _source_).
 
@@ -45,17 +65,16 @@ option(key: String, value: Long): DataStreamWriter[T]
 option(key: String, value: String): DataStreamWriter[T]
 ----
 
-| `options`
+| options
 a| [[options]]
 
 [source, scala]
 ----
-options(options: scala.collection.Map[String, String]): DataStreamWriter[T]
-options(options: java.util.Map[String, String]): DataStreamWriter[T]
+options(options: Map[String, String]): DataStreamWriter[T]
 ----
 
 | <<outputMode, outputMode>>
-a| Specifies the output mode
+a|
 
 [source, scala]
 ----
@@ -63,7 +82,9 @@ outputMode(outputMode: OutputMode): DataStreamWriter[T]
 outputMode(outputMode: String): DataStreamWriter[T]
 ----
 
-| `partitionBy`
+Specifies the <<spark-sql-streaming-OutputMode.adoc#, output mode>>
+
+| partitionBy
 a|
 
 [source, scala]
@@ -72,12 +93,14 @@ partitionBy(colNames: String*): DataStreamWriter[T]
 ----
 
 | <<queryName, queryName>>
-a| Assigns the name of a query
+a|
 
 [source, scala]
 ----
 queryName(queryName: String): DataStreamWriter[T]
 ----
+
+Assigns the name of a query
 
 | <<start, start>>
 a|
@@ -89,12 +112,14 @@ start(path: String): StreamingQuery
 ----
 
 | <<trigger, trigger>>
-a| Sets the link:spark-sql-streaming-Trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
+a|
 
 [source, scala]
 ----
 trigger(trigger: Trigger): DataStreamWriter[T]
 ----
+
+Sets the link:spark-sql-streaming-Trigger.adoc[Trigger] for how often a streaming query should be executed and the result saved.
 
 |===
 
@@ -162,38 +187,49 @@ NOTE: `hive` <<start, is not supported>> for streaming writing (and leads to a `
 NOTE: `DataFrameWriter` is responsible for writing in a batch fashion.
 
 [[internal-properties]]
-.DataStreamWriter's Internal Properties (in alphabetical order)
-[cols="1,1,2",options="header",width="100%"]
+.DataStreamWriter's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,1,2",options="header",width="100%"]
 |===
 | Name
 | Initial Value
 | Description
 
-| [[extraOptions]] `extraOptions`
+| extraOptions
 |
-|
+| [[extraOptions]]
 
-| [[foreachWriter]] `foreachWriter`
-|
-|
+| foreachBatchWriter
+| `null`
+a| [[foreachBatchWriter]]
 
-| [[partitioningColumns]] `partitioningColumns`
-|
-|
+[source, scala]
+----
+foreachBatchWriter: (Dataset[T], Long) => Unit
+----
 
-| [[source]] `source`
-|
-|
+The function that is used as the batch writer in the <<spark-sql-streaming-ForeachBatchSink.adoc#, ForeachBatchSink>> for <<foreachBatch, foreachBatch>>
 
-| [[outputMode-property]] `outputMode`
+| foreachWriter
+|
+| [[foreachWriter]]
+
+| partitioningColumns
+|
+| [[partitioningColumns]]
+
+| source
+|
+| [[source]]
+
+| outputMode
 | `OutputMode.Append`
-| link:spark-sql-streaming-OutputMode.adoc[OutputMode] of the streaming sink
+| [[outputMode-property]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] of the streaming sink
 
 Set using <<outputMode, outputMode>> method.
 
-| [[trigger-property]] `trigger`
+| trigger
 |
-|
+| [[trigger-property]]
 |===
 
 === [[option]] Specifying Write Option -- `option` Method

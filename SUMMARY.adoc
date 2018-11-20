@@ -90,6 +90,10 @@
 . link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
 . link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
 
+=== ForeachBatch Data Sink
+
+. link:spark-sql-streaming-ForeachBatchSink.adoc[ForeachBatchSink]
+
 == Query Planning and Execution
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Executions]
