@@ -10,23 +10,27 @@
 | Description
 
 | <<active, active>>
-a| Gets all active structured queries
+a|
 
 [source, scala]
 ----
 active: Array[StreamingQuery]
 ----
 
+Returns active structured queries
+
 | <<addListener, addListener>>
-a| Registers a <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>>
+a|
 
 [source, scala]
 ----
 addListener(listener: StreamingQueryListener): Unit
 ----
 
+Registers a <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>>
+
 | <<awaitAnyTermination, awaitAnyTermination>>
-a| Waits for any streaming query to be terminated
+a|
 
 [source, scala]
 ----
@@ -34,8 +38,10 @@ awaitAnyTermination(): Unit
 awaitAnyTermination(timeoutMs: Long): Boolean
 ----
 
+Waits for any streaming query to be terminated
+
 | <<get, get>>
-a| Gets a <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>> by id
+a|
 
 [source, scala]
 ----
@@ -43,13 +49,17 @@ get(id: String): StreamingQuery
 get(id: UUID): StreamingQuery
 ----
 
+Gets the <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>> by id
+
 | <<removeListener, removeListener>>
-a| De-registering a <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>>
+a|
 
 [source, scala]
 ----
 removeListener(listener: StreamingQueryListener): Unit
 ----
+
+De-registers the <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>>
 
 | <<resetTerminated, resetTerminated>>
 a|
@@ -58,14 +68,19 @@ a|
 ----
 resetTerminated(): Unit
 ----
+
+Resets the internal registry of the terminated streaming queries (that lets <<awaitAnyTermination, awaitAnyTermination>> to be used again)
 |===
 
-`StreamingQueryManager` is available using `SparkSession` and `streams` property.
+`StreamingQueryManager` is available using `SparkSession.streams` property.
 
 [source, scala]
 ----
-val spark: SparkSession = ...
-val queries = spark.streams
+scala> :type spark
+org.apache.spark.sql.SparkSession
+
+scala> :type spark.streams
+org.apache.spark.sql.streaming.StreamingQueryManager
 ----
 
 `StreamingQueryManager` is <<creating-instance, created>> when `SessionState` is created.
@@ -215,7 +230,8 @@ createQuery(
   userSpecifiedName: Option[String],
   userSpecifiedCheckpointLocation: Option[String],
   df: DataFrame,
-  sink: Sink,
+  extraOptions: Map[String, String],
+  sink: BaseStreamingSink,
   outputMode: OutputMode,
   useTempCheckpointLocation: Boolean,
   recoverFromCheckpointLocation: Boolean,
@@ -289,7 +305,7 @@ startQuery(
   triggerClock: Clock = new SystemClock()): StreamingQuery
 ----
 
-`startQuery` starts a link:spark-sql-streaming-StreamingQuery.adoc[streaming query].
+`startQuery` starts a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] and returns a handle to it.
 
 NOTE: `trigger` defaults to `0` milliseconds (as link:spark-sql-streaming-Trigger.adoc#ProcessingTime[ProcessingTime(0)]).
 

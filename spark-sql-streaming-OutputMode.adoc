@@ -2,7 +2,7 @@
 
 *Output mode* (`OutputMode`) describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in link:spark-sql-streaming-Source.adoc[streaming data sources] (in a trigger / streaming batch).
 
-Output mode of a streaming query is specified using link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[outputMode] method of `DataStreamWriter`.
+The output mode of a streaming query is specified using <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, DataStreamWriter.outputMode>> method.
 
 [source, scala]
 ----
@@ -25,15 +25,15 @@ val consoleOutput = inputStream.
 
 [[available-output-modes]]
 .Available Output Modes
-[cols="1,1,2",options="header",width="100%"]
+[cols="1m,1,2",options="header",width="100%"]
 |===
 | OutputMode
 | Name
 | Behaviour
 
-| [[Append]] `Append`
+| Append
 | `append`
-a|
+a| [[Append]]
 
 [[default-output-mode]]
 link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes "new" rows only.
@@ -48,15 +48,15 @@ Used for link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithS
 
 NOTE: `Append` is link:spark-sql-streaming-UnsupportedOperationChecker.adoc#multiple-flatMapGroupsWithState[mandatory] when multiple `flatMapGroupsWithState` operators are used in a structured query.
 
-| [[Complete]] `Complete`
+| Complete
 | `complete`
-a| Writes all rows (every time there are updates) and therefore corresponds to a traditional batch query.
+a| [[Complete]] Writes all rows (every time there are updates) and therefore corresponds to a traditional batch query.
 
 NOTE: Supported only for streaming queries with link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] or link:spark-sql-streaming-Dataset-operators.adoc#groupByKey[groupByKey] aggregations (as asserted by link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[UnsupportedOperationChecker]).
 
-| [[Update]] `Update`
+| Update
 | `update`
-| Write the rows that were updated (every time there are updates). If the query does not contain aggregations, it is equivalent to <<Append, Append>> mode.
+| [[Update]] Write the rows that were updated (every time there are updates). If the query does not contain aggregations, it is equivalent to <<Append, Append>> mode.
 
 Used for link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState] and link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operators
 |===

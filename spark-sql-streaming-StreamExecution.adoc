@@ -26,12 +26,14 @@ NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logic
 Used when `StreamExecution` is requested to <<runStream, runStream>> and <<toDebugString, toDebugString>>
 
 | runActivatedStream
-a| [[runActivatedStream]] Running the activated streaming query
+a| [[runActivatedStream]]
 
 [source, scala]
 ----
 runActivatedStream(sparkSessionForStream: SparkSession): Unit
 ----
+
+Runs the activated streaming query
 
 Used exclusively when `StreamExecution` is requested to <<runStream, run the streaming query>> (when transitioning from the `INITIALIZING` state to `ACTIVE`)
 |===
@@ -153,15 +155,15 @@ TIP: Monitor `offsets` and `commits` metadata logs to know the progress of a str
 
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| `availableOffsets`
-a| [[availableOffsets]] link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] of the streaming sources with their available and unprocessed offsets.
+| availableOffsets
+a| [[availableOffsets]] <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> that tracks the offsets that are available to be processed, but have not yet be committed to the sink.
 
-NOTE: `availableOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#availableOffsets[ProgressReporter Contract].
+NOTE: `availableOffsets` is part of the <<spark-sql-streaming-ProgressReporter.adoc#availableOffsets, ProgressReporter Contract>>.
 
 NOTE: link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] is an enhanced `immutable.Map` from Scala with streaming sources as keys and their link:spark-sql-streaming-Offset.adoc[Offsets] as values.
 
@@ -198,16 +200,16 @@ Used when:
 
 NOTE: `availableOffsets` works in tandem with <<committedOffsets, committedOffsets>> registry.
 
-| `awaitProgressLock`
+| awaitProgressLock
 | [[awaitProgressLock]] Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
 
-| `awaitProgressLockCondition`
+| awaitProgressLockCondition
 | [[awaitProgressLockCondition]]
 
-| `callSite`
+| callSite
 | [[callSite]]
 
-| `commitLog`
+| commitLog
 a| [[commitLog]] <<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>> for completed streaming batches (with a single file per batch with a file name being the batch id).
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
@@ -218,13 +220,13 @@ Used exclusively by the <<extensions, extensions>> for the following:
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>, <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>, and <<spark-sql-streaming-ContinuousExecution.adoc#awaitEpoch, awaitEpoch>>
 
-| `committedOffsets`
+| committedOffsets
 a| [[committedOffsets]] <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of the streaming sources and the committed offsets (i.e. processed already).
 
 NOTE: `committedOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#committedOffsets[ProgressReporter Contract].
 
-| [[currentBatchId]] `currentBatchId`
-a| Current batch number
+| currentBatchId
+a| [[currentBatchId]] Current batch number
 
 * `-1` when `StreamExecution` is <<creating-instance, created>>
 
@@ -232,34 +234,41 @@ a| Current batch number
 
 * Incremented when `StreamExecution` <<runBatches, runs streaming batches>> and finishes a trigger that had <<dataAvailable, data available from sources>> (right after <<batchCommitLog, committing the batch>>).
 
-| [[id]] `id`
-a| Unique identifier of the streaming query
+| id
+a| [[id]] Unique identifier of the streaming query
 
 Set as the `id` of <<streamMetadata, streamMetadata>> when `StreamExecution` is <<creating-instance, created>>.
 
 NOTE: `id` can get fetched from link:spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation[checkpoint metadata] if available and thus recovered when a query is resumed (i.e. restarted after a failure or a planned stop).
 
-| [[initializationLatch]] `initializationLatch`
-|
+| initializationLatch
+| [[initializationLatch]]
 
-| [[lastExecution]] `lastExecution`
-| Last link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution]
+| lastExecution
+| [[lastExecution]] Last link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution]
 
-| [[newData]] `newData`
-a| Registry of the link:spark-sql-streaming-Source.adoc[streaming sources] (in <<logicalPlan, logical query plan>>) that have new data available in the current batch. The new data is a streaming `DataFrame`.
+| newData
+a| [[newData]]
 
-NOTE: `newData` is a part of link:spark-sql-streaming-ProgressReporter.adoc#newData[ProgressReporter Contract].
+[source, scala]
+----
+newData: Map[BaseStreamingSource, LogicalPlan]
+----
 
-Set exclusively when `StreamExecution` <<runBatch-getBatch, requests unprocessed data from streaming sources>> (while <<runBatch, running a single streaming batch>>).
+Registry of the <<spark-sql-streaming-BaseStreamingSource.adoc#, streaming sources>> (in the <<logicalPlan, logical query plan>>) that have new data available in the current batch. The new data is a streaming `DataFrame`.
+
+NOTE: `newData` is part of the <<spark-sql-streaming-ProgressReporter.adoc#newData, ProgressReporter Contract>>.
+
+Set exclusively when `StreamExecution` is requested to <<runBatch-getBatch, requests unprocessed data from streaming sources>> (while <<runBatch, running a single streaming batch>>).
 
 Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (while <<runBatch, running a single streaming batch>>).
 
-| [[noNewData]] `noNewData`
-| Flag whether there are any new offsets available for processing or not.
+| noNewData
+| [[noNewData]] Flag whether there are any new offsets available for processing or not.
 
 Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming batch>> when no new offsets are available.
 
-| `offsetLog`
+| offsetLog
 a| [[offsetLog]] link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in when ready for processing.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
@@ -268,8 +277,8 @@ Used when `StreamExecution` <<populateStartOffsets, populates the start offsets>
 
 NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the offset metadata log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
 
-| [[offsetSeqMetadata]] `offsetSeqMetadata`
-a| link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
+| offsetSeqMetadata
+a| [[offsetSeqMetadata]] link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
 NOTE: `offsetSeqMetadata` is a part of link:spark-sql-streaming-ProgressReporter.adoc#offsetSeqMetadata[ProgressReporter Contract].
 
@@ -281,15 +290,15 @@ NOTE: `offsetSeqMetadata` is a part of link:spark-sql-streaming-ProgressReporter
 
 * Copied with `batchTimestampMs` updated with the current time (in milliseconds) when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>>.
 
-| [[pollingDelayMs]] `pollingDelayMs`
-| Time delay before polling new data again when no data was available
+| pollingDelayMs
+| [[pollingDelayMs]] Time delay before polling new data again when no data was available
 
 Set to link:spark-sql-streaming-properties.adoc#spark.sql.streaming.pollingDelay[spark.sql.streaming.pollingDelay] Spark property.
 
 Used when `StreamExecution` has started <<runBatches, running streaming batches>> (and <<runBatches-batchRunner-no-data, no data was available to process in a trigger>>).
 
-| [[prettyIdString]] `prettyIdString`
-a| Pretty-identified string for identification in logs (with <<name, name>> if defined).
+| prettyIdString
+a| [[prettyIdString]] Pretty-identified string for identification in logs (with <<name, name>> if defined).
 
 ```
 // query name set
@@ -299,8 +308,8 @@ queryName [id = xyz, runId = abc]
 [id = xyz, runId = abc]
 ```
 
-| [[resolvedCheckpointRoot]] `resolvedCheckpointRoot`
-a| Qualified path of the checkpoint directory (as defined using <<checkpointRoot, checkpointRoot>> when `StreamExecution` is <<creating-instance, created>>).
+| resolvedCheckpointRoot
+a| [[resolvedCheckpointRoot]] Qualified path of the checkpoint directory (as defined using <<checkpointRoot, checkpointRoot>> when `StreamExecution` is <<creating-instance, created>>).
 
 [NOTE]
 ====
@@ -326,31 +335,31 @@ Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path
 
 NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for a Hadoop configuration.
 
-| [[runId]] `runId`
-| Current run id
+| runId
+| [[runId]] Current run id
 
-| [[sources]] `sources`
-| All link:spark-sql-streaming-Source.adoc[streaming Sources] in <<logicalPlan, logical query plan>> (that are the link:spark-sql-streaming-StreamingExecutionRelation.adoc#source[sources] from `StreamingExecutionRelation`).
+| sources
+| [[sources]] All link:spark-sql-streaming-Source.adoc[streaming Sources] in <<logicalPlan, logical query plan>> (that are the link:spark-sql-streaming-StreamingExecutionRelation.adoc#source[sources] from `StreamingExecutionRelation`).
 
-| `startLatch`
+| startLatch
 | [[startLatch]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
 
 Used when `StreamExecution` is requested to <<start, start>> to pause the main thread until `StreamExecution` was requested to <<runStream, run the streaming query>>.
 
-| [[state]] `state`
-a| Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the three different states a streaming query execution can be:
+| state
+a| [[state]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the three different states a streaming query execution can be:
 
 * `INITIALIZING` (default)
 * `ACTIVE` (after the first execution of <<runBatches, runBatches>>)
 * `TERMINATED`
 
-| [[streamDeathCause]] `streamDeathCause`
-| `StreamingQueryException`
+| streamDeathCause
+| [[streamDeathCause]] `StreamingQueryException`
 
-| [[streamMetadata]] `streamMetadata`
-| `StreamMetadata` from the `metadata` file from <<checkpointFile, checkpoint directory>>. If the `metadata` file is not available it is created (with a new random <<id, id>>).
+| streamMetadata
+| [[streamMetadata]] `StreamMetadata` from the `metadata` file from <<checkpointFile, checkpoint directory>>. If the `metadata` file is not available it is created (with a new random <<id, id>>).
 
-| `uniqueSources`
+| uniqueSources
 a| [[uniqueSources]] Unique link:spark-sql-streaming-Source.adoc[streaming data sources] in a streaming Dataset (after being collected as `StreamingExecutionRelation` from the corresponding <<logicalPlan, logical query plan>>).
 
 NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] is a leaf logical operator (i.e. `LogicalPlan`) that represents a streaming data source (and corresponds to a single link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] in <<analyzedPlan, analyzed logical query plan>> of a streaming Dataset).

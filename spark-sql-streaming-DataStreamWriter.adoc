@@ -1,6 +1,6 @@
 == [[DataStreamWriter]] DataStreamWriter -- Writing Datasets To Streaming Data Sinks
 
-`DataStreamWriter` is the <<methods, interface>> to describe how the result of executing a streaming query is written to a <<spark-sql-streaming-Sink.adoc#, streaming sink>>.
+`DataStreamWriter` is the <<methods, interface>> to describe when and what rows of a streaming query are sent out to the <<format, streaming sink>>.
 
 [[methods]]
 .DataStreamWriter's Methods
@@ -43,16 +43,16 @@ a| [[format]]
 format(source: String): DataStreamWriter[T]
 ----
 
-Specifies the format of the output (which is an output data source and indirectly specifies the link:spark-sql-streaming-Sink.adoc[streaming sink] to write the rows to)
+Specifies the <<spark-sql-streaming-Sink.adoc#, streaming sink>> (aka _output format_) that is the streaming output data source to write the rows to.
 
 Internally, `format` is referred to as a _source_ (as in the output data _source_).
 
-Recognized "special" output data sources (in the code):
+The following list are the streaming formats that are used when `DataStreamWriter` is requested to <<start, start execution of the streaming query>>:
 
 * `hive`
 * `memory`
 * <<foreach, foreach>>
-* `console`
+* <<foreachBatch, foreachBatch>>
 
 | <<option, option>>
 a|
@@ -222,7 +222,7 @@ The function that is used as the batch writer in the <<spark-sql-streaming-Forea
 | [[source]]
 
 | outputMode
-| `OutputMode.Append`
+| <<spark-sql-streaming-OutputMode.adoc#Append, OutputMode.Append>>
 | [[outputMode-property]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] of the streaming sink
 
 Set using <<outputMode, outputMode>> method.
@@ -252,13 +252,11 @@ outputMode(outputMode: String): DataStreamWriter[T]
 outputMode(outputMode: OutputMode): DataStreamWriter[T]
 ----
 
-`outputMode` specifies the link:spark-sql-streaming-OutputMode.adoc[output mode] of a streaming `Dataset`.
+`outputMode` specifies the link:spark-sql-streaming-OutputMode.adoc[output mode] of a streaming query, i.e.  what data is sent out to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in link:spark-sql-streaming-Source.adoc[streaming data sources].
 
-NOTE: When unspecified explicitly, link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode is the default.
+NOTE: When not defined explicitly, `outputMode` defaults to <<spark-sql-streaming-OutputMode.adoc#Append, Append>> output mode.
 
-`outputMode` can be a name or typed `OutputMode`.
-
-NOTE: link:spark-sql-streaming-OutputMode.adoc[Output mode] describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in link:spark-sql-streaming-Source.adoc[streaming data sources].
+`outputMode` can be specified by name or one of the <<spark-sql-streaming-OutputMode.adoc#, OutputMode>> values.
 
 === [[queryName]] Setting Query Name -- `queryName` method
 

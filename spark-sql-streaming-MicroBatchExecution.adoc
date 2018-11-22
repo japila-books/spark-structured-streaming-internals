@@ -472,3 +472,14 @@ You can find more information on `SparkListener` in https://jaceklaskowski.gitbo
 In *awaitBatchLock* code block (it is not a time-tracking section), `runBatch` acquires a lock on <<awaitProgressLock, awaitProgressLock>>, wakes up all waiting threads on <<awaitProgressLockCondition, awaitProgressLockCondition>> and immediatelly releases <<awaitProgressLock, awaitProgressLock>> lock.
 
 NOTE: <<awaitProgressLockCondition, awaitProgressLockCondition>> is used mainly when `StreamExecution` <<processAllAvailable, processAllAvailable>> (and also when `awaitOffset`, but that seems mainly for testing).
+
+=== [[isNewDataAvailable]] `isNewDataAvailable` Internal Method
+
+[source, scala]
+----
+isNewDataAvailable: Boolean
+----
+
+`isNewDataAvailable`...FIXME
+
+NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to <<runActivatedStream, runActivatedStream>> and <<constructNextBatch, constructNextBatch>>.

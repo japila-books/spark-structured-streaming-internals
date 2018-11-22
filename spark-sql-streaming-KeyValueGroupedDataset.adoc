@@ -66,50 +66,121 @@ The most prestigious use case of `KeyValueGroupedDataset` however is *stateful s
 
 [[operators]]
 .KeyValueGroupedDataset's Operators
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Operator
 | Description
 
-| <<agg, agg>>
-|
+| agg
+a| [[agg]]
 
-| <<cogroup, cogroup>>
-|
+[source, scala]
+----
+agg[U1](col1: TypedColumn[V, U1]): Dataset[(K, U1)]
+agg[U1, U2](
+  col1: TypedColumn[V, U1],
+  col2: TypedColumn[V, U2]): Dataset[(K, U1, U2)]
+agg[U1, U2, U3](
+  col1: TypedColumn[V, U1],
+  col2: TypedColumn[V, U2],
+  col3: TypedColumn[V, U3]): Dataset[(K, U1, U2, U3)]
+agg[U1, U2, U3, U4](
+  col1: TypedColumn[V, U1],
+  col2: TypedColumn[V, U2],
+  col3: TypedColumn[V, U3],
+  col4: TypedColumn[V, U4]): Dataset[(K, U1, U2, U3, U4)]
+----
 
-| <<count, count>>
-|
+| cogroup
+a| [[cogroup]]
 
-| <<flatMapGroups, flatMapGroups>>
-|
+[source, scala]
+----
+cogroup[U, R : Encoder](
+  other: KeyValueGroupedDataset[K, U])(
+  f: (K, Iterator[V], Iterator[U]) => TraversableOnce[R]): Dataset[R]
+----
 
-| [[flatMapGroupsWithState]] link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState]
-a| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
+| count
+a| [[count]]
 
-NOTE: The difference between `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> is the state function that generates zero or more elements (that are in turn the rows in the result `Dataset`).
+[source, scala]
+----
+count(): Dataset[(K, Long)]
+----
 
-| <<keyAs, keyAs>>
-|
+| flatMapGroups
+a| [[flatMapGroups]]
 
-| <<keys, keys>>
-|
+[source, scala]
+----
+flatMapGroups[U : Encoder](f: (K, Iterator[V]) => TraversableOnce[U]): Dataset[U]
+----
 
-| <<mapGroups, mapGroups>>
-|
+| link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState]
+a| [[flatMapGroupsWithState]]
 
-| [[mapGroupsWithState]] link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState]
-a| Creates a `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
+[source, scala]
+----
+flatMapGroupsWithState[S: Encoder, U: Encoder](
+  outputMode: OutputMode,
+  timeoutConf: GroupStateTimeout)(
+  func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
+----
+
+Creates a new `Dataset` with <<spark-sql-streaming-FlatMapGroupsWithState.adoc#apply, FlatMapGroupsWithState>> logical operator
+
+NOTE: The difference between `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> is the state function that generates zero or more elements (that are in turn the rows in the result streaming `Dataset`).
+
+| keyAs
+a| [[keyAs]]
+
+[source, scala]
+----
+keys: Dataset[K]
+keyAs[L : Encoder]: KeyValueGroupedDataset[L, V]
+----
+
+| mapGroups
+a| [[mapGroups]]
+
+[source, scala]
+----
+mapGroups[U : Encoder](f: (K, Iterator[V]) => U): Dataset[U]
+----
+
+| link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState]
+a| [[mapGroupsWithState]]
+
+[source, scala]
+----
+mapGroupsWithState[S: Encoder, U: Encoder](
+  func: (K, Iterator[V], GroupState[S]) => U): Dataset[U]
+mapGroupsWithState[S: Encoder, U: Encoder](
+  timeoutConf: GroupStateTimeout)(
+  func: (K, Iterator[V], GroupState[S]) => U): Dataset[U]
+----
+
+Creates a new `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
 
 NOTE: The difference between `mapGroupsWithState` and <<flatMapGroupsWithState, flatMapGroupsWithState>> is the state function that generates exactly one element (that is in turn the row in the result `Dataset`).
 
-| <<mapValues, mapValues>>
-|
+| mapValues
+a| [[mapValues]]
 
-| <<queryExecution, queryExecution>>
-|
+[source, scala]
+----
+mapValues[W : Encoder](func: V => W): KeyValueGroupedDataset[K, W]
+----
 
-| <<reduceGroups, reduceGroups>>
-|
+| reduceGroups
+a| [[reduceGroups]]
+
+[source, scala]
+----
+reduceGroups(f: (V, V) => V): Dataset[(K, V)]
+----
+
 |===
 
 === [[creating-instance]] Creating KeyValueGroupedDataset Instance
