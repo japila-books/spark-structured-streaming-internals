@@ -108,8 +108,6 @@
 
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution of Streaming Datasets]
 
-. link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
-
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus -- Notification Bus for Streaming Events]
 
 === Logical Operators
@@ -126,6 +124,10 @@
 . link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator for Accumulating Event Time Watermark]
 .. link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
 . link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec Unary Physical Operator]
+
+. link:spark-sql-streaming-StatefulOperator.adoc[StatefulOperator Contract -- Physical Operators That Read or Write State]
+.. link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
+
 . link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates]
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates]
 .. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
@@ -162,7 +164,9 @@
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
-.. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
+
+. link:spark-sql-streaming-StateStoreReader.adoc[StateStoreReader]
+. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
 
 . link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
