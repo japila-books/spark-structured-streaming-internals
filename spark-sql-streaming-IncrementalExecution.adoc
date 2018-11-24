@@ -89,3 +89,14 @@ NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExec
 * [[offsetSeqMetadata]] link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
 `IncrementalExecution` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+
+[source, scala]
+----
+shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
+----
+
+`shouldRunAnotherBatch`...FIXME
+
+NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>>.

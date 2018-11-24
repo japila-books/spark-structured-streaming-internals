@@ -1,0 +1,14 @@
+== [[StreamingGlobalLimitExec]] StreamingGlobalLimitExec
+
+`StreamingGlobalLimitExec` is...FIXME
+
+=== [[doExecute]] Executing StreamingGlobalLimitExec -- `doExecute` Method
+
+[source, scala]
+----
+doExecute(): RDD[InternalRow]
+----
+
+`doExecute`...FIXME
+
+NOTE: `doExecute` is used when...FIXME

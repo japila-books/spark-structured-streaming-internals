@@ -316,7 +316,7 @@ DEBUG StreamExecution: Starting Trigger Calculation
 
 NOTE: `startTrigger` is used exclusively when `StreamExecution` starts link:spark-sql-streaming-StreamExecution.adoc#runStream[running batches] (as part of link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] executing a batch runner).
 
-=== [[finishTrigger]] Finishing Trigger (by Updating Progress and Marking Current Status As Trigger Inactive) -- `finishTrigger` Method
+=== [[finishTrigger]] Finishing Trigger (Updating Progress and Marking Current Status As Trigger Inactive) -- `finishTrigger` Method
 
 [source, scala]
 ----
@@ -351,6 +351,8 @@ If there was any data (using the input `hasNewData` flag), `finishTrigger` reset
 Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updates query progress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
 
 In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, StreamingQueryStatus>> (i.e. sets it to `false`).
+
+NOTE: `finishTrigger` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>.
 
 === [[reportTimeTaken]] Tracking and Recording Execution Time -- `reportTimeTaken` Method
 
@@ -409,3 +411,14 @@ extractExecutionStats(hasNewData: Boolean): ExecutionStats
 `extractExecutionStats`...FIXME
 
 NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finishTrigger>>.
+
+=== [[extractStateOperatorMetrics]] `extractStateOperatorMetrics` Internal Method
+
+[source, scala]
+----
+extractStateOperatorMetrics(hasNewData: Boolean): Seq[StateOperatorProgress]
+----
+
+`extractStateOperatorMetrics`...FIXME
+
+NOTE: `extractStateOperatorMetrics` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.

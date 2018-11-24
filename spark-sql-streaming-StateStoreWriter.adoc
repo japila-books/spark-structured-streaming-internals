@@ -1,35 +1,57 @@
-== [[StateStoreWriter]] StateStoreWriter -- Recording Metrics For Writing to StateStore
+== [[StateStoreWriter]] StateStoreWriter Contract -- Physical Operators That Write to StateStore
 
-`StateStoreWriter` is a contract for physical operators (i.e. `SparkPlan`) to record <<metrics, metrics>> when writing to a link:spark-sql-streaming-StateStore.adoc[StateStore].
+`StateStoreWriter` is the extension of the <<spark-sql-streaming-StatefulOperator.adoc#, StatefulOperator Contract>> for <<implementations, physical operators>> that write to a state store and collect the <<metrics, write metrics>> for <<getProgress, execution progress reporting>>.
 
 [[metrics]]
 .StateStoreWriter's SQLMetrics
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| [[numOutputRows]] `numOutputRows`
-| Number of output rows
+| numOutputRows
+| [[numOutputRows]] Number of output rows
 
-| [[numTotalStateRows]] `numTotalStateRows`
-| number of total state rows
+| numTotalStateRows
+| [[numTotalStateRows]] number of total state rows
 
-| [[numUpdatedStateRows]] `numUpdatedStateRows`
-| number of updated state rows
+| numUpdatedStateRows
+| [[numUpdatedStateRows]] number of updated state rows
 
-| [[allUpdatesTimeMs]] `allUpdatesTimeMs`
-| total time to update rows
+| allUpdatesTimeMs
+| [[allUpdatesTimeMs]] total time to update rows
 
-| [[allRemovalsTimeMs]] `allRemovalsTimeMs`
-| total time to remove rows
+| allRemovalsTimeMs
+| [[allRemovalsTimeMs]] total time to remove rows
 
-| [[commitTimeMs]] `commitTimeMs`
-| time to commit changes
+| commitTimeMs
+| [[commitTimeMs]] time to commit changes
 
-| [[stateMemory]] `stateMemory`
-| memory used by state (store)
+| stateMemory
+| [[stateMemory]] memory used by state (store)
+|===
 
+[[implementations]]
+.StateStoreWriters (Direct Implementations)
+[cols="1,2",options="header",width="100%"]
+|===
+| StateStoreWriter
+| Description
+
+| <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+| [[FlatMapGroupsWithStateExec]]
+
+| <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+| [[StateStoreSaveExec]]
+
+| <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+| [[StreamingDeduplicateExec]]
+
+| <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
+| [[StreamingGlobalLimitExec]]
+
+| <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
+| [[StreamingSymmetricHashJoinExec]]
 |===
 
 === [[setStoreMetrics]] Setting StateStore-Specific Metrics for Physical Operator -- `setStoreMetrics` Method
@@ -57,3 +79,47 @@ setStoreMetrics(store: StateStore): Unit
 
 * `StreamingDeduplicateExec` link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[is executed]
 ====
+
+=== [[getProgress]] `getProgress` Method
+
+[source, scala]
+----
+getProgress(): StateOperatorProgress
+----
+
+`getProgress`...FIXME
+
+NOTE: `getProgress` is used exclusively when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#extractStateOperatorMetrics, extractStateOperatorMetrics>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
+
+=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+
+[source, scala]
+----
+shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
+----
+
+`shouldRunAnotherBatch` is disabled by default.
+
+NOTE: `shouldRunAnotherBatch` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, shouldRunAnotherBatch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
+
+=== [[stateStoreCustomMetrics]] `stateStoreCustomMetrics` Internal Method
+
+[source, scala]
+----
+stateStoreCustomMetrics: Map[String, SQLMetric]
+----
+
+`stateStoreCustomMetrics`...FIXME
+
+NOTE: `stateStoreCustomMetrics` is used when `StateStoreWriter` is requested for the <<metrics, metrics>> and <<getProgress, getProgress>>.
+
+=== [[timeTakenMs]] `timeTakenMs` Method
+
+[source, scala]
+----
+timeTakenMs(body: => Unit): Long
+----
+
+`timeTakenMs`...FIXME
+
+NOTE: `timeTakenMs` is used when...FIXME

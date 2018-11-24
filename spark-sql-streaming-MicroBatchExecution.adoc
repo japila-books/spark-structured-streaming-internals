@@ -145,14 +145,7 @@ constructNextBatch(): Unit
 
 . <<constructNextBatch-hasNewData-false, No data is available>>
 
-[NOTE]
-====
-`constructNextBatch` is used when `StreamExecution`:
-
-* <<runBatches, Runs streaming batches>>
-
-* <<populateStartOffsets, Populates the start offsets>>
-====
+NOTE: `constructNextBatch` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run the activated streaming query>>.
 
 ==== [[constructNextBatch-hasNewData]] Checking Whether New Data Is Available (by Requesting New Offsets from Sources)
 

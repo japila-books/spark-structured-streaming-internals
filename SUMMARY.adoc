@@ -125,14 +125,17 @@
 .. link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
 . link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec Unary Physical Operator]
 
-. link:spark-sql-streaming-StatefulOperator.adoc[StatefulOperator Contract -- Physical Operators That Read or Write State]
+. link:spark-sql-streaming-StatefulOperator.adoc[StatefulOperator Contract -- Physical Operators That Read or Write to StateStore]
 .. link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
+.. link:spark-sql-streaming-StateStoreReader.adoc[StateStoreReader]
+.. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter Contract -- Physical Operators That Write to StateStore]
 
 . link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates]
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates]
 .. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
 .. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
 . link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication]
+. link:spark-sql-streaming-StreamingGlobalLimitExec.adoc[StreamingGlobalLimitExec]
 . link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec Leaf Physical Operator]
 . link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc[StreamingSymmetricHashJoinExec]
 
@@ -164,9 +167,6 @@
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
-
-. link:spark-sql-streaming-StateStoreReader.adoc[StateStoreReader]
-. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter -- Recording Metrics For Writing to StateStore]
 
 . link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]

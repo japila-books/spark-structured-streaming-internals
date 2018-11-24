@@ -1,4 +1,4 @@
-== [[StatefulOperator]] StatefulOperator Contract -- Physical Operators That Read or Write State
+== [[StatefulOperator]] StatefulOperator Contract -- Physical Operators That Read or Write to StateStore
 
 `StatefulOperator` is the <<contract, base>> of <<extensions, physical operators>> that <<StateStoreReader, read>> or <<StateStoreWriter, write>> state (described by <<stateInfo, stateInfo>>).
 
