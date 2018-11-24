@@ -1,4 +1,4 @@
-== [[StateStoreWriter]] StateStoreWriter Contract -- Physical Operators That Write to StateStore
+== [[StateStoreWriter]] StateStoreWriter Contract -- Stateful Physical Operators That Write to StateStore
 
 `StateStoreWriter` is the extension of the <<spark-sql-streaming-StatefulOperator.adoc#, StatefulOperator Contract>> for <<implementations, physical operators>> that write to a state store and collect the <<metrics, write metrics>> for <<getProgress, execution progress reporting>>.
 

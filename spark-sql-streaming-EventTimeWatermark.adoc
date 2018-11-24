@@ -30,9 +30,9 @@ EventTimeWatermark timestamp#10: timestamp, interval 30 seconds
 
 [[watermarkDelayMs]]
 [[delayKey]]
-`EventTimeWatermark` uses `spark.watermarkDelayMs` key (in `Metadata` in <<output, output>>) to hold the event-time watermark delay.
+`EventTimeWatermark` uses `spark.watermarkDelayMs` key (in the `Metadata` of the <<output, output attributes>>) to hold the event-time watermark delay (as a so-called _watermark attribute_ or _eventTime watermark_).
 
-NOTE: The *event-time watermark delay* is used to calculate the difference between the event time of an event (that is modelled as a row in the Dataset for a streaming batch) and the time in the past.
+NOTE: The *event-time watermark delay* is used to calculate the difference between the event time of an event (that is modeled as a row in the Dataset for a streaming batch) and the time in the past.
 
 [NOTE]
 ====
@@ -65,9 +65,9 @@ NOTE: `EventTimeWatermark` is converted (aka _planned_) to link:spark-sql-stream
 output: Seq[Attribute]
 ----
 
-NOTE: `output` is a part of the `QueryPlan` Contract to describe the attributes of (the schema of) the output.
+NOTE: `output` is part of the `QueryPlan` Contract to describe the attributes of (the schema of) the output.
 
-`output` finds <<eventTime, eventTime>> column in the <<child, child>>'s output schema and updates the `Metadata` of the column with <<delayKey, spark.watermarkDelayMs>> key and the milliseconds for the delay.
+`output` finds <<eventTime, eventTime>> column in the output schema of the <<child, child>> logical operator and updates the `Metadata` of the column with <<delayKey, spark.watermarkDelayMs>> key and the milliseconds for the delay.
 
 `output` removes <<delayKey, spark.watermarkDelayMs>> key from the other columns.
 
@@ -89,4 +89,4 @@ root
 
 * [[eventTime]] Event time column
 * [[delay]] Delay `CalendarInterval`
-* [[child]] Child logical plan
+* [[child]] Child logical operator

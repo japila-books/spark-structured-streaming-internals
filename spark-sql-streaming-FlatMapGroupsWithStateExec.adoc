@@ -1,8 +1,18 @@
 == [[FlatMapGroupsWithStateExec]] FlatMapGroupsWithStateExec Unary Physical Operator
 
-`FlatMapGroupsWithStateExec` is a unary physical operator (aka `UnaryExecNode`) that is <<creating-instance, created>> when link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy] execution planning strategy plans link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator for execution.
+`FlatMapGroupsWithStateExec` is a unary physical operator that represents a <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator at execution time.
 
-NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator is created as the result of link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operator.
+NOTE: A unary physical operator is a physical operator with a <<child, single child physical operator>>.
+
+`FlatMapGroupsWithStateExec` is <<creating-instance, created>> when link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy] execution planning strategy is requested to plan a streaming query with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators for execution.
+
+NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator is created as the result of link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[KeyValueGroupedDataset.flatMapGroupsWithState] operator.
+
+`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
+
+`FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator with the <<outputObjAttr, output object attribute>>.
+
+`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-WatermarkSupport.adoc#, physical operator that supports streaming watermark>>.
 
 [source, scala]
 ----
@@ -89,26 +99,34 @@ When <<doExecute, executed>>, `FlatMapGroupsWithStateExec` requires that the opt
 CAUTION: FIXME Where are the optional values defined?
 
 [[internal-registries]]
-.FlatMapGroupsWithStateExec's Internal Registries and Counters (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
+.FlatMapGroupsWithStateExec's Internal Registries and Counters
+[cols="1m,2",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| [[isTimeoutEnabled]] `isTimeoutEnabled`
-|
+| isTimeoutEnabled
+| [[isTimeoutEnabled]]
 
-| [[stateAttributes]] `stateAttributes`
-|
+| stateAttributes
+| [[stateAttributes]]
 
-| [[stateDeserializer]] `stateDeserializer`
-|
+| stateDeserializer
+| [[stateDeserializer]]
 
-| [[stateSerializer]] `stateSerializer`
-|
+| stateManager
+| [[stateManager]]
 
-| [[timestampTimeoutAttribute]] `timestampTimeoutAttribute`
-|
+| stateSerializer
+| [[stateSerializer]]
+
+| timestampTimeoutAttribute
+| [[timestampTimeoutAttribute]]
+
+| watermarkPresent
+| [[watermarkPresent]] Flag that says whether the <<child, child>> physical operator has a <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> (among the output attributes).
+
+Used exclusively when `InputProcessor` is requested to `callFunctionAndUpdateState`
 |===
 
 [TIP]
@@ -126,7 +144,14 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 
 === [[keyExpressions]] `keyExpressions` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+keyExpressions: Seq[Attribute]
+----
+
+NOTE: `keyExpressions` is part of the <<spark-sql-streaming-WatermarkSupport.adoc#keyExpressions, WatermarkSupport Contract>> to...FIXME.
+
+`keyExpressions` simply returns the <<groupingAttributes, grouping attributes>>.
 
 === [[doExecute]] Executing FlatMapGroupsWithStateExec -- `doExecute` Method
 
@@ -135,7 +160,7 @@ CAUTION: FIXME
 doExecute(): RDD[InternalRow]
 ----
 
-NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
+NOTE: `doExecute` is part of the `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
 
 Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
 
@@ -153,18 +178,30 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 
 `FlatMapGroupsWithStateExec` takes the following when created:
 
-* [[func]] State function of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`
-* [[keyDeserializer]] Key deserializer Catalyst expression
-* [[valueDeserializer]] Value deserializer Catalyst expression
+* [[func]] State function (`(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
+* [[keyDeserializer]] Key deserializer expression
+* [[valueDeserializer]] Value deserializer expression
 * [[groupingAttributes]] Grouping attributes (as used for grouping in link:spark-sql-streaming-KeyValueGroupedDataset.adoc#groupingAttributes[KeyValueGroupedDataset] for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
 * [[dataAttributes]] Data attributes
-* [[outputObjAttr]] Output object attribute
-* [[stateInfo]] Optional link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
-* [[stateEncoder]] State `ExpressionEncoder`
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode]
-* [[timeoutConf]] link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
-* [[batchTimestampMs]] Optional `batchTimestampMs`
-* [[eventTimeWatermark]] Optional event time watermark
+* [[outputObjAttr]] Output object attribute (that is the reference to the single object field this operator outputs)
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[stateEncoder]] State encoder (`ExpressionEncoder[Any]`)
+* [[stateFormatVersion]] State format version
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
+* [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
+* [[batchTimestampMs]] `batchTimestampMs`
+* [[eventTimeWatermark]] Event time watermark
 * [[child]] Child physical operator
 
 `FlatMapGroupsWithStateExec` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+
+[source, scala]
+----
+shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
+----
+
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to...FIXME.
+
+`shouldRunAnotherBatch`...FIXME

@@ -1,4 +1,4 @@
-== [[WatermarkSupport]] WatermarkSupport Contract for Streaming Watermark in Unary Physical Operators
+== [[WatermarkSupport]] WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support
 
 `WatermarkSupport` is the <<contract, contract>> for unary physical operators (i.e. `UnaryExecNode`) with streaming watermark support.
 
@@ -76,7 +76,7 @@ Used in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Pr
 Used also when link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec] and link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] physical operators are executed.
 |===
 
-=== [[removeKeysOlderThanWatermark]] Removing Keys Older Than Watermark From StateStore -- `removeKeysOlderThanWatermark` Internal Method
+=== [[removeKeysOlderThanWatermark]][[removeKeysOlderThanWatermark-StateStore]] Removing Keys From StateStore Older Than Watermark -- `removeKeysOlderThanWatermark` Method
 
 [source, scala]
 ----
@@ -87,11 +87,17 @@ removeKeysOlderThanWatermark(store: StateStore): Unit
 
 `removeKeysOlderThanWatermark` then uses <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to link:spark-sql-streaming-StateStore.adoc#remove[remove matching rows from the store].
 
-[NOTE]
-====
-`removeKeysOlderThanWatermark` is used when:
+NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StreamingDeduplicateExec` physical operator is <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, executed>>.
 
-* `StateStoreSaveExec` link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Update[is executed] (for link:spark-sql-streaming-OutputMode.adoc#Update[Update] output mode only)
+=== [[removeKeysOlderThanWatermark]] `removeKeysOlderThanWatermark` Method
 
-* `StreamingDeduplicateExec` link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[is executed]
-====
+[source, scala]
+----
+removeKeysOlderThanWatermark(
+  storeManager: StreamingAggregationStateManager,
+  store: StateStore): Unit
+----
+
+`removeKeysOlderThanWatermark`...FIXME
+
+NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StateStoreSaveExec` physical operator is <<spark-sql-streaming-StateStoreSaveExec.adoc#doExecute, executed>>.

@@ -197,7 +197,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamingDeduplicateExec=I
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
-=== [[doExecute]] Executing StreamingDeduplicateExec -- `doExecute` Method
+=== [[doExecute]] Executing Physical Operator -- `doExecute` Method
 
 [source, scala]
 ----

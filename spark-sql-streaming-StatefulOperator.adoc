@@ -31,5 +31,5 @@ The <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorState
 | [[StateStoreReader]]
 
 | <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>>
-| [[StateStoreWriter]]
+| [[StateStoreWriter]] Physical operator that writes to a state store and collects the write metrics for execution progress reporting
 |===
