@@ -1,12 +1,12 @@
-== [[StateStore]] StateStore Contract -- Kay-Value Store for Streaming Aggregations
+== [[StateStore]] StateStore Contract -- Kay-Value Store for State Management
 
-`StateStore` is the <<contract, contract>> of a <<version, versioned>> and fault-tolerant key-value store for persisting state of running aggregates across streaming batches (for link:spark-sql-streaming-Dataset-operators.adoc[streaming aggregations]).
-
-TIP: Read the motivation and design in https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit[State Store for Streaming Aggregations].
+`StateStore` is the <<contract, contract>> of a <<version, versioned>> and possibly fault-tolerant <<implementations, key-value stores>> for state management (e.g. of <<spark-sql-streaming-Dataset-operators.adoc#, streaming aggregations>>).
 
 `StateStore` describes a key-value store that lives on every executor (across the nodes in a Spark cluster) for persistent keyed aggregates.
 
 `StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for state store identification).
+
+TIP: Read the motivation and design in https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit[State Store for Streaming Aggregations].
 
 [[contract]]
 .StateStore Contract
@@ -23,6 +23,14 @@ a| [[abort]]
 abort(): Unit
 ----
 
+Aborts the state changes
+
+Used when:
+
+* `StateStoreOps` implicit class is requested to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
+
+* `StateStoreHandler` is requested to `abortIfNeeded` (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
+
 | commit
 a| [[commit]]
 
@@ -31,6 +39,20 @@ a| [[commit]]
 commit(): Long
 ----
 
+Commits the state changes
+
+Used when:
+
+* `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>> (after all rows in a partition have been processed successfully)
+
+* `StreamingDeduplicateExec` physical operator is <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, doExecute>> (after all rows in a partition have been processed successfully)
+
+* `StreamingGlobalLimitExec` physical operator is <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#doExecute, doExecute>> (after all rows in a partition have been processed successfully)
+
+* `StreamingAggregationStateManagerBaseImpl` is requested to `commit`
+
+* `StateStoreHandler` is requested to `commit`
+
 | get
 a| [[get]]
 
@@ -38,8 +60,6 @@ a| [[get]]
 ----
 get(key: UnsafeRow): UnsafeRow
 ----
-
-Used exclusively when `StateStoreRDD` link:spark-sql-streaming-StateStoreRDD.adoc#compute[is executed].
 
 | getRange
 a| [[getRange]]
@@ -57,6 +77,12 @@ a| [[hasCommitted]]
 hasCommitted: Boolean
 ----
 
+Used when:
+
+* `StateStoreOps` implicit class is requested to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (when a task finishes, possibly with an error, to check whether to <<abort, abort>> state updates)
+
+* `StateStoreHandler` is requested to `abortIfNeeded` (when a task finishes, possibly with an error, to check whether to <<abort, abort>> state updates)
+
 | id
 a| [[id]]
 
@@ -64,6 +90,14 @@ a| [[id]]
 ----
 id: StateStoreId
 ----
+
+The ID of the state store (for logging purposes only)
+
+Used when:
+
+* `HDFSBackedStateStore` state store is requested for the string identifier (`toString`)
+
+* `StateStoreHandler` is requested to `abortIfNeeded` and `getStateStore`
 
 | iterator
 a| [[iterator]]
@@ -81,23 +115,31 @@ a| [[metrics]]
 metrics: StateStoreMetrics
 ----
 
+Used when:
+
+* `StateStoreWriter` stateful physical operator is requested to <<spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics, setStoreMetrics>>
+
+* `StateStoreHandler` is requested to `commit` and for the `metrics`
+
 | put
-a| [[put]] Stores a value for a non-null key (both of `UnsafeRow` type)
+a| [[put]]
 
 [source, scala]
 ----
 put(key: UnsafeRow, value: UnsafeRow): Unit
 ----
 
+Stores a given value for a given non-null key
+
 Used when:
 
-* `StateStoreSaveExec` is link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[executed] (and...FIXME)
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>> physical operators are executed
 
-* `StreamingDeduplicateExec` is link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[executed] (and...FIXME)
+* `StateManagerImplBase` is requested to `putState`
 
-* `StateStoreUpdater` attempts to write the current state when rows are processed (which is when their iterator is fully consumed).
+* `StreamingAggregationStateManagerImplV1` and `StreamingAggregationStateManagerImplV2` are requested to `put`
 
-CAUTION: FIXME Review StateStoreUpdater.callFunctionAndUpdateState
+* `KeyToNumValuesStore` and `KeyWithIndexToValueStore` are requested to `put`
 
 | remove
 a| [[remove]]
@@ -107,6 +149,20 @@ a| [[remove]]
 remove(key: UnsafeRow): Unit
 ----
 
+Removes a given key from the state store
+
+Used when:
+
+* Physical operators with `WatermarkSupport` are requested to <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark, removeKeysOlderThanWatermark>>
+
+* `StateManagerImplBase` is requested to `removeState`
+
+* `StreamingAggregationStateManagerBaseImpl` is requested to `remove` a key
+
+* `KeyToNumValuesStore` is requested to `remove` a key
+
+* `KeyWithIndexToValueStore` is requested to `remove` and `removeAllValues`
+
 | version
 a| [[version]]
 
@@ -115,6 +171,25 @@ a| [[version]]
 version: Long
 ----
 
+Used when:
+
+* `HDFSBackedStateStore` state store is requested for <<spark-sql-streaming-HDFSBackedStateStore.adoc#newVersion, newVersion>>
+
+* `MemoryStateStore` state store is requested to `commit`
+|===
+
+[[implementations]]
+.StateStores
+[cols="1,2",options="header",width="100%"]
+|===
+| StateStore
+| Description
+
+| <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>>
+| [[HDFSBackedStateStore]] `StateStore` that uses a HDFS-compatible file system for state persistence
+
+| <<spark-sql-streaming-MemoryStateStore.adoc#, MemoryStateStore>>
+| [[MemoryStateStore]]
 |===
 
 [[internal-registries]]

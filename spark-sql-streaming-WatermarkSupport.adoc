@@ -89,7 +89,7 @@ removeKeysOlderThanWatermark(store: StateStore): Unit
 
 NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StreamingDeduplicateExec` physical operator is <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, executed>>.
 
-=== [[removeKeysOlderThanWatermark]] `removeKeysOlderThanWatermark` Method
+=== [[removeKeysOlderThanWatermark-StreamingAggregationStateManager-store]] `removeKeysOlderThanWatermark` Method
 
 [source, scala]
 ----

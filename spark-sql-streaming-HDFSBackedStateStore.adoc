@@ -1,4 +1,4 @@
-== [[HDFSBackedStateStore]] HDFSBackedStateStore
+== [[HDFSBackedStateStore]] HDFSBackedStateStore -- State Store on HDFS-Compatible File System
 
 `HDFSBackedStateStore` is a link:spark-sql-streaming-StateStore.adoc[StateStore] that uses a HDFS-compatible file system for versioned state persistence.
 
@@ -10,27 +10,37 @@
 * `COMMITTED`
 * `ABORTED`
 
+[[toString]]
+When requested for the string identifier, `HDFSBackedStateStore`...FIXME
+
 [[internal-registries]]
 .HDFSBackedStateStore's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| [[newVersion]] `newVersion`
-|
+| newVersion
+a| [[newVersion]]
 
-| [[tempDeltaFile]] `tempDeltaFile`
-|
+[source, scala]
+----
+newVersion: Long
+----
 
-| [[state]] `state`
-|
+Used exclusively when `HDFSBackedStateStore` is requested for the <<finalDeltaFile, finalDeltaFile>>, to <<commit, commit>> and <<abort, abort>>
 
-| [[tempDeltaFileStream]] `tempDeltaFileStream`
-|
+| tempDeltaFile
+| [[tempDeltaFile]]
 
-| [[finalDeltaFile]] `finalDeltaFile`
-|
+| state
+| [[state]]
+
+| tempDeltaFileStream
+| [[tempDeltaFileStream]]
+
+| finalDeltaFile
+| [[finalDeltaFile]]
 |===
 
 === [[writeUpdateToDeltaFile]] `writeUpdateToDeltaFile` Internal Method
@@ -65,16 +75,33 @@ Cannot put after already committed or aborted
 ```
 ====
 
-=== [[commit]] `commit` Method
+=== [[commit]] Committing State Changes -- `commit` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+commit(): Long
+----
+
+NOTE: `commit` is part of the <<spark-sql-streaming-StateStore.adoc#commit, StateStore Contract>> to commit the state changes.
+
+`commit`...FIXME
 
 === [[creating-instance]] Creating HDFSBackedStateStore Instance
 
 `HDFSBackedStateStore` takes the following when created:
 
 * [[version]] Version
-
 * [[mapToUpdate]] Key-value registry of `UnsafeRows` (as Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html[java.util.concurrent.ConcurrentHashMap])
 
 `HDFSBackedStateStore` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[abort]] Aborting State Changes -- `abort` Method
+
+[source, scala]
+----
+abort(): Unit
+----
+
+NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.adoc#abort, StateStore Contract>> to abort the state changes.
+
+`abort`...FIXME

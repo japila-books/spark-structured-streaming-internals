@@ -165,13 +165,15 @@
 
 == Managing State in Stateful Streaming Aggregations
 
-. link:spark-sql-streaming-StateStore.adoc[StateStore Contract -- Kay-Value Store for Streaming Aggregations]
+. link:spark-sql-streaming-StateStore.adoc[StateStore Contract -- Kay-Value Store for State Management]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 
-. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
+. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
+
+. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
 
 . link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)]
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
