@@ -123,7 +123,9 @@
 
 . link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator for Accumulating Event Time Watermark]
 .. link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
+
 . link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec Unary Physical Operator]
+.. link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]
 
 . link:spark-sql-streaming-StatefulOperator.adoc[StatefulOperator Contract -- Physical Operators That Read or Write to StateStore]
 .. link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
@@ -163,7 +165,7 @@
 
 == Managing State in Stateful Streaming Aggregations
 
-. link:spark-sql-streaming-StateStore.adoc[StateStore -- Streaming Aggregation State Management]
+. link:spark-sql-streaming-StateStore.adoc[StateStore Contract -- Kay-Value Store for Streaming Aggregations]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]

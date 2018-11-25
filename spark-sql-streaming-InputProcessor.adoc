@@ -1,0 +1,44 @@
+== [[InputProcessor]] InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator
+
+`InputProcessor` is a helper class to manage the state store of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
+
+`InputProcessor` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>> (and uses `InputProcessor` for the storeUpdateFunction while mapping over partitions with a state store).
+
+[[store]]
+`InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> when created.
+
+=== [[processNewData]] `processNewData` Method
+
+[source, scala]
+----
+processNewData(dataIter: Iterator[InternalRow]): Iterator[InternalRow]
+----
+
+`processNewData`...FIXME
+
+NOTE: `processNewData` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>>.
+
+=== [[processTimedOutState]] `processTimedOutState` Method
+
+[source, scala]
+----
+processTimedOutState(): Iterator[InternalRow]
+----
+
+`processTimedOutState`...FIXME
+
+NOTE: `processTimedOutState` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>>.
+
+=== [[callFunctionAndUpdateState]] `callFunctionAndUpdateState` Internal Method
+
+[source, scala]
+----
+callFunctionAndUpdateState(
+  stateData: StateData,
+  valueRowIter: Iterator[InternalRow],
+  hasTimedOut: Boolean): Iterator[InternalRow]
+----
+
+`callFunctionAndUpdateState`...FIXME
+
+NOTE: `callFunctionAndUpdateState` is used exclusively when `InputProcessor` is requested to <<processNewData, processNewData>> and <<processTimedOutState, processTimedOutState>>.

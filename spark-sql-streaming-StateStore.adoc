@@ -1,67 +1,93 @@
-== [[StateStore]] StateStore -- Streaming Aggregation State Management
+== [[StateStore]] StateStore Contract -- Kay-Value Store for Streaming Aggregations
 
-`StateStore` is the <<contract, contract>> of a versioned and fault-tolerant key-value store for persisting state of running aggregates across streaming batches (for link:spark-sql-streaming-Dataset-operators.adoc[aggregate operations] on streaming Datasets).
+`StateStore` is the <<contract, contract>> of a <<version, versioned>> and fault-tolerant key-value store for persisting state of running aggregates across streaming batches (for link:spark-sql-streaming-Dataset-operators.adoc[streaming aggregations]).
 
 TIP: Read the motivation and design in https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit[State Store for Streaming Aggregations].
 
 `StateStore` describes a key-value store that lives on every executor (across the nodes in a Spark cluster) for persistent keyed aggregates.
 
-`StateStore` is identified with the aggregating operator id and the partition id.
+`StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for state store identification).
 
 [[contract]]
-[source, scala]
-----
-package org.apache.spark.sql.execution.streaming.state
-
-trait StateStore {
-  def abort(): Unit
-  def commit(): Long
-  def get(key: UnsafeRow): UnsafeRow
-  def getRange(start: Option[UnsafeRow], end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
-  def hasCommitted: Boolean
-  def id: StateStoreId
-  def iterator(): Iterator[UnsafeRowPair]
-  def metrics: StateStoreMetrics
-  def put(key: UnsafeRow, value: UnsafeRow): Unit
-  def remove(key: UnsafeRow): Unit
-  def version: Long
-}
-----
-
 .StateStore Contract
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Method
 | Description
 
-| [[abort]] `abort`
-|
+| abort
+a| [[abort]]
 
-| [[commit]] `commit`
-|
+[source, scala]
+----
+abort(): Unit
+----
 
-| [[get]] `get`
-|
+| commit
+a| [[commit]]
+
+[source, scala]
+----
+commit(): Long
+----
+
+| get
+a| [[get]]
+
+[source, scala]
+----
+get(key: UnsafeRow): UnsafeRow
+----
 
 Used exclusively when `StateStoreRDD` link:spark-sql-streaming-StateStoreRDD.adoc#compute[is executed].
 
-| [[getRange]] `getRange`
-|
+| getRange
+a| [[getRange]]
 
-| [[hasCommitted]] `hasCommitted`
-|
+[source, scala]
+----
+getRange(start: Option[UnsafeRow], end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
+----
 
-| [[id]] `id`
-|
+| hasCommitted
+a| [[hasCommitted]]
 
-| [[iterator]] `iterator`
-|
+[source, scala]
+----
+hasCommitted: Boolean
+----
 
-| [[metrics]] `metrics`
-|
+| id
+a| [[id]]
 
-| [[put]] `put`
-a| Stores a value for a non-null key (both of `UnsafeRow` type)
+[source, scala]
+----
+id: StateStoreId
+----
+
+| iterator
+a| [[iterator]]
+
+[source, scala]
+----
+iterator(): Iterator[UnsafeRowPair]
+----
+
+| metrics
+a| [[metrics]]
+
+[source, scala]
+----
+metrics: StateStoreMetrics
+----
+
+| put
+a| [[put]] Stores a value for a non-null key (both of `UnsafeRow` type)
+
+[source, scala]
+----
+put(key: UnsafeRow, value: UnsafeRow): Unit
+----
 
 Used when:
 
@@ -73,11 +99,22 @@ Used when:
 
 CAUTION: FIXME Review StateStoreUpdater.callFunctionAndUpdateState
 
-| [[remove]] `remove`
-|
+| remove
+a| [[remove]]
 
-| [[version]] `version`
-|
+[source, scala]
+----
+remove(key: UnsafeRow): Unit
+----
+
+| version
+a| [[version]]
+
+[source, scala]
+----
+version: Long
+----
+
 |===
 
 [[internal-registries]]
