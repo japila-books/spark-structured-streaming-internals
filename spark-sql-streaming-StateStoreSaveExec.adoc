@@ -181,6 +181,9 @@ The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s outp
 [[outputPartitioning]]
 The output partitioning of `StateStoreSaveExec` is exactly the <<child, child>>'s output partitioning.
 
+[[stateManager]]
+`StateStoreRestoreExec` uses a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (that is <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, created>> for the <<keyExpressions, keyExpressions>>, the output of the <<child, child>> physical operator and the <<stateFormatVersion, stateFormatVersion>>).
+
 [TIP]
 ====
 Enable `INFO` logging level for `org.apache.spark.sql.execution.streaming.StateStoreSaveExec` to see what happens inside.
@@ -323,7 +326,8 @@ Invalid output mode: [outputMode]
 `StateStoreSaveExec` takes the following when created:
 
 * [[keyExpressions]] Catalyst expressions for keys (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
-* [[stateInfo]] Optional link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
+* [[stateInfo]] link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
 * [[eventTimeWatermark]] Event time watermark (as `long` number)
-* [[child]] Child physical plan (i.e. `SparkPlan`)
+* [[stateFormatVersion]] `stateFormatVersion`
+* [[child]] Child physical operator

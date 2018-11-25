@@ -1,0 +1,14 @@
+== [[StreamingAggregationStateManagerImplV2]] StreamingAggregationStateManagerImplV2
+
+`StreamingAggregationStateManagerImplV2` is...FIXME
+
+=== [[put]] Storing Row in State Store -- `put` Method
+
+[source, scala]
+----
+put(store: StateStore, row: UnsafeRow): Unit
+----
+
+NOTE: `put` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, StreamingAggregationStateManager Contract>> to store a row in a state store.
+
+`put`...FIXME

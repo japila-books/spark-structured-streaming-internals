@@ -1,0 +1,122 @@
+== [[StreamingAggregationStateManager]] StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation
+
+`StreamingAggregationStateManager` is the <<contract, contract>> of <<implementations, state managers>> that are used in streaming aggregations.
+
+[[supportedVersions]]
+`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>>:
+
+* [[legacyVersion]] `1` (the legacy implementation)
+* `2`
+
+[[contract]]
+.StreamingAggregationStateManager Contract
+[cols="1m,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| commit
+a| [[commit]]
+
+[source, scala]
+----
+commit(store: StateStore): Long
+----
+
+| get
+a| [[get]]
+
+[source, scala]
+----
+get(store: StateStore, key: UnsafeRow): UnsafeRow
+----
+
+| getKey
+a| [[getKey]]
+
+[source, scala]
+----
+getKey(row: UnsafeRow): UnsafeRow
+----
+
+| getStateValueSchema
+a| [[getStateValueSchema]]
+
+[source, scala]
+----
+getStateValueSchema: StructType
+----
+
+| iterator
+a| [[iterator]]
+
+[source, scala]
+----
+iterator(store: StateStore): Iterator[UnsafeRowPair]
+----
+
+| keys
+a| [[keys]]
+
+[source, scala]
+----
+keys(store: StateStore): Iterator[UnsafeRow]
+----
+
+Returns all keys in a state store (as an iterator)
+
+| put
+a| [[put]]
+
+[source, scala]
+----
+put(store: StateStore, row: UnsafeRow): Unit
+----
+
+Storing a given row in a given state store
+
+| remove
+a| [[remove]]
+
+[source, scala]
+----
+remove(store: StateStore, key: UnsafeRow): Unit
+----
+
+| values
+a| [[values]]
+
+[source, scala]
+----
+values(store: StateStore): Iterator[UnsafeRow]
+----
+|===
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, StreamingAggregationStateManagerBaseImpl>> is the one and only known base implementation of the <<contract, StreamingAggregationStateManager Contract>> in Spark Structured Streaming.
+
+NOTE: `StreamingAggregationStateManager` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
+
+=== [[createStateManager]] Creating StreamingAggregationStateManager Instance -- `createStateManager` Factory Method
+
+[source, scala]
+----
+createStateManager(
+  keyExpressions: Seq[Attribute],
+  inputRowAttributes: Seq[Attribute],
+  stateFormatVersion: Int): StreamingAggregationStateManager
+----
+
+`createStateManager` creates a new `StreamingAggregationStateManager` for a given `stateFormatVersion`:
+
+* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#, StreamingAggregationStateManagerImplV1>> for `stateFormatVersion` being `1`
+
+* <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#, StreamingAggregationStateManagerImplV2>> for `stateFormatVersion` being `2`
+
+`createStateManager` throws a `IllegalArgumentException` for any other `stateFormatVersion`:
+
+```
+Version [stateFormatVersion] is invalid
+```
+
+NOTE: `createStateManager` is used when <<spark-sql-streaming-StateStoreRestoreExec.adoc#stateManager, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.adoc#stateManager, StateStoreSaveExec>> physical operators are created.

@@ -209,3 +209,8 @@
 
 . link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
+
+. link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl -- Base StreamingAggregationStateManager]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2]

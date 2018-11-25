@@ -1,0 +1,73 @@
+== [[StreamingAggregationStateManagerBaseImpl]] StreamingAggregationStateManagerBaseImpl -- Base StreamingAggregationStateManager
+
+`StreamingAggregationStateManagerBaseImpl` is the base implementation of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager contract>> for <<implementations, state managers for streaming aggregations>> that <<keyProjector, use UnsafeProjection to getKey>>.
+
+[[keyProjector]]
+`StreamingAggregationStateManagerBaseImpl` uses `UnsafeProjection` to <<getKey, getKey>>.
+
+[[implementations]]
+.StreamingAggregationStateManagerBaseImpls
+[cols="1,2",options="header",width="100%"]
+|===
+| StreamingAggregationStateManagerBaseImpl
+| Description
+
+| <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#, StreamingAggregationStateManagerImplV1>>
+| [[StreamingAggregationStateManagerImplV1]] Legacy <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>>
+
+| <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#, StreamingAggregationStateManagerImplV2>>
+| [[StreamingAggregationStateManagerImplV2]] Current <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>>
+|===
+
+=== [[creating-instance]] Creating StreamingAggregationStateManagerBaseImpl Instance
+
+`StreamingAggregationStateManagerBaseImpl` takes the following when created:
+
+* [[keyExpressions]] Attribute expressions for keys (`Seq[Attribute]`)
+* [[inputRowAttributes]] Attribute expressions of input rows (`Seq[Attribute]`)
+
+NOTE: `StreamingAggregationStateManagerBaseImpl` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly for the <<implementations, concrete StreamingAggregationStateManagerBaseImpls>>.
+
+=== [[commit]] Committing (Changes to) State Store -- `commit` Method
+
+[source, scala]
+----
+commit(store: StateStore): Long
+----
+
+NOTE: `commit` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#commit, StreamingAggregationStateManager Contract>> to commit (changes to) a state store.
+
+`commit`...FIXME
+
+=== [[remove]] Removing Key From State Store -- `remove` Method
+
+[source, scala]
+----
+remove(store: StateStore, key: UnsafeRow): Unit
+----
+
+NOTE: `remove` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#remove, StreamingAggregationStateManager Contract>> to remove a key from a state store.
+
+`remove`...FIXME
+
+=== [[getKey]] `getKey` Method
+
+[source, scala]
+----
+getKey(row: UnsafeRow): UnsafeRow
+----
+
+NOTE: `getKey` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#getKey, StreamingAggregationStateManager Contract>> to...FIXME
+
+`getKey`...FIXME
+
+=== [[keys]] Getting All Keys in State Store -- `keys` Method
+
+[source, scala]
+----
+keys(store: StateStore): Iterator[UnsafeRow]
+----
+
+NOTE: `keys` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#keys, StreamingAggregationStateManager Contract>> to get all keys in a state store (as an iterator).
+
+`keys`...FIXME

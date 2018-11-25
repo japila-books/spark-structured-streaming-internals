@@ -85,6 +85,9 @@ The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s o
 [[outputPartitioning]]
 The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child>>'s output partitioning.
 
+[[stateManager]]
+`StateStoreRestoreExec` uses a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (that is <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, created>> for the <<keyExpressions, keyExpressions>>, the output of the <<child, child>> physical operator and the <<stateFormatVersion, stateFormatVersion>>).
+
 === [[doExecute]] Executing StateStoreRestoreExec -- `doExecute` Method
 
 [source, scala]
@@ -117,5 +120,6 @@ NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had a
 `StateStoreRestoreExec` takes the following when created:
 
 * [[keyExpressions]] Catalyst expressions for keys (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
-* [[stateInfo]] Optional link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
-* [[child]] Child physical plan (i.e. `SparkPlan`)
+* [[stateInfo]] link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
+* [[stateFormatVersion]] `stateFormatVersion`
+* [[child]] Child physical operator
