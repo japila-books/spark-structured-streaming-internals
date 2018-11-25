@@ -2,12 +2,6 @@
 
 `StreamingAggregationStateManager` is the <<contract, contract>> of <<implementations, state managers>> that are used in streaming aggregations.
 
-[[supportedVersions]]
-`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>>:
-
-* [[legacyVersion]] `1` (the legacy implementation)
-* `2`
-
 [[contract]]
 .StreamingAggregationStateManager Contract
 [cols="1m,2",options="header",width="100%"]
@@ -91,6 +85,14 @@ a| [[values]]
 values(store: StateStore): Iterator[UnsafeRow]
 ----
 |===
+
+[[supportedVersions]]
+`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>>:
+
+* [[legacyVersion]] `1` (legacy)
+* [[default]] `2` (default)
+
+NOTE: The version of a state manager is controlled using <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property.
 
 [[implementations]]
 NOTE: <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, StreamingAggregationStateManagerBaseImpl>> is the one and only known base implementation of the <<contract, StreamingAggregationStateManager Contract>> in Spark Structured Streaming.

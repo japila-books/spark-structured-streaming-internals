@@ -44,6 +44,7 @@
 
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager -- Streaming Query Management]
 
+. link:spark-sql-streaming-SQLConf.adoc[SQLConf -- Internal Configuration Store]
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
 === Kafka Data Source
@@ -163,7 +164,7 @@
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
-== Managing State in Stateful Streaming Aggregations
+== Managing State in Stateful Stream Processing
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore Contract -- Kay-Value Store for State Management]
 .. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
@@ -179,10 +180,17 @@
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 
+. link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl -- Base StreamingAggregationStateManager]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1 -- Legacy State Manager for Streaming Aggregations]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2 -- Default State Manager for Streaming Aggregations]
+
 == Monitoring
 
 . link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
 .. link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
+
+. link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
 
 . link:spark-sql-streaming-webui.adoc[Web UI]
 
@@ -192,11 +200,11 @@
 
 . link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
 
-. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
 . link:spark-sql-streaming-Source.adoc[Streaming Source]
+.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
 
-. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 . link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
+.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 
 == Demos
 
@@ -208,9 +216,3 @@
 == Varia
 
 . link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
-. link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
-
-. link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl -- Base StreamingAggregationStateManager]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2]

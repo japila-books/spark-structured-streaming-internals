@@ -1,0 +1,22 @@
+== [[SQLConf]] SQLConf -- Internal Configuration Store
+
+`SQLConf` is an *internal key-value configuration store* for <<parameters, parameters and hints>> used in Spark Structured Streaming (and Spark SQL in general).
+
+[[accessor-methods]]
+.SQLConf's Accessor Methods
+[cols="1,1",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| `STREAMING_AGGREGATION_STATE_FORMAT_VERSION`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>>
+a| [[STREAMING_AGGREGATION_STATE_FORMAT_VERSION]]
+
+Used when:
+
+* <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed
+
+* `OffsetSeqMetadata` is requested for `relevantSQLConfs` and `relevantSQLConfDefaultValues`
+|===

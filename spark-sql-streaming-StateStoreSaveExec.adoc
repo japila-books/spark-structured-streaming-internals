@@ -2,7 +2,7 @@
 
 `StateStoreSaveExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[saves a streaming state to a state store] with link:spark-sql-streaming-WatermarkSupport.adoc[support for streaming watermark].
 
-`StateStoreSaveExec` is <<creating-instance, created>> exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.adoc#Aggregate[plans streaming aggregate operators] (aka _streaming aggregates_).
+`StateStoreSaveExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed (and plans `Aggregate` logical operators in a streaming structured query).
 
 .StateStoreSaveExec and StatefulAggregationStrategy
 image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
@@ -329,5 +329,5 @@ Invalid output mode: [outputMode]
 * [[stateInfo]] link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
 * [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
 * [[eventTimeWatermark]] Event time watermark (as `long` number)
-* [[stateFormatVersion]] `stateFormatVersion`
+* [[stateFormatVersion]] `stateFormatVersion` (that is the value of <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
 * [[child]] Child physical operator

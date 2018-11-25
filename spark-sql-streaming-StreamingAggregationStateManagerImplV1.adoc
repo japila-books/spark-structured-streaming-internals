@@ -1,8 +1,10 @@
-== [[StreamingAggregationStateManagerImplV1]] StreamingAggregationStateManagerImplV1
+== [[StreamingAggregationStateManagerImplV1]] StreamingAggregationStateManagerImplV1 -- Legacy State Manager for Streaming Aggregations
 
-`StreamingAggregationStateManagerImplV1` is a <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, StreamingAggregationStateManagerBaseImpl>> that is used for `stateFormatVersion` being `1`.
+`StreamingAggregationStateManagerImplV1` is the legacy <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, state manager for streaming aggregations>>.
 
-`StreamingAggregationStateManagerImplV1` is <<creating-instance, created>> exclusively when `StreamingAggregationStateManager` is requested for a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, new StreamingAggregationStateManager>> .
+NOTE: The version of a state manager is controlled using <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property.
+
+`StreamingAggregationStateManagerImplV1` is <<creating-instance, created>> exclusively when `StreamingAggregationStateManager` is requested for a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, new StreamingAggregationStateManager>>.
 
 === [[put]] Storing Row in State Store -- `put` Method
 
