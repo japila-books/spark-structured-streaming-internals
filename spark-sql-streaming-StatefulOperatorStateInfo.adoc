@@ -1,3 +1,19 @@
 == [[StatefulOperatorStateInfo]] StatefulOperatorStateInfo
 
-`StatefulOperatorStateInfo` is...FIXME
+[[creating-instance]]
+`StatefulOperatorStateInfo` identifies the state store for a given operator:
+
+* [[checkpointLocation]] Checkpoint directory
+* [[queryRunId]] `queryRunId`
+* [[operatorId]] `operatorId`
+* [[storeVersion]] `storeVersion`
+* [[numPartitions]] Number of partitions
+
+`StatefulOperatorStateInfo` is <<creating-instance, created>> exclusively when `IncrementalExecution` is requested for <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>.
+
+[[toString]]
+When requested for a textual representation, `StatefulOperatorStateInfo` returns the following:
+
+```
+state info [ checkpoint = [checkpointLocation], runId = [queryRunId], opId = [operatorId], ver = [storeVersion], numPartitions = [numPartitions]]
+```

@@ -41,13 +41,13 @@ spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
 assert(spark.sessionState.conf.numShufflePartitions == 1)
 // END: Only for easier debugging
 
-val counts = spark.
-  readStream.
-  format("rate").
-  load.
-  groupBy(window($"timestamp", "5 seconds") as "group").
-  agg(count("value") as "value_count"). // <-- creates an Aggregate logical operator
-  orderBy("group")  // <-- makes for easier checking
+val counts = spark
+  .readStream
+  .format("rate")
+  .load
+  .groupBy(window($"timestamp", "5 seconds") as "group")
+  .agg(count("value") as "value_count") // <-- creates an Aggregate logical operator
+  .orderBy("group")  // <-- makes for easier checking
 scala> counts.explain
 == Physical Plan ==
 *(5) Sort [group#5 ASC NULLS FIRST], true, 0
@@ -67,19 +67,19 @@ scala> counts.explain
 import scala.concurrent.duration._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val t = Trigger.ProcessingTime(1.hour) // should be enough time for exploration
-val sq = counts.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(t).
-  outputMode(OutputMode.Complete).
-  start
+val sq = counts
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .trigger(t)
+  .outputMode(OutputMode.Complete)
+  .start
 
 // wait till the first batch which should happen right after start
 
 import org.apache.spark.sql.execution.streaming._
-val streamingBatch = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery.lastExecution
-scala> println(streamingBatch.logical.numberedTreeString)
+val lastExecution = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery.lastExecution
+scala> println(lastExecution.logical.numberedTreeString)
 00 WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWriter@4d8749e7
 01 +- Sort [group#5 ASC NULLS FIRST], true
 02    +- Aggregate [window#11], [window#11 AS group#5, count(value#1L) AS value_count#10L]

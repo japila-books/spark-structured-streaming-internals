@@ -1,0 +1,27 @@
+== [[StateStoreId]] StateStoreId
+
+`StateStoreId` is...FIXME
+
+`StateStoreId` is <<creating-instance, created>> when...FIXME
+
+[[creating-instance]]
+`StateStoreId` takes the following when created:
+
+* [[checkpointRootLocation]] Root directory of the checkpoint files
+* [[operatorId]] Operator ID
+* [[partitionId]] Partition ID
+* [[storeName]] Name of the state store (default: <<DEFAULT_STORE_NAME, default>>)
+
+[[DEFAULT_STORE_NAME]]
+The name of the default state store (for reading state store data that was generated before store names were used, i.e. Spark <= 2.2) is *default*.
+
+=== [[storeCheckpointLocation]] `storeCheckpointLocation` Method
+
+[source, scala]
+----
+storeCheckpointLocation(): Path
+----
+
+`storeCheckpointLocation`...FIXME
+
+NOTE: `storeCheckpointLocation` is used when...FIXME

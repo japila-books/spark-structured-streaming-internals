@@ -14,11 +14,39 @@
 When requested for the string identifier, `HDFSBackedStateStore`...FIXME
 
 [[internal-registries]]
-.HDFSBackedStateStore's Internal Registries and Counters
+.HDFSBackedStateStore's Internal Registries
 [cols="1m,2",options="header",width="100%"]
 |===
 | Name
 | Description
+
+| compressedStream
+a| [[compressedStream]]
+
+[source, scala]
+----
+compressedStream: DataOutputStream
+----
+
+The compressed Java https://docs.oracle.com/javase/8/docs/api/java/io/DataOutputStream.html[DataOutputStream] for the <<deltaFileStream, deltaFileStream>>
+
+| deltaFileStream
+a| [[deltaFileStream]]
+
+[source, scala]
+----
+deltaFileStream: CheckpointFileManager.CancellableFSDataOutputStream
+----
+
+| finalDeltaFile
+a| [[finalDeltaFile]]
+
+[source, scala]
+----
+finalDeltaFile: Path
+----
+
+The Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#deltaFile, deltaFile>> for the <<newVersion, version>>
 
 | newVersion
 a| [[newVersion]]
@@ -30,18 +58,21 @@ newVersion: Long
 
 Used exclusively when `HDFSBackedStateStore` is requested for the <<finalDeltaFile, finalDeltaFile>>, to <<commit, commit>> and <<abort, abort>>
 
-| tempDeltaFile
-| [[tempDeltaFile]]
-
 | state
 | [[state]]
 
+| tempDeltaFile
+| [[tempDeltaFile]]
+
 | tempDeltaFileStream
 | [[tempDeltaFileStream]]
-
-| finalDeltaFile
-| [[finalDeltaFile]]
 |===
+
+[[logging]]
+[TIP]
+====
+`HDFSBackedStateStore` is an internal class of <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> and uses its <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#logging, logger>>.
+====
 
 === [[writeUpdateToDeltaFile]] `writeUpdateToDeltaFile` Internal Method
 
@@ -82,9 +113,31 @@ Cannot put after already committed or aborted
 commit(): Long
 ----
 
-NOTE: `commit` is part of the <<spark-sql-streaming-StateStore.adoc#commit, StateStore Contract>> to commit the state changes.
+NOTE: `commit` is part of the <<spark-sql-streaming-StateStore.adoc#commit, StateStore Contract>> to commit state changes.
 
-`commit`...FIXME
+`commit` firstly <<commitUpdates, commitUpdates>> (with the <<newVersion, newVersion>>, the <<mapToUpdate, mapToUpdate>> and the <<compressedStream, compressed stream>>).
+
+`commit` sets the state to `COMMITTED`.
+
+`commit` prints out the following INFO message to the logs:
+
+```
+Committed version [newVersion] for [this] to file [finalDeltaFile]
+```
+
+`commit` returns a <<newVersion, newVersion>>.
+
+`commit` throws a `IllegalStateException` when executed in any state but `UPDATING` state:
+
+```
+Cannot commit after already committed or aborted
+```
+
+`commit` throws a `IllegalStateException` for any `NonFatal` exception:
+
+```
+Error committing version [newVersion] into [this]
+```
 
 === [[creating-instance]] Creating HDFSBackedStateStore Instance
 
@@ -105,3 +158,14 @@ abort(): Unit
 NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.adoc#abort, StateStore Contract>> to abort the state changes.
 
 `abort`...FIXME
+
+=== [[commitUpdates]] `commitUpdates` Internal Method
+
+[source, scala]
+----
+commitUpdates(newVersion: Long, map: MapType, output: DataOutputStream): Unit
+----
+
+`commitUpdates`...FIXME
+
+NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<commit, commit state changes>>.

@@ -39,17 +39,13 @@ a| [[commit]]
 commit(): Long
 ----
 
-Commits the state changes
+Commits state changes
 
 Used when:
 
-* `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>> (after all rows in a partition have been processed successfully)
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#doExecute, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed successfully)
 
-* `StreamingDeduplicateExec` physical operator is <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, doExecute>> (after all rows in a partition have been processed successfully)
-
-* `StreamingGlobalLimitExec` physical operator is <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#doExecute, doExecute>> (after all rows in a partition have been processed successfully)
-
-* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#commit, commit (changes to) a state store>>
+* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#commit, commit (changes to) a state store>> (exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed)
 
 * `StateStoreHandler` is requested to `commit`
 

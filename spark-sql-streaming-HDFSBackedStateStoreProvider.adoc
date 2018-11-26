@@ -2,6 +2,23 @@
 
 `HDFSBackedStateStoreProvider` is...FIXME
 
+[[baseDir]]
+`HDFSBackedStateStoreProvider` uses the *state checkpoint base directory* (that is the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, storeCheckpointLocation>> of the <<stateStoreId, StateStoreId>>) for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files. The checkpoint directory is created when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
+
+[[logging]]
+[TIP]
+====
+Enable `DEBUG`, `INFO` or `WARN` logging level for `org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider=DEBUG
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
+
 === [[getStore]] Creating HDFSBackedStateStore -- `getStore` Method
 
 [source, scala]
@@ -12,3 +29,75 @@ getStore(version: Long): StateStore
 NOTE: `getStore` is a part of link:spark-sql-streaming-StateStoreProvider.adoc#getStore[StateStoreProvider Contract] to..FIXME.
 
 CAUTION: FIXME
+
+=== [[deltaFile]] `deltaFile` Internal Method
+
+[source, scala]
+----
+deltaFile(version: Long): Path
+----
+
+`deltaFile` creates a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the `[version].delta` file in the <<baseDir, baseDir>>.
+
+NOTE: `deltaFile` is used when...FIXME
+
+=== [[fetchFiles]] `fetchFiles` Internal Method
+
+[source, scala]
+----
+fetchFiles(): Seq[StoreFile]
+----
+
+`fetchFiles`...FIXME
+
+NOTE: `fetchFiles` is used when `HDFSBackedStateStoreProvider` is requested to <<latestIterator, latestIterator>>, <<doSnapshot, doSnapshot>> and <<cleanup, cleanup>>.
+
+=== [[init]] Initializing StateStoreProvider -- `init` Method
+
+[source, scala]
+----
+init(
+  stateStoreId: StateStoreId,
+  keySchema: StructType,
+  valueSchema: StructType,
+  indexOrdinal: Option[Int],
+  storeConf: StateStoreConf,
+  hadoopConf: Configuration): Unit
+----
+
+NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#init, StateStoreProvider Contract>> to initialize itself.
+
+`init`...FIXME
+
+=== [[latestIterator]] `latestIterator` Internal Method
+
+[source, scala]
+----
+latestIterator(): Iterator[UnsafeRowPair]
+----
+
+`latestIterator`...FIXME
+
+NOTE: `latestIterator` is used when...FIXME
+
+=== [[doSnapshot]] `doSnapshot` Internal Method
+
+[source, scala]
+----
+doSnapshot(): Unit
+----
+
+`doSnapshot`...FIXME
+
+NOTE: `doSnapshot` is used when...FIXME
+
+=== [[cleanup]] `cleanup` Internal Method
+
+[source, scala]
+----
+cleanup(): Unit
+----
+
+`cleanup`...FIXME
+
+NOTE: `cleanup` is used when...FIXME
