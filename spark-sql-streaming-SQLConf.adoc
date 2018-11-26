@@ -9,6 +9,21 @@
 | Name
 | Description
 
+| `FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>>
+a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]]
+
+| `SHUFFLE_PARTITIONS`
+
+`spark.sql.shuffle.partitions`
+a| [[SHUFFLE_PARTITIONS]] See https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-properties.html#spark.sql.shuffle.partitions[spark.sql.shuffle.partitions] in The Internals of Spark SQL.
+
+| `STATE_STORE_PROVIDER_CLASS`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
+a| [[STATE_STORE_PROVIDER_CLASS]]
+
 | `STREAMING_AGGREGATION_STATE_FORMAT_VERSION`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>>
@@ -19,4 +34,9 @@ Used when:
 * <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed
 
 * `OffsetSeqMetadata` is requested for `relevantSQLConfs` and `relevantSQLConfDefaultValues`
+
+| `STREAMING_MULTIPLE_WATERMARK_POLICY`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.multipleWatermarkPolicy, spark.sql.streaming.multipleWatermarkPolicy>>
+a| [[STREAMING_MULTIPLE_WATERMARK_POLICY]]
 |===

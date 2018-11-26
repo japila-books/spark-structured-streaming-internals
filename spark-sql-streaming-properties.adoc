@@ -35,6 +35,16 @@ State between versions are tend to be incompatible, so state format version shou
 (empty)
 | [[spark.sql.streaming.checkpointLocation]] Default checkpoint directory for storing checkpoint data for streaming queries
 
+| `spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion`
+
+`2`
+a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used by `flatMapGroupsWithState` operation in a streaming query.
+
+Supported values:
+
+* `1`
+* `2`
+
 | `spark.sql.streaming.metricsEnabled`
 
 `false`
@@ -46,6 +56,19 @@ State between versions are tend to be incompatible, so state format version shou
 a| [[spark.sql.streaming.minBatchesToRetain]] (internal) The minimum number of batches that must be retained and made recoverable.
 
 Used...FIXME
+
+| `spark.sql.streaming.multipleWatermarkPolicy`
+
+`min`
+a| [[spark.sql.streaming.multipleWatermarkPolicy]] Policy to calculate the global watermark value when there are multiple watermark operators in a streaming query.
+
+Supported values:
+
+* `min` (default) - chooses the minimum watermark reported across multiple operators
+
+* `max` - chooses the maximum across multiple operators
+
+NOTE: This configuration cannot be changed between query restarts from the same checkpoint location.
 
 | `spark.sql.streaming.numRecentProgressUpdates`
 
@@ -65,7 +88,9 @@ a| [[spark.sql.streaming.pollingDelay]] *(internal)* Time delay (in ms) before `
 | `spark.sql.streaming.stateStore.providerClass`
 
 <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider>>
-| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name to manage state data in stateful streaming queries. This class must be a subclass of link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider], and must have a zero-arg constructor.
+| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name to manage state data in stateful streaming queries.
+
+This class must be a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>, and must have a zero-arg constructor.
 
 | `spark.sql.streaming.unsupportedOperationCheck`
 
