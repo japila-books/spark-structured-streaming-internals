@@ -181,9 +181,9 @@
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
 
 . link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl -- Base StreamingAggregationStateManager]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1 -- Legacy State Manager for Streaming Aggregations]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2 -- Default State Manager for Streaming Aggregations]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl -- Base State Manager for Streaming Aggregation]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1 -- Legacy State Manager for Streaming Aggregation]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2 -- Default State Manager for Streaming Aggregation]
 
 == Monitoring
 

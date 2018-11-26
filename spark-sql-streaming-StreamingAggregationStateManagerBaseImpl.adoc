@@ -1,4 +1,4 @@
-== [[StreamingAggregationStateManagerBaseImpl]] StreamingAggregationStateManagerBaseImpl -- Base StreamingAggregationStateManager
+== [[StreamingAggregationStateManagerBaseImpl]] StreamingAggregationStateManagerBaseImpl -- Base State Manager for Streaming Aggregation
 
 `StreamingAggregationStateManagerBaseImpl` is the base implementation of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager contract>> for <<implementations, state managers for streaming aggregations>> that <<keyProjector, use UnsafeProjection to getKey>>.
 

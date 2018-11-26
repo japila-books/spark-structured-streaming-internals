@@ -1,4 +1,4 @@
-== [[StreamingAggregationStateManagerImplV1]] StreamingAggregationStateManagerImplV1 -- Legacy State Manager for Streaming Aggregations
+== [[StreamingAggregationStateManagerImplV1]] StreamingAggregationStateManagerImplV1 -- Legacy State Manager for Streaming Aggregation
 
 `StreamingAggregationStateManagerImplV1` is the legacy <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, state manager for streaming aggregations>>.
 

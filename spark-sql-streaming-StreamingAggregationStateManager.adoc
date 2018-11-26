@@ -1,6 +1,6 @@
 == [[StreamingAggregationStateManager]] StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation
 
-`StreamingAggregationStateManager` is the <<contract, contract>> of <<implementations, state managers>> that are used in streaming aggregations.
+`StreamingAggregationStateManager` is the <<contract, contract>> of <<implementations, state managers>> that are used in streaming aggregations (with <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operators).
 
 [[contract]]
 .StreamingAggregationStateManager Contract
@@ -17,6 +17,8 @@ a| [[commit]]
 commit(store: StateStore): Long
 ----
 
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
+
 | get
 a| [[get]]
 
@@ -24,6 +26,10 @@ a| [[get]]
 ----
 get(store: StateStore, key: UnsafeRow): UnsafeRow
 ----
+
+Gets the saved state for a non-null key from a <<spark-sql-streaming-StateStore.adoc#, state store>>
+
+Used exclusively when <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operator is executed.
 
 | getKey
 a| [[getKey]]
@@ -33,6 +39,12 @@ a| [[getKey]]
 getKey(row: UnsafeRow): UnsafeRow
 ----
 
+Used when:
+
+* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operator is executed
+
+* `StreamingAggregationStateManagerImplV1` legacy state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#put, put a row to a state store>>
+
 | getStateValueSchema
 a| [[getStateValueSchema]]
 
@@ -41,6 +53,10 @@ a| [[getStateValueSchema]]
 getStateValueSchema: StructType
 ----
 
+The schema for the state values
+
+Used when <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operators are executed.
+
 | iterator
 a| [[iterator]]
 
@@ -48,6 +64,10 @@ a| [[iterator]]
 ----
 iterator(store: StateStore): Iterator[UnsafeRowPair]
 ----
+
+Returns all the `UnsafeRow` key-value pairs in a <<spark-sql-streaming-StateStore.adoc#, state store>>
+
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
 
 | keys
 a| [[keys]]
@@ -59,6 +79,8 @@ keys(store: StateStore): Iterator[UnsafeRow]
 
 Returns all keys in a state store (as an iterator)
 
+Used exclusively when physical operators with `WatermarkSupport` are requested to <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, removeKeysOlderThanWatermark>> (i.e. exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed).
+
 | put
 a| [[put]]
 
@@ -67,7 +89,9 @@ a| [[put]]
 put(store: StateStore, row: UnsafeRow): Unit
 ----
 
-Storing a given row in a given state store
+Stores a row in a <<spark-sql-streaming-StateStore.adoc#, state store>>
+
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
 
 | remove
 a| [[remove]]
@@ -77,6 +101,8 @@ a| [[remove]]
 remove(store: StateStore, key: UnsafeRow): Unit
 ----
 
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed (directly or indirectly as a <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, WatermarkSupport>>)
+
 | values
 a| [[values]]
 
@@ -84,6 +110,11 @@ a| [[values]]
 ----
 values(store: StateStore): Iterator[UnsafeRow]
 ----
+
+Returns all the values in a <<spark-sql-streaming-StateStore.adoc#, state store>>
+
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
+
 |===
 
 [[supportedVersions]]
