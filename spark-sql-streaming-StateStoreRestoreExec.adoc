@@ -1,6 +1,6 @@
 == [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates
 
-`StateStoreRestoreExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreReader.adoc[restores a state from a state store] (for the keys in the input rows).
+`StateStoreRestoreExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreReader.adoc[restores a state from a state store] (for the keys from the <<child, child>> physical operator).
 
 `StateStoreRestoreExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed (and plans `Aggregate` logical operators in a streaming structured query).
 

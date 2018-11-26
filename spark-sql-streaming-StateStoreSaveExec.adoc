@@ -32,16 +32,13 @@ image::images/StateStoreSaveExec-StateStoreRDD.png[align="center"]
 
 [source, scala]
 ----
-scala> spark.version
-res0: String = 2.3.0-SNAPSHOT
-
 // START: Only for easier debugging
 // The state is then only for one partition
-// which should make monitoring it easier
+// which should make monitoring easier
 import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
 spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
-scala> spark.sessionState.conf.numShufflePartitions
-res2: Int = 1
+
+assert(spark.sessionState.conf.numShufflePartitions == 1)
 // END: Only for easier debugging
 
 val counts = spark.
@@ -49,32 +46,32 @@ val counts = spark.
   format("rate").
   load.
   groupBy(window($"timestamp", "5 seconds") as "group").
-  agg(count("value") as "value_count") // <-- creates a Aggregate logical operator
-scala> counts.explain(true)
-== Parsed Logical Plan ==
-'Aggregate [timewindow('timestamp, 5000000, 5000000, 0) AS window#5 AS group#6], [timewindow('timestamp, 5000000, 5000000, 0) AS window#5 AS group#6, count('value) AS value_count#12]
-+- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@489cbbcb,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
-...
+  agg(count("value") as "value_count"). // <-- creates an Aggregate logical operator
+  orderBy("group")  // <-- makes for easier checking
+scala> counts.explain
 == Physical Plan ==
-*HashAggregate(keys=[window#18], functions=[count(value#1L)], output=[group#6, value_count#12L])
-+- StateStoreSave [window#18], StatefulOperatorStateInfo(<unknown>,9a6d381e-1066-4e2c-abd2-27884a6c2d16,0,0), Append, 0
-   +- *HashAggregate(keys=[window#18], functions=[merge_count(value#1L)], output=[window#18, count#20L])
-      +- StateStoreRestore [window#18], StatefulOperatorStateInfo(<unknown>,9a6d381e-1066-4e2c-abd2-27884a6c2d16,0,0)
-         +- *HashAggregate(keys=[window#18], functions=[merge_count(value#1L)], output=[window#18, count#20L])
-            +- Exchange hashpartitioning(window#18, 1)
-               +- *HashAggregate(keys=[window#18], functions=[partial_count(value#1L)], output=[window#18, count#20L])
-                  +- *Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#18, value#1L]
-                     +- *Filter isnotnull(timestamp#0)
-                        +- StreamingRelation rate, [timestamp#0, value#1L]
+*(5) Sort [group#5 ASC NULLS FIRST], true, 0
++- Exchange rangepartitioning(group#5 ASC NULLS FIRST, 1)
+   +- *(4) HashAggregate(keys=[window#11], functions=[count(value#1L)])
+      +- StateStoreSave [window#11], state info [ checkpoint = <unknown>, runId = ba5e4345-6d7a-4aca-b480-231ae9268916, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
+         +- *(3) HashAggregate(keys=[window#11], functions=[merge_count(value#1L)])
+            +- StateStoreRestore [window#11], state info [ checkpoint = <unknown>, runId = ba5e4345-6d7a-4aca-b480-231ae9268916, opId = 0, ver = 0, numPartitions = 1], 2
+               +- *(2) HashAggregate(keys=[window#11], functions=[merge_count(value#1L)])
+                  +- Exchange hashpartitioning(window#11, 1)
+                     +- *(1) HashAggregate(keys=[window#11], functions=[partial_count(value#1L)])
+                        +- *(1) Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#11, value#1L]
+                           +- *(1) Filter isnotnull(timestamp#0)
+                              +- StreamingRelation rate, [timestamp#0, value#1L]
 
 // Start the query and hence execute StateStoreSaveExec
 import scala.concurrent.duration._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+val t = Trigger.ProcessingTime(1.hour) // should be enough time for exploration
 val sq = counts.
   writeStream.
   format("console").
   option("truncate", false).
-  trigger(Trigger.ProcessingTime(1.hour)). // <-- should be enough time for exploration
+  trigger(t).
   outputMode(OutputMode.Complete).
   start
 
@@ -82,29 +79,14 @@ val sq = counts.
 
 import org.apache.spark.sql.execution.streaming._
 val streamingBatch = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery.lastExecution
-
 scala> println(streamingBatch.logical.numberedTreeString)
-00 Aggregate [window#13], [window#13 AS group#6, count(value#25L) AS value_count#12L]
-01 +- Filter isnotnull(timestamp#24)
-02    +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#24, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#13, timestamp#24, value#25L]
-03       +- LogicalRDD [timestamp#24, value#25L], true
-
-// Note the number of partitions
-// 200 is the default, but we have changed it above
-scala> println(streamingBatch.toRdd.toDebugString)
-(1) MapPartitionsRDD[20] at toRdd at <console>:38 []
- |  StateStoreRDD[19] at toRdd at <console>:38 []
- |  MapPartitionsRDD[18] at toRdd at <console>:38 []
- |  StateStoreRDD[17] at toRdd at <console>:38 []
- |  MapPartitionsRDD[16] at toRdd at <console>:38 []
- |  ShuffledRowRDD[4] at start at <console>:36 []
- +-(0) MapPartitionsRDD[3] at start at <console>:36 []
-    |  MapPartitionsRDD[2] at start at <console>:36 []
-    |  MapPartitionsRDD[1] at start at <console>:36 []
-    |  EmptyRDD[0] at start at <console>:36 []
-
-scala> spark.sessionState.conf.numShufflePartitions
-res6: Int = 1
+00 WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWriter@4d8749e7
+01 +- Sort [group#5 ASC NULLS FIRST], true
+02    +- Aggregate [window#11], [window#11 AS group#5, count(value#1L) AS value_count#10L]
+03       +- Filter isnotnull(timestamp#0)
+04          +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#11, timestamp#0, value#1L]
+05             +- Project [timestamp#211 AS timestamp#0, value#212L AS value#1L]
+06                +- Streaming RelationV2 rate[timestamp#211, value#212L]
 ----
 
 .StateStoreSaveExec and StateStoreRDD (after streamingBatch.toRdd.count)
@@ -121,7 +103,7 @@ NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
 
 [[metrics]]
 .StateStoreSaveExec's SQLMetrics
-[cols="1,1,2",options="header",width="100%"]
+[cols="1,2,2",options="header",width="100%"]
 |===
 | Key
 | Name (in UI)

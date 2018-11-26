@@ -14,7 +14,8 @@ val spark: SparkSession = SparkSession.builder
   .getOrCreate
 ----
 
-.Structured Streaming's Properties (in alphabetical order)
+[[properties]]
+.Structured Streaming's Properties
 [cols="1,2",options="header",width="100%"]
 |===
 | Name / Default Value

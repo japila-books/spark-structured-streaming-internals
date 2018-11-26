@@ -7,7 +7,7 @@ NOTE: The version of a state manager is controlled using <<spark-sql-streaming-p
 `StreamingAggregationStateManagerImplV2` is <<creating-instance, created>> exclusively when `StreamingAggregationStateManager` is requested for a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, new StreamingAggregationStateManager>>.
 
 [[internal-registries]]
-.StreamingAggregationStateManagerImplV2's Internal Properties (e.g. Registries, Counters and Flags)
+.StreamingAggregationStateManagerImplV2's Internal Properties
 [cols="1m,2",options="header",width="100%"]
 |===
 | Name
