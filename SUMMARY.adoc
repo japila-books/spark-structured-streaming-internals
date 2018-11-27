@@ -154,17 +154,14 @@
 == Managing State in Stateful Stream Processing
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore Contract -- Kay-Value Store for State Management]
-.. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
-.. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
-.. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
+. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
+. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
+
+. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider Contract]
+.. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
 
 . link:spark-sql-streaming-StateStoreMetrics.adoc[StateStoreMetrics]
 . link:spark-sql-streaming-StateStoreCustomMetric.adoc[StateStoreCustomMetric Contract]
-
-. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
-.. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
-
-. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
 
 . link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)]
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
@@ -185,6 +182,9 @@
 . link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler Contract]
 .. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
 .. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
+
+. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
+. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 
 == Monitoring
 

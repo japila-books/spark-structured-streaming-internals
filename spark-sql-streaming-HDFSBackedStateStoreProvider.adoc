@@ -5,6 +5,12 @@
 [[baseDir]]
 `HDFSBackedStateStoreProvider` uses the *state checkpoint base directory* (that is the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, storeCheckpointLocation>> of the <<stateStoreId, StateStoreId>>) for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files. The checkpoint directory is created when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
 
+[[stateStoreId]]
+`HDFSBackedStateStoreProvider` uses `stateStoreId` that...FIXME
+
+[[toString]]
+When requested for the textual representation, `HDFSBackedStateStoreProvider`...FIXME
+
 [[logging]]
 [TIP]
 ====

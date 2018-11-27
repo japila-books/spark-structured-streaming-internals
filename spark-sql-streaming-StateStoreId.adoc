@@ -1,4 +1,4 @@
-== [[StateStoreId]] StateStoreId
+== [[StateStoreId]] StateStoreId -- Unique Identifier of State Store
 
 `StateStoreId` is...FIXME
 

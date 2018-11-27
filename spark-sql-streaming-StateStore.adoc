@@ -111,7 +111,7 @@ a| [[metrics]]
 metrics: StateStoreMetrics
 ----
 
-<<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>
+Returns the <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>
 
 Used when:
 
@@ -214,9 +214,16 @@ NOTE: `StateStore` was introduced in https://github.com/apache/spark/commit/8c82
 
 CAUTION: FIXME
 
-=== [[unload]] Removing StateStoreProvider From Provider Registry -- `unload` Internal Method
+=== [[unload]] Unloading State Store Provider -- `unload` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+unload(storeProviderId: StateStoreProviderId): Unit
+----
+
+`unload`...FIXME
+
+NOTE: `unload` is used when...FIXME
 
 === [[verifyIfStoreInstanceActive]] `verifyIfStoreInstanceActive` Internal Method
 
@@ -245,7 +252,7 @@ NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` is reque
 
 CAUTION: FIXME
 
-=== [[get]] Finding StateStore by StateStoreProviderId -- `get` Method
+=== [[get-StateStore]] Finding StateStore by ID and Version -- `get` Method
 
 [source, scala]
 ----
@@ -292,7 +299,7 @@ When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProvider
 
 NOTE: Use link:spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval[spark.sql.streaming.stateStore.maintenanceInterval] Spark property (default: `60s`) to control the initial delay and how often the thread should be executed.
 
-=== [[doMaintenance]] Triggering Maintenance of Registered StateStoreProviders -- `doMaintenance` Internal Method
+=== [[doMaintenance]] Performing Maintenance of Registered State Store Providers -- `doMaintenance` Internal Method
 
 [source, scala]
 ----

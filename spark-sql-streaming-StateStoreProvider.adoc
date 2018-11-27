@@ -1,17 +1,116 @@
-== [[StateStoreProvider]] StateStoreProvider
+== [[StateStoreProvider]] StateStoreProvider Contract
 
-`StateStoreProvider` is...FIXME
+`StateStoreProvider` is the <<contract, abstraction>> of <<implementations, state store providers>>.
 
-=== [[doMaintenance]] `doMaintenance` Method
+[[contract]]
+.StateStoreProvider Contract
+[cols="1m,2",options="header",width="100%"]
+|===
+| Method
+| Description
 
-CAUTION: FIXME
+| close
+a| [[close]]
 
-=== [[createAndInit]] `createAndInit` Method
+[source, scala]
+----
+close(): Unit
+----
 
-CAUTION: FIXME
+Closes the state store provider
 
-=== [[getStore]] `getStore` Method
+Used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#unload, unload a state store provider>>
 
-CAUTION: FIXME
+| doMaintenance
+a| [[doMaintenance]]
 
-NOTE: `getStore` is used exclusively when `StateStore` is link:spark-sql-streaming-StateStore.adoc#get[requested for a state store] (given a `StateStoreProviderId`).
+[source, scala]
+----
+doMaintenance(): Unit
+----
+
+Optional maintenance task
+
+Used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#doMaintenance, perform maintenance of registered state store providers>>
+
+| getStore
+a| [[getStore]]
+
+[source, scala]
+----
+getStore(version: Long): StateStore
+----
+
+Returns the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a given version
+
+Used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, get the StateStore for a given ID and version>>
+
+| init
+a| [[init]]
+
+[source, scala]
+----
+init(
+  stateStoreId: StateStoreId,
+  keySchema: StructType,
+  valueSchema: StructType,
+  keyIndexOrdinal: Option[Int],
+  storeConfs: StateStoreConf,
+  hadoopConf: Configuration): Unit
+----
+
+Initializes the state store provider
+
+Used exclusively when `StateStoreProvider` helper object is requested to <<createAndInit, create and init the StateStoreProvider>>
+
+| stateStoreId
+a| [[stateStoreId]]
+
+[source, scala]
+----
+stateStoreId: StateStoreId
+----
+
+Returns the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> (that was used at <<init, initialization>>)
+
+Used when:
+
+* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.adoc#id, unique id>>
+
+* `HDFSBackedStateStoreProvider` is <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#baseDir, created>> and requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#toString, textual representation>>
+
+| supportedCustomMetrics
+a| [[supportedCustomMetrics]]
+
+[source, scala]
+----
+supportedCustomMetrics: Seq[StateStoreCustomMetric]
+----
+
+Used when:
+
+* `StateStoreWriter` stateful physical operators is requested for the <<spark-sql-streaming-StateStoreWriter.adoc#stateStoreCustomMetrics, stateStoreCustomMetrics>> (when requested for the <<spark-sql-streaming-StateStoreWriter.adoc#metrics, metrics>> and <<spark-sql-streaming-StateStoreWriter.adoc#getProgress, getProgress>>)
+
+* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.adoc#metrics, metrics>>
+
+|===
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> is the one and only known implementation of the <<contract, StateStoreProvider Contract>> in Spark Structured Streaming.
+
+=== [[createAndInit]] `createAndInit` Object Method
+
+[source, scala]
+----
+createAndInit(
+  stateStoreId: StateStoreId,
+  keySchema: StructType,
+  valueSchema: StructType,
+  indexOrdinal: Option[Int],
+  storeConf: StateStoreConf,
+  hadoopConf: Configuration): StateStoreProvider
+----
+
+`createAndInit`...FIXME
+
+NOTE: `createAndInit` is used when...FIXME

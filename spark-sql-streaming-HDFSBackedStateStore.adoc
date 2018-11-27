@@ -10,6 +10,9 @@
 * `COMMITTED`
 * `ABORTED`
 
+[[id]]
+`HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> of the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#stateStoreId, HDFSBackedStateStoreProvider>>.
+
 [[toString]]
 When requested for the string identifier, `HDFSBackedStateStore`...FIXME
 
@@ -169,3 +172,14 @@ commitUpdates(newVersion: Long, map: MapType, output: DataOutputStream): Unit
 `commitUpdates`...FIXME
 
 NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<commit, commit state changes>>.
+
+=== [[metrics]] `metrics` Method
+
+[source, scala]
+----
+metrics: StateStoreMetrics
+----
+
+NOTE: `metrics` is part of the <<spark-sql-streaming-StateStore.adoc#metrics, StateStore Contract>> to get the <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>.
+
+`metrics`...FIXME
