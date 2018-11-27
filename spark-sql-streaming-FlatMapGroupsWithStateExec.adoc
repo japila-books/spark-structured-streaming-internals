@@ -2,7 +2,7 @@
 
 `FlatMapGroupsWithStateExec` is a unary physical operator that represents a <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator at execution time.
 
-NOTE: A unary physical operator is a physical operator with a <<child, single child physical operator>>.
+NOTE: A unary physical operator is a physical operator with a single <<child, child>> physical operator.
 
 `FlatMapGroupsWithStateExec` is <<creating-instance, created>> when link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy] execution planning strategy is requested to plan a streaming query with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators for execution.
 

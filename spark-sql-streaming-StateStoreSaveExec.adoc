@@ -1,6 +1,8 @@
 == [[StateStoreSaveExec]] StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates
 
-`StateStoreSaveExec` is a unary physical operator (i.e. `UnaryExecNode`) that link:spark-sql-streaming-StateStoreWriter.adoc[saves a streaming state to a state store] with link:spark-sql-streaming-WatermarkSupport.adoc[support for streaming watermark].
+`StateStoreSaveExec` is a unary physical operator that link:spark-sql-streaming-StateStoreWriter.adoc[saves a streaming state to a state store] with link:spark-sql-streaming-WatermarkSupport.adoc[support for streaming watermark].
+
+NOTE: A unary physical operator is a physical operator with a single <<child, child>> physical operator.
 
 `StateStoreSaveExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed (and plans `Aggregate` logical operators in a streaming structured query).
 

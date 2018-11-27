@@ -1,0 +1,115 @@
+== [[StateStoreHandler]] StateStoreHandler Contract
+
+`StateStoreHandler` is the <<contract, base>> of <<extensions, state store handlers>> that manage a <<stateStore, StateStore>> (i.e. <<commit, commit>>, <<abortIfNeeded, abortIfNeeded>> and <<metrics, metrics>>).
+
+[[contract]]
+.StateStoreHandler Contract
+[cols="1m,2",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| stateStore
+a| [[stateStore]]
+
+[source, scala]
+----
+stateStore: StateStore
+----
+
+<<spark-sql-streaming-StateStore.adoc#, StateStore>>
+|===
+
+[[metrics]]
+When requested for the <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>, `StateStoreHandler` simply requests the <<stateStore, StateStore>> for <<spark-sql-streaming-StateStore.adoc#metrics, them>>.
+
+[[extensions]]
+.StateStoreHandlers
+[cols="1,2",options="header",width="100%"]
+|===
+| StateStoreHandler
+| Description
+
+| <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>>
+| [[KeyToNumValuesStore]]
+
+| <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>>
+| [[KeyWithIndexToValueStore]]
+
+|===
+
+[[stateStoreType]]
+[[creating-instance]]
+`StateStoreHandler` takes a single <<StateStoreType, StateStoreType>> when created.
+
+NOTE: `StateStoreHandler` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly when the <<extensions, concrete StateStoreHandlers>> are.
+
+[[logging]]
+[TIP]
+====
+Enable `DEBUG` or `INFO` logging levels for `org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinStateManager.StateStoreHandler` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinStateManager.StateStoreHandler=DEBUG
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
+
+=== [[commit]] Committing Changes to State Store -- `commit` Method
+
+[source, scala]
+----
+commit(): Unit
+----
+
+`commit`...FIXME
+
+NOTE: `commit` is used when...FIXME
+
+=== [[abortIfNeeded]] `abortIfNeeded` Method
+
+[source, scala]
+----
+abortIfNeeded(): Unit
+----
+
+`abortIfNeeded`...FIXME
+
+NOTE: `abortIfNeeded` is used when...FIXME
+
+=== [[getStateStore]] `getStateStore` Method
+
+[source, scala]
+----
+getStateStore(keySchema: StructType, valueSchema: StructType): StateStore
+----
+
+`getStateStore`...FIXME
+
+NOTE: `getStateStore` is used when...FIXME
+
+=== [[StateStoreType]] `StateStoreType` Contract (Sealed Trait)
+
+`StateStoreType` is required to create a <<creating-instance, StateStoreHandler>>.
+
+[[StateStoreType-implementations]]
+.StateStoreTypes
+[cols="1m,1m,2",options="header",width="100%"]
+|===
+| StateStoreType
+| toString
+| Description
+
+| KeyToNumValuesType
+| keyToNumValues
+| [[KeyToNumValuesType]]
+
+| KeyWithIndexToValueType
+| keyWithIndexToValue
+| [[KeyWithIndexToValueType]]
+|===
+
+NOTE: `StateStoreType` is a Scala private *sealed trait* which means that all the <<StateStoreType-implementations, implementations>> are in the same compilation unit (a single file).

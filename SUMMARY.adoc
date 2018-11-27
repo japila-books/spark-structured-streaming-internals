@@ -166,6 +166,8 @@
 .. link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 
+. link:spark-sql-streaming-StateStoreMetrics.adoc[StateStoreMetrics]
+
 . link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
 
@@ -186,6 +188,10 @@
 
 . link:spark-sql-streaming-StateStoreId.adoc[StateStoreId]
 . link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
+
+. link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler Contract]
+.. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
+.. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
 
 == Monitoring
 

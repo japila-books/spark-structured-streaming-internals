@@ -47,7 +47,7 @@ Used when:
 
 * `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#commit, commit (changes to) a state store>> (exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed)
 
-* `StateStoreHandler` is requested to `commit`
+* `StateStoreHandler` is requested to <<spark-sql-streaming-StateStoreHandler.adoc#commit, commit changes to a state store>>
 
 | get
 a| [[get]]
@@ -110,6 +110,8 @@ a| [[metrics]]
 ----
 metrics: StateStoreMetrics
 ----
+
+<<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>
 
 Used when:
 

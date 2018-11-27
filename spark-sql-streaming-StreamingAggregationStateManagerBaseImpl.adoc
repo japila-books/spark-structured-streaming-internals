@@ -35,9 +35,9 @@ NOTE: `StreamingAggregationStateManagerBaseImpl` is a Scala abstract class and c
 commit(store: StateStore): Long
 ----
 
-NOTE: `commit` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#commit, StreamingAggregationStateManager Contract>> to commit (changes to) a state store.
+NOTE: `commit` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#commit, StreamingAggregationStateManager Contract>> to commit changes to a <<spark-sql-streaming-StateStore.adoc#, state store>>.
 
-`commit`...FIXME
+`commit` simply requests the <<spark-sql-streaming-StateStore.adoc#, state store>> to <<spark-sql-streaming-StateStore.adoc#commit, commit state changes>>.
 
 === [[remove]] Removing Key From State Store -- `remove` Method
 
