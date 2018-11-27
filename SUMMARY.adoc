@@ -167,6 +167,7 @@
 .. link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 
 . link:spark-sql-streaming-StateStoreMetrics.adoc[StateStoreMetrics]
+. link:spark-sql-streaming-StateStoreCustomMetric.adoc[StateStoreCustomMetric Contract]
 
 . link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
@@ -224,3 +225,4 @@
 == Varia
 
 . link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
+. link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
