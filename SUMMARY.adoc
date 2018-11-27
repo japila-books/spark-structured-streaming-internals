@@ -123,21 +123,13 @@
 === Physical Operators
 
 . link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator for Accumulating Event Time Watermark]
-.. link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
-
 . link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec Unary Physical Operator]
-.. link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]
-
 . link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates]
 . link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates]
-.. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
-.. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
 . link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication]
 . link:spark-sql-streaming-StreamingGlobalLimitExec.adoc[StreamingGlobalLimitExec]
 . link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec Leaf Physical Operator]
 . link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc[StreamingSymmetricHashJoinExec]
-
-. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support]
 
 === Execution Planning Strategies
 
@@ -217,6 +209,8 @@
 
 == Demos
 
+. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
+. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
 . link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[groupBy Streaming Aggregation with Append Output Mode]
 . link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
 . link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
@@ -226,3 +220,6 @@
 
 . link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
 . link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
+. link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
+. link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]
+. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support]
