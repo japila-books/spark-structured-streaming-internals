@@ -1,0 +1,15 @@
+== [[StateStoreConf]] StateStoreConf
+
+`StateStoreConf` is...FIXME
+
+[[properties]]
+.StateStoreConf's Properties
+[cols="1m,2",options="header",width="100%"]
+|===
+| Name
+| Configuration Property
+
+| [[providerClass]] providerClass
+| <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
+
+|===

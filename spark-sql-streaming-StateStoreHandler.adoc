@@ -89,7 +89,7 @@ getStateStore(keySchema: StructType, valueSchema: StructType): StateStore
 
 `getStateStore`...FIXME
 
-NOTE: `getStateStore` is used when...FIXME
+NOTE: `getStateStore` is used when <<spark-sql-streaming-KeyToNumValuesStore.adoc#stateStore, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#stateStore, KeyWithIndexToValueStore>> are created.
 
 === [[StateStoreType]] `StateStoreType` Contract (Sealed Trait)
 

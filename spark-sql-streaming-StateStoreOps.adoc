@@ -50,11 +50,9 @@ In the end, `mapPartitionsWithStateStore` creates a link:spark-sql-streaming-Sta
 ====
 `mapPartitionsWithStateStore` is used when the following physical operators are executed:
 
-* link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[FlatMapGroupsWithStateExec]
-
-* link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec]
-
-* link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec]
-
-* link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec]
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
 ====

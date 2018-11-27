@@ -154,8 +154,8 @@
 == Managing State in Stateful Stream Processing
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore Contract -- Kay-Value Store for State Management]
-. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
-. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
+.. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
+.. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
 
 . link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider Contract]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
@@ -185,6 +185,8 @@
 
 . link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps -- Implicits Methods for Creating StateStoreRDD]
 . link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
+
+. link:spark-sql-streaming-StateStoreConf.adoc[StateStoreConf]
 
 == Monitoring
 

@@ -2,13 +2,13 @@
 
 `StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.adoc[StateStore] (and data from partitions of a <<dataRDD, new batch RDD>>).
 
-`StateStoreRDD` is <<creating-instance, created>> when link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[executing physical operators] that work with state:
+`StateStoreRDD` is <<creating-instance, created>> when the following stateful physical operators are executed (using <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
 
-* link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[FlatMapGroupsWithStateExec] (for link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState] and link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operators)
-
-* link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec] and link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec] (for link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy], `rollup`, and `cube` operators)
-
-* link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] (for link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates] operator)
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
 
 .StateStoreRDD, Physical and Logical Plans, and operators
 image::images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png[align="center"]

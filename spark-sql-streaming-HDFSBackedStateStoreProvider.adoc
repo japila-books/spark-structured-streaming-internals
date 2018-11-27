@@ -1,6 +1,6 @@
 == [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider
 
-`HDFSBackedStateStoreProvider` is...FIXME
+`HDFSBackedStateStoreProvider` is the one and only known <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>.
 
 [[baseDir]]
 `HDFSBackedStateStoreProvider` uses the *state checkpoint base directory* (that is the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, storeCheckpointLocation>> of the <<stateStoreId, StateStoreId>>) for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files. The checkpoint directory is created when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
@@ -10,6 +10,28 @@
 
 [[toString]]
 When requested for the textual representation, `HDFSBackedStateStoreProvider`...FIXME
+
+[[internal-registries]]
+.HDFSBackedStateStoreProvider's Internal Properties
+[cols="1m,2",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| loadedMaps
+a| [[loadedMaps]]
+
+[source, scala]
+----
+loadedMaps: TreeMap[Long, ConcurrentHashMap[UnsafeRow, UnsafeRow]]
+----
+
+Java's https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[TreeMap] of FIXME sorted according to the reversed natural ordering of the keys
+
+A new entry (a version and the associated map) is added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>
+
+Used when...FIXME
+|===
 
 [[logging]]
 [TIP]
@@ -25,16 +47,16 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStore
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
-=== [[getStore]] Creating HDFSBackedStateStore -- `getStore` Method
+=== [[getStore]] Retrieving State Store for Version -- `getStore` Method
 
 [source, scala]
 ----
 getStore(version: Long): StateStore
 ----
 
-NOTE: `getStore` is a part of link:spark-sql-streaming-StateStoreProvider.adoc#getStore[StateStoreProvider Contract] to..FIXME.
+NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, StateStoreProvider Contract>> to get the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a given version.
 
-CAUTION: FIXME
+`getStore`...FIXME
 
 === [[deltaFile]] `deltaFile` Internal Method
 
@@ -84,7 +106,7 @@ latestIterator(): Iterator[UnsafeRowPair]
 
 `latestIterator`...FIXME
 
-NOTE: `latestIterator` is used when...FIXME
+NOTE: `latestIterator` seems to be used exclusively in tests.
 
 === [[doSnapshot]] `doSnapshot` Internal Method
 
@@ -107,3 +129,52 @@ cleanup(): Unit
 `cleanup`...FIXME
 
 NOTE: `cleanup` is used when...FIXME
+
+=== [[close]] Closing State Store Provider -- `close` Method
+
+[source, scala]
+----
+close(): Unit
+----
+
+NOTE: `close` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#close, StateStoreProvider Contract>> to close the state store provider.
+
+`close`...FIXME
+
+=== [[putStateIntoStateCacheMap]] `putStateIntoStateCacheMap` Internal Method
+
+[source, scala]
+----
+putStateIntoStateCacheMap(
+  newVersion: Long,
+  map: ConcurrentHashMap[UnsafeRow, UnsafeRow]): Unit
+----
+
+`putStateIntoStateCacheMap`...FIXME
+
+NOTE: `putStateIntoStateCacheMap` is used when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commitUpdates>> and <<loadMap, loadMap>>.
+
+=== [[commitUpdates]] `commitUpdates` Internal Method
+
+[source, scala]
+----
+commitUpdates(
+  newVersion: Long,
+  map: ConcurrentHashMap[UnsafeRow, UnsafeRow],
+  output: DataOutputStream): Unit
+----
+
+`commitUpdates`...FIXME
+
+NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.adoc#commit, commit state changes>>.
+
+=== [[loadMap]] `loadMap` Internal Method
+
+[source, scala]
+----
+loadMap(version: Long): ConcurrentHashMap[UnsafeRow, UnsafeRow]
+----
+
+`loadMap`...FIXME
+
+NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, getStore>> and <<latestIterator, latestIterator>>.

@@ -6,8 +6,6 @@ NOTE: A unary physical operator is a physical operator with a single <<child, ch
 
 `FlatMapGroupsWithStateExec` is <<creating-instance, created>> when link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy] execution planning strategy is requested to plan a streaming query with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators for execution.
 
-NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator is created as the result of link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[KeyValueGroupedDataset.flatMapGroupsWithState] operator.
-
 `FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
 
 `FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator with the <<outputObjAttr, output object attribute>>.
