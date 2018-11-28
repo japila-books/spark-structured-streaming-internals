@@ -6,7 +6,7 @@
 `HDFSBackedStateStoreProvider` uses the *state checkpoint base directory* (that is the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, storeCheckpointLocation>> of the <<stateStoreId, StateStoreId>>) for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files. The checkpoint directory is created when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
 
 [[stateStoreId]]
-`HDFSBackedStateStoreProvider` uses `stateStoreId` that...FIXME
+The <<spark-sql-streaming-StateStoreProvider.adoc#stateStoreId, StateStoreId>> of a `HDFSBackedStateStoreProvider` is defined at <<init, initialization>>.
 
 [[toString]]
 When requested for the textual representation, `HDFSBackedStateStoreProvider`...FIXME
@@ -28,9 +28,23 @@ loadedMaps: TreeMap[Long, ConcurrentHashMap[UnsafeRow, UnsafeRow]]
 
 Java's https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[TreeMap] of FIXME sorted according to the reversed natural ordering of the keys
 
+The current size estimation of `loadedMaps` is the <<memoryUsedBytes, memoryUsedBytes>> metric in the <<metrics, metrics>>.
+
 A new entry (a version and the associated map) is added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>
 
 Used when...FIXME
+
+| numberOfVersionsToRetainInMemory
+a| [[numberOfVersionsToRetainInMemory]]
+
+[source, scala]
+----
+numberOfVersionsToRetainInMemory: Int
+----
+
+`numberOfVersionsToRetainInMemory` is the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property that sets the upper limit on the number of entries in the <<loadedMaps, loadedMaps>> internal registry.
+
+`numberOfVersionsToRetainInMemory` is used when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
 |===
 
 [[logging]]
@@ -95,7 +109,11 @@ init(
 
 NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#init, StateStoreProvider Contract>> to initialize itself.
 
-`init`...FIXME
+`init` assigns the values of the input arguments to <<stateStoreId, stateStoreId>>, <<keySchema, keySchema>>, <<valueSchema, valueSchema>>, <<storeConf, storeConf>>, and <<hadoopConf, hadoopConf>>.
+
+`init` uses the `StateStoreConf` to requests for the <<spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>>).
+
+In the end, `init` requests the <<fm, CheckpointFileManager>> to create the <<baseDir, baseDir>> directory (with subdirectories).
 
 === [[latestIterator]] `latestIterator` Internal Method
 

@@ -71,13 +71,12 @@ setStoreMetrics(store: StateStore): Unit
 
 [NOTE]
 ====
-`setStoreMetrics` is used when:
+`setStoreMetrics` is used when the following physical operators are executed:
 
-* `FlatMapGroupsWithStateExec` link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[is executed]
-
-* `StateStoreSaveExec` link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[is executed]
-
-* `StreamingDeduplicateExec` link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[is executed]
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
 ====
 
 === [[getProgress]] `getProgress` Method

@@ -12,4 +12,7 @@
 | [[providerClass]] providerClass
 | <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
 
+| [[maxVersionsToRetainInMemory]] maxVersionsToRetainInMemory
+| <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
+
 |===
