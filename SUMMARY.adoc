@@ -151,14 +151,14 @@
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 
-== Managing State in Stateful Stream Processing
+== State Management in Stateful Stream Processing
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore Contract -- Kay-Value Store for State Management]
 .. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore -- State Store on HDFS-Compatible File System]
 .. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
 
 . link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider Contract]
-.. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
+.. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider -- Default StateStoreProvider]
 
 . link:spark-sql-streaming-StateStoreMetrics.adoc[StateStoreMetrics]
 . link:spark-sql-streaming-StateStoreCustomMetric.adoc[StateStoreCustomMetric Contract]

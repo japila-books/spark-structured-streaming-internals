@@ -6,23 +6,23 @@ The semantics of the Structured Streaming model is as follows (see the article h
 
 > At any time, the output of a continuous application is equivalent to executing a batch job on a prefix of the data.
 
-NOTE: As of Spark 2.2.0, Structured Streaming has been marked stable and ready for production use. With that the other older streaming module Spark Streaming should _de facto_ be considered obsolete and not used for developing new Spark applications.
+NOTE: As of Spark 2.2.0, Structured Streaming has been marked stable and ready for production use. With that the other older streaming module Spark Streaming should _de facto_ be considered obsolete and not used for developing new streaming applications with Apache Spark.
 
 Structured Streaming attempts to unify streaming, interactive, and batch queries over structured datasets for developing end-to-end stream processing applications dubbed *continuous applications* using Spark SQL's Datasets API with additional support for the following features:
 
-* link:spark-sql-streaming-Dataset-operators.adoc#groupBy[Continuous streaming aggregations]
+* link:spark-sql-streaming-Dataset-operators.adoc#groupBy[Continuous Streaming Aggregations]
 
 * link:spark-sql-streaming-Dataset-withWatermark.adoc[Streaming watermark] (for state expiration and late events)
 
-* Continuous window aggregations (aka *windowing*) using `groupBy` operator with `window` function
+* Continuous Window Aggregations (aka *windowing*) using `groupBy` operator with `window` function
 
-* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[arbitrary stateful stream aggregation]
+* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[Arbitrary Stateful Streaming Aggregations]
 
 In Structured Streaming, Spark developers describe custom streaming computations in the same way as with Spark SQL. Internally, Structured Streaming applies the user-defined structured query to the continuously and indefinitely arriving data to analyze real-time streaming data.
 
 With Structured Streaming, Spark 2 aims at simplifying *streaming analytics* with little to no need to reason about effective data streaming (trying to hide the unnecessary complexity in your streaming analytics architectures).
 
-Structured Streaming introduces *streaming Datasets* that are _infinite datasets_ with primitives like input link:spark-sql-streaming-Source.adoc[streaming data sources] and output link:spark-sql-streaming-Sink.adoc[streaming data sinks].
+Structured Streaming introduces the concept of *streaming datasets* that are _infinite datasets_ with primitives like input link:spark-sql-streaming-Source.adoc[streaming data sources] and output link:spark-sql-streaming-Sink.adoc[streaming data sinks].
 
 [TIP]
 ====
@@ -33,23 +33,23 @@ A `Dataset` is *streaming* (aka _continuous_) when its logical plan is streaming
 val batchQuery = spark.
   read. // <-- batch non-streaming query
   csv("sales")
-scala> batchQuery.isStreaming
-res0: Boolean = false
+
+assert(batchQuery.isStreaming == false)
 
 val streamingQuery = spark.
   readStream. // <-- streaming query
   format("rate").
   load
-scala> streamingQuery.isStreaming
-res1: Boolean = true
+
+assert(streamingQuery.isStreaming)
 ----
 
-More information about Spark SQL, Datasets and logical plans is available in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/[Mastering Apache Spark 2].
+More information about Spark SQL, Datasets and logical plans is available in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL].
 ====
 
 Structured Streaming models a stream of data as an infinite (and hence continuous) table that could be changed every streaming batch.
 
-You can specify link:spark-sql-streaming-OutputMode.adoc[output mode] of a streaming dataset which is what gets written to a streaming sink (i.e. the infinite table) when there is new data available.
+You can specify link:spark-sql-streaming-OutputMode.adoc[output mode] of a streaming dataset which is what gets written to a streaming sink (i.e. the infinite result table) when there is a new data available.
 
 Streaming Datasets use *streaming query plans* (as opposed to regular batch Datasets that are based on batch query plans).
 
@@ -60,12 +60,12 @@ From this perspective, batch queries can be considered streaming Datasets execut
 [source, scala]
 ----
 val batchQuery = spark.read.format("rate").load
-scala> batchQuery.isStreaming
-res0: Boolean = false
+
+assert(batchQuery.isStreaming == false)
 
 val streamingQuery = spark.readStream.format("rate").load
-scala> streamingQuery.isStreaming
-res1: Boolean = true
+
+assert(streamingQuery.isStreaming)
 ----
 ====
 
@@ -102,8 +102,7 @@ val people = spark.
   as[Person]
 
 // people has this additional capability of being streaming
-scala> people.isStreaming
-res0: Boolean = true
+assert(people.isStreaming)
 
 // ...but it is still a Dataset.
 // (Almost) any Dataset operation is available
@@ -124,8 +123,7 @@ val populationStream = population.
   queryName("textStream").
   start
 
-scala> populationStream.isActive
-res1: Boolean = true
+assert(populationStream.isActive)
 
 scala> populationStream.explain(extended = true)
 == Parsed Logical Plan ==
@@ -155,8 +153,7 @@ Streaming Query - Population [state = ACTIVE]
 // You may eventually want to stop the streaming query
 populationStream.stop
 
-scala> populationStream.isActive
-res2: Boolean = false
+assert(populationStream.isActive == false)
 ----
 
 Structured streaming is defined by the following data abstractions in `org.apache.spark.sql.streaming` package:

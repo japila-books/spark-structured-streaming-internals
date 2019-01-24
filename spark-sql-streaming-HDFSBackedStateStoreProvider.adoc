@@ -1,6 +1,8 @@
-== [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider
+== [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider -- Default StateStoreProvider
 
-`HDFSBackedStateStoreProvider` is the one and only known <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>.
+`HDFSBackedStateStoreProvider` is the default <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> per <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property.
+
+When `StateStoreProvider` helper object is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize the StateStoreProvider>>, `HDFSBackedStateStoreProvider` is created and requested to <<init, initialize>>.
 
 [[baseDir]]
 `HDFSBackedStateStoreProvider` uses the *state checkpoint base directory* (that is the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, storeCheckpointLocation>> of the <<stateStoreId, StateStoreId>>) for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files. The checkpoint directory is created when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
@@ -9,7 +11,7 @@
 The <<spark-sql-streaming-StateStoreProvider.adoc#stateStoreId, StateStoreId>> of a `HDFSBackedStateStoreProvider` is defined at <<init, initialization>>.
 
 [[toString]]
-When requested for the textual representation, `HDFSBackedStateStoreProvider`...FIXME
+When requested for the textual representation, `HDFSBackedStateStoreProvider` returns *HDFSStateStoreProvider[id = (op=[operatorId],part=[partitionId]),dir = [baseDir]]*.
 
 [[internal-registries]]
 .HDFSBackedStateStoreProvider's Internal Properties
@@ -26,7 +28,7 @@ a| [[loadedMaps]]
 loadedMaps: TreeMap[Long, ConcurrentHashMap[UnsafeRow, UnsafeRow]]
 ----
 
-Java's https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[TreeMap] of FIXME sorted according to the reversed natural ordering of the keys
+https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[java.util.TreeMap] of FIXME sorted according to the reversed natural ordering of the keys
 
 The current size estimation of `loadedMaps` is the <<memoryUsedBytes, memoryUsedBytes>> metric in the <<metrics, metrics>>.
 

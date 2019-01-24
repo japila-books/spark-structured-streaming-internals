@@ -252,7 +252,7 @@ NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` is reque
 
 CAUTION: FIXME
 
-=== [[get-StateStore]] Retrieving StateStore by ID and Version -- `get` Method
+=== [[get-StateStore]] Retrieving StateStore by ID and Version -- `get` Factory Method
 
 [source, scala]
 ----
@@ -268,7 +268,7 @@ get(
 
 `get` finds `StateStore` for `StateStoreProviderId`.
 
-Internally, `get` looks up the `StateStoreProvider` (for `storeProviderId`) in <<loadedProviders, loadedProviders>> registry. If unavailable, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
+Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (for `storeProviderId`) in <<loadedProviders, loadedProviders>> registry. If unavailable, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
 
 `get` will also <<startMaintenanceIfNeeded, start the periodic maintenance task>> (unless already started) and <<reportActiveStoreInstance, announce the new StateStoreProvider>>.
 
@@ -280,7 +280,7 @@ In the end, `get` link:spark-sql-streaming-StateStoreProvider.adoc#getStore[gets
 
 * `StateStoreRDD` is requested to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute>>
 
-* `StateStoreHandler` is requested to <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, getStateStore>>
+* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, getStateStore>>
 ====
 
 === [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Method

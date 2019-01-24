@@ -63,7 +63,7 @@ init(
 
 Initializes the state store provider
 
-Used exclusively when `StateStoreProvider` helper object is requested to <<createAndInit, create and init the StateStoreProvider>>
+Used exclusively when `StateStoreProvider` helper object is requested to <<createAndInit, create and init the StateStoreProvider>> (when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, retrieve a StateStore by ID and version>>)
 
 | stateStoreId
 a| [[stateStoreId]]
@@ -100,7 +100,7 @@ Used when:
 [[implementations]]
 NOTE: <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> is the one and only known implementation of the <<contract, StateStoreProvider Contract>> in Spark Structured Streaming.
 
-=== [[createAndInit]] Creating and Initializing StateStoreProvider -- `createAndInit` Object Method
+=== [[createAndInit]] Creating and Initializing StateStoreProvider -- `createAndInit` Factory Method
 
 [source, scala]
 ----
@@ -113,7 +113,7 @@ createAndInit(
   hadoopConf: Configuration): StateStoreProvider
 ----
 
-`createAndInit` creates a new `StateStoreProvider` (per <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> configuration property).
+`createAndInit` creates a new `StateStoreProvider` (per <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property).
 
 `createAndInit` requests the `StateStoreProvider` to <<init, initialize>>.
 

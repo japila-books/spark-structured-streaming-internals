@@ -103,9 +103,9 @@ a| [[spark.sql.streaming.pollingDelay]] *(internal)* Time delay (in ms) before `
 | `spark.sql.streaming.stateStore.providerClass`
 
 <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider>>
-| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name to manage state data in stateful streaming queries.
+| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name of the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
 
-This class must be a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>, and must have a zero-arg constructor.
+Use <<spark-sql-streaming-SQLConf.adoc#stateStoreProviderClass, SQLConf.stateStoreProviderClass>> to get the current value.
 
 | `spark.sql.streaming.unsupportedOperationCheck`
 

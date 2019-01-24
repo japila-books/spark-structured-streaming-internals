@@ -19,10 +19,15 @@ a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]]
 `spark.sql.shuffle.partitions`
 a| [[SHUFFLE_PARTITIONS]] See https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-properties.html#spark.sql.shuffle.partitions[spark.sql.shuffle.partitions] in The Internals of Spark SQL.
 
-| `STATE_STORE_PROVIDER_CLASS`
+| `stateStoreProviderClass`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
-a| [[STATE_STORE_PROVIDER_CLASS]]
+
+a| [[stateStoreProviderClass]] Used when:
+
+* `StateStoreWriter` is requested to <<spark-sql-streaming-StateStoreWriter.adoc#stateStoreCustomMetrics, stateStoreCustomMetrics>> (when `StateStoreWriter` is requested for the <<spark-sql-streaming-StateStoreWriter.adoc#metrics, metrics>> and <<spark-sql-streaming-StateStoreWriter.adoc#getProgress, getProgress>>)
+
+* `StateStoreConf` is <<spark-sql-streaming-StateStoreConf.adoc#providerClass, created>>
 
 | `STREAMING_AGGREGATION_STATE_FORMAT_VERSION`
 

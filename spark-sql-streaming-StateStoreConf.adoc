@@ -4,15 +4,17 @@
 
 [[properties]]
 .StateStoreConf's Properties
-[cols="1m,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
 | Configuration Property
 
-| [[providerClass]] providerClass
-| <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
+| providerClass
+a| [[providerClass]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
 
-| [[maxVersionsToRetainInMemory]] maxVersionsToRetainInMemory
-| <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
+Used exclusively when `StateStoreProvider` helper object is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize the StateStoreProvider>>.
+
+| maxVersionsToRetainInMemory
+| [[maxVersionsToRetainInMemory]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
 
 |===
