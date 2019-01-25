@@ -1,8 +1,11 @@
 == [[StateStoreProvider]] StateStoreProvider Contract
 
-`StateStoreProvider` is the <<contract, abstraction>> of <<implementations, state store providers>>.
+`StateStoreProvider` is the <<contract, abstraction>> of <<implementations, state store providers>> that manage <<getStore, StateStores>> for a given <<stateStoreId, StateStoreId>>.
 
-NOTE: `StateStoreProvider` helper object uses <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> configuration property to <<createAndInit, create and initialize the StateStoreProvider>>.
+NOTE: `StateStoreProvider` helper object uses <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property for the name of the class of the <<implementations, StateStoreProvider implementation>>.
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> is the only available implementation of the <<contract, StateStoreProvider Contract>> in Spark Structured Streaming.
 
 [[contract]]
 .StateStoreProvider Contract
@@ -97,8 +100,21 @@ Used when:
 
 |===
 
-[[implementations]]
-NOTE: <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> is the one and only known implementation of the <<contract, StateStoreProvider Contract>> in Spark Structured Streaming.
+=== [[lifecycle]] Lifecycle of StateStoreProvider
+
+The lifecycle of a `StateStoreProvider` starts when `StateStore` helper object (on a Spark executor) is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, retrieve a StateStore by provider ID and version>>.
+
+NOTE: <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> is the only available implementation of the <<contract, StateStoreProvider Contract>> in Spark Structured Streaming.
+
+NOTE: Since `StateStore` and `StateStoreProvider` helper objects are Scala objects that gives that there can only be one instance of `StateStore` and `StateStoreProvider` on a JVM. That in turn means that there will be only one instance of each per JVM which is exactly the JVM of a Spark executor.
+
+`StateStore` helper object requests `StateStoreProvider` helper object to <<createAndInit, createAndInit>> that creates the `StateStoreProvider` implementation (given <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property) and requests it to <<init, initialize>>.
+
+The initialized `StateStoreProvider` is cached in <<spark-sql-streaming-StateStore.adoc#loadedProviders, loadedProviders>> internal lookup table (for a <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>>) for later lookups.
+
+`StateStoreProvider` helper object then requests the `StateStoreProvider` to <<getStore, getStore>> for the version.
+
+An instance of `StateStoreProvider` is requested to <<doMaintenance, do its own maintenance>> or <<close, close>> (when <<verifyIfStoreInstanceActive, a corresponding StateStore is inactive>>) in <<MaintenanceTask, MaintenanceTask daemon thread>> that runs periodically every <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> configuration property (default: `60s`).
 
 === [[createAndInit]] Creating and Initializing StateStoreProvider -- `createAndInit` Factory Method
 
@@ -117,4 +133,4 @@ createAndInit(
 
 `createAndInit` requests the `StateStoreProvider` to <<init, initialize>>.
 
-NOTE: `createAndInit` is used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, retrieve a StateStore by ID and version>>.
+NOTE: `createAndInit` is used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, retrieve a StateStore by provider ID and version>>.
