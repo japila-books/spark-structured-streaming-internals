@@ -43,11 +43,11 @@ Commits state changes
 
 Used when:
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#doExecute, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed successfully)
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed)
 
 * `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#commit, commit (changes to) a state store>> (exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed)
 
-* `StateStoreHandler` is requested to <<spark-sql-streaming-StateStoreHandler.adoc#commit, commit changes to a state store>>
+* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#commit, commit changes to a state store>>
 
 | get
 a| [[get]]

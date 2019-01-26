@@ -1,6 +1,6 @@
 == [[KeyValueGroupedDataset]] KeyValueGroupedDataset -- Streaming Aggregation
 
-`KeyValueGroupedDataset` represents a *grouped dataset* as a result of link:spark-sql-streaming-Dataset-operators.adoc#groupByKey[groupByKey] operator (that aggregates records by a grouping function).
+`KeyValueGroupedDataset` represents a *grouped dataset* as a result of <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> operator (that aggregates records by a grouping function).
 
 [source, scala]
 ----
@@ -8,18 +8,47 @@
 groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
 ----
 
-`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for *streaming aggregation* (with streaming Datasets).
-
 [source, scala]
 ----
 import java.sql.Timestamp
-scala> val numGroups = spark.
+val numGroups = spark.
   readStream.
   format("rate").
   load.
   as[(Timestamp, Long)].
   groupByKey { case (time, value) => value % 2 }
-numGroups: org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)] = org.apache.spark.sql.KeyValueGroupedDataset@616c1605
+
+scala> :type numGroups
+org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
+----
+
+`KeyValueGroupedDataset` is also <<creating-instance, created>> for <<keyAs, KeyValueGroupedDataset.keyAs>> and <<mapValues, KeyValueGroupedDataset.mapValues>> operators.
+
+[source, scala]
+----
+scala> :type numGroups
+org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
+
+scala> :type numGroups.keyAs[String]
+org.apache.spark.sql.KeyValueGroupedDataset[String,(java.sql.Timestamp, Long)]
+----
+
+[source, scala]
+----
+scala> :type numGroups
+org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
+
+val mapped = numGroups.mapValues { case (ts, n) => s"($ts, $n)" }
+scala> :type mapped
+org.apache.spark.sql.KeyValueGroupedDataset[Long,String]
+----
+
+`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for *streaming aggregation* (with streaming Datasets).
+
+[source, scala]
+----
+scala> :type numGroups
+org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
 
 import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
