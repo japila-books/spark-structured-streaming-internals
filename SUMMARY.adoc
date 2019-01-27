@@ -165,7 +165,7 @@
 
 . link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)]
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator -- Tracking Locations of StateStores for StateStoreRDD]
-.. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator]
+.. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef -- StateStoreCoordinator RPC Endpoint to StateStoreCoordinator]
 
 . link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation]
 .. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl -- Base State Manager for Streaming Aggregation]

@@ -236,7 +236,7 @@ Used exclusively when `HDFSBackedStateStore` state store is requested for a <<sp
 Used in...FIXME
 
 | _coordRef
-| [[_coordRef]] <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinatorRef>> (a `RpcEndpointRef` to link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]).
+| [[_coordRef]] <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinator RPC endpoint>> (a `RpcEndpointRef` to link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]).
 
 Used in...FIXME
 |===
@@ -319,7 +319,7 @@ In the end, `reportActiveStoreInstance` prints out the following INFO message to
 Reported that the loaded instance [storeProviderId] is active
 ```
 
-NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` is requested to <<get-StateStore, find the StateStore by StateStoreProviderId>>.
+NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` helper object is requested to <<get-StateStore, find the StateStore by StateStoreProviderId>>.
 
 === [[MaintenanceTask]] `MaintenanceTask` Daemon Thread
 

@@ -1,37 +1,38 @@
-== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef Interface for Communication with StateStoreCoordinator
+== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef -- StateStoreCoordinator RPC Endpoint to StateStoreCoordinator
 
 [[rpcEndpointRef]]
 `StateStoreCoordinatorRef` allows for <<messages, communication>> with link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] (through `rpcEndpointRef` reference).
 
 [[messages]]
 .StateStoreCoordinatorRef's Methods and Underlying RPC Messages (in alphabetical order)
-[width="100%",cols="1,1,2",options="header"]
+[width="100%",cols="1m,1m,3",options="header"]
 |===
 | Method
 | RPC Message
 | Description
 
-| [[deactivateInstances]] `deactivateInstances`
-| `DeactivateInstances`
-a| Synchronous event to announce that `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#notifyQueryTermination[has been informed that a query terminated] (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream-finally[has finished (running streaming batches)]).
+| deactivateInstances
+| DeactivateInstances
+a| [[deactivateInstances]] Synchronous event to announce that `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#notifyQueryTermination[has been informed that a query terminated] (which is when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream-finally[has finished (running streaming batches)]).
 
 NOTE: Refer to link:spark-sql-streaming-StateStoreCoordinator.adoc#DeactivateInstances[DeactivateInstances] (of `StateStoreCoordinator`) to know how the event is handled.
 
-| [[getLocation]] `getLocation`
-| `GetLocation`
-|
+| getLocation
+| GetLocation
+| [[getLocation]]
 
-| [[reportActiveInstance]] `reportActiveInstance`
-| `ReportActiveInstance`
-|
+| reportActiveInstance
+| ReportActiveInstance
+| [[reportActiveInstance]]
 
-| [[stop]] `stop`
-| `StopCoordinator`
-|
+| stop
+| StopCoordinator
+| [[stop]]
 
-| [[verifyIfInstanceActive]] `verifyIfInstanceActive`
-| `VerifyIfInstanceActive`
-|
+| verifyIfInstanceActive
+| VerifyIfInstanceActive
+| [[verifyIfInstanceActive]]
+
 |===
 
 === [[forDriver]] Creating StateStoreCoordinatorRef with StateStoreCoordinator RPC Endpoint -- `forDriver` Method
