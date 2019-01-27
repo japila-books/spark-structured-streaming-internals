@@ -1,8 +1,8 @@
 == [[HDFSBackedStateStore]] HDFSBackedStateStore -- State Store on HDFS-Compatible File System
 
-`HDFSBackedStateStore` is a link:spark-sql-streaming-StateStore.adoc[StateStore] that uses a HDFS-compatible file system for versioned state persistence.
+`HDFSBackedStateStore` is a concrete <<spark-sql-streaming-StateStore.adoc#, StateStore>> that uses a HDFS-compatible file system for versioned state persistence.
 
-`HDFSBackedStateStore` is created exclusively when `HDFSBackedStateStoreProvider` <<getStore, is requested for a state store>> (which is when...FIXME).
+`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for a <<getStore, state store for a given version>> (when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, retrieve the StateStore for a given ID and version>>).
 
 `HDFSBackedStateStore` can be in the following <<state, states>>:
 
@@ -14,11 +14,17 @@
 `HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> of the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#stateStoreId, HDFSBackedStateStoreProvider>>.
 
 [[toString]]
-When requested for the string identifier, `HDFSBackedStateStore`...FIXME
+When requested for the textual representation, `HDFSBackedStateStore` gives *HDFSStateStore[id=(op=[operatorId],part=[partitionId]),dir=[baseDir]]*.
+
+[[creating-instance]]
+`HDFSBackedStateStore` takes the following to be created:
+
+* [[version]] Current version
+* [[mapToUpdate]] Key-value registry of `UnsafeRows` (as https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html[java.util.concurrent.ConcurrentHashMap])
 
 [[internal-registries]]
 .HDFSBackedStateStore's Internal Registries
-[cols="1m,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
 | Description
@@ -31,7 +37,7 @@ a| [[compressedStream]]
 compressedStream: DataOutputStream
 ----
 
-The compressed Java https://docs.oracle.com/javase/8/docs/api/java/io/DataOutputStream.html[DataOutputStream] for the <<deltaFileStream, deltaFileStream>>
+The compressed https://docs.oracle.com/javase/8/docs/api/java/io/DataOutputStream.html[java.io.DataOutputStream] for the <<deltaFileStream, deltaFileStream>>
 
 | deltaFileStream
 a| [[deltaFileStream]]
@@ -62,13 +68,13 @@ newVersion: Long
 Used exclusively when `HDFSBackedStateStore` is requested for the <<finalDeltaFile, finalDeltaFile>>, to <<commit, commit>> and <<abort, abort>>
 
 | state
-| [[state]]
+a| [[state]]
 
-| tempDeltaFile
-| [[tempDeltaFile]]
+[source, scala]
+----
+state: STATE
+----
 
-| tempDeltaFileStream
-| [[tempDeltaFileStream]]
 |===
 
 [[logging]]
@@ -141,15 +147,6 @@ Cannot commit after already committed or aborted
 ```
 Error committing version [newVersion] into [this]
 ```
-
-=== [[creating-instance]] Creating HDFSBackedStateStore Instance
-
-`HDFSBackedStateStore` takes the following when created:
-
-* [[version]] Version
-* [[mapToUpdate]] Key-value registry of `UnsafeRows` (as Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html[java.util.concurrent.ConcurrentHashMap])
-
-`HDFSBackedStateStore` initializes the <<internal-registries, internal registries and counters>>.
 
 === [[abort]] Aborting State Changes -- `abort` Method
 

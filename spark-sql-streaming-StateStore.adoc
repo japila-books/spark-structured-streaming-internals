@@ -29,7 +29,7 @@ Used when:
 
 * `StateStoreOps` implicit class is requested to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
 
-* `StateStoreHandler` is requested to `abortIfNeeded` (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
+* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#abortIfNeeded, abortIfNeeded>> (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
 
 | commit
 a| [[commit]]
@@ -57,6 +57,20 @@ a| [[get]]
 get(key: UnsafeRow): UnsafeRow
 ----
 
+Used when:
+
+* `StreamingDeduplicateExec` physical operator is requested to <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, doExecute>>
+
+* `StreamingGlobalLimitExec` physical operator is requested to <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#doExecute, doExecute>>
+
+* `StateManagerImplBase` (of `FlatMapGroupsWithStateExecHelper`) is requested to `getState`
+
+* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#get, StreamingAggregationStateManagerImplV1>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#get, StreamingAggregationStateManagerImplV2>> are requested to get the current value of a non-null key
+
+* `KeyToNumValuesStore` is requested to <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, get>>
+
+* KeyWithIndexToValueStore` is requested to <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#get, get>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#getAll, getAll>>
+
 | getRange
 a| [[getRange]]
 
@@ -64,6 +78,18 @@ a| [[getRange]]
 ----
 getRange(start: Option[UnsafeRow], end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
 ----
+
+Gets the key-value pairs with optional approximate `start` and `end` extents
+
+Used when:
+
+* `WatermarkSupport` is requested to <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark, removeKeysOlderThanWatermark>>
+
+* `StateManagerImplBase` is requested to `getAllState`
+
+* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#keys, keys>>
+
+* <<spark-sql-streaming-KeyToNumValuesStore.adoc#iterator, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#iterator, KeyWithIndexToValueStore>> are requested to `iterator`
 
 | hasCommitted
 a| [[hasCommitted]]
@@ -77,7 +103,7 @@ Used when:
 
 * `StateStoreOps` implicit class is requested to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (when a task finishes, possibly with an error, to check whether to <<abort, abort>> state updates)
 
-* `StateStoreHandler` is requested to `abortIfNeeded` (when a task finishes, possibly with an error, to check whether to <<abort, abort>> state updates)
+* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#abortIfNeeded, abortIfNeeded>> (when a task finishes, possibly with an error, to check whether to <<abort, abort state updates>>)
 
 | id
 a| [[id]]
@@ -87,13 +113,13 @@ a| [[id]]
 id: StateStoreId
 ----
 
-The ID of the state store (for logging purposes only)
+The <<spark-sql-streaming-StateStoreId.adoc#, ID of the state store>> (for logging purposes only)
 
 Used when:
 
-* `HDFSBackedStateStore` state store is requested for the string identifier (`toString`)
+* `HDFSBackedStateStore` state store is requested for the <<spark-sql-streaming-HDFSBackedStateStore.adoc#toString, textual representation>>
 
-* `StateStoreHandler` is requested to `abortIfNeeded` and `getStateStore`
+* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#abortIfNeeded, abortIfNeeded>> and <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, getStateStore>>
 
 | iterator
 a| [[iterator]]
@@ -103,6 +129,16 @@ a| [[iterator]]
 iterator(): Iterator[UnsafeRowPair]
 ----
 
+Used when:
+
+* `StateStoreRestoreExec` physical operator is requested to <<spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute, doExecute>>
+
+* <<spark-sql-streaming-HDFSBackedStateStore.adoc#getRange, HDFSBackedStateStore>> state store in particular and any <<getRange, StateStore>> in particular are requested to `getRange`
+
+* `StreamingAggregationStateManagerImplV1` state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#values, values>>
+
+* `StreamingAggregationStateManagerImplV2` state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#values, values>>
+
 | metrics
 a| [[metrics]]
 
@@ -111,13 +147,13 @@ a| [[metrics]]
 metrics: StateStoreMetrics
 ----
 
-Returns the <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>
+The <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>
 
 Used when:
 
 * `StateStoreWriter` stateful physical operator is requested to <<spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics, setStoreMetrics>>
 
-* `StateStoreHandler` is requested to `commit` and for the `metrics`
+* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#commit, commit>> and for the <<spark-sql-streaming-StateStoreHandler.adoc#metrics, metrics>>
 
 | put
 a| [[put]]
@@ -137,7 +173,7 @@ Used when:
 
 * <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#put, StreamingAggregationStateManagerImplV1>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#put, StreamingAggregationStateManagerImplV2>> are requested to store a row in a state store
 
-* `KeyToNumValuesStore` and `KeyWithIndexToValueStore` are requested to `put`
+* <<spark-sql-streaming-KeyToNumValuesStore.adoc#put, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#put, KeyWithIndexToValueStore>> are requested to store a new value for a key
 
 | remove
 a| [[remove]]
@@ -157,9 +193,9 @@ Used when:
 
 * `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#remove, remove a key from a state store>>
 
-* `KeyToNumValuesStore` is requested to `remove` a key
+* `KeyToNumValuesStore` is requested to <<spark-sql-streaming-KeyToNumValuesStore.adoc#remove, remove a key>>
 
-* `KeyWithIndexToValueStore` is requested to `remove` and `removeAllValues`
+* `KeyWithIndexToValueStore` is requested to <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#remove, remove a key>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#removeAllValues, removeAllValues>>
 
 | version
 a| [[version]]
@@ -169,11 +205,8 @@ a| [[version]]
 version: Long
 ----
 
-Used when:
+Used exclusively when `HDFSBackedStateStore` state store is requested for a <<spark-sql-streaming-HDFSBackedStateStore.adoc#newVersion, new version>> (that simply the current version incremented)
 
-* `HDFSBackedStateStore` state store is requested for <<spark-sql-streaming-HDFSBackedStateStore.adoc#newVersion, newVersion>>
-
-* `MemoryStateStore` state store is requested to `commit`
 |===
 
 [[implementations]]
@@ -184,7 +217,7 @@ Used when:
 | Description
 
 | <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>>
-| [[HDFSBackedStateStore]] `StateStore` that uses a HDFS-compatible file system for state persistence
+| [[HDFSBackedStateStore]] Uses a HDFS-compatible file system for state persistence
 
 | <<spark-sql-streaming-MemoryStateStore.adoc#, MemoryStateStore>>
 | [[MemoryStateStore]]
@@ -209,6 +242,20 @@ Used in...FIXME
 |===
 
 NOTE: `StateStore` was introduced in https://github.com/apache/spark/commit/8c826880f5eaa3221c4e9e7d3fece54e821a0b98[[SPARK-13809\][SQL\] State store for streaming aggregations].
+
+[[logging]]
+[TIP]
+====
+Enable `DEBUG`, `INFO` or `WARN` logging level for `org.apache.spark.sql.execution.streaming.state.StateStore$` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.state.StateStore$=DEBUG
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
 
 === [[coordinatorRef]] Creating StateStoreCoordinatorRef (for Executors) -- `coordinatorRef` Internal Method
 

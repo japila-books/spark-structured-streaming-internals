@@ -90,7 +90,7 @@ The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child
 [[stateManager]]
 `StateStoreRestoreExec` uses a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (that is <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, created>> for the <<keyExpressions, keyExpressions>>, the output of the <<child, child>> physical operator and the <<stateFormatVersion, stateFormatVersion>>).
 
-=== [[doExecute]] Executing StateStoreRestoreExec -- `doExecute` Method
+=== [[doExecute]] Executing Physical Operator -- `doExecute` Method
 
 [source, scala]
 ----
