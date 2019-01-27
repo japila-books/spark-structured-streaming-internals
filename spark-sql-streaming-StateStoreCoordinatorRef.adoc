@@ -54,4 +54,4 @@ forExecutor(env: SparkEnv): StateStoreCoordinatorRef
 
 `forExecutor`...FIXME
 
-NOTE: `forExecutor` is used exclusively when `StateStore` link:spark-sql-streaming-StateStore.adoc#coordinatorRef[creates a StateStoreCoordinatorRef (for executors)].
+NOTE: `forExecutor` is used exclusively when `StateStore` is requested for the <<spark-sql-streaming-StateStore.adoc#coordinatorRef, StateStoreCoordinator endpoint>> (for executors).
