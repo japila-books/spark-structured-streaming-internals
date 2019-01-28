@@ -62,6 +62,7 @@ Verified that state store [id] is active: [response]
 ```
 |===
 
+[[logging]]
 [TIP]
 ====
 Enable `INFO` or `DEBUG` logging level for `org.apache.spark.sql.execution.streaming.state.StateStoreCoordinator` to see what happens inside.

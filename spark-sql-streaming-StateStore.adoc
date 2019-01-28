@@ -302,16 +302,16 @@ stop(): Unit
 
 NOTE: `stop` seems only be used in tests.
 
-=== [[reportActiveStoreInstance]] Announcing New StateStoreProvider -- `reportActiveStoreInstance` Internal Method
+=== [[reportActiveStoreInstance]] Announcing New StateStoreProvider -- `reportActiveStoreInstance` Internal Object Method
 
 [source, scala]
 ----
 reportActiveStoreInstance(storeProviderId: StateStoreProviderId): Unit
 ----
 
-`reportActiveStoreInstance` takes the current host and `executorId` (from `BlockManager`) and requests `StateStoreCoordinatorRef` to link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#reportActiveInstance[reportActiveInstance].
+`reportActiveStoreInstance` takes the current host and `executorId` (from the `BlockManager` on the Spark executor) and requests the <<coordinatorRef, StateStoreCoordinatorRef>> to <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#reportActiveInstance, reportActiveInstance>>.
 
-NOTE: `reportActiveStoreInstance` uses `SparkEnv` to access the current `BlockManager`.
+NOTE: `reportActiveStoreInstance` uses `SparkEnv` to access the `BlockManager`.
 
 In the end, `reportActiveStoreInstance` prints out the following INFO message to the logs:
 

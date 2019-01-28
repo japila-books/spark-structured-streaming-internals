@@ -1,6 +1,15 @@
-== [[StateStoreHandler]] StateStoreHandler Contract
+== [[StateStoreHandler]] StateStoreHandler Internal Contract
 
-`StateStoreHandler` is the <<contract, base>> of <<extensions, state store handlers>> that manage a <<stateStore, StateStore>> (i.e. <<commit, commit>>, <<abortIfNeeded, abortIfNeeded>> and <<metrics, metrics>>).
+`StateStoreHandler` is the internal <<contract, base>> of <<extensions, state store handlers>> that manage a <<stateStore, StateStore>> (i.e. <<commit, commit>>, <<abortIfNeeded, abortIfNeeded>> and <<metrics, metrics>>).
+
+[[stateStoreType]]
+`StateStoreHandler` takes a single `StateStoreType` to be created:
+
+* [[KeyToNumValuesType]] `KeyToNumValuesType` for <<KeyToNumValuesStore, KeyToNumValuesStore>>
+
+* [[KeyWithIndexToValueType]] `KeyWithIndexToValueType` for <<KeyWithIndexToValueStore, KeyWithIndexToValueStore>>
+
+NOTE: `StateStoreHandler` is a Scala private abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly for the <<extensions, concrete StateStoreHandlers>>.
 
 [[contract]]
 .StateStoreHandler Contract

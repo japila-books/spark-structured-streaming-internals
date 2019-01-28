@@ -4,7 +4,7 @@
 
 NOTE: A unary physical operator is a physical operator with a single <<child, child>> physical operator.
 
-`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed (and plans `Aggregate` logical operators in a streaming structured query).
+`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical query plan with an `Aggregate` logical operator in a streaming structured query.
 
 .StateStoreRestoreExec and StatefulAggregationStrategy
 image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="center"]
@@ -65,15 +65,15 @@ scala> counts.explain
 
 [[metrics]]
 .StateStoreRestoreExec's SQLMetrics
-[cols="1,1,2",options="header",width="100%"]
+[cols="1m,1,3",options="header",width="100%"]
 |===
 | Key
 | Name (in UI)
 | Description
 
-| [[numOutputRows]] `numOutputRows`
+| numOutputRows
 | number of output rows
-| The number of input rows from the <<child, child>> physical operator (for which `StateStoreRestoreExec` tried to find the state)
+| [[numOutputRows]] The number of input rows from the <<child, child>> physical operator (for which `StateStoreRestoreExec` tried to find the state)
 |===
 
 .StateStoreRestoreExec in web UI (Details for Query)
@@ -119,7 +119,7 @@ NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had a
 
 === [[creating-instance]] Creating StateStoreRestoreExec Instance
 
-`StateStoreRestoreExec` takes the following when created:
+`StateStoreRestoreExec` takes the following to be created:
 
 * [[keyExpressions]] Catalyst expressions for keys (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
 * [[stateInfo]] link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]

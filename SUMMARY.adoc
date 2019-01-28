@@ -129,13 +129,14 @@
 . link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication]
 . link:spark-sql-streaming-StreamingGlobalLimitExec.adoc[StreamingGlobalLimitExec]
 . link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec Leaf Physical Operator]
-. link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc[StreamingSymmetricHashJoinExec]
+. link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc[StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins]
 
 === Execution Planning Strategies
 
 . link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
+. link:spark-sql-streaming-StreamingJoinStrategy.adoc[StreamingJoinStrategy Execution Planning Strategy]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
 == Offsets and Checkpointing
@@ -179,7 +180,8 @@
 . link:spark-sql-streaming-StateStoreId.adoc[StateStoreId]
 . link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
 
-. link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler Contract]
+. link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
+.. link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler Internal Contract]
 .. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
 .. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
 
@@ -221,7 +223,6 @@
 == Varia
 
 . link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
-. link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
 . link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
 . link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]
 . link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support]
