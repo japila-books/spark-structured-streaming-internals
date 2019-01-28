@@ -257,7 +257,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.StateStore$=DEBUG
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
-=== [[coordinatorRef]] Retrieving StateStoreCoordinatorRef (for Executors) -- `coordinatorRef` Internal Object Method
+=== [[coordinatorRef]] Creating (and Caching) RPC Endpoint Reference to StateStoreCoordinator for Executors -- `coordinatorRef` Internal Object Method
 
 [source, scala]
 ----

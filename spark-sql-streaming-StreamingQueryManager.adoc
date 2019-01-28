@@ -103,23 +103,23 @@ image::images/StreamingQueryManager-createQuery.png[align="center"]
 
 [[internal-registries]]
 .StreamingQueryManager's Internal Registries and Counters (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| `activeQueries`
+| activeQueries
 | [[activeQueries]] Registry of <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQueries>> per `UUID`
 
 Used when `StreamingQueryManager` is requested for <<active, active streaming queries>>, <<get, get a streaming query by id>>, <<startQuery, starts a streaming query>> and <<notifyQueryTermination, is notified that a streaming query has terminated>>.
 
-| `activeQueriesLock`
+| activeQueriesLock
 | [[activeQueriesLock]]
 
-| `awaitTerminationLock`
+| awaitTerminationLock
 | [[awaitTerminationLock]]
 
-| `lastTerminatedQuery`
+| lastTerminatedQuery
 a| [[lastTerminatedQuery]] <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>> that has recently been terminated, i.e. link:spark-sql-streaming-StreamingQuery.adoc#stop[stopped] or link:spark-sql-streaming-StreamingQuery.adoc#exception[due to an exception].
 
 `null` when no streaming query has terminated yet or <<resetTerminated, resetTerminated>>.
@@ -128,7 +128,7 @@ a| [[lastTerminatedQuery]] <<spark-sql-streaming-StreamingQuery.adoc#, Streaming
 
 * Set when `StreamingQueryManager` <<notifyQueryTermination, is notified that a streaming query has terminated>>
 
-| `listenerBus`
+| listenerBus
 a| [[listenerBus]] <<spark-sql-streaming-StreamingQueryListenerBus.adoc#, StreamingQueryListenerBus>> (for the current <<sparkSession, SparkSession>>)
 
 Used to:
@@ -137,8 +137,8 @@ Used to:
 
 * <<postListenerEvent, Post a streaming event>> (and notify `StreamingQueryListener` listeners about streaming events)
 
-| `stateStoreCoordinator`
-a| [[stateStoreCoordinator]] link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] with the *StateStoreCoordinator* RPC Endpoint
+| stateStoreCoordinator
+a| [[stateStoreCoordinator]] link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] to the *StateStoreCoordinator* RPC Endpoint
 
 * link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#forDriver[Created] when `StreamingQueryManager` is <<creating-instance, created>>
 
@@ -149,6 +149,7 @@ Used when:
 * Stateful operators are executed, i.e. link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[FlatMapGroupsWithStateExec], link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec], link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] and link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute[StreamingSymmetricHashJoinExec]
 
 * link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)]
+
 |===
 
 === [[active]] Getting All Active Streaming Queries -- `active` Method
@@ -342,7 +343,7 @@ image::images/StreamingQueryManager-postListenerEvent.png[align="center"]
 
 NOTE: `postListenerEvent` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#postEvent[posts a streaming event].
 
-=== [[notifyQueryTermination]] Marking Streaming Query as Terminated (and Deactivating Query in StateStoreCoordinator) -- `notifyQueryTermination` Internal Method
+=== [[notifyQueryTermination]] Handling Termination of Streaming Query (and Deactivating Query in StateStoreCoordinator) -- `notifyQueryTermination` Internal Method
 
 [source, scala]
 ----
@@ -360,4 +361,4 @@ In the end, `notifyQueryTermination` requests <<stateStoreCoordinator, StateStor
 .StreamingQueryManager's Marking Streaming Query as Terminated
 image::images/StreamingQueryManager-notifyQueryTermination.png[align="center"]
 
-NOTE: `notifyQueryTermination` is used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream-finally[has finished (running streaming batches)] (possibly due to an exception).
+NOTE: `notifyQueryTermination` is used exclusively when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.adoc#runStream, run a streaming query>> and the query <<spark-sql-streaming-StreamExecution.adoc#runStream-finally, has finished (running streaming batches)>> (with or without an exception).
