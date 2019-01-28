@@ -2,6 +2,9 @@
 
 `StreamingGlobalLimitExec` is...FIXME
 
+[[metrics]]
+`StreamingGlobalLimitExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
+
 === [[doExecute]] Executing Physical Operator -- `doExecute` Method
 
 [source, scala]

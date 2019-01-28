@@ -1,6 +1,13 @@
 == [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator that...FIXME
+`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a `Join` logical operator of two streaming structured queries with equality predicates at execution time.
+
+[NOTE]
+====
+`Join` logical operator represents `Dataset.join` operator.
+
+Find out more in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] chapter in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+====
 
 `StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming structured queries with equality predicates (i.e. `EqualTo` and `EqualNullSafe`)
 
@@ -54,7 +61,10 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 q.stop
 ----
 
-`StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>> that...FIXME
+`StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
+
+[[metrics]]
+`StreamingSymmetricHashJoinExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
 
 When <<doExecute, executed>>, `StreamingSymmetricHashJoinExec`...FIXME
 

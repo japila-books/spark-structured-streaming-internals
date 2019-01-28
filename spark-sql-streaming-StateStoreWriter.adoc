@@ -3,36 +3,45 @@
 `StateStoreWriter` is the extension of the <<spark-sql-streaming-StatefulOperator.adoc#, StatefulOperator Contract>> for <<implementations, physical operators>> that write to a state store and collect the <<metrics, write metrics>> for <<getProgress, execution progress reporting>>.
 
 [[metrics]]
-.StateStoreWriter's SQLMetrics
-[cols="1m,2",options="header",width="100%"]
+.StateStoreWriter's Performance Metrics
+[cols="1m,2,2",options="header",width="100%"]
 |===
-| Name
+| Key
+| Name (in web UI)
 | Description
 
 | numOutputRows
-| [[numOutputRows]] Number of output rows
+| number of output rows
+| [[numOutputRows]]
 
 | numTotalStateRows
-| [[numTotalStateRows]] number of total state rows
+| number of total state rows
+| [[numTotalStateRows]]
 
 | numUpdatedStateRows
-| [[numUpdatedStateRows]] number of updated state rows
+| number of updated state rows
+| [[numUpdatedStateRows]]
 
 | allUpdatesTimeMs
-| [[allUpdatesTimeMs]] total time to update rows
+| total time to update rows
+| [[allUpdatesTimeMs]]
 
 | allRemovalsTimeMs
-| [[allRemovalsTimeMs]] total time to remove rows
+| total time to remove rows
+| [[allRemovalsTimeMs]]
 
 | commitTimeMs
-| [[commitTimeMs]] time to commit changes
+| time to commit changes
+| [[commitTimeMs]]
 
 | stateMemory
-| [[stateMemory]] memory used by state (store)
+| memory used by state
+| [[stateMemory]]
+
 |===
 
 [[implementations]]
-.StateStoreWriters (Direct Implementations)
+.StateStoreWriters
 [cols="1,2",options="header",width="100%"]
 |===
 | StateStoreWriter
@@ -52,6 +61,7 @@
 
 | <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
 | [[StreamingSymmetricHashJoinExec]]
+
 |===
 
 === [[setStoreMetrics]] Setting StateStore-Specific Metrics for Stateful Physical Operator -- `setStoreMetrics` Method

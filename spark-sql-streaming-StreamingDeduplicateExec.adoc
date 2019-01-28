@@ -84,36 +84,7 @@ sq.stop
 ----
 
 [[metrics]]
-.StreamingDeduplicateExec's SQLMetrics
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| [[allUpdatesTimeMs]] `allUpdatesTimeMs`
-|
-
-| [[allRemovalsTimeMs]] `allRemovalsTimeMs`
-|
-
-| [[commitTimeMs]] `commitTimeMs`
-|
-
-| [[numTotalStateRows]] `numTotalStateRows`
-| Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
-
-| [[numOutputRows]] `numOutputRows`
-|
-
-| [[numTotalStateRows]] `numTotalStateRows`
-| Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
-
-| [[numUpdatedStateRows]] `numUpdatedStateRows`
-|
-
-| [[stateMemory]] `stateMemory`
-| Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
-|===
+`StreamingDeduplicateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
 
 .StreamingDeduplicateExec in web UI (Details for Query)
 image::images/StreamingDeduplicateExec-webui-query-details.png[align="center"]

@@ -104,38 +104,33 @@ There will be that many `StateStores` as there are partitions in `StateStoreRDD`
 NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
 
 [[metrics]]
-.StateStoreSaveExec's SQLMetrics
-[cols="1,2,2",options="header",width="100%"]
+`StateStoreSaveExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
+
+.StateStoreSaveExec's Performance Metrics
+[cols="1m,2",options="header",width="100%"]
 |===
 | Key
-| Name (in UI)
-| Description
+| Usage
 
-| [[allUpdatesTimeMs]] `allUpdatesTimeMs`
-| total time to update rows
-|
+| allUpdatesTimeMs
+| [[allUpdatesTimeMs]]
 
-| [[allRemovalsTimeMs]] `allRemovalsTimeMs`
-| total time to remove rows
-|
+| allRemovalsTimeMs
+| [[allRemovalsTimeMs]]
 
-| [[commitTimeMs]] `commitTimeMs`
-| time to commit changes
-|
+| commitTimeMs
+| [[commitTimeMs]]
 
-| [[numOutputRows]] `numOutputRows`
-| number of output rows
-|
+| numOutputRows
+| [[numOutputRows]]
 
-| [[numTotalStateRows]] `numTotalStateRows`
-| number of total state rows
-| Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store]
+| numTotalStateRows
+| [[numTotalStateRows]] Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store]
 
 Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal` for ``0``th operator).
 
-| [[numUpdatedStateRows]] `numUpdatedStateRows`
-| number of updated state rows
-a| Number of the state keys that link:spark-sql-streaming-StateStore.adoc#put[were stored as updates in the state store] in a trigger and for the keys in the result rows of the upstream physical operator.
+| numUpdatedStateRows
+a| [[numUpdatedStateRows]] Number of the state keys that link:spark-sql-streaming-StateStore.adoc#put[were stored as updates in the state store] in a trigger and for the keys in the result rows of the upstream physical operator.
 
 * In `Complete` output mode, `numUpdatedStateRows` is the number of input rows (which should be exactly the number of output rows from the upstream operator)
 
@@ -149,9 +144,9 @@ CAUTION: FIXME
 
 NOTE: You can see the current value as `numRowsUpdated` attribute in `stateOperators` in link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] (that is available as `StreamingQuery.lastProgress.stateOperators(n).numRowsUpdated` for ``n``th operator).
 
-| [[stateMemory]] `stateMemory`
-| memory used by state
-| Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
+| stateMemory
+| [[stateMemory]] Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
+
 |===
 
 .StateStoreSaveExec in web UI (Details for Query)

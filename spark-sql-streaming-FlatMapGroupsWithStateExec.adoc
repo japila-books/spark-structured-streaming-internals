@@ -58,30 +58,10 @@ sq.stop
 ----
 
 [[metrics]]
-.FlatMapGroupsWithStateExec's SQLMetrics
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| [[numTotalStateRows]] `numTotalStateRows`
-| Number of keys in the link:spark-sql-streaming-StateStore.adoc[StateStore]
-
-Incremented when `FlatMapGroupsWithStateExec` is <<doExecute, executed>> (and the iterator has finished generating the rows).
-
-| [[stateMemory]] `stateMemory`
-| Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
-
-|===
+`FlatMapGroupsWithStateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
 
 .FlatMapGroupsWithStateExec in web UI (Details for Query)
 image::images/FlatMapGroupsWithStateExec-webui-query-details.png[align="center"]
-
-`FlatMapGroupsWithStateExec` is a `ObjectProducerExec` that...FIXME
-
-`FlatMapGroupsWithStateExec` is a `StateStoreWriter` that...FIXME
-
-`FlatMapGroupsWithStateExec` link:spark-sql-streaming-WatermarkSupport.adoc[supports watermark] which is...FIXME
 
 [NOTE]
 ====
