@@ -136,7 +136,8 @@
 . link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
 . link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
 . link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
-. link:spark-sql-streaming-StreamingJoinStrategy.adoc[StreamingJoinStrategy Execution Planning Strategy]
+. link:spark-sql-streaming-StreamingGlobalLimitStrategy.adoc[StreamingGlobalLimitStrategy Execution Planning Strategy]
+. link:spark-sql-streaming-StreamingJoinStrategy.adoc[StreamingJoinStrategy Execution Planning Strategy for Stream-Stream Equi-Joins]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
 == Offsets and Checkpointing

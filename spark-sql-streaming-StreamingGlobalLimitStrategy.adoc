@@ -1,0 +1,3 @@
+== [[StreamingGlobalLimitStrategy]] StreamingGlobalLimitStrategy Execution Planning Strategy
+
+`StreamingGlobalLimitStrategy` is...FIXME
