@@ -100,3 +100,16 @@ NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a p
 * [[right]] Physical operator on the right side SparkPlan
 
 `StreamingSymmetricHashJoinExec` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[processPartitions]] `processPartitions` Internal Method
+
+[source, scala]
+----
+processPartitions(
+  leftInputIter: Iterator[InternalRow],
+  rightInputIter: Iterator[InternalRow]): Iterator[InternalRow]
+----
+
+`processPartitions`...FIXME
+
+NOTE: `processPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<doExecute, doExecute>>.

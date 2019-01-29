@@ -1,3 +1,44 @@
 == [[SymmetricHashJoinStateManager]] SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is...FIXME
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiner>>.
+
+[[internal-registries]]
+.SymmetricHashJoinStateManager's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,3",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| keyAttributes
+| [[keyAttributes]] Key attributes
+
+Used when...FIXME
+
+| keySchema
+| [[keySchema]] Key schema
+
+Used when...FIXME
+
+| keyToNumValues
+| [[keyToNumValues]] <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>>
+
+Used when...FIXME
+
+| keyWithIndexToValue
+| [[keyWithIndexToValue]] <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>>
+
+Used when...FIXME
+|===
+
+=== [[creating-instance]] Creating SymmetricHashJoinStateManager Instance
+
+`SymmetricHashJoinStateManager` takes the following to be created:
+
+* [[joinSide]] `JoinSide`
+* [[inputValueAttributes]] Input value attributes
+* [[joinKeys]] Join keys (`Seq[Expression]`)
+* [[stateInfo]] Optional <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[storeConf]] <<spark-sql-streaming-StateStoreConf.adoc#, StateStoreConf>>
+* [[hadoopConf]] Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/conf/Configuration.html[Configuration]
+
+`SymmetricHashJoinStateManager` initializes the <<internal-registries, internal registries and counters>>.

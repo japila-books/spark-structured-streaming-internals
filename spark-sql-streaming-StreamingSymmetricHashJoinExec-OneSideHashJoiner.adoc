@@ -1,0 +1,103 @@
+== [[OneSideHashJoiner]] OneSideHashJoiner
+
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, doExecute>>).
+
+NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
+
+[[internal-registries]]
+.OneSideHashJoiner's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,3",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| joinStateManager
+| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>
+
+Used when...FIXME
+
+| keyGenerator
+| [[keyGenerator]] `UnsafeProjection` to generate join keys
+
+Used when...FIXME
+
+| preJoinFilter
+| [[preJoinFilter]] `InternalRow => Boolean`
+
+Used when...FIXME
+
+| stateKeyWatermarkPredicateFunc
+| [[stateKeyWatermarkPredicateFunc]] `InternalRow => Boolean`
+
+Used when...FIXME
+
+| stateValueWatermarkPredicateFunc
+| [[stateValueWatermarkPredicateFunc]] `InternalRow => Boolean`
+
+Used when...FIXME
+
+| updatedStateRowsCount
+a| [[updatedStateRowsCount]][[numUpdatedStateRows]] Counter
+
+Used exclusively when requested to <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
+|===
+
+=== [[storeAndJoinWithOtherSide]] `storeAndJoinWithOtherSide` Method
+
+[source, scala]
+----
+storeAndJoinWithOtherSide(
+  otherSideJoiner: OneSideHashJoiner)(
+  generateJoinedRow: (InternalRow, InternalRow) => JoinedRow): Iterator[InternalRow]
+----
+
+`storeAndJoinWithOtherSide`...FIXME
+
+NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, doExecute>>).
+
+=== [[creating-instance]] Creating OneSideHashJoiner Instance
+
+`OneSideHashJoiner` takes the following to be created:
+
+* [[joinSide]] `JoinSide`
+* [[inputAttributes]] Input attributes (`Seq[Attribute]`)
+* [[joinKeys]] Join keys (`Seq[Expression]`)
+* [[inputIter]] Input internal rows (`Iterator[InternalRow]`)
+* [[preJoinFilterExpr]] Optional pre-join filter Catalyst expression
+* [[postJoinFilter]] Post-join filter (`(InternalRow) => Boolean`)
+* [[stateWatermarkPredicate]] Optional `JoinStateWatermarkPredicate`
+
+`OneSideHashJoiner` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[removeOldState]] `removeOldState` Method
+
+[source, scala]
+----
+removeOldState(): Iterator[UnsafeRowPair]
+----
+
+`removeOldState`...FIXME
+
+NOTE: `removeOldState` is used when...FIXME
+
+=== [[get]] `get` Method
+
+[source, scala]
+----
+get(key: UnsafeRow): Iterator[UnsafeRow]
+----
+
+`get`...FIXME
+
+NOTE: `get` is used when...FIXME
+
+=== [[commitStateAndGetMetrics]] `commitStateAndGetMetrics` Method
+
+[source, scala]
+----
+commitStateAndGetMetrics(): StateStoreMetrics
+----
+
+`commitStateAndGetMetrics`...FIXME
+
+NOTE: `commitStateAndGetMetrics` is used when...FIXME
