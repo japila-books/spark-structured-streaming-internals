@@ -1,27 +1,47 @@
 == [[Trigger]] Trigger -- How Frequently to Check Sources For New Data
 
-`Trigger` defines how frequently a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] should be executed and therefore emit a new data (which `StreamExecution` uses to link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[resolve a TriggerExecutor]).
-
-NOTE: A trigger can also be called a *batch interval* (as in the older Spark Streaming).
+`Trigger` defines how often a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] should be executed (_triggered_) and emit a new data (which `StreamExecution` uses to link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[resolve a TriggerExecutor]).
 
 [[available-implementations]]
 [[available-triggers]]
-.Triggers
+.Trigger's Factory Methods
 [cols="1m,2",options="header",width="100%"]
 |===
 | Trigger
 | Creating Instance
 
 | ContinuousTrigger
-| [[ContinuousTrigger]]
+a| [[ContinuousTrigger]][[Continuous]]
 
-.3+.^| <<ProcessingTime, ProcessingTime>>
-| `Trigger.ProcessingTime(long intervalMs)`
-| `Trigger.ProcessingTime(Duration interval)`
-| `Trigger.ProcessingTime(String interval)`
+[source, java]
+----
+Trigger Continuous(long intervalMs)
+Trigger Continuous(long interval, TimeUnit timeUnit)
+Trigger Continuous(Duration interval)
+Trigger Continuous(String interval)
+----
 
 | OneTimeTrigger
-| [[OneTimeTrigger]]
+a| [[OneTimeTrigger]][[Once]]
+
+[source, java]
+----
+Trigger Once()
+----
+
+| ProcessingTime
+a| [[ProcessingTime]]
+
+[source, java]
+----
+Trigger ProcessingTime(Duration interval)
+Trigger ProcessingTime(long intervalMs)
+Trigger ProcessingTime(long interval, TimeUnit timeUnit)
+Trigger ProcessingTime(String interval)
+----
+
+<<ProcessingTime-examples, Examples of ProcessingTime>>
+
 |===
 
 NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#trigger[trigger] method.
@@ -98,7 +118,7 @@ java.lang.IllegalStateException: Unknown type of trigger: MyTrigger
 
 NOTE: `Trigger` was introduced in https://github.com/apache/spark/commit/855ed44ed31210d2001d7ce67c8fa99f8416edd3[the commit for [SPARK-14176\][SQL\] Add DataFrameWriter.trigger to set the stream batch period].
 
-=== [[ProcessingTime]] ProcessingTime
+=== [[ProcessingTime-examples]] Examples of ProcessingTime
 
 `ProcessingTime` is a `Trigger` that assumes that milliseconds is the minimum time unit.
 

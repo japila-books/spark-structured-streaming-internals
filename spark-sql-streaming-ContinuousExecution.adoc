@@ -1,6 +1,6 @@
 == [[ContinuousExecution]] ContinuousExecution -- StreamExecution of StreamWriteSupport Sink and ContinuousTrigger
 
-`ContinuousExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> of a <<sink, StreamWriteSupport sink>> with a <<trigger, ContinuousTrigger>>.
+`ContinuousExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> with exactly one <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>>.
 
 [source, scala]
 ----
@@ -77,7 +77,7 @@ getStartOffsets(sparkSessionToRunBatches: SparkSession): OffsetSeq
 
 NOTE: `getStartOffsets` is used when...FIXME
 
-=== [[commit]] `commit` Method
+=== [[commit]] Committing Epoch -- `commit` Method
 
 [source, scala]
 ----
@@ -86,7 +86,7 @@ commit(epoch: Long): Unit
 
 `commit`...FIXME
 
-NOTE: `commit` is used when...FIXME
+NOTE: `commit` is used exclusively when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.adoc#commitEpoch, commitEpoch>>.
 
 === [[awaitEpoch]] `awaitEpoch` Internal Method
 
@@ -152,11 +152,11 @@ Data source [name] does not support continuous processing.
 runActivatedStream(sparkSessionForStream: SparkSession): Unit
 ----
 
-NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the streaming query.
+NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run a streaming query.
 
 `runActivatedStream`...FIXME
 
-=== [[runContinuous]] Running Streaming Query -- `runContinuous` Internal Method
+=== [[runContinuous]] Running Streaming Query in Continuous Mode -- `runContinuous` Internal Method
 
 [source, scala]
 ----
@@ -165,7 +165,7 @@ runContinuous(sparkSessionForQuery: SparkSession): Unit
 
 `runContinuous`...FIXME
 
-NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run the activated streaming query>>.
+NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
 
 === [[creating-instance]] Creating ContinuousExecution Instance
 

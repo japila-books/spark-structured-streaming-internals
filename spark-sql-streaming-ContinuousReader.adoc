@@ -1,6 +1,6 @@
 == [[ContinuousReader]] ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing
 
-`ContinuousReader` is the <<contract, extension>> of the <<spark-sql-streaming-DataSourceReader.adoc#, DataSourceReader>> and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>> contracts for <<implementations, continuous readers>> that <<FIXME, FIXME>>.
+`ContinuousReader` is the <<contract, extension>> of the <<spark-sql-streaming-DataSourceReader.adoc#, DataSourceReader>> (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> that can read in a continuous processing mode.
 
 [[contract]]
 .ContinuousReader Contract
@@ -17,7 +17,7 @@ a| [[commit]]
 void commit(Offset end)
 ----
 
-Used when...FIXME
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>.
 
 | deserializeOffset
 a| [[deserializeOffset]]
@@ -77,7 +77,7 @@ Used when...FIXME
 | ContinuousReader
 | Description
 
-| ContinuousMemoryStream
+| <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>>
 | [[ContinuousMemoryStream]]
 
 | KafkaContinuousReader

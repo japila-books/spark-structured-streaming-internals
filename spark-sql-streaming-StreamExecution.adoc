@@ -35,7 +35,7 @@ runActivatedStream(sparkSessionForStream: SparkSession): Unit
 
 Runs the activated streaming query
 
-Used exclusively when `StreamExecution` is requested to <<runStream, run the streaming query>> (when transitioning from the `INITIALIZING` state to `ACTIVE`)
+Used exclusively when `StreamExecution` is requested to <<runStream, run the streaming query>> (when transitioning from `INITIALIZING` to `ACTIVE` state)
 |===
 
 [[extensions]]
@@ -498,7 +498,8 @@ NOTE: `runBatches` does the work only when first started (i.e. when <<state, sta
 
 CAUTION: FIXME `initializationLatch` so what?
 
-`runBatches` requests <<triggerExecutor, TriggerExecutor>> to start executing batches (aka _triggers_) by executing a <<batch-runner, batch runner>>.
+[[runBatches-runActivatedStream]]
+`runBatches` <<runActivatedStream, runs the activated streaming query>>.
 
 [[runBatches-stopped]]
 Once <<triggerExecutor, TriggerExecutor>> has finished executing batches, `runBatches` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Stopped*.

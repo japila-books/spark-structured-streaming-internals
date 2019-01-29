@@ -1,0 +1,134 @@
+== [[EpochCoordinator]] EpochCoordinator
+
+`EpochCoordinator` is a `ThreadSafeRpcEndpoint` that receive <<messages, messages>> from...FIXME
+
+`EpochCoordinator` is <<creating-instance, created>> (using <<create, create>> factory method) when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>.
+
+[[messages]]
+.EpochCoordinator RPC Endpoint's Messages
+[cols="1m,3",options="header",width="100%"]
+|===
+| Message
+| Description
+
+| CommitPartitionEpoch
+| [[CommitPartitionEpoch]]
+
+| GetCurrentEpoch
+| [[GetCurrentEpoch]]
+
+| IncrementAndGetEpoch
+| [[IncrementAndGetEpoch]]
+
+| ReportPartitionOffset
+| [[ReportPartitionOffset]]
+
+| SetReaderPartitions
+| [[SetReaderPartitions]]
+
+| SetWriterPartitions
+| [[SetWriterPartitions]]
+
+| StopContinuousExecutionWrites
+| [[StopContinuousExecutionWrites]]
+
+|===
+
+[[internal-registries]]
+.EpochCoordinator's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,3",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| queryWritesStopped
+| [[queryWritesStopped]] Flag that...FIXME
+
+Used when...FIXME
+|===
+
+[[logging]]
+[TIP]
+====
+Enable `INFO` logging level for `org.apache.spark.sql.execution.streaming.continuous.EpochCoordinatorRef*` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.continuous.EpochCoordinatorRef*=INFO
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
+
+=== [[receive]] Receiving Messages -- `receive` Method
+
+[source, scala]
+----
+receive: PartialFunction[Any, Unit]
+----
+
+NOTE: `receive` is part of the `RpcEndpoint` Contract in Apache Spark to receive messages.
+
+`receive`...FIXME
+
+==== [[resolveCommitsAtEpoch]] `resolveCommitsAtEpoch` Internal Method
+
+[source, scala]
+----
+resolveCommitsAtEpoch(epoch: Long): Unit
+----
+
+`resolveCommitsAtEpoch`...FIXME
+
+NOTE: `resolveCommitsAtEpoch` is used exclusively when `EpochCoordinator` is requested to <<receive, receive>> `CommitPartitionEpoch` and `ReportPartitionOffset` messages.
+
+==== [[commitEpoch]] `commitEpoch` Internal Method
+
+[source, scala]
+----
+commitEpoch(
+  epoch: Long,
+  messages: Iterable[WriterCommitMessage]): Unit
+----
+
+`commitEpoch`...FIXME
+
+NOTE: `commitEpoch` is used exclusively when `EpochCoordinator` is requested to <<resolveCommitsAtEpoch, resolveCommitsAtEpoch>>.
+
+=== [[creating-instance]] Creating EpochCoordinator Instance
+
+`EpochCoordinator` takes the following to be created:
+
+* [[writer]] <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>
+* [[reader]] <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>
+* [[query]] <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>>
+* [[startEpoch]] Start epoch
+* [[session]] `SparkSession`
+* [[rpcEnv]] `RpcEnv`
+
+`EpochCoordinator` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[create]] Registering EpochCoordinator RPC Endpoint -- `create` Factory Method
+
+[source, scala]
+----
+create(
+  writer: StreamWriter,
+  reader: ContinuousReader,
+  query: ContinuousExecution,
+  epochCoordinatorId: String,
+  startEpoch: Long,
+  session: SparkSession,
+  env: SparkEnv): RpcEndpointRef
+----
+
+`create` simply <<creating-instance, creates a new EpochCoordinator>> and requests the `RpcEnv` to register a RPC endpoint as *EpochCoordinator-[id]* (where `id` is the given `epochCoordinatorId`).
+
+`create` prints out the following INFO message to the logs:
+
+```
+Registered EpochCoordinator endpoint
+```
+
+NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>.
