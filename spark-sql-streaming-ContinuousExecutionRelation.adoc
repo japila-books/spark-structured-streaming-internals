@@ -1,14 +1,13 @@
 == [[ContinuousExecutionRelation]] ContinuousExecutionRelation Leaf Logical Operator
 
-`ContinuousExecutionRelation` is a `MultiInstanceRelation` and leaf logical operator.
+`ContinuousExecutionRelation` is a `MultiInstanceRelation` leaf logical operator.
 
-NOTE: Read up on leaf logical operator in Mastering Spark SQL gitbook.
+NOTE: Find out more on leaf logical operators in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-LeafNode.html[LeafNode — Base Logical Operator with No Child Operators and Optional Statistics] section in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
 
-`ContinuousExecutionRelation` is <<creating-instance, created>> when `ContinuousExecution` is <<spark-sql-streaming-ContinuousExecution.adoc#, created>> (and requested for the <<spark-sql-streaming-ContinuousExecution.adoc#logicalPlan, logical plan>> with <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> operators with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> sources).
+`ContinuousExecutionRelation` is <<creating-instance, created>> (to represent <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source) when `ContinuousExecution` is <<spark-sql-streaming-ContinuousExecution.adoc#, created>> (and requested for the <<spark-sql-streaming-ContinuousExecution.adoc#logicalPlan, logical plan>>).
 
-=== [[creating-instance]] Creating ContinuousExecutionRelation Instance
-
-`ContinuousExecutionRelation` takes the following when created:
+[[creating-instance]]
+`ContinuousExecutionRelation` takes the following to be created:
 
 * [[source]] <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport source>>
 * [[extraOptions]] Options (`Map[String, String]`)

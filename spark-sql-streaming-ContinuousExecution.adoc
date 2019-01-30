@@ -4,6 +4,12 @@
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
+`ContinuousExecution` can only run streaming queries with <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source.
+
+When <<creating-instance, created>> for a streaming query `ContinuousExecution` is given the <<analyzedPlan, analyzed logical plan>>. The analyzed logical plan is immediately transformed to include a <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> for every <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source (and is the <<logicalPlan, logical plan>> internally).
+
+NOTE: `ContinuousExecution` uses the same instance of `ContinuousExecutionRelation` for the same instances of <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source.
+
 `ContinuousExecution` allows for exactly one <<continuousSources, ContinuousReader>> in the <<logicalPlan, streaming query>> (and asserts it when <<addOffset, addOffset>> and <<commit, commit>>).
 
 When requested to <<runContinuous, run the streaming query>>, `ContinuousExecution` collects <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data sources (inside <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>>) from the <<logicalPlan, analyzed logical plan>> and requests each and every `ContinuousReadSupport` to <<spark-sql-streaming-ContinuousReadSupport.adoc#createContinuousReader, create a ContinuousReader>> (that are stored in <<continuousSources, continuousSources>> internal registry).

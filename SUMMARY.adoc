@@ -9,16 +9,17 @@
 . link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
 
 . link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of Continuous Stream Processing]
+.. link:spark-sql-streaming-StreamingRelationV2.adoc[StreamingRelationV2 Leaf Logical Operator]
+.. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
 
 . link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- DataSourceV2 Sinks with Custom StreamWriter]
 . link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Source Factories of ContinuousReaders]
 . link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
 . link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
+
 . link:spark-sql-streaming-DataSourceReader.adoc[DataSourceReader Contract]
 .. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
 .. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
-. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
-. link:spark-sql-streaming-StreamingRelationV2.adoc[StreamingRelationV2]
 
 . link:spark-sql-streaming-StreamWriter.adoc[StreamWriter]
 . link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator]
