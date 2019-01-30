@@ -1,3 +1,42 @@
-== [[ContinuousReadSupport]] ContinuousReadSupport Contract
+== [[ContinuousReadSupport]] ContinuousReadSupport Contract -- Data Source Factories of ContinuousReaders
 
-`ContinuousReadSupport` is...FIXME
+`ContinuousReadSupport` is the <<contract, abstraction>> of <<implementations, data source factories>> that can <<createContinuousReader, create a ContinuousReader>>.
+
+[[contract]]
+[[createContinuousReader]]
+`ContinuousReadSupport` defines a single `createContinuousReader` method that creates a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>.
+
+[source, java]
+----
+ContinuousReader createContinuousReader(
+  Optional<StructType> schema,
+  String checkpointLocation,
+  DataSourceOptions options)
+----
+
+`createContinuousReader` is used when:
+
+* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query>> (and finds <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelations>> in the <<spark-sql-streaming-ContinuousExecution.adoc#logicalPlan, analyzed logical plan>>)
+
+* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, create a streaming query for a ContinuousReadSupport data source>>
+
+[[implementations]]
+.ContinuousReadSupports
+[cols="1,3",options="header",width="100%"]
+|===
+| ContinuousReadSupport
+| Description
+
+| <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>>
+| [[ContinuousMemoryStream]]
+
+| <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>>
+| [[KafkaSourceProvider]]
+
+| <<spark-sql-streaming-RateStreamProvider.adoc#, RateStreamProvider>>
+| [[RateStreamProvider]]
+
+| <<spark-sql-streaming-TextSocketSourceProvider.adoc#, TextSocketSourceProvider>>
+| [[TextSocketSourceProvider]]
+
+|===

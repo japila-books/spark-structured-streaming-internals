@@ -1,4 +1,4 @@
-== TextSocketSourceProvider
+== [[TextSocketSourceProvider]] TextSocketSourceProvider
 
 `TextSocketSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider] for link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource] that read records from `host` and `port`.
 

@@ -17,7 +17,7 @@ a| [[commit]]
 void commit(Offset end)
 ----
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>.
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
 
 | deserializeOffset
 a| [[deserializeOffset]]
@@ -27,7 +27,7 @@ a| [[deserializeOffset]]
 Offset deserializeOffset(String json)
 ----
 
-Used when...FIXME
+Used when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query>> and <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
 
 | getStartOffset
 a| [[getStartOffset]]

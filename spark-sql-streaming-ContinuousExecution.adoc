@@ -1,36 +1,16 @@
-== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of StreamWriteSupport Sink and ContinuousTrigger
+== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of Continuous Stream Processing
 
-`ContinuousExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> with exactly one <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>>.
+`ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> in <<spark-sql-streaming-continuous-stream-processing.adoc, Continuous Stream Processing>>.
 
-[source, scala]
-----
-import org.apache.spark.sql.streaming.Trigger
-import scala.concurrent.duration._
-val q = spark
-  .readStream
-  .format("rate")
-  .load
-  .writeStream
-  .format("console")
-  .trigger(Trigger.Continuous(10.seconds))
-  .queryName("rate2console")
-  .option("truncate", false)
-  .start
+`ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
-scala> q.explain
-== Physical Plan ==
-WriteToContinuousDataSource ConsoleWriter[numRows=20, truncate=false]
-+- *(1) Project [timestamp#758, value#759L]
-   +- *(1) ScanV2 rate[timestamp#758, value#759L]
+`ContinuousExecution` allows for exactly one <<continuousSources, ContinuousReader>> in the <<logicalPlan, streaming query>> (and asserts it when <<addOffset, addOffset>> and <<commit, commit>>).
 
-// q.stop
-----
-
-`ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport sink>> and a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
+When requested to <<runContinuous, run the streaming query>>, `ContinuousExecution` collects <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data sources (inside <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>>) from the <<logicalPlan, analyzed logical plan>> and requests each and every `ContinuousReadSupport` to <<spark-sql-streaming-ContinuousReadSupport.adoc#createContinuousReader, create a ContinuousReader>> (that are stored in <<continuousSources, continuousSources>> internal registry).
 
 [[internal-registries]]
-.ContinuousExecution's Internal Properties
-[cols="1m,2",options="header",width="100%"]
+.ContinuousExecution's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
 | Description
@@ -43,20 +23,18 @@ a| [[continuousSources]]
 continuousSources: Seq[ContinuousReader]
 ----
 
-Collection of <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReaders>> (that are <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupports>> of the <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelations>> in the <<logicalPlan, logicalPlan>>)
-
-NOTE: Only one continuous source is currently supported (and enforced in <<addOffset, addOffset>> and <<commit, commit>>).
+Registry of <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReaders>> (in the <<logicalPlan, analyzed logical plan of the streaming query>>)
 
 Used when `ContinuousExecution` is requested to <<commit, commit>>, <<getStartOffsets, getStartOffsets>>, and <<runContinuous, runContinuous>>
 
-Use <<sources, sources>> to access it
+Use <<sources, sources>> to access the current value
 
 | currentEpochCoordinatorId
 | [[currentEpochCoordinatorId]] FIXME
 
 Used when...FIXME
 
-| `triggerExecutor`
+| triggerExecutor
 a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
 
 * `ProcessingTimeExecutor` for `ContinuousTrigger`
@@ -64,6 +42,7 @@ a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecu
 Used when...FIXME
 
 NOTE: `StreamExecution` throws an `IllegalStateException` when the <<trigger, Trigger>> is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>.
+
 |===
 
 === [[getStartOffsets]] `getStartOffsets` Internal Method

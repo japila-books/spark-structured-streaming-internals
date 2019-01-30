@@ -34,13 +34,15 @@ json(path: String): DataFrame
 ----
 
 | <<load-internals, load>>
-a| [[load]] Loads data from a streaming source to a streaming `Dataset`
+a| [[load]]
 
 [source, scala]
 ----
 load(): DataFrame
 load(path: String): DataFrame
 ----
+
+Creates a streaming query for a streaming source (as a `DataFrame` that represents loading data in a streaming dataflow)
 
 | <<option, option>>
 a| Sets a loading option
