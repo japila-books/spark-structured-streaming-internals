@@ -9,11 +9,10 @@
 . link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
 
 . link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of Continuous Stream Processing]
-.. link:spark-sql-streaming-StreamingRelationV2.adoc[StreamingRelationV2 Leaf Logical Operator]
 .. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
 
 . link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- DataSourceV2 Sinks with Custom StreamWriter]
-. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Source Factories of ContinuousReaders]
+. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Sources with ContinuousReaders]
 . link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
 . link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
 
@@ -24,12 +23,12 @@
 . link:spark-sql-streaming-StreamWriter.adoc[StreamWriter]
 . link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator]
 
-. link:spark-sql-streaming-RateStreamProvider.adoc[RateStreamProvider]
+== Micro-Batch Stream Processing (Structured Streaming V1)
 
-=== Text Socket Source
+. link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
 
-. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
-. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
+. link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders]
+. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract]
 
 == Developing Streaming Applications
 
@@ -75,12 +74,17 @@
 . link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
 . link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 
+=== Text Socket Data Source
+
+. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
+. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
+
 === Text File Data Source
 
 . link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
 . link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink -- Streaming Sink for Parquet Format]
 
-=== Rate Source
+=== Rate Data Source
 
 . link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]
 . link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
@@ -109,7 +113,6 @@
 == Query Planning and Execution
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Executions]
-.. link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
 .. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper -- Serializable StreamExecution]
 
 . link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter Contract]
@@ -128,6 +131,7 @@
 . link:spark-sql-streaming-Deduplicate.adoc[Deduplicate Unary Logical Operator]
 . link:spark-sql-streaming-MemoryPlan.adoc[MemoryPlan Logical Query Plan]
 . link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation Leaf Logical Operator for Streaming Source]
+. link:spark-sql-streaming-StreamingRelationV2.adoc[StreamingRelationV2 Leaf Logical Operator]
 . link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation Leaf Logical Operator for Streaming Source At Execution]
 
 === Physical Operators

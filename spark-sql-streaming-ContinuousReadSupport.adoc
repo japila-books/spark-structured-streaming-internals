@@ -1,6 +1,6 @@
-== [[ContinuousReadSupport]] ContinuousReadSupport Contract -- Data Source Factories of ContinuousReaders
+== [[ContinuousReadSupport]] ContinuousReadSupport Contract -- Data Sources with ContinuousReaders
 
-`ContinuousReadSupport` is the <<contract, abstraction>> of <<implementations, data source factories>> that can <<createContinuousReader, create a ContinuousReader>>.
+`ContinuousReadSupport` is the <<contract, abstraction>> of <<implementations, data sources>> with a <<createContinuousReader, ContinuousReader>>.
 
 [[contract]]
 [[createContinuousReader]]
