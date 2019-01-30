@@ -4,34 +4,40 @@
 
 [[methods]]
 .DataStreamReader's Methods
-[cols="1,2",options="header",width="100%"]
+[cols="1,3",options="header",width="100%"]
 |===
 | Method
 | Description
 
 | <<csv, csv>>
-a| Sets `csv` as the source <<format, format>>
+a|
 
 [source, scala]
 ----
 csv(path: String): DataFrame
 ----
 
+Sets `csv` as the <<format, format>> of the data source
+
 | <<format, format>>
-a| Sets the format of datasets
+a|
 
 [source, scala]
 ----
 format(source: String): DataStreamReader
 ----
 
+Sets the <<source, data source>> format
+
 | <<json, json>>
-a| Sets `json` as the source <<format, format>>
+a|
 
 [source, scala]
 ----
 json(path: String): DataFrame
 ----
+
+Sets `json` as the <<format, format>> of the data source
 
 | <<load-internals, load>>
 a| [[load]]
@@ -42,10 +48,10 @@ load(): DataFrame
 load(path: String): DataFrame
 ----
 
-Creates a streaming query for a streaming source (as a `DataFrame` that represents loading data in a streaming dataflow)
+Creates a streaming query with a streaming source (as a `DataFrame` that represents loading data in a streaming dataflow)
 
 | <<option, option>>
-a| Sets a loading option
+a|
 
 [source, scala]
 ----
@@ -55,8 +61,10 @@ option(key: String, value: Long): DataStreamReader
 option(key: String, value: String): DataStreamReader
 ----
 
+Sets a loading option
+
 | <<options, options>>
-a| Sets one or more loading options
+a|
 
 [source, scala]
 ----
@@ -64,48 +72,58 @@ options(options: scala.collection.Map[String, String]): DataStreamReader
 options(options: java.util.Map[String, String]): DataStreamReader
 ----
 
+Sets one or more data source options
+
 | <<orc, orc>>
-a| Sets `orc` as the source <<format, format>>
+a|
 
 [source, scala]
 ----
 orc(path: String): DataFrame
 ----
 
+Sets `orc` as the <<format, format>> of the data source
+
 | <<parquet, parquet>>
-a| Sets `parquet` as the source <<format, format>>
+a|
 
 [source, scala]
 ----
 parquet(path: String): DataFrame
 ----
 
-| <<schema, schema>>
-a| Sets the schema of datasets
+Sets `parquet` as the <<format, format>> of the data source
 
-*(New in 2.3.0)* `schema` that accepts a DDL-formatted table schema, e.g. `a INT, b STRING`.
+| <<schema, schema>>
+a|
 
 [source, scala]
 ----
-schema(schemaString: String): DataStreamReader
+schema(schemaString: String): DataStreamReader // <1>
 schema(schema: StructType): DataStreamReader
 ----
+<1> *(New in 2.3.0)*
+
+Sets the <<userSpecifiedSchema, user-defined schema>> of the data source (as a `StructType` or DDL-formatted table schema, e.g. `a INT, b STRING`)
 
 | <<text, text>>
-a| Sets `text` as the source <<format, format>>
+a|
 
 [source, scala]
 ----
 text(path: String): DataFrame
 ----
 
+Sets `text` as the <<format, format>> of the data source
+
 | <<textFile, textFile>>
-a| Returns `Dataset[String]` (not `DataFrame`)
+a|
 
 [source, scala]
 ----
 textFile(path: String): Dataset[String]
 ----
+
 |===
 
 .DataStreamReader and The Others

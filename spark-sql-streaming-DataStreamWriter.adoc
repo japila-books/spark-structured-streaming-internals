@@ -4,7 +4,7 @@
 
 [[methods]]
 .DataStreamWriter's Methods
-[cols="1m,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Method
 | Description
@@ -85,7 +85,7 @@ outputMode(outputMode: String): DataStreamWriter[T]
 Specifies the <<spark-sql-streaming-OutputMode.adoc#, output mode>>
 
 | partitionBy
-a|
+a| [[partitionBy]]
 
 [source, scala]
 ----
@@ -129,9 +129,6 @@ A streaming query is a link:spark-sql-Dataset.adoc[Dataset] with a link:spark-sq
 
 [source, scala]
 ----
-scala> spark.version
-res0: String = 2.3.0-SNAPSHOT
-
 import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
 import org.apache.spark.sql.DataFrame
