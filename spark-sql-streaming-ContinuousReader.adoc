@@ -4,7 +4,7 @@
 
 [[contract]]
 .ContinuousReader Contract
-[cols="1m,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Method
 | Description
@@ -68,6 +68,7 @@ void setStartOffset(Optional<Offset> start)
 ----
 
 Used when...FIXME
+
 |===
 
 [[implementations]]
@@ -88,4 +89,5 @@ Used when...FIXME
 
 | TextSocketContinuousReader
 | [[TextSocketContinuousReader]]
+
 |===

@@ -1,3 +1,85 @@
-== [[MicroBatchReader]] MicroBatchReader Contract
+== [[MicroBatchReader]] MicroBatchReader Contract -- DataSourceReaders For Micro-Batch Stream Processing
 
-`MicroBatchReader` is...FIXME
+`MicroBatchReader` is the <<contract, extension>> of the <<spark-sql-streaming-DataSourceReader.adoc#, DataSourceReader>> (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> that can read in a micro-batch processing mode.
+
+[[contract]]
+.MicroBatchReader Contract
+[cols="1m,3",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| commit
+a| [[commit]]
+
+[source, java]
+----
+void commit(Offset end)
+----
+
+Used when...FIXME
+
+| deserializeOffset
+a| [[deserializeOffset]]
+
+[source, java]
+----
+Offset deserializeOffset(String json)
+----
+
+Used when...FIXME
+
+| getEndOffset
+a| [[getEndOffset]]
+
+[source, java]
+----
+Offset getEndOffset()
+----
+
+Used when...FIXME
+
+| getStartOffset
+a| [[getStartOffset]]
+
+[source, java]
+----
+Offset getStartOffset()
+----
+
+Used when...FIXME
+
+| setOffsetRange
+a| [[setOffsetRange]]
+
+[source, java]
+----
+void setOffsetRange(
+  Optional<Offset> start,
+  Optional<Offset> end)
+----
+
+Used when...FIXME
+
+|===
+
+[[implementations]]
+.MicroBatchReaders
+[cols="1,2",options="header",width="100%"]
+|===
+| MicroBatchReader
+| Description
+
+| KafkaMicroBatchReader
+| [[KafkaMicroBatchReader]]
+
+| <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>>
+| [[MemoryStream]]
+
+| RateStreamMicroBatchReader
+| [[RateStreamMicroBatchReader]]
+
+| TextSocketMicroBatchReader
+| [[TextSocketMicroBatchReader]]
+
+|===

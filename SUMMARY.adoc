@@ -14,7 +14,6 @@
 . link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- DataSourceV2 Sinks with Custom StreamWriter]
 . link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Sources with ContinuousReaders]
 . link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
-. link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
 
 . link:spark-sql-streaming-DataSourceReader.adoc[DataSourceReader Contract]
 .. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
@@ -28,7 +27,7 @@
 . link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
 
 . link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders]
-. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract]
+. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract -- DataSourceReaders For Micro-Batch Stream Processing]
 
 == Developing Streaming Applications
 
@@ -123,6 +122,8 @@
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution of Streaming Datasets]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus -- Notification Bus for Streaming Events]
+
+. link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
 
 === Logical Operators
 
