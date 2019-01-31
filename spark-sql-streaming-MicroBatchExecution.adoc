@@ -1,12 +1,41 @@
-== [[MicroBatchExecution]] MicroBatchExecution
+== [[MicroBatchExecution]] MicroBatchExecution -- StreamExecution in Micro-Batch Stream Processing
 
 `MicroBatchExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>.
 
-`MicroBatchExecution` is <<creating-instance, created>> when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>> for a sink that is not a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> or a trigger that is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a serializable StreamingQuery>>).
+`MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with any type of <<sink, sink>> but <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> and any type of <<trigger, trigger>> but <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
+
+[source, scala]
+----
+import org.apache.spark.sql.streaming.Trigger
+val sq = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .trigger(Trigger.Once) // <-- Gives MicroBatchExecution
+  .queryName("rate2console")
+  .start
+
+import org.apache.spark.sql.streaming.StreamingQuery
+assert(sq.isInstanceOf[StreamingQuery])
+
+// The following gives access to the internals
+// And to MicroBatchExecution
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val engine = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
+import org.apache.spark.sql.execution.streaming.StreamExecution
+assert(engine.isInstanceOf[StreamExecution])
+
+import org.apache.spark.sql.execution.streaming.MicroBatchExecution
+val microBatchEngine = engine.asInstanceOf[MicroBatchExecution]
+assert(microBatchEngine.trigger == Trigger.Once)
+----
 
 [[internal-registries]]
 .MicroBatchExecution's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1m,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
 | Description
@@ -16,7 +45,7 @@
 
 Used when...FIXME
 
-| `triggerExecutor`
+| triggerExecutor
 a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
 
 * `ProcessingTimeExecutor` for `ProcessingTime`
@@ -114,21 +143,25 @@ NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc
 * [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
 * [[triggerClock]] `Clock`
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>> (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
-* [[extraOptions]] Map[String, String]
+* [[extraOptions]] `Map[String, String]`
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 
 `MicroBatchExecution` initializes the <<internal-registries, internal registries and counters>>.
 
-=== [[logicalPlan]] `logicalPlan` Lazy Value
+=== [[logicalPlan]] Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
 
 [source, scala]
 ----
 logicalPlan: LogicalPlan
 ----
 
-NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> to...FIXME.
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> that is the analyzed logical plan of the streaming query.
 
-`logicalPlan`...FIXME
+`logicalPlan` resolves (_replaces_) <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>>, <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> logical operators.
+
+NOTE: `logicalPlan` is a Scala lazy value and so the resolution happens only at the first access and is cached afterwards.
+
+Internally, `logicalPlan`...FIXME
 
 === [[constructNextBatch]] Constructing Next Streaming Batch -- `constructNextBatch` Internal Method
 

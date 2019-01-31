@@ -287,7 +287,7 @@ In the end, `createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapp
 
 NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 
-NOTE: `createQuery` is used exclusively when `StreamingQueryManager` is requested to <<startQuery, start a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
+NOTE: `createQuery` is used exclusively when `StreamingQueryManager` is requested to <<startQuery, start a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of a streaming query>>).
 
 === [[startQuery]] Starting Streaming Query Execution -- `startQuery` Internal Method
 

@@ -35,6 +35,13 @@ State between versions are tend to be incompatible, so state format version shou
 (empty)
 | [[spark.sql.streaming.checkpointLocation]] Default checkpoint directory for storing checkpoint data for streaming queries
 
+| `spark.sql.streaming.disabledV2MicroBatchReaders`
+
+(empty)
+a| [[spark.sql.streaming.disabledV2MicroBatchReaders]] *(internal)* A comma-separated list of fully-qualified data source register class names for which <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> is disabled. Reads from these sources will fall back to the V1 Sources.
+
+Use <<spark-sql-streaming-SQLConf.adoc#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
+
 | `spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion`
 
 `2`

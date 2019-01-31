@@ -3,11 +3,17 @@
 `SQLConf` is an *internal key-value configuration store* for <<parameters, parameters and hints>> used in Spark Structured Streaming (and Spark SQL in general).
 
 [[accessor-methods]]
-.SQLConf's Accessor Methods
+.SQLConf's Property Methods
 [cols="1,1",options="header",width="100%"]
 |===
 | Name
 | Description
+
+| disabledV2StreamingMicroBatchReaders
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>
+
+a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExecution` is requested for <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>>
 
 | `FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION`
 

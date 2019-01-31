@@ -7,7 +7,7 @@ NOTE: <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> is the one 
 
 [[contract]]
 .ProgressReporter Contract
-[cols="1m,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Method
 | Description
@@ -143,15 +143,15 @@ The clock to use to track the time
 ----
 import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
-val sampleQuery = spark.
-  readStream.
-  format("rate").
-  load.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  start
+val sampleQuery = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .trigger(Trigger.ProcessingTime(10.seconds))
+  .start
 
 // Using public API
 import org.apache.spark.sql.streaming.SourceProgress
@@ -187,14 +187,14 @@ source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => of
 ----
 
 [[internal-registries]]
-.ProgressReporter's Internal Registries and Counters (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
+.ProgressReporter's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| [[currentDurationsMs]] `currentDurationsMs`
-a| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap[scala.collection.mutable.HashMap] of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
+| currentDurationsMs
+a| [[currentDurationsMs]] http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap[scala.collection.mutable.HashMap] of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
 
 The action names can be as follows:
 
@@ -218,32 +218,33 @@ res3: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBat
 ----
 ====
 
-| [[currentStatus]] `currentStatus`
-| `StreamingQueryStatus` to track the status of a streaming query.
+| currentStatus
+| [[currentStatus]] `StreamingQueryStatus` to track the status of a streaming query.
 
 Available using <<status, status>> method.
 
-| [[currentTriggerEndTimestamp]] `currentTriggerEndTimestamp`
-| Timestamp of when the current batch/trigger has ended
+| currentTriggerEndTimestamp
+| [[currentTriggerEndTimestamp]] Timestamp of when the current batch/trigger has ended
 
-| [[currentTriggerStartTimestamp]] `currentTriggerStartTimestamp`
-| Timestamp of when the current batch/trigger has started
+| currentTriggerStartTimestamp
+| [[currentTriggerStartTimestamp]] Timestamp of when the current batch/trigger has started
 
-| [[noDataProgressEventInterval]] `noDataProgressEventInterval`
-| FIXME
+| noDataProgressEventInterval
+| [[noDataProgressEventInterval]] FIXME
 
-| [[lastNoDataProgressEventTime]] `lastNoDataProgressEventTime`
-| FIXME
+| lastNoDataProgressEventTime
+| [[lastNoDataProgressEventTime]] FIXME
 
-| [[lastTriggerStartTimestamp]] `lastTriggerStartTimestamp`
-| Timestamp of when the last batch/trigger started
+| lastTriggerStartTimestamp
+| [[lastTriggerStartTimestamp]] Timestamp of when the last batch/trigger started
 
-| [[progressBuffer]] `progressBuffer`
-| Scala's http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.Queue[scala.collection.mutable.Queue] of link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
+| progressBuffer
+| [[progressBuffer]] http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.Queue[scala.collection.mutable.Queue] of link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
 
 Elements are added and removed when `ProgressReporter` <<updateProgress, updates progress>>.
 
 Used when `ProgressReporter` does `lastProgress` or `recentProgress`.
+
 |===
 
 === [[SourceProgress]] SourceProgress

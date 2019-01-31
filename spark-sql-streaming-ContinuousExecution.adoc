@@ -1,8 +1,38 @@
-== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of Continuous Stream Processing
+== [[ContinuousExecution]] ContinuousExecution -- StreamExecution in Continuous Stream Processing
 
 `ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
+
+[source, scala]
+----
+import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
+val sq = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .trigger(Trigger.Continuous(1.minute)) // <-- Gives ContinuousExecution
+  .queryName("rate2console")
+  .start
+
+import org.apache.spark.sql.streaming.StreamingQuery
+assert(sq.isInstanceOf[StreamingQuery])
+
+// The following gives access to the internals
+// And to ContinuousExecution
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val engine = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
+import org.apache.spark.sql.execution.streaming.StreamExecution
+assert(engine.isInstanceOf[StreamExecution])
+
+import org.apache.spark.sql.execution.streaming.continuous.ContinuousExecution
+val continuousEngine = engine.asInstanceOf[ContinuousExecution]
+assert(continuousEngine.trigger == Trigger.Continuous(1.minute))
+----
 
 `ContinuousExecution` can only run streaming queries with <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source.
 
