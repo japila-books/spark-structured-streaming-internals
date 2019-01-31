@@ -23,7 +23,7 @@ Analyzed logical plan of the streaming query
 
 NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, ProgressReporter Contract>> and the only purpose of the `logicalPlan` property is to change the access level from `protected` to `public`.
 
-Used when `StreamExecution` is requested to <<runStream, runStream>> and <<toDebugString, toDebugString>>
+Used when `StreamExecution` is requested to <<runStream, run stream processing>>
 
 | runActivatedStream
 a| [[runActivatedStream]]
@@ -609,7 +609,7 @@ toDebugString(includeLogicalPlan: Boolean): String
 
 `toDebugString`...FIXME
 
-NOTE: `toDebugString` is used exclusively when `StreamExecution` is requested to <<runStream, run the underlying streaming query plan>> (and a streaming query terminated with an exception).
+NOTE: `toDebugString` is used exclusively when `StreamExecution` is requested to <<runStream, run stream processing>> (and a streaming query terminated with an exception).
 
 === [[start]] Starting Streaming Query (on Stream Execution Thread) -- `start` Method
 
