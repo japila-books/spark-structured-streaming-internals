@@ -24,6 +24,8 @@
 
 == Micro-Batch Stream Processing (Structured Streaming V1)
 
+. link:spark-sql-streaming-micro-batch-processing.adoc[Micro-Batch Stream Processing]
+
 . link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
 
 . link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders]

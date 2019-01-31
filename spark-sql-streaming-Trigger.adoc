@@ -4,6 +4,7 @@
 
 [[available-implementations]]
 [[available-triggers]]
+[[triggers]]
 .Trigger's Factory Methods
 [cols="1m,2",options="header",width="100%"]
 |===
@@ -60,8 +61,7 @@ val query = spark.
   queryName("rate-once").
   start
 
-scala> query.isActive
-res0: Boolean = false
+assert(query.isActive == false)
 
 scala> println(query.lastProgress)
 {
@@ -97,22 +97,22 @@ NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` li
 
 [source, scala]
 ----
+import org.apache.spark.sql.streaming.Trigger
 case object MyTrigger extends Trigger
-scala> val query = spark.
-  readStream.
-  format("rate").
-  load.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(MyTrigger). // <-- use custom trigger
-  queryName("rate-once").
-  start
+scala> val sq = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")
+  .trigger(MyTrigger) // <-- use custom trigger
+  .queryName("rate-custom-trigger")
+  .start
 java.lang.IllegalStateException: Unknown type of trigger: MyTrigger
-  at org.apache.spark.sql.execution.streaming.StreamExecution.<init>(StreamExecution.scala:178)
-  at org.apache.spark.sql.streaming.StreamingQueryManager.createQuery(StreamingQueryManager.scala:240)
-  at org.apache.spark.sql.streaming.StreamingQueryManager.startQuery(StreamingQueryManager.scala:278)
-  at org.apache.spark.sql.streaming.DataStreamWriter.start(DataStreamWriter.scala:284)
+  at org.apache.spark.sql.execution.streaming.MicroBatchExecution.<init>(MicroBatchExecution.scala:60)
+  at org.apache.spark.sql.streaming.StreamingQueryManager.createQuery(StreamingQueryManager.scala:275)
+  at org.apache.spark.sql.streaming.StreamingQueryManager.startQuery(StreamingQueryManager.scala:316)
+  at org.apache.spark.sql.streaming.DataStreamWriter.start(DataStreamWriter.scala:325)
   ... 57 elided
 ----
 

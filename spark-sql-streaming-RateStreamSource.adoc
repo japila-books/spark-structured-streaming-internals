@@ -6,32 +6,33 @@
 
 [source, scala]
 ----
-val rates = spark.
-  readStream.
-  format("rate"). // <-- use RateStreamSource
-  option("rowsPerSecond", 1).
-  load
+val rates = spark
+  .readStream
+  .format("rate") // <-- use RateStreamSource
+  .option("rowsPerSecond", 1)
+  .load
 ----
 
 [[options]]
 .RateStreamSource's Options
-[cols="1,1,2",options="header",width="100%"]
+[cols="1m,1,2",options="header",width="100%"]
 |===
 | Name
 | Default Value
 | Description
 
-| [[numPartitions]] `numPartitions`
+| numPartitions
 | (default parallelism)
-| Number of partitions to use
+| [[numPartitions]] Number of partitions to use
 
-| [[rampUpTime]] `rampUpTime`
+| rampUpTime
 | `0` (seconds)
-|
+| [[rampUpTime]]
 
-| [[rowsPerSecond]] `rowsPerSecond`
+| rowsPerSecond
 | `1`
-| Number of rows to generate per second (has to be greater than `0`)
+| [[rowsPerSecond]] Number of rows to generate per second (has to be greater than `0`)
+
 |===
 
 [[schema]]
@@ -47,38 +48,41 @@ root
 ----
 
 .RateStreamSource's Dataset Schema (in the positional order)
-[cols="1,2",options="header",width="100%"]
+[cols="1m,1m",options="header",width="100%"]
 |===
 | Name
 | Type
 
-| `timestamp`
-| `TimestampType`
+| timestamp
+| TimestampType
 
-| `value`
-| `LongType`
+| value
+| LongType
+
 |===
 
 [[internal-registries]]
 .RateStreamSource's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| [[clock]] `clock`
-|
+| clock
+| [[clock]]
 
-| [[lastTimeMs]] `lastTimeMs`
-|
+| lastTimeMs
+| [[lastTimeMs]]
 
-| [[maxSeconds]] `maxSeconds`
-|
+| maxSeconds
+| [[maxSeconds]]
 
-| [[startTimeMs]] `startTimeMs`
-|
+| startTimeMs
+| [[startTimeMs]]
+
 |===
 
+[[logging]]
 [TIP]
 ====
 Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.execution.streaming.RateStreamSource` to see what happens inside.

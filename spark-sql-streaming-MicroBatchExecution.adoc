@@ -1,8 +1,8 @@
 == [[MicroBatchExecution]] MicroBatchExecution
 
-`MicroBatchExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> that...FIXME
+`MicroBatchExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>.
 
-`MicroBatchExecution` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>> for a sink that is not a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> or a trigger that is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a serializable StreamingQuery>>).
+`MicroBatchExecution` is <<creating-instance, created>> when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start>> for a sink that is not a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> or a trigger that is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>> (when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a serializable StreamingQuery>>).
 
 [[internal-registries]]
 .MicroBatchExecution's Internal Properties (e.g. Registries, Counters and Flags)
@@ -178,9 +178,9 @@ In the end (of this checking-data block), `constructNextBatch` releases <<awaitP
 
 ==== [[constructNextBatch-hasNewData-true]] New Data Available
 
-When new data is available, `constructNextBatch` updates the event time watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if it finds one in the <<lastExecution, last IncrementalExecution>>.
+When new data is available, `constructNextBatch` updates the event time watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if it finds one in the <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, last IncrementalExecution>>.
 
-If <<lastExecution, lastExecution>> is available (which may not when `constructNextBatch` is executed the very first time), `constructNextBatch` takes the executed physical plan (i.e. `SparkPlan`) and collects all `EventTimeWatermarkExec` physical operators with the count of link:spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats[eventTimeStats] greater than `0`.
+If <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>> is available (which may not when `constructNextBatch` is executed the very first time), `constructNextBatch` takes the executed physical plan (i.e. `SparkPlan`) and collects all `EventTimeWatermarkExec` physical operators with the count of link:spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats[eventTimeStats] greater than `0`.
 
 NOTE: The executed physical plan is available as `executedPlan` property of link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution] (which is a custom `QueryExecution`).
 
@@ -212,7 +212,7 @@ DEBUG StreamExecution: Event time didn't move: [newWatermarkMs] <= [batchWaterma
 
 `constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with just the current time.
 
-NOTE: Although `constructNextBatch` collects all the `EventTimeWatermarkExec` physical operators in the executed physical plan of <<lastExecution, lastExecution>>, only the first matters if available.
+NOTE: Although `constructNextBatch` collects all the `EventTimeWatermarkExec` physical operators in the executed physical plan of <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>>, only the first matters if available.
 
 NOTE: A physical plan can have as many `EventTimeWatermarkExec` physical operators as link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator was used to create a streaming query.
 
@@ -423,9 +423,9 @@ In *queryPlanning* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTake
 
 * <<offsetSeqMetadata, OffsetSeqMetadata>>
 
-The new `IncrementalExecution` is recorded in <<lastExecution, lastExecution>> property.
+The new `IncrementalExecution` is recorded in <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>> property.
 
-Before leaving *queryPlanning* section, `runBatch` forces preparation of the physical plan for execution (i.e. requesting <<lastExecution, IncrementalExecution>> for link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan]).
+Before leaving *queryPlanning* section, `runBatch` forces preparation of the physical plan for execution (i.e. requesting <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, IncrementalExecution>> for link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan]).
 
 NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] is a physical plan (i.e. `SparkPlan`) ready for execution with link:spark-sql-streaming-IncrementalExecution.adoc#preparations[state optimization rules] applied.
 

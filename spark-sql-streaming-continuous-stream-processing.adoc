@@ -1,6 +1,6 @@
 == Continuous Stream Processing (Structured Streaming V2)
 
-*Continuous Stream Processing* is a new stream processing model in Spark Structured Streaming (and often referred as *Structured Streaming V2*).
+*Continuous Stream Processing* is a new stream processing model in Spark Structured Streaming (often referred as *Structured Streaming V2*) that is used for <<spark-sql-streaming-Trigger.adoc#Continuous, Trigger.Continuous>> trigger.
 
 When `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, create a streaming query for a ContinuousReadSupport data source>>, it creates...FIXME
 
@@ -14,9 +14,9 @@ val q = spark
   .load
   .writeStream
   .format("console")
-  .trigger(Trigger.Continuous(10.seconds))
-  .queryName("rate2console")
   .option("truncate", false)
+  .trigger(Trigger.Continuous(10.seconds)) // <-- Uses Continuous Stream Processing engine for execution
+  .queryName("rate2console")
   .start
 
 scala> q.explain

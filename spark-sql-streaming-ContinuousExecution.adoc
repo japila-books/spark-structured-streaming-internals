@@ -1,6 +1,6 @@
 == [[ContinuousExecution]] ContinuousExecution -- StreamExecution of Continuous Stream Processing
 
-`ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> in <<spark-sql-streaming-continuous-stream-processing.adoc, Continuous Stream Processing>>.
+`ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
