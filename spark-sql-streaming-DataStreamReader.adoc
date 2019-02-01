@@ -49,7 +49,7 @@ a| [[load]]
 load(): DataFrame
 load(path: String): DataFrame // <1>
 ----
-<1> Explicit `path` (that could also be specified using <<option, option>>)
+<1> Explicit `path` (that could also be specified as an <<option, option>>)
 
 Creates a streaming `DataFrame` (that is internally a logical plan with a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> or <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>> leaf logical operators)
 
@@ -199,7 +199,7 @@ Internally, `option` sets <<extraOptions, extraOptions>> internal property.
 
 NOTE: You can also set options in bulk using <<options, options>> method. You have to do the type conversion yourself, though.
 
-=== [[load-internals]] Loading Data From Streaming Source (to Streaming Dataset) -- `load` Method
+=== [[load-internals]] Creating Streaming Dataset (to Represent Loading Data From Streaming Source) -- `load` Method
 
 [source, scala]
 ----
@@ -208,15 +208,7 @@ load(path: String): DataFrame // <1>
 ----
 <1> Specifies `path` option before passing the call to parameterless `load()`
 
-`load` loads data from a link:spark-sql-streaming-Source.adoc[streaming data source] to a streaming dataset.
-
-Internally, `load` first link:spark-sql-streaming-DataSource.adoc#creating-instance[creates a DataSource] (using <<userSpecifiedSchema, user-specified schema>>, the <<source, name of the source>> and <<extraOptions, options>>) followed by creating a `DataFrame` with a link:spark-sql-streaming-StreamingRelation.adoc#apply[StreamingRelation] logical operator (for the `DataSource`).
-
-`load` makes sure that the name of the source is not `hive`. Otherwise, `load` reports a `AnalysisException`.
-
-```
-Hive data source can only be used with tables, you can not read files of Hive data source directly.
-```
+`load`...FIXME
 
 === [[builtin-formats]][[json]][[csv]][[parquet]][[text]][[textFile]] Built-in Formats
 
