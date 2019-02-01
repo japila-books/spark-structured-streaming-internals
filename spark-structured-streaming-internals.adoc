@@ -4,6 +4,7 @@ NOTE: The page is to keep notes about how to guide readers through the codebase 
 
 . <<DataStreamReader, DataStreamReader and Streaming Data Source>>
 . <<data-source-resolution, Streaming Dataset, Data Source Resolution and Logical Query Plan>>
+. <<dataset, Dataset API -- High-Level DSL to Build Logical Query Plan>>
 
 === [[DataStreamReader]] DataStreamReader and Streaming Data Source
 
@@ -95,4 +96,82 @@ val texts = spark.readStream.format("text").load("data/streaming")
 val plan = texts.queryExecution.logical
 scala> println(plan.numberedTreeString)
 00 StreamingRelation DataSource(org.apache.spark.sql.SparkSession@35edd886,text,List(),None,List(),None,Map(path -> data/streaming),None), FileSource[data/streaming], [value#18]
+----
+
+=== [[dataset]] Dataset API -- High-Level DSL to Build Logical Query Plan
+
+With the streaming Dataset created, you can now use all the methods of `Dataset` API, including but not limited to the following operators:
+
+* <<spark-sql-streaming-Dataset-operators.adoc#dropDuplicates, Dataset.dropDuplicates>> for streaming deduplication
+
+* <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> and <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> for streaming aggregation
+
+* <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> for event time watermark
+
+Please note that a streaming Dataset is a regular Dataset (_with some streaming-related limitations_).
+
+[source, scala]
+----
+val rates = spark
+  .readStream
+  .format("rate")
+  .load
+import java.sql.Timestamp
+val countByTime = rates
+  .as[(Timestamp, Long)]
+  .groupByKey(_._1)
+  .count
+
+import org.apache.spark.sql.Dataset
+assert(countByTime.isInstanceOf[Dataset[_]]))
+----
+
+The point is to understand that the Dataset API is a domain-specific language (DSL) to build a more sophisticated stream processing graph that you could also build using the low-level logical operators directly.
+
+Use <<spark-sql-streaming-Dataset-operators.adoc#explain, Dataset.explain>> to learn the underlying logical and physical query plans.
+
+[source, scala]
+----
+assert(countByTime.isStreaming)
+
+scala> countByTime.explain(extended = true)
+== Parsed Logical Plan ==
+Aggregate [value#39], [value#39, count(1) AS count(1)#43L]
++- AppendColumns <function1>, class scala.Tuple2, [StructField(_1,TimestampType,true), StructField(_2,LongType,false)], newInstance(class scala.Tuple2), [staticinvoke(class org.apache.spark.sql.catalyst.util.DateTimeUtils$, TimestampType, fromJavaTimestamp, input[0, java.sql.Timestamp, true], true, false) AS value#39]
+   +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@60eed3d7, rate, [timestamp#20, value#21L]
+
+== Analyzed Logical Plan ==
+value: timestamp, count(1): bigint
+Aggregate [value#39], [value#39, count(1) AS count(1)#43L]
++- AppendColumns <function1>, class scala.Tuple2, [StructField(_1,TimestampType,true), StructField(_2,LongType,false)], newInstance(class scala.Tuple2), [staticinvoke(class org.apache.spark.sql.catalyst.util.DateTimeUtils$, TimestampType, fromJavaTimestamp, input[0, java.sql.Timestamp, true], true, false) AS value#39]
+   +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@60eed3d7, rate, [timestamp#20, value#21L]
+
+== Optimized Logical Plan ==
+Aggregate [value#39], [value#39, count(1) AS count(1)#43L]
++- Project [value#39]
+   +- AppendColumns <function1>, class scala.Tuple2, [StructField(_1,TimestampType,true), StructField(_2,LongType,false)], newInstance(class scala.Tuple2), [staticinvoke(class org.apache.spark.sql.catalyst.util.DateTimeUtils$, TimestampType, fromJavaTimestamp, input[0, java.sql.Timestamp, true], true, false) AS value#39]
+      +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@60eed3d7, rate, [timestamp#20, value#21L]
+
+== Physical Plan ==
+*(4) HashAggregate(keys=[value#39], functions=[count(1)], output=[value#39, count(1)#43L])
++- StateStoreSave [value#39], state info [ checkpoint = <unknown>, runId = 29feaa73-8482-4584-804b-442a57b07ce4, opId = 0, ver = 0, numPartitions = 200], Append, 0, 2
+   +- *(3) HashAggregate(keys=[value#39], functions=[merge_count(1)], output=[value#39, count#48L])
+      +- StateStoreRestore [value#39], state info [ checkpoint = <unknown>, runId = 29feaa73-8482-4584-804b-442a57b07ce4, opId = 0, ver = 0, numPartitions = 200], 2
+         +- *(2) HashAggregate(keys=[value#39], functions=[merge_count(1)], output=[value#39, count#48L])
+            +- Exchange hashpartitioning(value#39, 200)
+               +- *(1) HashAggregate(keys=[value#39], functions=[partial_count(1)], output=[value#39, count#48L])
+                  +- *(1) Project [value#39]
+                     +- AppendColumns <function1>, newInstance(class scala.Tuple2), [staticinvoke(class org.apache.spark.sql.catalyst.util.DateTimeUtils$, TimestampType, fromJavaTimestamp, input[0, java.sql.Timestamp, true], true, false) AS value#39]
+                        +- StreamingRelation rate, [timestamp#20, value#21L]
+----
+
+Or go pro and talk to `QueryExecution` directly.
+
+[source, scala]
+----
+val plan = countByTime.queryExecution.logical
+scala> println(plan.numberedTreeString)
+00 Aggregate [value#39], [value#39, count(1) AS count(1)#43L]
+01 +- AppendColumns <function1>, class scala.Tuple2, [StructField(_1,TimestampType,true), StructField(_2,LongType,false)], newInstance(class scala.Tuple2), [staticinvoke(class org.apache.spark.sql.catalyst.util.DateTimeUtils$, TimestampType, fromJavaTimestamp, input[0, java.sql.Timestamp, true], true, false) AS value#39]
+02    +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@60eed3d7, rate, [timestamp#20, value#21L]
 ----

@@ -9,8 +9,8 @@ Dataset API has a set of <<operators, operators>> that are of particular use in 
 | Operator
 | Description
 
-| [[dropDuplicates]] link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates]
-a| Drops duplicate records (given a subset of columns)
+| <<spark-sql-streaming-Dataset-dropDuplicates.adoc#, dropDuplicates>>
+a| [[dropDuplicates]]
 
 [source, scala]
 ----
@@ -19,8 +19,10 @@ dropDuplicates(colNames: Seq[String]): Dataset[T]
 dropDuplicates(col1: String, cols: String*): Dataset[T]
 ----
 
-| [[explain]] link:spark-sql-streaming-Dataset-explain.adoc[explain]
-a| Explains execution plans
+Drops duplicate records (given a subset of columns)
+
+| <<spark-sql-streaming-Dataset-explain.adoc#, explain>>
+a| [[explain]]
 
 [source, scala]
 ----
@@ -28,8 +30,10 @@ explain(): Unit
 explain(extended: Boolean): Unit
 ----
 
-| [[groupBy]] link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy]
-a| Aggregates rows by a untyped grouping function
+Explains query plans
+
+| <<spark-sql-streaming-Dataset-groupBy.adoc#, groupBy>>
+a| [[groupBy]]
 
 [source, scala]
 ----
@@ -37,34 +41,37 @@ groupBy(cols: Column*): RelationalGroupedDataset
 groupBy(col1: String, cols: String*): RelationalGroupedDataset
 ----
 
-| [[groupByKey]] link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey]
-a| Aggregates rows by a typed grouping function
+Aggregates rows by a untyped grouping function
+
+| <<spark-sql-streaming-Dataset-groupByKey.adoc#, groupByKey>>
+a| [[groupByKey]]
 
 [source, scala]
 ----
 groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
 ----
 
-| [[withWatermark]] link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark]
-a| Defines a streaming watermark on a column
+Aggregates rows by a typed grouping function
+
+| <<spark-sql-streaming-Dataset-withWatermark.adoc#, withWatermark>>
+a| [[withWatermark]]
 
 [source, scala]
 ----
 withWatermark(eventTime: String, delayThreshold: String): Dataset[T]
 ----
+
+Defines a streaming watermark for late events (on the given `eventTime` column)
+
 |===
 
 [source, scala]
 ----
-scala> spark.version
-res0: String = 2.3.0-SNAPSHOT
-
-// input stream
-val rates = spark.
-  readStream.
-  format("rate").
-  option("rowsPerSecond", 1).
-  load
+val rates = spark
+  .readStream
+  .format("rate")
+  .option("rowsPerSecond", 1)
+  .load
 
 // stream processing
 // replace [operator] with the operator of your choice
@@ -73,14 +80,14 @@ rates.[operator]
 // output stream
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import scala.concurrent.duration._
-val sq = rates.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Complete).
-  queryName("rate-console").
-  start
+val sq = rates
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .trigger(Trigger.ProcessingTime(10.seconds))
+  .outputMode(OutputMode.Complete)
+  .queryName("rate-console")
+  .start
 
 // eventually...
 sq.stop
