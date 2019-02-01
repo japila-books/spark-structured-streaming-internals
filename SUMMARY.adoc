@@ -4,6 +4,8 @@
 
 . link:spark-structured-streaming.adoc[Spark Structured Streaming -- Streaming Datasets]
 
+. link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
+
 == Continuous Stream Processing (Structured Streaming V2)
 
 . link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]

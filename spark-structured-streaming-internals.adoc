@@ -1,0 +1,48 @@
+== Internals of Streaming Datasets
+
+NOTE: The page is to keep notes about how to guide readers through the codebase and may disappear if merged with the other pages or become an intro page.
+
+. <<DataStreamReader, DataStreamReader>>
+
+=== DataStreamReader and Streaming Data Source
+
+It all starts with `SparkSession.readStream` method which lets you define a <<spark-sql-streaming-Source.adoc#, streaming source>> in a *stream processing graph* (a _dataflow graph_).
+
+[source, scala]
+----
+import org.apache.spark.sql.SparkSession
+assert(spark.isInstanceOf[SparkSession])
+
+val reader = spark.readStream
+
+import org.apache.spark.sql.streaming.DataStreamReader
+assert(reader.isInstanceOf[DataStreamReader])
+----
+
+`SparkSession.readStream` method creates a <<spark-sql-streaming-DataStreamReader.adoc#, DataStreamReader>>.
+
+The fluent API of `DataStreamReader` allows you to describe the input data source (e.g. <<spark-sql-streaming-DataStreamReader.adoc#format, DataStreamReader.format>> and <<spark-sql-streaming-DataStreamReader.adoc#options, DataStreamReader.options>>) using method chaining (with the goal of making the readability of the source code close to that of ordinary written prose, essentially creating a domain-specific language within the interface. See https://en.wikipedia.org/wiki/Fluent_interface[Fluent interface] article in Wikipedia).
+
+[source, scala]
+----
+reader
+  .format("csv")
+  .option("delimiter", "|")
+----
+
+There are a couple of built-in formats. Their names are the names of the corresponding `DataStreamReader` methods and so act like shortcuts of `DataStreamReader.format` (where you have to specify the format by name), i.e. <<spark-sql-streaming-DataStreamReader.adoc#csv, csv>>, <<spark-sql-streaming-DataStreamReader.adoc#json, json>>, <<spark-sql-streaming-DataStreamReader.adoc#orc, orc>>, <<spark-sql-streaming-DataStreamReader.adoc#parquet, parquet>> and <<spark-sql-streaming-DataStreamReader.adoc#text, text>> followed by <<spark-sql-streaming-DataStreamReader.adoc#load, DataStreamReader.load>>.
+
+You may also want to use <<spark-sql-streaming-DataStreamReader.adoc#schema, DataStreamReader.schema>> method to specify the schema of the streaming data source.
+
+[source, scala]
+----
+reader.schema("a INT, b STRING")
+----
+
+In the end, you use <<spark-sql-streaming-DataStreamReader.adoc#load, DataStreamReader.load>> method that creates a streaming `Dataset`.
+
+[source, scala]
+----
+val input = reader.format("csv").load("data/streaming")
+assert(input.isStreaming)
+----

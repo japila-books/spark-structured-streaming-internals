@@ -19,15 +19,17 @@ csv(path: String): DataFrame
 
 Sets `csv` as the <<format, format>> of the data source
 
-| <<format, format>>
-a|
+| `format`
+a| [[format]]
 
 [source, scala]
 ----
 format(source: String): DataStreamReader
 ----
 
-Sets the <<source, data source>> format
+Specifies the format of the <<source, data source>>
+
+The format is used internally as the name (_alias_) of the <<spark-sql-streaming-Source.adoc#, streaming source>> to use to load the data
 
 | <<json, json>>
 a|
@@ -45,10 +47,11 @@ a| [[load]]
 [source, scala]
 ----
 load(): DataFrame
-load(path: String): DataFrame
+load(path: String): DataFrame // <1>
 ----
+<1> Explicit `path` (that could also be specified using <<option, option>>)
 
-Creates a streaming query with a streaming source (as a `DataFrame` that represents loading data in a streaming dataflow)
+Creates a streaming `DataFrame` (that is internally a logical plan with a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> or <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>> leaf logical operators)
 
 | <<option, option>>
 a|
@@ -63,16 +66,17 @@ option(key: String, value: String): DataStreamReader
 
 Sets a loading option
 
-| <<options, options>>
-a|
+| `options`
+a| [[options]]
 
 [source, scala]
 ----
-options(options: scala.collection.Map[String, String]): DataStreamReader
-options(options: java.util.Map[String, String]): DataStreamReader
+options(options: Map[String, String]): DataStreamReader
 ----
 
-Sets one or more data source options
+Specifies the configuration options of a data source
+
+NOTE: You could use <<option, option>> method if you prefer specifying the options one by one or there is only one in use.
 
 | <<orc, orc>>
 a|
@@ -94,17 +98,17 @@ parquet(path: String): DataFrame
 
 Sets `parquet` as the <<format, format>> of the data source
 
-| <<schema, schema>>
-a|
+| `schema`
+a| [[schema]]
 
 [source, scala]
 ----
-schema(schemaString: String): DataStreamReader // <1>
 schema(schema: StructType): DataStreamReader
+schema(schemaString: String): DataStreamReader // <1>
 ----
-<1> *(New in 2.3.0)*
+<1> Uses a DDL-formatted table schema
 
-Sets the <<userSpecifiedSchema, user-defined schema>> of the data source (as a `StructType` or DDL-formatted table schema, e.g. `a INT, b STRING`)
+Specifies the <<userSpecifiedSchema, user-defined schema>> of the streaming data source (as a `StructType` or DDL-formatted table schema, e.g. `a INT, b STRING`)
 
 | <<text, text>>
 a|
@@ -177,30 +181,6 @@ After you have described the *streaming pipeline* to read datasets from an exter
 | Collection of key-value configuration options
 |===
 
-=== [[format]] Specifying Format -- `format` Method
-
-[source, scala]
-----
-format(source: String): DataStreamReader
-----
-
-`format` specifies the `source` format of datasets in a streaming data source.
-
-Internally, `schema` sets <<source, source>> internal property.
-
-=== [[schema]] Specifying Schema -- `schema` Method
-
-[source, scala]
-----
-schema(schema: StructType): DataStreamReader
-schema(schemaString: String): DataStreamReader  // <1>
-----
-<1> Uses the input DDL-formatted string
-
-`schema` specifies the `schema` of the streaming data source.
-
-Internally, `schema` sets <<userSpecifiedSchema, userSpecifiedSchema>> internal property.
-
 === [[option]] Specifying Loading Options -- `option` Method
 
 [source, scala]
@@ -218,17 +198,6 @@ There is support for values of `String`, `Boolean`, `Long`, and `Double` types f
 Internally, `option` sets <<extraOptions, extraOptions>> internal property.
 
 NOTE: You can also set options in bulk using <<options, options>> method. You have to do the type conversion yourself, though.
-
-=== [[options]] Specifying Loading Options -- `options` Method
-
-[source, scala]
-----
-options(options: scala.collection.Map[String, String]): DataStreamReader
-----
-
-`options` method allows specifying one or many options of the streaming input data source.
-
-NOTE: You can also set options one by one using <<option, option>> method.
 
 === [[load-internals]] Loading Data From Streaming Source (to Streaming Dataset) -- `load` Method
 
