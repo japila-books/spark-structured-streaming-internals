@@ -43,7 +43,7 @@ NOTE: `sourceSchema` is used exclusively when `DataSource` is requested <<source
 `DataSource` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[className]] Fully-qualified class name or an alias of the data source
+* [[className]] `className`, i.e. the fully-qualified class name or an alias of the data source
 * [[paths]] Paths (default: `Nil`, i.e. an empty collection)
 * [[userSpecifiedSchema]] Optional user-defined schema (default: `None`)
 * [[partitionColumns]] Names of the partition columns (default: empty)

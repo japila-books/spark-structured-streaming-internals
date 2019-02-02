@@ -244,9 +244,29 @@ import org.apache.spark.sql.streaming.StreamingQuery
 assert(sq.isInstanceOf[StreamingQuery])
 ----
 
+When `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start a streaming query>>, it allows for the following data source formats:
+
+* *memory* with <<spark-sql-streaming-MemorySinkV2.adoc#, MemorySinkV2>> (with <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>) or <<spark-sql-streaming-MemorySink.adoc#, MemorySink>>
+
+* *foreach* with <<spark-sql-streaming-ForeachWriterProvider.adoc#, ForeachWriterProvider>> sink
+
+* *foreachBatch* with <<spark-sql-streaming-ForeachBatchSink.adoc#, ForeachBatchSink>> sink (that does not support <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>)
+
+* Any `DataSourceRegister` data source
+
+* Custom data sources specified by their fully-qualified class names or *[name].DefaultSource*
+
+* *avro*, *kafka* _and some others_ (see `DataSource.lookupDataSource` object method)
+
+* <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>>
+
+* `DataSource` is requested to <<spark-sql-streaming-DataSource.adoc#createSink, create a streaming sink>> that accepts <<spark-sql-streaming-StreamSinkProvider.adoc#, StreamSinkProvider>> or `FileFormat` data sources only
+
+With a streaming sink, `DataStreamWriter` requests the <<StreamingQueryManager, StreamingQueryManager>> to <<spark-sql-streaming-StreamingQueryManager.adoc#startQuery, start a streaming query>>.
+
 === [[StreamingQuery]] StreamingQuery
 
-When a stream processing pipeline is started (using <<spark-sql-streaming-DataStreamWriter.adoc#start, DataStreamWriter.start>> method), `DataStreamWriter` creates and immediately starts a <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>>.
+When a stream processing pipeline is started (using <<spark-sql-streaming-DataStreamWriter.adoc#start, DataStreamWriter.start>> method), `DataStreamWriter` creates a <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>> and requests the <<StreamingQueryManager, StreamingQueryManager>> to <<spark-sql-streaming-StreamingQueryManager.adoc#startQuery, start a streaming query>>.
 
 === [[StreamingQueryManager]] StreamingQueryManager
 
