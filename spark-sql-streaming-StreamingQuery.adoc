@@ -2,9 +2,9 @@
 
 `StreamingQuery` is the <<contract, contract>> for a streaming query that is executed continuously and concurrently (i.e. on a separate thread).
 
-NOTE: `StreamingQuery` is called *continuous query* or *stream query*.
+NOTE: `StreamingQuery` is called *continuous query* or *streaming query*.
 
-NOTE: `StreamingQuery` is a Scala trait with the only implementation being link:spark-sql-streaming-StreamExecution.adoc[StreamExecution] (and less importanly `StreamingQueryWrapper` for serializing non-serializable `StreamExecution`).
+NOTE: `StreamingQuery` is a Scala trait with the only implementation being link:spark-sql-streaming-StreamExecution.adoc[StreamExecution] (and less importanly `StreamingQueryWrapper` for serializing a non-serializable `StreamExecution`).
 
 `StreamingQuery` can be in two states:
 
