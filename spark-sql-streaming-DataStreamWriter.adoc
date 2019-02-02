@@ -43,16 +43,9 @@ a| [[format]]
 format(source: String): DataStreamWriter[T]
 ----
 
-Specifies the <<spark-sql-streaming-Sink.adoc#, streaming sink>> (aka _output format_) that is the streaming output data source to write the rows to.
+Specifies the format of the <<source, data sink>> (aka _output format_)
 
-Internally, `format` is referred to as a _source_ (as in the output data _source_).
-
-The following list are the streaming formats that are used when `DataStreamWriter` is requested to <<start, start execution of the streaming query>>:
-
-* `hive`
-* `memory`
-* <<foreach, foreach>>
-* <<foreachBatch, foreachBatch>>
+The format is used internally as the name (_alias_) of the <<spark-sql-streaming-Sink.adoc#, streaming sink>> to use to write the data to
 
 | <<option, option>>
 a|
@@ -72,6 +65,10 @@ a| [[options]]
 ----
 options(options: Map[String, String]): DataStreamWriter[T]
 ----
+
+Specifies the configuration options of a data sink
+
+NOTE: You could use <<option, option>> method if you prefer specifying the options one by one or there is only one in use.
 
 | <<outputMode, outputMode>>
 a|
@@ -108,8 +105,11 @@ a|
 [source, scala]
 ----
 start(): StreamingQuery
-start(path: String): StreamingQuery
+start(path: String): StreamingQuery // <1>
 ----
+<1> Explicit `path` (that could also be specified as an <<option, option>>)
+
+Creates and immediately starts a <<spark-sql-streaming-StreamingQuery.adoc#, StreamingQuery>>
 
 | <<trigger, trigger>>
 a|
