@@ -180,7 +180,7 @@ runContinuous(sparkSessionForQuery: SparkSession): Unit
 
 `runContinuous`...FIXME
 
-NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
+NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, execute an activated streaming query>>.
 
 === [[creating-instance]] Creating ContinuousExecution Instance
 

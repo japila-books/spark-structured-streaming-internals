@@ -33,9 +33,10 @@ a| [[runActivatedStream]]
 runActivatedStream(sparkSessionForStream: SparkSession): Unit
 ----
 
-Runs the activated streaming query
+Executes the activated streaming query
 
 Used exclusively when `StreamExecution` is requested to <<runStream, run the streaming query>> (when transitioning from `INITIALIZING` to `ACTIVE` state)
+
 |===
 
 [[extensions]]
@@ -58,9 +59,6 @@ NOTE: `StreamExecution` corresponds to a link:spark-sql-streaming-StreamingQuery
 
 [source, scala]
 ----
-scala> spark.version
-res0: String = 2.3.0-SNAPSHOT
-
 import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
 val q = spark.
@@ -357,7 +355,12 @@ a| [[state]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurre
 | [[streamDeathCause]] `StreamingQueryException`
 
 | streamMetadata
-| [[streamMetadata]] `StreamMetadata` from the `metadata` file from <<checkpointFile, checkpoint directory>>. If the `metadata` file is not available it is created (with a new random <<id, id>>).
+| [[streamMetadata]] <<spark-sql-streaming-StreamMetadata.adoc#, StreamMetadata>> from the `metadata` file from the <<checkpointFile, checkpoint directory>>. If the `metadata` file is not available it is created (with a new random <<id, id>>).
+
+| streamMetrics
+a| [[streamMetrics]] <<spark-sql-streaming-MetricsReporter.adoc#, MetricsReporter>> with *spark.streaming.[name or id]* source name
+
+Uses <<name, name>> if defined (can be `null`) or falls back to <<id, id>>
 
 | uniqueSources
 a| [[uniqueSources]] Unique link:spark-sql-streaming-Source.adoc[streaming data sources] in a streaming Dataset (after being collected as `StreamingExecutionRelation` from the corresponding <<logicalPlan, logical query plan>>).
@@ -371,6 +374,7 @@ Used when `StreamExecution`:
 * <<stopSources, Stops all streaming data sources>>
 |===
 
+[[logging]]
 [TIP]
 ====
 Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.execution.streaming.StreamExecution` to see what happens inside.
@@ -404,23 +408,20 @@ CAUTION: FIXME
 runStream(): Unit
 ----
 
-`runBatches` runs streaming batches of data (that are datasets from every <<uniqueSources, streaming source>>).
+`runStream`...FIXME
 
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
-
-val out = spark.
-  readStream.
-  text("server-logs").
-  writeStream.
-  format("console").
-  queryName("debug").
-  trigger(Trigger.ProcessingTime(10.seconds))
-scala> val debugStream = out.start
-INFO StreamExecution: Starting debug [id = 8b57b0bd-fc4a-42eb-81a3-777d7ba5e370, runId = 920b227e-6d02-4a03-a271-c62120258cea]. Use file:///private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-274f9ae1-1238-4088-b4a1-5128fc520c1f to store the query checkpoint.
-debugStream: org.apache.spark.sql.streaming.StreamingQuery = org.apache.spark.sql.execution.streaming.StreamingQueryWrapper@58a5b69c
+val sq = spark
+  .readStream
+  .text("server-logs")
+  .writeStream
+  .format("console")
+  .queryName("debug")
+  .trigger(Trigger.ProcessingTime(20.seconds))
+  .start
 
 // Enable the log level to see the INFO and DEBUG messages
 // log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG

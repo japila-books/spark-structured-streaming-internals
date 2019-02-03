@@ -1,15 +1,28 @@
 == [[SQLConf]] SQLConf -- Internal Configuration Store
 
-`SQLConf` is an *internal key-value configuration store* for <<parameters, parameters and hints>> used in Spark Structured Streaming (and Spark SQL in general).
+`SQLConf` is an *internal key-value configuration store* for parameters and hints used to configure a Spark Structured Streaming application (and Spark SQL applications in general).
+
+The parameters and hints are accessible as <<accessor-methods, property accessor methods>>.
+
+`SQLConf` is available as the `conf` property of the `SessionState` of a `SparkSession`.
+
+[source, scala]
+----
+scala> :type spark
+org.apache.spark.sql.SparkSession
+
+scala> :type spark.sessionState.conf
+org.apache.spark.sql.internal.SQLConf
+----
 
 [[accessor-methods]]
-.SQLConf's Property Methods
+.SQLConf's Property Accessor Methods
 [cols="1,1",options="header",width="100%"]
 |===
-| Name
+| Method Name / Property
 | Description
 
-| disabledV2StreamingMicroBatchReaders
+| `disabledV2StreamingMicroBatchReaders`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>
 
@@ -46,8 +59,16 @@ Used when:
 
 * `OffsetSeqMetadata` is requested for `relevantSQLConfs` and `relevantSQLConfDefaultValues`
 
+| `streamingMetricsEnabled`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.metricsEnabled, spark.sql.streaming.metricsEnabled>>
+
+a| [[streamingMetricsEnabled]] Used exclusively when `StreamExecution` is requested for <<spark-sql-streaming-StreamExecution.adoc#runStream, runStream>> (to control whether to register a <<spark-sql-streaming-StreamExecution.adoc#streamMetrics, metrics reporter>> for a streaming query)
+
 | `STREAMING_MULTIPLE_WATERMARK_POLICY`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.multipleWatermarkPolicy, spark.sql.streaming.multipleWatermarkPolicy>>
+
 a| [[STREAMING_MULTIPLE_WATERMARK_POLICY]]
+
 |===

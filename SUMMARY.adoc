@@ -117,6 +117,7 @@
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Executions]
 .. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper -- Serializable StreamExecution]
+.. link:spark-sql-streaming-StreamMetadata.adoc[StreamMetadata]
 
 . link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter Contract]
 . link:spark-sql-streaming-QueryExecutionThread.adoc[QueryExecutionThread]
@@ -216,6 +217,8 @@
 
 . link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
 .. link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
+
+. link:spark-sql-streaming-MetricsReporter.adoc[MetricsReporter]
 
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
 
