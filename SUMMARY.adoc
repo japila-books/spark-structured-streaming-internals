@@ -117,7 +117,6 @@
 
 . link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Executions]
 .. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper -- Serializable StreamExecution]
-.. link:spark-sql-streaming-StreamMetadata.adoc[StreamMetadata]
 
 . link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter Contract]
 . link:spark-sql-streaming-QueryExecutionThread.adoc[QueryExecutionThread]
@@ -129,6 +128,7 @@
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus -- Notification Bus for Streaming Events]
 
 . link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
+. link:spark-sql-streaming-StreamMetadata.adoc[StreamMetadata]
 
 === Logical Operators
 

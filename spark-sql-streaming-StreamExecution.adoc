@@ -1,8 +1,8 @@
 == [[StreamExecution]] StreamExecution -- Base of Streaming Query Executions
 
-`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can <<runActivatedStream, execute>> the <<logicalPlan, structured query>> continuously on a <<queryExecutionThread, stream execution thread>>.
+`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can <<runActivatedStream, execute>> the <<logicalPlan, structured query>> at regular intervals on a <<queryExecutionThread, stream execution thread>>.
 
-NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
+NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* can be considered synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
 [[contract]]
 .StreamExecution Contract
@@ -19,11 +19,11 @@ a| [[logicalPlan]]
 logicalPlan: LogicalPlan
 ----
 
-Analyzed logical plan of the streaming query
-
-NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, ProgressReporter Contract>> and the only purpose of the `logicalPlan` property is to change the access level from `protected` to `public`.
+Analyzed logical plan of the streaming query to execute
 
 Used when `StreamExecution` is requested to <<runStream, run stream processing>>
+
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-ProgressReporter.adoc#logicalPlan, ProgressReporter Contract>> and the only purpose of the `logicalPlan` property is to change the access level from `protected` to `public`.
 
 | runActivatedStream
 a| [[runActivatedStream]]
@@ -151,6 +151,12 @@ TIP: Monitor `offsets` and `commits` metadata logs to know the progress of a str
 
 `StreamExecution` <<runBatches-batchRunner-no-data, delays polling for new data>> for 10 milliseconds (when no data was available to process in a batch). Use link:spark-sql-streaming-properties.adoc#spark.sql.streaming.pollingDelay[spark.sql.streaming.pollingDelay] Spark property to control the delay.
 
+[[id]]
+Every `StreamExecution` is uniquely identified by an *ID of the streaming query* (which is the `id` of the <<streamMetadata, StreamMetadata>> that is persisted in the `metadata` file in the <<checkpointFile, checkpoint directory>>).
+
+[[streamMetadata]]
+`StreamExecution` uses a <<spark-sql-streaming-StreamMetadata.adoc#, StreamMetadata>> that is <<spark-sql-streaming-StreamMetadata.adoc#write, persisted>> in the `metadata` file in the <<checkpointFile, checkpoint directory>>. If the `metadata` file is available it is <<spark-sql-streaming-StreamMetadata.adoc#read, read>> and is the way to recover the <<id, ID>> of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
+
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
 [cols="1m,2",options="header",width="100%"]
@@ -231,13 +237,6 @@ a| [[currentBatchId]] Current batch number
 * `0` when `StreamExecution` <<populateStartOffsets, populates start offsets>> (and <<offsetLog, OffsetSeqLog>> is empty, i.e. no offset files in `offsets` directory in checkpoint)
 
 * Incremented when `StreamExecution` <<runBatches, runs streaming batches>> and finishes a trigger that had <<dataAvailable, data available from sources>> (right after <<batchCommitLog, committing the batch>>).
-
-| id
-a| [[id]] Unique identifier of the streaming query
-
-Set as the `id` of <<streamMetadata, streamMetadata>> when `StreamExecution` is <<creating-instance, created>>.
-
-NOTE: `id` can get fetched from link:spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation[checkpoint metadata] if available and thus recovered when a query is resumed (i.e. restarted after a failure or a planned stop).
 
 | initializationLatch
 | [[initializationLatch]]
@@ -353,9 +352,6 @@ a| [[state]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurre
 
 | streamDeathCause
 | [[streamDeathCause]] `StreamingQueryException`
-
-| streamMetadata
-| [[streamMetadata]] <<spark-sql-streaming-StreamMetadata.adoc#, StreamMetadata>> from the `metadata` file from the <<checkpointFile, checkpoint directory>>. If the `metadata` file is not available it is created (with a new random <<id, id>>).
 
 | streamMetrics
 a| [[streamMetrics]] <<spark-sql-streaming-MetricsReporter.adoc#, MetricsReporter>> with *spark.streaming.[name or id]* source name
