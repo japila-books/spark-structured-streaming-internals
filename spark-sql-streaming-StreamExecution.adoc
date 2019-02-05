@@ -1,6 +1,6 @@
 == [[StreamExecution]] StreamExecution -- Base of Streaming Query Executions
 
-`StreamExecution` is the <<contract, base>> of <<extensions, streaming query executions>> that can <<runActivatedStream, execute>> the <<logicalPlan, structured query>> at regular intervals on a <<queryExecutionThread, stream execution thread>>.
+`StreamExecution` is the <<contract, base>> of <<extensions, execution environments>> that can <<runActivatedStream, run>> a <<logicalPlan, structured query>> at regular intervals on a <<queryExecutionThread, stream execution thread>>.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* can be considered synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
@@ -53,7 +53,7 @@ Used exclusively when `StreamExecution` is requested to <<runStream, run the str
 | [[MicroBatchExecution]]
 |===
 
-`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single continuous query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, adds the results to a sink>>.
+`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, adds the results to a sink>>.
 
 NOTE: `StreamExecution` corresponds to a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] with one or more link:spark-sql-streaming-Source.adoc[streaming sources] and exactly one link:spark-sql-streaming-Sink.adoc[streaming sink].
 
@@ -84,7 +84,7 @@ image::images/StreamExecution-creating-instance.png[align="center"]
 
 NOTE: link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter] describes how the results of executing batches of a streaming query are written to a streaming sink.
 
-`StreamExecution` <<start, starts a thread of execution>> that runs the streaming query continuously and concurrently (and <<runBatches, polls for new records in the streaming data sources to create a batch>> every trigger).
+When <<start, started>>, `StreamExecution` starts a <<queryExecutionThread, query execution thread>> that simply <<runStream, runs stream processing>> (and hence the streaming query).
 
 .StreamExecution's Starting Streaming Query (on Execution Thread)
 image::images/StreamExecution-start.png[align="center"]
@@ -152,7 +152,25 @@ TIP: Monitor `offsets` and `commits` metadata logs to know the progress of a str
 `StreamExecution` <<runBatches-batchRunner-no-data, delays polling for new data>> for 10 milliseconds (when no data was available to process in a batch). Use link:spark-sql-streaming-properties.adoc#spark.sql.streaming.pollingDelay[spark.sql.streaming.pollingDelay] Spark property to control the delay.
 
 [[id]]
-Every `StreamExecution` is uniquely identified by an *ID of the streaming query* (which is the `id` of the <<streamMetadata, StreamMetadata>> that is persisted in the `metadata` file in the <<checkpointFile, checkpoint directory>>).
+Every `StreamExecution` is uniquely identified by an *ID of the streaming query* (which is the `id` of the <<streamMetadata, StreamMetadata>>).
+
+NOTE: Since the <<streamMetadata, StreamMetadata>> is persisted (to the `metadata` file in the <<checkpointFile, checkpoint directory>>), the streaming query ID "survives" query restarts as long as the checkpoint directory is preserved.
+
+[[runId]]
+`StreamExecution` is also uniquely identified by a *run ID of the streaming query*. A run ID is a randomly-generated 128-bit universally unique identifier (UUID) that is assigned at the time `StreamExecution` is created.
+
+NOTE: `runId` does not "survive" query restarts and will always be different yet unique (across all active queries).
+
+[NOTE]
+====
+The <<name, name>>, <<id, id>> and <<runId, runId>> are all unique across all active queries (in a <<spark-sql-streaming-StreamingQueryManager.adoc#, StreamingQueryManager>>). The difference is that:
+
+* <<name, name>> is optional and user-defined
+
+* <<id, id>> is a UUID that is auto-generated at the time `StreamExecution` is created and persisted to `metadata` checkpoint file
+
+* <<runId, runId>> is a UUID that is auto-generated every time `StreamExecution` is created
+====
 
 [[streamMetadata]]
 `StreamExecution` uses a <<spark-sql-streaming-StreamMetadata.adoc#, StreamMetadata>> that is <<spark-sql-streaming-StreamMetadata.adoc#write, persisted>> in the `metadata` file in the <<checkpointFile, checkpoint directory>>. If the `metadata` file is available it is <<spark-sql-streaming-StreamMetadata.adoc#read, read>> and is the way to recover the <<id, ID>> of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
@@ -331,9 +349,6 @@ INFO StreamExecution: Starting [id] with [resolvedCheckpointRoot] to store the q
 Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path` for <<checkpointRoot, checkpointRoot>> and makes it qualified.
 
 NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for a Hadoop configuration.
-
-| runId
-| [[runId]] Current run id
 
 | sources
 | [[sources]] All link:spark-sql-streaming-Source.adoc[streaming Sources] in <<logicalPlan, logical query plan>> (that are the link:spark-sql-streaming-StreamingExecutionRelation.adoc#source[sources] from `StreamingExecutionRelation`).
@@ -636,7 +651,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <
 `StreamExecution` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[name]] Query name
+* [[name]] Name of the streaming query
 * [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
 * [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
