@@ -1,3 +1,0 @@
-== [[QueryExecutionThread]] QueryExecutionThread
-
-`QueryExecutionThread` is...FIXME

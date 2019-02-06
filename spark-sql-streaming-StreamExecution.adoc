@@ -84,7 +84,7 @@ image::images/StreamExecution-creating-instance.png[align="center"]
 
 NOTE: link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter] describes how the results of executing batches of a streaming query are written to a streaming sink.
 
-When <<start, started>>, `StreamExecution` starts a <<queryExecutionThread, query execution thread>> that simply <<runStream, runs stream processing>> (and hence the streaming query).
+When <<start, started>>, `StreamExecution` starts a <<queryExecutionThread, stream execution thread>> that simply <<runStream, runs stream processing>> (and hence the streaming query).
 
 .StreamExecution's Starting Streaming Query (on Execution Thread)
 image::images/StreamExecution-start.png[align="center"]
@@ -399,18 +399,23 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
-=== [[stop]] `stop` Method
-
-CAUTION: FIXME
-
-=== [[stopSources]] `stopSources` Internal Method
+=== [[stopSources]] `stopSources` Method
 
 [source, scala]
 ----
 stopSources(): Unit
 ----
 
-CAUTION: FIXME
+`stopSources`...FIXME
+
+[NOTE]
+====
+`stopSources` is used when:
+
+* `StreamExecution` is requested to <<runStream, run stream processing>> (and terminates)
+
+* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run the streaming query in continuous mode>> (and terminates)
+====
 
 === [[runStream]] Running Stream Processing -- `runStream` Internal Method
 
@@ -603,25 +608,23 @@ When no <<dataAvailable, data was available>> in the sources to process, `batchR
 
 `batchRunner` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Waiting for next trigger* and returns whether the query is currently active or not (so <<triggerExecutor, TriggerExecutor>> can decide whether to finish executing the batches or not)
 
-=== [[getBatchDescriptionString]] `getBatchDescriptionString` Internal Method
+=== [[getBatchDescriptionString]] `getBatchDescriptionString` Method
 
 [source, scala]
 ----
 getBatchDescriptionString: String
 ----
 
-CAUTION: FIXME
+`getBatchDescriptionString`...FIXME
 
-=== [[toDebugString]] `toDebugString` Internal Method
+[NOTE]
+====
+`getBatchDescriptionString` is used when:
 
-[source, scala]
-----
-toDebugString(includeLogicalPlan: Boolean): String
-----
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, runActivatedStream>> (and sets the job description)
 
-`toDebugString`...FIXME
-
-NOTE: `toDebugString` is used exclusively when `StreamExecution` is requested to <<runStream, run stream processing>> (and a streaming query terminated with an exception).
+* `StreamExecution` is requested to <<runStream, runStream>> (and sets job group)
+====
 
 === [[start]] Starting Streaming Query (on Stream Execution Thread) -- `start` Method
 
@@ -633,25 +636,25 @@ start(): Unit
 When called, `start` prints out the following INFO message to the logs:
 
 ```
-Starting [id]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
 ```
 
-`start` then starts the <<queryExecutionThread, queryExecutionThread>> as a daemon thread.
+`start` then starts the <<queryExecutionThread, stream execution thread>> (as a daemon thread).
 
 NOTE: `start` uses Java's link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#start--++[java.lang.Thread.start] to run the streaming query on a separate execution thread.
 
 NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
-In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` was requested to <<runStream, run the streaming query>>).
+In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` is requested to <<runStream, run the streaming query>> that in turn sends a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent, QueryStartedEvent>> to all streaming listeners followed by decrementing the count of the <<startLatch, startLatch>>).
 
-NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#startQuery, start a streaming query>>.
+NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#startQuery, start a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
 === [[creating-instance]] Creating StreamExecution Instance
 
 `StreamExecution` takes the following when created:
 
 * [[sparkSession]] `SparkSession`
-* [[name]] Name of the streaming query
+* [[name]] Name of the streaming query (can also be `null`)
 * [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
 * [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
@@ -733,7 +736,7 @@ queryExecutionThread: QueryExecutionThread
 
 `queryExecutionThread` uses the name *stream execution thread for [id]* (that uses <<prettyIdString, prettyIdString>> for the id, i.e. `queryName [id = [id], runId = [runId]]`).
 
-`queryExecutionThread` is a <<spark-sql-streaming-QueryExecutionThread.adoc#, QueryExecutionThread>> (that is a Spark `UninterruptibleThread` with `runUninterruptibly` method for running a block of code without being interrupted by `Thread.interrupt()`).
+`queryExecutionThread` is a `QueryExecutionThread` that is really a custom `UninterruptibleThread` from Apache Spark with `runUninterruptibly` method for running a block of code without being interrupted by `Thread.interrupt()`).
 
 `queryExecutionThread` is started (as a daemon thread) when `StreamExecution` is requested to <<start, start>>.
 
@@ -744,7 +747,7 @@ When started, `queryExecutionThread` sets the thread-local properties as the <<c
 Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
 
 ```
-$ jstack <driver-pid> \| grep -e "stream execution thread"
+$ jstack <driver-pid> | grep -e "stream execution thread"
 "stream execution thread for kafka-topic1 [id =...
 ```
 ====

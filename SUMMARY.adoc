@@ -119,7 +119,6 @@
 .. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper -- Serializable StreamExecution]
 
 . link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter Contract]
-. link:spark-sql-streaming-QueryExecutionThread.adoc[QueryExecutionThread]
 
 . link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor]
 
