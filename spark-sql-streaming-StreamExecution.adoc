@@ -53,6 +53,8 @@ Used exclusively when `StreamExecution` is requested to <<runStream, run the str
 | [[MicroBatchExecution]]
 |===
 
+NOTE: `StreamExecution` does not support adaptive query execution and cost-based optimizer (and turns them off when requested to <<runStream, run stream processing>>).
+
 `StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, adds the results to a sink>>.
 
 NOTE: `StreamExecution` corresponds to a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] with one or more link:spark-sql-streaming-Source.adoc[streaming sources] and exactly one link:spark-sql-streaming-Sink.adoc[streaming sink].
@@ -89,13 +91,63 @@ When <<start, started>>, `StreamExecution` starts a <<queryExecutionThread, stre
 .StreamExecution's Starting Streaming Query (on Execution Thread)
 image::images/StreamExecution-start.png[align="center"]
 
-`StreamExecution` can be in three states:
+`StreamExecution` can be in three <<state, states>>:
 
 * `INITIALIZED` when the instance was created.
 * `ACTIVE` when batches are pulled from the sources.
 * `TERMINATED` when executing streaming batches has been terminated due to an error, all batches were successfully processed or `StreamExecution` <<stop, has been stopped>>.
 
 `StreamExecution` is a link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter] and <<postEvent, reports status of the streaming query>> (i.e. when it starts, progresses and terminates) by posting `StreamingQueryListener` events.
+
+[source, scala]
+----
+import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
+val sq = spark
+  .readStream
+  .text("server-logs")
+  .writeStream
+  .format("console")
+  .queryName("debug")
+  .trigger(Trigger.ProcessingTime(20.seconds))
+  .start
+
+// Enable the log level to see the INFO and DEBUG messages
+// log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
+
+17/06/18 21:21:07 INFO StreamExecution: Starting new streaming query.
+17/06/18 21:21:07 DEBUG StreamExecution: getOffset took 5 ms
+17/06/18 21:21:07 DEBUG StreamExecution: Stream running from {} to {}
+17/06/18 21:21:07 DEBUG StreamExecution: triggerExecution took 9 ms
+17/06/18 21:21:07 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
+17/06/18 21:21:07 INFO StreamExecution: Streaming query made progress: {
+  "id" : "8b57b0bd-fc4a-42eb-81a3-777d7ba5e370",
+  "runId" : "920b227e-6d02-4a03-a271-c62120258cea",
+  "name" : "debug",
+  "timestamp" : "2017-06-18T19:21:07.693Z",
+  "numInputRows" : 0,
+  "processedRowsPerSecond" : 0.0,
+  "durationMs" : {
+    "getOffset" : 5,
+    "triggerExecution" : 9
+  },
+  "stateOperators" : [ ],
+  "sources" : [ {
+    "description" : "FileStreamSource[file:/Users/jacek/dev/oss/spark/server-logs]",
+    "startOffset" : null,
+    "endOffset" : null,
+    "numInputRows" : 0,
+    "processedRowsPerSecond" : 0.0
+  } ],
+  "sink" : {
+    "description" : "org.apache.spark.sql.execution.streaming.ConsoleSink@2460208a"
+  }
+}
+17/06/18 21:21:10 DEBUG StreamExecution: Starting Trigger Calculation
+17/06/18 21:21:10 DEBUG StreamExecution: getOffset took 3 ms
+17/06/18 21:21:10 DEBUG StreamExecution: triggerExecution took 3 ms
+17/06/18 21:21:10 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
+----
 
 `StreamExecution` tracks streaming data sources in <<uniqueSources, uniqueSources>> internal registry.
 
@@ -424,101 +476,60 @@ stopSources(): Unit
 runStream(): Unit
 ----
 
-`runStream`...FIXME
+`runStream` simply prepares the environment to <<runActivatedStream, execute the activated streaming query>>.
 
-[source, scala]
-----
-import org.apache.spark.sql.streaming.Trigger
-import scala.concurrent.duration._
-val sq = spark
-  .readStream
-  .text("server-logs")
-  .writeStream
-  .format("console")
-  .queryName("debug")
-  .trigger(Trigger.ProcessingTime(20.seconds))
-  .start
+NOTE: `runStream` is used exclusively when the <<queryExecutionThread, stream execution thread>> is requested to start (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
-// Enable the log level to see the INFO and DEBUG messages
-// log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=DEBUG
+Internally, `runStream` sets the job group (to all the Spark jobs started by this thread) as follows:
 
-17/06/18 21:21:07 INFO StreamExecution: Starting new streaming query.
-17/06/18 21:21:07 DEBUG StreamExecution: getOffset took 5 ms
-17/06/18 21:21:07 DEBUG StreamExecution: Stream running from {} to {}
-17/06/18 21:21:07 DEBUG StreamExecution: triggerExecution took 9 ms
-17/06/18 21:21:07 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
-17/06/18 21:21:07 INFO StreamExecution: Streaming query made progress: {
-  "id" : "8b57b0bd-fc4a-42eb-81a3-777d7ba5e370",
-  "runId" : "920b227e-6d02-4a03-a271-c62120258cea",
-  "name" : "debug",
-  "timestamp" : "2017-06-18T19:21:07.693Z",
-  "numInputRows" : 0,
-  "processedRowsPerSecond" : 0.0,
-  "durationMs" : {
-    "getOffset" : 5,
-    "triggerExecution" : 9
-  },
-  "stateOperators" : [ ],
-  "sources" : [ {
-    "description" : "FileStreamSource[file:/Users/jacek/dev/oss/spark/server-logs]",
-    "startOffset" : null,
-    "endOffset" : null,
-    "numInputRows" : 0,
-    "processedRowsPerSecond" : 0.0
-  } ],
-  "sink" : {
-    "description" : "org.apache.spark.sql.execution.streaming.ConsoleSink@2460208a"
-  }
-}
-17/06/18 21:21:10 DEBUG StreamExecution: Starting Trigger Calculation
-17/06/18 21:21:10 DEBUG StreamExecution: getOffset took 3 ms
-17/06/18 21:21:10 DEBUG StreamExecution: triggerExecution took 3 ms
-17/06/18 21:21:10 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
-----
+* <<runId, runId>> for the job group ID
 
-Internally, `runBatches` assigns the group id (to all the Spark jobs started by this thread) as <<runId, runId>> (with the group description to display in web UI as <<getBatchDescriptionString, getBatchDescriptionString>> and `interruptOnCancel` flag enabled).
+* <<getBatchDescriptionString, getBatchDescriptionString>> for the job group description (to display in web UI)
+
+* `interruptOnCancel` flag on
 
 [NOTE]
 ====
-`runBatches` uses <<sparkSession, SparkSession>> to access `SparkContext` and assign the group id.
+`runStream` uses the <<sparkSession, SparkSession>> to access `SparkContext` and assign the job group id.
 
-You can find the details on `SparkContext.setJobGroup` method in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkContext.html#setJobGroup[Mastering Apache Spark 2] gitbook.
+Read up on `SparkContext.setJobGroup` method in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkContext.html#setJobGroup[Setting Local Properties to Group Spark Jobs] section of the https://bit.ly/mastering-apache-spark[Mastering Apache Spark] gitbook.
 ====
 
-`runBatches` sets a local property `sql.streaming.queryId` as <<id, id>>.
+`runStream` sets `sql.streaming.queryId` local property to <<id, id>>.
 
-`runBatches` registers a metric source when link:spark-sql-streaming-properties.adoc#spark.sql.streaming.metricsEnabled[spark.sql.streaming.metricsEnabled] property is enabled (which is disabled by default).
+`runStream` requests the `MetricsSystem` to register the <<streamMetrics, MetricsReporter>> when <<spark-sql-streaming-properties.adoc#spark.sql.streaming.metricsEnabled, spark.sql.streaming.metricsEnabled>> configuration property is on (default: off / `false`).
 
-CAUTION: FIXME Metrics
-
-`runBatches` notifies `StreamingQueryListeners` that a streaming query has been started (by <<postEvent, posting a QueryStartedEvent>> with <<id, id>>, <<runId, runId>> and <<name, name>>).
+`runStream` notifies <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListeners>> that the streaming query has been started (by <<postEvent, posting>> a new <<spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent, QueryStartedEvent>> event with <<id, id>>, <<runId, runId>>, and <<name, name>>).
 
 .StreamingQueryListener Notified about Query's Start (onQueryStarted)
 image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
 
-`runBatches` unblocks the <<start, main starting thread>> (by decrementing the count of <<startLatch, startLatch>> that goes to `0` and lets the starting thread continue).
+`runStream` unblocks the <<start, main starting thread>> (by decrementing the count of the <<startLatch, startLatch>> that when `0` lets the starting thread continue).
 
 CAUTION: FIXME A picture with two parallel lanes for the starting thread and daemon one for the query.
 
-[[runBatches-initializing-sources]]
-`runBatches` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Initializing sources* followed by initialization of the <<logicalPlan, logical plan>> (of the streaming Dataset).
+`runStream` <<spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage, updates the status message>> to be *Initializing sources*.
 
-`runBatches` disables adaptive query execution (using `spark.sql.adaptive.enabled` property which is disabled by default) as it could change the number of shuffle partitions.
+[[runStream-initializing-sources]]
+`runStream` initializes the <<logicalPlan, analyzed logical plan>>.
 
-`runBatches` initializes <<offsetSeqMetadata, offsetSeqMetadata>> internal variable.
+NOTE: The <<logicalPlan, analyzed logical plan>> is a lazy value in Scala and is initialized when requested the very first time.
 
-`runBatches` sets <<state, state>> to `ACTIVE` (only when the current state is `INITIALIZING` that prevents from repeating the initialization)
+`runStream` disables *adaptive query execution* and *cost-based join optimization* (by turning `spark.sql.adaptive.enabled` and `spark.sql.cbo.enabled` configuration properties off, respectively).
 
-NOTE: `runBatches` does the work only when first started (i.e. when <<state, state>> is `INITIALIZING`).
+`runStream` creates a new "zero" <<offsetSeqMetadata, OffsetSeqMetadata>>.
 
-`runBatches` decrements the count of <<initializationLatch, initializationLatch>>.
+(Only when in <<state, INITIALIZING>> state) `runStream` enters <<state, ACTIVE>> state:
 
-CAUTION: FIXME `initializationLatch` so what?
+* Decrements the count of <<initializationLatch, initializationLatch>>
 
-[[runBatches-runActivatedStream]]
-`runBatches` <<runActivatedStream, runs the activated streaming query>>.
+* [[runStream-runActivatedStream]] <<runActivatedStream, Executes the activated streaming query>> (which is different per <<extensions, StreamExecution>>, i.e. <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> or <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>>).
 
-[[runBatches-stopped]]
+NOTE: `runBatches` does the main work only when first started (i.e. when <<state, state>> is `INITIALIZING`).
+
+[[runStream-stopped]]
+`runStream`...FIXME (describe the failed and stop states)
+
 Once <<triggerExecutor, TriggerExecutor>> has finished executing batches, `runBatches` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Stopped*.
 
 NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<runBatches-batch-runner, batch runner>> returns whether the streaming query is stopped or not (which is when the internal <<state, state>> is not `TERMINATED`).
@@ -530,8 +541,6 @@ CAUTION: FIXME Describe `catch` block for exception handling
 
 [[runStream-finally]]
 CAUTION: FIXME Describe `finally` block for query termination
-
-NOTE: `runStream` is used exclusively when the <<queryExecutionThread, stream execution thread>> is requested to start.
 
 ==== [[runBatches-batch-runner]] TriggerExecutor's Batch Runner
 

@@ -8,7 +8,7 @@ The main use of `StreamingExecutionRelation` logical operator is to be a "placeh
 
 [NOTE]
 ====
-Right after `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-initializing-sources[has started running streaming batches] it initializes the streaming sources by transforming the analyzed logical plan of the streaming Dataset so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is replaced by the corresponding `StreamingExecutionRelation`.
+Right after `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runStream-initializing-sources[has started running streaming batches] it initializes the streaming sources by transforming the analyzed logical plan of the streaming Dataset so that every link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator is replaced by the corresponding `StreamingExecutionRelation`.
 ====
 
 .StreamingExecutionRelation Represents Streaming Source At Execution
