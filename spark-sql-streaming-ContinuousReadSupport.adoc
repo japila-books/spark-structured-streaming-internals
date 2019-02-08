@@ -1,10 +1,10 @@
 == [[ContinuousReadSupport]] ContinuousReadSupport Contract -- Data Sources with ContinuousReaders
 
-`ContinuousReadSupport` is the <<contract, abstraction>> of <<implementations, data sources>> with a <<createContinuousReader, ContinuousReader>>.
+`ContinuousReadSupport` is the <<contract, abstraction>> of <<implementations, data sources>> with a <<createContinuousReader, ContinuousReader>> in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
 
 [[contract]]
 [[createContinuousReader]]
-`ContinuousReadSupport` defines a single `createContinuousReader` method that creates a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>.
+`ContinuousReadSupport` defines a single `createContinuousReader` method to create a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>.
 
 [source, java]
 ----

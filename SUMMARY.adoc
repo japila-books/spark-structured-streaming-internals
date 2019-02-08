@@ -6,6 +6,22 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
 
+== Kafka Data Source
+
+. link:spark-sql-streaming-kafka-data-source.adoc[Kafka Data Source]
+. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider -- Data Source Provider for Apache Kafka]
+. link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
+. link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation]
+. link:spark-sql-streaming-KafkaSourceRDD.adoc[KafkaSourceRDD]
+. link:spark-sql-streaming-CachedKafkaConsumer.adoc[CachedKafkaConsumer]
+. link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
+. link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy Contract for KafkaConsumer Providers]
+. link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
+. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
+. link:spark-sql-streaming-KafkaOffsetRangeLimit.adoc[KafkaOffsetRangeLimit]
+. link:spark-sql-streaming-KafkaContinuousReader.adoc[KafkaContinuousReader -- ContinuousReader for Kafka Data Source in Continuous Stream Processing]
+. link:spark-sql-streaming-KafkaContinuousInputPartition.adoc[KafkaContinuousInputPartition]
+
 == Continuous Stream Processing (Structured Streaming V2)
 
 . link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
@@ -64,18 +80,6 @@
 
 . link:spark-sql-streaming-SQLConf.adoc[SQLConf -- Internal Configuration Store]
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
-
-=== Kafka Data Source
-
-. link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider -- Data Source Provider for Apache Kafka]
-. link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
-. link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation]
-. link:spark-sql-streaming-KafkaSourceRDD.adoc[KafkaSourceRDD]
-. link:spark-sql-streaming-CachedKafkaConsumer.adoc[CachedKafkaConsumer]
-. link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
-. link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy Contract for KafkaConsumer Providers]
-. link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
-. link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 
 === Text Socket Data Source
 

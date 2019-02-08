@@ -1,0 +1,5 @@
+== Kafka Data Source
+
+*Kafka Data Source* is...FIXME
+
+Kafka Data Source supports <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.adoc#Continuous, Trigger.Continuous>> trigger) via <<spark-sql-streaming-KafkaContinuousReader.adoc#, KafkaContinuousReader>>.

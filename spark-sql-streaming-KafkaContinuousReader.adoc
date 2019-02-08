@@ -1,0 +1,31 @@
+== [[KafkaContinuousReader]] KafkaContinuousReader -- ContinuousReader for Kafka Data Source in Continuous Stream Processing
+
+`KafkaContinuousReader` is a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> for <<spark-sql-streaming-kafka-data-source.adoc#, Kafka Data Source>> in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
+
+`KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createContinuousReader, create a ContinuousReader>>.
+
+[[pollTimeoutMs]]
+[[kafkaConsumer.pollTimeoutMs]]
+`KafkaContinuousReader` uses *kafkaConsumer.pollTimeoutMs* configuration parameter (default: `512`) for <<spark-sql-streaming-KafkaContinuousInputPartition.adoc#, KafkaContinuousInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
+
+=== [[creating-instance]] Creating KafkaContinuousReader Instance
+
+`KafkaContinuousReader` takes the following to be created:
+
+* [[offsetReader]] <<spark-sql-streaming-KafkaOffsetReader.adoc#, KafkaOffsetReader>>
+* [[kafkaParams]] Kafka parameters (as `java.util.Map[String, Object]`)
+* [[sourceOptions]] Source options (as `Map[String, String]`)
+* [[metadataPath]] Metadata path
+* [[initialOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, KafkaOffsetRangeLimit>>
+* [[failOnDataLoss]] `failOnDataLoss` flag
+
+=== [[planInputPartitions]] `planInputPartitions` Method
+
+[source, scala]
+----
+planInputPartitions(): java.util.List[InputPartition[InternalRow]]
+----
+
+NOTE: `planInputPartitions` is part of the <<spark-sql-streaming-DataSourceReader.adoc#planInputPartitions, DataSourceReader Contract>> to...FIXME.
+
+`planInputPartitions`...FIXME

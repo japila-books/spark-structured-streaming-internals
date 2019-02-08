@@ -1,0 +1,3 @@
+== [[KafkaOffsetRangeLimit]] KafkaOffsetRangeLimit
+
+`KafkaOffsetRangeLimit` is...FIXME
