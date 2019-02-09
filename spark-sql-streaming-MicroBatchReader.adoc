@@ -70,7 +70,7 @@ Used when...FIXME
 | MicroBatchReader
 | Description
 
-| KafkaMicroBatchReader
+| <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>
 | [[KafkaMicroBatchReader]]
 
 | <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>>

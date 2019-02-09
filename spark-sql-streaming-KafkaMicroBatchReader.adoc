@@ -1,0 +1,3 @@
+== [[KafkaMicroBatchReader]] KafkaMicroBatchReader
+
+`KafkaMicroBatchReader` is...FIXME

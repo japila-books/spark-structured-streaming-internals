@@ -587,7 +587,7 @@ In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.ado
 * [[executorKafkaParams]] Parameters of executors (reading from Kafka)
 * [[sourceOptions]] Collection of key-value options
 * [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] offsets in JSON format)
-* [[startingOffsets]] `KafkaOffsetRangeLimit` (as defined using <<startingoffsets, startingoffsets>> option)
+* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Starting offsets>> (as defined using <<startingoffsets, startingoffsets>> option)
 * [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
 
 `KafkaSource` initializes the <<internal-registries, internal registries and counters>>.

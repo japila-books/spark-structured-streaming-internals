@@ -16,7 +16,7 @@
 * [[kafkaParams]] Kafka parameters (as `java.util.Map[String, Object]`)
 * [[sourceOptions]] Source options (as `Map[String, String]`)
 * [[metadataPath]] Metadata path
-* [[initialOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, KafkaOffsetRangeLimit>>
+* [[initialOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Initial offsets>>
 * [[failOnDataLoss]] `failOnDataLoss` flag
 
 === [[planInputPartitions]] `planInputPartitions` Method

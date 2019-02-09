@@ -13,10 +13,8 @@
 * [[sourceOptions]] `Source` options
 * [[specifiedKafkaParams]] User-defined Kafka parameters
 * [[failOnDataLoss]] `failOnDataLoss` flag
-* [[startingOffsets]] `KafkaOffsetRangeLimit`
-* [[endingOffsets]] `KafkaOffsetRangeLimit`
-
-`KafkaRelation` initializes the <<internal-registries, internal registries and counters>>.
+* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Starting offsets>>
+* [[endingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Ending offsets>>
 
 === [[getPartitionOffsets]] `getPartitionOffsets` Internal Method
 

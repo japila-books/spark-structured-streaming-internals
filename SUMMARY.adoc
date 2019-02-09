@@ -18,8 +18,9 @@
 . link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy Contract for KafkaConsumer Providers]
 . link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
 . link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
-. link:spark-sql-streaming-KafkaOffsetRangeLimit.adoc[KafkaOffsetRangeLimit]
+. link:spark-sql-streaming-KafkaOffsetRangeLimit.adoc[KafkaOffsetRangeLimit -- Desired Offset Range Limits]
 . link:spark-sql-streaming-KafkaContinuousReader.adoc[KafkaContinuousReader -- ContinuousReader for Kafka Data Source in Continuous Stream Processing]
+. link:spark-sql-streaming-KafkaMicroBatchReader.adoc[KafkaMicroBatchReader]
 . link:spark-sql-streaming-KafkaContinuousInputPartition.adoc[KafkaContinuousInputPartition]
 
 == Continuous Stream Processing (Structured Streaming V2)

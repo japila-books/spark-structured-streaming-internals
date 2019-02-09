@@ -223,7 +223,7 @@ ending offset not valid in streaming queries
 
 NOTE: `validateStreamOptions` is used when `KafkaSourceProvider` is requested the <<sourceSchema, schema for Kafka source>> and to <<createSource, create a KafkaSource>>.
 
-=== [[createContinuousReader]] Creating ContinuousReader (in Continuous Stream Processing) -- `createContinuousReader` Method
+=== [[createContinuousReader]] Creating ContinuousReader for Continuous Stream Processing -- `createContinuousReader` Method
 
 [source, scala]
 ----
@@ -236,3 +236,63 @@ createContinuousReader(
 NOTE: `createContinuousReader` is part of the <<spark-sql-streaming-ContinuousReadSupport.adoc#createContinuousReader, ContinuousReadSupport Contract>> to create a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>.
 
 `createContinuousReader`...FIXME
+
+=== [[getKafkaOffsetRangeLimit]] Converting Configuration Options to KafkaOffsetRangeLimit -- `getKafkaOffsetRangeLimit` Object Method
+
+[source, scala]
+----
+getKafkaOffsetRangeLimit(
+  params: Map[String, String],
+  offsetOptionKey: String,
+  defaultOffsets: KafkaOffsetRangeLimit): KafkaOffsetRangeLimit
+----
+
+`getKafkaOffsetRangeLimit` finds the given `offsetOptionKey` in the `params` and does the following conversion:
+
+* *latest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#LatestOffsetRangeLimit, LatestOffsetRangeLimit>>
+
+* *earliest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#EarliestOffsetRangeLimit, EarliestOffsetRangeLimit>>
+
+* A JSON-formatted text becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#SpecificOffsetRangeLimit, SpecificOffsetRangeLimit>>
+
+* When the given `offsetOptionKey` is not found, `getKafkaOffsetRangeLimit` returns the given `defaultOffsets`
+
+NOTE: `getKafkaOffsetRangeLimit` is used when `KafkaSourceProvider` is requested to <<createSource, createSource>>, <<createMicroBatchReader, createMicroBatchReader>>, <<createContinuousReader, createContinuousReader>>, <<createRelation, createRelation>>, and <<validateBatchOptions, validateBatchOptions>>.
+
+=== [[createMicroBatchReader]] Creating KafkaMicroBatchReader for Micro-Batch Stream Processing -- `createMicroBatchReader` Method
+
+[source, scala]
+----
+createMicroBatchReader(
+  schema: Optional[StructType],
+  metadataPath: String,
+  options: DataSourceOptions): KafkaMicroBatchReader
+----
+
+NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.adoc#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
+
+`createMicroBatchReader`...FIXME
+
+=== [[createRelation]] Creating BaseRelation -- `createRelation` Method
+
+[source, scala]
+----
+createRelation(
+  sqlContext: SQLContext,
+  parameters: Map[String, String]): BaseRelation
+----
+
+NOTE: `createRelation` is part of the `RelationProvider` Contract to create a `BaseRelation`.
+
+`createRelation`...FIXME
+
+=== [[validateBatchOptions]] Validating Configuration Options for Batch Processing -- `validateBatchOptions` Internal Method
+
+[source, scala]
+----
+validateBatchOptions(caseInsensitiveParams: Map[String, String]): Unit
+----
+
+`validateBatchOptions`...FIXME
+
+NOTE: `validateBatchOptions` is used exclusively when `KafkaSourceProvider` is requested to <<createSource, createSource>>.
