@@ -8,6 +8,20 @@
 [[kafkaConsumer.pollTimeoutMs]]
 `KafkaContinuousReader` uses *kafkaConsumer.pollTimeoutMs* configuration parameter (default: `512`) for <<spark-sql-streaming-KafkaContinuousInputPartition.adoc#, KafkaContinuousInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
 
+[[logging]]
+[TIP]
+====
+Enable `INFO` or `WARN` logging levels for `org.apache.spark.sql.kafka010.KafkaContinuousReader` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.kafka010.KafkaContinuousReader=INFO
+```
+
+Refer to link:spark-sql-streaming-logging.adoc[Logging].
+====
+
 === [[creating-instance]] Creating KafkaContinuousReader Instance
 
 `KafkaContinuousReader` takes the following to be created:

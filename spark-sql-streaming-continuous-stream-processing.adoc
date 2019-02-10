@@ -15,7 +15,7 @@ val sq = spark
   .writeStream
   .format("console")
   .option("truncate", false)
-  .trigger(Trigger.Continuous(10.seconds)) // <-- Uses ContinuousExecution for execution
+  .trigger(Trigger.Continuous(15.seconds)) // <-- Uses ContinuousExecution for execution
   .queryName("rate2console")
   .start
 

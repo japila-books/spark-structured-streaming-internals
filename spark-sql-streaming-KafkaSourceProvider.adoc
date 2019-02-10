@@ -1,9 +1,9 @@
 == [[KafkaSourceProvider]] KafkaSourceProvider -- Data Source Provider for Apache Kafka
 
-`KafkaSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[streaming data source provider] for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that is both the batch and streaming data source for https://kafka.apache.org/[Apache Kafka]).
+`KafkaSourceProvider` is a <<spark-sql-streaming-StreamSourceProvider.adoc#, streaming data source provider>> for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that is both the batch and streaming data source for https://kafka.apache.org/[Apache Kafka]).
 
 [[shortName]]
-`KafkaSourceProvider` (as a `DataSourceRegister`) is registered as *kafka* format.
+`KafkaSourceProvider` (as a `DataSourceRegister`) is registered as *kafka* data source format.
 
 [source, scala]
 ----

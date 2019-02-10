@@ -8,7 +8,7 @@
 
 == Kafka Data Source
 
-. link:spark-sql-streaming-kafka-data-source.adoc[Kafka Data Source]
+. link:spark-sql-streaming-kafka-data-source.adoc[Kafka Data Source -- Streaming Data Source for Apache Kafka]
 . link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider -- Data Source Provider for Apache Kafka]
 . link:spark-sql-streaming-KafkaSource.adoc[KafkaSource]
 . link:spark-sql-streaming-KafkaRelation.adoc[KafkaRelation]
