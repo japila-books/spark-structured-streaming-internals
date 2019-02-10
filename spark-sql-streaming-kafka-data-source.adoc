@@ -44,13 +44,18 @@ import scala.concurrent.duration._
 val sq = spark
   .readStream
   .format("kafka")
-  .option("subscribepattern", "input*")
+  .option("subscribepattern", "kafka2console.*")
   .option("kafka.bootstrap.servers", ":9092")
+  .option("failOnDataLoss", false) // <-- for demo purposes. Don't use in production
   .load
+  .withColumn("value", $"value" cast "string") // <-- convert bytes to string for display purposes
   .writeStream
+  .trigger(Trigger.Continuous(10.seconds))
+  // query-generic option
+  .option("checkpointLocation", "checkpointLocation-kafka2console")
   .format("console")
+  // format-specific option
   .option("truncate", false)
-  .trigger(Trigger.Continuous(15.seconds))
   .queryName("kafka2console")
   .start
 ----

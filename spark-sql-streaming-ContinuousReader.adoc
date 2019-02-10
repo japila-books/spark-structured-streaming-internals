@@ -37,7 +37,7 @@ a| [[getStartOffset]]
 Offset getStartOffset()
 ----
 
-Used when...FIXME
+NOTE: Used exclusively in tests.
 
 | mergeOffsets
 a| [[mergeOffsets]]
@@ -47,7 +47,7 @@ a| [[mergeOffsets]]
 Offset mergeOffsets(PartitionOffset[] offsets)
 ----
 
-Used when...FIXME
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#addOffset, addOffset>>.
 
 | needsReconfiguration
 a| [[needsReconfiguration]]
@@ -57,7 +57,7 @@ a| [[needsReconfiguration]]
 boolean needsReconfiguration()
 ----
 
-Used when...FIXME
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run the streaming query in continuous mode>>.
 
 | setStartOffset
 a| [[setStartOffset]]
@@ -67,7 +67,7 @@ a| [[setStartOffset]]
 void setStartOffset(Optional<Offset> start)
 ----
 
-Used when...FIXME
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run the streaming query in continuous mode>>.
 
 |===
 

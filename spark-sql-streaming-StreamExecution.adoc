@@ -251,11 +251,12 @@ Set when (in order):
 
 [NOTE]
 ====
-You can see <<availableOffsets, availableOffsets>> in the DEBUG message in the logs when `StreamExecution` resumes and <<populateStartOffsets, populates the start offsets>>.
+You can see <<availableOffsets, availableOffsets>> in DEBUG messages in the logs when `StreamExecution` resumes and <<populateStartOffsets, populates the start offsets>>.
 
-```
-DEBUG Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
-```
+[options="wrap"]
+----
+Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
+----
 ====
 
 Used when:
@@ -376,13 +377,13 @@ queryName [id = xyz, runId = abc]
 ```
 
 | resolvedCheckpointRoot
-a| [[resolvedCheckpointRoot]] Qualified path of the checkpoint directory (as defined using <<checkpointRoot, checkpointRoot>> when `StreamExecution` is <<creating-instance, created>>).
+a| [[resolvedCheckpointRoot]] Fully-qualified path of the *checkpoint directory* (as defined using <<checkpointRoot, checkpointRoot>> when `StreamExecution` is <<creating-instance, created>>).
 
 [NOTE]
 ====
-<<checkpointRoot, checkpointRoot>> is defined using `checkpointLocation` option or link:spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property with `queryName` option.
+<<checkpointRoot, checkpointRoot>> is defined using *checkpointLocation* option or <<spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property with `queryName` option.
 
-`checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[creates a streaming query].
+`checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>>.
 ====
 
 Used when <<checkpointFile, creating the path to the checkpoint directory>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
@@ -394,7 +395,7 @@ Used for <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyz
 You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` is <<start, started>>.
 
 ```
-INFO StreamExecution: Starting [id] with [resolvedCheckpointRoot] to store the query checkpoint.
+Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
 ```
 ====
 
