@@ -2,24 +2,27 @@
 
 `KafkaOffsetReader` is <<creating-instance, created>> when:
 
-* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[builds an RDD with rows] that are records from Kafka
+* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[builds an RDD with rows] (records from one or more Kafka topics)
+
 * `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#createSource[creates a KafkaSource] (for *kafka* format)
 
 [[options]]
 .KafkaOffsetReader's Options
-[cols="1,1,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
-| Default Value
 | Description
 
-| [[fetchOffset.numRetries]] `fetchOffset.numRetries`
-| `3`
-|
+| fetchOffset.numRetries
+a| [[fetchOffset.numRetries]]
 
-| [[fetchOffset.retryIntervalMs]] `fetchOffset.retryIntervalMs`
-| `1000`
-| How long to wait before retries.
+Default: `3`
+
+| fetchOffset.retryIntervalMs
+a| [[fetchOffset.retryIntervalMs]] How long to wait before retries
+
+Default: `1000`
+
 |===
 
 [[kafkaSchema]]
@@ -27,13 +30,13 @@
 
 [[internal-registries]]
 .KafkaOffsetReader's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
+[cols="1m,3",options="header",width="100%"]
 |===
 | Name
 | Description
 
-| [[consumer]] `consumer`
-a| Kafka's https://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/Consumer.html[Consumer] (with keys and values of `Array[Byte]` type)
+| _consumer
+a| [[_consumer]] Kafka's https://kafka.apache.org/21/javadoc/org/apache/kafka/clients/consumer/Consumer.html[Consumer] (`Consumer[Array[Byte], Array[Byte]]`)
 
 <<createConsumer, Initialized>> when `KafkaOffsetReader` is <<creating-instance, created>>.
 
@@ -46,25 +49,29 @@ Used when `KafkaOffsetReader`:
 * <<resetConsumer, resetConsumer>>
 * <<close, is closed>>
 
-| [[execContext]] `execContext`
-|
+| execContext
+a| [[execContext]] Scala's https://www.scala-lang.org/api/2.12.8/scala/concurrent/ExecutionContextExecutorService.html[scala.concurrent.ExecutionContextExecutorService]
 
-| [[groupId]] `groupId`
-|
+| groupId
+a| [[groupId]]
 
-| [[kafkaReaderThread]] `kafkaReaderThread`
-|
+| kafkaReaderThread
+a| [[kafkaReaderThread]]
 
-| [[maxOffsetFetchAttempts]] `maxOffsetFetchAttempts`
-|
+| maxOffsetFetchAttempts
+a| [[maxOffsetFetchAttempts]]
 
-| [[nextId]] `nextId`
-|
+| nextId
+a| [[nextId]]
 
-| [[offsetFetchAttemptIntervalMs]] `offsetFetchAttemptIntervalMs`
-|
+Initially `0`
+
+| offsetFetchAttemptIntervalMs
+a| [[offsetFetchAttemptIntervalMs]]
+
 |===
 
+[[logging]]
 [TIP]
 ====
 Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaOffsetReader` to see what happens inside.
@@ -80,11 +87,27 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 
 === [[nextGroupId]] `nextGroupId` Internal Method
 
-CAUTION: FIXME
+[source, scala]
+----
+nextGroupId(): String
+----
+
+`nextGroupId` sets the <<groupId, groupId>> to be the <<driverGroupIdPrefix, driverGroupIdPrefix>>, `-` followed by the <<nextId, nextId>> (i.e. `[driverGroupIdPrefix]-[nextId]`).
+
+In the end, `nextGroupId` increments the <<nextId, nextId>> and returns the <<groupId, groupId>>.
+
+NOTE: `nextGroupId` is used exclusively when `KafkaOffsetReader` is requested for a <<consumer, Kafka Consumer>>.
 
 === [[resetConsumer]] `resetConsumer` Internal Method
 
-CAUTION: FIXME
+[source, scala]
+----
+resetConsumer(): Unit
+----
+
+`resetConsumer`...FIXME
+
+NOTE: `resetConsumer` is used when...FIXME
 
 === [[fetchTopicPartitions]] `fetchTopicPartitions` Method
 
@@ -101,6 +124,7 @@ NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streami
 
 [source, scala]
 ----
+fetchEarliestOffsets(): Map[TopicPartition, Long]
 fetchEarliestOffsets(newPartitions: Seq[TopicPartition]): Map[TopicPartition, Long]
 ----
 
@@ -123,8 +147,13 @@ NOTE: `fetchLatestOffsets` is used when `KafkaSource` link:spark-sql-streaming-K
 
 [source, scala]
 ----
-withRetriesWithoutInterrupt(body: => Map[TopicPartition, Long]): Map[TopicPartition, Long]
+withRetriesWithoutInterrupt(
+  body: => Map[TopicPartition, Long]): Map[TopicPartition, Long]
 ----
+
+`withRetriesWithoutInterrupt`...FIXME
+
+NOTE: `withRetriesWithoutInterrupt` is used when...FIXME
 
 === [[creating-instance]] Creating KafkaOffsetReader Instance
 
@@ -133,7 +162,7 @@ withRetriesWithoutInterrupt(body: => Map[TopicPartition, Long]): Map[TopicPartit
 * [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
 * [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
 * [[readerOptions]] Options (as name-value pairs)
-* [[driverGroupIdPrefix]] Prefix for group id
+* [[driverGroupIdPrefix]] Prefix of the group ID
 
 `KafkaOffsetReader` initializes the <<internal-registries, internal registries and counters>>.
 
@@ -141,7 +170,9 @@ withRetriesWithoutInterrupt(body: => Map[TopicPartition, Long]): Map[TopicPartit
 
 [source, scala]
 ----
-fetchSpecificOffsets(partitionOffsets: Map[TopicPartition, Long]): Map[TopicPartition, Long]
+fetchSpecificOffsets(
+  partitionOffsets: Map[TopicPartition, Long],
+  reportDataLoss: String => Unit): KafkaSourceOffset
 ----
 
 .KafkaOffsetReader's fetchSpecificOffsets
@@ -179,3 +210,62 @@ createConsumer(): Consumer[Array[Byte], Array[Byte]]
 `createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to link:spark-sql-streaming-ConsumerStrategy.adoc#createConsumer[create a Kafka Consumer] with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
 
 NOTE: `createConsumer` is used when `KafkaOffsetReader` is <<creating-instance, created>> (and initializes <<consumer, consumer>>) and <<resetConsumer, resetConsumer>>
+
+=== [[consumer]] Creating Kafka Consumer (Unless Already Available) -- `consumer` Method
+
+[source, scala]
+----
+consumer: Consumer[Array[Byte], Array[Byte]]
+----
+
+`consumer` gives the cached <<_consumer, Kafka Consumer>> or creates one itself.
+
+NOTE: Since `consumer` method is used (to access the internal <<_consumer, Kafka Consumer>>) in the `fetch` methods that gives the property of creating a new Kafka Consumer whenever the internal <<_consumer, Kafka Consumer>> reference become `null`, i.e. as in <<resetConsumer, resetConsumer>>.
+
+`consumer`...FIXME
+
+NOTE: `consumer` is used when `KafkaOffsetReader` is requested to <<fetchTopicPartitions, fetchTopicPartitions>>, <<fetchSpecificOffsets, fetchSpecificOffsets>>, <<fetchEarliestOffsets, fetchEarliestOffsets>>, and <<fetchLatestOffsets, fetchLatestOffsets>>.
+
+=== [[close]] Closing -- `close` Method
+
+[source, scala]
+----
+close(): Unit
+----
+
+`close`...FIXME
+
+NOTE: `close` is used when...FIXME
+
+=== [[runUninterruptibly]] `runUninterruptibly` Internal Method
+
+[source, scala]
+----
+runUninterruptibly[T](body: => T): T
+----
+
+`runUninterruptibly`...FIXME
+
+NOTE: `runUninterruptibly` is used when...FIXME
+
+=== [[stopConsumer]] `stopConsumer` Internal Method
+
+[source, scala]
+----
+stopConsumer(): Unit
+----
+
+`stopConsumer`...FIXME
+
+NOTE: `stopConsumer` is used when...FIXME
+
+=== [[toString]] `toString` Method
+
+[source, scala]
+----
+toString(): String
+----
+
+NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()++[java.lang.Object] Contract for a string representation of the object.
+
+`toString`...FIXME
