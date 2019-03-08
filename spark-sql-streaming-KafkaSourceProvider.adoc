@@ -259,7 +259,7 @@ getKafkaOffsetRangeLimit(
 
 NOTE: `getKafkaOffsetRangeLimit` is used when `KafkaSourceProvider` is requested to <<createSource, createSource>>, <<createMicroBatchReader, createMicroBatchReader>>, <<createContinuousReader, createContinuousReader>>, <<createRelation, createRelation>>, and <<validateBatchOptions, validateBatchOptions>>.
 
-=== [[createMicroBatchReader]] Creating KafkaMicroBatchReader for Micro-Batch Stream Processing -- `createMicroBatchReader` Method
+=== [[createMicroBatchReader]] Creating MicroBatchReader for Micro-Batch Stream Processing -- `createMicroBatchReader` Method
 
 [source, scala]
 ----
@@ -271,7 +271,33 @@ createMicroBatchReader(
 
 NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.adoc#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
 
-`createMicroBatchReader`...FIXME
+`createMicroBatchReader` <<validateStreamOptions, validateStreamOptions>> (with the given `DataSourceOptions`).
+
+`createMicroBatchReader` generates a unique group ID of the format *spark-kafka-source-[randomUUID]-[metadataPath_hashCode]* (to make sure that a streaming query creates a new consumer group).
+
+`createMicroBatchReader` finds all the parameters (in the given `DataSourceOptions`) that start with *kafka.* prefix, removes it, and creates the current Kafka parameters.
+
+`createMicroBatchReader` creates a <<spark-sql-streaming-KafkaOffsetReader.adoc#, KafkaOffsetReader>> with the following:
+
+* <<strategy, strategy>> (in the given `DataSourceOptions`)
+
+* <<kafkaParamsForDriver, Kafka parameters for the driver>> (in the current Kafka parameters, i.e. without *kafka.* prefix)
+
+* The given `DataSourceOptions`
+
+* *spark-kafka-source-[randomUUID]-[metadataPath_hashCode]-driver* for the `driverGroupIdPrefix`
+
+In the end, `createMicroBatchReader` creates a <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>> with the following:
+
+* the `KafkaOffsetReader`
+
+* <<kafkaParamsForExecutors, Kafka parameters for executors>> (in the current Kafka parameters, i.e. without *kafka.* prefix) and the unique group ID (`spark-kafka-source-[randomUUID]-[metadataPath_hashCode]-driver`)
+
+* The given `DataSourceOptions` and the `metadataPath`
+
+* <<getKafkaOffsetRangeLimit, Starting stream offsets>> (`startingoffsets` offset option key and `LatestOffsetRangeLimit` default offsets)
+
+* <<failOnDataLoss, failOnDataLoss>>
 
 === [[createRelation]] Creating BaseRelation -- `createRelation` Method
 
@@ -307,3 +333,27 @@ kafkaParamsForDriver(specifiedKafkaParams: Map[String, String]): Map[String, Obj
 `kafkaParamsForDriver`...FIXME
 
 NOTE: `kafkaParamsForDriver` is used when...FIXME
+
+=== [[kafkaParamsForExecutors]] `kafkaParamsForExecutors` Method
+
+[source, scala]
+----
+kafkaParamsForExecutors(
+  specifiedKafkaParams: Map[String, String],
+  uniqueGroupId: String): Map[String, Object]
+----
+
+`kafkaParamsForExecutors`...FIXME
+
+NOTE: `kafkaParamsForExecutors` is used when...FIXME
+
+=== [[failOnDataLoss]] `failOnDataLoss` Internal Method
+
+[source, scala]
+----
+failOnDataLoss(caseInsensitiveParams: Map[String, String]): Boolean
+----
+
+`failOnDataLoss`...FIXME
+
+NOTE: `failOnDataLoss` is used when...FIXME

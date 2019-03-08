@@ -38,7 +38,11 @@ State between versions are tend to be incompatible, so state format version shou
 | `spark.sql.streaming.disabledV2MicroBatchReaders`
 
 (empty)
-a| [[spark.sql.streaming.disabledV2MicroBatchReaders]] *(internal)* A comma-separated list of fully-qualified data source register class names for which <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> is disabled. Reads from these sources will fall back to the V1 Sources.
+a| [[spark.sql.streaming.disabledV2MicroBatchReaders]] *(internal)* A comma-separated list of fully-qualified class names of data source providers for which <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> is disabled. Reads from these sources will fall back to the V1 Sources.
+
+```
+spark.sql.streaming.disabledV2MicroBatchReaders=org.apache.spark.sql.kafka010.KafkaSourceProvider
+```
 
 Use <<spark-sql-streaming-SQLConf.adoc#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
 

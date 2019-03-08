@@ -24,11 +24,14 @@ root
  |-- timestampType: integer (nullable = true)
 
 val values = records.select($"value" cast "string")
+import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
 val sq = values
   .writeStream
   .format("console")
   .option("truncate", false)
   .queryName("kafka-to-console")
+  .trigger(Trigger.ProcessingTime(30.seconds))
   .start
 scala> sq.explain
 == Physical Plan ==

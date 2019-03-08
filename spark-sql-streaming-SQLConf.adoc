@@ -26,7 +26,7 @@ org.apache.spark.sql.internal.SQLConf
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>
 
-a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExecution` is requested for <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>>
+a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExecution` is requested for the <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>> (of a streaming query)
 
 | `FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION`
 
