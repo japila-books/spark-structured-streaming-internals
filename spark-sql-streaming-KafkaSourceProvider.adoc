@@ -282,7 +282,7 @@ createRelation(
   parameters: Map[String, String]): BaseRelation
 ----
 
-NOTE: `createRelation` is part of the `RelationProvider` Contract to create a `BaseRelation`.
+NOTE: `createRelation` is part of the https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-RelationProvider.html[RelationProvider] contract to create a `BaseRelation`.
 
 `createRelation`...FIXME
 
@@ -296,3 +296,14 @@ validateBatchOptions(caseInsensitiveParams: Map[String, String]): Unit
 `validateBatchOptions`...FIXME
 
 NOTE: `validateBatchOptions` is used exclusively when `KafkaSourceProvider` is requested to <<createSource, createSource>>.
+
+=== [[kafkaParamsForDriver]] `kafkaParamsForDriver` Method
+
+[source, scala]
+----
+kafkaParamsForDriver(specifiedKafkaParams: Map[String, String]): Map[String, Object]
+----
+
+`kafkaParamsForDriver`...FIXME
+
+NOTE: `kafkaParamsForDriver` is used when...FIXME

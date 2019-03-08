@@ -175,78 +175,9 @@ sq.stop
 ----
 
 [[schema]]
-`KafkaSource` uses a link:spark-sql-streaming-KafkaOffsetReader.adoc#kafkaSchema[predefined fixed schema] (and link:spark-sql-streaming-KafkaSourceProvider.adoc#sourceSchema[cannot be changed]).
-
-[source, scala]
-----
-scala> records.printSchema
-root
- |-- key: binary (nullable = true)
- |-- value: binary (nullable = true)
- |-- topic: string (nullable = true)
- |-- partition: integer (nullable = true)
- |-- offset: long (nullable = true)
- |-- timestamp: timestamp (nullable = true)
- |-- timestampType: integer (nullable = true)
-----
-
-.KafkaSource's Dataset Schema (in the positional order)
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Type
-
-| `key`
-| `BinaryType`
-
-| `value`
-| `BinaryType`
-
-| `topic`
-| `StringType`
-
-| `partition`
-| `IntegerType`
-
-| `offset`
-| `LongType`
-
-| `timestamp`
-| `TimestampType`
-
-| `timestampType`
-| `IntegerType`
-|===
-
-[TIP]
-====
-Use `cast` method (of `Column`) to cast `BinaryType` to a string (for `key` and `value` columns).
-
-```
-$"value" cast "string"
-```
-====
+`KafkaSource` uses a <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined (fixed) schema>> (that <<spark-sql-streaming-KafkaSourceProvider.adoc#sourceSchema, cannot be changed>>).
 
 `KafkaSource` also supports batch Datasets.
-
-[source, scala]
-----
-val topic1 = spark
-  .read // <-- read one batch only
-  .format("kafka")
-  .option("subscribe", "topic1")
-  .option("kafka.bootstrap.servers", "localhost:9092")
-  .load
-scala> topic1.printSchema
-root
- |-- key: binary (nullable = true)
- |-- value: binary (nullable = true)
- |-- topic: string (nullable = true)
- |-- partition: integer (nullable = true)
- |-- offset: long (nullable = true)
- |-- timestamp: timestamp (nullable = true)
- |-- timestampType: integer (nullable = true)
-----
 
 [[internal-registries]]
 .KafkaSource's Internal Registries and Counters

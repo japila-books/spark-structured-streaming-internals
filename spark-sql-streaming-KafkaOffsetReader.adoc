@@ -1,10 +1,14 @@
 == [[KafkaOffsetReader]] KafkaOffsetReader
 
+`KafkaOffsetReader` relies on the <<consumerStrategy, ConsumerStrategy>> to <<consumer, create a Kafka Consumer>>.
+
+`KafkaOffsetReader` <<consumer, creates a Kafka Consumer>> with *group.id* (`ConsumerConfig.GROUP_ID_CONFIG`) configuration explicitly set to <<nextGroupId, nextGroupId>> (i.e. the given <<driverGroupIdPrefix, driverGroupIdPrefix>> followed by <<nextId, nextId>>).
+
 `KafkaOffsetReader` is <<creating-instance, created>> when:
 
-* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[builds an RDD with rows] (records from one or more Kafka topics)
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, build a distributed data scan with column pruning>>
 
-* `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#createSource[creates a KafkaSource] (for *kafka* format)
+* `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createSource, create a KafkaSource>>, <<spark-sql-streaming-KafkaSourceProvider.adoc#createMicroBatchReader, createMicroBatchReader>>, and <<spark-sql-streaming-KafkaSourceProvider.adoc#createContinuousReader, createContinuousReader>>
 
 [[options]]
 .KafkaOffsetReader's Options
@@ -26,7 +30,7 @@ Default: `1000`
 |===
 
 [[kafkaSchema]]
-`KafkaOffsetReader` defines the predefined fixed schema of link:spark-sql-streaming-KafkaSource.adoc#schema[Kafka source].
+`KafkaOffsetReader` defines the predefined fixed schema of the <<spark-sql-streaming-KafkaSource.adoc#schema, Kafka data source>>.
 
 [[internal-registries]]
 .KafkaOffsetReader's Internal Registries and Counters

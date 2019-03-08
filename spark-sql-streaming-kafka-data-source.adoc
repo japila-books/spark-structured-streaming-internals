@@ -2,6 +2,92 @@
 
 *Kafka Data Source* is a streaming data source for https://kafka.apache.org/[Apache Kafka].
 
+[source, scala]
+----
+val records = spark
+  .readStream
+  .format("kafka")
+  .option("subscribe", "t1")
+  .option("kafka.bootstrap.servers", ":9092")
+  .load
+
+assert(records.isStreaming)
+
+scala> records.printSchema
+root
+ |-- key: binary (nullable = true)
+ |-- value: binary (nullable = true)
+ |-- topic: string (nullable = true)
+ |-- partition: integer (nullable = true)
+ |-- offset: long (nullable = true)
+ |-- timestamp: timestamp (nullable = true)
+ |-- timestampType: integer (nullable = true)
+
+val values = records.select($"value" cast "string")
+val sq = values
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .queryName("kafka-to-console")
+  .start
+scala> sq.explain
+== Physical Plan ==
+WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWriter@2575b2b3
++- *(1) Project [cast(value#25 as string) AS value#21]
+   +- *(1) Project [key#24, value#25, topic#26, partition#27, offset#28L, timestamp#29, timestampType#30]
+      +- *(1) ScanV2 kafka[key#24, value#25, topic#26, partition#27, offset#28L, timestamp#29, timestampType#30] (Options: [subscribe=t1,kafka.bootstrap.servers=:9092])
+----
+
+=== [[schema]] Predefined (Fixed) Schema
+
+Kafka Data Source uses a predefined (fixed) schema.
+
+.Kafka Data Source's Fixed Schema (in the positional order)
+[cols="1m,2m",options="header",width="100%"]
+|===
+| Name
+| Type
+
+| key
+| BinaryType
+
+| value
+| BinaryType
+
+| topic
+| StringType
+
+| partition
+| IntegerType
+
+| offset
+| LongType
+
+| timestamp
+| TimestampType
+
+| timestampType
+| IntegerType
+
+|===
+
+[TIP]
+====
+Use `Column.cast` operator to cast `BinaryType` to a `StringType` (for `key` and `value` columns).
+
+[source, scala]
+----
+scala> :type records
+org.apache.spark.sql.DataFrame
+
+val values = records.select($"value" cast "string")
+scala> values.printSchema
+root
+ |-- value: string (nullable = true)
+----
+
+====
+
 === External Module
 
 Kafka Data Source is an external module that is distributed as part of the official distribution of Apache Spark, but is not available on the CLASSPATH by default. You should define it as part of a build definition (e.g. as a `libraryDependency` in `build.sbt` for sbt) or use `--packages` command-line option when `spark-submit` a Spark Structured Streaming application.
