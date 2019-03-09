@@ -12,9 +12,9 @@ spark.readStream.format("kafka")
 
 `KafkaSourceProvider` requires the following options (that you can set using `option` method of `DataStreamReader` or `DataStreamWriter`):
 
-1. Exactly one option for `subscribe`, `subscribepattern` or `assign`
+. Exactly one option for `subscribe`, `subscribepattern` or `assign`
 
-1. `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
+. `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
 
 TIP: Refer to link:spark-sql-streaming-KafkaSource.adoc#options[KafkaSource's Options] for the supported options.
 
@@ -34,6 +34,56 @@ val records = spark.
   option("maxOffsetsPerTrigger", 1).
   load
 ----
+
+Internally, `KafkaSourceProvider` uses...FIXME...with the following <<kafkaParamsForExecutors-properties, Kafka properties for executors>>.
+
+[[kafkaParamsForExecutors-properties]]
+.KafkaSourceProvider's Kafka Properties For Executors
+[cols="1m,1m,2",options="header",width="100%"]
+|===
+| ConsumerConfig's Key
+| Value
+| Description
+
+| KEY_DESERIALIZER_CLASS_CONFIG
+| ByteArrayDeserializer
+a| [[KEY_DESERIALIZER_CLASS_CONFIG]] FIXME
+
+| VALUE_DESERIALIZER_CLASS_CONFIG
+| ByteArrayDeserializer
+a| [[VALUE_DESERIALIZER_CLASS_CONFIG]] FIXME
+
+| AUTO_OFFSET_RESET_CONFIG
+| none
+a| [[AUTO_OFFSET_RESET_CONFIG]] FIXME
+
+| GROUP_ID_CONFIG
+| <<uniqueGroupId, uniqueGroupId>>-executor
+a| [[GROUP_ID_CONFIG]] FIXME
+
+| ENABLE_AUTO_COMMIT_CONFIG
+| false
+a| [[ENABLE_AUTO_COMMIT_CONFIG]] FIXME
+
+| RECEIVE_BUFFER_CONFIG
+| 65536
+a| [[RECEIVE_BUFFER_CONFIG]] Only when not set in the <<specifiedKafkaParams, specifiedKafkaParams>> already
+
+|===
+
+[[logging]]
+[TIP]
+====
+Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaSourceProvider` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.kafka010.KafkaSourceProvider=DEBUG
+```
+
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+====
 
 === [[createSource]] Creating KafkaSource -- `createSource` Method
 
@@ -135,12 +185,12 @@ strategy(caseInsensitiveParams: Map[String, String])
 Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that are one of the following and creates a corresponding link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy].
 
 .KafkaSourceProvider.strategy's Key to ConsumerStrategy Conversion
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
 | Key
 | ConsumerStrategy
 
-| `assign`
+| assign
 a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[AssignStrategy] with Kafka's http://kafka.apache.org/0110/javadoc/org/apache/kafka/common/TopicPartition.html[TopicPartitions].
 
 ---
@@ -153,7 +203,7 @@ a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[AssignStrategy]
 
 The topic names and partitions are mapped directly to Kafka's `TopicPartition` objects.
 
-| `subscribe`
+| subscribe
 a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[SubscribeStrategy] with topic names
 
 ---
@@ -164,12 +214,13 @@ a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[SubscribeStr
 topic1,topic2,topic3
 ```
 
-| `subscribepattern`
-| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[SubscribePatternStrategy] with topic subscription regex pattern (that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the pattern), e.g.
+| subscribepattern
+a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[SubscribePatternStrategy] with topic subscription regex pattern (that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the pattern), e.g.
 
 ```
 topic\d
 ```
+
 |===
 
 [NOTE]
@@ -343,9 +394,22 @@ kafkaParamsForExecutors(
   uniqueGroupId: String): Map[String, Object]
 ----
 
-`kafkaParamsForExecutors`...FIXME
+`kafkaParamsForExecutors` sets the <<kafkaParamsForExecutors-properties, Kafka ConsumerConfig configuration properties>>.
 
-NOTE: `kafkaParamsForExecutors` is used when...FIXME
+While setting the properties, `kafkaParamsForExecutors` prints out the following DEBUG message to the logs:
+
+```
+executor: Set [key] to [value], earlier value: [value]
+```
+
+[NOTE]
+====
+`kafkaParamsForExecutors` is used when:
+
+* `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>), <<createMicroBatchReader, createMicroBatchReader>> (for a <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>), and <<createContinuousReader, createContinuousReader>> (for a <<spark-sql-streaming-KafkaContinuousReader.adoc#, KafkaContinuousReader>>)
+
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, buildScan>> (for a `KafkaSourceRDD`)
+====
 
 === [[failOnDataLoss]] `failOnDataLoss` Internal Method
 
