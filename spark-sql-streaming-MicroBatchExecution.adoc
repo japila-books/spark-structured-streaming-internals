@@ -148,18 +148,18 @@ NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc
 
 `MicroBatchExecution` initializes the <<internal-registries, internal registries and counters>>.
 
-=== [[logicalPlan]] Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
+=== [[logicalPlan]] Initializing Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
 
 [source, scala]
 ----
 logicalPlan: LogicalPlan
 ----
 
-NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> that is the analyzed logical plan of the streaming query.
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> to initialize the analyzed logical plan of the streaming query.
 
 `logicalPlan` resolves (_replaces_) <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>>, <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> logical operators.
 
-NOTE: `logicalPlan` is a Scala lazy value and so the resolution happens only at the first access and is cached afterwards.
+NOTE: `logicalPlan` is a Scala lazy value and so the resolution happens only once at the first access and is cached for later use afterwards.
 
 Internally, `logicalPlan`...FIXME
 

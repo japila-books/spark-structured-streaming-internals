@@ -36,7 +36,7 @@ sourceSchema(): SourceInfo
 
 `sourceSchema`...FIXME
 
-NOTE: `sourceSchema` is used exclusively when `DataSource` is requested <<sourceInfo, SourceInfo>>.
+NOTE: `sourceSchema` is used exclusively when `DataSource` is requested for the <<sourceInfo, SourceInfo>>.
 
 === [[creating-instance]] Creating DataSource Instance
 
@@ -53,7 +53,7 @@ NOTE: `sourceSchema` is used exclusively when `DataSource` is requested <<source
 
 `DataSource` initializes the <<internal-registries, internal registries and counters>>.
 
-=== [[createSource]] `createSource` Method
+=== [[createSource]] Creating Streaming Source -- `createSource` Method
 
 [source, scala]
 ----
@@ -62,7 +62,7 @@ createSource(metadataPath: String): Source
 
 `createSource`...FIXME
 
-NOTE: `createSource` is used when...FIXME
+NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>.
 
 === [[createSink]] Creating Streaming Sink -- `createSink` Method
 

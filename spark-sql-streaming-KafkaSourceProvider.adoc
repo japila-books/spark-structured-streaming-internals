@@ -97,30 +97,11 @@ createSource(
   parameters: Map[String, String]): Source
 ----
 
-Internally, `createSource` first <<validateStreamOptions, validates stream options>>.
+NOTE: `createSource` is a part of the <<spark-sql-streaming-StreamSourceProvider.adoc#createSource, StreamSourceProvider Contract>> to create a <<spark-sql-streaming-Source.adoc#, streaming source>> for a format or system (to continually read data).
 
-CAUTION: FIXME
+`createSource` first <<validateStreamOptions, validates stream options>>.
 
-NOTE: `createSource` is a part of link:spark-sql-streaming-StreamSourceProvider.adoc#createSource[StreamSourceProvider Contract] to create a streaming source for *kafka* format.
-
-=== [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 Library Dependency
-
-The new structured streaming API for Kafka is part of the `spark-sql-kafka-0-10` artifact. Add the following dependency to sbt project to use the streaming integration:
-
-```
-libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.2.0"
-```
-
-[TIP]
-====
-`spark-sql-kafka-0-10` module is not included in the CLASSPATH of link:spark-shell.adoc[spark-shell] so you have to start it with link:spark-submit.adoc#packages[`--packages` command-line option].
-
-```
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
-```
-====
-
-NOTE: Replace `2.2.0` or `2.3.0-SNAPSHOT` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-streaming-kafka-0-10_2.11%22[The Central Repository's Search] that matches your version of Spark.
+`createSource`...FIXME
 
 === [[validateGeneralOptions]] Validating General Options For Batch And Streaming Queries -- `validateGeneralOptions` Internal Method
 
@@ -232,7 +213,7 @@ topic\d
 * `KafkaSourceProvider` creates a KafkaRelation (using `createRelation` method).
 ====
 
-=== [[sourceSchema]] Specifying Name and Schema of Streaming Source for Kafka Format -- `sourceSchema` Method
+=== [[sourceSchema]] Describing Streaming Source with Name and Schema -- `sourceSchema` Method
 
 [source, scala]
 ----
@@ -243,7 +224,7 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ----
 
-NOTE: `sourceSchema` is a part of link:spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema[StreamSourceProvider Contract] to define the name and the schema of a streaming source.
+NOTE: `sourceSchema` is part of the <<spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema, StreamSourceProvider Contract>> to describe a <<spark-sql-streaming-Source.adoc#, streaming source>> with a name and the schema.
 
 `sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the link:spark-sql-streaming-KafkaOffsetReader.adoc#kafkaSchema[fixed schema].
 
@@ -254,8 +235,6 @@ When the input `schema` is defined, `sourceSchema` reports a `IllegalArgumentExc
 ```
 Kafka source has a fixed schema and cannot be set with a custom one
 ```
-
-NOTE: `sourceSchema` is used exclusively when `DataSource` is requested the link:spark-sql-streaming-DataSource.adoc#sourceSchema[name and schema of a streaming source].
 
 === [[validateStreamOptions]] Validating Kafka Options for Streaming Queries -- `validateStreamOptions` Internal Method
 

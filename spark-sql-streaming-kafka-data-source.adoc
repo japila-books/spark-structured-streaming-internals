@@ -41,6 +41,27 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
       +- *(1) ScanV2 kafka[key#24, value#25, topic#26, partition#27, offset#28L, timestamp#29, timestampType#30] (Options: [subscribe=t1,kafka.bootstrap.servers=:9092])
 ----
 
+=== [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 Library Dependency
+
+The structured streaming API for Kafka is part of the *spark-sql-kafka-0-10* external project. Although the `spark-sql-kafka-0-10` external project is indeed part of the official distribution of Apache Spark, but it is not included in the CLASSPATH by default.
+
+You should add the following dependency to sbt project to use the Kafka data source:
+
+```
+libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ book.version }}"
+```
+
+[TIP]
+====
+`spark-sql-kafka-0-10` module is not included in the CLASSPATH of `spark-shell` so you have to start it with `--packages` command-line option.
+
+```
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ book.version }}
+```
+====
+
+NOTE: Replace `{{ book.version }}` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-sql-kafka-0-10_2.12%22[The Central Repository's Search] that matches your version of Spark.
+
 === [[schema]] Predefined (Fixed) Schema
 
 Kafka Data Source uses a predefined (fixed) schema.

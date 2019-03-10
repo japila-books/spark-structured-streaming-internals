@@ -1,60 +1,52 @@
 == [[StreamSourceProvider]] StreamSourceProvider -- Streaming Data Source Provider
 
-`StreamSourceProvider` is the <<contract, contract>> for objects that can <<createSource, create a streaming data source>> for a format (e.g. text file) or system (e.g. Apache Kafka) by their short names.
+`StreamSourceProvider` is the <<contract, contract>> of <<implementations, data source providers>> that can <<createSource, create a streaming data source>> for a format (e.g. text file) or system (e.g. Apache Kafka).
 
-`StreamSourceProvider` is used when `DataSource` is requested for the link:spark-sql-datasource.adoc#sourceSchema[name and schema of a streaming source] or just link:spark-sql-datasource.adoc#createSource[creates one].
-
-.Streaming Source Providers (in alphabetical order)
-[cols="1,3",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider]
-| Creates link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider] for `kafka` format.
-
-| link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
-| Creates link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSources] for `socket` format.
-|===
-
-=== [[contract]] StreamSourceProvider Contract
-
-[source, scala]
-----
-trait StreamSourceProvider {
-  def sourceSchema(
-      sqlContext: SQLContext,
-      schema: Option[StructType],
-      providerName: String,
-      parameters: Map[String, String]): (String, StructType)
-  def createSource(
-      sqlContext: SQLContext,
-      metadataPath: String,
-      schema: Option[StructType],
-      providerName: String,
-      parameters: Map[String, String]): Source
-}
-----
-
-NOTE: `StreamSourceProvider` is an experimental contract.
-
-.StreamSourceProvider Contract (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
+[[contract]]
+.StreamSourceProvider Contract
+[cols="1m,3",options="header",width="100%"]
 |===
 | Method
 | Description
 
-| [[createSource]] `createSource`
-a|
+| createSource
+a| [[createSource]]
 
-Creates a link:spark-sql-streaming-Source.adoc[streaming source] for a format or system (to continually read data).
+[source, scala]
+----
+createSource(
+  sqlContext: SQLContext,
+  metadataPath: String,
+  schema: Option[StructType],
+  providerName: String,
+  parameters: Map[String, String]): Source
+----
+
+Creates a <<spark-sql-streaming-Source.adoc#, streaming source>> for a format or system (to continually read data)
 
 NOTE: `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[StreamingQueryManager].
 
-Used exclusively when Spark SQL's `DataSource` is requested for a `Source` for a `StreamSourceProvider` (which is when `StreamingRelation` is requested for a logical plan).
+Used exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.adoc#createSource, create a streaming source>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>)
 
-TIP: Read https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-datasource.html[DataSource &mdash; Pluggable Data Sources].
+| sourceSchema
+a| [[sourceSchema]]
 
-| [[sourceSchema]] `sourceSchema`
-| Defines the name and the schema of a link:spark-sql-streaming-Source.adoc[streaming source]
+[source, scala]
+----
+sourceSchema(
+  sqlContext: SQLContext,
+  schema: Option[StructType],
+  providerName: String,
+  parameters: Map[String, String]): (String, StructType)
+----
+
+Describes a <<spark-sql-streaming-Source.adoc#, streaming source>> with a name and the schema
+
+Used exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.adoc#sourceSchema, describe the name and the schema of a streaming source>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>)
+
 |===
+
+NOTE: `StreamSourceProvider` is an experimental contract.
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> is the default implementation of the <<contract, StreamSourceProvider Contract>> in Spark Structured Streaming.
