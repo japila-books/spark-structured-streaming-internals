@@ -1,8 +1,15 @@
 == [[KafkaOffsetRangeCalculator]] KafkaOffsetRangeCalculator
 
-`KafkaOffsetRangeCalculator` is...FIXME
+`KafkaOffsetRangeCalculator` is <<apply, created>> when `KafkaMicroBatchReader` is <<spark-sql-streaming-KafkaMicroBatchReader.adoc#rangeCalculator, created>> for the only purpose of <<getRanges, calculating offset ranges>> (when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>).
 
-=== [[getRanges]] `getRanges` Method
+[[minPartitions]]
+[[creating-instance]]
+`KafkaOffsetRangeCalculator` takes an optional minumum number of partitions per executor (`minPartitions`) to be created (that is either undefined or greater than `0`).
+
+[[apply]]
+When created using a `DataSourceOptions`, `KafkaOffsetRangeCalculator` uses <<spark-sql-streaming-kafka-data-source.adoc#minPartitions, minPartitions>> option for the <<minPartitions, minimum number of partitions per executor>>.
+
+=== [[getRanges]] Calculating Offset Ranges -- `getRanges` Method
 
 [source, scala]
 ----
@@ -14,4 +21,4 @@ getRanges(
 
 `getRanges`...FIXME
 
-NOTE: `getRanges` is used when...FIXME
+NOTE: `getRanges` is used exclusively when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>.

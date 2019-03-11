@@ -227,6 +227,13 @@ Default: `(undefined)`
 
 Unless defined, `KafkaSource` requests <<spark-sql-streaming-KafkaSource.adoc#kafkaReader, KafkaOffsetReader>> for the link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[latest offsets].
 
+| minPartitions
+a| [[minPartitions]] Minimum number of partitions per executor (given Kafka partitions)
+
+Default: `(undefined)`
+
+Must be undefined (default) or greater than `0`
+
 | startingOffsets
 a| [[startingOffsets]] Starting offsets
 

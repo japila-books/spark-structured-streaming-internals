@@ -27,7 +27,7 @@ Used when...FIXME
 | rangeCalculator
 a| [[rangeCalculator]] <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#, KafkaOffsetRangeCalculator>> (for the given <<options, DataSourceOptions>>)
 
-Used when...FIXME
+Used exclusively when `KafkaMicroBatchReader` is requested to <<planInputPartitions, planInputPartitions>> (to calculate offset ranges)
 
 | startPartitionOffsets
 a| [[startPartitionOffsets]] Starting offsets for the assigned partitions (`Map[TopicPartition, Long]`)
@@ -115,13 +115,13 @@ NOTE: A `KafkaMicroBatchInputPartition` uses a shared Kafka consumer only when a
 
 `planInputPartitions` <<reportDataLoss, reports data loss>> when...FIXME
 
-=== [[getSortedExecutorList]] `getSortedExecutorList` Internal Method
+=== [[getSortedExecutorList]] Sorted List of Executors (by Host and Executor ID in Descending Order) -- `getSortedExecutorList` Internal Method
 
 [source, scala]
 ----
 getSortedExecutorList(): Array[String]
 ----
 
-`getSortedExecutorList`...FIXME
+`getSortedExecutorList` requests the `BlockManager` to request the `BlockManagerMaster` to get the peers (the other nodes in a Spark cluster), creates a `ExecutorCacheTaskLocation` for every pair of host and executor ID, and in the end, sort it in descending order.
 
-NOTE: `getSortedExecutorList` is used when...FIXME
+NOTE: `getSortedExecutorList` is used exclusively when `KafkaMicroBatchReader` is requested to <<planInputPartitions, planInputPartitions>> (and calculates offset ranges).
