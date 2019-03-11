@@ -24,6 +24,11 @@ a| [[endPartitionOffsets]] Ending offsets for the assigned partitions (`Map[Topi
 
 Used when...FIXME
 
+| rangeCalculator
+a| [[rangeCalculator]] <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#, KafkaOffsetRangeCalculator>> (for the given <<options, DataSourceOptions>>)
+
+Used when...FIXME
+
 | startPartitionOffsets
 a| [[startPartitionOffsets]] Starting offsets for the assigned partitions (`Map[TopicPartition, Long]`)
 
@@ -89,4 +94,34 @@ planInputPartitions(): java.util.List[InputPartition[InternalRow]]
 
 NOTE: `planInputPartitions` is part of the <<spark-sql-streaming-DataSourceReader.adoc#planInputPartitions, DataSourceReader Contract>> to...FIXME.
 
-`planInputPartitions`...FIXME
+`planInputPartitions` first finds the new partitions (`TopicPartitions` that are in the <<endPartitionOffsets, endPartitionOffsets>> but not in the <<startPartitionOffsets, startPartitionOffsets>>) and requests the <<kafkaOffsetReader, KafkaOffsetReader>> to
+<<spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets, fetch their earliest offsets>>.
+
+`planInputPartitions` prints out the following INFO message to the logs:
+
+```
+Partitions added: [newPartitionInitialOffsets]
+```
+
+`planInputPartitions` then prints out the following DEBUG message to the logs:
+
+```
+TopicPartitions: [comma-separated list of TopicPartitions]
+```
+
+In the end, `planInputPartitions` requests the <<rangeCalculator, KafkaOffsetRangeCalculator>> for the <<getRanges, offset ranges>> (given the <<startPartitionOffsets, startPartitionOffsets>> and the newly-calculated `newPartitionInitialOffsets` as the `fromOffsets`, the <<endPartitionOffsets, endPartitionOffsets>> as the `untilOffsets`, and <<getSortedExecutorList, getSortedExecutorList>> as the `executorLocations`) and creates a `KafkaMicroBatchInputPartition` for every offset range (with the <<executorKafkaParams, Kafka properties for executors>>, the <<pollTimeoutMs, pollTimeoutMs>>, the <<failOnDataLoss, failOnDataLoss>> flag and whether to reuse a Kafka consumer among Spark tasks).
+
+NOTE: A `KafkaMicroBatchInputPartition` uses a shared Kafka consumer only when all the offset ranges have distinct `TopicPartitions`, so concurrent tasks (of a stage in a Spark job) will not interfere and read the same `TopicPartitions`.
+
+`planInputPartitions` <<reportDataLoss, reports data loss>> when...FIXME
+
+=== [[getSortedExecutorList]] `getSortedExecutorList` Internal Method
+
+[source, scala]
+----
+getSortedExecutorList(): Array[String]
+----
+
+`getSortedExecutorList`...FIXME
+
+NOTE: `getSortedExecutorList` is used when...FIXME

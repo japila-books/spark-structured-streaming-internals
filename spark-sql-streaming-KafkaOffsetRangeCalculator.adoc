@@ -1,0 +1,17 @@
+== [[KafkaOffsetRangeCalculator]] KafkaOffsetRangeCalculator
+
+`KafkaOffsetRangeCalculator` is...FIXME
+
+=== [[getRanges]] `getRanges` Method
+
+[source, scala]
+----
+getRanges(
+  fromOffsets: PartitionOffsetMap,
+  untilOffsets: PartitionOffsetMap,
+  executorLocations: Seq[String] = Seq.empty): Seq[KafkaOffsetRange]
+----
+
+`getRanges`...FIXME
+
+NOTE: `getRanges` is used when...FIXME
