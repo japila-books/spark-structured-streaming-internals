@@ -10,6 +10,8 @@
 [[maxOffsetsPerTrigger]]
 `KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the <<spark-sql-streaming-kafka-data-source.adoc#maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option (default: `(undefined)`).
 
+`KafkaMicroBatchReader` uses the <<executorKafkaParams, Kafka properties for executors>> to create `KafkaMicroBatchInputPartitions` when requested to <<planInputPartitions, planInputPartitions>>.
+
 [[internal-registries]]
 .KafkaMicroBatchReader's Internal Properties (e.g. Registries, Counters and Flags)
 [cols="1m,3",options="header",width="100%"]
@@ -77,3 +79,14 @@ stop(): Unit
 NOTE: `stop` is part of the <<spark-sql-streaming-BaseStreamingSource.adoc#stop, BaseStreamingSource Contract>> to stop a streaming reader.
 
 `stop` simply requests the <<kafkaOffsetReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#close, close>>.
+
+=== [[planInputPartitions]] `planInputPartitions` Method
+
+[source, scala]
+----
+planInputPartitions(): java.util.List[InputPartition[InternalRow]]
+----
+
+NOTE: `planInputPartitions` is part of the <<spark-sql-streaming-DataSourceReader.adoc#planInputPartitions, DataSourceReader Contract>> to...FIXME.
+
+`planInputPartitions`...FIXME

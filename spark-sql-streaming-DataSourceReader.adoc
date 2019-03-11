@@ -1,3 +1,78 @@
 == [[DataSourceReader]] DataSourceReader Contract
 
-`DataSourceReader` is...FIXME
+`DataSourceReader` is the <<contract, abstraction>> of <<implementations, data source readers>> (in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing (Structured Streaming V2)>>) that can <<planInputPartitions, planInputPartitions>> and <<readSchema, readSchema>>.
+
+[[contract]]
+.DataSourceReader Contract
+[cols="1m,3",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| planInputPartitions
+a| [[planInputPartitions]]
+
+[source, java]
+----
+List<InputPartition<InternalRow>> planInputPartitions()
+----
+
+Used exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the `partitions` (and simply delegates to the underlying `DataSourceReader`) to create the input `RDD[InternalRow]` (`inputRDD`)
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan-DataSourceV2ScanExec.html[DataSourceV2ScanExec] leaf physical operator in the https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] gitbook.
+
+| readSchema
+a| [[readSchema]]
+
+[source, java]
+----
+StructType readSchema()
+----
+
+Schema to use for reading (loading) data from a data source
+
+Used when:
+
+* `MicroBatchExecution` stream execution is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a single streaming batch>>
+
+* `ContinuousExecution` stream execution is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>
+
+* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, "load" data as a DataFrame>>
+
+* `DataSourceV2Relation` factory object is requested to create a `DataSourceV2Relation`
+
+* `DataSourceV2Strategy` execution planning strategy is requested to apply column pruning (`pruneColumns`)
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-DataSourceV2Relation.html[DataSourceV2Relation] leaf logical operator, https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-DataSourceV2Strategy.html[DataSourceV2Strategy] execution planning strategy in the https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] gitbook.
+
+|===
+
+[[implementations]]
+.DataSourceReaders (Direct Implementations)
+[cols="1,3",options="header",width="100%"]
+|===
+| DataSourceReader
+| Description
+
+| <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>
+| [[ContinuousReader]] DataSourceReaders for <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>
+
+| <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>
+| [[MicroBatchReader]] DataSourceReaders for <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>
+
+| SupportsPushDownFilters
+| [[SupportsPushDownFilters]]
+
+| SupportsPushDownRequiredColumns
+| [[SupportsPushDownRequiredColumns]]
+
+| SupportsReportPartitioning
+| [[SupportsReportPartitioning]]
+
+| SupportsReportStatistics
+| [[SupportsReportStatistics]]
+
+| SupportsScanColumnarBatch
+| [[SupportsScanColumnarBatch]]
+
+|===
