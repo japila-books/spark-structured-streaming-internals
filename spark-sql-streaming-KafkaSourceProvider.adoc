@@ -373,7 +373,7 @@ kafkaParamsForExecutors(
   uniqueGroupId: String): Map[String, Object]
 ----
 
-`kafkaParamsForExecutors` sets the <<kafkaParamsForExecutors-properties, Kafka ConsumerConfig configuration properties>>.
+`kafkaParamsForExecutors` sets the <<kafkaParamsForExecutors-properties, Kafka properties for executors>>.
 
 While setting the properties, `kafkaParamsForExecutors` prints out the following DEBUG message to the logs:
 
@@ -397,6 +397,6 @@ executor: Set [key] to [value], earlier value: [value]
 failOnDataLoss(caseInsensitiveParams: Map[String, String]): Boolean
 ----
 
-`failOnDataLoss`...FIXME
+`failOnDataLoss` simply looks up the `failOnDataLoss` configuration property in the given `caseInsensitiveParams` (in case-insensitive manner) or defaults to `true`.
 
-NOTE: `failOnDataLoss` is used when...FIXME
+NOTE: `failOnDataLoss` is used when `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>), <<createMicroBatchReader, createMicroBatchReader>> (for a <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>), <<createContinuousReader, createContinuousReader>> (for a <<spark-sql-streaming-KafkaContinuousReader.adoc#, KafkaContinuousReader>>), and <<createRelation, createRelation>> (for a <<spark-sql-streaming-KafkaRelation.adoc#, KafkaRelation>>).
