@@ -31,7 +31,7 @@ val sq = values
   .format("console")
   .option("truncate", false)
   .queryName("kafka-to-console")
-  .trigger(Trigger.ProcessingTime(30.seconds))
+  .trigger(Trigger.ProcessingTime(30.seconds)) // micro-batch stream processing
   .start
 scala> sq.explain
 == Physical Plan ==
@@ -41,24 +41,41 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
       +- *(1) ScanV2 kafka[key#24, value#25, topic#26, partition#27, offset#28L, timestamp#29, timestampType#30] (Options: [subscribe=t1,kafka.bootstrap.servers=:9092])
 ----
 
-=== [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 Library Dependency
+=== kafka Data Source Format
 
-The structured streaming API for Kafka is part of the *spark-sql-kafka-0-10* external project. Although the `spark-sql-kafka-0-10` external project is indeed part of the official distribution of Apache Spark, but it is not included in the CLASSPATH by default.
+Kafka Data Source is registered under *kafka* data source format (via <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> and the corresponding `META-INF/services/org.apache.spark.sql.sources.DataSourceRegister` service registration file).
 
-You should add the following dependency to sbt project to use the Kafka data source:
+[source, scala]
+----
+val inputs = spark
+  .readStream
+  .format("kafka") // <-- uses Kafka data source
+  .option("subscribepattern", "input*")
+  .option("kafka.bootstrap.servers", ":9092")
+  .load
+scala> inputs.explain(extended = true)
+== Parsed Logical Plan ==
+StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1acb7cf0, kafka, Map(subscribepattern -> input*, kafka.bootstrap.servers -> :9092), [key#4344, value#4345, topic#4346, partition#4347, offset#4348L, timestamp#4349, timestampType#4350], StreamingRelation DataSource(org.apache.spark.sql.SparkSession@1b33bbbe,kafka,List(),None,List(),None,Map(subscribepattern -> input*, kafka.bootstrap.servers -> :9092),None), kafka, [key#4337, value#4338, topic#4339, partition#4340, offset#4341L, timestamp#4342, timestampType#4343]
+...
+----
+
+NOTE: <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> is the provider for streaming <<spark-sql-streaming-StreamSourceProvider.adoc#, sources>> and <<spark-sql-streaming-StreamSinkProvider.adoc#, sinks>> for the Kafka data source.
+
+=== [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 External Module
+
+Kafka Data Source is part of the *spark-sql-kafka-0-10* external module that is distributed with the official distribution of Apache Spark, but it is not included in the CLASSPATH by default.
+
+Define `spark-sql-kafka-0-10` as part of a build definition (e.g. as a `libraryDependency` in `build.sbt` for sbt) as follows:
 
 ```
 libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ book.version }}"
 ```
 
-[TIP]
-====
-`spark-sql-kafka-0-10` module is not included in the CLASSPATH of `spark-shell` so you have to start it with `--packages` command-line option.
+Use `--packages` command-line option of `spark-submit` shell script while deploying a Spark Structured Streaming application for execution.
 
 ```
 ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ book.version }}
 ```
-====
 
 NOTE: Replace `{{ book.version }}` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-sql-kafka-0-10_2.12%22[The Central Repository's Search] that matches your version of Spark.
 
@@ -112,36 +129,30 @@ root
 
 ====
 
-=== External Module
+=== Micro-Batch Stream Processing
 
-Kafka Data Source is an external module that is distributed as part of the official distribution of Apache Spark, but is not available on the CLASSPATH by default. You should define it as part of a build definition (e.g. as a `libraryDependency` in `build.sbt` for sbt) or use `--packages` command-line option when `spark-submit` a Spark Structured Streaming application.
-
-All the examples that follow assume that you started `spark-shell` with the `--packages` command-line option.
+Kafka Data Source supports <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>> triggers) via <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>.
 
 [source, scala]
 ----
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ book.version }}
-----
-
-=== kafka Format
-
-Kafka Data Source is registered under *kafka* data source format (via <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> and the corresponding `META-INF/services/org.apache.spark.sql.sources.DataSourceRegister` service registration file).
-
-[source, scala]
-----
-val inputs = spark
+import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
+val sq = spark
   .readStream
-  .format("kafka") // <-- uses Kafka data source
-  .option("subscribepattern", "input*")
+  .format("kafka")
+  .option("subscribepattern", "kafka2console.*")
   .option("kafka.bootstrap.servers", ":9092")
+  .option("failOnDataLoss", false) // for demo purposes. Don't use in production
   .load
-scala> inputs.explain(extended = true)
-== Parsed Logical Plan ==
-StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1acb7cf0, kafka, Map(subscribepattern -> input*, kafka.bootstrap.servers -> :9092), [key#4344, value#4345, topic#4346, partition#4347, offset#4348L, timestamp#4349, timestampType#4350], StreamingRelation DataSource(org.apache.spark.sql.SparkSession@1b33bbbe,kafka,List(),None,List(),None,Map(subscribepattern -> input*, kafka.bootstrap.servers -> :9092),None), kafka, [key#4337, value#4338, topic#4339, partition#4340, offset#4341L, timestamp#4342, timestampType#4343]
-...
+  .withColumn("value", $"value" cast "string") // convert bytes to string for display purposes
+  .writeStream
+  .format("console")
+  .option("truncate", false) // format-specific option
+  .queryName("kafka2console-microbatch")
+  .trigger(Trigger.ProcessingTime(30.seconds))
+  .option("checkpointLocation", "checkpointLocation-kafka2console") // generic query option
+  .start
 ----
-
-NOTE: <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> is the provider for streaming <<spark-sql-streaming-StreamSourceProvider.adoc#, sources>> and <<spark-sql-streaming-StreamSinkProvider.adoc#, sinks>> for the Kafka data source.
 
 === Continuous Stream Processing
 
@@ -156,20 +167,14 @@ val sq = spark
   .format("kafka")
   .option("subscribepattern", "kafka2console.*")
   .option("kafka.bootstrap.servers", ":9092")
-  .option("failOnDataLoss", false) // <-- for demo purposes. Don't use in production
+  .option("failOnDataLoss", false) // for demo purposes. Don't use in production
   .load
-  .withColumn("value", $"value" cast "string") // <-- convert bytes to string for display purposes
+  .withColumn("value", $"value" cast "string") // convert bytes to string for display purposes
   .writeStream
-  .trigger(Trigger.Continuous(10.seconds))
-  // query-generic option
-  .option("checkpointLocation", "checkpointLocation-kafka2console")
   .format("console")
-  // format-specific option
-  .option("truncate", false)
-  .queryName("kafka2console")
+  .option("truncate", false) // format-specific option
+  .queryName("kafka2console-continuous")
+  .trigger(Trigger.Continuous(10.seconds))
+  .option("checkpointLocation", "checkpointLocation-kafka2console") // generic query option
   .start
 ----
-
-=== Micro-Batch Stream Processing
-
-Kafka Data Source supports <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>> triggers) via <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>.
