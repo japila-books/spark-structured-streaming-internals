@@ -30,7 +30,7 @@ Default: `1000`
 |===
 
 [[kafkaSchema]]
-`KafkaOffsetReader` defines the predefined fixed schema of the <<spark-sql-streaming-KafkaSource.adoc#schema, Kafka data source>>.
+`KafkaOffsetReader` defines the <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined fixed schema>>.
 
 [[internal-registries]]
 .KafkaOffsetReader's Internal Registries and Counters
@@ -54,13 +54,13 @@ Used when `KafkaOffsetReader`:
 * <<close, is closed>>
 
 | execContext
-a| [[execContext]] Scala's https://www.scala-lang.org/api/2.12.8/scala/concurrent/ExecutionContextExecutorService.html[scala.concurrent.ExecutionContextExecutorService]
+a| [[execContext]] https://www.scala-lang.org/api/2.12.8/scala/concurrent/ExecutionContextExecutorService.html[scala.concurrent.ExecutionContextExecutorService]
 
 | groupId
 a| [[groupId]]
 
 | kafkaReaderThread
-a| [[kafkaReaderThread]]
+a| [[kafkaReaderThread]] https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html[java.util.concurrent.ExecutorService]
 
 | maxOffsetFetchAttempts
 a| [[maxOffsetFetchAttempts]]
@@ -237,9 +237,18 @@ NOTE: `consumer` is used when `KafkaOffsetReader` is requested to <<fetchTopicPa
 close(): Unit
 ----
 
-`close`...FIXME
+`close` <<stopConsumer, stop the Kafka Consumer>> (if the <<_consumer, Kafka Consumer>> is available).
 
-NOTE: `close` is used when...FIXME
+`close` requests the <<kafkaReaderThread, ExecutorService>> to shut down.
+
+[NOTE]
+====
+`close` is used when:
+
+* <<spark-sql-streaming-KafkaContinuousReader.adoc#stop, KafkaContinuousReader>>, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#stop, KafkaMicroBatchReader>>, and <<spark-sql-streaming-KafkaSource.adoc#stop, KafkaSource>> are requested to stop a streaming reader or source
+
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, build a distributed data scan with column pruning>>
+====
 
 === [[runUninterruptibly]] `runUninterruptibly` Internal Method
 

@@ -6,9 +6,11 @@
 ----
 val records = spark
   .readStream
-  .format("kafka")
-  .option("subscribe", "t1")
+  .format("kafka") // via KafkaSourceProvider
+  .option("subscribepattern", """topic\d""") // topics with a digit at the end
   .option("kafka.bootstrap.servers", ":9092")
+  .option("startingOffsets", "latest")
+  .option("maxOffsetsPerTrigger", 1)
   .load
 
 assert(records.isStreaming)
@@ -23,8 +25,10 @@ root
  |-- timestamp: timestamp (nullable = true)
  |-- timestampType: integer (nullable = true)
 
-val values = records.select($"value" cast "string")
-import org.apache.spark.sql.streaming.Trigger
+val values = records
+  .select($"value" cast "string") // deserialize values
+
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import scala.concurrent.duration._
 val sq = values
   .writeStream
@@ -32,6 +36,7 @@ val sq = values
   .option("truncate", false)
   .queryName("kafka-to-console")
   .trigger(Trigger.ProcessingTime(30.seconds)) // micro-batch stream processing
+  .outputMode(OutputMode.Append)
   .start
 scala> sq.explain
 == Physical Plan ==
@@ -39,6 +44,9 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 +- *(1) Project [cast(value#25 as string) AS value#21]
    +- *(1) Project [key#24, value#25, topic#26, partition#27, offset#28L, timestamp#29, timestampType#30]
       +- *(1) ScanV2 kafka[key#24, value#25, topic#26, partition#27, offset#28L, timestamp#29, timestampType#30] (Options: [subscribe=t1,kafka.bootstrap.servers=:9092])
+
+// In the end, stop the streaming query
+sq.stop
 ----
 
 === kafka Data Source Format
@@ -50,13 +58,15 @@ Kafka Data Source is registered under *kafka* data source format (via <<spark-sq
 val inputs = spark
   .readStream
   .format("kafka") // <-- uses Kafka data source
-  .option("subscribepattern", "input*")
+  .option("subscribepattern", "input.*")
   .option("kafka.bootstrap.servers", ":9092")
   .load
 scala> inputs.explain(extended = true)
 == Parsed Logical Plan ==
-StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1acb7cf0, kafka, Map(subscribepattern -> input*, kafka.bootstrap.servers -> :9092), [key#4344, value#4345, topic#4346, partition#4347, offset#4348L, timestamp#4349, timestampType#4350], StreamingRelation DataSource(org.apache.spark.sql.SparkSession@1b33bbbe,kafka,List(),None,List(),None,Map(subscribepattern -> input*, kafka.bootstrap.servers -> :9092),None), kafka, [key#4337, value#4338, topic#4339, partition#4340, offset#4341L, timestamp#4342, timestampType#4343]
+StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@2300d2b4, kafka, Map(subscribepattern -> input.*, kafka.bootstrap.servers -> :9092), [key#7, value#8, topic#9, partition#10, offset#11L, timestamp#12, timestampType#13], StreamingRelation DataSource(org.apache.spark.sql.SparkSession@30090808,kafka,List(),None,List(),None,Map(subscribepattern -> input.*, kafka.bootstrap.servers -> :9092),None), kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
 ...
+== Physical Plan ==
+StreamingRelation kafka, [key#7, value#8, topic#9, partition#10, offset#11L, timestamp#12, timestampType#13]
 ----
 
 NOTE: <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> is the provider for streaming <<spark-sql-streaming-StreamSourceProvider.adoc#, sources>> and <<spark-sql-streaming-StreamSinkProvider.adoc#, sinks>> for the Kafka data source.
@@ -71,13 +81,13 @@ Define `spark-sql-kafka-0-10` as part of a build definition (e.g. as a `libraryD
 libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ book.version }}"
 ```
 
-Use `--packages` command-line option of `spark-submit` shell script while deploying a Spark Structured Streaming application for execution.
+Use `--packages` command-line option of `spark-submit` shell script (and "derivatives" like `spark-shell`) while submitting a Spark Structured Streaming application for execution.
 
 ```
 ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ book.version }}
 ```
 
-NOTE: Replace `{{ book.version }}` with one of the available versions found at http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22spark-sql-kafka-0-10_2.12%22[The Central Repository's Search] that matches your version of Spark.
+NOTE: Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ book.version }}` above) with one of the available versions found at https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12[The Central Repository's Search] that matches your version of Apache Spark.
 
 === [[schema]] Predefined (Fixed) Schema
 
@@ -178,3 +188,98 @@ val sq = spark
   .option("checkpointLocation", "checkpointLocation-kafka2console") // generic query option
   .start
 ----
+
+=== [[options]] Configuration Options
+
+.Kafka Data Source's Options (Case-Insensitive)
+[cols="1m,3",options="header",width="100%"]
+|===
+| Option
+| Description
+
+| assign
+a| [[assign]] link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
+
+```
+{"topicA":[0,1],"topicB":[0,1]}
+```
+
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+
+| failOnDataLoss
+a| [[failOnDataLoss]] Flag to control whether...FIXME
+
+Default: `true`
+
+Used when `KafkaSourceProvider` is requested for <<spark-sql-streaming-KafkaSourceProvider.adoc#failOnDataLoss, failOnDataLoss configuration property>>
+
+| kafkaConsumer.pollTimeoutMs
+a| [[kafkaConsumer.pollTimeoutMs]][[pollTimeoutMs]] The time (in milliseconds) spent waiting in `Consumer.poll` if data is not available in the buffer.
+
+Default: `spark.network.timeout` or `120s`
+
+Used when...FIXME
+
+| maxOffsetsPerTrigger
+a| [[maxOffsetsPerTrigger]] Number of records to fetch per trigger (to limit the number of records to fetch).
+
+Default: `(undefined)`
+
+Unless defined, `KafkaSource` requests <<spark-sql-streaming-KafkaSource.adoc#kafkaReader, KafkaOffsetReader>> for the link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[latest offsets].
+
+| startingOffsets
+a| [[startingOffsets]] Starting offsets
+
+Possible values:
+
+* `latest`
+
+* `earliest`
+
+* JSON with topics, partitions and their starting offsets, e.g.
++
+```
+{"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
+```
+
+[TIP]
+====
+Use Scala's tripple quotes for the JSON for topics, partitions and offsets.
+
+[source, scala]
+----
+option(
+  "startingOffsets",
+  """{"topic1":{"0":5,"4":-1},"topic2":{"0":-2}}""")
+----
+====
+
+| subscribe
+a| [[subscribe]] link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
+
+```
+topic1,topic2,topic3
+```
+
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+
+| subscribepattern
+a| [[subscribepattern]] link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
+
+```
+topic\d
+```
+
+[TIP]
+====
+Use Scala's tripple quotes for the regular expression for topic subscription regex pattern.
+
+[source, scala]
+----
+option("subscribepattern", """topic\d""")
+----
+====
+
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+
+|===

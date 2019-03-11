@@ -92,7 +92,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.continuous.ContinuousExecution=DEBUG
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
 === [[getStartOffsets]] `getStartOffsets` Internal Method

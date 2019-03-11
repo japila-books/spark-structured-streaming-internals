@@ -5,35 +5,15 @@
 [[shortName]]
 `KafkaSourceProvider` (as a `DataSourceRegister`) is registered as *kafka* data source format.
 
-[source, scala]
-----
-spark.readStream.format("kafka")
-----
-
 `KafkaSourceProvider` requires the following options (that you can set using `option` method of `DataStreamReader` or `DataStreamWriter`):
 
-. Exactly one option for `subscribe`, `subscribepattern` or `assign`
+* Exactly one `subscribe`, `subscribepattern` or `assign` option
 
-. `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
+* `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
 
-TIP: Refer to link:spark-sql-streaming-KafkaSource.adoc#options[KafkaSource's Options] for the supported options.
+TIP: Refer to <<spark-sql-streaming-kafka-data-source.adoc#options, Kafka Data Source's Options>> for the supported configuration options.
 
 NOTE: `endingoffsets` option <<validateStreamOptions, is not allowed>> in streaming queries.
-
-NOTE: `KafkaSourceProvider` is part of <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 Library Dependency>> and so has to be "installed" in spark-shell using `--package` command-line option.
-
-[source, scala]
-----
-// See the section about KafkaSource for a complete example
-val records = spark.
-  readStream.
-  format("kafka").  // <-- use KafkaSourceProvider
-  option("subscribe", "raw-events").
-  option("kafka.bootstrap.servers", "localhost:9092").
-  option("startingoffsets", "earliest").
-  option("maxOffsetsPerTrigger", 1).
-  load
-----
 
 Internally, `KafkaSourceProvider` uses...FIXME...with the following <<kafkaParamsForExecutors-properties, Kafka properties for executors>>.
 
@@ -303,7 +283,7 @@ NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchRe
 
 `createMicroBatchReader` <<validateStreamOptions, validateStreamOptions>> (with the given `DataSourceOptions`).
 
-`createMicroBatchReader` generates a unique group ID of the format *spark-kafka-source-[randomUUID]-[metadataPath_hashCode]* (to make sure that a streaming query creates a new consumer group).
+`createMicroBatchReader` generates a unique group ID of the format *spark-kafka-source-[randomUUID]-[metadataPath_hashCode]* (to make sure that a new streaming query creates a new consumer group).
 
 `createMicroBatchReader` finds all the parameters (in the given `DataSourceOptions`) that start with *kafka.* prefix, removes it, and creates the current Kafka parameters.
 
@@ -325,9 +305,9 @@ In the end, `createMicroBatchReader` creates a <<spark-sql-streaming-KafkaMicroB
 
 * The given `DataSourceOptions` and the `metadataPath`
 
-* <<getKafkaOffsetRangeLimit, Starting stream offsets>> (`startingoffsets` offset option key and `LatestOffsetRangeLimit` default offsets)
+* <<getKafkaOffsetRangeLimit, Starting stream offsets>> (<<spark-sql-streaming-kafka-data-source.adoc#startingOffsets, startingOffsets>> option with the default of `LatestOffsetRangeLimit` offsets)
 
-* <<failOnDataLoss, failOnDataLoss>>
+* <<failOnDataLoss, failOnDataLoss configuration property>>
 
 === [[createRelation]] Creating BaseRelation -- `createRelation` Method
 
@@ -390,7 +370,7 @@ executor: Set [key] to [value], earlier value: [value]
 * `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, buildScan>> (for a `KafkaSourceRDD`)
 ====
 
-=== [[failOnDataLoss]] `failOnDataLoss` Internal Method
+=== [[failOnDataLoss]] Looking Up failOnDataLoss Configuration Property -- `failOnDataLoss` Internal Method
 
 [source, scala]
 ----

@@ -1,3 +1,79 @@
 == [[KafkaMicroBatchReader]] KafkaMicroBatchReader
 
-`KafkaMicroBatchReader` is...FIXME
+`KafkaMicroBatchReader` is a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> for <<spark-sql-streaming-kafka-data-source.adoc#, kafka data source>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing (Structured Streaming V1)>>.
+
+`KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createMicroBatchReader, create a MicroBatchReader>>.
+
+[[pollTimeoutMs]]
+`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the <<spark-sql-streaming-kafka-data-source.adoc#kafkaConsumer.pollTimeoutMs, kafkaConsumer.pollTimeoutMs>> option (default: `spark.network.timeout` or `120s`).
+
+[[maxOffsetsPerTrigger]]
+`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the <<spark-sql-streaming-kafka-data-source.adoc#maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option (default: `(undefined)`).
+
+[[internal-registries]]
+.KafkaMicroBatchReader's Internal Properties (e.g. Registries, Counters and Flags)
+[cols="1m,3",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| endPartitionOffsets
+a| [[endPartitionOffsets]] Ending offsets for the assigned partitions (`Map[TopicPartition, Long]`)
+
+Used when...FIXME
+
+| startPartitionOffsets
+a| [[startPartitionOffsets]] Starting offsets for the assigned partitions (`Map[TopicPartition, Long]`)
+
+Used when...FIXME
+
+|===
+
+[[logging]]
+[TIP]
+====
+Enable `WARN`, `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaMicroBatchReader` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.kafka010.KafkaMicroBatchReader=DEBUG
+```
+
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+====
+
+=== [[creating-instance]] Creating KafkaMicroBatchReader Instance
+
+`KafkaMicroBatchReader` takes the following to be created:
+
+* [[kafkaOffsetReader]] <<spark-sql-streaming-KafkaOffsetReader.adoc#, KafkaOffsetReader>>
+* [[executorKafkaParams]] Kafka properties for executors (`Map[String, Object]`)
+* [[options]] `DataSourceOptions`
+* [[metadataPath]] Metadata Path
+* [[startingOffsets]] Desired starting <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, KafkaOffsetRangeLimit>>
+* [[failOnDataLoss]] <<spark-sql-streaming-kafka-data-source.adoc#failOnDataLoss, failOnDataLoss>> option
+
+`KafkaMicroBatchReader` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[readSchema]] `readSchema` Method
+
+[source, scala]
+----
+readSchema(): StructType
+----
+
+NOTE: `readSchema` is part of the <<spark-sql-streaming-DataSourceReader.adoc#readSchema, DataSourceReader Contract>> to...FIXME.
+
+`readSchema` simply returns the <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined fixed schema>>.
+
+=== [[stop]] Stopping Streaming Reader -- `stop` Method
+
+[source, scala]
+----
+stop(): Unit
+----
+
+NOTE: `stop` is part of the <<spark-sql-streaming-BaseStreamingSource.adoc#stop, BaseStreamingSource Contract>> to stop a streaming reader.
+
+`stop` simply requests the <<kafkaOffsetReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#close, close>>.

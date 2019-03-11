@@ -109,7 +109,7 @@ val topic1 = spark.
   format("kafka").
   option("subscribe", "topic1").
   option("kafka.bootstrap.servers", "localhost:9092").
-  option("startingoffsets", "earliest").
+  option("startingOffsets", "earliest").
   load
 
 // Processing with deduplication
