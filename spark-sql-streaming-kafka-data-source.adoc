@@ -143,6 +143,10 @@ root
 
 Kafka Data Source supports <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>> triggers) via <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>.
 
+Kafka Data Source can assign a single task per Kafka partition (using <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#, KafkaOffsetRangeCalculator>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>).
+
+Kafka Data Source can reuse a Kafka consumer (using <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>).
+
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.Trigger
@@ -233,6 +237,8 @@ a| [[minPartitions]] Minimum number of partitions per executor (given Kafka part
 Default: `(undefined)`
 
 Must be undefined (default) or greater than `0`
+
+When undefined (default) or smaller than the number of `TopicPartitions` with records to consume from, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>> uses <<spark-sql-streaming-KafkaMicroBatchReader.adoc#rangeCalculator, KafkaOffsetRangeCalculator>> to <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#getLocation, find the preferred executor>> for every `TopicPartition` (and the <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getSortedExecutorList, available executors>>).
 
 | startingOffsets
 a| [[startingOffsets]] Starting offsets

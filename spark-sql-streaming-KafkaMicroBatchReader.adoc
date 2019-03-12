@@ -1,6 +1,6 @@
 == [[KafkaMicroBatchReader]] KafkaMicroBatchReader
 
-`KafkaMicroBatchReader` is a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> for <<spark-sql-streaming-kafka-data-source.adoc#, kafka data source>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing (Structured Streaming V1)>>.
+`KafkaMicroBatchReader` is a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> for <<spark-sql-streaming-kafka-data-source.adoc#, kafka data source>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>.
 
 `KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createMicroBatchReader, create a MicroBatchReader>>.
 
