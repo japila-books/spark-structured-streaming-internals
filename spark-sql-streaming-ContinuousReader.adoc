@@ -1,6 +1,6 @@
 == [[ContinuousReader]] ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing
 
-`ContinuousReader` is the <<contract, extension>> of the <<spark-sql-streaming-DataSourceReader.adoc#, DataSourceReader>> (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> that manage offsets in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
+`ContinuousReader` is the <<contract, extension>> of the `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> that manage offsets in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
 
 [[contract]]
 .ContinuousReader Contract

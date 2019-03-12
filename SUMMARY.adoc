@@ -35,9 +35,8 @@
 . link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Sources with ContinuousReaders]
 . link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
 
-. link:spark-sql-streaming-DataSourceReader.adoc[DataSourceReader Contract]
-.. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
-.. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
+. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
+. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
 
 . link:spark-sql-streaming-StreamWriter.adoc[StreamWriter]
 . link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator]

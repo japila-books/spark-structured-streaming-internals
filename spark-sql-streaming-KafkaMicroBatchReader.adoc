@@ -70,7 +70,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 readSchema(): StructType
 ----
 
-NOTE: `readSchema` is part of the <<spark-sql-streaming-DataSourceReader.adoc#readSchema, DataSourceReader Contract>> to...FIXME.
+NOTE: `readSchema` is part of the `DataSourceReader` contract to...FIXME.
 
 `readSchema` simply returns the <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined fixed schema>>.
 
@@ -92,7 +92,7 @@ NOTE: `stop` is part of the <<spark-sql-streaming-BaseStreamingSource.adoc#stop,
 planInputPartitions(): java.util.List[InputPartition[InternalRow]]
 ----
 
-NOTE: `planInputPartitions` is part of the <<spark-sql-streaming-DataSourceReader.adoc#planInputPartitions, DataSourceReader Contract>> to...FIXME.
+NOTE: `planInputPartitions` is part of the `DataSourceReader` contract to...FIXME.
 
 `planInputPartitions` first finds the new partitions (`TopicPartitions` that are in the <<endPartitionOffsets, endPartitionOffsets>> but not in the <<startPartitionOffsets, startPartitionOffsets>>) and requests the <<kafkaOffsetReader, KafkaOffsetReader>> to
 <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets, fetch their earliest offsets>>.

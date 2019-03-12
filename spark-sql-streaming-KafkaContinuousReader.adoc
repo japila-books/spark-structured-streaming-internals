@@ -40,6 +40,6 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 planInputPartitions(): java.util.List[InputPartition[InternalRow]]
 ----
 
-NOTE: `planInputPartitions` is part of the <<spark-sql-streaming-DataSourceReader.adoc#planInputPartitions, DataSourceReader Contract>> to...FIXME.
+NOTE: `planInputPartitions` is part of the `DataSourceReader` contract to...FIXME.
 
 `planInputPartitions`...FIXME
