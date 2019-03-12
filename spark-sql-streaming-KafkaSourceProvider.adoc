@@ -5,20 +5,18 @@
 [[shortName]]
 `KafkaSourceProvider` (as a `DataSourceRegister`) is registered as *kafka* data source format.
 
-`KafkaSourceProvider` requires the following options (that you can set using `option` method of `DataStreamReader` or `DataStreamWriter`):
+`KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.adoc#, DataStreamReader>> or <<spark-sql-streaming-DataStreamWriter.adoc#, DataStreamWriter>>):
 
-* Exactly one `subscribe`, `subscribepattern` or `assign` option
+* Exactly one of the following options: <<spark-sql-streaming-kafka-data-source.adoc#subscribe, subscribe>>, <<spark-sql-streaming-kafka-data-source.adoc#subscribePattern, subscribePattern>> or <<spark-sql-streaming-kafka-data-source.adoc#assign, assign>>
 
-* `kafka.bootstrap.servers` (that becomes `bootstrap.servers` property of the Kafka client)
+* <<spark-sql-streaming-kafka-data-source.adoc#kafka.bootstrap.servers, kafka.bootstrap.servers>>
 
 TIP: Refer to <<spark-sql-streaming-kafka-data-source.adoc#options, Kafka Data Source's Options>> for the supported configuration options.
 
-NOTE: `endingoffsets` option <<validateStreamOptions, is not allowed>> in streaming queries.
-
-Internally, `KafkaSourceProvider` uses...FIXME...with the following <<kafkaParamsForExecutors-properties, Kafka properties for executors>>.
+Internally, `KafkaSourceProvider` sets the <<kafkaParamsForExecutors-properties, properties for Kafka Consumers on executors>> (that are passed on to `InternalKafkaConsumer` when requested to create a Kafka consumer with a single `TopicPartition` manually assigned).
 
 [[kafkaParamsForExecutors-properties]]
-.KafkaSourceProvider's Kafka Properties For Executors
+.KafkaSourceProvider's Properties for Kafka Consumers on Executors
 [cols="1m,1m,2",options="header",width="100%"]
 |===
 | ConsumerConfig's Key
@@ -281,17 +279,17 @@ createMicroBatchReader(
 
 NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.adoc#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
 
-`createMicroBatchReader` <<validateStreamOptions, validateStreamOptions>> (with the given `DataSourceOptions`).
+`createMicroBatchReader` <<validateStreamOptions, validateStreamOptions>> (in the given `DataSourceOptions`).
 
 `createMicroBatchReader` generates a unique group ID of the format *spark-kafka-source-[randomUUID]-[metadataPath_hashCode]* (to make sure that a new streaming query creates a new consumer group).
 
-`createMicroBatchReader` finds all the parameters (in the given `DataSourceOptions`) that start with *kafka.* prefix, removes it, and creates the current Kafka parameters.
+`createMicroBatchReader` finds all the parameters (in the given `DataSourceOptions`) that start with *kafka.* prefix, removes the prefix, and creates the current Kafka parameters.
 
 `createMicroBatchReader` creates a <<spark-sql-streaming-KafkaOffsetReader.adoc#, KafkaOffsetReader>> with the following:
 
 * <<strategy, strategy>> (in the given `DataSourceOptions`)
 
-* <<kafkaParamsForDriver, Kafka parameters for the driver>> (in the current Kafka parameters, i.e. without *kafka.* prefix)
+* <<kafkaParamsForDriver, Properties for Kafka consumers on the driver>> (given the current Kafka parameters, i.e. without *kafka.* prefix)
 
 * The given `DataSourceOptions`
 
@@ -301,7 +299,7 @@ In the end, `createMicroBatchReader` creates a <<spark-sql-streaming-KafkaMicroB
 
 * the `KafkaOffsetReader`
 
-* <<kafkaParamsForExecutors, Kafka parameters for executors>> (in the current Kafka parameters, i.e. without *kafka.* prefix) and the unique group ID (`spark-kafka-source-[randomUUID]-[metadataPath_hashCode]-driver`)
+* <<kafkaParamsForExecutors, Properties for Kafka consumers on executors>> (given the current Kafka parameters, i.e. without *kafka.* prefix) and the unique group ID (`spark-kafka-source-[randomUUID]-[metadataPath_hashCode]-driver`)
 
 * The given `DataSourceOptions` and the `metadataPath`
 

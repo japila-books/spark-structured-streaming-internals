@@ -195,6 +195,8 @@ val sq = spark
 
 === [[options]] Configuration Options
 
+NOTE: Options with *kafka.* prefix (e.g. `kafka.bootstrap.servers`) are considered configuration properties for Kafka consumers used on the <<spark-sql-streaming-KafkaSourceProvider.adoc#kafkaParamsForDriver, driver>> and <<spark-sql-streaming-KafkaSourceProvider.adoc#kafkaParamsForExecutors, executors>>.
+
 .Kafka Data Source's Options (Case-Insensitive)
 [cols="1m,3",options="header",width="100%"]
 |===
