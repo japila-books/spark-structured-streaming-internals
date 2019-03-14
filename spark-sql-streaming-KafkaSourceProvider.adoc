@@ -1,9 +1,14 @@
 == [[KafkaSourceProvider]] KafkaSourceProvider -- Data Source Provider for Apache Kafka
 
-`KafkaSourceProvider` is a <<spark-sql-streaming-StreamSourceProvider.adoc#, streaming data source provider>> for link:spark-sql-streaming-KafkaSource.adoc[KafkaSource] (that is both the batch and streaming data source for https://kafka.apache.org/[Apache Kafka]).
-
 [[shortName]]
-`KafkaSourceProvider` (as a `DataSourceRegister`) is registered as *kafka* data source format.
+`KafkaSourceProvider` is a `DataSourceRegister` and registers a developer-friendly alias for *kafka* data source format in Spark Structured Streaming.
+
+[NOTE]
+====
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceRegister.html[DataSourceRegister Contract] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+====
+
+`KafkaSourceProvider` supports <<spark-sql-streaming-micro-batch-processing.adoc#, micro-batch stream processing>> (through <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> contract) and <<createMicroBatchReader, creates a specialized KafkaMicroBatchReader>>.
 
 `KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.adoc#, DataStreamReader>> or <<spark-sql-streaming-DataStreamWriter.adoc#, DataStreamWriter>>):
 
@@ -63,7 +68,7 @@ log4j.logger.org.apache.spark.sql.kafka010.KafkaSourceProvider=DEBUG
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
-=== [[createSource]] Creating KafkaSource -- `createSource` Method
+=== [[createSource]] Creating Streaming Source -- `createSource` Method
 
 [source, scala]
 ----
@@ -75,7 +80,7 @@ createSource(
   parameters: Map[String, String]): Source
 ----
 
-NOTE: `createSource` is a part of the <<spark-sql-streaming-StreamSourceProvider.adoc#createSource, StreamSourceProvider Contract>> to create a <<spark-sql-streaming-Source.adoc#, streaming source>> for a format or system (to continually read data).
+NOTE: `createSource` is part of the <<spark-sql-streaming-StreamSourceProvider.adoc#createSource, StreamSourceProvider Contract>> to create a <<spark-sql-streaming-Source.adoc#, streaming source>> for a format or system (to continually read data).
 
 `createSource` first <<validateStreamOptions, validates stream options>>.
 
@@ -277,7 +282,7 @@ createMicroBatchReader(
   options: DataSourceOptions): KafkaMicroBatchReader
 ----
 
-NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.adoc#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
+NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.adoc#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>.
 
 `createMicroBatchReader` <<validateStreamOptions, validateStreamOptions>> (in the given `DataSourceOptions`).
 

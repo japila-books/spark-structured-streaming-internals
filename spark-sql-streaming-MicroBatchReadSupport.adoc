@@ -28,7 +28,7 @@ MicroBatchReader createMicroBatchReader(
 | Description
 
 | <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>>
-| [[KafkaSourceProvider]]
+| [[KafkaSourceProvider]] Data source provider for *kafka* format
 
 | <<spark-sql-streaming-RateStreamProvider.adoc#, RateStreamProvider>>
 | [[RateStreamProvider]]
