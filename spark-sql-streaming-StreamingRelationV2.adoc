@@ -1,20 +1,33 @@
 == [[StreamingRelationV2]] StreamingRelationV2 Leaf Logical Operator
 
-`StreamingRelationV2` is a `MultiInstanceRelation` leaf logical operator that is used to represent <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> or <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> streaming data sources in a logical plan of a streaming query.
+`StreamingRelationV2` is a `MultiInstanceRelation` leaf logical operator that represents <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> or <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> streaming data sources in a logical plan of a streaming query.
 
-TIP: Find out more on leaf logical operators in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-LeafNode.html[LeafNode — Base Logical Operator with No Child Operators and Optional Statistics] section in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on leaf logical operators in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-LeafNode.html[LeafNode — Base Logical Operator with No Child Operators and Optional Statistics] section in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
 
 `StreamingRelationV2` is <<creating-instance, created>> when:
 
+* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, "load" data as a streaming DataFrame>> for <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> streaming data sources
+
 * <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>> is created
 
-* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, create a streaming query>> for a <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> or a <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source
+[[isStreaming]]
+`isStreaming` flag is always enabled (i.e. `true`).
+
+[source, scala]
+----
+scala> :type sq
+org.apache.spark.sql.DataFrame
+
+import org.apache.spark.sql.execution.streaming.StreamingRelationV2
+val relation = sq.queryExecution.logical.asInstanceOf[StreamingRelationV2]
+assert(relation.isStreaming)
+----
 
 `StreamingRelationV2` is resolved (_replaced_) to the following leaf logical operators:
 
-* <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> when `ContinuousExecution` is requested for the <<spark-sql-streaming-ContinuousExecution.adoc#logicalPlan, analyzed logical plan>>
+* <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> when `ContinuousExecution` stream execution engine is requested for the <<spark-sql-streaming-ContinuousExecution.adoc#logicalPlan, analyzed logical plan>>
 
-* <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> when `MicroBatchExecution` is requested for the <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>>
+* <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> when `MicroBatchExecution` stream execution engine is requested for the <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>>
 
 === [[creating-instance]] Creating StreamingRelationV2 Instance
 

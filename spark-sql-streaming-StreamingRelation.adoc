@@ -18,7 +18,7 @@ scala> println(rate.queryExecution.logical.numberedTreeString)
 ----
 
 [[isStreaming]]
-`isStreaming` is always enabled (i.e. `true`).
+`isStreaming` flag is always enabled (i.e. `true`).
 
 [source, scala]
 ----

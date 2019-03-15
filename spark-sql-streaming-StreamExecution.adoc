@@ -1,8 +1,8 @@
-== [[StreamExecution]] StreamExecution -- Base of Streaming Query Executions
+== [[StreamExecution]] StreamExecution -- Base of Streaming Query Execution Engines
 
 `StreamExecution` is the <<contract, base>> of <<extensions, execution environments>> that can <<runActivatedStream, run>> a <<logicalPlan, structured query>> at regular intervals on a <<queryExecutionThread, stream execution thread>>.
 
-NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* can be considered synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
+NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* can all be considered synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
 [[contract]]
 .StreamExecution Contract

@@ -120,7 +120,7 @@
 
 == Query Planning and Execution
 
-. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Executions]
+. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Execution Engines]
 .. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper -- Serializable StreamExecution]
 
 . link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter Contract]

@@ -1,8 +1,8 @@
 == Kafka Data Source -- Streaming Data Source for Apache Kafka
 
-*Kafka Data Source* is the data source for https://kafka.apache.org/[Apache Kafka] in Spark Structured Streaming.
+*Kafka Data Source* is the streaming data source for https://kafka.apache.org/[Apache Kafka] in Spark Structured Streaming.
 
-Kafka Data Source can be used as a <<streaming-source, streaming source>> and a <<streaming-sink, streaming sink>>.
+Kafka Data Source can be used as a <<streaming-source, streaming source>> and a <<streaming-sink, streaming sink>> in <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing.
 
 === [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 External Module
 
@@ -37,17 +37,6 @@ val records = spark
 ----
 
 Internally, the *kafka* data source format for reading is available through <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> that is a <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
-
-=== Stream Processing Mode
-
-Kafka Data Source supports stream and batch processing modes (of Spark Structured Streaming and Spark SQL, respectively).
-
-[source, scala]
-----
-// We used spark.readStream above to create records DataFrame
-// And so it is a streaming DataFrame
-assert(records.isStreaming)
-----
 
 === [[schema]] Predefined (Fixed) Schema
 
@@ -115,6 +104,23 @@ root
  |-- value: string (nullable = true)
 ----
 ====
+
+=== [[streaming-sink]] Streaming Sink
+
+With <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 module>> you can use *kafka* data source format for writing the result of executing a streaming query (a streaming Dataset) to one or more Kafka topics.
+
+[source, scala]
+----
+val sq = records
+  .writeStream
+  .format("kafka")
+  .option("kafka.bootstrap.servers", ":9092")
+  .option("topic", "kafka2console-output")
+  .option("checkpointLocation", "checkpointLocation-kafka2console")
+  .start
+----
+
+Internally, the *kafka* data source format for writing is available through <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> that is a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>>.
 
 === [[micro-batch-stream-processing]] Micro-Batch Stream Processing
 
@@ -304,23 +310,6 @@ scala> records.explain(extended = true)
 StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1a366d0, kafka, Map(maxOffsetsPerTrigger -> 1, startingOffsets -> latest, subscribepattern -> topic\d, kafka.bootstrap.servers -> :9092), [key#7, value#8, topic#9, partition#10, offset#11L, timestamp#12, timestampType#13], StreamingRelation DataSource(org.apache.spark.sql.SparkSession@39b3de87,kafka,List(),None,List(),None,Map(maxOffsetsPerTrigger -> 1, startingOffsets -> latest, subscribepattern -> topic\d, kafka.bootstrap.servers -> :9092),None), kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
 ...
 ----
-
-=== [[streaming-sink]] Streaming Sink
-
-With <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 module>> you can use *kafka* data source format for writing the result of executing a streaming query (a streaming Dataset) to one or more Kafka topics.
-
-[source, scala]
-----
-val sq = records
-  .writeStream
-  .format("kafka")
-  .option("kafka.bootstrap.servers", ":9092")
-  .option("topic", "kafka2console-output")
-  .option("checkpointLocation", "checkpointLocation-kafka2console")
-  .start
-----
-
-Internally, the *kafka* data source format for writing is available through <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> that is a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>>.
 
 === [[logical-query-plan-for-writing]] Logical Query Plan for Writing
 
