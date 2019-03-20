@@ -1,8 +1,10 @@
 == [[ConsoleSinkProvider]] ConsoleSinkProvider
 
-`ConsoleSinkProvider` is a `DataSourceV2` with <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> for <<spark-sql-streaming-ConsoleSink.adoc#< ConsoleSink>>.
+`ConsoleSinkProvider` is a `DataSourceV2` with <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> for *console* data source format
 
-`ConsoleSinkProvider` is a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister] that registers the `ConsoleSink` streaming sink as `console` format.
+NOTE: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceV2.html[DataSourceV2 Contract] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+
+`ConsoleSinkProvider` is a <<spark-sql-DataSourceRegister.adoc#, DataSourceRegister>> and registers itself as the *console* data source format.
 
 [source, scala]
 ----
@@ -17,6 +19,29 @@ val q = spark
   .start
 scala> println(q.lastProgress.sink)
 {
-  "description" : "org.apache.spark.sql.execution.streaming.ConsoleSinkProvider@edde9bb"
+  "description" : "org.apache.spark.sql.execution.streaming.ConsoleSinkProvider@2392cfb1"
 }
 ----
+
+[[createStreamWriter]]
+When requested for a <<spark-sql-streaming-StreamWriteSupport.adoc#createStreamWriter, StreamWriter>>, `ConsoleSinkProvider` simply creates a <<spark-sql-streaming-ConsoleWriter.adoc#, ConsoleWriter>> (with the given schema and options).
+
+[[CreatableRelationProvider]]
+`ConsoleSinkProvider` is a <<createRelation, CreatableRelationProvider>>.
+
+NOTE: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-CreatableRelationProvider.html[CreatableRelationProvider Contract -- Data Sources That Write Rows Per Save Mode] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+
+=== [[createRelation]] `createRelation` Method
+
+[source, scala]
+----
+createRelation(
+  sqlContext: SQLContext,
+  mode: SaveMode,
+  parameters: Map[String, String],
+  data: DataFrame): BaseRelation
+----
+
+NOTE: `createRelation` is part of the `CreatableRelationProvider` Contract to support writing a structured query (a DataFrame) per save mode.
+
+`createRelation`...FIXME

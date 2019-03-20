@@ -1,3 +1,3 @@
-== [[StreamWriter]] StreamWriter
+== [[StreamWriter]] StreamWriter Contract
 
 `StreamWriter` is...FIXME

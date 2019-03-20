@@ -6,6 +6,19 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
 
+== (WIP) Extending Structured Streaming
+
+. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
+
+. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- Writable Streaming Data Sources]
+.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter Contract]
+
+. link:spark-sql-streaming-Source.adoc[Streaming Source]
+.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
+
+. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
+.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
+
 == Kafka Data Source
 
 . link:spark-sql-streaming-kafka-data-source.adoc[Kafka Data Source -- Streaming Data Source for Apache Kafka]
@@ -31,14 +44,12 @@
 . link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of Continuous Stream Processing]
 .. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
 
-. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- DataSourceV2 Sinks with Custom StreamWriter]
 . link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Sources with ContinuousReaders]
 . link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
 
 . link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
 . link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
 
-. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter]
 . link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator]
 
 == Micro-Batch Stream Processing (Structured Streaming V1)
@@ -106,7 +117,7 @@
 === Console Data Sink
 
 . link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
-. link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink for Showing DataFrames to Console]
+. link:spark-sql-streaming-ConsoleWriter.adoc[ConsoleWriter]
 
 === Foreach Data Sink
 
@@ -229,16 +240,6 @@
 . link:spark-sql-streaming-webui.adoc[Web UI]
 
 . link:spark-sql-streaming-logging.adoc[Logging]
-
-== Extending Structured Streaming
-
-. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
-
-. link:spark-sql-streaming-Source.adoc[Streaming Source]
-.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
-
-. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
-.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 
 == Demos
 

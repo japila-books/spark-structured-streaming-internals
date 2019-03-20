@@ -209,7 +209,7 @@ query.stop
 
 === [[example-csv-in-console-out]] Example -- Streaming Query over CSV Files with Output to Console Every 5 Seconds
 
-Below you can find a complete example of a streaming query in a form of `DataFrame` of data from `csv-logs` files in `csv` format of a given schema into a link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink] every 5 seconds.
+Below you can find a complete example of a streaming query in a form of `DataFrame` of data from `csv-logs` files in `csv` format of a given schema into a `console` sink every 5 seconds.
 
 TIP: Copy and paste it to Spark Shell in `:paste` mode to run it.
 

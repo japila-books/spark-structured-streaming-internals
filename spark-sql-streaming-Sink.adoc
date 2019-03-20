@@ -29,7 +29,7 @@ trait Sink {
 | Sink
 
 | `console`
-| link:spark-sql-streaming-ConsoleSink.adoc[ConsoleSink]
+|
 
 a| Any `FileFormat`
 
