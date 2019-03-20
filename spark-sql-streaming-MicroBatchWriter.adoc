@@ -1,0 +1,12 @@
+== [[MicroBatchWriter]] MicroBatchWriter -- DataSourceWriter for StreamWriters (Data Source V2)
+
+[[batchId]]
+[[writer]]
+[[creating-instance]]
+[[commit]]
+[[abort]]
+`MicroBatchWriter` is a `DataSourceWriter` that uses the given batch ID as the epoch when requested to commit, abort and create a `WriterFactory` for a given <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>.
+
+NOTE: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceWriter.html[DataSourceWriter Contract] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+
+`MicroBatchWriter` is <<creating-instance, created>> exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a streaming batch>> (with a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> streaming sink).

@@ -57,6 +57,7 @@
 . link:spark-sql-streaming-micro-batch-processing.adoc[Micro-Batch Stream Processing]
 
 . link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
+.. link:spark-sql-streaming-MicroBatchWriter.adoc[MicroBatchWriter -- DataSourceWriter for StreamWriters (Data Source V2)]
 
 . link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders]
 . link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract -- DataSourceReaders For Micro-Batch Stream Processing]

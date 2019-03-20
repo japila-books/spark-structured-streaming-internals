@@ -23,7 +23,7 @@ void abort(
 
 Aborts the writing job for a specified `epochId` and `WriterCommitMessages`
 
-Used exclusively when `MicroBatchWriter` is requested to abort
+Used exclusively when `MicroBatchWriter` is requested to <<spark-sql-streaming-MicroBatchWriter.adoc#abort, abort>>
 
 | commit
 a| [[commit]]
@@ -41,7 +41,7 @@ Used when:
 
 * `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.adoc#commitEpoch, commitEpoch>>
 
-* `MicroBatchWriter` is requested to commit
+* `MicroBatchWriter` is requested to <<spark-sql-streaming-MicroBatchWriter.adoc#commit, commit>>
 
 |===
 
