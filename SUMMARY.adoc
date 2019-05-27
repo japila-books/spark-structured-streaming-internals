@@ -244,6 +244,7 @@
 
 == Demos
 
+. link:spark-sql-streaming-demo-groupByKey-count-Update.adoc[Demo: groupByKey Streaming Aggregation in Update Mode]
 . link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
 . link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
 . link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[groupBy Streaming Aggregation with Append Output Mode]

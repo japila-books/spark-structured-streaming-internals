@@ -3,7 +3,6 @@
 * <<introduction, Introduction>>
 * <<example-aggregating-orders-per-zip-code, Example: Aggregating Orders Per Zip Code>>
 * <<example-aggregating-metrics-per-device, Example: Aggregating Metrics Per Device>>
-* <<credits, Credits>>
 
 === [[introduction]] Introduction
 
@@ -56,27 +55,7 @@ List(value#7)
 
 === [[example-aggregating-orders-per-zip-code]] Example: Aggregating Orders Per Zip Code
 
-The following example shows how to use `groupByKey` to group together customer orders that all together come from the same zip code.
-
-In this example, the key (`K`) is the postal code of each order (`T`).
-
-[source, scala]
-----
-case class Order(id: Long, zipCode: String)
-
-// Generate some orders
-// Use whatever streaming source you like, e.g. kafka, socket, files, memory
-def zipCode(n: Long) = (n % 3).toString * 5
-val orders = (0 to 5).map { n => Order(n, zipCode(n)) }.toDS
-
-scala> :type orders
-org.apache.spark.sql.Dataset[Order]
-
-val byZipCode = (o: Order) => o.zipCode
-val ordersByZipCode = orders.groupByKey(byZipCode)
-scala> :type ordersByZipCode
-org.apache.spark.sql.KeyValueGroupedDataset[String,Order]
-----
+Go to <<spark-sql-streaming-demo-groupByKey-count-Update.adoc#, Demo: groupByKey Streaming Aggregation in Update Mode>>.
 
 === [[example-aggregating-metrics-per-device]] Example: Aggregating Metrics Per Device
 
@@ -102,7 +81,3 @@ val deviceId: ((Timestamp, Long, Int)) => Int = { case (_, _, deviceId) => devic
 scala> val signalsByDevice = signals.groupByKey(deviceId)
 signalsByDevice: org.apache.spark.sql.KeyValueGroupedDataset[Int,(java.sql.Timestamp, Long, Int)] = org.apache.spark.sql.KeyValueGroupedDataset@19d40bc6
 ----
-
-=== [[credits]] Credits
-
-* The example with customer orders and postal codes is borrowed from Apache Beam's https://beam.apache.org/documentation/programming-guide/#transforms-gbk[Using GroupByKey] Programming Guide.
