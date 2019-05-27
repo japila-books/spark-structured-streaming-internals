@@ -60,6 +60,24 @@ The following example shows how to use `groupByKey` to group together customer o
 
 In this example, the key (`K`) is the postal code of each order (`T`).
 
+[source, scala]
+----
+case class Order(id: Long, zipCode: String)
+
+// Generate some orders
+// Use whatever streaming source you like, e.g. kafka, socket, files, memory
+def zipCode(n: Long) = (n % 3).toString * 5
+val orders = (0 to 5).map { n => Order(n, zipCode(n)) }.toDS
+
+scala> :type orders
+org.apache.spark.sql.Dataset[Order]
+
+val byZipCode = (o: Order) => o.zipCode
+val ordersByZipCode = orders.groupByKey(byZipCode)
+scala> :type ordersByZipCode
+org.apache.spark.sql.KeyValueGroupedDataset[String,Order]
+----
+
 === [[example-aggregating-metrics-per-device]] Example: Aggregating Metrics Per Device
 
 The following example code shows how to apply `groupByKey` operator to a structured stream of timestamped values of different devices.
