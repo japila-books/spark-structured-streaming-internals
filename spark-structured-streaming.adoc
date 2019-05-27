@@ -1,12 +1,12 @@
-== Structured Streaming -- Streaming Datasets
+== Spark Structured Streaming -- Streaming Datasets
 
-*Structured Streaming* is a stream processing engine with a high-level declarative streaming API built on top of Spark SQL allowing for link:spark-sql-streaming-StreamingQuery.adoc[continuous incremental execution of a structured query].
+*Spark Structured Streaming* (aka _Spark Streams_) is a stream processing engine in Apache Spark with a <<spark-sql-streaming-Dataset-operators.adoc#, high-level declarative streaming API>> built on top of Spark SQL.
 
 The semantics of the Structured Streaming model is as follows (see the article https://databricks.com/blog/2016/07/28/structured-streaming-in-apache-spark.html[Structured Streaming In Apache Spark]):
 
 > At any time, the output of a continuous application is equivalent to executing a batch job on a prefix of the data.
 
-NOTE: As of Spark 2.2.0, Structured Streaming has been marked stable and ready for production use. With that the other older streaming module Spark Streaming should _de facto_ be considered obsolete and not used for developing new streaming applications with Apache Spark.
+NOTE: As of Spark 2.2.0, Structured Streaming has been marked stable and ready for production use. With that the other older streaming module *Spark Streaming* is considered obsolete and not used for developing new streaming applications with Apache Spark.
 
 Structured Streaming attempts to unify streaming, interactive, and batch queries over structured datasets for developing end-to-end stream processing applications dubbed *continuous applications* using Spark SQL's Datasets API with additional support for the following features:
 

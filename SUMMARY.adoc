@@ -6,7 +6,39 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
 
-== (WIP) Extending Structured Streaming
+== Developing Streaming Applications
+
+. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
+
+. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
+.. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
+.. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
+
+. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
+
+. link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators -- High-Level Declarative Streaming Dataset API]
+.. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator -- Streaming Deduplication]
+.. link:spark-sql-streaming-Dataset-explain.adoc[explain Operator -- Explaining Query Plan]
+.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Untyped Streaming Aggregation (with Implicit State Logic)]
+.. link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey Operator -- Streaming Aggregation]
+.. link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark Operator -- Event Time Watermark]
+
+. link:spark-sql-streaming-window.adoc[window Function -- Stream Time Windows]
+
+. link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator -- Stateful Streaming Aggregation (with Explicit State Logic)]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Streaming Aggregation (with Explicit State Logic)]
+
+. link:spark-sql-streaming-GroupState.adoc[GroupState -- State Per Group in Stateful Streaming Aggregation]
+.. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
+.. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
+
+. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager -- Streaming Query Management]
+
+. link:spark-sql-streaming-SQLConf.adoc[SQLConf -- Internal Configuration Store]
+. link:spark-sql-streaming-properties.adoc[Configuration Properties]
+
+== Extending Structured Streaming
 
 . link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
 
@@ -61,38 +93,6 @@
 
 . link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders]
 . link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract -- DataSourceReaders For Micro-Batch Stream Processing]
-
-== Developing Streaming Applications
-
-. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
-
-. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
-.. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
-.. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
-
-. link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
-
-. link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators / Streaming Dataset API]
-.. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator -- Streaming Deduplication]
-.. link:spark-sql-streaming-Dataset-explain.adoc[explain Operator -- Explaining Query Plan]
-.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Untyped Streaming Aggregation (with Implicit State Logic)]
-.. link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey Operator -- Streaming Aggregation (with Explicit State Logic)]
-.. link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark Operator -- Event Time Watermark]
-
-. link:spark-sql-streaming-window.adoc[window Function -- Stream Time Windows]
-
-. link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
-.. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator -- Stateful Streaming Aggregation (with Explicit State Logic)]
-.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Streaming Aggregation (with Explicit State Logic)]
-
-. link:spark-sql-streaming-GroupState.adoc[GroupState -- State Per Group in Stateful Streaming Aggregation]
-.. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
-.. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
-
-. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager -- Streaming Query Management]
-
-. link:spark-sql-streaming-SQLConf.adoc[SQLConf -- Internal Configuration Store]
-. link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
 === Text Socket Data Source
 
