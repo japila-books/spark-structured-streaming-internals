@@ -2,10 +2,6 @@
     "structure": {
         "readme": "book-intro.adoc"
     },
-    "variables": {
-       "spark.version": "2.2+",
-       "sourcedir": "src/main/scala"
-     },
     "plugins": ["ga"],
     "pluginsConfig": {
         "ga": {
@@ -13,6 +9,6 @@
         }
     },
     "variables": {
-      "version": "2.4.1"
+      "version": "2.4.3"
     }
 }
