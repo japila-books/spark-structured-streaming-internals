@@ -40,56 +40,19 @@ When <<creating-instance, created>> (for a streaming query), `ContinuousExecutio
 
 NOTE: `ContinuousExecution` uses the same instance of `ContinuousExecutionRelation` for the same instances of <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source.
 
-`ContinuousExecution` allows for exactly one <<continuousSources, ContinuousReader>> in the <<logicalPlan, streaming query>> (and asserts it when <<addOffset, addOffset>> and <<commit, commit>>).
+`ContinuousExecution` supports exactly one <<continuousSources, ContinuousReader>> in the <<logicalPlan, streaming query>> only (and asserts it when requested to <<addOffset, addOffset>> and <<commit, commit>>).
 
 When requested to <<runContinuous, run the streaming query>>, `ContinuousExecution` collects <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data sources (inside <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>>) from the <<logicalPlan, analyzed logical plan>> and requests each and every `ContinuousReadSupport` to <<spark-sql-streaming-ContinuousReadSupport.adoc#createContinuousReader, create a ContinuousReader>> (that are stored in <<continuousSources, continuousSources>> internal registry).
-
-[[internal-registries]]
-.ContinuousExecution's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| continuousSources
-a| [[continuousSources]]
-
-[source, scala]
-----
-continuousSources: Seq[ContinuousReader]
-----
-
-Registry of <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReaders>> (in the <<logicalPlan, analyzed logical plan of the streaming query>>)
-
-Used when `ContinuousExecution` is requested to <<commit, commit>>, <<getStartOffsets, getStartOffsets>>, and <<runContinuous, runContinuous>>
-
-Use <<sources, sources>> to access the current value
-
-| currentEpochCoordinatorId
-| [[currentEpochCoordinatorId]] FIXME
-
-Used when...FIXME
-
-| triggerExecutor
-a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
-
-* `ProcessingTimeExecutor` for `ContinuousTrigger`
-
-Used when...FIXME
-
-NOTE: `StreamExecution` throws an `IllegalStateException` when the <<trigger, Trigger>> is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>.
-
-|===
 
 [[logging]]
 [TIP]
 ====
-Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.execution.streaming.continuous.ContinuousExecution` to see what happens inside.
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.continuous.ContinuousExecution` to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.execution.streaming.continuous.ContinuousExecution=DEBUG
+log4j.logger.org.apache.spark.sql.execution.streaming.continuous.ContinuousExecution=ALL
 ```
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
@@ -138,9 +101,19 @@ addOffset(
   partitionOffsets: Seq[PartitionOffset]): Unit
 ----
 
-`addOffset`...FIXME
+`addOffset` requests the given <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.adoc#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and gets the current global offset back.
 
-NOTE: `addOffset` is used when...FIXME
+`addOffset` then requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, OffsetSeqLog>> to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, add>> the current global offset for the given `epoch`.
+
+`addOffset` requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, OffsetSeqLog>> for the <<spark-sql-streaming-HDFSMetadataLog.adoc#get, offset at the previous epoch>>.
+
+If the offsets at the current and previous epochs are the same, `addOffset` turns the <<spark-sql-streaming-StreamExecution.adoc#noNewData, noNewData>> internal flag on.
+
+`addOffset` then acquires the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLock, awaitProgressLock>>, wakes up all threads waiting for the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLockCondition, awaitProgressLockCondition>> and in the end releases the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLock, awaitProgressLock>>.
+
+NOTE: `addOffset` supports exactly one <<continuousSources, continuous source>>.
+
+NOTE: `addOffset` is used exclusively when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.adoc#ReportPartitionOffset, handle a ReportPartitionOffset message>>.
 
 === [[sources]] `sources` Method
 
@@ -233,3 +206,39 @@ Query [prettyIdString] was stopped
 ```
 
 NOTE: <<spark-sql-streaming-StreamExecution.adoc#prettyIdString, prettyIdString>> is in the format of `queryName [id = [id], runId = [runId]]`.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| continuousSources
+a| [[continuousSources]]
+
+[source, scala]
+----
+continuousSources: Seq[ContinuousReader]
+----
+
+Registry of <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReaders>> (in the <<logicalPlan, analyzed logical plan of the streaming query>>)
+
+Used when `ContinuousExecution` is requested to <<commit, commit>>, <<getStartOffsets, getStartOffsets>>, and <<runContinuous, runContinuous>>
+
+Use <<sources, sources>> to access the current value
+
+| currentEpochCoordinatorId
+| [[currentEpochCoordinatorId]] FIXME
+
+Used when...FIXME
+
+| triggerExecutor
+a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
+
+* `ProcessingTimeExecutor` for `ContinuousTrigger`
+
+Used when...FIXME
+
+NOTE: `StreamExecution` throws an `IllegalStateException` when the <<trigger, Trigger>> is not a <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>.
+|===

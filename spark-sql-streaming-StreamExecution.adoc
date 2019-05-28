@@ -276,7 +276,7 @@ Used when:
 NOTE: `availableOffsets` works in tandem with <<committedOffsets, committedOffsets>> registry.
 
 | awaitProgressLock
-| [[awaitProgressLock]] Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention).
+| [[awaitProgressLock]] Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention)
 
 | awaitProgressLockCondition
 | [[awaitProgressLockCondition]]
@@ -332,12 +332,12 @@ Set exclusively when `StreamExecution` is requested to <<runBatch-getBatch, requ
 Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (while <<runBatch, running a single streaming batch>>).
 
 | noNewData
-| [[noNewData]] Flag whether there are any new offsets available for processing or not.
+| [[noNewData]] Flag that indicates whether there are new offsets (_data_) available for processing or not
 
 Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming batch>> when no new offsets are available.
 
 | offsetLog
-a| [[offsetLog]] link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog] with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in when ready for processing.
+a| [[offsetLog]] <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in when ready for processing.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
