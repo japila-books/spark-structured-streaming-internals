@@ -21,6 +21,10 @@
 
 . link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator RPC Endpoint]
 . link:spark-sql-streaming-ContinuousQueuedDataReader.adoc[ContinuousQueuedDataReader]
+.. link:spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.adoc[DataReaderThread]
+.. link:spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.adoc[EpochMarkerGenerator]
+
+. link:spark-sql-streaming-ContinuousDataSourceRDD.adoc[ContinuousDataSourceRDD]
 
 == Developing Streaming Applications
 
