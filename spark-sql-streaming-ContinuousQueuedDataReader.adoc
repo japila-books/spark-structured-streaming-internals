@@ -1,0 +1,14 @@
+== [[ContinuousQueuedDataReader]] ContinuousQueuedDataReader
+
+`ContinuousQueuedDataReader` is...FIXME
+
+=== [[next]] Fetching Next Row -- `next` Method
+
+[source, scala]
+----
+next(): InternalRow
+----
+
+`next`...FIXME
+
+NOTE: `next` is used when...FIXME

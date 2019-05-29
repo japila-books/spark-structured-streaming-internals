@@ -47,7 +47,7 @@ a| [[mergeOffsets]]
 Offset mergeOffsets(PartitionOffset[] offsets)
 ----
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#addOffset, addOffset>>.
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#addOffset, addOffset>>
 
 | needsReconfiguration
 a| [[needsReconfiguration]]

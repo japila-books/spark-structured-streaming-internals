@@ -6,6 +6,22 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
 
+== (WIP) Continuous Stream Processing (Structured Streaming V2)
+
+. link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
+
+. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of Continuous Stream Processing]
+.. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
+
+. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Sources with ContinuousReaders]
+. link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
+
+. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
+. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
+
+. link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator RPC Endpoint]
+. link:spark-sql-streaming-ContinuousQueuedDataReader.adoc[ContinuousQueuedDataReader]
+
 == Developing Streaming Applications
 
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
@@ -68,21 +84,6 @@
 . link:spark-sql-streaming-KafkaMicroBatchReader.adoc[KafkaMicroBatchReader]
 .. link:spark-sql-streaming-KafkaOffsetRangeCalculator.adoc[KafkaOffsetRangeCalculator]
 . link:spark-sql-streaming-KafkaContinuousInputPartition.adoc[KafkaContinuousInputPartition]
-
-== Continuous Stream Processing (Structured Streaming V2)
-
-. link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
-
-. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of Continuous Stream Processing]
-.. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
-
-. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Sources with ContinuousReaders]
-. link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
-
-. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
-. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
-
-. link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator]
 
 == Micro-Batch Stream Processing (Structured Streaming V1)
 

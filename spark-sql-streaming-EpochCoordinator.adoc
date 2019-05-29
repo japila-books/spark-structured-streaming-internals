@@ -1,12 +1,13 @@
-== [[EpochCoordinator]] EpochCoordinator
+== [[EpochCoordinator]] EpochCoordinator RPC Endpoint
 
 `EpochCoordinator` is a `ThreadSafeRpcEndpoint` that receive <<messages, messages>> from...FIXME
 
 `EpochCoordinator` is <<creating-instance, created>> (using <<create, create>> factory method) when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>.
 
 [[messages]]
+[[EpochCoordinatorMessage]]
 .EpochCoordinator RPC Endpoint's Messages
-[cols="1m,3",options="header",width="100%"]
+[cols="30m,70",options="header",width="100%"]
 |===
 | Message
 | Description
@@ -20,8 +21,13 @@
 | IncrementAndGetEpoch
 | [[IncrementAndGetEpoch]]
 
-| ReportPartitionOffset
-| [[ReportPartitionOffset]]
+a| `ReportPartitionOffset`
+
+* [[ReportPartitionOffset-partitionId]] `partitionId`
+* [[ReportPartitionOffset-epoch]] `epoch`
+* [[ReportPartitionOffset-offset]] `PartitionOffset`
+
+| [[ReportPartitionOffset]] Sent out when `ContinuousQueuedDataReader` is requested for the <<spark-sql-streaming-ContinuousQueuedDataReader.adoc#next, next row>> to be read in the current epoch, and the epoch is done
 
 | SetReaderPartitions
 | [[SetReaderPartitions]]
@@ -34,31 +40,18 @@
 
 |===
 
-[[internal-registries]]
-.EpochCoordinator's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| queryWritesStopped
-| [[queryWritesStopped]] Flag that...FIXME
-
-Used when...FIXME
-|===
-
 [[logging]]
 [TIP]
 ====
-Enable `INFO` logging level for `org.apache.spark.sql.execution.streaming.continuous.EpochCoordinatorRef*` logger to see what happens inside.
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.continuous.EpochCoordinatorRef*` logger to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.execution.streaming.continuous.EpochCoordinatorRef*=INFO
+log4j.logger.org.apache.spark.sql.execution.streaming.continuous.EpochCoordinatorRef*=ALL
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
 === [[receive]] Receiving Messages -- `receive` Method
@@ -107,7 +100,7 @@ NOTE: `commitEpoch` is used exclusively when `EpochCoordinator` is requested to 
 * [[session]] `SparkSession`
 * [[rpcEnv]] `RpcEnv`
 
-`EpochCoordinator` initializes the <<internal-registries, internal registries and counters>>.
+`EpochCoordinator` initializes the <<internal-properties, internal properties>>.
 
 === [[create]] Registering EpochCoordinator RPC Endpoint -- `create` Factory Method
 
@@ -132,3 +125,16 @@ Registered EpochCoordinator endpoint
 ```
 
 NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| queryWritesStopped
+| [[queryWritesStopped]] Flag that indicates that...FIXME
+
+Used when...FIXME
+|===
