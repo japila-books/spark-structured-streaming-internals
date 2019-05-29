@@ -101,9 +101,14 @@ addOffset(
   partitionOffsets: Seq[PartitionOffset]): Unit
 ----
 
-`addOffset` requests the given <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.adoc#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and gets the current global offset back.
+In essense, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.adoc#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and then requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, OffsetSeqLog>> to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, register the offset with the given epoch>>.
 
-`addOffset` then requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, OffsetSeqLog>> to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, add>> the current global offset for the given `epoch`.
+.ContinuousExecution.addOffset
+image::images/ContinuousExecution-addOffset.png[align="center"]
+
+Internally, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.adoc#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and to get the current "global" offset back.
+
+`addOffset` then requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, OffsetSeqLog>> to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, add>> the current "global" offset for the given `epoch`.
 
 `addOffset` requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, OffsetSeqLog>> for the <<spark-sql-streaming-HDFSMetadataLog.adoc#get, offset at the previous epoch>>.
 
