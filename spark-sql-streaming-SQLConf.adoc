@@ -22,6 +22,22 @@ org.apache.spark.sql.internal.SQLConf
 | Method Name / Property
 | Description
 
+| `continuousStreamingExecutorQueueSize`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.continuous.executorQueueSize, spark.sql.streaming.continuous.executorQueueSize>>
+
+a| [[continuousStreamingExecutorQueueSize]] Used when:
+
+* `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<spark-sql-streaming-ContinuousDataSourceRDD.adoc#, ContinuousDataSourceRDD>>)
+
+* `ContinuousCoalesceExec` unary physical operator is requested to execute
+
+| `continuousStreamingExecutorPollIntervalMs`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.continuous.executorPollIntervalMs, spark.sql.streaming.continuous.executorPollIntervalMs>>
+
+a| [[continuousStreamingExecutorPollIntervalMs]] Used exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<spark-sql-streaming-ContinuousDataSourceRDD.adoc#, ContinuousDataSourceRDD>>)
+
 | `disabledV2StreamingMicroBatchReaders`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>
