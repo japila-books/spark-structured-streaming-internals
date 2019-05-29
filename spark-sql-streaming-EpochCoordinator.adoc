@@ -27,7 +27,7 @@ a| `ReportPartitionOffset`
 * [[ReportPartitionOffset-epoch]] `epoch`
 * [[ReportPartitionOffset-offset]] `PartitionOffset`
 
-| [[ReportPartitionOffset]] Sent out when `ContinuousQueuedDataReader` is requested for the <<spark-sql-streaming-ContinuousQueuedDataReader.adoc#next, next row>> to be read in the current epoch, and the epoch is done
+| [[ReportPartitionOffset]] Sent out exclusively when `ContinuousQueuedDataReader` is requested for the <<spark-sql-streaming-ContinuousQueuedDataReader.adoc#next, next row>> to be read in the current epoch, and the epoch is done
 
 | SetReaderPartitions
 | [[SetReaderPartitions]]
@@ -35,8 +35,8 @@ a| `ReportPartitionOffset`
 | SetWriterPartitions
 | [[SetWriterPartitions]]
 
-| StopContinuousExecutionWrites
-| [[StopContinuousExecutionWrites]]
+a| `StopContinuousExecutionWrites`
+| [[StopContinuousExecutionWrites]] Send out exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>> (and it finishes successfully or not)
 
 |===
 
@@ -126,6 +126,17 @@ Registered EpochCoordinator endpoint
 
 NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>.
 
+=== [[receiveAndReply]] Receiving Messages (Synchronous Mode) -- `receiveAndReply` Method
+
+[source, scala]
+----
+receiveAndReply(context: RpcCallContext): PartialFunction[Any, Unit]
+----
+
+NOTE: `receiveAndReply` is part of the `RpcEndpoint` Contract in Apache Spark to receive and reply to messages.
+
+`receiveAndReply`...FIXME
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -134,7 +145,9 @@ NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<
 | Description
 
 | queryWritesStopped
-| [[queryWritesStopped]] Flag that indicates that...FIXME
+| [[queryWritesStopped]] Flag that indicates whether to drop messages (`true`) or not (`false`) when requested to <<receiveAndReply, handle one synchronously>>
 
-Used when...FIXME
+Default: `false`
+
+Turned on (`true`) when requested to <<StopContinuousExecutionWrites, handle a synchronous StopContinuousExecutionWrites message>>
 |===
