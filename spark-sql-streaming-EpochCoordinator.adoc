@@ -1,4 +1,4 @@
-== [[EpochCoordinator]] EpochCoordinator RPC Endpoint -- Coordinating Epochs and Offsets Between Partition Tasks
+== [[EpochCoordinator]] EpochCoordinator RPC Endpoint -- Coordinating Epochs and Offsets Across Partition Tasks
 
 `EpochCoordinator` is a `ThreadSafeRpcEndpoint` that tracks offsets and epochs (_coordinates epochs_) by handling <<messages, messages>> (in <<receive, fire-and-forget one-way>> and <<receiveAndReply, request-response two-way>> modes) from...FIXME
 
