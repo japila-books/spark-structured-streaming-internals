@@ -11,21 +11,27 @@
 . link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
 
 . link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of Continuous Stream Processing]
-.. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
 
-. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract -- Data Sources with ContinuousReaders]
-. link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing]
+. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract]
+. link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract]
 
 . link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
 . link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
 
 . link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator RPC Endpoint]
+.. link:spark-sql-streaming-EpochCoordinatorRef.adoc[EpochCoordinatorRef]
+.. link:spark-sql-streaming-EpochTracker.adoc[EpochTracker]
+
 . link:spark-sql-streaming-ContinuousQueuedDataReader.adoc[ContinuousQueuedDataReader]
 .. link:spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.adoc[DataReaderThread]
 .. link:spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.adoc[EpochMarkerGenerator]
 
 . link:spark-sql-streaming-PartitionOffset.adoc[PartitionOffset]
-. link:spark-sql-streaming-ContinuousWriteRDD.adoc[ContinuousWriteRDD]
+
+. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
+. link:spark-sql-streaming-WriteToContinuousDataSourceExec.adoc[WriteToContinuousDataSourceExec Leaf Physical Operator]
+.. link:spark-sql-streaming-ContinuousWriteRDD.adoc[ContinuousWriteRDD]
+
 . link:spark-sql-streaming-ContinuousDataSourceRDD.adoc[ContinuousDataSourceRDD]
 
 == Developing Streaming Applications

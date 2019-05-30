@@ -4,6 +4,12 @@
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
+[[EPOCH_COORDINATOR_ID_KEY]]
+`ContinuousExecution` uses *__epoch_coordinator_id* local property for...FIXME
+
+[[START_EPOCH_KEY]]
+`ContinuousExecution` uses *__continuous_start_epoch* local property for...FIXME
+
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.Trigger

@@ -1,0 +1,3 @@
+== [[EpochCoordinatorRef]] EpochCoordinatorRef
+
+`EpochCoordinatorRef` is...FIXME

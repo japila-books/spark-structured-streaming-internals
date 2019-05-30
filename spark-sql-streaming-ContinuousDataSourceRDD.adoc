@@ -1,6 +1,6 @@
 == [[ContinuousDataSourceRDD]] ContinuousDataSourceRDD -- Input RDD of DataSourceV2ScanExec Physical Operator with ContinuousReader
 
-`ContinuousDataSourceRDD` is a specialized `RDD` of `InternalRows` (`RDD[InternalRow]`) that is used exclusively for the only input RDD (with the input rows) of `DataSourceV2ScanExec` leaf physical operator with a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>.
+`ContinuousDataSourceRDD` is a specialized `RDD` (`RDD[InternalRow]`) that is used exclusively for the only input RDD (with the input rows) of `DataSourceV2ScanExec` leaf physical operator with a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>.
 
 `ContinuousDataSourceRDD` is <<creating-instance, created>> exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (which there is only one actually).
 
@@ -25,7 +25,9 @@
 
 [source, scala]
 ----
-compute(split: Partition, context: TaskContext): Iterator[InternalRow]
+compute(
+  split: Partition,
+  context: TaskContext): Iterator[InternalRow]
 ----
 
 NOTE: `compute` is part of the `RDD` Contract to compute a partition.

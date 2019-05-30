@@ -1,14 +1,32 @@
-== [[ContinuousWriteRDD]] ContinuousWriteRDD
+== [[ContinuousWriteRDD]] ContinuousWriteRDD -- RDD of WriteToContinuousDataSourceExec Unary Physical Operator
 
-`ContinuousWriteRDD` is...FIXME
+`ContinuousWriteRDD` is a specialized `RDD` (`RDD[Unit]`) that is used exclusively as the underlying RDD of `WriteToContinuousDataSourceExec` unary physical operator.
+
+`ContinuousWriteRDD` is <<creating-instance, created>> exclusively when `WriteToContinuousDataSourceExec` unary physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, execute and generate an RDD>>.
+
+[[partitioner]]
+[[getPartitions]]
+`ContinuousWriteRDD` uses the <<prev, parent RDD>> for the partitions and the partitioner.
+
+[[creating-instance]]
+`ContinuousWriteRDD` takes the following to be created:
+
+* [[prev]] Parent `RDD[InternalRow]`
+* [[writeTask]] Write task (`DataWriterFactory[InternalRow]`)
 
 === [[compute]] Computing Partition -- `compute` Method
 
 [source, scala]
 ----
-compute(split: Partition, context: TaskContext): Iterator[InternalRow]
+compute(
+  split: Partition,
+  context: TaskContext): Iterator[Unit]
 ----
 
 NOTE: `compute` is part of the `RDD` Contract to compute a partition.
+
+`compute` requests the `EpochCoordinatorRef` helper for a <<spark-sql-streaming-EpochCoordinatorRef.adoc#get, remote reference to the EpochCoordinator RPC endpoint>> (using the <<spark-sql-streaming-ContinuousExecution.adoc#EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id local property>>).
+
+`compute` then uses the `EpochTracker` helper to <<spark-sql-streaming-EpochTracker.adoc#initializeCurrentEpoch, initializeCurrentEpoch>> (using the <<spark-sql-streaming-ContinuousExecution.adoc#START_EPOCH_KEY, __continuous_start_epoch local property>>).
 
 `compute`...FIXME
