@@ -1,0 +1,14 @@
+== [[ContinuousWriteRDD]] ContinuousWriteRDD
+
+`ContinuousWriteRDD` is...FIXME
+
+=== [[compute]] Computing Partition -- `compute` Method
+
+[source, scala]
+----
+compute(split: Partition, context: TaskContext): Iterator[InternalRow]
+----
+
+NOTE: `compute` is part of the `RDD` Contract to compute a partition.
+
+`compute`...FIXME

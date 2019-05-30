@@ -24,6 +24,8 @@
 .. link:spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.adoc[DataReaderThread]
 .. link:spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.adoc[EpochMarkerGenerator]
 
+. link:spark-sql-streaming-PartitionOffset.adoc[PartitionOffset]
+. link:spark-sql-streaming-ContinuousWriteRDD.adoc[ContinuousWriteRDD]
 . link:spark-sql-streaming-ContinuousDataSourceRDD.adoc[ContinuousDataSourceRDD]
 
 == Developing Streaming Applications
