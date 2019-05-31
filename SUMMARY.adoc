@@ -29,7 +29,8 @@
 . link:spark-sql-streaming-PartitionOffset.adoc[PartitionOffset]
 
 . link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
-. link:spark-sql-streaming-WriteToContinuousDataSourceExec.adoc[WriteToContinuousDataSourceExec Leaf Physical Operator]
+. link:spark-sql-streaming-WriteToContinuousDataSource.adoc[WriteToContinuousDataSource Unary Logical Operator]
+. link:spark-sql-streaming-WriteToContinuousDataSourceExec.adoc[WriteToContinuousDataSourceExec Unary Physical Operator]
 .. link:spark-sql-streaming-ContinuousWriteRDD.adoc[ContinuousWriteRDD]
 
 . link:spark-sql-streaming-ContinuousDataSourceRDD.adoc[ContinuousDataSourceRDD]

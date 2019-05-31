@@ -1,0 +1,3 @@
+== [[WriteToContinuousDataSource]] WriteToContinuousDataSource Unary Logical Operator
+
+`WriteToContinuousDataSource` is...FIXME
