@@ -7,6 +7,7 @@
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-DataSourceV2Strategy.html[DataSourceV2Strategy Execution Planning Strategy] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
 
+[[creating-instance]]
 `WriteToContinuousDataSourceExec` takes the following to be created:
 
 * [[writer]] <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>
