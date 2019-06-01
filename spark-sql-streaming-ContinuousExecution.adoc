@@ -1,14 +1,13 @@
-== [[ContinuousExecution]] ContinuousExecution -- StreamExecution in Continuous Stream Processing
+== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of Continuous Stream Processing
 
-`ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
+`ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> of <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
-[[EPOCH_COORDINATOR_ID_KEY]]
-`ContinuousExecution` uses *__epoch_coordinator_id* local property for...FIXME
+`ContinuousExecution` can only run streaming queries with <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source.
 
-[[START_EPOCH_KEY]]
-`ContinuousExecution` uses *__continuous_start_epoch* local property for...FIXME
+[[sources]]
+`ContinuousExecution` supports one <<continuousSources, ContinuousReader>> in a <<logicalPlan, streaming query>> only (and asserts it when <<addOffset, addOffset>> and <<commit, committing an epoch>>). When requested for available <<spark-sql-streaming-ProgressReporter.adoc#sources, streaming sources>>, `ContinuousExecution` simply gives the <<continuousSources, single ContinuousReader>>.
 
 [source, scala]
 ----
@@ -40,15 +39,17 @@ val continuousEngine = engine.asInstanceOf[ContinuousExecution]
 assert(continuousEngine.trigger == Trigger.Continuous(1.minute))
 ----
 
-`ContinuousExecution` can only run streaming queries with <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source.
-
 When <<creating-instance, created>> (for a streaming query), `ContinuousExecution` is given the <<analyzedPlan, analyzed logical plan>>. The analyzed logical plan is immediately transformed to include a <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> for every <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source (and is the <<logicalPlan, logical plan>> internally).
 
 NOTE: `ContinuousExecution` uses the same instance of `ContinuousExecutionRelation` for the same instances of <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data source.
 
-`ContinuousExecution` supports exactly one <<continuousSources, ContinuousReader>> in the <<logicalPlan, streaming query>> only (and asserts it when requested to <<addOffset, addOffset>> and <<commit, commit>>).
-
 When requested to <<runContinuous, run the streaming query>>, `ContinuousExecution` collects <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data sources (inside <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>>) from the <<logicalPlan, analyzed logical plan>> and requests each and every `ContinuousReadSupport` to <<spark-sql-streaming-ContinuousReadSupport.adoc#createContinuousReader, create a ContinuousReader>> (that are stored in <<continuousSources, continuousSources>> internal registry).
+
+[[EPOCH_COORDINATOR_ID_KEY]]
+`ContinuousExecution` uses *__epoch_coordinator_id* local property for...FIXME
+
+[[START_EPOCH_KEY]]
+`ContinuousExecution` uses *__continuous_start_epoch* local property for...FIXME
 
 [[logging]]
 [TIP]
@@ -64,7 +65,49 @@ log4j.logger.org.apache.spark.sql.execution.streaming.continuous.ContinuousExecu
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
-=== [[getStartOffsets]] `getStartOffsets` Internal Method
+=== [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
+
+[source, scala]
+----
+runActivatedStream(sparkSessionForStream: SparkSession): Unit
+----
+
+NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run a streaming query.
+
+`runActivatedStream` simply <<runContinuous, runs the streaming query in continuous mode>> as long as the <<spark-sql-streaming-StreamExecution.adoc#state, state>> is <<spark-sql-streaming-StreamExecution.adoc#ACTIVE, ACTIVE>>.
+
+=== [[runContinuous]] Running Streaming Query in Continuous Mode -- `runContinuous` Internal Method
+
+[source, scala]
+----
+runContinuous(sparkSessionForQuery: SparkSession): Unit
+----
+
+`runContinuous` initializes the <<continuousSources, continuousSources>> internal registry by traversing the <<logicalPlan, analyzed logical plan>> to find <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> leaf logical operators and requests their <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport data sources>> to <<spark-sql-streaming-ContinuousReadSupport.adoc#createContinuousReader, create a ContinuousReader>> (with the *sources* metadata directory under the <<spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot, checkpoint directory>>).
+
+`runContinuous` initializes the <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, uniqueSources>> internal registry to be the <<continuousSources, continuousSources>> distinct.
+
+`runContinuous` <<getStartOffsets, gets the start offsets>> (they may or may not be available).
+
+`runContinuous` transforms the <<logicalPlan, analyzed logical plan>>. For every <<spark-sql-streaming-ContinuousExecutionRelation.adoc#, ContinuousExecutionRelation>> `runContinuous` finds the corresponding <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> (in the <<continuousSources, continuousSources>>), requests it to <<spark-sql-streaming-ContinuousReader.adoc#deserializeOffset, deserialize the start offsets>> (from their JSON representation), and then <<spark-sql-streaming-ContinuousReader.adoc#setStartOffset, setStartOffset>>. In the end, `runContinuous` creates a `StreamingDataSourceV2Relation` (with the read schema of the `ContinuousReader` and the `ContinuousReader` itself).
+
+`runContinuous` rewires the transformed plan (with the `StreamingDataSourceV2Relation`) to use the new attributes from the source (the reader).
+
+NOTE: `CurrentTimestamp` and `CurrentDate` expressions are not supported for continuous processing.
+
+`runContinuous` requests the <<sink, StreamWriteSupport>> to <<spark-sql-streaming-StreamWriteSupport.adoc#createStreamWriter, create a StreamWriter>> (with the <<spark-sql-streaming-StreamExecution.adoc#runId, run ID of the streaming query>>).
+
+`runContinuous` creates a <<spark-sql-streaming-WriteToContinuousDataSource.adoc#, WriteToContinuousDataSource>> (with the <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>> and the transformed logical query plan).
+
+`runContinuous` finds the only <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
+
+In *queryPlanning* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runContinuous` creates a <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> (that becomes the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, lastExecution>>) that is immediately executed (i.e. the entire query execution pipeline is executed with no internal RDD generation).
+
+`runContinuous`...FIXME
+
+NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
+
+==== [[getStartOffsets]] Retrieving Start Offsets -- `getStartOffsets` Internal Method
 
 [source, scala]
 ----
@@ -73,7 +116,7 @@ getStartOffsets(sparkSessionToRunBatches: SparkSession): OffsetSeq
 
 `getStartOffsets`...FIXME
 
-NOTE: `getStartOffsets` is used when...FIXME
+NOTE: `getStartOffsets` is used exclusively when `ContinuousExecution` is requested to <<runContinuous, run a streaming query in continuous mode>>.
 
 === [[commit]] Committing Epoch -- `commit` Method
 
@@ -85,17 +128,6 @@ commit(epoch: Long): Unit
 `commit`...FIXME
 
 NOTE: `commit` is used exclusively when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.adoc#commitEpoch, commitEpoch>>.
-
-=== [[awaitEpoch]] `awaitEpoch` Internal Method
-
-[source, scala]
-----
-awaitEpoch(epoch: Long): Unit
-----
-
-`awaitEpoch`...FIXME
-
-NOTE: `awaitEpoch` is used when...FIXME
 
 === [[addOffset]] `addOffset` Method
 
@@ -126,17 +158,6 @@ NOTE: `addOffset` supports exactly one <<continuousSources, continuous source>>.
 
 NOTE: `addOffset` is used exclusively when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.adoc#ReportPartitionOffset, handle a ReportPartitionOffset message>>.
 
-=== [[sources]] `sources` Method
-
-[source, scala]
-----
-sources: Seq[BaseStreamingSource]
-----
-
-NOTE: `sources` is part of <<spark-sql-streaming-ProgressReporter.adoc#sources, ProgressReporter Contract>> to...FIXME.
-
-`sources`...FIXME
-
 === [[logicalPlan]] Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
 
 [source, scala]
@@ -158,28 +179,6 @@ Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>>
 Data source [name] does not support continuous processing.
 ```
 
-=== [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
-
-[source, scala]
-----
-runActivatedStream(sparkSessionForStream: SparkSession): Unit
-----
-
-NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run a streaming query.
-
-`runActivatedStream`...FIXME
-
-=== [[runContinuous]] Running Streaming Query in Continuous Mode -- `runContinuous` Internal Method
-
-[source, scala]
-----
-runContinuous(sparkSessionForQuery: SparkSession): Unit
-----
-
-`runContinuous`...FIXME
-
-NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, execute an activated streaming query>>.
-
 === [[creating-instance]] Creating ContinuousExecution Instance
 
 `ContinuousExecution` takes the following when created:
@@ -195,7 +194,7 @@ NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requeste
 * [[extraOptions]] Options (`Map[String, String]`)
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 
-`ContinuousExecution` initializes the <<internal-registries, internal registries and counters>>.
+`ContinuousExecution` initializes the <<internal-properties, internal properties>>.
 
 === [[stop]] Stopping Streaming Query -- `stop` Method
 
@@ -204,7 +203,7 @@ NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requeste
 stop(): Unit
 ----
 
-NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop the streaming query.
+NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop a streaming query.
 
 `stop` transitions the streaming query to `TERMINATED` state.
 
@@ -217,6 +216,17 @@ Query [prettyIdString] was stopped
 ```
 
 NOTE: <<spark-sql-streaming-StreamExecution.adoc#prettyIdString, prettyIdString>> is in the format of `queryName [id = [id], runId = [runId]]`.
+
+=== [[awaitEpoch]] `awaitEpoch` Internal Method
+
+[source, scala]
+----
+awaitEpoch(epoch: Long): Unit
+----
+
+`awaitEpoch`...FIXME
+
+NOTE: `awaitEpoch` seems to be used exclusively in tests.
 
 === [[internal-properties]] Internal Properties
 
@@ -247,7 +257,7 @@ Used when...FIXME
 | triggerExecutor
 a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
 
-* `ProcessingTimeExecutor` for `ContinuousTrigger`
+* `ProcessingTimeExecutor` for <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>
 
 Used when...FIXME
 

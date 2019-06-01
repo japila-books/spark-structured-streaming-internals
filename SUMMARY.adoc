@@ -10,7 +10,7 @@
 
 . link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
 
-. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution -- StreamExecution of Continuous Stream Processing]
+. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution]
 
 . link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract]
 . link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract]

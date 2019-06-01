@@ -412,11 +412,12 @@ NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for 
 Used when `StreamExecution` is requested to <<start, start>> to pause the main thread until `StreamExecution` was requested to <<runStream, run the streaming query>>.
 
 | state
-a| [[state]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the three different states a streaming query execution can be:
+a| [[state]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the state of a streaming query execution:
 
 * `INITIALIZING` (default)
-* `ACTIVE` (after the first execution of <<runBatches, runBatches>>)
+* [[ACTIVE]] `ACTIVE` (after the first execution of <<runBatches, runBatches>>)
 * `TERMINATED`
+* [[RECONFIGURING]] `RECONFIGURING`
 
 | streamDeathCause
 | [[streamDeathCause]] `StreamingQueryException`
