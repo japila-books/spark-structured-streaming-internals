@@ -51,6 +51,9 @@ When requested to <<runContinuous, run the streaming query>>, `ContinuousExecuti
 [[START_EPOCH_KEY]]
 `ContinuousExecution` uses *__continuous_start_epoch* local property for...FIXME
 
+[[EPOCH_INTERVAL_KEY]]
+`ContinuousExecution` uses *__continuous_epoch_interval* local property for...FIXME
+
 [[logging]]
 [TIP]
 ====
@@ -101,7 +104,21 @@ NOTE: `CurrentTimestamp` and `CurrentDate` expressions are not supported for con
 
 `runContinuous` finds the only <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
 
-In *queryPlanning* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runContinuous` creates a <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> (that becomes the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, lastExecution>>) that is immediately executed (i.e. the entire query execution pipeline is executed with no internal RDD generation).
+In *queryPlanning* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runContinuous` creates an <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> (that becomes the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, lastExecution>>) that is immediately executed (i.e. the entire query execution pipeline is executed up to and including _executedPlan_).
+
+`runContinuous` sets the following local properties:
+
+* <<spark-sql-streaming-StreamExecution.adoc#IS_CONTINUOUS_PROCESSING, IS_CONTINUOUS_PROCESSING>> as `true`
+
+* <<START_EPOCH_KEY, START_EPOCH_KEY>> as the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>
+
+* <<EPOCH_COORDINATOR_ID_KEY, EPOCH_COORDINATOR_ID_KEY>> as the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, i.e. <<spark-sql-streaming-StreamExecution.adoc#runId, runId>> followed by `--` with a random UUID
+
+* <<EPOCH_INTERVAL_KEY, EPOCH_INTERVAL_KEY>> as the interval of the <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>
+
+`runContinuous` uses the `EpochCoordinatorRef` helper to <<spark-sql-streaming-EpochCoordinatorRef.adoc#create, create a remote reference to the EpochCoordinator RPC endpoint>> (with the <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>, the <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>, the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>).
+
+NOTE: The <<spark-sql-streaming-EpochCoordinator.adoc#, EpochCoordinator RPC endpoint>> runs on the driver as the single point to coordinate epochs across partition tasks.
 
 `runContinuous`...FIXME
 

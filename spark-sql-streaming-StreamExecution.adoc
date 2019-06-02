@@ -227,6 +227,9 @@ The <<name, name>>, <<id, id>> and <<runId, runId>> are all unique across all ac
 [[streamMetadata]]
 `StreamExecution` uses a <<spark-sql-streaming-StreamMetadata.adoc#, StreamMetadata>> that is <<spark-sql-streaming-StreamMetadata.adoc#write, persisted>> in the `metadata` file in the <<checkpointFile, checkpoint directory>>. If the `metadata` file is available it is <<spark-sql-streaming-StreamMetadata.adoc#read, read>> and is the way to recover the <<id, ID>> of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
 
+[[IS_CONTINUOUS_PROCESSING]]
+`StreamExecution` uses *__is_continuous_processing* local property to...FIXME
+
 [[internal-registries]]
 .StreamExecution's Internal Registries and Counters (in alphabetical order)
 [cols="1m,2",options="header",width="100%"]
