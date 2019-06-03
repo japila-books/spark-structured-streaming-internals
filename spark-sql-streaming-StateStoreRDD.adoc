@@ -35,14 +35,16 @@ image::images/StateStoreRDD-StateStoreCoordinator.png[align="center"]
 | Configuration parameters (as `StateStoreConf`) using the current `SQLConf` (from `SessionState`)
 |===
 
-=== [[compute]] Computing Partition (in TaskContext) -- `compute` Method
+=== [[compute]] Computing Partition -- `compute` Method
 
 [source, scala]
 ----
-compute(partition: Partition, ctxt: TaskContext): Iterator[U]
+compute(
+  partition: Partition,
+  ctxt: TaskContext): Iterator[U]
 ----
 
-NOTE: `compute` is a part of the RDD Contract to compute a given partition in a `TaskContext`.
+NOTE: `compute` is part of the RDD Contract to compute a given partition.
 
 `compute` computes <<dataRDD, dataRDD>> passing the result on to <<storeUpdateFunction, storeUpdateFunction>> (with a configured link:spark-sql-streaming-StateStore.adoc[StateStore]).
 
