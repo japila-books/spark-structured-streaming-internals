@@ -76,9 +76,16 @@ NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataL
 
 `get`...FIXME
 
-=== [[add]] `add` Method
+=== [[add]] Storing Batch Metadata -- `add` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+add(batchId: Long, metadata: T): Boolean
+----
+
+NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to...FIXME.
+
+`add`...FIXME
 
 === [[getLatest]] Retrieving Latest Committed Batch Id with Metadata If Available -- `getLatest` Method
 
@@ -107,3 +114,14 @@ NOTE: It is possible that the batch id could be in the metadata storage, but not
 `HDFSMetadataLog` initializes the <<internal-registries, internal registries and counters>>.
 
 `HDFSMetadataLog` creates the <<path, path>> unless exists already.
+
+=== [[purge]] Removing Log Entries (Purging) -- `purge` Method
+
+[source, scala]
+----
+purge(thresholdBatchId: Long): Unit
+----
+
+NOTE: `purge` is part of the <<spark-sql-streaming-MetadataLog.adoc#purge, MetadataLog Contract>> to...FIXME.
+
+`purge`...FIXME

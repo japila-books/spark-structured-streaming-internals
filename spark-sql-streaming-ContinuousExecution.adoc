@@ -148,7 +148,27 @@ NOTE: `getStartOffsets` is used exclusively when `ContinuousExecution` is reques
 commit(epoch: Long): Unit
 ----
 
-`commit`...FIXME
+In essence, `commit` <<spark-sql-streaming-HDFSMetadataLog.adoc#add, adds>> the given epoch to <<spark-sql-streaming-StreamExecution.adoc#commitLog, commit log>> and the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>>, and requests the <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.adoc#commit, commit the corresponding offset>>. In the end, `commit` <<spark-sql-streaming-HDFSMetadataLog.adoc#purge, removes log entries>> from the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, offset>> and <<spark-sql-streaming-StreamExecution.adoc#commitLog, commit>> logs to keep <<spark-sql-streaming-StreamExecution.adoc#minLogEntriesToMaintain, spark.sql.streaming.minBatchesToRetain>> only.
+
+Internally, `commit` <<spark-sql-streaming-ProgressReporter.adoc#recordTriggerOffsets, recordTriggerOffsets>> (with the from and to offsets as the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> and <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, availableOffsets>>, respectively).
+
+At this point, `commit` may simply return when the <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, stream execution thread>> is no longer alive (died).
+
+`commit` requests the <<spark-sql-streaming-StreamExecution.adoc#commitLog, commit log>> to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, store a metadata>> for the epoch.
+
+`commit` requests the single <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.adoc#deserializeOffset, deserialize the offset>> for the epoch (from the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, offset write-ahead log>>).
+
+`commit` adds the single <<continuousSources, ContinuousReader>> and the offset (for the epoch) to the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> registry.
+
+`commit` requests the single <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.adoc#commit, commit the offset>>.
+
+`commit` requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, offset>> and <<spark-sql-streaming-StreamExecution.adoc#commitLog, commit>> logs to <<spark-sql-streaming-HDFSMetadataLog.adoc#purge, remove log entries>> to keep <<spark-sql-streaming-StreamExecution.adoc#minLogEntriesToMaintain, spark.sql.streaming.minBatchesToRetain>> only.
+
+`commit` then acquires the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLock, awaitProgressLock>>, wakes up all threads waiting for the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLockCondition, awaitProgressLockCondition>> and in the end releases the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLock, awaitProgressLock>>.
+
+NOTE: `commit` supports only one continuous source (registered in the <<continuousSources, continuousSources>> internal registry).
+
+`commit` asserts that the given epoch is available in the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, offsetLog>> internal registry (i.e. the offset for the given epoch has been reported before).
 
 NOTE: `commit` is used exclusively when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.adoc#commitEpoch, commitEpoch>>.
 
@@ -267,6 +287,8 @@ continuousSources: Seq[ContinuousReader]
 ----
 
 Registry of <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReaders>> (in the <<logicalPlan, analyzed logical plan of the streaming query>>)
+
+As asserted in <<commit, commit>> and <<addOffset, addOffset>> there could only be exactly one `ContinuousReaders` registered.
 
 Used when `ContinuousExecution` is requested to <<commit, commit>>, <<getStartOffsets, getStartOffsets>>, and <<runContinuous, runContinuous>>
 

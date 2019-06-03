@@ -1,6 +1,6 @@
-== [[ContinuousReader]] ContinuousReader Contract -- DataSourceReaders For Continuous Stream Processing
+== [[ContinuousReader]] ContinuousReader Contract -- Continuous Source in Continuous Stream Processing
 
-`ContinuousReader` is the <<contract, extension>> of the `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> that manage offsets in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
+`ContinuousReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> that manage offsets in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
 
 [[contract]]
 .ContinuousReader Contract
@@ -17,6 +17,8 @@ a| [[commit]]
 void commit(Offset end)
 ----
 
+Commits the specified <<spark-sql-streaming-Offset.adoc#, offset>>
+
 Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
 
 | deserializeOffset
@@ -26,6 +28,8 @@ a| [[deserializeOffset]]
 ----
 Offset deserializeOffset(String json)
 ----
+
+Deserializes an <<spark-sql-streaming-Offset.adoc#, offset>> from JSON representation
 
 Used when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query>> and <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
 

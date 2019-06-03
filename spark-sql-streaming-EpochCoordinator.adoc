@@ -109,7 +109,7 @@ resolveCommitsAtEpoch(epoch: Long): Unit
 
 `resolveCommitsAtEpoch`...FIXME
 
-NOTE: `resolveCommitsAtEpoch` is used exclusively when `EpochCoordinator` is requested to <<receive, receive>> `CommitPartitionEpoch` and <<ReportPartitionOffset, ReportPartitionOffset>> messages.
+NOTE: `resolveCommitsAtEpoch` is used exclusively when `EpochCoordinator` is requested to handle <<CommitPartitionEpoch, CommitPartitionEpoch>> and <<ReportPartitionOffset, ReportPartitionOffset>> messages.
 
 ==== [[commitEpoch]] `commitEpoch` Internal Method
 

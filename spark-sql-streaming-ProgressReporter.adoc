@@ -423,3 +423,23 @@ extractStateOperatorMetrics(hasNewData: Boolean): Seq[StateOperatorProgress]
 `extractStateOperatorMetrics`...FIXME
 
 NOTE: `extractStateOperatorMetrics` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
+
+=== [[recordTriggerOffsets]] `recordTriggerOffsets` Method
+
+[source, scala]
+----
+recordTriggerOffsets(
+  from: StreamProgress,
+  to: StreamProgress): Unit
+----
+
+`recordTriggerOffsets`...FIXME
+
+[NOTE]
+====
+`recordTriggerOffsets` is used when:
+
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>
+
+* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
+====

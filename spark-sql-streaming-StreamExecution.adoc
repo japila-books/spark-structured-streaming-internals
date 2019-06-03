@@ -39,6 +39,10 @@ Used exclusively when `StreamExecution` is requested to <<runStream, run the str
 
 |===
 
+[[minLogEntriesToMaintain]]
+[[spark.sql.streaming.minBatchesToRetain]]
+`StreamExecution` uses...FIXME
+
 [[extensions]]
 .StreamExecutions
 [cols="1,2",options="header",width="100%"]
@@ -288,7 +292,7 @@ NOTE: `availableOffsets` works in tandem with <<committedOffsets, committedOffse
 | [[callSite]]
 
 | commitLog
-a| [[commitLog]] <<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>> for completed streaming batches (with a single file per batch with a file name being the batch id).
+a| [[commitLog]] *Commit Log* (<<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>>) for completed streaming batches (with a single file per batch with a file name being the batch id) or committed epochs.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
@@ -299,9 +303,9 @@ Used exclusively by the <<extensions, extensions>> for the following:
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>, <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>, and <<spark-sql-streaming-ContinuousExecution.adoc#awaitEpoch, awaitEpoch>>
 
 | committedOffsets
-a| [[committedOffsets]] <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of the streaming sources and the committed offsets (i.e. processed already).
+a| [[committedOffsets]] *Committed offsets* (<<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of pairs of the streaming sources and the offsets they already processed)
 
-NOTE: `committedOffsets` is a part of link:spark-sql-streaming-ProgressReporter.adoc#committedOffsets[ProgressReporter Contract].
+`committedOffsets` is a part of the link:spark-sql-streaming-ProgressReporter.adoc#committedOffsets[ProgressReporter Contract]
 
 | currentBatchId
 a| [[currentBatchId]] Current batch number
@@ -340,7 +344,7 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces Stre
 Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming batch>> when no new offsets are available.
 
 | offsetLog
-a| [[offsetLog]] <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>> for *write-ahead log* to record offsets in when ready for processing.
+a| [[offsetLog]] *Offset write-ahead log* (<<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>>) to record offsets in when ready for processing.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
