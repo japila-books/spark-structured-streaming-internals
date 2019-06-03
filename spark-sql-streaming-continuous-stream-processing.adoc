@@ -1,8 +1,12 @@
 == Continuous Stream Processing (Structured Streaming V2)
 
-*Continuous Stream Processing* is a new stream processing model in Spark Structured Streaming (often referred as *Structured Streaming V2*) that is used for <<spark-sql-streaming-Trigger.adoc#Continuous, Trigger.Continuous>> trigger.
+*Continuous Stream Processing* is one of the two stream processing engines in <<spark-structured-streaming.adoc#, Spark Structured Streaming>> that is used for <<spark-sql-streaming-Trigger.adoc#Continuous, Trigger.Continuous>> trigger.
 
-Continuous stream processing uses <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> as the stream execution engine.
+NOTE: The other feature-richer stream processing engine is <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>.
+
+Not only does Continuous Stream Processing engine use the novel Data Source API V2 (in Spark SQL) but also makes stream processing really continuous and is often referred as *Structured Streaming V2*.
+
+NOTE: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-data-source-api-v2.html[Data Source API V2] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 [source, scala]
 ----
@@ -19,15 +23,35 @@ val sq = spark
   .queryName("rate2console")
   .start
 
+scala> :type sq
+org.apache.spark.sql.streaming.StreamingQuery
+
 assert(sq.isActive)
+
+// sq.stop
+----
+
+Continuous Stream Processing uses <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> stream execution engine internally. When requested to <<spark-sql-streaming-ContinuousExecution.adoc#runActivatedStream, run an activated streaming query>>, `ContinuousExecution` adds <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#, WriteToContinuousDataSourceExec>> physical operator as the top-level operator in the physical query plan of the streaming query.
+
+[source, scala]
+----
+scala> :type sq
+org.apache.spark.sql.streaming.StreamingQuery
 
 scala> sq.explain
 == Physical Plan ==
 WriteToContinuousDataSource ConsoleWriter[numRows=20, truncate=false]
 +- *(1) Project [timestamp#758, value#759L]
    +- *(1) ScanV2 rate[timestamp#758, value#759L]
-
-// sq.stop
 ----
+
+When eventually requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, execute>>, `WriteToContinuousDataSourceExec` operator simply requests the underlying <<spark-sql-streaming-ContinuousWriteRDD.adoc#, ContinuousWriteRDD>> to collect.
+
+That collect operator is how a Spark job is run (over all partitions of the RDD) as described by the <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute, ContinuousWriteRDD.compute>> method.
+
+.Creating Instance of StreamExecution
+image::images/webui-spark-job-streaming-query-started.png[align="center"]
+
+While <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute, computing a partition>>, the tasks (of the partitions of the `ContinuousWriteRDD`) <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute-loop, keep running unless killed or completed>>. And that's how the Spark job (with the distributed tasks running on executors) runs continuously and indefinitely.
 
 When `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, create a streaming query for a ContinuousReadSupport data source>>, it creates...FIXME

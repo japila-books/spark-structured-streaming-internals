@@ -1,4 +1,4 @@
-== [[ContinuousExecution]] ContinuousExecution -- StreamExecution of Continuous Stream Processing
+== [[ContinuousExecution]] ContinuousExecution -- Stream Execution Engine of Continuous Stream Processing
 
 `ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> of <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
 
@@ -123,15 +123,6 @@ NOTE: The <<spark-sql-streaming-EpochCoordinator.adoc#, EpochCoordinator RPC end
 `runContinuous` creates a daemon <<runContinuous-epoch-update-thread, epoch update thread>> and starts it immediately.
 
 In *runContinuous* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runContinuous` requests the physical query plan (of the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, IncrementalExecution>>) to execute (that simply requests the physical operator to `doExecute` and generate an `RDD[InternalRow]`).
-
-[NOTE]
-====
-The trick here is that the top-level operator in the physical query plan is always a <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#, WriteToContinuousDataSourceExec>> and so requesting it to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, doExecute>> leads to requesting the underlying <<spark-sql-streaming-ContinuousWriteRDD.adoc#, ContinuousWriteRDD>> to collect.
-
-That collect operator is how a Spark job is run (on all partitions in an RDD) as described by the <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute, ContinuousWriteRDD.compute>> method.
-
-While computing a partition, `ContinuousWriteRDD` <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute-loop, is never meant to stop unless a task is killed or completed>>. The Spark job with the tasks ran on executors simply runs indefinitely.
-====
 
 NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
 
