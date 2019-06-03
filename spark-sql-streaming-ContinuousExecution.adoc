@@ -108,21 +108,36 @@ In *queryPlanning* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, 
 
 `runContinuous` sets the following local properties:
 
-* <<spark-sql-streaming-StreamExecution.adoc#IS_CONTINUOUS_PROCESSING, IS_CONTINUOUS_PROCESSING>> as `true`
+* <<spark-sql-streaming-StreamExecution.adoc#IS_CONTINUOUS_PROCESSING, __is_continuous_processing>> as `true`
 
-* <<START_EPOCH_KEY, START_EPOCH_KEY>> as the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>
+* <<START_EPOCH_KEY, __continuous_start_epoch>> as the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>
 
-* <<EPOCH_COORDINATOR_ID_KEY, EPOCH_COORDINATOR_ID_KEY>> as the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, i.e. <<spark-sql-streaming-StreamExecution.adoc#runId, runId>> followed by `--` with a random UUID
+* <<EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id>> as the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, i.e. <<spark-sql-streaming-StreamExecution.adoc#runId, runId>> followed by `--` with a random UUID
 
-* <<EPOCH_INTERVAL_KEY, EPOCH_INTERVAL_KEY>> as the interval of the <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>
+* <<EPOCH_INTERVAL_KEY, __continuous_epoch_interval>> as the interval of the <<spark-sql-streaming-Trigger.adoc#ContinuousTrigger, ContinuousTrigger>>
 
-`runContinuous` uses the `EpochCoordinatorRef` helper to <<spark-sql-streaming-EpochCoordinatorRef.adoc#create, create a remote reference to the EpochCoordinator RPC endpoint>> (with the <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>, the <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>, the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>).
+`runContinuous` uses the `EpochCoordinatorRef` helper to <<spark-sql-streaming-EpochCoordinatorRef.adoc#create, create a remote reference to the EpochCoordinator RPC endpoint>> (with the <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>, the <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>, the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, and the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>).
 
 NOTE: The <<spark-sql-streaming-EpochCoordinator.adoc#, EpochCoordinator RPC endpoint>> runs on the driver as the single point to coordinate epochs across partition tasks.
 
-`runContinuous`...FIXME
+`runContinuous` creates a daemon <<runContinuous-epoch-update-thread, epoch update thread>> and starts it immediately.
+
+In *runContinuous* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runContinuous` requests the physical query plan (of the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, IncrementalExecution>>) to execute (that simply requests the physical operator to `doExecute` and generate an `RDD[InternalRow]`).
+
+[NOTE]
+====
+The trick here is that the top-level operator in the physical query plan is always a <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#, WriteToContinuousDataSourceExec>> and so requesting it to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, doExecute>> leads to requesting the underlying <<spark-sql-streaming-ContinuousWriteRDD.adoc#, ContinuousWriteRDD>> to collect.
+
+That collect operator is how a Spark job is run (on all partitions in an RDD) as described by the <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute, ContinuousWriteRDD.compute>> method.
+
+While computing a partition, `ContinuousWriteRDD` <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute-loop, is never meant to stop unless a task is killed or completed>>. The Spark job with the tasks ran on executors simply runs indefinitely.
+====
 
 NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
+
+==== [[runContinuous-epoch-update-thread]] Epoch Update Thread
+
+`runContinuous` creates an *epoch update thread* that...FIXME
 
 ==== [[getStartOffsets]] Retrieving Start Offsets -- `getStartOffsets` Internal Method
 
