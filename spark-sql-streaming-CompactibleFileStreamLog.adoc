@@ -1,1 +1,3 @@
 == [[CompactibleFileStreamLog]] CompactibleFileStreamLog
+
+`CompactibleFileStreamLog` is...FIXME

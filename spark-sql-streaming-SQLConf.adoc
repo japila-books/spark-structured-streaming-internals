@@ -49,6 +49,17 @@ a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExe
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>>
 a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]]
 
+| `minBatchesToRetain`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
+a| [[minBatchesToRetain]] Used when:
+
+* `CompactibleFileStreamLog` is <<spark-sql-streaming-CompactibleFileStreamLog.adoc#minBatchesToRetain, created>>
+
+* `StreamExecution` is <<spark-sql-streaming-StreamExecution.adoc#minLogEntriesToMaintain, created>>
+
+* `StateStoreConf` is <<spark-sql-streaming-StateStoreConf.adoc#minVersionsToRetain, created>>
+
 | `SHUFFLE_PARTITIONS`
 
 `spark.sql.shuffle.partitions`

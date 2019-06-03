@@ -9,12 +9,15 @@
 | Name
 | Configuration Property
 
+| maxVersionsToRetainInMemory
+| [[maxVersionsToRetainInMemory]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
+
+| minVersionsToRetain
+| [[minVersionsToRetain]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
+
 | providerClass
 a| [[providerClass]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
 
 Used exclusively when `StateStoreProvider` helper object is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize the StateStoreProvider>>.
-
-| maxVersionsToRetainInMemory
-| [[maxVersionsToRetainInMemory]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
 
 |===

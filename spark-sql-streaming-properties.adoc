@@ -87,14 +87,14 @@ Used exclusively when `HDFSBackedStateStoreProvider` is requested to <<spark-sql
 
 | [[spark.sql.streaming.metricsEnabled]] Flag whether Dropwizard CodaHale metrics are reported for active streaming queries
 
-Use <<spark-sql-streaming-SQLConf.adoc#streamingMetricsEnabled, SQLConf.streamingMetricsEnabled>> to get the current value.
+Use <<spark-sql-streaming-SQLConf.adoc#streamingMetricsEnabled, SQLConf.streamingMetricsEnabled>> to get the current value
 
 | `spark.sql.streaming.minBatchesToRetain`
 
 `100`
-a| [[spark.sql.streaming.minBatchesToRetain]] (internal) The minimum number of batches that must be retained and made recoverable.
+a| [[spark.sql.streaming.minBatchesToRetain]] *(internal)* The minimum number of entries to retain for failure recovery
 
-Used...FIXME
+Use <<spark-sql-streaming-SQLConf.adoc#minBatchesToRetain, SQLConf.minBatchesToRetain>> to get the current value
 
 | `spark.sql.streaming.multipleWatermarkPolicy`
 
