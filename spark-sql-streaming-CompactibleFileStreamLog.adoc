@@ -1,6 +1,212 @@
-== [[CompactibleFileStreamLog]] CompactibleFileStreamLog
+== [[CompactibleFileStreamLog]] CompactibleFileStreamLog Contract -- Compactible Metadata Logs
 
-`CompactibleFileStreamLog` is...FIXME
+`CompactibleFileStreamLog` is the <<contract, extension>> of the <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog contract>> for <<implementations, compactible metadata logs>> that <<compactLogs, compactLogs>> every <<defaultCompactInterval, defaultCompactInterval>>.
+
+[[contract]]
+.CompactibleFileStreamLog Contract (Abstract Methods Only)
+[cols="30m,70",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| compactLogs
+a| [[compactLogs]]
+
+[source, scala]
+----
+compactLogs(logs: Seq[T]): Seq[T]
+----
+
+Used when `CompactibleFileStreamLog` is requested to <<compact, compact>> and <<allFiles, allFiles>>
+
+| defaultCompactInterval
+a| [[defaultCompactInterval]]
+
+[source, scala]
+----
+defaultCompactInterval: Int
+----
+
+Used when...FIXME
+
+| fileCleanupDelayMs
+a| [[fileCleanupDelayMs]]
+
+[source, scala]
+----
+fileCleanupDelayMs: Long
+----
+
+Used when...FIXME
+
+| isDeletingExpiredLog
+a| [[isDeletingExpiredLog]]
+
+[source, scala]
+----
+isDeletingExpiredLog: Boolean
+----
+
+Used when...FIXME
+
+|===
+
+[[implementations]]
+.CompactibleFileStreamLogs
+[cols="30,70",options="header",width="100%"]
+|===
+| CompactibleFileStreamLog
+| Description
+
+| <<spark-sql-streaming-FileStreamSinkLog.adoc#, FileStreamSinkLog>>
+| [[FileStreamSinkLog]]
+
+| <<spark-sql-streaming-FileStreamSourceLog.adoc#, FileStreamSourceLog>>
+| [[FileStreamSourceLog]]
+
+|===
+
+[[minBatchesToRetain]][[spark.sql.streaming.minBatchesToRetain]]
+`CompactibleFileStreamLog` uses <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property for...FIXME
+
+[[creating-instance]]
+`CompactibleFileStreamLog` takes the following to be created:
+
+* [[metadataLogVersion]] Version
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata log directory
+
+NOTE: `CompactibleFileStreamLog` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly for the <<implementations, concrete CompactibleFileStreamLogs>>.
+
+=== [[batchIdToPath]] `batchIdToPath` Method
+
+[source, scala]
+----
+batchIdToPath(batchId: Long): Path
+----
+
+NOTE: `batchIdToPath` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#batchIdToPath, HDFSMetadataLog Contract>> to...FIXME.
+
+`batchIdToPath`...FIXME
+
+=== [[pathToBatchId]] `pathToBatchId` Method
+
+[source, scala]
+----
+pathToBatchId(path: Path): Long
+----
+
+NOTE: `pathToBatchId` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#pathToBatchId, HDFSMetadataLog Contract>> to...FIXME.
+
+`pathToBatchId`...FIXME
+
+=== [[isBatchFile]] `isBatchFile` Method
+
+[source, scala]
+----
+isBatchFile(path: Path): Boolean
+----
+
+NOTE: `isBatchFile` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#isBatchFile, HDFSMetadataLog Contract>> to...FIXME.
+
+`isBatchFile`...FIXME
+
+=== [[serialize]] `serialize` Method
+
+[source, scala]
+----
+serialize(logData: Array[T], out: OutputStream): Unit
+----
+
+NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to...FIXME.
+
+`serialize`...FIXME
+
+=== [[deserialize]] `deserialize` Method
+
+[source, scala]
+----
+deserialize(in: InputStream): Array[T]
+----
+
+NOTE: `deserialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#deserialize, HDFSMetadataLog Contract>> to...FIXME.
+
+`deserialize`...FIXME
+
+=== [[add]] `add` Method
+
+[source, scala]
+----
+add(batchId: Long, logs: Array[T]): Boolean
+----
+
+NOTE: `add` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#add, HDFSMetadataLog Contract>> to...FIXME.
+
+`add`...FIXME
+
+=== [[allFiles]] `allFiles` Method
+
+[source, scala]
+----
+allFiles(): Array[T]
+----
+
+`allFiles`...FIXME
+
+NOTE: `allFiles` is used when...FIXME
+
+=== [[compact]] `compact` Internal Method
+
+[source, scala]
+----
+compact(batchId: Long, logs: Array[T]): Boolean
+----
+
+`compact`...FIXME
+
+NOTE: `compact` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, add>>.
+
+=== [[deleteExpiredLog]] `deleteExpiredLog` Internal Method
+
+[source, scala]
+----
+deleteExpiredLog(currentBatchId: Long): Unit
+----
+
+`deleteExpiredLog`...FIXME
+
+NOTE: `deleteExpiredLog` is used when...FIXME
+
+=== [[getValidBatchesBeforeCompactionBatch]] `getValidBatchesBeforeCompactionBatch` Object Method
+
+[source, scala]
+----
+getValidBatchesBeforeCompactionBatch(
+  compactionBatchId: Long,
+  compactInterval: Int): Seq[Long]
+----
+
+`getValidBatchesBeforeCompactionBatch`...FIXME
+
+NOTE: `getValidBatchesBeforeCompactionBatch` is used when...FIXME
+
+=== [[isCompactionBatch]] `isCompactionBatch` Object Method
+
+[source, scala]
+----
+isCompactionBatch(batchId: Long, compactInterval: Int): Boolean
+----
+
+`isCompactionBatch`...FIXME
+
+[NOTE]
+====
+`isCompactionBatch` is used when:
+
+* `CompactibleFileStreamLog` is requested to <<batchIdToPath, batchIdToPath>>, <<add, add>>, <<deleteExpiredLog, deleteExpiredLog>>, and <<getValidBatchesBeforeCompactionBatch, getValidBatchesBeforeCompactionBatch>>
+
+* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.adoc#add, add>> and <<spark-sql-streaming-FileStreamSourceLog.adoc#get, get>>
+====
 
 === [[internal-properties]] Internal Properties
 

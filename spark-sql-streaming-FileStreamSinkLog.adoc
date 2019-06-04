@@ -1,0 +1,3 @@
+== [[FileStreamSinkLog]] FileStreamSinkLog
+
+`FileStreamSinkLog` is...FIXME

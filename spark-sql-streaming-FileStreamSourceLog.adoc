@@ -1,0 +1,29 @@
+== [[FileStreamSourceLog]] FileStreamSourceLog
+
+`FileStreamSourceLog` is...FIXME
+
+=== [[add]] `add` Method
+
+[source, scala]
+----
+add(
+  batchId: Long,
+  logs: Array[FileEntry]): Boolean
+----
+
+NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to...FIXME.
+
+`add`...FIXME
+
+=== [[get]][[get-range]] `get` Method
+
+[source, scala]
+----
+get(
+  startId: Option[Long],
+  endId: Option[Long]): Array[(Long, Array[FileEntry])]
+----
+
+NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to...FIXME.
+
+`get`...FIXME

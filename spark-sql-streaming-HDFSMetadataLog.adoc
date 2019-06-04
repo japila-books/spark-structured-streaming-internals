@@ -15,10 +15,10 @@
 | Description
 
 | <<spark-sql-streaming-CommitLog.adoc#, CommitLog>>
-| [[CommitLog]] <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>>
+| [[CommitLog]] <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
 
 | <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>
-| [[CompactibleFileStreamLog]]
+| [[CompactibleFileStreamLog]] Compactible metadata logs
 
 | <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>
 | [[OffsetSeqLog]]
@@ -81,7 +81,9 @@ NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataL
 
 [source, scala]
 ----
-get(startId: Option[Long], endId: Option[Long]): Array[(Long, T)]
+get(
+  startId: Option[Long],
+  endId: Option[Long]): Array[(Long, T)]
 ----
 
 NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to...FIXME.
