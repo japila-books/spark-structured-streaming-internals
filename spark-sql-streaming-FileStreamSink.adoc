@@ -1,6 +1,6 @@
-== [[FileStreamSink]] FileStreamSink -- Streaming Sink for Parquet Format
+== [[FileStreamSink]] FileStreamSink -- Streaming Sink for File-Based Data Sources
 
-`FileStreamSink` is the link:spark-sql-streaming-Sink.adoc[streaming sink] that writes out the results of a streaming query to `parquet` files.
+`FileStreamSink` is a concrete <<spark-sql-streaming-Sink.adoc#, streaming sink>> that writes out the results of a streaming query to files (of the specified <<fileFormat, FileFormat>>) in the <<path, root path>>.
 
 [source, scala]
 ----
@@ -16,7 +16,9 @@ val out = in.
   start
 ----
 
-`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to link:spark-sql-streaming-DataSource.adoc#createSink[create a streaming sink].
+`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.adoc#createSink, create a streaming sink>> for a file-based data source (i.e. `FileFormat`).
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
 
 `FileStreamSink` supports link:spark-sql-streaming-OutputMode.adoc#Append[Append output mode] only.
 
@@ -25,33 +27,22 @@ val out = in.
 [[toString]]
 The textual representation of `FileStreamSink` is *FileSink[path]*
 
-[[internal-registries]]
-.FileStreamSink's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
+[[metadataDir]]
+`FileStreamSink` uses *_spark_metadata* directory for...FIXME
 
-| `basePath`
-| [[basePath]] FIXME
+[[logging]]
+[TIP]
+====
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.FileStreamSink` to see what happens inside.
 
-Used when...FIXME
+Add the following line to `conf/log4j.properties`:
 
-| `logPath`
-| [[logPath]] FIXME
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSink=ALL
+```
 
-Used when...FIXME
-
-| `fileLog`
-| [[fileLog]] FIXME
-
-Used when...FIXME
-
-| `hadoopConf`
-| [[hadoopConf]] FIXME
-
-Used when...FIXME
-|===
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+====
 
 === [[addBatch]] `addBatch` Method
 
@@ -66,12 +57,59 @@ NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink C
 
 === [[creating-instance]] Creating FileStreamSink Instance
 
-`FileStreamSink` takes the following when created:
+`FileStreamSink` takes the following to be created:
 
 * [[sparkSession]] `SparkSession`
-* [[path]] Path with the <<metadataDir, metadata>> directory
+* [[path]] Root directory
 * [[fileFormat]] `FileFormat`
 * [[partitionColumnNames]] Names of the partition columns
 * [[options]] Configuration options
 
-`FileStreamSink` initializes the <<internal-registries, internal registries and counters>>.
+`FileStreamSink` initializes the <<internal-properties, internal properties>>.
+
+=== [[basicWriteJobStatsTracker]] Creating BasicWriteJobStatsTracker -- `basicWriteJobStatsTracker` Internal Method
+
+[source, scala]
+----
+basicWriteJobStatsTracker: BasicWriteJobStatsTracker
+----
+
+`basicWriteJobStatsTracker` simply creates a `BasicWriteJobStatsTracker` with the basic metrics:
+
+* number of written files
+* bytes of written output
+* number of output rows
+* number of dynamic partitions
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BasicWriteJobStatsTracker.html[BasicWriteJobStatsTracker] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+
+NOTE: `basicWriteJobStatsTracker` is used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| basePath
+| [[basePath]] *Base path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the given <<path, path>>)
+
+Used when...FIXME
+
+| logPath
+| [[logPath]] *Metadata log path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the <<basePath, base path>> and the <<metadataDir, _spark_metadata>>)
+
+Used when...FIXME
+
+| fileLog
+a| [[fileLog]] <<spark-sql-streaming-FileStreamSinkLog.adoc#, FileStreamSinkLog>> (for the <<spark-sql-streaming-FileStreamSinkLog.adoc#VERSION, version 1>> and the <<logPath, metadata log path>>)
+
+Used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>
+
+| hadoopConf
+| [[hadoopConf]] FIXME
+
+Used when...FIXME
+
+|===

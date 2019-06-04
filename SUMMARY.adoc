@@ -108,15 +108,14 @@
 . link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders]
 . link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract -- DataSourceReaders For Micro-Batch Stream Processing]
 
-=== Text Socket Data Source
-
-. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
-. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
-
-=== Text File Data Source
+=== File-Based Data Source
 
 . link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
-. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink -- Streaming Sink for Parquet Format]
+. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
+
+. link:spark-sql-streaming-FileStreamSinkLog.adoc[FileStreamSinkLog]
+.. link:spark-sql-streaming-SinkFileStatus.adoc[SinkFileStatus]
+.. link:spark-sql-streaming-ManifestFileCommitProtocol.adoc[ManifestFileCommitProtocol]
 
 === Rate Data Source
 
@@ -143,6 +142,11 @@
 === ForeachBatch Data Sink
 
 . link:spark-sql-streaming-ForeachBatchSink.adoc[ForeachBatchSink]
+
+=== Text Socket Data Source
+
+. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
+. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
 
 == Query Planning and Execution
 
@@ -202,7 +206,6 @@
 
 . link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog Contract]
 .. link:spark-sql-streaming-FileStreamSourceLog.adoc[FileStreamSourceLog]
-.. link:spark-sql-streaming-FileStreamSinkLog.adoc[FileStreamSinkLog]
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
 

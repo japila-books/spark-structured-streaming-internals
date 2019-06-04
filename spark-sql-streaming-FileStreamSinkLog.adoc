@@ -1,3 +1,26 @@
 == [[FileStreamSinkLog]] FileStreamSinkLog
 
-`FileStreamSinkLog` is...FIXME
+`FileStreamSinkLog` is a concrete <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>> (of <<spark-sql-streaming-SinkFileStatus.adoc#, SinkFileStatus>> metadata) for...FIXME
+
+`FileStreamSinkLog` is <<creating-instance, created>> for <<spark-sql-streaming-FileStreamSink.adoc#fileLog, FileStreamSink>> and `MetadataLogFileIndex`.
+
+[[creating-instance]]
+`FileStreamSinkLog` (like the parent <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>) takes the following to be created:
+
+* [[metadataLogVersion]] Version
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata log directory
+
+[[VERSION]]
+`FileStreamSinkLog` uses *1* for the version.
+
+=== [[compactLogs]] `compactLogs` Method
+
+[source, scala]
+----
+compactLogs(logs: Seq[SinkFileStatus]): Seq[SinkFileStatus]
+----
+
+NOTE: `compactLogs` is part of the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compactLogs, CompactibleFileStreamLog Contract>> to...FIXME.
+
+`compactLogs`...FIXME

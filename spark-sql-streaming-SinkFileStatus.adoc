@@ -1,0 +1,3 @@
+== [[SinkFileStatus]] SinkFileStatus
+
+`SinkFileStatus` is...FIXME
