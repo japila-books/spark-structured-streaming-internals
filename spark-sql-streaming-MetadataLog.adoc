@@ -1,39 +1,62 @@
-== [[MetadataLog]] MetadataLog -- Contract for Metadata Storage
+== [[MetadataLog]] MetadataLog Contract -- Metadata Storage
 
-`MetadataLog` is the <<contract, contract>> to store metadata.
+`MetadataLog` is the <<contract, abstraction>> of <<implementations, store metadata>> that can <<add, persist>>, <<get, retrieve>>, and <<purge, remove>> metadata (of type `T`).
 
-=== [[contract]] MetadataLog Contract
-
-[source, scala]
-----
-package org.apache.spark.sql.execution.streaming
-
-trait MetadataLog[T] {
-  def add(batchId: Long, metadata: T): Boolean
-  def get(batchId: Long): Option[T]
-  def get(startId: Option[Long], endId: Option[Long]): Array[(Long, T)]
-  def getLatest(): Option[(Long, T)]
-  def purge(thresholdBatchId: Long): Unit
-}
-----
-
+[[contract]]
 .MetadataLog Contract
-[cols="1,2",options="header",width="100%"]
+[cols="30m,70",options="header",width="100%"]
 |===
 | Method
 | Description
 
-| [[add]] `add`
-|
+| add
+a| [[add]]
 
-| [[get]] `get`
-|
+[source, scala]
+----
+add(
+  batchId: Long,
+  metadata: T): Boolean
+----
 
-| [[getLatest]] `getLatest`
-a| Retrieves the latest-committed batch with the metadata if available from the metadata storage.
+Used when...FIXME
 
-NOTE: It is assumed (i.e. link:spark-sql-streaming-FileStreamSink.adoc#addBatch[FileStreamSink]) that the latest batch id is of the batch which has already been committed and a link:spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets[streaming query can start from].
+| get
+a| [[get]]
 
-| [[purge]] `purge`
-|
+[source, scala]
+----
+get(batchId: Long): Option[T]
+get(
+  startId: Option[Long],
+  endId: Option[Long]): Array[(Long, T)]
+----
+
+Used when...FIXME
+
+| getLatest
+a| [[getLatest]]
+
+[source, scala]
+----
+getLatest(): Option[(Long, T)]
+----
+
+Retrieves the latest-committed metadata (if available)
+
+Used when...FIXME
+
+| purge
+a| [[purge]]
+
+[source, scala]
+----
+purge(thresholdBatchId: Long): Unit
+----
+
+Used when...FIXME
+
 |===
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog>> is the direct implementation of the <<contract, MetadataLog Contract>> in Spark Structured Streaming.

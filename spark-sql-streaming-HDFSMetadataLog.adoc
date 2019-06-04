@@ -1,58 +1,59 @@
 == [[HDFSMetadataLog]] HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Reliable Storage
 
-`HDFSMetadataLog` is a link:spark-sql-streaming-MetadataLog.adoc[MetadataLog] that uses Hadoop HDFS for a reliable storage.
+`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, MetadataLog>> that uses Hadoop HDFS for a reliable storage.
 
-NOTE: `HDFSMetadataLog` uses <<path, path>> (specified when <<creating-instance, created>>) that is created automatically unless exists already.
+[[formats]]
+`HDFSMetadataLog` uses http://json4s.org/[Json4s] with the https://github.com/FasterXML/jackson-databind[Jackson] binding for JSON parsing (serialization and deserialization).
 
-`HDFSMetadataLog` is <<creating-instance, created>> when:
+`HDFSMetadataLog` is further customized by the <<extensions, extensions>>.
 
-* `KafkaSource` is first requested for link:spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets[initial partition offsets] (from the metadata storage)
-
-* `RateStreamSource` link:spark-sql-streaming-RateStreamSource.adoc#creating-instance[is created] (and looks up link:spark-sql-streaming-RateStreamSource.adoc#startTimeMs[startTimeMs] in the metadata storage)
-
-`HDFSMetadataLog` is <<available-implementations, further customized>> to...FIXME
-
-[[available-implementations]]
-.HDFSMetadataLog's Available Implementations
-[cols="1,2",options="header",width="100%"]
+[[extensions]]
+.HDFSMetadataLogs
+[cols="30,70",options="header",width="100%"]
 |===
 | HDFSMetadataLog
 | Description
 
-| [[BatchCommitLog]] link:spark-sql-streaming-CommitLog.adoc[BatchCommitLog]
-|
+| <<spark-sql-streaming-CommitLog.adoc#, CommitLog>>
+| [[CommitLog]]
 
-| [[CompactibleFileStreamLog]] link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
-|
+| <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>
+| [[CompactibleFileStreamLog]]
 
-| [[OffsetSeqLog]] link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
-|
+| <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>
+| [[OffsetSeqLog]]
+
 |===
 
-[[internal-registries]]
-.HDFSMetadataLog's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
+[[creating-instance]]
+`HDFSMetadataLog` takes the following to be created:
 
-| [[fileManager]] `fileManager`
-| `FileManager` that...FIXME
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata log directory
 
-| [[batchFilesFilter]] `batchFilesFilter`
-| Filter of batch files
-
-| [[metadataPath]] `metadataPath`
-| The path to metadata directory
-|===
+While being <<creating-instance, created>> `HDFSMetadataLog` creates the <<path, path>> unless exists already.
 
 === [[serialize]] Writing Metadata in Serialized Format -- `serialize` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+serialize(metadata: T, out: OutputStream): Unit
+----
+
+`serialize`...FIXME
+
+NOTE: `serialize` is used when...FIXME
 
 === [[deserialize]] `deserialize` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+deserialize(in: InputStream): T
+----
+
+`deserialize`...FIXME
+
+NOTE: `deserialize` is used when...FIXME
 
 === [[createFileManager]] `createFileManager` Internal Method
 
@@ -65,7 +66,7 @@ CAUTION: FIXME
 
 NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creating-instance, created>> (and the internal <<fileManager, FileManager>> is created alongside).
 
-=== [[get]] Retrieving Metadata By Batch Id -- `get` Method
+=== [[get]][[get-batchId]] Retrieving Metadata By Batch Id -- `get` Method
 
 [source, scala]
 ----
@@ -76,7 +77,18 @@ NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataL
 
 `get`...FIXME
 
-=== [[add]] Storing Batch Metadata -- `add` Method
+=== [[get-range]] Retrieving Metadata For Batch Id Range -- `get` Method
+
+[source, scala]
+----
+get(startId: Option[Long], endId: Option[Long]): Array[(Long, T)]
+----
+
+NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to...FIXME.
+
+`get`...FIXME
+
+=== [[add]] Persisting (Storing) Metadata for Batch -- `add` Method
 
 [source, scala]
 ----
@@ -85,7 +97,9 @@ add(batchId: Long, metadata: T): Boolean
 
 NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to...FIXME.
 
-`add`...FIXME
+`add` <<batchIdToPath, batchIdToPath>> for the given `batchId` and <<writeBatchToFile, writeBatchToFile>> unless <<get, already available (persisted)>>.
+
+`add` returns `true` when the <<batchIdToPath, batchIdToPath>> for the given `batchId` was not available.
 
 === [[getLatest]] Retrieving Latest Committed Batch Id with Metadata If Available -- `getLatest` Method
 
@@ -104,17 +118,6 @@ NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.adoc#getLate
 
 NOTE: It is possible that the batch id could be in the metadata storage, but not available for retrieval.
 
-=== [[creating-instance]] Creating HDFSMetadataLog Instance
-
-`HDFSMetadataLog` takes the following when created:
-
-* [[sparkSession]] `SparkSession`
-* [[path]] Path of the metadata log directory
-
-`HDFSMetadataLog` initializes the <<internal-registries, internal registries and counters>>.
-
-`HDFSMetadataLog` creates the <<path, path>> unless exists already.
-
 === [[purge]] Removing Log Entries (Purging) -- `purge` Method
 
 [source, scala]
@@ -125,3 +128,108 @@ purge(thresholdBatchId: Long): Unit
 NOTE: `purge` is part of the <<spark-sql-streaming-MetadataLog.adoc#purge, MetadataLog Contract>> to...FIXME.
 
 `purge`...FIXME
+
+=== [[getOrderedBatchFiles]] `getOrderedBatchFiles` Method
+
+[source, scala]
+----
+getOrderedBatchFiles(): Array[FileStatus]
+----
+
+`getOrderedBatchFiles`...FIXME
+
+NOTE: `getOrderedBatchFiles` is used when...FIXME
+
+=== [[purgeAfter]] `purgeAfter` Method
+
+[source, scala]
+----
+purgeAfter(thresholdBatchId: Long): Unit
+----
+
+`purgeAfter`...FIXME
+
+NOTE: `purgeAfter` is used when...FIXME
+
+=== [[batchIdToPath]] `batchIdToPath` Method
+
+[source, scala]
+----
+batchIdToPath(batchId: Long): Path
+----
+
+`batchIdToPath`...FIXME
+
+NOTE: `batchIdToPath` is used when...FIXME
+
+=== [[isBatchFile]] `isBatchFile` Method
+
+[source, scala]
+----
+isBatchFile(path: Path): Boolean
+----
+
+`isBatchFile`...FIXME
+
+NOTE: `isBatchFile` is used when...FIXME
+
+=== [[parseVersion]] `parseVersion` Internal Method
+
+[source, scala]
+----
+parseVersion(text: String, maxSupportedVersion: Int): Int
+----
+
+`parseVersion`...FIXME
+
+NOTE: `parseVersion` is used when...FIXME
+
+=== [[pathToBatchId]] `pathToBatchId` Method
+
+[source, scala]
+----
+pathToBatchId(path: Path): Long
+----
+
+`pathToBatchId`...FIXME
+
+NOTE: `pathToBatchId` is used when...FIXME
+
+=== [[writeBatchToFile]] `writeBatchToFile` Internal Method
+
+[source, scala]
+----
+writeBatchToFile(metadata: T, path: Path): Unit
+----
+
+`writeBatchToFile`...FIXME
+
+NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, store metadata for a batch>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| batchFilesFilter
+a| [[batchFilesFilter]] Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/PathFilter.html[PathFilter] of <<isBatchFile, batch files>> (with names being long numbers)
+
+Used when:
+
+* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compactInterval, compactInterval>>
+
+* `HDFSMetadataLog` is requested to <<get, get batch metadata>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
+
+| fileManager
+a| [[fileManager]] `CheckpointFileManager`
+
+Used when...FIXME
+
+| metadataPath
+a| [[metadataPath]] The path to metadata directory
+
+Used when...FIXME
+
+|===
