@@ -15,7 +15,7 @@
 | Description
 
 | <<spark-sql-streaming-CommitLog.adoc#, CommitLog>>
-| [[CommitLog]]
+| [[CommitLog]] <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>>
 
 | <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>
 | [[CompactibleFileStreamLog]]
@@ -42,18 +42,18 @@ serialize(metadata: T, out: OutputStream): Unit
 
 `serialize`...FIXME
 
-NOTE: `serialize` is used when...FIXME
+NOTE: `serialize` is used exclusively when `HDFSMetadataLog` is requested to <<writeBatchToFile, writeBatchToFile>> (when requested to <<add, store metadata for a batch>>).
 
-=== [[deserialize]] `deserialize` Method
+=== [[deserialize]] Deserializing Metadata -- `deserialize` Method
 
 [source, scala]
 ----
 deserialize(in: InputStream): T
 ----
 
-`deserialize`...FIXME
+`deserialize` deserializes a metadata (of type `T`) from a given `InputStream`.
 
-NOTE: `deserialize` is used when...FIXME
+NOTE: `deserialize` is used exclusively when `HDFSMetadataLog` is requested to <<get, retrieve metadata for a batch>>.
 
 === [[createFileManager]] `createFileManager` Internal Method
 
@@ -173,7 +173,7 @@ isBatchFile(path: Path): Boolean
 
 NOTE: `isBatchFile` is used when...FIXME
 
-=== [[parseVersion]] `parseVersion` Internal Method
+=== [[parseVersion]] Retrieving Version (From Text Line) -- `parseVersion` Internal Method
 
 [source, scala]
 ----

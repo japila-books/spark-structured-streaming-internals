@@ -371,7 +371,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 1. <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
 1. <<runBatch-awaitBatchLock, awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress>>
 
-NOTE: `runBatch` is used exclusively when `StreamExecution` <<runBatches, runs streaming batches>>.
+NOTE: `runBatch` is used when...FIXME
 
 ==== [[runBatch-getBatch]] getBatch Phase -- Requesting New (and Hence Unprocessed) Data From Streaming Sources
 

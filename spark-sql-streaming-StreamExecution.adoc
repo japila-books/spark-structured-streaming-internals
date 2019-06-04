@@ -247,6 +247,18 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=ALL
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
+=== [[commitLog]] Offset Commit Log -- `commits` Metadata Checkpoint Directory
+
+`StreamExecution` uses *offset commit log* (<<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>>) for completed streaming batches (with a single file per batch with a file name being the batch id) or committed epochs.
+
+NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
+
+`commitLog` is used by the <<extensions, extensions>> for the following:
+
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>> (that in turn requests to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate the start offsets>> at the very beginning of the query execution and later regularly every <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, single batch>>)
+
+* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, retrieve the start offsets>> at the very beginning of the query execution and later regularly every <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>)
+
 === [[stopSources]] `stopSources` Method
 
 [source, scala]
@@ -624,17 +636,6 @@ NOTE: `availableOffsets` works in tandem with <<committedOffsets, committedOffse
 
 | callSite
 | [[callSite]]
-
-| commitLog
-a| [[commitLog]] *Commit Log* (<<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>>) for completed streaming batches (with a single file per batch with a file name being the batch id) or committed epochs.
-
-NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
-
-Used exclusively by the <<extensions, extensions>> for the following:
-
-* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, runActivatedStream>> when data was available and the offsets need to be committed (and does <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populateStartOffsets>> or <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, constructNextBatch>>)
-
-* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>, <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>, and <<spark-sql-streaming-ContinuousExecution.adoc#awaitEpoch, awaitEpoch>>
 
 | committedOffsets
 a| [[committedOffsets]] *Committed offsets* (<<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of pairs of the streaming sources and the offsets they already processed)

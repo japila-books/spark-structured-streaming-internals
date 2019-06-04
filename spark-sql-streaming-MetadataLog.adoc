@@ -32,6 +32,8 @@ get(
   endId: Option[Long]): Array[(Long, T)]
 ----
 
+Retrieves metadata by batch id or batch range
+
 Used when...FIXME
 
 | getLatest
