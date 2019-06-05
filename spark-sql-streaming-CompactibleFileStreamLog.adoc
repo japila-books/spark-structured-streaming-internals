@@ -133,14 +133,14 @@ NOTE: `deserialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#de
 
 `deserialize`...FIXME
 
-=== [[add]] `add` Method
+=== [[add]] Storing Metadata For Batch -- `add` Method
 
 [source, scala]
 ----
 add(batchId: Long, logs: Array[T]): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#add, HDFSMetadataLog Contract>> to...FIXME.
+NOTE: `add` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#add, HDFSMetadataLog Contract>> to store metadata for a batch.
 
 `add`...FIXME
 
@@ -175,7 +175,7 @@ deleteExpiredLog(currentBatchId: Long): Unit
 
 `deleteExpiredLog`...FIXME
 
-NOTE: `deleteExpiredLog` is used when...FIXME
+NOTE: `deleteExpiredLog` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, store metadata for a batch>>.
 
 === [[getValidBatchesBeforeCompactionBatch]] `getValidBatchesBeforeCompactionBatch` Object Method
 

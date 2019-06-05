@@ -1,0 +1,124 @@
+== [[CheckpointFileManager]] CheckpointFileManager Contract
+
+`CheckpointFileManager` is the <<contract, abstraction>> of <<implementations, checkpoint managers>> that can <<FIXME, FIXME>>.
+
+[[contract]]
+.CheckpointFileManager Contract
+[cols="30m,70",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| createAtomic
+a| [[createAtomic]]
+
+[source, scala]
+----
+createAtomic(
+  path: Path,
+  overwriteIfPossible: Boolean): CancellableFSDataOutputStream
+----
+
+Used when:
+
+* `HDFSMetadataLog` is requested to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, store metadata for a batch>> (that <<spark-sql-streaming-HDFSMetadataLog.adoc#writeBatchToFile, writeBatchToFile>>)
+
+* `StreamMetadata` helper object is requested to <<spark-sql-streaming-StreamMetadata.adoc#write, persist metadata>>
+
+* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.adoc#deltaFileStream, deltaFileStream>>
+
+* `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#writeSnapshotFile, writeSnapshotFile>>
+
+| delete
+a| [[delete]]
+
+[source, scala]
+----
+delete(path: Path): Unit
+----
+
+Deletes a path recursively (if it exists)
+
+Used when:
+
+* `RenameBasedFSDataOutputStream` is requested to `cancel`
+
+* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#add, store metadata for a batch>> (that <<spark-sql-streaming-CompactibleFileStreamLog.adoc#deleteExpiredLog, deleteExpiredLog>>)
+
+* `HDFSMetadataLog` is requested to <<spark-sql-streaming-HDFSMetadataLog.adoc#purge, remove expired metadata>>
+
+* `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#doMaintenance, do maintenance>> (that <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#cleanup, clean up>>)
+
+| exists
+a| [[exists]]
+
+[source, scala]
+----
+exists(path: Path): Boolean
+----
+
+Used when...FIXME
+
+| isLocal
+a| [[isLocal]]
+
+[source, scala]
+----
+isLocal: Boolean
+----
+
+Does not seem to be used.
+
+| list
+a| [[list]]
+
+[source, scala]
+----
+list(path: Path): Array[FileStatus]
+list(path: Path, filter: PathFilter): Array[FileStatus]
+----
+
+Used when...FIXME
+
+| mkdirs
+a| [[mkdirs]]
+
+[source, scala]
+----
+mkdirs(path: Path): Unit
+----
+
+Used when...FIXME
+
+| open
+a| [[open]]
+
+[source, scala]
+----
+open(path: Path): FSDataInputStream
+----
+
+Opens a file for reading
+
+Used when:
+
+* `HDFSMetadataLog` is requested to <<spark-sql-streaming-HDFSMetadataLog.adoc#get, retrieve metadata for batch>>
+
+* `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#getStore, retrieve the state store for a specified version>> (that <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#updateFromDeltaFile, updateFromDeltaFile>>)
+
+|===
+
+[[implementations]]
+.CheckpointFileManagers
+[cols="30,70",options="header",width="100%"]
+|===
+| CheckpointFileManager
+| Description
+
+| <<spark-sql-streaming-FileContextBasedCheckpointFileManager.adoc#, FileContextBasedCheckpointFileManager>>
+| [[FileContextBasedCheckpointFileManager]]
+
+| <<spark-sql-streaming-FileSystemBasedCheckpointFileManager.adoc#, FileSystemBasedCheckpointFileManager>>
+| [[FileSystemBasedCheckpointFileManager]]
+
+|===

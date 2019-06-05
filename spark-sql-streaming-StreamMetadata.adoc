@@ -43,7 +43,7 @@ NOTE: `read` uses `org.json4s.jackson.Serialization.read` for JSON deserializati
 
 NOTE: `read` is used exclusively when `StreamExecution` is <<spark-sql-streaming-StreamExecution.adoc#streamMetadata, created>> (and tries to read the `metadata` checkpoint file).
 
-=== [[write]] Persisting StreamMetadata (to JSON File) -- `write` Object Method
+=== [[write]] Persisting Metadata -- `write` Object Method
 
 [source, scala]
 ----

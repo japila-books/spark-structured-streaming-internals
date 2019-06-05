@@ -63,7 +63,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStore
 Refer to link:spark-sql-streaming-logging.adoc[Logging].
 ====
 
-=== [[getStore]] Retrieving State Store for Version -- `getStore` Method
+=== [[getStore]] Retrieving State Store by Version -- `getStore` Method
 
 [source, scala]
 ----
@@ -139,7 +139,7 @@ doSnapshot(): Unit
 
 NOTE: `doSnapshot` is used when...FIXME
 
-=== [[cleanup]] `cleanup` Internal Method
+=== [[cleanup]] Cleaning Up -- `cleanup` Internal Method
 
 [source, scala]
 ----
@@ -148,7 +148,18 @@ cleanup(): Unit
 
 `cleanup`...FIXME
 
-NOTE: `cleanup` is used when...FIXME
+NOTE: `cleanup` is used exclusively when <<doMaintenance, doMaintenance>>.
+
+=== [[doMaintenance]] Doing Maintenance -- `doMaintenance` Method
+
+[source, scala]
+----
+doMaintenance(): Unit
+----
+
+NOTE: `doMaintenance` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#doMaintenance, StateStoreProvider Contract>> to do maintenance if needed.
+
+`doMaintenance`...FIXME
 
 === [[close]] Closing State Store Provider -- `close` Method
 
@@ -197,4 +208,30 @@ loadMap(version: Long): ConcurrentHashMap[UnsafeRow, UnsafeRow]
 
 `loadMap`...FIXME
 
-NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, getStore>> and <<latestIterator, latestIterator>>.
+NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, retrieve the state store for a specified version>> and <<latestIterator, latestIterator>>.
+
+=== [[writeSnapshotFile]] `writeSnapshotFile` Internal Method
+
+[source, scala]
+----
+writeSnapshotFile(
+  version: Long,
+  map: MapType): Unit
+----
+
+`writeSnapshotFile`...FIXME
+
+NOTE: `writeSnapshotFile` is used when...FIXME
+
+=== [[updateFromDeltaFile]] `updateFromDeltaFile` Internal Method
+
+[source, scala]
+----
+updateFromDeltaFile(
+  version: Long,
+  map: MapType): Unit
+----
+
+`updateFromDeltaFile`...FIXME
+
+NOTE: `updateFromDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, loadMap>>.

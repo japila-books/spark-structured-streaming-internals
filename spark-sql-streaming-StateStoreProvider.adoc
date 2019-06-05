@@ -34,7 +34,7 @@ a| [[doMaintenance]]
 doMaintenance(): Unit
 ----
 
-Optional maintenance task
+Doing maintenance if needed
 
 Used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#doMaintenance, perform maintenance of registered state store providers>>
 

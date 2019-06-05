@@ -194,7 +194,7 @@
 . link:spark-sql-streaming-StreamingJoinStrategy.adoc[StreamingJoinStrategy Execution Planning Strategy for Stream-Stream Equi-Joins]
 . link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
 
-== Offsets and Checkpointing
+== Offsets and Metadata Checkpointing
 
 . link:spark-sql-streaming-Offset.adoc[Offset]
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog Contract]
@@ -208,6 +208,10 @@
 .. link:spark-sql-streaming-FileStreamSourceLog.adoc[FileStreamSourceLog]
 
 . link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
+
+. link:spark-sql-streaming-CheckpointFileManager.adoc[CheckpointFileManager Contract]
+.. link:spark-sql-streaming-FileContextBasedCheckpointFileManager.adoc[FileContextBasedCheckpointFileManager]
+.. link:spark-sql-streaming-FileSystemBasedCheckpointFileManager.adoc[FileSystemBasedCheckpointFileManager]
 
 == State Management in Stateful Stream Processing
 

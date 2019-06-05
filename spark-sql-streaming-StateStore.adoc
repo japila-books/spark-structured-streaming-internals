@@ -373,7 +373,7 @@ NOTE: `startMaintenanceIfNeeded` does nothing when the maintenance task has alre
 
 NOTE: `startMaintenanceIfNeeded` is used exclusively when `StateStore` is requested to <<get, find the StateStore by StateStoreProviderId>>.
 
-==== [[doMaintenance]] Performing Maintenance of Registered State Store Providers -- `doMaintenance` Internal Object Method
+==== [[doMaintenance]] Doing Maintenance of Registered State Store Providers -- `doMaintenance` Internal Object Method
 
 [source, scala]
 ----

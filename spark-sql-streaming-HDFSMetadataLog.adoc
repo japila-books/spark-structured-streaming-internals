@@ -66,7 +66,7 @@ CAUTION: FIXME
 
 NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creating-instance, created>> (and the internal <<fileManager, FileManager>> is created alongside).
 
-=== [[get]][[get-batchId]] Retrieving Metadata By Batch Id -- `get` Method
+=== [[get]][[get-batchId]] Retrieving Metadata For Batch -- `get` Method
 
 [source, scala]
 ----
@@ -120,7 +120,7 @@ NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.adoc#getLate
 
 NOTE: It is possible that the batch id could be in the metadata storage, but not available for retrieval.
 
-=== [[purge]] Removing Log Entries (Purging) -- `purge` Method
+=== [[purge]] Removing Expired Metadata (Purging) -- `purge` Method
 
 [source, scala]
 ----
@@ -141,17 +141,6 @@ getOrderedBatchFiles(): Array[FileStatus]
 `getOrderedBatchFiles`...FIXME
 
 NOTE: `getOrderedBatchFiles` is used when...FIXME
-
-=== [[purgeAfter]] `purgeAfter` Method
-
-[source, scala]
-----
-purgeAfter(thresholdBatchId: Long): Unit
-----
-
-`purgeAfter`...FIXME
-
-NOTE: `purgeAfter` is used when...FIXME
 
 === [[batchIdToPath]] `batchIdToPath` Method
 
@@ -207,6 +196,17 @@ writeBatchToFile(metadata: T, path: Path): Unit
 `writeBatchToFile`...FIXME
 
 NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, store metadata for a batch>>.
+
+=== [[purgeAfter]] `purgeAfter` Method
+
+[source, scala]
+----
+purgeAfter(thresholdBatchId: Long): Unit
+----
+
+`purgeAfter`...FIXME
+
+NOTE: `purgeAfter` seems to be used exclusively in tests.
 
 === [[internal-properties]] Internal Properties
 
