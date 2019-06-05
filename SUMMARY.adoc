@@ -6,35 +6,6 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
 
-== (WIP) Continuous Stream Processing (Structured Streaming V2)
-
-. link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
-
-. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution]
-
-. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract]
-. link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract]
-
-. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
-. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
-
-. link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator RPC Endpoint]
-.. link:spark-sql-streaming-EpochCoordinatorRef.adoc[EpochCoordinatorRef]
-.. link:spark-sql-streaming-EpochTracker.adoc[EpochTracker]
-
-. link:spark-sql-streaming-ContinuousQueuedDataReader.adoc[ContinuousQueuedDataReader]
-.. link:spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.adoc[DataReaderThread]
-.. link:spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.adoc[EpochMarkerGenerator]
-
-. link:spark-sql-streaming-PartitionOffset.adoc[PartitionOffset]
-
-. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
-. link:spark-sql-streaming-WriteToContinuousDataSource.adoc[WriteToContinuousDataSource Unary Logical Operator]
-. link:spark-sql-streaming-WriteToContinuousDataSourceExec.adoc[WriteToContinuousDataSourceExec Unary Physical Operator]
-.. link:spark-sql-streaming-ContinuousWriteRDD.adoc[ContinuousWriteRDD]
-
-. link:spark-sql-streaming-ContinuousDataSourceRDD.adoc[ContinuousDataSourceRDD]
-
 == Developing Streaming Applications
 
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
@@ -67,18 +38,14 @@
 . link:spark-sql-streaming-SQLConf.adoc[SQLConf -- Internal Configuration Store]
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
 
-== Extending Structured Streaming
+== File-Based Data Source
 
-. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
+. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
+. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
 
-. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- Writable Streaming Data Sources]
-.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter Contract]
-
-. link:spark-sql-streaming-Source.adoc[Streaming Source]
-.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
-
-. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
-.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
+. link:spark-sql-streaming-FileStreamSinkLog.adoc[FileStreamSinkLog]
+.. link:spark-sql-streaming-SinkFileStatus.adoc[SinkFileStatus]
+.. link:spark-sql-streaming-ManifestFileCommitProtocol.adoc[ManifestFileCommitProtocol]
 
 == Kafka Data Source
 
@@ -98,6 +65,50 @@
 .. link:spark-sql-streaming-KafkaOffsetRangeCalculator.adoc[KafkaOffsetRangeCalculator]
 . link:spark-sql-streaming-KafkaContinuousInputPartition.adoc[KafkaContinuousInputPartition]
 
+== Text Socket Data Source
+
+. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
+. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
+
+== Rate Data Source
+
+. link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]
+. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
+
+== Console Data Sink
+
+. link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
+. link:spark-sql-streaming-ConsoleWriter.adoc[ConsoleWriter]
+
+== Foreach Data Sink
+
+. link:spark-sql-streaming-ForeachWriterProvider.adoc[ForeachWriterProvider]
+. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
+. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
+
+== ForeachBatch Data Sink
+
+. link:spark-sql-streaming-ForeachBatchSink.adoc[ForeachBatchSink]
+
+== Memory Data Sink
+
+. link:spark-sql-streaming-MemorySinkV2.adoc[MemorySinkV2]
+. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
+. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
+
+== Extending Structured Streaming
+
+. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
+
+. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- Writable Streaming Data Sources]
+.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter Contract]
+
+. link:spark-sql-streaming-Source.adoc[Streaming Source]
+.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
+
+. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
+.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
+
 == Micro-Batch Stream Processing (Structured Streaming V1)
 
 . link:spark-sql-streaming-micro-batch-processing.adoc[Micro-Batch Stream Processing]
@@ -108,45 +119,34 @@
 . link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders]
 . link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract -- DataSourceReaders For Micro-Batch Stream Processing]
 
-=== File-Based Data Source
+== Continuous Stream Processing (Structured Streaming V2)
 
-. link:spark-sql-streaming-FileStreamSource.adoc[FileStreamSource]
-. link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
+. link:spark-sql-streaming-continuous-stream-processing.adoc[Continuous Stream Processing]
 
-. link:spark-sql-streaming-FileStreamSinkLog.adoc[FileStreamSinkLog]
-.. link:spark-sql-streaming-SinkFileStatus.adoc[SinkFileStatus]
-.. link:spark-sql-streaming-ManifestFileCommitProtocol.adoc[ManifestFileCommitProtocol]
+. link:spark-sql-streaming-ContinuousExecution.adoc[ContinuousExecution]
 
-=== Rate Data Source
+. link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract]
+. link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract]
 
-. link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]
-. link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
+. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
+. link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
 
-=== Memory Data Sink
+. link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator RPC Endpoint]
+.. link:spark-sql-streaming-EpochCoordinatorRef.adoc[EpochCoordinatorRef]
+.. link:spark-sql-streaming-EpochTracker.adoc[EpochTracker]
 
-. link:spark-sql-streaming-MemorySinkV2.adoc[MemorySinkV2]
-. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
-. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
+. link:spark-sql-streaming-ContinuousQueuedDataReader.adoc[ContinuousQueuedDataReader]
+.. link:spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.adoc[DataReaderThread]
+.. link:spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.adoc[EpochMarkerGenerator]
 
-=== Console Data Sink
+. link:spark-sql-streaming-PartitionOffset.adoc[PartitionOffset]
 
-. link:spark-sql-streaming-ConsoleSinkProvider.adoc[ConsoleSinkProvider]
-. link:spark-sql-streaming-ConsoleWriter.adoc[ConsoleWriter]
+. link:spark-sql-streaming-ContinuousExecutionRelation.adoc[ContinuousExecutionRelation Leaf Logical Operator]
+. link:spark-sql-streaming-WriteToContinuousDataSource.adoc[WriteToContinuousDataSource Unary Logical Operator]
+. link:spark-sql-streaming-WriteToContinuousDataSourceExec.adoc[WriteToContinuousDataSourceExec Unary Physical Operator]
+.. link:spark-sql-streaming-ContinuousWriteRDD.adoc[ContinuousWriteRDD]
 
-=== Foreach Data Sink
-
-. link:spark-sql-streaming-ForeachWriterProvider.adoc[ForeachWriterProvider]
-. link:spark-sql-streaming-ForeachWriter.adoc[ForeachWriter]
-. link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
-
-=== ForeachBatch Data Sink
-
-. link:spark-sql-streaming-ForeachBatchSink.adoc[ForeachBatchSink]
-
-=== Text Socket Data Source
-
-. link:spark-sql-streaming-TextSocketSourceProvider.adoc[TextSocketSourceProvider]
-. link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource]
+. link:spark-sql-streaming-ContinuousDataSourceRDD.adoc[ContinuousDataSourceRDD]
 
 == Query Planning and Execution
 
