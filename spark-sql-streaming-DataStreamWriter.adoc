@@ -1,4 +1,4 @@
-== [[DataStreamWriter]] DataStreamWriter -- Writing Datasets To Streaming Data Sinks
+== [[DataStreamWriter]] DataStreamWriter -- Writing Datasets To Streaming Sink
 
 `DataStreamWriter` is the <<methods, interface>> to describe when and what rows of a streaming query are sent out to the <<format, streaming sink>>.
 

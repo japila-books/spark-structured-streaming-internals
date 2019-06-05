@@ -8,35 +8,70 @@
 
 == Developing Streaming Applications
 
-. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader -- Loading Data from Streaming Data Source]
+. link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader]
 
-. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter -- Writing Datasets To Streaming Data Sinks]
+. link:spark-sql-streaming-DataStreamWriter.adoc[DataStreamWriter]
 .. link:spark-sql-streaming-OutputMode.adoc[OutputMode]
-.. link:spark-sql-streaming-Trigger.adoc[Trigger -- How Frequently to Check Sources For New Data]
+.. link:spark-sql-streaming-Trigger.adoc[Trigger]
 
 . link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery]
 
-. link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators -- High-Level Declarative Streaming Dataset API]
-.. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator -- Streaming Deduplication]
-.. link:spark-sql-streaming-Dataset-explain.adoc[explain Operator -- Explaining Query Plan]
-.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator -- Untyped Streaming Aggregation (with Implicit State Logic)]
-.. link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey Operator -- Streaming Aggregation]
-.. link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark Operator -- Event Time Watermark]
+. link:spark-sql-streaming-Dataset-operators.adoc[Streaming Operators]
+.. link:spark-sql-streaming-Dataset-dropDuplicates.adoc[dropDuplicates Operator]
+.. link:spark-sql-streaming-Dataset-explain.adoc[explain Operator]
+.. link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy Operator]
+.. link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey Operator]
+.. link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark Operator]
 
-. link:spark-sql-streaming-window.adoc[window Function -- Stream Time Windows]
+. link:spark-sql-streaming-window.adoc[window Function]
 
-. link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset -- Streaming Aggregation]
-.. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator -- Stateful Streaming Aggregation (with Explicit State Logic)]
-.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator -- Arbitrary Stateful Streaming Aggregation (with Explicit State Logic)]
+. link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator]
+.. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator]
 
-. link:spark-sql-streaming-GroupState.adoc[GroupState -- State Per Group in Stateful Streaming Aggregation]
-.. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
+. link:spark-sql-streaming-GroupState.adoc[GroupState]
 .. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
-. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager -- Streaming Query Management]
+. link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 
-. link:spark-sql-streaming-SQLConf.adoc[SQLConf -- Internal Configuration Store]
+. link:spark-sql-streaming-SQLConf.adoc[SQLConf]
 . link:spark-sql-streaming-properties.adoc[Configuration Properties]
+
+== Monitoring
+
+. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
+.. link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
+
+. link:spark-sql-streaming-MetricsReporter.adoc[MetricsReporter]
+
+. link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
+
+. link:spark-sql-streaming-webui.adoc[Web UI]
+
+. link:spark-sql-streaming-logging.adoc[Logging]
+
+== Demos
+
+. link:spark-sql-streaming-demo-groupByKey-count-Update.adoc[Demo: groupByKey Streaming Aggregation in Update Mode]
+. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
+. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
+. link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[groupBy Streaming Aggregation with Append Output Mode]
+. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
+. link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
+. link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
+
+== Extending Structured Streaming
+
+. link:spark-sql-streaming-DataSource.adoc[DataSource]
+
+. link:spark-sql-streaming-Source.adoc[Streaming Source]
+.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider]
+
+. link:spark-sql-streaming-Sink.adoc[Streaming Sink]
+.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
+
+. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract]
+.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter Contract]
 
 == File-Based Data Source
 
@@ -95,19 +130,6 @@
 . link:spark-sql-streaming-MemorySinkV2.adoc[MemorySinkV2]
 . link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 . link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
-
-== Extending Structured Streaming
-
-. link:spark-sql-streaming-DataSource.adoc[DataSource -- Pluggable Data Source]
-
-. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract -- Writable Streaming Data Sources]
-.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter Contract]
-
-. link:spark-sql-streaming-Source.adoc[Streaming Source]
-.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider -- Streaming Data Source Provider]
-
-. link:spark-sql-streaming-Sink.adoc[Streaming Sink -- Adding Batches of Data to Storage]
-.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 
 == Micro-Batch Stream Processing (Structured Streaming V1)
 
@@ -234,6 +256,8 @@
 .. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1 -- Legacy State Manager for Streaming Aggregation]
 .. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2 -- Default State Manager for Streaming Aggregation]
 
+. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
+
 . link:spark-sql-streaming-StatefulOperator.adoc[StatefulOperator Contract -- Physical Operators That Read or Write to StateStore]
 .. link:spark-sql-streaming-StateStoreReader.adoc[StateStoreReader]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter Contract -- Stateful Physical Operators That Write to StateStore]
@@ -252,29 +276,6 @@
 . link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
 
 . link:spark-sql-streaming-StateStoreConf.adoc[StateStoreConf]
-
-== Monitoring
-
-. link:spark-sql-streaming-StreamingQueryListener.adoc[StreamingQueryListener -- Intercepting Streaming Events]
-.. link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress]
-
-. link:spark-sql-streaming-MetricsReporter.adoc[MetricsReporter]
-
-. link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
-
-. link:spark-sql-streaming-webui.adoc[Web UI]
-
-. link:spark-sql-streaming-logging.adoc[Logging]
-
-== Demos
-
-. link:spark-sql-streaming-demo-groupByKey-count-Update.adoc[Demo: groupByKey Streaming Aggregation in Update Mode]
-. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
-. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
-. link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[groupBy Streaming Aggregation with Append Output Mode]
-. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
-. link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
-. link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
 
 == Varia
 

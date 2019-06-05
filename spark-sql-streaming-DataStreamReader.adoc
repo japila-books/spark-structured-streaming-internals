@@ -1,4 +1,4 @@
-== [[DataStreamReader]] DataStreamReader -- Loading Data from Streaming Data Source
+== [[DataStreamReader]] DataStreamReader -- Loading Data from Streaming Source
 
 `DataStreamReader` is the <<methods, interface>> to describe how data is <<load, loaded>> to a streaming `Dataset` from a <<spark-sql-streaming-Source.adoc#, streaming source>>.
 
