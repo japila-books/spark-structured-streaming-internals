@@ -8,6 +8,7 @@
 
 `GroupStateTimeout` is meant to be used to expire (_manage_) group state.
 
+[[extensions]]
 .GroupStateTimeouts
 [cols="30m,70",options="header",width="100%"]
 |===

@@ -55,6 +55,9 @@ Used when `StreamExecution` starts <<runBatches, running streaming batches>>.
 
 NOTE: `StreamExecution` throws a `IllegalStateException` when the <<trigger, Trigger>> is not one of the <<spark-sql-streaming-Trigger.adoc#available-implementations, two built-in implementations>>: `OneTimeExecutor` or `ProcessingTimeExecutor`.
 
+| watermarkTracker
+a| [[watermarkTracker]] `WatermarkTracker`
+
 |===
 
 === [[populateStartOffsets]] Populating Start Offsets -- `populateStartOffsets` Internal Method
@@ -141,7 +144,7 @@ NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc
 * [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
 * [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
 * [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
-* [[triggerClock]] `Clock`
+* [[triggerClock]] Trigger clock (`Clock`)
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>> (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
 * [[extraOptions]] `Map[String, String]`
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
@@ -260,6 +263,7 @@ FIXME True? Example?
 
 `constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Writing offsets to log*.
 
+[[walCommit]]
 In *walCommit* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section],
 `constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets in the batch] to <<offsetLog, OffsetSeqLog>>.
 

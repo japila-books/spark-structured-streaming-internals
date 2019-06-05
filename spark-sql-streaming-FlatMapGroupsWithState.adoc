@@ -1,19 +1,16 @@
 == [[FlatMapGroupsWithState]] FlatMapGroupsWithState Unary Logical Operator
 
-`FlatMapGroupsWithState` is a unary logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> to represent the following operators in link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset]:
+`FlatMapGroupsWithState` is a unary logical operator (`UnaryNode`) that is <<creating-instance, created>> to represent the following <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> operators:
 
-* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState]
+* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>>
 
-* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState]
+* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>>
 
-[NOTE]
-====
-`FlatMapGroupsWithState` is translated to:
+`FlatMapGroupsWithState` is resolved (_translated_) to:
 
-* link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operator in link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]  execution planning strategy for streaming Datasets (aka streaming plans)
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> unary physical operator for streaming datasets (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy)
 
-* `MapGroupsExec` physical operator in `BasicOperators` execution planning strategy for non-streaming/batch Datasets (aka batch plans)
-====
+* `MapGroupsExec` physical operator for batch datasets (in `BasicOperators` execution planning strategy)
 
 === [[apply]] Creating SerializeFromObject with FlatMapGroupsWithState -- `apply` Factory Method
 
@@ -37,7 +34,7 @@ Internally, `apply` finds `ExpressionEncoder` for the type `S` and creates a `Fl
 
 In the end, `apply` creates a `SerializeFromObject` object consumer with the `FlatMapGroupsWithState`.
 
-NOTE: `apply` is used when link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] is executed.
+NOTE: `apply` is used in <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operator.
 
 === [[creating-instance]] Creating FlatMapGroupsWithState Instance
 
@@ -50,7 +47,7 @@ NOTE: `apply` is used when link:spark-sql-streaming-KeyValueGroupedDataset.adoc#
 * [[dataAttributes]] Data attributes
 * [[outputObjAttr]] Output object attribute
 * [[stateEncoder]] State `ExpressionEncoder`
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
-* [[isMapGroupsWithState]] `isMapGroupsWithState` Flag (disabled by default)
-* [[timeout]] link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
+* [[isMapGroupsWithState]] `isMapGroupsWithState` flag (default: `false`)
+* [[timeout]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
 * [[child]] Child logical operator

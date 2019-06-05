@@ -107,7 +107,7 @@ NOTE: `getProgress` is used exclusively when `ProgressReporter` is requested to 
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-`shouldRunAnotherBatch` is disabled by default.
+`shouldRunAnotherBatch` is disabled (`false`) by default.
 
 NOTE: `shouldRunAnotherBatch` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, shouldRunAnotherBatch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
 

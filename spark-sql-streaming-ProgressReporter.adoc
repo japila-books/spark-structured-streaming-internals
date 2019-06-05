@@ -88,6 +88,8 @@ a| [[offsetSeqMetadata]]
 offsetSeqMetadata: OffsetSeqMetadata
 ----
 
+<<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> (with the current batch <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> and <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchTimestampMs, timestamp>>)
+
 | postEvent
 a| [[postEvent]]
 

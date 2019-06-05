@@ -104,6 +104,7 @@ NOTE: `CurrentTimestamp` and `CurrentDate` expressions are not supported for con
 
 `runContinuous` finds the only <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
 
+[[runContinuous-queryPlanning]]
 In *queryPlanning* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runContinuous` creates an <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> (that becomes the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, lastExecution>>) that is immediately executed (i.e. the entire query execution pipeline is executed up to and including _executedPlan_).
 
 `runContinuous` sets the following local properties:

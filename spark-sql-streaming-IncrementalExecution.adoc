@@ -8,7 +8,7 @@ image::images/IncrementalExecution-StreamExecution.png[align="center"]
 TIP: Details on `QueryExecution` contract can be found in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-QueryExecution.html[Mastering Apache Spark 2] gitbook.
 
 [[preparations]]
-`IncrementalExecution` registers <<state, state>> physical preparation rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using batch-specific execution properties).
+`IncrementalExecution` registers the <<state, state>> preparation rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using batch-specific execution properties).
 
 `IncrementalExecution` is <<creating-instance, created>> when:
 
@@ -107,7 +107,7 @@ a| `SparkPlanner` with the following extra planning strategies (in the order of 
 ====
 
 | [[state]] `state`
-a| State preparation rule (i.e. `Rule[SparkPlan]`) that transforms a streaming physical plan (i.e. `SparkPlan` with link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators) and fills missing properties that are batch-specific, e.g.
+a| State preparation rule (`Rule[SparkPlan]`) that transforms a streaming physical plan (i.e. `SparkPlan` with link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators) and fills missing properties that are batch-specific, e.g.
 
 * `StateStoreSaveExec` and `StateStoreRestoreExec` operator pair, `state` assigns:
 
@@ -152,7 +152,7 @@ NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExec
 * [[checkpointLocation]] `state` checkpoint directory
 * [[runId]] Run id
 * [[currentBatchId]] Current batch id
-* [[offsetSeqMetadata]] link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
+* [[offsetSeqMetadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>>
 
 `IncrementalExecution` initializes the <<internal-registries, internal registries and counters>>.
 
@@ -165,4 +165,4 @@ shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 
 `shouldRunAnotherBatch`...FIXME
 
-NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>>.
+NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>>.

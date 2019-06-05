@@ -1,6 +1,6 @@
 == [[WatermarkSupport]] WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support
 
-`WatermarkSupport` is the <<contract, contract>> for unary physical operators (i.e. `UnaryExecNode`) with streaming watermark support.
+`WatermarkSupport` is the <<contract, contract>> for unary physical operators (`UnaryExecNode`) with support for streaming event-time watermark.
 
 [NOTE]
 ====

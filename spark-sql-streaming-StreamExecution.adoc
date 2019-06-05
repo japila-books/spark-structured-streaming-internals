@@ -1,6 +1,6 @@
 == [[StreamExecution]] StreamExecution -- Base of Streaming Query Execution Engines
 
-`StreamExecution` is the <<contract, base>> of <<extensions, execution environments>> that can <<runActivatedStream, run>> a <<logicalPlan, structured query>> at regular intervals on a <<queryExecutionThread, stream execution thread>>.
+`StreamExecution` is the <<contract, base>> of <<extensions, streaming query execution engines>> that can <<runActivatedStream, run>> a <<logicalPlan, structured query>> at regular intervals on a <<queryExecutionThread, stream execution thread>>.
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* can all be considered synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
 
@@ -580,6 +580,33 @@ toDebugString(includeLogicalPlan: Boolean): String
 
 NOTE: `toDebugString` is used exclusively when `StreamExecution` is requested to <<runStream, run stream processing>> (and an exception is caught).
 
+=== [[offsetSeqMetadata]] Current Batch Metadata (Event-Time Watermark and Timestamp) -- `offsetSeqMetadata` Internal Property
+
+[source, scala]
+----
+offsetSeqMetadata: OffsetSeqMetadata
+----
+
+`offsetSeqMetadata` is a <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>>.
+
+NOTE: `offsetSeqMetadata` is part of the <<spark-sql-streaming-ProgressReporter.adoc#offsetSeqMetadata, ProgressReporter Contract>> to hold the current event-time watermark and timestamp.
+
+`offsetSeqMetadata` is used to create an <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> in the *queryPlanning* phase of the <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous-queryPlanning, ContinuousExecution>> execution engines.
+
+`offsetSeqMetadata` is initialized (with `0` for `batchWatermarkMs` and `batchTimestampMs`) when `StreamExecution` is requested to <<runStream, run stream processing>>.
+
+`offsetSeqMetadata` is then updated (with the current event-time watermark and timestamp) when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>>.
+
+NOTE: `MicroBatchExecution` uses the <<spark-sql-streaming-MicroBatchExecution.adoc#watermarkTracker, WatermarkTracker>> for the current event-time watermark and the <<spark-sql-streaming-MicroBatchExecution.adoc#triggerClock, trigger clock>> for the current batch timestamp.
+
+`offsetSeqMetadata` is stored (_checkpointed_) in the *walCommit* phase of <<spark-sql-streaming-MicroBatchExecution.adoc#walCommit, MicroBatchExecution>> (and printed out as INFO message to the logs).
+
+```
+FIXME INFO message
+```
+
+`offsetSeqMetadata` is restored (_re-created_) from a checkpointed state when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets>>.
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -686,19 +713,6 @@ NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used in
 Used when `StreamExecution` <<populateStartOffsets, populates the start offsets>> and <<constructNextBatch, constructs the next streaming batch>> (first to store the current batch's offsets in a write-ahead log and retrieve the previous batch's offsets right afterwards).
 
 NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the offset metadata log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
-
-| offsetSeqMetadata
-a| [[offsetSeqMetadata]] link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
-
-NOTE: `offsetSeqMetadata` is a part of link:spark-sql-streaming-ProgressReporter.adoc#offsetSeqMetadata[ProgressReporter Contract].
-
-* Initialized with `0` for `batchWatermarkMs` and `batchTimestampMs` when `StreamExecution` is <<creating-instance, created>>.
-
-* Updated with `0` for `batchWatermarkMs` and `batchTimestampMs` and `SparkSession` with `spark.sql.adaptive.enabled` disabled when `StreamExecution` <<runBatches, runs streaming batches>>.
-
-* Used in...FIXME
-
-* Copied with `batchTimestampMs` updated with the current time (in milliseconds) when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>>.
 
 | pollingDelayMs
 | [[pollingDelayMs]] Time delay before polling new data again when no data was available
