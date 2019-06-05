@@ -1,43 +1,46 @@
 == [[GroupStateTimeout]] GroupStateTimeout
 
-`GroupStateTimeout` represents the possible timeouts that you can use for the state-aware Dataset operations:
+`GroupStateTimeout` represents an *aggregation state timeout* that a Spark developer uses with the <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> operations:
 
-* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState]
+* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[KeyValueGroupedDataset.mapGroupsWithState]
 
-* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState]
+* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[KeyValueGroupedDataset.flatMapGroupsWithState]
 
-`GroupStateTimeout` is part of `org.apache.spark.sql.streaming` package.
+`GroupStateTimeout` is meant to be used to expire (_manage_) group state.
 
-[source, scala]
-----
-import org.apache.spark.sql.streaming.GroupStateTimeout
-----
-
-.Types of GroupStateTimeouts (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
+.GroupStateTimeouts
+[cols="30m,70",options="header",width="100%"]
 |===
 | GroupStateTimeout
 | Description
 
-| [[ProcessingTimeTimeout]] `ProcessingTimeTimeout`
-a| Timeout based on the processing time.
-
-[NOTE]
-====
-`FlatMapGroupsWithStateExec` link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[requires] that `batchTimestampMs` is specified when `ProcessingTimeTimeout` is used.
-
-`batchTimestampMs` is defined when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[is created] (and so is link:spark-sql-streaming-IncrementalExecution.adoc#state[state]). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a streaming batch].
-
-CAUTION: FIXME Describe `OffsetSeqMetadata` and `StreamExecution.offsetSeqMetadata`
-====
-
-| [[EventTimeTimeout]] `EventTimeTimeout`
-| Timeout based on the event time
+| EventTimeTimeout
+| [[EventTimeTimeout]] Timeout based on the event time
 
 Used when...FIXME
 
-| [[NoTimeout]] `NoTimeout`
-| No timeout
+| NoTimeout
+| [[NoTimeout]] No timeout
 
 Used when...FIXME
+
+| ProcessingTimeTimeout
+a| [[ProcessingTimeTimeout]] Timeout based on the processing time.
+
+`FlatMapGroupsWithStateExec` physical operator link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[requires] that `batchTimestampMs` is specified when `ProcessingTimeTimeout` is used.
+
+`batchTimestampMs` is defined when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is created (with the <<spark-sql-streaming-IncrementalExecution.adoc#state, state>>). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a streaming batch>>.
+
 |===
+
+=== [[internals]] Internals
+
+Internally, `GroupStateTimeout` is used for the following:
+
+* <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> unary logical operator is created
+
+* `MapGroupsExec` unary physical operator is created
+
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> unary physical operator is created
+
+* <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>> is created, <<spark-sql-streaming-GroupStateImpl.adoc#createForStreaming, createForStreaming>>, and <<spark-sql-streaming-GroupStateImpl.adoc#createForBatch, createForBatch>>

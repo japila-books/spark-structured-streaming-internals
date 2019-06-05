@@ -1,3 +1,33 @@
 == [[GroupStateImpl]] GroupStateImpl
 
 `GroupStateImpl`...FIXME
+
+=== [[createForStreaming]] `createForStreaming` Factory Method
+
+[source, scala]
+----
+createForStreaming[S](
+  optionalValue: Option[S],
+  batchProcessingTimeMs: Long,
+  eventTimeWatermarkMs: Long,
+  timeoutConf: GroupStateTimeout,
+  hasTimedOut: Boolean,
+  watermarkPresent: Boolean): GroupStateImpl[S]
+----
+
+`createForStreaming`...FIXME
+
+NOTE: `createForStreaming` is used when...FIXME
+
+=== [[createForBatch]] `createForBatch` Factory Method
+
+[source, scala]
+----
+createForBatch(
+  timeoutConf: GroupStateTimeout,
+  watermarkPresent: Boolean): GroupStateImpl[Any]
+----
+
+`createForBatch`...FIXME
+
+NOTE: `createForBatch` is used when...FIXME
