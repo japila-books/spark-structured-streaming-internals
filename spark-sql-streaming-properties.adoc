@@ -99,15 +99,17 @@ Use <<spark-sql-streaming-SQLConf.adoc#minBatchesToRetain, SQLConf.minBatchesToR
 | `spark.sql.streaming.multipleWatermarkPolicy`
 
 `min`
-a| [[spark.sql.streaming.multipleWatermarkPolicy]] Policy to calculate the global watermark value when there are multiple watermark operators in a streaming query.
+a| [[spark.sql.streaming.multipleWatermarkPolicy]] *Global watermark policy* that is the policy to calculate the global watermark value when there are multiple watermark operators in a streaming query
+
+Default: `min`
 
 Supported values:
 
-* `min` (default) - chooses the minimum watermark reported across multiple operators
+* `min` - chooses the minimum watermark reported across multiple operators
 
 * `max` - chooses the maximum across multiple operators
 
-NOTE: This configuration cannot be changed between query restarts from the same checkpoint location.
+Cannot be changed between query restarts from the same checkpoint location.
 
 | `spark.sql.streaming.numRecentProgressUpdates`
 

@@ -56,7 +56,7 @@ Used when `StreamExecution` starts <<runBatches, running streaming batches>>.
 NOTE: `StreamExecution` throws a `IllegalStateException` when the <<trigger, Trigger>> is not one of the <<spark-sql-streaming-Trigger.adoc#available-implementations, two built-in implementations>>: `OneTimeExecutor` or `ProcessingTimeExecutor`.
 
 | watermarkTracker
-a| [[watermarkTracker]] `WatermarkTracker`
+a| [[watermarkTracker]] <<spark-sql-streaming-WatermarkTracker.adoc#, WatermarkTracker>> that is created when `MicroBatchExecution` is requested to <<populateStartOffsets, populate start offsets>> (when requested to <<runActivatedStream, run an activated streaming query>>)
 
 |===
 
