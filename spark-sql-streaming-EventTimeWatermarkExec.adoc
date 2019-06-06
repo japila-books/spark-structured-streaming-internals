@@ -1,6 +1,10 @@
-== [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator for Accumulating Event Time Watermark
+== [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator -- Accumulating Event-Time Watermark
 
-`EventTimeWatermarkExec` is a unary physical operator (aka `UnaryExecNode`) that <<doExecute, accumulates>> the event time values (that appear in <<eventTime, eventTime watermark column>>).
+`EventTimeWatermarkExec` is a unary physical operator (`UnaryExecNode`) that <<doExecute, accumulates>> the event time values (that appear in the <<eventTime, eventTime watermark column>>).
+
+`EventTimeWatermarkExec` is <<creating-instance, created>> when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical plan with <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator for execution.
+
+NOTE: <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator is created as the result of <<spark-sql-streaming-Dataset-withWatermark.adoc#, Dataset.withWatermark>> operator.
 
 [NOTE]
 ====
@@ -11,17 +15,13 @@
 * `StreamExecution` to observe and possibly update eventTime watermark while link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData-true[constructing the next streaming batch].
 ====
 
-`EventTimeWatermarkExec` is <<creating-instance, created>> when link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy] execution planning strategy plans a `EventTimeWatermark` logical operator for execution.
-
-NOTE: link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is created as the result of link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator.
-
 [source, scala]
 ----
-val rates = spark.
-  readStream.
-  format("rate").
-  load.
-  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds") // <-- use EventTimeWatermark logical operator
+val rates = spark
+  .readStream
+  .format("rate")
+  .load
+  .withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds") // <-- creates EventTimeWatermark logical operator
 scala> rates.explain
 == Physical Plan ==
 EventTimeWatermark timestamp#0: timestamp, interval 10 seconds
@@ -29,15 +29,16 @@ EventTimeWatermark timestamp#0: timestamp, interval 10 seconds
 
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import scala.concurrent.duration._
-val sq = rates.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Append).
-  queryName("rates-to-console").
-  start
-17/08/11 09:04:17 INFO StreamExecution: Starting rates-to-console [id = ec8f8228-90f6-4e1f-8ad2-80222affed63, runId = f605c134-cfb0-4378-88c1-159d8a7c232e] with file:///private/var/folders/0w/kb0d3rqn4zb9fcc91pxhgn8w0000gn/T/temporary-3869a982-9824-4715-8cce-cce7c8251299 to store the query checkpoint.
+val queryName = "rates-to-console"
+val sq = rates
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .option("checkpointLocation", s"checkpointLocation-$queryName")
+  .trigger(Trigger.ProcessingTime(10.seconds))
+  .outputMode(OutputMode.Append)
+  .queryName(queryName)
+  .start
 ...
 -------------------------------------------
 Batch: 0
@@ -175,25 +176,14 @@ Batch: 2
 sq.stop
 ----
 
-[[internal-registries]]
-.EventTimeWatermarkExec's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
+[[creating-instance]]
+`EventTimeWatermarkExec` takes the following to be created:
 
-| [[delayMs]] `delayMs`
-| FIXME
+* [[eventTime]] Name of the column with event-time watermarks
+* [[delay]] Delay (`CalendarInterval`)
+* [[child]] Child physical operator (`SparkPlan`)
 
-Used when...FIXME
-
-| [[eventTimeStats]] `eventTimeStats`
-a| link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum] accumulator to accumulate <<eventTime, eventTime>> values from every row in a streaming batch (when `EventTimeWatermarkExec` <<doExecute, is executed>>).
-
-NOTE: `EventTimeStatsAccum` is a Spark accumulator of `EventTimeStats` from `Longs` (i.e. `AccumulatorV2[Long, EventTimeStats]`).
-
-NOTE: Every Spark accumulator has to be registered before use, and `eventTimeStats` is registered when `EventTimeWatermarkExec` <<creating-instance, is created>>.
-|===
+While being created, `EventTimeWatermarkExec` registers <<eventTimeStats, eventTimeStats>> accumulator (with the current `SparkContext`).
 
 === [[doExecute]] Executing EventTimeWatermarkExec (And Collecting Event Times) -- `doExecute` Method
 
@@ -202,7 +192,7 @@ NOTE: Every Spark accumulator has to be registered before use, and `eventTimeSta
 doExecute(): RDD[InternalRow]
 ----
 
-NOTE: `doExecute` is a part of `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
+NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
 Internally, `doExecute` executes <<child, child>> physical operator and maps over the partitions (using `RDD.mapPartitions`) that does the following:
 
@@ -210,16 +200,25 @@ Internally, `doExecute` executes <<child, child>> physical operator and maps ove
 
 1. For every row (as `InternalRow`)
 
-* Adds <<eventTime, eventTime>> to <<eventTimeStats, eventTimeStats>> acumulator
+* Adds <<eventTime, eventTime>> to <<eventTimeStats, eventTimeStats>> accumulator
 
-=== [[creating-instance]] Creating EventTimeWatermarkExec Instance
+=== [[internal-properties]] Internal Properties
 
-`EventTimeWatermarkExec` takes the following when created:
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
 
-* [[eventTime]] Name of the eventTime watermark column
-* [[delay]] Delay `CalendarInterval`
-* [[child]] Child physical plan
+| delayMs
+a| [[delayMs]] FIXME
 
-While being created, `EventTimeWatermarkExec` registers <<eventTimeStats, eventTimeStats>> accumulator (with the current `SparkContext`).
+Used when...FIXME
 
-`EventTimeWatermarkExec` initializes the <<internal-registries, internal registries and counters>>.
+| eventTimeStats
+a| [[eventTimeStats]] <<spark-sql-streaming-EventTimeStatsAccum.adoc#, EventTimeStatsAccum>> accumulator to accumulate <<eventTime, eventTime>> values from every row in a streaming batch (when `EventTimeWatermarkExec` <<doExecute, is executed>>).
+
+NOTE: `EventTimeStatsAccum` is a Spark accumulator of `EventTimeStats` from `Longs` (i.e. `AccumulatorV2[Long, EventTimeStats]`).
+
+NOTE: Every Spark accumulator has to be registered before use, and `eventTimeStats` is registered when `EventTimeWatermarkExec` <<creating-instance, is created>>.
+
+|===

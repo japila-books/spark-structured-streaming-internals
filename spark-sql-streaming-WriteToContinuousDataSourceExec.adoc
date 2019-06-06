@@ -37,7 +37,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 doExecute(): RDD[InternalRow]
 ----
 
-NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of a structured query as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
+NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
 `doExecute` requests the <<writer, StreamWriter>> to create a `DataWriterFactory`.
 
