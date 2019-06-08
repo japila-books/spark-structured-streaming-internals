@@ -1,14 +1,17 @@
 == [[FlatMapGroupsWithStateExec]] FlatMapGroupsWithStateExec Unary Physical Operator
 
-`FlatMapGroupsWithStateExec` is a unary physical operator (`UnaryExecNode`) that represents <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator at execution time.
+`FlatMapGroupsWithStateExec` is a unary physical operator that represents <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator at execution time.
 
-NOTE: A unary physical operator is a physical operator with a single <<child, child>> physical operator.
+[NOTE]
+====
+A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
 
-NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> unary logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators.
+<<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> unary logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators.
+====
 
-`FlatMapGroupsWithStateExec` is <<creating-instance, created>> when <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a streaming query with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators for execution.
+`FlatMapGroupsWithStateExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a streaming query with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators for execution.
 
-`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>> (and is requested <<shouldRunAnotherBatch, whether MicroBatchExecution should run another batch>> based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>> and the <<timeoutConf, GroupStateTimeout>>).
+`FlatMapGroupsWithStateExec` is a <<StateStoreWriter, stateful physical operator that can write to a state store>> (and `MicroBatchExecution` requests <<shouldRunAnotherBatch, whether to run another batch or not>> based on the <<timeoutConf, GroupStateTimeout>>).
 
 `FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator with the <<outputObjAttr, output object attribute>>.
 
@@ -61,21 +64,6 @@ sq.stop
 .FlatMapGroupsWithStateExec in web UI (Details for Query)
 image::images/FlatMapGroupsWithStateExec-webui-query-details.png[align="center"]
 
-[NOTE]
-====
-`FlatMapGroupsWithStateStrategy` converts link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined <<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>>.
-
-<<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>> are defined when `IncrementalExecution` query execution pipeline is requested to apply the link:spark-sql-streaming-IncrementalExecution.adoc#preparations[physical plan preparation rules].
-====
-
-When <<doExecute, executed>>, `FlatMapGroupsWithStateExec` requires that the optional values are properly defined given <<timeoutConf, timeoutConf>>:
-
-* <<batchTimestampMs, batchTimestampMs>> for `ProcessingTimeTimeout`
-
-* <<eventTimeWatermark, eventTimeWatermark>> and <<watermarkExpression, watermarkExpression>> for `EventTimeTimeout`
-
-CAUTION: FIXME Where are the optional values defined?
-
 [[logging]]
 [TIP]
 ====
@@ -90,6 +78,12 @@ log4j.logger.org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
+=== [[StateStoreWriter]] FlatMapGroupsWithStateExec as StateStoreWriter
+
+`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that can write to a state store>>.
+
+`FlatMapGroupsWithStateExec` uses the <<timeoutConf, GroupStateTimeout>> (and possibly the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>>) when asked <<shouldRunAnotherBatch, whether to run another batch or not>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>> when requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
+
 === [[WatermarkSupport]] FlatMapGroupsWithStateExec with Streaming Event-Time Watermark Support (WatermarkSupport)
 
 `FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-WatermarkSupport.adoc#, physical operator that supports streaming event-time watermark>>.
@@ -98,7 +92,12 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 The <<eventTimeWatermark, event-time watermark>> is initially undefined (`None`) when planned to for execution (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy).
 
-The <<eventTimeWatermark, event-time watermark>> is only defined to the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, current event-time watermark>> of the given <<spark-sql-streaming-IncrementalExecution.adoc#offsetSeqMetadata, OffsetSeqMetadata>> when `IncrementalExecution` is requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state>> preparation rule (as part of the <<spark-sql-streaming-IncrementalExecution.adoc#preparations, preparations>> rules).
+[NOTE]
+====
+`FlatMapGroupsWithStateStrategy` converts link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined <<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>>.
+====
+
+The <<eventTimeWatermark, event-time watermark>> (with the <<stateInfo, StatefulOperatorStateInfo>> and the <<batchTimestampMs, batchTimestampMs>>) is only defined to the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, current event-time watermark>> of the given <<spark-sql-streaming-IncrementalExecution.adoc#offsetSeqMetadata, OffsetSeqMetadata>> when `IncrementalExecution` query execution pipeline is requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state>> preparation rule (as part of the <<spark-sql-streaming-IncrementalExecution.adoc#preparations, preparations>> rules).
 
 [NOTE]
 ====
