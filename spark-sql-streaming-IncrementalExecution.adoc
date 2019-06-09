@@ -165,4 +165,4 @@ shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 
 `shouldRunAnotherBatch`...FIXME
 
-NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>>.
+NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>>.

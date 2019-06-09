@@ -19,7 +19,7 @@ toStreamProgress(sources: Seq[BaseStreamingSource]): StreamProgress
 ====
 `toStreamProgress` is used when:
 
-* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populateStartOffsets>> and <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, constructNextBatch>>
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populateStartOffsets>> and <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>>
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>
 ====

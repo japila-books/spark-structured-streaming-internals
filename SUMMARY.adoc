@@ -64,6 +64,9 @@
 
 . link:spark-sql-streaming-DataSource.adoc[DataSource]
 
+. link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
+. link:spark-sql-streaming-BaseStreamingSink.adoc[BaseStreamingSink Contract]
+
 . link:spark-sql-streaming-Source.adoc[Streaming Source]
 .. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider]
 
@@ -185,7 +188,6 @@
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus -- Notification Bus for Streaming Events]
 
-. link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
 . link:spark-sql-streaming-StreamMetadata.adoc[StreamMetadata]
 
 === Logical Operators

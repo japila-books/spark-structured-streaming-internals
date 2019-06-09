@@ -375,7 +375,7 @@ a|
 DEBUG Stream running from [committedOffsets] to [availableOffsets]
 ```
 
-| 1. <<constructNextBatch, Constructing the next streaming batch>>
+| 1. <<constructNextBatch, Constructing the next streaming micro-batch>>
 |===
 
 If there is <<dataAvailable, data available>> in the sources, `batchRunner` marks <<currentStatus, currentStatus>> with `isDataAvailable` enabled.
@@ -538,7 +538,7 @@ NOTE: <<streamDeathCause, streamDeathCause>> is defined exclusively when `Stream
 
 `processAllAvailable` keeps waiting 10 seconds for <<awaitProgressLockCondition, awaitProgressLockCondition>> until <<noNewData, noNewData>> flag is turned on or `StreamExecution` is no longer <<isActive, active>>.
 
-NOTE: <<noNewData, noNewData>> flag is turned on exclusively when `StreamExecution` <<constructNextBatch, constructs the next streaming batch>> (and finds that <<constructNextBatch-hasNewData-false, no data is available>>).
+NOTE: <<noNewData, noNewData>> flag is turned on exclusively when `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and finds that <<constructNextBatch-hasNewData-false, no data is available>>).
 
 In the end, `processAllAvailable` releases <<awaitProgressLock, awaitProgressLock>> lock.
 
@@ -595,7 +595,7 @@ NOTE: `offsetSeqMetadata` is part of the <<spark-sql-streaming-ProgressReporter.
 
 `offsetSeqMetadata` is initialized (with `0` for `batchWatermarkMs` and `batchTimestampMs`) when `StreamExecution` is requested to <<runStream, run stream processing>>.
 
-`offsetSeqMetadata` is then updated (with the current event-time watermark and timestamp) when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>>.
+`offsetSeqMetadata` is then updated (with the current event-time watermark and timestamp) when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>>.
 
 NOTE: `MicroBatchExecution` uses the <<spark-sql-streaming-MicroBatchExecution.adoc#watermarkTracker, WatermarkTracker>> for the current event-time watermark and the <<spark-sql-streaming-MicroBatchExecution.adoc#triggerClock, trigger clock>> for the current batch timestamp.
 
@@ -627,7 +627,7 @@ Set when (in order):
 
 1. `StreamExecution` resumes and <<populateStartOffsets, populates the start offsets>> with the latest offsets from the <<offsetLog, offset log>> that may have already been processed (and committed to the <<batchCommitLog, batch commit log>> so they are used as the current <<committedOffsets, committed offsets>>)
 
-1. `StreamExecution` <<constructNextBatch, constructs the next streaming batch>> (and gets offsets from the sources)
+1. `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and gets offsets from the sources)
 
 [NOTE]
 ====
@@ -645,7 +645,7 @@ Used when:
 
 * `StreamExecution` <<dataAvailable, checks whether a new data is available in the sources>> (and is not recorded in <<committedOffsets, committed offsets>>)
 
-* `StreamExecution` <<constructNextBatch, constructs the next streaming batch>> (and records offsets in the <<offsetLog, write-ahead offset log>>)
+* `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and records offsets in the <<offsetLog, write-ahead offset log>>)
 
 * `StreamExecution` <<runBatch, runs a streaming batch>> (and fetches data from the sources that has not been processed yet, i.e. not in <<committedOffsets, committed offsets>> registry)
 
@@ -703,14 +703,14 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces Stre
 | noNewData
 | [[noNewData]] Flag that indicates whether there are new offsets (_data_) available for processing or not
 
-Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming batch>> when no new offsets are available.
+Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming micro-batch>> when no new offsets are available.
 
 | offsetLog
 a| [[offsetLog]] *Offset write-ahead log* (<<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>>) to record offsets in when ready for processing.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
-Used when `StreamExecution` <<populateStartOffsets, populates the start offsets>> and <<constructNextBatch, constructs the next streaming batch>> (first to store the current batch's offsets in a write-ahead log and retrieve the previous batch's offsets right afterwards).
+Used when `StreamExecution` <<populateStartOffsets, populates the start offsets>> and <<constructNextBatch, constructs the next streaming micro-batch>> (first to store the current batch's offsets in a write-ahead log and retrieve the previous batch's offsets right afterwards).
 
 NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the offset metadata log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
 
@@ -790,7 +790,7 @@ NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutio
 
 Used when `StreamExecution`:
 
-* <<constructNextBatch, Constructs the next streaming batch>> (and gets new offsets for every streaming data source)
+* <<constructNextBatch, Constructs the next streaming micro-batch>> (and gets new offsets for every streaming data source)
 
 * <<stopSources, Stops all streaming data sources>>
 |===

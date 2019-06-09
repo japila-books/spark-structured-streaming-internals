@@ -82,7 +82,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 `FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that can write to a state store>>.
 
-`FlatMapGroupsWithStateExec` uses the <<timeoutConf, GroupStateTimeout>> (and possibly the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>>) when asked <<shouldRunAnotherBatch, whether to run another batch or not>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming batch>> when requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
+`FlatMapGroupsWithStateExec` uses the <<timeoutConf, GroupStateTimeout>> (and possibly the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>>) when asked <<shouldRunAnotherBatch, whether to run another batch or not>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>> when requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
 
 === [[WatermarkSupport]] FlatMapGroupsWithStateExec with Streaming Event-Time Watermark Support (WatermarkSupport)
 

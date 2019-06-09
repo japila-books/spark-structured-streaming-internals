@@ -183,7 +183,7 @@ Internally, `getOffset` fetches the <<initialPartitionOffsets, initial partition
 .KafkaSource Initializing initialPartitionOffsets While Fetching Initial Offsets
 image::images/KafkaSource-initialPartitionOffsets.png[align="center"]
 
-NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData[constructs a streaming batch]).
+NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData[constructs a streaming micro-batch]).
 
 [source, scala]
 ----
