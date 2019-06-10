@@ -7,10 +7,11 @@ object GroupbyAppendWatermarkExample extends App {
 
   val appName = this.getClass.getSimpleName.replace("$", "")
   val queryName = appName
-  val checkpointLocation = s"target/$queryName"
+  val rootDir = "target"
+  val checkpointLocation = s"$rootDir/$queryName"
   val numPartitions = 1
   val master = "local[*]"
-  val warehouseDir = s"target/$queryName-warehouse"
+  val warehouseDir = s"$checkpointLocation-warehouse"
 
   val eventTimeCol = "eventTime"
 

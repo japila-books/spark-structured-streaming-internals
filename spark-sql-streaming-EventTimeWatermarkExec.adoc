@@ -1,6 +1,13 @@
 == [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator -- Accumulating Event-Time Watermark
 
-`EventTimeWatermarkExec` is a unary physical operator (`UnaryExecNode`) that <<doExecute, accumulates>> the event time values (that appear in the <<eventTime, eventTime watermark column>>).
+`EventTimeWatermarkExec` is a unary physical operator that <<doExecute, accumulates>> the event time values (that appear in the <<eventTime, eventTime watermark column>>).
+
+[NOTE]
+====
+A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
+
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+====
 
 `EventTimeWatermarkExec` is <<creating-instance, created>> when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical plan with <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator for execution.
 

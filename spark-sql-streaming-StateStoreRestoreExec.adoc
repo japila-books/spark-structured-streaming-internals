@@ -2,7 +2,12 @@
 
 `StateStoreRestoreExec` is a unary physical operator that link:spark-sql-streaming-StateStoreReader.adoc[restores a state from a state store] (for the keys from the <<child, child>> physical operator).
 
-NOTE: A unary physical operator is a physical operator with a single <<child, child>> physical operator.
+[NOTE]
+====
+A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
+
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+====
 
 `StateStoreRestoreExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical query plan with an `Aggregate` logical operator in a streaming structured query.
 
