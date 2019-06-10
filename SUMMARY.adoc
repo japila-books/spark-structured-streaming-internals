@@ -248,6 +248,8 @@
 . link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider Contract]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider -- Default StateStoreProvider]
 
+. link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
+
 . link:spark-sql-streaming-StateStoreMetrics.adoc[StateStoreMetrics]
 . link:spark-sql-streaming-StateStoreCustomMetric.adoc[StateStoreCustomMetric Contract]
 
@@ -284,6 +286,5 @@
 == Varia
 
 . link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
-. link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum Accumulator]
 . link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]
 . link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support]
