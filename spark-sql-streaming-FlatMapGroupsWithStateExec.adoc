@@ -126,14 +126,14 @@ NOTE: `keyExpressions` is part of the <<spark-sql-streaming-WatermarkSupport.ado
 
 `keyExpressions` simply returns the <<groupingAttributes, grouping attributes>>.
 
-=== [[doExecute]] Executing FlatMapGroupsWithStateExec -- `doExecute` Method
+=== [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 
 [source, scala]
 ----
 doExecute(): RDD[InternalRow]
 ----
 
-NOTE: `doExecute` is part of the `SparkPlan` contract to produce the result of a physical operator as an RDD of internal binary rows (i.e. `InternalRow`).
+NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
 Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
 

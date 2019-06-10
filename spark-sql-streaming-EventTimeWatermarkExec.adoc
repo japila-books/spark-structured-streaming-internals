@@ -109,7 +109,7 @@ EventTimeStats(1560160063350,1560160049350,1.5601600563500002E12,15)
 // The stats are indeed different (on the second and third places)
 ----
 
-=== [[doExecute]] Executing EventTimeWatermarkExec (And Collecting Event Times) -- `doExecute` Method
+=== [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 
 [source, scala]
 ----
