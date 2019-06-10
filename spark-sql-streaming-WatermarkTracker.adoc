@@ -52,7 +52,7 @@ setWatermark(newWatermarkMs: Long): Unit
 
 NOTE: `setWatermark` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets>> (when requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>>).
 
-=== [[updateWatermark]] `updateWatermark` Method
+=== [[updateWatermark]] Updating Event-Time Watermark -- `updateWatermark` Method
 
 [source, scala]
 ----

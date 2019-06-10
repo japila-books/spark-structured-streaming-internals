@@ -61,7 +61,7 @@ a| [[withWatermark]]
 withWatermark(eventTime: String, delayThreshold: String): Dataset[T]
 ----
 
-Defines a streaming watermark for late events (on the given `eventTime` column)
+Defines a streaming event-time watermark for late events (on the given `eventTime` column with a delay threshold)
 
 | `writeStream`
 a| [[writeStream]]

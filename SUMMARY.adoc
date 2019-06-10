@@ -202,14 +202,14 @@
 
 === Physical Operators
 
-. link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec Unary Physical Operator for Accumulating Event Time Watermark]
-. link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec Unary Physical Operator]
-. link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates]
-. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates]
-. link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication]
+. link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
+. link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec]
+. link:spark-sql-streaming-StateStoreRestoreExec.adoc[StateStoreRestoreExec]
+. link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec]
+. link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec]
 . link:spark-sql-streaming-StreamingGlobalLimitExec.adoc[StreamingGlobalLimitExec]
-. link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec Leaf Physical Operator]
-. link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc[StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins]
+. link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec]
+. link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc[StreamingSymmetricHashJoinExec]
 
 === Execution Planning Strategies
 

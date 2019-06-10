@@ -1,6 +1,6 @@
-== [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator -- Accumulating Event-Time Watermark
+== [[EventTimeWatermarkExec]] EventTimeWatermarkExec Unary Physical Operator -- Monitoring Event-Time Watermark
 
-`EventTimeWatermarkExec` is a unary physical operator that <<doExecute, accumulates>> the event time values (that appear in the <<eventTime, eventTime watermark column>>).
+`EventTimeWatermarkExec` is a unary physical operator that simply <<doExecute, updates>> the <<eventTimeStats, EventTimeStatsAccum>> internal accumulator with the values of the <<eventTime, event-time watermark column>>.
 
 [NOTE]
 ====
@@ -9,18 +9,24 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`EventTimeWatermarkExec` is <<creating-instance, created>> when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical plan with <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator for execution.
+`EventTimeWatermarkExec` uses <<eventTimeStats, EventTimeStatsAccum>> internal accumulator as a way to send the statistics (the maximum, minimum, average and update count) of the values in the <<eventTime, event-time watermark column>> that is used in:
 
-NOTE: <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator is created as the result of <<spark-sql-streaming-Dataset-withWatermark.adoc#, Dataset.withWatermark>> operator.
+* `ProgressReporter` for link:spark-sql-streaming-ProgressReporter.adoc#extractExecutionStats[creating execution statistics] for the most recent query execution (for you to monitor `max`, `min`, `avg`, and `watermark` event-time watermark statistics)
 
-[NOTE]
-====
-`EventTimeWatermarkExec` uses <<eventTimeStats, eventTimeStats>> accumulator to send the statistics (i.e. the maximum, minimum, average and count) for the event time column in a streaming batch that is later used in:
+* `StreamExecution` to observe and possibly update event-time watermark when <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData-true, constructing the next streaming batch>>.
 
-* `ProgressReporter` for link:spark-sql-streaming-ProgressReporter.adoc#extractExecutionStats[creating execution statistics] for the most recent query execution. You should then see `max`, `min`, `avg`, and `watermark` eventTime watermark statistics.
+`EventTimeWatermarkExec` is <<creating-instance, created>> for every <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator in a logical query plan when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical plan for execution.
 
-* `StreamExecution` to observe and possibly update eventTime watermark while link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData-true[constructing the next streaming batch].
-====
+NOTE: <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator is created as the result of <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator.
+
+[[creating-instance]]
+`EventTimeWatermarkExec` takes the following to be created:
+
+* [[eventTime]] Event-time watermark column
+* [[delay]] Delay interval (`CalendarInterval`)
+* [[child]] Child physical operator (`SparkPlan`)
+
+While <<creating-instance, created>>, `EventTimeWatermarkExec` registers the <<eventTimeStats, EventTimeStatsAccum>> internal accumulator (with the current `SparkContext`).
 
 [source, scala]
 ----
@@ -29,168 +35,79 @@ val rates = spark
   .format("rate")
   .load
   .withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds") // <-- creates EventTimeWatermark logical operator
+
+// EventTimeWatermark logical operator is planned as EventTimeWatermarkExec physical operator
+// Note that as a physical operator EventTimeWatermarkExec shows itself without the Exec suffix
 scala> rates.explain
 == Physical Plan ==
 EventTimeWatermark timestamp#0: timestamp, interval 10 seconds
 +- StreamingRelation rate, [timestamp#0, value#1L]
 
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+// Let's build a complete streaming pipeline
+// Connecting the input (source) to the output (sink)
+import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
 val queryName = "rates-to-console"
 val sq = rates
   .writeStream
   .format("console")
+  .option("numRows", 1) // just the last row with the timestamp
   .option("truncate", false)
-  .option("checkpointLocation", s"checkpointLocation-$queryName")
-  .trigger(Trigger.ProcessingTime(10.seconds))
-  .outputMode(OutputMode.Append)
+  .trigger(Trigger.ProcessingTime(15.seconds))
   .queryName(queryName)
   .start
-...
--------------------------------------------
-Batch: 0
--------------------------------------------
-+---------+-----+
-|timestamp|value|
-+---------+-----+
-+---------+-----+
-...
-17/08/11 09:04:17 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] -> 0),ArrayBuffer(),Map(watermark -> 1970-01-01T00:00:00.000Z))
-...
-17/08/11 09:04:17 INFO StreamExecution: Streaming query made progress: {
-  "id" : "ec8f8228-90f6-4e1f-8ad2-80222affed63",
-  "runId" : "f605c134-cfb0-4378-88c1-159d8a7c232e",
-  "name" : "rates-to-console",
-  "timestamp" : "2017-08-11T07:04:17.373Z",
-  "batchId" : 0,
-  "numInputRows" : 0,
-  "processedRowsPerSecond" : 0.0,
-  "durationMs" : {
-    "addBatch" : 38,
-    "getBatch" : 1,
-    "getOffset" : 0,
-    "queryPlanning" : 1,
-    "triggerExecution" : 62,
-    "walCommit" : 19
-  },
-  "eventTime" : {
-    "watermark" : "1970-01-01T00:00:00.000Z"  // <-- no watermark found yet
-  },
-...
-17/08/11 09:04:17 DEBUG StreamExecution: batch 0 committed
-...
--------------------------------------------
-Batch: 1
--------------------------------------------
-+-----------------------+-----+
-|timestamp              |value|
-+-----------------------+-----+
-|2017-08-11 09:04:17.282|0    |
-|2017-08-11 09:04:18.282|1    |
-+-----------------------+-----+
-...
-17/08/11 09:04:20 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] -> 2),ArrayBuffer(),Map(max -> 2017-08-11T07:04:18.282Z, min -> 2017-08-11T07:04:17.282Z, avg -> 2017-08-11T07:04:17.782Z, watermark -> 1970-01-01T00:00:00.000Z))
-...
-//
-// Notice eventTimeStats in eventTime section below
-// They are only available when watermark is used and
-// EventTimeWatermarkExec.eventTimeStats.value.count > 0, i.e.
-// there were input rows (with event time)
-// Note that watermark has NOT been changed yet (perhaps it should have)
-//
-17/08/11 09:04:20 INFO StreamExecution: Streaming query made progress: {
-  "id" : "ec8f8228-90f6-4e1f-8ad2-80222affed63",
-  "runId" : "f605c134-cfb0-4378-88c1-159d8a7c232e",
-  "name" : "rates-to-console",
-  "timestamp" : "2017-08-11T07:04:20.004Z",
-  "batchId" : 1,
-  "numInputRows" : 2,
-  "inputRowsPerSecond" : 0.7601672367920943,
-  "processedRowsPerSecond" : 25.31645569620253,
-  "durationMs" : {
-    "addBatch" : 48,
-    "getBatch" : 6,
-    "getOffset" : 0,
-    "queryPlanning" : 1,
-    "triggerExecution" : 79,
-    "walCommit" : 23
-  },
-  "eventTime" : {
-    "avg" : "2017-08-11T07:04:17.782Z",
-    "max" : "2017-08-11T07:04:18.282Z",
-    "min" : "2017-08-11T07:04:17.282Z",
-    "watermark" : "1970-01-01T00:00:00.000Z"
-  },
-...
-17/08/11 09:04:20 DEBUG StreamExecution: batch 1 committed
-...
-//
-// At long last!
-// I think it should have been a batch earlier
-// I did ask about it on the dev mailing list today (on 17/08/11)
-//
-17/08/11 09:04:30 DEBUG StreamExecution: Observed event time stats: EventTimeStats(1502435058282,1502435057282,1.502435057782E12,2)
-17/08/11 09:04:30 INFO StreamExecution: Updating eventTime watermark to: 1502435048282 ms
-...
--------------------------------------------
-Batch: 2
--------------------------------------------
-+-----------------------+-----+
-|timestamp              |value|
-+-----------------------+-----+
-|2017-08-11 09:04:19.282|2    |
-|2017-08-11 09:04:20.282|3    |
-|2017-08-11 09:04:21.282|4    |
-|2017-08-11 09:04:22.282|5    |
-|2017-08-11 09:04:23.282|6    |
-|2017-08-11 09:04:24.282|7    |
-|2017-08-11 09:04:25.282|8    |
-|2017-08-11 09:04:26.282|9    |
-|2017-08-11 09:04:27.282|10   |
-|2017-08-11 09:04:28.282|11   |
-+-----------------------+-----+
-...
-17/08/11 09:04:30 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] -> 10),ArrayBuffer(),Map(max -> 2017-08-11T07:04:28.282Z, min -> 2017-08-11T07:04:19.282Z, avg -> 2017-08-11T07:04:23.782Z, watermark -> 2017-08-11T07:04:08.282Z))
-...
-17/08/11 09:04:30 INFO StreamExecution: Streaming query made progress: {
-  "id" : "ec8f8228-90f6-4e1f-8ad2-80222affed63",
-  "runId" : "f605c134-cfb0-4378-88c1-159d8a7c232e",
-  "name" : "rates-to-console",
-  "timestamp" : "2017-08-11T07:04:30.003Z",
-  "batchId" : 2,
-  "numInputRows" : 10,
-  "inputRowsPerSecond" : 1.000100010001,
-  "processedRowsPerSecond" : 56.17977528089888,
-  "durationMs" : {
-    "addBatch" : 147,
-    "getBatch" : 6,
-    "getOffset" : 0,
-    "queryPlanning" : 1,
-    "triggerExecution" : 178,
-    "walCommit" : 22
-  },
-  "eventTime" : {
-    "avg" : "2017-08-11T07:04:23.782Z",
-    "max" : "2017-08-11T07:04:28.282Z",
-    "min" : "2017-08-11T07:04:19.282Z",
-    "watermark" : "2017-08-11T07:04:08.282Z"
-  },
-...
-17/08/11 09:04:30 DEBUG StreamExecution: batch 2 committed
-...
 
-// In the end, stop the streaming query
-sq.stop
+// Let's access the underlying stream execution engine
+// It should be MicroBatchExecution since we use ProcessingTime, shouldn't it?
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val se = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
+scala> :type se
+org.apache.spark.sql.execution.streaming.StreamExecution
+
+import org.apache.spark.sql.execution.streaming.MicroBatchExecution
+val engine = se.asInstanceOf[MicroBatchExecution]
+scala> :type engine
+org.apache.spark.sql.execution.streaming.MicroBatchExecution
+
+val lastMicroBatch = engine.lastExecution
+scala> :type lastMicroBatch
+org.apache.spark.sql.execution.streaming.IncrementalExecution
+
+// Access executedPlan that is the optimized physical query plan ready for execution
+// All streaming optimizations have been applied at this point
+// We just need the EventTimeWatermarkExec physical operator
+val plan = lastMicroBatch.executedPlan
+scala> :type plan
+org.apache.spark.sql.execution.SparkPlan
+
+// Let's find the one and only EventTimeWatermarkExec operator in the plan
+import org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec
+val watermarkOp = plan.collect { case op: EventTimeWatermarkExec => op }.head
+
+// Among the properties are delay interval (in millis)
+// We used withWatermark(..., delayThreshold = "10 seconds")
+assert(watermarkOp.delayMs == 10000)
+
+// Let's check out the event-time watermark stats
+// They correspond to the concrete EventTimeWatermarkExec operator for a micro-batch
+val stats = watermarkOp.eventTimeStats.value
+scala> :type stats
+org.apache.spark.sql.execution.streaming.EventTimeStats
+
+scala> println(stats)
+EventTimeStats(1560159493350,1560159479350,1.56015948635E12,15)
+
+// Let's compare it to the latest lastExecution
+val lastMicroBatch = engine.lastExecution
+val plan = lastMicroBatch.executedPlan
+import org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec
+val watermarkOp = plan.collect { case op: EventTimeWatermarkExec => op }.head
+val stats = watermarkOp.eventTimeStats.value
+scala> println(stats)
+EventTimeStats(1560160063350,1560160049350,1.5601600563500002E12,15)
+
+// The stats are indeed different (on the second and third places)
 ----
-
-[[creating-instance]]
-`EventTimeWatermarkExec` takes the following to be created:
-
-* [[eventTime]] Name of the column with event-time watermarks
-* [[delay]] Delay (`CalendarInterval`)
-* [[child]] Child physical operator (`SparkPlan`)
-
-While being created, `EventTimeWatermarkExec` registers <<eventTimeStats, eventTimeStats>> accumulator (with the current `SparkContext`).
 
 === [[doExecute]] Executing EventTimeWatermarkExec (And Collecting Event Times) -- `doExecute` Method
 
@@ -209,6 +126,17 @@ Internally, `doExecute` executes <<child, child>> physical operator and maps ove
 
 * Adds <<eventTime, eventTime>> to <<eventTimeStats, eventTimeStats>> accumulator
 
+=== [[output]] Output Schema -- `output` Property
+
+[source, scala]
+----
+output: Seq[Attribute]
+----
+
+NOTE: `output` is part of the `QueryPlan` Contract to describe the attributes of the output (aka _schema_).
+
+`output`...FIXME
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -217,9 +145,12 @@ Internally, `doExecute` executes <<child, child>> physical operator and maps ove
 | Description
 
 | delayMs
-a| [[delayMs]] FIXME
+a| [[delayMs]] <<delay, delay>> interval in milliseconds
 
-Used when...FIXME
+Used when:
+
+* `EventTimeWatermarkExec` is requested for the <<output, output schema>>
+* `WatermarkTracker` is requested to <<spark-sql-streaming-WatermarkTracker.adoc#updateWatermark, update the event-time watermark>>
 
 | eventTimeStats
 a| [[eventTimeStats]] <<spark-sql-streaming-EventTimeStatsAccum.adoc#, EventTimeStatsAccum>> accumulator to accumulate <<eventTime, eventTime>> values from every row in a streaming batch (when `EventTimeWatermarkExec` <<doExecute, is executed>>).
