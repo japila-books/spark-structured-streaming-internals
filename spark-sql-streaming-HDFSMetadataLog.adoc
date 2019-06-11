@@ -2,6 +2,9 @@
 
 `HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, MetadataLog>> that uses Hadoop HDFS for a reliable storage.
 
+[[metadataPath]]
+`HDFSMetadataLog` uses the given <<path, path>> as the root directory of metadata logs. The path is immediately converted to a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for file management.
+
 [[formats]]
 `HDFSMetadataLog` uses http://json4s.org/[Json4s] with the https://github.com/FasterXML/jackson-databind[Jackson] binding for JSON parsing (serialization and deserialization).
 
@@ -21,7 +24,7 @@
 | [[CompactibleFileStreamLog]] Compactible metadata logs
 
 | <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>
-| [[OffsetSeqLog]]
+| [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-ahead log (WAL)>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
 
 |===
 
@@ -90,18 +93,20 @@ NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataL
 
 `get`...FIXME
 
-=== [[add]] Persisting (Storing) Metadata for Batch -- `add` Method
+=== [[add]] Adding Metadata for Batch -- `add` Method
 
 [source, scala]
 ----
-add(batchId: Long, metadata: T): Boolean
+add(
+  batchId: Long,
+  metadata: T): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to...FIXME.
+NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to add metadata for a batch.
 
-`add` <<batchIdToPath, batchIdToPath>> for the given `batchId` and <<writeBatchToFile, writeBatchToFile>> unless <<get, already available (persisted)>>.
+`add` <<batchIdToPath, creates a batch metadata file>> for the given `batchId` and <<writeBatchToFile, writes the batch metadata to the file>> unless <<get, already done>>.
 
-`add` returns `true` when the <<batchIdToPath, batchIdToPath>> for the given `batchId` was not available.
+`add` returns `true` when the metadata has just been written for the batch (and the <<batchIdToPath, batchIdToPath>> for the given `batchId` was not available).
 
 === [[getLatest]] Retrieving Latest Committed Batch Id with Metadata If Available -- `getLatest` Method
 
@@ -142,14 +147,14 @@ getOrderedBatchFiles(): Array[FileStatus]
 
 NOTE: `getOrderedBatchFiles` is used when...FIXME
 
-=== [[batchIdToPath]] `batchIdToPath` Method
+=== [[batchIdToPath]] Creating Batch Metadata File -- `batchIdToPath` Method
 
 [source, scala]
 ----
 batchIdToPath(batchId: Long): Path
 ----
 
-`batchIdToPath`...FIXME
+`batchIdToPath` simply creates a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the file called by the specified `batchId` under the <<metadataPath, metadata directory>>.
 
 NOTE: `batchIdToPath` is used when...FIXME
 
@@ -186,16 +191,22 @@ pathToBatchId(path: Path): Long
 
 NOTE: `pathToBatchId` is used when...FIXME
 
-=== [[writeBatchToFile]] `writeBatchToFile` Internal Method
+=== [[writeBatchToFile]] Writing Batch Metadata to File -- `writeBatchToFile` Internal Method
 
 [source, scala]
 ----
-writeBatchToFile(metadata: T, path: Path): Unit
+writeBatchToFile(
+  metadata: T,
+  path: Path): Unit
 ----
 
-`writeBatchToFile`...FIXME
+`writeBatchToFile` requests the <<fileManager, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#createAtomic, createAtomic>> (for the specified `path` and the `overwriteIfPossible` flag disabled).
 
-NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, store metadata for a batch>>.
+`writeBatchToFile` then <<serialize, serializes the metadata>> (to the `CancellableFSDataOutputStream` output stream) and closes the stream.
+
+In case of an exception, `writeBatchToFile` simply requests the `CancellableFSDataOutputStream` output stream to `cancel` (so that the output file is not generated) and re-throws the exception.
+
+NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, add (persists) metadata for a batch>>.
 
 === [[purgeAfter]] `purgeAfter` Method
 
@@ -226,11 +237,6 @@ Used when:
 
 | fileManager
 a| [[fileManager]] `CheckpointFileManager`
-
-Used when...FIXME
-
-| metadataPath
-a| [[metadataPath]] The path to metadata directory
 
 Used when...FIXME
 

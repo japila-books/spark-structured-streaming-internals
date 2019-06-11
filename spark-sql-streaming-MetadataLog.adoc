@@ -19,7 +19,7 @@ add(
   metadata: T): Boolean
 ----
 
-Used when...FIXME
+Adds metadata for a batch
 
 | get
 a| [[get]]

@@ -1,24 +1,28 @@
-== [[OffsetSeqLog]] OffsetSeqLog -- HDFSMetadataLog with OffsetSeq Metadata
+== [[OffsetSeqLog]] OffsetSeqLog -- HDFSMetadataLog for Write-Ahead Log (WAL)
 
-`OffsetSeqLog` is a link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] with metadata as <<OffsetSeq, OffsetSeq>>.
+`OffsetSeqLog` is a <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog>> with <<OffsetSeq, OffsetSeq>> metadata.
 
-NOTE: link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog] is a `MetadataLog` that uses Hadoop HDFS for a reliable storage.
+`OffsetSeqLog` is <<creating-instance, created>> exclusively for the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, write-ahead log (WAL) of offsets>> of <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>>.
 
-`OffsetSeqLog` is <<creating-instance, created>> exclusively for link:spark-sql-streaming-StreamExecution.adoc#offsetLog[write-ahead log of offsets] in `StreamExecution`.
-
-[[OffsetSeq]]
-[[offsets]]
-[[metadata]]
+[[OffsetSeq]][[offsets]][[metadata]]
 `OffsetSeqLog` uses <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeq>> for metadata which holds an ordered collection of zero or more offsets and optional metadata (as link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata] for keeping track of event time watermark as set up by a Spark developer and what was found in the records).
 
-=== [[serialize]] `serialize` Method
+[[creating-instance]]
+`OffsetSeqLog` (like the parent <<spark-sql-streaming-HDFSMetadataLog.adoc#creating-instance, HDFSMetadataLog>>) takes the following to be created:
+
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata log directory
+
+=== [[serialize]] Serializing Metadata -- `serialize` Method
 
 [source, scala]
 ----
-serialize(offsetSeq: OffsetSeq, out: OutputStream): Unit
+serialize(
+  offsetSeq: OffsetSeq,
+  out: OutputStream): Unit
 ----
 
-NOTE: `serialize` is a part of link:spark-sql-streaming-HDFSMetadataLog.adoc#serialize[HDFSMetadataLog Contract] to write a metadata in serialized format.
+NOTE: `serialize` is part of <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to write a metadata in serialized format.
 
 `serialize` firstly writes out the version prefixed with `v` on a single line (e.g. `v1`) followed by the <<metadata, optional metadata>> in JSON format.
 
@@ -38,18 +42,13 @@ v1
 51
 ```
 
-=== [[deserialize]] `deserialize` Method
+=== [[deserialize]] Deserializing Metadata -- `deserialize` Method
 
 [source, scala]
 ----
 deserialize(in: InputStream): OffsetSeq
 ----
 
-CAUTION: FIXME
+NOTE: `deserialize` is part of <<spark-sql-streaming-HDFSMetadataLog.adoc#deserialize, HDFSMetadataLog Contract>> to deserialize a metadata (from an `InputStream`).
 
-=== [[creating-instance]] Creating OffsetSeqLog Instance
-
-`OffsetSeqLog` takes the following when created:
-
-* [[sparkSession]] `SparkSession`
-* [[path]] Path of the metadata log directory
+`deserialize`...FIXME

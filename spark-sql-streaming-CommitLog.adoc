@@ -4,8 +4,7 @@
 
 `CommitLog` is <<creating-instance, created>> exclusively for the <<spark-sql-streaming-StreamExecution.adoc#commitLog, offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>>.
 
-[[CommitMetadata]]
-[[nextBatchWatermarkMs]]
+[[CommitMetadata]][[nextBatchWatermarkMs]]
 `CommitLog` uses `CommitMetadata` for the metadata with *nextBatchWatermarkMs* attribute (of type `Long` and the default `0`).
 
 `CommitLog` <<serialize, writes>> commit metadata to files with names that are offsets.
