@@ -111,6 +111,13 @@ Supported values:
 
 Cannot be changed between query restarts from the same checkpoint location.
 
+| `spark.sql.streaming.noDataProgressEventInterval`
+
+`10000L`
+a| [[spark.sql.streaming.noDataProgressEventInterval]] *(internal)* How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#finishTrigger, finish a trigger>>
+
+Use <<spark-sql-streaming-SQLConf.adoc#streamingNoDataProgressEventInterval, SQLConf.streamingNoDataProgressEventInterval>> to get the current value
+
 | `spark.sql.streaming.numRecentProgressUpdates`
 
 `100`

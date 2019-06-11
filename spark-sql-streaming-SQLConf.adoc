@@ -98,4 +98,10 @@ a| [[streamingMetricsEnabled]] Used exclusively when `StreamExecution` is reques
 
 a| [[STREAMING_MULTIPLE_WATERMARK_POLICY]]
 
+| `streamingNoDataProgressEventInterval`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.noDataProgressEventInterval, spark.sql.streaming.noDataProgressEventInterval>>
+
+a| [[streamingNoDataProgressEventInterval]] Used exclusively for <<spark-sql-streaming-ProgressReporter.adoc#noDataProgressEventInterval, ProgressReporter>>
+
 |===
