@@ -19,12 +19,11 @@
 | [[StreamingAggregationStateManagerImplV2]] Current <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>>
 |===
 
-=== [[creating-instance]] Creating StreamingAggregationStateManagerBaseImpl Instance
+[[creating-instance]]
+`StreamingAggregationStateManagerBaseImpl` takes the following to be created:
 
-`StreamingAggregationStateManagerBaseImpl` takes the following when created:
-
-* [[keyExpressions]] Attribute expressions for keys (`Seq[Attribute]`)
-* [[inputRowAttributes]] Attribute expressions of input rows (`Seq[Attribute]`)
+* [[keyExpressions]] Catalyst expressions for the keys (`Seq[Attribute]`)
+* [[inputRowAttributes]] Catalyst expressions for the input rows (`Seq[Attribute]`)
 
 NOTE: `StreamingAggregationStateManagerBaseImpl` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly for the <<implementations, concrete StreamingAggregationStateManagerBaseImpls>>.
 

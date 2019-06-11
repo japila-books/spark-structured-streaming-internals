@@ -6,31 +6,11 @@ NOTE: The version of a state manager is controlled using <<spark-sql-streaming-p
 
 `StreamingAggregationStateManagerImplV2` is <<creating-instance, created>> exclusively when `StreamingAggregationStateManager` is requested for a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, new StreamingAggregationStateManager>>.
 
-[[internal-registries]]
-.StreamingAggregationStateManagerImplV2's Internal Properties
-[cols="1m,2",options="header",width="100%"]
-|===
-| Name
-| Description
+[[creating-instance]]
+`StreamingAggregationStateManagerImplV2` (like the parent <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#creating-instance, StreamingAggregationStateManagerBaseImpl>>) takes the following to be created:
 
-| joiner
-| [[joiner]]
-
-| keyValueJoinedExpressions
-| [[keyValueJoinedExpressions]]
-
-| needToProjectToRestoreValue
-| [[needToProjectToRestoreValue]]
-
-| restoreValueProjector
-| [[restoreValueProjector]]
-
-| valueExpressions
-| [[valueExpressions]]
-
-| valueProjector
-| [[valueProjector]]
-|===
+* [[keyExpressions]] Catalyst expressions for the keys (`Seq[Attribute]`)
+* [[inputRowAttributes]] Catalyst expressions for the input rows (`Seq[Attribute]`)
 
 === [[put]] Storing Row in State Store -- `put` Method
 
@@ -42,15 +22,6 @@ put(store: StateStore, row: UnsafeRow): Unit
 NOTE: `put` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, StreamingAggregationStateManager Contract>> to store a row in a state store.
 
 `put`...FIXME
-
-=== [[creating-instance]] Creating StreamingAggregationStateManagerImplV2 Instance
-
-`StreamingAggregationStateManagerImplV2` takes the following when created:
-
-* [[keyExpressions]] Attribute expressions for keys (`Seq[Attribute]`)
-* [[inputRowAttributes]] Attribute expressions for input rows (`Seq[Attribute]`)
-
-`StreamingAggregationStateManagerImplV2` initializes the <<internal-registries, internal registries and counters>>.
 
 === [[get]] Getting Saved State for Non-Null Key from State Store -- `get` Method
 
@@ -111,3 +82,29 @@ values(store: StateStore): Iterator[UnsafeRow]
 NOTE: `values` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#values, StreamingAggregationStateManager Contract>> to...FIXME.
 
 `values`...FIXME
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| joiner
+| [[joiner]]
+
+| keyValueJoinedExpressions
+a| [[keyValueJoinedExpressions]]
+
+| needToProjectToRestoreValue
+a| [[needToProjectToRestoreValue]]
+
+| restoreValueProjector
+a| [[restoreValueProjector]]
+
+| valueExpressions
+a| [[valueExpressions]]
+
+| valueProjector
+a| [[valueProjector]]
+|===

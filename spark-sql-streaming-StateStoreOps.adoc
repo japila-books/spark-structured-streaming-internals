@@ -1,14 +1,15 @@
 == [[StateStoreOps]] StateStoreOps -- Extension Methods for Creating StateStoreRDD
 
-`StateStoreOps` is a *Scala implicit class* to <<mapPartitionsWithStateStore, create>> `StateStoreRDD` when the following physical operators are executed:
+[[dataRDD]]
+`StateStoreOps` is a *Scala implicit class* (for `RDD[T]` type) to <<mapPartitionsWithStateStore, create a StateStoreRDD>> for the following physical operators:
 
-* link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[FlatMapGroupsWithStateExec]
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
 
-* link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec]
+* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
 
-* link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec]
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
 
-* link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec]
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
 
 NOTE: http://docs.scala-lang.org/overviews/core/implicit-classes.html[Implicit Classes] are a language feature in Scala for *implicit conversions* with *extension methods* for existing types.
 
@@ -36,7 +37,7 @@ mapPartitionsWithStateStore[U](
 
 Internally, `mapPartitionsWithStateStore` requests `SparkContext` to clean `storeUpdateFunction` function.
 
-NOTE: `mapPartitionsWithStateStore` uses the enclosing RDD to access the current `SparkContext`.
+NOTE: `mapPartitionsWithStateStore` uses the <<dataRDD, enclosing RDD>> to access the current `SparkContext`.
 
 NOTE: *Function Cleaning* is to clean a closure from unreferenced variables before it is serialized and sent to tasks. `SparkContext` reports a `SparkException` when the closure is not serializable.
 
