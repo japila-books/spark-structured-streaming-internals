@@ -1,4 +1,4 @@
-== [[withWatermark]] withWatermark Operator -- Event Time Watermark
+== [[withWatermark]] withWatermark Operator -- Event-Time Watermark
 
 [source, scala]
 ----

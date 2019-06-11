@@ -157,9 +157,9 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ----
 
-Creates a new `Dataset` with <<spark-sql-streaming-FlatMapGroupsWithState.adoc#apply, FlatMapGroupsWithState>> logical operator
+Creates a new `Dataset` with <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator
 
-NOTE: The difference between `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> is the state function that generates zero or more elements (that are in turn the rows in the result streaming `Dataset`).
+NOTE: The difference between this `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> operators is the state function that generates zero or more elements (that are in turn the rows in the result streaming `Dataset`).
 
 | keyAs
 a| [[keyAs]]

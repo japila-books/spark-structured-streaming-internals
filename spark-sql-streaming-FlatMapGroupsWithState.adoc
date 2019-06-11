@@ -1,10 +1,17 @@
 == [[FlatMapGroupsWithState]] FlatMapGroupsWithState Unary Logical Operator
 
-`FlatMapGroupsWithState` is a unary logical operator (`UnaryNode`) that is <<creating-instance, created>> to represent the following <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> operators:
+`FlatMapGroupsWithState` is a unary logical operator that is <<creating-instance, created>> to represent the following operators:
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>>
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>>
+
+[NOTE]
+====
+A unary logical operator (`UnaryNode`) is a logical operator with a single <<child, child>> logical operator.
+
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan.html[UnaryNode] (and logical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+====
 
 `FlatMapGroupsWithState` is resolved (_translated_) to:
 

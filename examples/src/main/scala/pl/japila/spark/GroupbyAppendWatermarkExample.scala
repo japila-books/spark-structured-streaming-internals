@@ -1,17 +1,26 @@
 package pl.japila.spark
 
 /**
-  * Input lines (from socket source) are in the format of "second,group"
+  * Consumes lines from a socket (in the format of "second,group")
+  * groups them by group and prints the aggregations to the console
+  *
+  * Use `nc -l 8888` to open a socket
   */
 object GroupbyAppendWatermarkExample extends App {
 
   val appName = this.getClass.getSimpleName.replace("$", "")
   val queryName = appName
   val rootDir = "target"
-  val checkpointLocation = s"$rootDir/$queryName"
+  val checkpointLocation = s"$rootDir/$queryName-checkpoint"
   val numPartitions = 1
   val master = "local[*]"
-  val warehouseDir = s"$checkpointLocation-warehouse"
+  val warehouseDir = s"$rootDir/$queryName-warehouse"
+
+  val source = "socket"
+  val sink = "console"
+
+  val host = "localhost"
+  val port = "8888"
 
   val eventTimeCol = "eventTime"
 
@@ -44,9 +53,9 @@ object GroupbyAppendWatermarkExample extends App {
 
   val input = spark
     .readStream
-    .format("socket")
-    .option("host", "localhost")
-    .option("port", "8888")
+    .format(source)
+    .option("host", host)
+    .option("port", port)
     .load
 
   val output = input.transform(mytransform)
@@ -55,7 +64,7 @@ object GroupbyAppendWatermarkExample extends App {
   import org.apache.spark.sql.streaming.{OutputMode, Trigger}
   val sq = output
     .writeStream
-    .format("console")
+    .format(sink)
     .option("truncate", false)
     .queryName(queryName)
     .option("checkpointLocation", checkpointLocation)
