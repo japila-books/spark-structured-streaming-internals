@@ -23,12 +23,19 @@ val spark: SparkSession = SparkSession.builder
 
 | `spark.sql.streaming.aggregation.stateFormatVersion`
 
-`2`
-| [[spark.sql.streaming.aggregation.stateFormatVersion]] *(internal)* State format version used by streaming aggregation operations in a streaming query.
+a| [[spark.sql.streaming.aggregation.stateFormatVersion]] *(internal)* Version of the state format
 
-Supported values: `1` or `2`
+Default: `2`
 
-State between versions are tend to be incompatible, so state format version shouldn't be modified after running.
+Supported values:
+
+* [[spark.sql.streaming.aggregation.stateFormatVersion-legacyVersion]] `1` (for the legacy <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#StreamingAggregationStateManagerImplV1, StreamingAggregationStateManagerImplV1>>)
+
+* [[spark.sql.streaming.aggregation.stateFormatVersion-default]] `2` (for the default <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#StreamingAggregationStateManagerImplV2, StreamingAggregationStateManagerImplV2>>)
+
+Used when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed (and plans a streaming query with an aggregate that simply boils down to creating a <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> with the proper _implementation version_ of <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>>)
+
+Among the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfs, checkpointed properties>> that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 
 | `spark.sql.streaming.checkpointLocation`
 

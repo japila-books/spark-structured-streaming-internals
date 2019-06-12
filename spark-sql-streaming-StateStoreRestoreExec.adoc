@@ -1,6 +1,6 @@
 == [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates
 
-`StateStoreRestoreExec` is a unary physical operator that link:spark-sql-streaming-StateStoreReader.adoc[restores a state from a state store] (for the keys from the <<child, child>> physical operator).
+`StateStoreRestoreExec` is a unary physical operator that <<spark-sql-streaming-StateStoreReader.adoc#, restores a state from a state store>> (for the keys from the <<child, child>> physical operator).
 
 [NOTE]
 ====
@@ -30,9 +30,9 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Logi
 [[creating-instance]]
 `StateStoreRestoreExec` takes the following to be created:
 
-* [[keyExpressions]] Catalyst expressions for the keys (in <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator)
+* [[keyExpressions]] *Key expressions*, i.e. Catalyst expressions for the keys (in <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator)
 * [[stateInfo]] Optional <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
-* [[stateFormatVersion]] Version of the state format (that corresponds to the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
+* [[stateFormatVersion]] Version of the state format (based on the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
 The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.adoc#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.adoc#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
@@ -94,7 +94,7 @@ scala> counts.explain
 .StateStoreRestoreExec in web UI (Details for Query)
 image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 
-When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that restores the saved state for the keys in input rows if available.
+When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, creates a StateStoreRDD to map over partitions>> with `storeUpdateFunction` that restores the state for the keys in the input rows if available.
 
 [[output]]
 The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s output schema.
@@ -102,8 +102,24 @@ The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s o
 [[outputPartitioning]]
 The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child>>'s output partitioning.
 
-[[stateManager]]
-`StateStoreRestoreExec` uses a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (that is <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, created>> for the <<keyExpressions, keyExpressions>>, the output schema of the <<child, child>> physical operator and the <<stateFormatVersion, stateFormatVersion>>).
+=== [[stateManager]] StateStoreRestoreExec and StreamingAggregationStateManager -- `stateManager` Property
+
+[source, scala]
+----
+stateManager: StreamingAggregationStateManager
+----
+
+`stateManager` is a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> that is created together with `StateStoreRestoreExec`.
+
+The `StreamingAggregationStateManager` is created for the <<keyExpressions, keys>>, the output schema of the <<child, child>> physical operator and the <<stateFormatVersion, version of the state format>>.
+
+The `StreamingAggregationStateManager` is used when `StateStoreRestoreExec` is requested to <<doExecute, generate a recipe for a distributed computation (as a RDD[InternalRow])>> for the following:
+
+* <<spark-sql-streaming-StreamingAggregationStateManager.adoc#getStateValueSchema, Schema of the values in a state store>>
+
+* <<spark-sql-streaming-StreamingAggregationStateManager.adoc#getKey, Extracting the columns for the key from the input row>>
+
+* <<spark-sql-streaming-StreamingAggregationStateManager.adoc#get, Looking up the value of a key from a state store>>
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 

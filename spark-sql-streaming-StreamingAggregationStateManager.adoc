@@ -1,6 +1,6 @@
 == [[StreamingAggregationStateManager]] StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation
 
-`StreamingAggregationStateManager` is the <<contract, contract>> of <<implementations, state managers>> that are used in streaming aggregations (with the <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operators).
+`StreamingAggregationStateManager` is the <<contract, contract>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.adoc#, state stores>> and the physical operators used in streaming aggregations (<<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>).
 
 [[contract]]
 .StreamingAggregationStateManager Contract
@@ -29,7 +29,7 @@ a| [[get]]
 get(store: StateStore, key: UnsafeRow): UnsafeRow
 ----
 
-Gets the current value of a non-``null`` key from the <<spark-sql-streaming-StateStore.adoc#, state store>>
+Looks up the value of the key from the <<spark-sql-streaming-StateStore.adoc#, state store>> (the key is non-``null``)
 
 Used exclusively when <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operator is executed.
 
@@ -40,6 +40,8 @@ a| [[getKey]]
 ----
 getKey(row: UnsafeRow): UnsafeRow
 ----
+
+Extracts the columns for the key from the input row
 
 Used when:
 
@@ -55,9 +57,9 @@ a| [[getStateValueSchema]]
 getStateValueSchema: StructType
 ----
 
-Gets the schema for the state values
+Gets the schema of the values in a <<spark-sql-streaming-StateStore.adoc#, state store>>
 
-Used when <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operators are executed.
+Used when <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operators are executed
 
 | iterator
 a| [[iterator]]
@@ -122,15 +124,14 @@ Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStore
 |===
 
 [[supportedVersions]]
-`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>>:
+`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>> (per the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property):
 
-* [[legacyVersion]] `1` (legacy)
-* [[default]] `2` (default)
+* [[legacyVersion]] `1` (for the legacy <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#StreamingAggregationStateManagerImplV1, StreamingAggregationStateManagerImplV1>>)
 
-NOTE: The version of a state manager is controlled using <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property.
+* [[default]] `2` (for the default <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#StreamingAggregationStateManagerImplV2, StreamingAggregationStateManagerImplV2>>)
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, StreamingAggregationStateManagerBaseImpl>> is the one and only known base implementation of the <<contract, StreamingAggregationStateManager Contract>> in Spark Structured Streaming.
+NOTE: <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, StreamingAggregationStateManagerBaseImpl>> is the one and only known direct implementation of the <<contract, StreamingAggregationStateManager Contract>> in Spark Structured Streaming.
 
 NOTE: `StreamingAggregationStateManager` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
 

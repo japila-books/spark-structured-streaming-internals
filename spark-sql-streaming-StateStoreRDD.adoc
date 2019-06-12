@@ -1,8 +1,8 @@
 == [[StateStoreRDD]] StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)
 
-`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.adoc[StateStore] (and data from partitions of a <<dataRDD, new batch RDD>>).
+`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.adoc[StateStore] (and data from partitions of the <<dataRDD, data RDD>>).
 
-`StateStoreRDD` is <<creating-instance, created>> when the following stateful physical operators are executed (using <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
+`StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
 
 * <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
 * <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
@@ -20,20 +20,6 @@ image::images/StateStoreRDD-StateStoreCoordinator.png[align="center"]
 
 [[getPartitions]]
 `getPartitions` is exactly the partitions of the <<dataRDD, data RDD>>.
-
-[[internal-registries]]
-.StateStoreRDD's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| [[hadoopConfBroadcast]] `hadoopConfBroadcast`
-|
-
-| [[storeConf]] `storeConf`
-| Configuration parameters (as `StateStoreConf`) using the current `SQLConf` (from `SessionState`)
-|===
 
 === [[compute]] Computing Partition -- `compute` Method
 
@@ -73,18 +59,32 @@ NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 
 === [[creating-instance]] Creating StateStoreRDD Instance
 
-`StateStoreRDD` takes the following when created:
+`StateStoreRDD` takes the following to be created:
 
-* [[dataRDD]] `RDD` with the new streaming batch data (to update the aggregates in a state store)
-* [[storeUpdateFunction]] Store update function (i.e. `(StateStore, Iterator[T]) => Iterator[U]` with `T` being the type of the new batch data)
-* [[checkpointLocation]] The path to the checkpoint location
-* [[queryRunId]] `queryRunId`
-* [[operatorId]] Operator id
-* [[storeVersion]] Store version
+* [[dataRDD]] Data RDD (`RDD[T]` to update the aggregates in a state store)
+* [[storeUpdateFunction]] Store update function (`(StateStore, Iterator[T]) => Iterator[U]` where `T` is the type of rows in the <<dataRDD, data RDD>>)
+* [[checkpointLocation]] Path of the checkpoint location
+* [[queryRunId]] Run ID of the streaming query
+* [[operatorId]] Operator ID
+* [[storeVersion]] Version of the store
 * [[keySchema]] Schema of the keys
 * [[valueSchema]] Schema of the values
 * [[indexOrdinal]] Optional index
 * [[sessionState]] `SessionState`
-* [[storeCoordinator]] Optional link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef]
+* [[storeCoordinator]] Optional <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinatorRef>>
 
-`StateStoreRDD` initializes the <<internal-registries, internal registries and counters>>.
+`StateStoreRDD` initializes the <<internal-properties, internal properties>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| [[hadoopConfBroadcast]] `hadoopConfBroadcast`
+|
+
+| [[storeConf]] `storeConf`
+| Configuration parameters (as `StateStoreConf`) using the current `SQLConf` (from `SessionState`)
+|===

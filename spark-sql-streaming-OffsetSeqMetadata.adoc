@@ -11,7 +11,7 @@
 NOTE: `OffsetSeqMetadata` is used mainly when `IncrementalExecution` is link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[created].
 
 [[relevantSQLConfs]]
-`OffsetSeqMetadata` defines the following *relevantSQLConfs*:
+`OffsetSeqMetadata` considers some configuration properties as *relevantSQLConfs*:
 
 * <<spark-sql-streaming-SQLConf.adoc#SHUFFLE_PARTITIONS, SHUFFLE_PARTITIONS>>
 * <<spark-sql-streaming-SQLConf.adoc#STATE_STORE_PROVIDER_CLASS, STATE_STORE_PROVIDER_CLASS>>

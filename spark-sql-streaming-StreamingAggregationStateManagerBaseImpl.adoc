@@ -13,10 +13,10 @@
 | Description
 
 | <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#, StreamingAggregationStateManagerImplV1>>
-| [[StreamingAggregationStateManagerImplV1]] Legacy <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>>
+| [[StreamingAggregationStateManagerImplV1]] Legacy <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (used when <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property is `1`)
 
 | <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#, StreamingAggregationStateManagerImplV2>>
-| [[StreamingAggregationStateManagerImplV2]] Current <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>>
+| [[StreamingAggregationStateManagerImplV2]] Default <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (used when <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property is `2`)
 |===
 
 [[creating-instance]]
