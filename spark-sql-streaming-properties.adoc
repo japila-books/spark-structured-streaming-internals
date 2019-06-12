@@ -1,28 +1,28 @@
 == Configuration Properties
 
-The following list are the properties that you can use to fine-tune Spark Structured Streaming applications.
+Configuration properties are used to fine-tune Spark Structured Streaming applications.
 
-You can set them in a link:spark-sql-SparkSession.adoc[SparkSession] upon instantiation using link:spark-sql-sparksession-builder.adoc#config[config] method.
+You can set them for a `SparkSession` when it is created using `config` method.
 
 [source, scala]
 ----
 import org.apache.spark.sql.SparkSession
-val spark: SparkSession = SparkSession.builder
-  .master("local[*]")
-  .appName("My Spark Application")
+val spark = SparkSession
+  .builder
   .config("spark.sql.streaming.metricsEnabled", true)
   .getOrCreate
 ----
 
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkSession.html[SparkSession] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+
 [[properties]]
 .Structured Streaming's Properties
-[cols="1,2",options="header",width="100%"]
+[cols="1m,2",options="header",width="100%"]
 |===
-| Name / Default Value
+| Name
 | Description
 
-| `spark.sql.streaming.aggregation.stateFormatVersion`
-
+| spark.sql.streaming.aggregation.stateFormatVersion
 a| [[spark.sql.streaming.aggregation.stateFormatVersion]] *(internal)* Version of the state format
 
 Default: `2`
@@ -37,46 +37,42 @@ Used when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggre
 
 Among the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfs, checkpointed properties>> that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 
-| `spark.sql.streaming.checkpointLocation`
+| spark.sql.streaming.checkpointLocation
+a| [[spark.sql.streaming.checkpointLocation]] Default checkpoint directory for storing checkpoint data
 
-(empty)
-| [[spark.sql.streaming.checkpointLocation]] Default checkpoint directory for storing checkpoint data for streaming queries
+Default: `(empty)`
 
-| `spark.sql.streaming.continuous.executorQueueSize`
+| spark.sql.streaming.continuous.executorQueueSize
 a| [[spark.sql.streaming.continuous.executorQueueSize]] *(internal)* The size (measured in number of rows) of the queue used in continuous execution to buffer the results of a ContinuousDataReader.
 
 Default: `1024`
 
-| `spark.sql.streaming.continuous.executorPollIntervalMs`
+| spark.sql.streaming.continuous.executorPollIntervalMs
 a| [[spark.sql.streaming.continuous.executorPollIntervalMs]] *(internal)* The interval (in millis) at which continuous execution readers will poll to check whether the epoch has advanced on the driver.
 
 Default: `100` (ms)
 
-| `spark.sql.streaming.disabledV2MicroBatchReaders`
-
-(empty)
+| spark.sql.streaming.disabledV2MicroBatchReaders
 a| [[spark.sql.streaming.disabledV2MicroBatchReaders]] *(internal)* A comma-separated list of fully-qualified class names of data source providers for which <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> is disabled. Reads from these sources will fall back to the V1 Sources.
 
-```
-spark.sql.streaming.disabledV2MicroBatchReaders=org.apache.spark.sql.kafka010.KafkaSourceProvider
-```
+Default: `(empty)`
 
 Use <<spark-sql-streaming-SQLConf.adoc#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
 
-| `spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion`
-
-`2`
+| spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
 a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used by `flatMapGroupsWithState` operation in a streaming query.
+
+Default: `2`
 
 Supported values:
 
 * `1`
 * `2`
 
-| `spark.sql.streaming.maxBatchesToRetainInMemory`
-
-`2`
+| spark.sql.streaming.maxBatchesToRetainInMemory
 a| [[spark.sql.streaming.maxBatchesToRetainInMemory]] *(internal)* The maximum number of batches which will be retained in memory to avoid loading from files.
+
+Default: `2`
 
 Maximum count of versions a State Store implementation should retain in memory.
 
@@ -88,24 +84,21 @@ The value adjusts a trade-off between memory usage vs cache miss:
 
 Used exclusively when `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#init, initialize>>.
 
-| `spark.sql.streaming.metricsEnabled`
-
-`false`
-
+| spark.sql.streaming.metricsEnabled
 | [[spark.sql.streaming.metricsEnabled]] Flag whether Dropwizard CodaHale metrics are reported for active streaming queries
+
+Default: `false`
 
 Use <<spark-sql-streaming-SQLConf.adoc#streamingMetricsEnabled, SQLConf.streamingMetricsEnabled>> to get the current value
 
-| `spark.sql.streaming.minBatchesToRetain`
-
-`100`
+| spark.sql.streaming.minBatchesToRetain
 a| [[spark.sql.streaming.minBatchesToRetain]] *(internal)* The minimum number of entries to retain for failure recovery
+
+Default: `100`
 
 Use <<spark-sql-streaming-SQLConf.adoc#minBatchesToRetain, SQLConf.minBatchesToRetain>> to get the current value
 
-| `spark.sql.streaming.multipleWatermarkPolicy`
-
-`min`
+| spark.sql.streaming.multipleWatermarkPolicy
 a| [[spark.sql.streaming.multipleWatermarkPolicy]] *Global watermark policy* that is the policy to calculate the global watermark value when there are multiple watermark operators in a streaming query
 
 Default: `min`
@@ -118,37 +111,38 @@ Supported values:
 
 Cannot be changed between query restarts from the same checkpoint location.
 
-| `spark.sql.streaming.noDataProgressEventInterval`
-
-`10000L`
+| spark.sql.streaming.noDataProgressEventInterval
 a| [[spark.sql.streaming.noDataProgressEventInterval]] *(internal)* How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#finishTrigger, finish a trigger>>
+
+Default: `10000L`
 
 Use <<spark-sql-streaming-SQLConf.adoc#streamingNoDataProgressEventInterval, SQLConf.streamingNoDataProgressEventInterval>> to get the current value
 
-| `spark.sql.streaming.numRecentProgressUpdates`
+| spark.sql.streaming.numRecentProgressUpdates
+a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[progress updates to retain] for a streaming query
 
-`100`
-| [[spark.sql.streaming.numRecentProgressUpdates]] Number of link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[progress updates to retain] for a streaming query
+Default: `100`
 
-| `spark.sql.streaming.pollingDelay`
-
-`10`
+| spark.sql.streaming.pollingDelay
 a| [[spark.sql.streaming.pollingDelay]] *(internal)* Time delay (in ms) before `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch].
 
-| `spark.sql.streaming.stateStore.maintenanceInterval`
+Default: `10`
 
-`60s`
-| [[spark.sql.streaming.stateStore.maintenanceInterval]] The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.adoc#MaintenanceTask[maintenance task].
+| spark.sql.streaming.stateStore.maintenanceInterval
+a| [[spark.sql.streaming.stateStore.maintenanceInterval]] The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.adoc#MaintenanceTask[maintenance task].
 
-| `spark.sql.streaming.stateStore.providerClass`
+Default: `60s`
 
-<<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider>>
-| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name of the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
+| spark.sql.streaming.stateStore.providerClass
+a| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name of the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
+
+Default: <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>>
 
 Use <<spark-sql-streaming-SQLConf.adoc#stateStoreProviderClass, SQLConf.stateStoreProviderClass>> to get the current value.
 
-| `spark.sql.streaming.unsupportedOperationCheck`
+| spark.sql.streaming.unsupportedOperationCheck
+a| [[spark.sql.streaming.unsupportedOperationCheck]] *(internal)* When enabled (`true`), `StreamingQueryManager` link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[makes sure that the logical plan of a streaming query uses supported operations only].
 
-`true`
-| [[spark.sql.streaming.unsupportedOperationCheck]] *(internal)* When enabled (`true`), `StreamingQueryManager` link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[makes sure that the logical plan of a streaming query uses supported operations only].
+Default: `true`
+
 |===
