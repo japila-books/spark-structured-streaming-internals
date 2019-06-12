@@ -18,7 +18,7 @@ val out = in.
 
 `FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.adoc#createSink, create a streaming sink>> for a file-based data source (i.e. `FileFormat`).
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 `FileStreamSink` supports link:spark-sql-streaming-OutputMode.adoc#Append[Append output mode] only.
 
@@ -81,7 +81,7 @@ basicWriteJobStatsTracker: BasicWriteJobStatsTracker
 * number of output rows
 * number of dynamic partitions
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BasicWriteJobStatsTracker.html[BasicWriteJobStatsTracker] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BasicWriteJobStatsTracker.html[BasicWriteJobStatsTracker] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 NOTE: `basicWriteJobStatsTracker` is used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>.
 

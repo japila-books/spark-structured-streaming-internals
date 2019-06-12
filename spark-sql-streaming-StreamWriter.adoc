@@ -2,7 +2,7 @@
 
 `StreamWriter` is the <<contract, extension>> of the `DataSourceWriter` contract to support epochs, i.e. <<implementations, streaming writers>> that can <<abort, abort>> and <<commit, commit>> writing jobs for a specified epoch.
 
-NOTE: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceWriter.html[DataSourceWriter Contract] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceWriter.html[DataSourceWriter] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 [[contract]]
 .StreamWriter Contract

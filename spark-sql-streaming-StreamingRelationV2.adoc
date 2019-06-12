@@ -2,7 +2,7 @@
 
 `StreamingRelationV2` is a `MultiInstanceRelation` leaf logical operator that represents <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> or <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> streaming data sources in a logical plan of a streaming query.
 
-TIP: Read up on leaf logical operators in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-LeafNode.html[LeafNode — Base Logical Operator with No Child Operators and Optional Statistics] section in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-LeafNode.html[Leaf logical operators] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 `StreamingRelationV2` is <<creating-instance, created>> when:
 

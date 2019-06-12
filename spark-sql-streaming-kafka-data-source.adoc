@@ -86,7 +86,7 @@ root
 
 Internally, the fixed schema is defined as part of the `DataSourceReader` contract through <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> and <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> extension contracts for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
 
-TIP: Read up on the https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceReader.html[DataSourceReader Contract] in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceReader.html[DataSourceReader] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 [TIP]
 ====

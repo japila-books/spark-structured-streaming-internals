@@ -3,7 +3,7 @@
 [[schema]]
 `KafkaRelation` represents a *collection of rows* with a <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined schema>> (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in *The Internals of Spark SQL* gitbook.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 `KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createRelation, create a BaseRelation>>.
 

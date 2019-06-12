@@ -300,7 +300,7 @@ Internally, `runStream` sets the job group (to all the Spark jobs started by thi
 ====
 `runStream` uses the <<sparkSession, SparkSession>> to access `SparkContext` and assign the job group id.
 
-Read up on `SparkContext.setJobGroup` method in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkContext.html#setJobGroup[Setting Local Properties to Group Spark Jobs] section of the https://bit.ly/mastering-apache-spark[Mastering Apache Spark] gitbook.
+Read up on https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkContext.html#setJobGroup[SparkContext.setJobGroup] method in https://bit.ly/apache-spark-internals[The Internals of Apache Spark] book.
 ====
 
 `runStream` sets `sql.streaming.queryId` local property to <<id, id>>.
