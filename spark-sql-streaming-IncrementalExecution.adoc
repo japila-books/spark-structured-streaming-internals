@@ -1,11 +1,13 @@
-== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Datasets
+== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
-`IncrementalExecution` is a `QueryExecution` of a streaming Dataset that link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[StreamExecution] creates when incrementally executing the <<logicalPlan, logical query plan>> (every trigger).
+`IncrementalExecution` is the `QueryExecution` of streaming queries.
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[QueryExecution] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+
+`IncrementalExecution` is used when <<spark-sql-streaming-MicroBatchExecution.adoc#, StreamExecution>> is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, incrementally execute>> the <<logicalPlan, logical query plan>> every trigger.
 
 .StreamExecution creates IncrementalExecution (every trigger / streaming batch)
 image::images/IncrementalExecution-StreamExecution.png[align="center"]
-
-TIP: Details on `QueryExecution` contract can be found in the https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-QueryExecution.html[Mastering Apache Spark 2] gitbook.
 
 [[preparations]]
 `IncrementalExecution` registers the <<state, state>> preparation rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using batch-specific execution properties).
@@ -93,10 +95,12 @@ file:/tmp/spark-streams-state-checkpoint-root/state
 a| `SparkPlanner` with the following extra planning strategies (in the order of execution):
 
 [[extraPlanningStrategies]]
-1. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy]
-1. link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]
-1. link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy]
-1. link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy]
+* <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>>
+* <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>>
+* <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>>
+* <<spark-sql-streaming-StreamingRelationStrategy.adoc#, StreamingRelationStrategy>>
+* <<spark-sql-streaming-StreamingDeduplicationStrategy.adoc#, StreamingDeduplicationStrategy>>
+* <<spark-sql-streaming-StreamingGlobalLimitStrategy.adoc#, StreamingGlobalLimitStrategy>>
 
 [[executedPlan]]
 [NOTE]

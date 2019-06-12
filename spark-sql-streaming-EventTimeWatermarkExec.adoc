@@ -17,7 +17,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 `EventTimeWatermarkExec` is <<creating-instance, created>> for every <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator in a logical query plan when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical plan for execution.
 
-NOTE: <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator is created as the result of <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator.
+NOTE: <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator.
 
 [[creating-instance]]
 `EventTimeWatermarkExec` takes the following to be created:

@@ -8,6 +8,8 @@
 
 == (WIP) State Management in Stateful Stream Processing
 
+. link:spark-sql-streaming-stateful-stream-processing.adoc[Stateful Stream Processing]
+
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
 .. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
@@ -24,6 +26,8 @@
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef]
 
 . link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
+
+. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport]
 
 . link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
 
@@ -233,7 +237,7 @@
 
 . link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor]
 
-. link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution -- QueryExecution of Streaming Datasets]
+. link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution]
 
 . link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus -- Notification Bus for Streaming Events]
 
@@ -262,12 +266,12 @@
 
 === Execution Planning Strategies
 
-. link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator]
-. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators]
-. link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator]
-. link:spark-sql-streaming-StreamingGlobalLimitStrategy.adoc[StreamingGlobalLimitStrategy Execution Planning Strategy]
-. link:spark-sql-streaming-StreamingJoinStrategy.adoc[StreamingJoinStrategy Execution Planning Strategy for Stream-Stream Equi-Joins]
-. link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators]
+. link:spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc[FlatMapGroupsWithStateStrategy]
+. link:spark-sql-streaming-StatefulAggregationStrategy.adoc[StatefulAggregationStrategy]
+. link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc[StreamingDeduplicationStrategy]
+. link:spark-sql-streaming-StreamingGlobalLimitStrategy.adoc[StreamingGlobalLimitStrategy]
+. link:spark-sql-streaming-StreamingJoinStrategy.adoc[StreamingJoinStrategy]
+. link:spark-sql-streaming-StreamingRelationStrategy.adoc[StreamingRelationStrategy]
 
 == Offsets and Metadata Checkpointing
 
@@ -292,4 +296,3 @@
 
 . link:spark-sql-streaming-UnsupportedOperationChecker.adoc[UnsupportedOperationChecker]
 . link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]
-. link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support]

@@ -1,13 +1,12 @@
-== [[StatefulAggregationStrategy]] StatefulAggregationStrategy Execution Planning Strategy for EventTimeWatermark and Aggregate Logical Operators
+== [[StatefulAggregationStrategy]] StatefulAggregationStrategy Execution Planning Strategy -- EventTimeWatermark and Aggregate Logical Operators
 
-`StatefulAggregationStrategy` is an execution planning strategy (i.e. `Strategy`) that link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] uses to <<apply, plan>> `EventTimeWatermark` and `Aggregate` logical operators in streaming structured queries (`Datasets`).
+`StatefulAggregationStrategy` is an execution planning strategy that is used to <<apply, plan streaming queries>> with `EventTimeWatermark` and `Aggregate` logical operators only:
 
-[NOTE]
-====
-link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark] logical operator is the result of link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator.
-====
+* <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator.
 
-NOTE: `Aggregate` logical operator represents link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy] and link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey] aggregations (and SQL's `GROUP BY` clause).
+* `Aggregate` logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> and <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> operators and SQL's `GROUP BY` clause.
+
+`StatefulAggregationStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to plan a streaming query.
 
 `StatefulAggregationStrategy` is available using `SessionState`.
 
@@ -24,11 +23,11 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Logical Operator
 | Physical Operator
 
-| [[EventTimeWatermark]] link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark]
-| link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
+| link:spark-sql-streaming-EventTimeWatermark.adoc[EventTimeWatermark]
+a| [[EventTimeWatermark]] link:spark-sql-streaming-EventTimeWatermarkExec.adoc[EventTimeWatermarkExec]
 
-| [[Aggregate]] `Aggregate`
-a|
+| `Aggregate`
+a| [[Aggregate]]
 
 In the order of preference:
 
@@ -36,7 +35,8 @@ In the order of preference:
 1. `ObjectHashAggregateExec`
 1. `SortAggregateExec`
 
-TIP: Read https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-SparkStrategy-Aggregation.html[Aggregation Execution Planning Strategy for Aggregate Physical Operators] in *Mastering Apache Spark 2* gitbook.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-Aggregation.html[Aggregation Execution Planning Strategy for Aggregate Physical Operators] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+
 |===
 
 [source, scala]
