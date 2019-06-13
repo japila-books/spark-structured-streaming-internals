@@ -4,7 +4,7 @@
 
 [NOTE]
 ====
-`Join` logical operator represents `Dataset.join` operator.
+`Join` logical operator represents `Dataset.join` operator in a logical query plan.
 
 Find out more in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] section in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
 ====

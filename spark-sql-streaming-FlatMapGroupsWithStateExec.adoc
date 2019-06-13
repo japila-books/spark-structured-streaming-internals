@@ -9,10 +9,7 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-[NOTE]
-====
-<<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> unary logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators.
-====
+NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> unary logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators in a logical query plan.
 
 `FlatMapGroupsWithStateExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a streaming query with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators for execution.
 

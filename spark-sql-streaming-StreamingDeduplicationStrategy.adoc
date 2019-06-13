@@ -1,11 +1,11 @@
 == [[StreamingDeduplicationStrategy]] StreamingDeduplicationStrategy Execution Planning Strategy for Deduplicate Logical Operator
 
-`StreamingDeduplicationStrategy` is an execution planning strategy (i.e. `Strategy`) that link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] uses to <<apply, plan>> `Deduplicate` logical operators in streaming Datasets.
+[[apply]]
+`StreamingDeduplicationStrategy` is an execution planning strategy that can plan streaming queries with `Deduplicate` logical operators (over streaming queries) to <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>> physical operators.
 
-[NOTE]
-====
-link:spark-sql-streaming-Deduplicate.adoc[Deduplicate] logical operator is the result of link:spark-sql-streaming-Dataset-operators.adoc#dropDuplicates[dropDuplicates] operator.
-====
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+
+NOTE: <<spark-sql-streaming-Deduplicate.adoc#, Deduplicate>> logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#dropDuplicates, Dataset.dropDuplicates>> operator in a logical query plan.
 
 `StreamingDeduplicationStrategy` is available using `SessionState`.
 
@@ -14,8 +14,7 @@ link:spark-sql-streaming-Deduplicate.adoc[Deduplicate] logical operator is the r
 spark.sessionState.planner.StreamingDeduplicationStrategy
 ----
 
-[[apply]]
-`StreamingDeduplicationStrategy` resolves streaming link:spark-sql-streaming-Deduplicate.adoc[Deduplicate] unary logical operators to link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] physical operators.
+=== [[demo]] Demo: Using StreamingDeduplicationStrategy
 
 [source, scala]
 ----

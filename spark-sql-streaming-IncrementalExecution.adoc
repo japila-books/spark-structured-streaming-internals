@@ -1,6 +1,6 @@
 == [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
-`IncrementalExecution` is the `QueryExecution` of streaming queries.
+`IncrementalExecution` is the `QueryExecution` of a <<logicalPlan, streaming query>>.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[QueryExecution] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
@@ -8,6 +8,17 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 .StreamExecution creates IncrementalExecution (every trigger / streaming batch)
 image::images/IncrementalExecution-StreamExecution.png[align="center"]
+
+[[creating-instance]]
+`IncrementalExecution` takes the following to be created:
+
+* [[sparkSession]] `SparkSession`
+* [[logicalPlan]] Logical plan of a streaming query (i.e. `LogicalPlan` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[with the logical plans of the data sources that have new data and new column attributes])
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>> (as specified using <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, DataStreamWriter.outputMode>> method)
+* [[checkpointLocation]] Checkpoint location
+* [[runId]] Run ID of a streaming query (`UUID`)
+* [[currentBatchId]] Batch ID
+* [[offsetSeqMetadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>>
 
 [[preparations]]
 `IncrementalExecution` registers the <<state, state>> preparation rule with the parent ``QueryExecution``'s `preparations` that prepares the streaming physical plan (using batch-specific execution properties).
@@ -24,7 +35,19 @@ image::images/IncrementalExecution-StreamExecution.png[align="center"]
 
 * *state* directory under <<spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot, checkpoint directory>> (i.e. <<spark-sql-streaming-DataStreamWriter.adoc#checkpointLocation, checkpointLocation>> option or <<spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property with `queryName` option added)
 
-.Demo: State Checkpoint Directory
+=== [[planner]][[extraPlanningStrategies]] SparkPlanner -- `planner` Property
+
+As a custom `QueryExecution`, `IncrementalExecution` uses a custom execution planning strategies that are used to plan the <<logicalPlan, streaming query>> for execution:
+
+* <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>>
+* <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>>
+* <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>>
+* <<spark-sql-streaming-StreamingRelationStrategy.adoc#, StreamingRelationStrategy>>
+* <<spark-sql-streaming-StreamingDeduplicationStrategy.adoc#, StreamingDeduplicationStrategy>>
+* <<spark-sql-streaming-StreamingGlobalLimitStrategy.adoc#, StreamingGlobalLimitStrategy>>
+
+=== [[demo]] Demo: State Checkpoint Directory
+
 [source, scala]
 ----
 // START: Only for easier debugging
@@ -84,31 +107,36 @@ scala> println(lastExecution.checkpointLocation)
 file:/tmp/spark-streams-state-checkpoint-root/state
 ----
 
-[[internal-registries]]
-.IncrementalExecution's Internal Registries and Counters (in alphabetical order)
-[cols="1,2",options="header",width="100%"]
+=== [[nextStatefulOperationStateInfo]] `nextStatefulOperationStateInfo` Internal Method
+
+[source, scala]
+----
+nextStatefulOperationStateInfo(): StatefulOperatorStateInfo
+----
+
+`nextStatefulOperationStateInfo` creates a new <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> with <<checkpointLocation, checkpointLocation>>, <<runId, runId>>, the next <<statefulOperatorId, statefulOperatorId>> and <<currentBatchId, currentBatchId>>.
+
+NOTE: All the properties of `StatefulOperatorStateInfo` are specified when `IncrementalExecution` is <<creating-instance, created>>.
+
+NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to transform a streaming physical plan using <<state, state>> preparation rule.
+
+=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+
+[source, scala]
+----
+shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
+----
+
+`shouldRunAnotherBatch`...FIXME
+
+NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
 |===
 | Name
 | Description
-
-| [[planner]] `planner`
-a| `SparkPlanner` with the following extra planning strategies (in the order of execution):
-
-[[extraPlanningStrategies]]
-* <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>>
-* <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>>
-* <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>>
-* <<spark-sql-streaming-StreamingRelationStrategy.adoc#, StreamingRelationStrategy>>
-* <<spark-sql-streaming-StreamingDeduplicationStrategy.adoc#, StreamingDeduplicationStrategy>>
-* <<spark-sql-streaming-StreamingGlobalLimitStrategy.adoc#, StreamingGlobalLimitStrategy>>
-
-[[executedPlan]]
-[NOTE]
-====
-`planner` is used to plan (aka _convert_) an optimized logical plan into a physical plan (that is later available as `sparkPlan`).
-
-`sparkPlan` physical plan is then prepared for execution using <<preparations, preparations>> physical optimization rules. The result is later available as `executedPlan` physical plan.
-====
 
 | [[state]] `state`
 a| State preparation rule (`Rule[SparkPlan]`) that transforms a streaming physical plan (i.e. `SparkPlan` with link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators) and fills missing properties that are batch-specific, e.g.
@@ -132,41 +160,3 @@ a| Java's `AtomicInteger`
 
 * Incremented...FIXME
 |===
-
-=== [[nextStatefulOperationStateInfo]] `nextStatefulOperationStateInfo` Internal Method
-
-[source, scala]
-----
-nextStatefulOperationStateInfo(): StatefulOperatorStateInfo
-----
-
-`nextStatefulOperationStateInfo` creates a new <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> with <<checkpointLocation, checkpointLocation>>, <<runId, runId>>, the next <<statefulOperatorId, statefulOperatorId>> and <<currentBatchId, currentBatchId>>.
-
-NOTE: All the properties of `StatefulOperatorStateInfo` are specified when `IncrementalExecution` is <<creating-instance, created>>.
-
-NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to transform a streaming physical plan using <<state, state>> preparation rule.
-
-=== [[creating-instance]] Creating IncrementalExecution Instance
-
-`IncrementalExecution` takes the following when created:
-
-* [[sparkSession]] `SparkSession`
-* [[logicalPlan]] Logical query plan (i.e. `LogicalPlan` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[with the logical plans of the data sources that have new data and new column attributes])
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] (as specified using link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[outputMode] method of `DataStreamWriter`)
-* [[checkpointLocation]] `state` checkpoint directory
-* [[runId]] Run id
-* [[currentBatchId]] Current batch id
-* [[offsetSeqMetadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>>
-
-`IncrementalExecution` initializes the <<internal-registries, internal registries and counters>>.
-
-=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
-
-[source, scala]
-----
-shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
-----
-
-`shouldRunAnotherBatch`...FIXME
-
-NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>>.

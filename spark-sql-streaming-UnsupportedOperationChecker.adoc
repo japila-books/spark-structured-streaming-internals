@@ -30,7 +30,7 @@ checkForStreaming(plan: LogicalPlan, outputMode: OutputMode): Unit
 
 `checkForStreaming` finds all streaming aggregates (i.e. `Aggregate` logical operators with streaming sources).
 
-NOTE: `Aggregate` logical operator represents link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy] and link:spark-sql-streaming-Dataset-groupByKey.adoc[groupByKey] aggregations (and SQL's `GROUP BY` clause).
+NOTE: `Aggregate` logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> and <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> operators (and SQL's `GROUP BY` clause) in a logical query plan.
 
 [[only-one-streaming-aggregation-allowed]]
 `checkForStreaming` asserts that there is exactly one streaming aggregation in a streaming query.
@@ -56,7 +56,7 @@ CAUTION: FIXME
 
 `checkForStreaming` counts all link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators (on streaming Datasets with `isMapGroupsWithState` flag disabled).
 
-NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operator represents link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState] and link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operators.
+NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators in a logical query plan.
 
 NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.adoc#isMapGroupsWithState[FlatMapGroupsWithState.isMapGroupsWithState] flag is disabled when...FIXME
 

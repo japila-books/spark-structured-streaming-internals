@@ -1,9 +1,14 @@
-== [[StreamingJoinStrategy]] StreamingJoinStrategy Execution Planning Strategy for Stream-Stream Equi-Joins
+== [[StreamingJoinStrategy]] StreamingJoinStrategy Execution Planning Strategy -- Stream-Stream Equi-Joins
 
 [[apply]]
-`StreamingJoinStrategy` is an execution planning strategy (i.e. `Strategy`) that <<spark-sql-streaming-IncrementalExecution.adoc#planner, IncrementalExecution>> uses to plan `Join` binary logical operators with two streaming queries to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators.
+`StreamingJoinStrategy` is an execution planning strategy that can plan streaming queries with `Join` logical operators (of two streaming queries) to a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator.
 
-.Using StreamingJoinStrategy
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+
+`StreamingJoinStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to plan a streaming query.
+
+=== [[demo]] Demo: Using StreamingJoinStrategy
+
 [source, scala]
 ----
 scala> :type spark

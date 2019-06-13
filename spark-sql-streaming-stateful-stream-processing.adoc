@@ -2,22 +2,19 @@
 
 NOTE: Consider this page as _work in progress_ until the note disappears.
 
-*Stateful Stream Processing* is a stream processing with state.
+*Stateful Stream Processing* is a stream processing with an implicit or explicit state.
 
-In Spark Structured Streaming, a streaming query is an example of stateful streaming processing when uses the following operators (or their SQL variants):
+In Spark Structured Streaming, a streaming query is an example of stateful streaming processing when it uses the following operators (or their SQL variants):
 
 * <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>>
 * <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>>
 * <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>>
+* <<spark-sql-streaming-Dataset-operators.adoc#dropDuplicates, Dataset.dropDuplicates>>
+* `Dataset.join`
 * ...
 
-Regardless of the query language (<<spark-sql-streaming-Dataset-operators.adoc#, Dataset API>> or SQL) they are meant to create a query plan that <<IncrementalExecution, IncrementalExecution>> plans for execution.
+Regardless of the query language (<<spark-sql-streaming-Dataset-operators.adoc#, Dataset API>> or SQL), any structured query (incl. streaming queries) becomes a logical query plan that <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> plans for execution.
 
-State could be implicit or explicit.
+=== State Management
 
-=== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
-
-<<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is the `QueryExecution` of streaming queries with the following execution planning strategies that are relevant for stateful stream processing:
-
-* <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>>
-* ...
+The state in a stateful streaming query can be implicit or explicit.

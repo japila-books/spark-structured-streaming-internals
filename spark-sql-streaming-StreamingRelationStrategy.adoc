@@ -1,21 +1,14 @@
 == [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
 
-`StreamingRelationStrategy` is an link:spark-sql-streaming-IncrementalExecution.adoc#extraPlanningStrategies[streaming execution planning strategy] (i.e. `Strategy`) that <<apply, converts>> `StreamingRelation` and `StreamingExecutionRelation` logical operators (in the logical query plan of a streaming Dataset) to `StreamingRelationExec` physical operator.
+[[apply]]
+`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>>, <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>>, and <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingRelationExec.adoc#, StreamingRelationExec>> physical operators.
 
 .StreamingRelationStrategy, StreamingRelation, StreamingExecutionRelation and StreamingRelationExec Operators
 image::images/StreamingRelationStrategy-apply.png[align="center"]
 
-[NOTE]
-====
-link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator represents a streaming source in a logical plan and is created when `DataStreamReader` link:spark-sql-streaming-DataStreamReader.adoc#load[loads data from a streaming source] (that gives a streaming Dataset).
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator also represents a streaming source in a logical plan, but is used internally when `StreamExecution` (of a streaming Dataset) initializes the link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[logical query plan].
-====
-
-`StreamingRelationStrategy` is used exclusively when link:spark-sql-streaming-IncrementalExecution.adoc#planner[IncrementalExecution] plans the logical plan of a streaming Dataset for link:spark-sql-streaming-Dataset-explain.adoc[explain] operator.
-
-[[apply]]
-`StreamingRelationStrategy` converts link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] and link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operators in a logical query plan to a link:spark-sql-streaming-StreamingRelationExec.adoc[StreamingRelationExec] physical operator (with their `sourceName` and `output` schema) to give a corresponding physical query plan.
+`StreamingRelationStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to plan a streaming query.
 
 `StreamingRelationStrategy` is available using `SessionState` (of a `SparkSession`).
 
@@ -23,6 +16,8 @@ link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelat
 ----
 spark.sessionState.planner.StreamingRelationStrategy
 ----
+
+=== [[demo]] Demo: Using StreamingRelationStrategy
 
 [source, scala]
 ----

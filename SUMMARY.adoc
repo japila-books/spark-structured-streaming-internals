@@ -6,7 +6,7 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
 
-== (WIP) State Management in Stateful Stream Processing
+== (WIP) Stateful Stream Processing
 
 . link:spark-sql-streaming-stateful-stream-processing.adoc[Stateful Stream Processing]
 

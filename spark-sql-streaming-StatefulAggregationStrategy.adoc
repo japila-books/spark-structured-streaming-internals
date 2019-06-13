@@ -1,10 +1,12 @@
 == [[StatefulAggregationStrategy]] StatefulAggregationStrategy Execution Planning Strategy -- EventTimeWatermark and Aggregate Logical Operators
 
-`StatefulAggregationStrategy` is an execution planning strategy that is used to <<apply, plan streaming queries>> with `EventTimeWatermark` and `Aggregate` logical operators only:
+`StatefulAggregationStrategy` is an execution planning strategy that can <<apply, plan streaming queries>> with `EventTimeWatermark` and `Aggregate` logical operators only:
 
-* <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator.
+* <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator in a logical query plan.
 
-* `Aggregate` logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> and <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> operators and SQL's `GROUP BY` clause.
+* `Aggregate` logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> and <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> operators and SQL's `GROUP BY` clause in a logical query plan.
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 `StatefulAggregationStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to plan a streaming query.
 
