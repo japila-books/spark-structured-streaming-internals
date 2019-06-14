@@ -247,6 +247,36 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=ALL
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
+=== [[resolvedCheckpointRoot]] Fully-Qualified (Resolved) Path to Checkpoint Root Directory -- `resolvedCheckpointRoot` Property
+
+[source, scala]
+----
+resolvedCheckpointRoot: String
+----
+
+`resolvedCheckpointRoot` is a fully-qualified path of the given <<checkpointRoot, checkpoint root directory>>.
+
+The given <<checkpointRoot, checkpoint root directory>> is defined using *checkpointLocation* option or the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property with `queryName` option.
+
+`checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>>.
+
+`resolvedCheckpointRoot` is used when <<checkpointFile, creating the path to the checkpoint directory>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
+
+`resolvedCheckpointRoot` is used for the <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyzedPlan>> and planning `StreamingRelation` logical operators to corresponding `StreamingExecutionRelation` physical operators with the streaming data sources created passing in the path to `sources` directory to store checkpointing metadata).
+
+[TIP]
+====
+You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` is <<start, started>>.
+
+```
+Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+```
+====
+
+Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path` for <<checkpointRoot, checkpointRoot>> and makes it qualified.
+
+NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for a Hadoop configuration.
+
 === [[commitLog]] Offset Commit Log -- `commits` Metadata Checkpoint Directory
 
 `StreamExecution` uses *offset commit log* (<<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>>) for completed streaming batches (with a single file per batch with a file name being the batch id) or committed epochs.
@@ -484,7 +514,7 @@ NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <
 
 NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly when the <<extensions, concrete StreamExecutions>> are.
 
-=== [[checkpointFile]] Creating Path to Checkpoint Directory -- `checkpointFile` Internal Method
+=== [[checkpointFile]] Path to Checkpoint Directory -- `checkpointFile` Internal Method
 
 [source, scala]
 ----
@@ -731,33 +761,6 @@ queryName [id = xyz, runId = abc]
 // no query name
 [id = xyz, runId = abc]
 ```
-
-| resolvedCheckpointRoot
-a| [[resolvedCheckpointRoot]] Fully-qualified path of the *checkpoint directory* (as defined using <<checkpointRoot, checkpointRoot>> when `StreamExecution` is <<creating-instance, created>>).
-
-[NOTE]
-====
-<<checkpointRoot, checkpointRoot>> is defined using *checkpointLocation* option or <<spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property with `queryName` option.
-
-`checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>>.
-====
-
-Used when <<checkpointFile, creating the path to the checkpoint directory>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
-
-Used for <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyzedPlan>> and planning `StreamingRelation` logical operators to corresponding `StreamingExecutionRelation` physical operators with the streaming data sources created passing in the path to `sources` directory to store checkpointing metadata).
-
-[NOTE]
-====
-You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` is <<start, started>>.
-
-```
-Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
-```
-====
-
-Internally, `resolvedCheckpointRoot` creates a Hadoop `org.apache.hadoop.fs.Path` for <<checkpointRoot, checkpointRoot>> and makes it qualified.
-
-NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for a Hadoop configuration.
 
 | sources
 | [[sources]] All link:spark-sql-streaming-Source.adoc[streaming Sources] in <<logicalPlan, logical query plan>> (that are the link:spark-sql-streaming-StreamingExecutionRelation.adoc#source[sources] from `StreamingExecutionRelation`).

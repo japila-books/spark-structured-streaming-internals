@@ -19,12 +19,58 @@ Once <<creating-instance, created>>, `IncrementalExecution` is immediately execu
 `IncrementalExecution` takes the following to be created:
 
 * [[sparkSession]] `SparkSession`
-* [[logicalPlan]] Logical plan of a streaming query (i.e. `LogicalPlan` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning[with the logical plans of the data sources that have new data and new column attributes])
+* [[logicalPlan]] Streaming query (as `LogicalPlan`)
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>> (as specified using <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, DataStreamWriter.outputMode>> method)
-* [[checkpointLocation]] Checkpoint location
+* [[checkpointLocation]] <<state-checkpoint-location, State checkpoint location>>
 * [[runId]] Run ID of a streaming query (`UUID`)
 * [[currentBatchId]] Batch ID
 * [[offsetSeqMetadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>>
+
+=== [[state-checkpoint-location]] State Checkpoint Location (Directory)
+
+When <<creating-instance, created>>, `IncrementalExecution` is given the <<checkpointLocation, checkpoint location>>.
+
+For the two available execution engines (<<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>>), the checkpoint location is actually *state* directory under the <<spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot, checkpoint root directory>>.
+
+[source, scala]
+----
+val queryName = "rate2memory"
+val checkpointLocation = s"checkpoint-$queryName"
+val query = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("memory")
+  .queryName(queryName)
+  .option("checkpointLocation", checkpointLocation)
+  .start
+
+// Give the streaming query a moment (one micro-batch)
+// So lastExecution is available for the checkpointLocation
+import scala.concurrent.duration._
+query.awaitTermination(1.second.toMillis)
+
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val stateCheckpointDir = query
+  .asInstanceOf[StreamingQueryWrapper]
+  .streamingQuery
+  .lastExecution
+  .checkpointLocation
+val stateDir = s"$checkpointLocation/state"
+assert(stateCheckpointDir endsWith stateDir)
+----
+
+State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
+
+=== [[numStateStores]] Number of State Stores (Shuffle Partitions) -- `numStateStores` Internal Property
+
+[source, scala]
+----
+numStateStores: Int
+----
+
+`numStateStores` is...FIXME
 
 === [[planner]][[extraPlanningStrategies]] Extra Execution Planning Strategies for Streaming Queries -- `planner` Property
 
@@ -65,11 +111,9 @@ state: Rule[SparkPlan]
 nextStatefulOperationStateInfo(): StatefulOperatorStateInfo
 ----
 
-`nextStatefulOperationStateInfo` creates a new <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> with <<checkpointLocation, checkpointLocation>>, <<runId, runId>>, the next <<statefulOperatorId, statefulOperatorId>> and <<currentBatchId, currentBatchId>>.
+`nextStatefulOperationStateInfo` simply creates a new <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> with the <<state-checkpoint-location, state checkpoint location>>, the <<runId, run ID>> (of the streaming query), the next <<statefulOperatorId, statefulOperator ID>>, the <<currentBatchId, current batch ID>>, and the <<numStateStores, number of state stores>>.
 
-NOTE: All the properties of `StatefulOperatorStateInfo` are specified when `IncrementalExecution` is <<creating-instance, created>>.
-
-NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to transform a streaming physical plan using <<state, state>> preparation rule.
+NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to optimize a streaming physical plan using the <<state, state preparation rule>> (and creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
 
 === [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
 

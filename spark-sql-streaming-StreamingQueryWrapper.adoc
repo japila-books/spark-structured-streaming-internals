@@ -2,8 +2,23 @@
 
 `StreamingQueryWrapper` is a serializable interface of a <<_streamingQuery, StreamExecution>>.
 
+.Demo: Any Streaming Query is StreamingQueryWrapper
+[source, scala]
+----
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val query = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("memory")
+  .queryName("rate2memory")
+  .start
+assert(query.isInstanceOf[StreamingQueryWrapper])
+----
+
 [[stop]]
-`StreamingQueryWrapper` has the same <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> API and  simply passes all the method calls along to the underlying <<_streamingQuery, StreamExecution>>.
+`StreamingQueryWrapper` has the same <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> API and simply passes all the method calls along to the underlying <<_streamingQuery, StreamExecution>>.
 
 [[creating-instance]]
 [[_streamingQuery]]
