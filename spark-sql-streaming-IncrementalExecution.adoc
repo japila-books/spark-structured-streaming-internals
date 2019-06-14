@@ -12,6 +12,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 * <<spark-sql-streaming-Dataset-operators.adoc#explain, Dataset.explain>> operator is executed (on a streaming query)
 
+[[executedPlan]]
 Once <<creating-instance, created>>, `IncrementalExecution` is immediately executed (by the <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> stream execution engines in the *queryPlanning* phase) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the <<extraPlanningStrategies, extra planning strategies>> and the <<state, state preparation rule>> have been applied at this point and the <<logicalPlan, streaming query>> is ready for execution.
 
 === [[creating-instance]] Creating IncrementalExecution Instance
@@ -35,7 +36,7 @@ For the two available execution engines (<<spark-sql-streaming-MicroBatchExecuti
 [source, scala]
 ----
 val queryName = "rate2memory"
-val checkpointLocation = s"checkpoint-$queryName"
+val checkpointLocation = s"file:/tmp/checkpoint-$queryName"
 val query = spark
   .readStream
   .format("rate")
@@ -58,7 +59,7 @@ val stateCheckpointDir = query
   .lastExecution
   .checkpointLocation
 val stateDir = s"$checkpointLocation/state"
-assert(stateCheckpointDir endsWith stateDir)
+assert(stateCheckpointDir equals stateDir)
 ----
 
 State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
@@ -93,26 +94,38 @@ Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlanner.html[SparkPlanner] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-=== [[state]] State Preparation Rule -- `state` Property
+=== [[state]][[preparations]] State Preparation Rule For Execution-Specific Configuration -- `state` Property
 
 [source, scala]
 ----
 state: Rule[SparkPlan]
 ----
 
-`state` is a custom physical preparation rule (`Rule[SparkPlan]`) that transforms a streaming physical plan (i.e. `SparkPlan` with link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec] and link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec] physical operators) and fills missing properties that are batch-specific, e.g.
+`state` is a custom physical preparation rule (`Rule[SparkPlan]`) that can transform a streaming physical plan (`SparkPlan`) with the following physical operators:
 
-* `StateStoreSaveExec` and `StateStoreRestoreExec` operator pair, `state` assigns:
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> with any unary physical operator (`UnaryExecNode`) with a <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
 
-** `StateStoreSaveExec` operator gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>, <<outputMode, OutputMode>> and <<offsetSeqMetadata, batchWatermarkMs>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
 
-** `StateStoreRestoreExec` operator gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>> that was used for `StateStoreSaveExec` operator
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
 
-* `StreamingDeduplicateExec` operator gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>> and <<offsetSeqMetadata, batchWatermarkMs>>
+* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
 
-* `FlatMapGroupsWithStateExec` gets <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>, <<offsetSeqMetadata, batchWatermarkMs>> and <<offsetSeqMetadata, batchWatermarkMs>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
 
-`state` is used when...FIXME
+`state` simply transforms the physical plan with the above physical operators and fills out the execution-specific configuration:
+
+* <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>> for the state info
+
+* <<outputMode, OutputMode>>
+
+* <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, batchWatermarkMs>> (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the event-time watermark
+
+* <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchTimestampMs, batchTimestampMs>> (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the current timestamp
+
+`state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to <<executedPlan, optimize (prepare) the physical plan of the streaming query>> (once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html#preparations[Physical Query Optimizations] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 === [[nextStatefulOperationStateInfo]] `nextStatefulOperationStateInfo` Internal Method
 
