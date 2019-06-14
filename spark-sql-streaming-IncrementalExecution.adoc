@@ -12,7 +12,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 * <<spark-sql-streaming-Dataset-operators.adoc#explain, Dataset.explain>> operator is executed (on a streaming query)
 
-Once <<creating-instance, created>>, `IncrementalExecution` is immediately executed (by the <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> stream execution engines in the *queryPlanning* phase) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the <<extraPlanningStrategies, extra execution planning strategies for streaming queries>> and <<state, state preparation rule>> have been applied at this point.
+Once <<creating-instance, created>>, `IncrementalExecution` is immediately executed (by the <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> stream execution engines in the *queryPlanning* phase) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the <<extraPlanningStrategies, extra planning strategies>> and the <<state, state preparation rule>> have been applied at this point and the <<logicalPlan, streaming query>> is ready for execution.
 
 === [[creating-instance]] Creating IncrementalExecution Instance
 
@@ -63,18 +63,26 @@ assert(stateCheckpointDir endsWith stateDir)
 
 State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
 
-=== [[numStateStores]] Number of State Stores (Shuffle Partitions) -- `numStateStores` Internal Property
+=== [[numStateStores]] Number of State Stores (spark.sql.shuffle.partitions) -- `numStateStores` Internal Property
 
 [source, scala]
 ----
 numStateStores: Int
 ----
 
-`numStateStores` is...FIXME
+`numStateStores` is the *number of state stores* which corresponds to `spark.sql.shuffle.partitions` configuration property (default: `200`).
 
-=== [[planner]][[extraPlanningStrategies]] Extra Execution Planning Strategies for Streaming Queries -- `planner` Property
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-properties.html#spark.sql.shuffle.partitions[spark.sql.shuffle.partitions] configuration property (and the others) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-As a custom `QueryExecution`, `IncrementalExecution` uses the following extra execution planning strategies to plan the <<logicalPlan, streaming query>> for execution:
+Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata>> for the <<spark-sql-streaming-SQLConf.adoc#SHUFFLE_PARTITIONS, spark.sql.shuffle.partitions>> configuration property (using the <<spark-sql-streaming-OffsetSeqMetadata.adoc#conf, streaming configuration>>) or simply takes whatever was defined for the given <<sparkSession, SparkSession>> (default: `200`).
+
+`numStateStores` is initialized right when `IncrementalExecution` is <<creating-instance, created>>.
+
+`numStateStores` is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
+
+=== [[planner]][[extraPlanningStrategies]] Extra Planning Strategies for Streaming Queries -- `planner` Property
+
+`IncrementalExecution` uses a custom `SparkPlanner` with the following *extra planning strategies* to plan the <<logicalPlan, streaming query>> for execution:
 
 * <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>>
 * <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>>
@@ -82,6 +90,8 @@ As a custom `QueryExecution`, `IncrementalExecution` uses the following extra ex
 * <<spark-sql-streaming-StreamingRelationStrategy.adoc#, StreamingRelationStrategy>>
 * <<spark-sql-streaming-StreamingDeduplicationStrategy.adoc#, StreamingDeduplicationStrategy>>
 * <<spark-sql-streaming-StreamingGlobalLimitStrategy.adoc#, StreamingGlobalLimitStrategy>>
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlanner.html[SparkPlanner] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 === [[state]] State Preparation Rule -- `state` Property
 
