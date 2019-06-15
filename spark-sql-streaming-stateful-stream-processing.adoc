@@ -13,7 +13,20 @@ In Spark Structured Streaming, a streaming query is an example of stateful strea
 * `Dataset.join`
 * ...
 
-Regardless of the query language (<<spark-sql-streaming-Dataset-operators.adoc#, Dataset API>> or SQL), any structured query (incl. streaming queries) becomes a logical query plan that <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> plans for execution.
+=== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
+
+Regardless of the query language (<<spark-sql-streaming-Dataset-operators.adoc#, Dataset API>> or SQL), any structured query (incl. streaming queries) becomes a logical query plan.
+
+In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> that plans streaming queries for execution.
+
+While planning a streaming query (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>>. The rule fills out the following physical operators with the execution-specific configuration (with <<spark-sql-streaming-IncrementalExecution.adoc#nextStatefulOperationStateInfo, StatefulOperatorStateInfo>> being the most important for stateful stream processing):
+
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
 
 === State Management
 
