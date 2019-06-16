@@ -21,7 +21,7 @@ In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.a
 
 While planning a streaming query (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>>. The rule fills out the following physical operators with the execution-specific configuration (with <<spark-sql-streaming-IncrementalExecution.adoc#nextStatefulOperationStateInfo, StatefulOperatorStateInfo>> being the most important for stateful stream processing):
 
-* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> (used for <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>>)
 * <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
 * <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
 * <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>

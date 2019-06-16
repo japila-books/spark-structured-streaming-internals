@@ -84,7 +84,7 @@ Used when:
 
 * <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed
 
-* `OffsetSeqMetadata` is requested for `relevantSQLConfs` and `relevantSQLConfDefaultValues`
+* `OffsetSeqMetadata` is requested for the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfs, relevantSQLConfs>> and the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfDefaultValues, relevantSQLConfDefaultValues>>
 
 | `streamingMetricsEnabled`
 

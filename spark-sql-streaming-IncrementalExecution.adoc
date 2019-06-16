@@ -12,25 +12,25 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 * <<spark-sql-streaming-Dataset-operators.adoc#explain, Dataset.explain>> operator is executed (on a streaming query)
 
-[[executedPlan]]
-Once <<creating-instance, created>>, `IncrementalExecution` is immediately executed (by the <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> stream execution engines in the *queryPlanning* phase) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the <<extraPlanningStrategies, extra planning strategies>> and the <<state, state preparation rule>> have been applied at this point and the <<logicalPlan, streaming query>> is ready for execution.
-
 [[statefulOperatorId]]
 `IncrementalExecution` uses the `statefulOperatorId` internal counter for the IDs of the stateful operators in the <<optimizedPlan, optimized logical plan>> (while applying the <<preparations, preparations>> rules) when requested to prepare the plan for execution (in <<executedPlan, executedPlan>> phase).
 
-[[optimizedPlan]]
-When requested for optimized logical plan, `IncrementalExecution` transforms `CurrentBatchTimestamp` and `ExpressionWithRandomSeed` expressions with the timestamp literal and new random seeds, respectively. When transforming `CurrentBatchTimestamp` expressions, `IncrementalExecution` prints out the following INFO message to the logs:
+=== [[preparing-for-execution]][[optimizedPlan]][[executedPlan]][[preparations]] Preparing Logical Plan (of Streaming Query) for Execution -- `optimizedPlan` and `executedPlan` Phases of Query Execution
+
+When requested for the optimized logical plan (of the <<logicalPlan, logical plan>>), `IncrementalExecution` transforms `CurrentBatchTimestamp` and `ExpressionWithRandomSeed` expressions with the timestamp literal and new random seeds, respectively. When transforming `CurrentBatchTimestamp` expressions, `IncrementalExecution` prints out the following INFO message to the logs:
 
 ```
 Current batch timestamp = [timestamp]
 ```
+
+Once <<creating-instance, created>>, `IncrementalExecution` is immediately executed (by the <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> stream execution engines in the *queryPlanning* phase) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the <<extraPlanningStrategies, extra planning strategies>> and the <<state, state preparation rule>> have been applied at this point and the <<logicalPlan, streaming query>> is ready for execution.
 
 === [[creating-instance]] Creating IncrementalExecution Instance
 
 `IncrementalExecution` takes the following to be created:
 
 * [[sparkSession]] `SparkSession`
-* [[logicalPlan]] Streaming query (as `LogicalPlan`)
+* [[logicalPlan]] Logical plan (`LogicalPlan`)
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>> (as specified using <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, DataStreamWriter.outputMode>> method)
 * [[checkpointLocation]] <<state-checkpoint-location, State checkpoint location>>
 * [[runId]] Run ID of a streaming query (`UUID`)
@@ -104,7 +104,7 @@ Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlanner.html[SparkPlanner] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-=== [[state]][[preparations]] State Preparation Rule For Execution-Specific Configuration -- `state` Property
+=== [[state]] State Preparation Rule For Execution-Specific Configuration -- `state` Property
 
 [source, scala]
 ----

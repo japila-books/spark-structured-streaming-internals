@@ -55,6 +55,10 @@
 
 . link:spark-sql-streaming-StateStoreConf.adoc[StateStoreConf]
 
+== Streaming Aggregation
+
+. link:spark-sql-streaming-aggregation.adoc[Streaming Aggregation]
+
 == Developing Streaming Applications
 
 . link:spark-sql-streaming-DataStreamReader.adoc[DataStreamReader]

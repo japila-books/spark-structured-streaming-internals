@@ -1,0 +1,12 @@
+== Streaming Aggregation
+
+*Streaming Aggregation* is...FIXME
+
+In Spark Structured Streaming, a streaming query is an example of streaming aggregation when it uses the following high-level operators (or their SQL variants):
+
+* FIXME
+
+Spark Structured Streaming uses the following for streaming aggregations:
+
+* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator
+* <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy
