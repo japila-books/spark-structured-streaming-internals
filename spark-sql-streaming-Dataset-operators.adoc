@@ -41,7 +41,7 @@ groupBy(cols: Column*): RelationalGroupedDataset
 groupBy(col1: String, cols: String*): RelationalGroupedDataset
 ----
 
-Aggregates rows by a untyped grouping function
+Aggregates rows by zero, one or more columns
 
 | <<spark-sql-streaming-Dataset-groupByKey.adoc#, groupByKey>>
 a| [[groupByKey]]

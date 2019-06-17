@@ -4,6 +4,8 @@
 
 In Spark Structured Streaming, a streaming query is an example of streaming aggregation when it uses the following high-level operators:
 
+* <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>>
+
 * `RelationalGroupedDataset.agg` or `RelationalGroupedDataset.pivot` aggregations
 
 * `KeyValueGroupedDataset` aggregations, i.e. `mapGroups`, `flatMapGroups`, `mapGroupsWithState`, `flatMapGroupsWithState`, `reduceGroups`, and `agg`, `cogroup` operators
@@ -13,6 +15,16 @@ In Spark Structured Streaming, a streaming query is an example of streaming aggr
 Under the covers, the high-level operators create a streaming query with `Aggregate` unary logical operators.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Aggregate.html[Aggregate] logical operator in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+
+=== [[demos]] Demos
+
+Use the following demos to learn more:
+
+* <<spark-sql-streaming-demo-groupBy-aggregation-append-memory.adoc#, Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Memory Data Source (Append Output Mode)>>
+
+* <<spark-sql-streaming-demo-groupBy-aggregation-append.adoc#, Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Append Output Mode>>
+
+* <<spark-sql-streaming-demo-groupByKey-count-Update.adoc#, Demo: groupByKey Streaming Aggregation in Update Mode>>
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 

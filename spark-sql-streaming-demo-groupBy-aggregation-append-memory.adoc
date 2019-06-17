@@ -1,0 +1,76 @@
+== Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Memory Data Source (Append Output Mode)
+
+The following code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> high-level operator and <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>> data source (for the streaming source and the sink).
+
+[source, scala]
+----
+// START: Only for easier debugging
+// The state is then only for one partition
+// which should make monitoring easier
+val numShufflePartitions = 1
+import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
+
+assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
+// END: Only for easier debugging
+
+import java.sql.Timestamp
+case class Event(time: Timestamp, value: Long)
+import scala.concurrent.duration._
+object Event {
+  def apply(n: Long, value: Long): Event = {
+    Event(new Timestamp(n.seconds.toMillis), value)
+  }
+}
+
+import org.apache.spark.sql.execution.streaming.MemoryStream
+implicit val sqlCtx = spark.sqlContext
+val events = MemoryStream[Event]
+events.addData(
+  Event(1,1),
+  Event(1,2),
+  Event(3,3),
+  Event(4,3),
+  Event(5,2),
+  Event(6,2),
+  Event(10,9))
+val values = events.toDS
+
+assert(values.isStreaming, "values must be a streaming Dataset")
+
+import org.apache.spark.sql.functions.window
+val countsPer5secWindow = values
+  .withWatermark(eventTime = "time", delayThreshold = "0 seconds")
+  .groupBy(window($"time", "5 seconds") as "window", $"value")
+  .agg(count("*") as "count") // <-- creates an Aggregate logical operator
+
+import org.apache.spark.sql.streaming.OutputMode
+val queryName = "counts"
+val checkpointLocation = s"/tmp/checkpoint-$queryName"
+val streamingQuery = countsPer5secWindow
+  .writeStream
+  .format("memory")
+  .queryName(queryName)
+  .option("checkpointLocation", checkpointLocation)
+  .outputMode(OutputMode.Append)
+  .start
+
+streamingQuery.processAllAvailable()
+
+val output = spark.table("counts").orderBy("window", "value")
+scala> output.show(truncate = false)
++------------------------------------------+-----+-----+
+|window                                    |value|count|
++------------------------------------------+-----+-----+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|1    |1    |
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|2    |1    |
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|3    |2    |
+|[1970-01-01 01:00:05, 1970-01-01 01:00:10]|2    |2    |
++------------------------------------------+-----+-----+
+
+val lastWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+val expectedWatermark = "1970-01-01T00:00:10.000Z"
+assert(lastWatermark == expectedWatermark)
+
+streamingQuery.stop()
+----
