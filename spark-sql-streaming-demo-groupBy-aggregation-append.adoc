@@ -1,6 +1,6 @@
-== Demo: groupBy Streaming Aggregation with Append Output Mode
+== Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Append Output Mode
 
-The following example code shows a link:spark-sql-streaming-Dataset-groupBy.adoc[groupBy] streaming aggregation with link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode.
+The following example code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> with link:spark-sql-streaming-Dataset-groupBy.adoc[Dataset.groupBy] high-level operator and link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode.
 
 `Append` output mode link:spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark[requires] that a streaming aggregation defines a watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on at least one of the grouping expressions (directly or using link:spark-sql-streaming-window.adoc[window] function).
 

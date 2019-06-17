@@ -1,6 +1,6 @@
 == [[StateStoreSaveExec]] StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates
 
-`StateStoreSaveExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.adoc#, saves a streaming state to a state store>> with <<spark-sql-streaming-WatermarkSupport.adoc#, support for streaming watermark>>.
+`StateStoreSaveExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.adoc#, writes a streaming state to a state store>> with <<spark-sql-streaming-WatermarkSupport.adoc#, support for streaming watermark>>.
 
 [NOTE]
 ====
@@ -9,21 +9,10 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StateStoreSaveExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> (`Aggregate` logical operators in the logical plan of a streaming query).
+`StateStoreSaveExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> for execution (`Aggregate` logical operators in the logical plan of a streaming query).
 
 .StateStoreSaveExec and StatefulAggregationStrategy
 image::images/StateStoreSaveExec-StatefulAggregationStrategy.png[align="center"]
-
-[NOTE]
-====
-`Aggregate` logical operator is the result of:
-
-* `RelationalGroupedDataset` aggregations, i.e. `agg` and  `pivot` operators
-
-* `KeyValueGroupedDataset` aggregations, i.e. `mapGroups`, `flatMapGroups`, `mapGroupsWithState`, `flatMapGroupsWithState`, `reduceGroups`, and `agg`, `cogroup` operators
-
-* SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
-====
 
 The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>>, the <<outputMode, output mode>>, and the <<eventTimeWatermark, event-time watermark>>, are initially undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#preparing-for-execution, prepare the logical plan (of a streaming query) for execution>> (when the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> is executed).
 
@@ -37,15 +26,55 @@ When <<doExecute, executed>>, `StateStoreSaveExec` link:spark-sql-streaming-Stat
 .StateStoreSaveExec creates StateStoreRDD
 image::images/StateStoreSaveExec-StateStoreRDD.png[align="center"]
 
+.StateStoreSaveExec and StateStoreRDD (after streamingBatch.toRdd.count)
+image::images/StateStoreSaveExec-StateStoreRDD-count.png[align="center"]
+
+[NOTE]
+====
+The number of partitions of link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[StateStoreRDD] (and hence the number of Spark tasks) is what was defined for the <<child, child>> physical plan.
+
+There will be that many `StateStores` as there are partitions in `StateStoreRDD`.
+====
+
+NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
+
+When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] (with `storeUpdateFunction` specific to the output mode).
+
+[[output]]
+The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
+
+[[outputPartitioning]]
+The output partitioning of `StateStoreSaveExec` is exactly the <<child, child>>'s output partitioning.
+
+[[stateManager]]
+`StateStoreRestoreExec` uses a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (that is <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, created>> for the <<keyExpressions, keyExpressions>>, the output of the <<child, child>> physical operator and the <<stateFormatVersion, stateFormatVersion>>).
+
+[[logging]]
+[TIP]
+====
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.StateStoreSaveExec` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.StateStoreSaveExec=ALL
+```
+
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+====
+
+=== [[demo]] Demo: StateStoreSaveExec Operator in Physical Plan of Streaming Aggregation (Dataset.groupBy Operator)
+
 [source, scala]
 ----
 // START: Only for easier debugging
 // The state is then only for one partition
 // which should make monitoring easier
+val numShufflePartitions = 1
 import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
-spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
 
-assert(spark.sessionState.conf.numShufflePartitions == 1)
+assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
 // END: Only for easier debugging
 
 val counts = spark
@@ -60,9 +89,9 @@ scala> counts.explain
 *(5) Sort [group#5 ASC NULLS FIRST], true, 0
 +- Exchange rangepartitioning(group#5 ASC NULLS FIRST, 1)
    +- *(4) HashAggregate(keys=[window#11], functions=[count(value#1L)])
-      +- StateStoreSave [window#11], state info [ checkpoint = <unknown>, runId = ba5e4345-6d7a-4aca-b480-231ae9268916, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
+      +- StateStoreSave [window#11], state info [ checkpoint = <unknown>, runId = 3c4d9c60-5fda-4053-aeef-4ddd2b485605, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
          +- *(3) HashAggregate(keys=[window#11], functions=[merge_count(value#1L)])
-            +- StateStoreRestore [window#11], state info [ checkpoint = <unknown>, runId = ba5e4345-6d7a-4aca-b480-231ae9268916, opId = 0, ver = 0, numPartitions = 1], 2
+            +- StateStoreRestore [window#11], state info [ checkpoint = <unknown>, runId = 3c4d9c60-5fda-4053-aeef-4ddd2b485605, opId = 0, ver = 0, numPartitions = 1], 2
                +- *(2) HashAggregate(keys=[window#11], functions=[merge_count(value#1L)])
                   +- Exchange hashpartitioning(window#11, 1)
                      +- *(1) HashAggregate(keys=[window#11], functions=[partial_count(value#1L)])
@@ -71,70 +100,71 @@ scala> counts.explain
                               +- StreamingRelation rate, [timestamp#0, value#1L]
 
 // Start the query and hence execute StateStoreSaveExec
-import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val t = Trigger.ProcessingTime(1.hour) // should be enough time for exploration
-val sq = counts
+import org.apache.spark.sql.streaming.OutputMode
+val queryName = "rate2memory"
+val checkpointLocation = s"/tmp/checkpoint-$queryName"
+val query = counts
   .writeStream
-  .format("console")
-  .option("truncate", false)
-  .trigger(t)
+  .format("memory")
+  .queryName(queryName)
+  .option("checkpointLocation", checkpointLocation)
   .outputMode(OutputMode.Complete)
   .start
 
-// wait till the first batch which should happen right after start
+// Give the streaming query a moment (one micro-batch)
+// So lastExecution is available for the checkpointLocation
+import scala.concurrent.duration._
+query.awaitTermination(1.second.toMillis)
 
-import org.apache.spark.sql.execution.streaming._
-val lastExecution = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery.lastExecution
-scala> println(lastExecution.logical.numberedTreeString)
-00 WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWriter@4d8749e7
-01 +- Sort [group#5 ASC NULLS FIRST], true
-02    +- Aggregate [window#11], [window#11 AS group#5, count(value#1L) AS value_count#10L]
-03       +- Filter isnotnull(timestamp#0)
-04          +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#11, timestamp#0, value#1L]
-05             +- Project [timestamp#211 AS timestamp#0, value#212L AS value#1L]
-06                +- Streaming RelationV2 rate[timestamp#211, value#212L]
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val lastExecution = query
+  .asInstanceOf[StreamingQueryWrapper]
+  .streamingQuery
+  .lastExecution
+val logicalPlan = lastExecution.logical
+scala> println(logicalPlan.numberedTreeString)
+00 Sort [group#5 ASC NULLS FIRST], true
+01 +- Aggregate [window#11], [window#11 AS group#5, count(value#1L) AS value_count#10L]
+02    +- Filter isnotnull(timestamp#0)
+03       +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#11, timestamp#0, value#1L]
+04          +- Project [timestamp#249 AS timestamp#0, value#250L AS value#1L]
+05             +- Streaming RelationV2 rate[timestamp#249, value#250L]
 ----
 
-.StateStoreSaveExec and StateStoreRDD (after streamingBatch.toRdd.count)
-image::images/StateStoreSaveExec-StateStoreRDD-count.png[align="center"]
+=== [[metrics]] Performance Metrics (SQLMetrics)
 
-[NOTE]
-====
-The number of partitions of link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[StateStoreRDD] (and hence the number of Spark tasks) is what was defined for the <<child, child>> physical plan.
+`StateStoreSaveExec` uses the performance metrics of the parent <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
 
-There will be that many `StateStores` as there are partitions in `StateStoreRDD`.
-====
-
-NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
-
-[[metrics]]
-`StateStoreSaveExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
-
-.StateStoreSaveExec's Performance Metrics
-[cols="1m,2",options="header",width="100%"]
+[cols="1m,1,3",options="header",width="100%"]
 |===
 | Key
-| Usage
+| Name (in UI)
+| Description
 
 | allUpdatesTimeMs
+|
 | [[allUpdatesTimeMs]]
 
 | allRemovalsTimeMs
+|
 | [[allRemovalsTimeMs]]
 
 | commitTimeMs
+|
 | [[commitTimeMs]]
 
 | numOutputRows
+|
 | [[numOutputRows]]
 
 | numTotalStateRows
+|
 | [[numTotalStateRows]] Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store]
 
 Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal` for ``0``th operator).
 
 | numUpdatedStateRows
+|
 a| [[numUpdatedStateRows]] Number of the state keys that link:spark-sql-streaming-StateStore.adoc#put[were stored as updates in the state store] in a trigger and for the keys in the result rows of the upstream physical operator.
 
 * In `Complete` output mode, `numUpdatedStateRows` is the number of input rows (which should be exactly the number of output rows from the upstream operator)
@@ -150,6 +180,7 @@ CAUTION: FIXME
 NOTE: You can see the current value as `numRowsUpdated` attribute in `stateOperators` in link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] (that is available as `StreamingQuery.lastProgress.stateOperators(n).numRowsUpdated` for ``n``th operator).
 
 | stateMemory
+|
 | [[stateMemory]] Memory used by the link:spark-sql-streaming-StateStore.adoc[StateStore]
 
 |===
@@ -157,29 +188,16 @@ NOTE: You can see the current value as `numRowsUpdated` attribute in `stateOpera
 .StateStoreSaveExec in web UI (Details for Query)
 image::images/StateStoreSaveExec-webui-query-details.png[align="center"]
 
-When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] (with `storeUpdateFunction` specific to the output mode).
+=== [[creating-instance]] Creating StateStoreSaveExec Instance
 
-[[output]]
-The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
+`StateStoreSaveExec` takes the following to be created:
 
-[[outputPartitioning]]
-The output partitioning of `StateStoreSaveExec` is exactly the <<child, child>>'s output partitioning.
-
-[[stateManager]]
-`StateStoreRestoreExec` uses a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, StreamingAggregationStateManager>> (that is <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, created>> for the <<keyExpressions, keyExpressions>>, the output of the <<child, child>> physical operator and the <<stateFormatVersion, stateFormatVersion>>).
-
-[TIP]
-====
-Enable `INFO` logging level for `org.apache.spark.sql.execution.streaming.StateStoreSaveExec` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.StateStoreSaveExec=INFO
-```
-
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
-====
+* [[keyExpressions]] *Key expressions*, i.e. Catalyst attributes for the grouping keys
+* [[stateInfo]] Execution-specific <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> (default: `None`)
+* [[outputMode]] Execution-specific <<spark-sql-streaming-OutputMode.adoc#, output mode>> (default: `None`)
+* [[eventTimeWatermark]] Execution-specific event-time watermark (default: `None`)
+* [[stateFormatVersion]] Version of the state format (based on the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
+* [[child]] Child physical operator (`SparkPlan`)
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 
@@ -304,14 +322,3 @@ In `next`, link:spark-sql-streaming-StateStore.adoc#put[stores a row] in `StateS
 ```
 Invalid output mode: [outputMode]
 ```
-
-=== [[creating-instance]] Creating StateStoreSaveExec Instance
-
-`StateStoreSaveExec` takes the following when created:
-
-* [[keyExpressions]] Catalyst expressions for keys (as used for aggregation in link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] operator)
-* [[stateInfo]] link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
-* [[outputMode]] link:spark-sql-streaming-OutputMode.adoc[Output mode]
-* [[eventTimeWatermark]] Event time watermark (as `long` number)
-* [[stateFormatVersion]] `stateFormatVersion` (that is the value of <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
-* [[child]] Child physical operator

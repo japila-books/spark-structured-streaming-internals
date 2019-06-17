@@ -19,7 +19,7 @@ Regardless of the query language (<<spark-sql-streaming-Dataset-operators.adoc#,
 
 In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> that plans streaming queries for execution.
 
-While planning a streaming query (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>>. The rule fills out the following physical operators with the execution-specific configuration (with <<spark-sql-streaming-IncrementalExecution.adoc#nextStatefulOperationStateInfo, StatefulOperatorStateInfo>> being the most important for stateful stream processing):
+While <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, planning a streaming query for execution>> (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>>. The rule fills out the following physical operators with the execution-specific configuration (with <<spark-sql-streaming-IncrementalExecution.adoc#nextStatefulOperationStateInfo, StatefulOperatorStateInfo>> being the most important for stateful stream processing):
 
 * <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> (used for <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>>)
 * <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>

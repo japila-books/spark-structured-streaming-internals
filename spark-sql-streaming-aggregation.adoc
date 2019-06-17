@@ -2,11 +2,20 @@
 
 *Streaming Aggregation* is...FIXME
 
-In Spark Structured Streaming, a streaming query is an example of streaming aggregation when it uses the following high-level operators (or their SQL variants):
+In Spark Structured Streaming, a streaming query is an example of streaming aggregation when it uses the following high-level operators:
 
-* FIXME
+* `RelationalGroupedDataset.agg` or `RelationalGroupedDataset.pivot` aggregations
 
-Spark Structured Streaming uses the following for streaming aggregations:
+* `KeyValueGroupedDataset` aggregations, i.e. `mapGroups`, `flatMapGroups`, `mapGroupsWithState`, `flatMapGroupsWithState`, `reduceGroups`, and `agg`, `cogroup` operators
 
-* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator
-* <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy
+* SQL's `GROUP BY` clause (possibly with `WITH CUBE` or `WITH ROLLUP`)
+
+Under the covers, the high-level operators create a streaming query with `Aggregate` unary logical operators.
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Aggregate.html[Aggregate] logical operator in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+
+=== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
+
+In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> that plans streaming queries for execution.
+
+While <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, planning a streaming query for execution>> (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy for planning streaming aggregations (`Aggregate` unary logical operators) as pairs of <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operators.
