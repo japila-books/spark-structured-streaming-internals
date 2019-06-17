@@ -44,9 +44,15 @@ val countsPer5secWindow = values
   .groupBy(window($"time", "5 seconds") as "window", $"value")
   .agg(count("*") as "count") // <-- creates an Aggregate logical operator
 
-import org.apache.spark.sql.streaming.OutputMode
 val queryName = "counts"
 val checkpointLocation = s"/tmp/checkpoint-$queryName"
+
+// Delete the checkpoint location from previous executions
+import java.nio.file.{Files, FileSystems}
+val path = FileSystems.getDefault().getPath(checkpointLocation)
+Files.deleteIfExists(path)
+
+import org.apache.spark.sql.streaming.OutputMode
 val streamingQuery = countsPer5secWindow
   .writeStream
   .format("memory")
@@ -58,7 +64,8 @@ val streamingQuery = countsPer5secWindow
 streamingQuery.processAllAvailable()
 
 val output = spark.table("counts").orderBy("window", "value")
-scala> output.show(truncate = false)
+output.show(truncate = false)
+/**
 +------------------------------------------+-----+-----+
 |window                                    |value|count|
 +------------------------------------------+-----+-----+
@@ -67,6 +74,8 @@ scala> output.show(truncate = false)
 |[1970-01-01 01:00:00, 1970-01-01 01:00:05]|3    |2    |
 |[1970-01-01 01:00:05, 1970-01-01 01:00:10]|2    |2    |
 +------------------------------------------+-----+-----+
+*/
+assert(output.collect.size == 4)
 
 val lastWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
 val expectedWatermark = "1970-01-01T00:00:10.000Z"

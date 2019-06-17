@@ -10,13 +10,13 @@ NOTE: As of Spark 2.2.0, Structured Streaming has been marked stable and ready f
 
 Structured Streaming attempts to unify streaming, interactive, and batch queries over structured datasets for developing end-to-end stream processing applications dubbed *continuous applications* using Spark SQL's Datasets API with additional support for the following features:
 
-* link:spark-sql-streaming-Dataset-operators.adoc#groupBy[Continuous Streaming Aggregations]
+* <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>
 
-* link:spark-sql-streaming-Dataset-withWatermark.adoc[Streaming watermark] (for state expiration and late events)
+* <<spark-sql-streaming-stateful-stream-processing.adoc#, Stateful Stream Processing>>
 
-* Continuous Window Aggregations (aka *windowing*) using `groupBy` operator with `window` function
+* <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>> Stream Processing Engines
 
-* link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[Arbitrary Stateful Streaming Aggregations]
+* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, Arbitrary Stateful Streaming Aggregations>>
 
 In Structured Streaming, Spark developers describe custom streaming computations in the same way as with Spark SQL. Internally, Structured Streaming applies the user-defined structured query to the continuously and indefinitely arriving data to analyze real-time streaming data.
 
@@ -26,7 +26,7 @@ Structured Streaming introduces the concept of *streaming datasets* that are _in
 
 [TIP]
 ====
-A `Dataset` is *streaming* (aka _continuous_) when its logical plan is streaming.
+A `Dataset` is *streaming* when its logical plan is streaming.
 
 [source, scala]
 ----
