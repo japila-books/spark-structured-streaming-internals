@@ -3,9 +3,9 @@
 [[creating-instance]]
 `StateStoreMetrics` holds the metrics of a <<spark-sql-streaming-StateStore.adoc#, state store>>:
 
-* [[numKeys]] Number of keys
+* [[numKeys]] Total number of keys
 * [[memoryUsedBytes]] Memory used (in bytes)
-* [[customMetrics]] <<spark-sql-streaming-StateStoreCustomMetric.adoc#, StateStoreCustomMetrics>> and their values (`Map[StateStoreCustomMetric, Long]`)
+* [[customMetrics]] <<spark-sql-streaming-StateStoreCustomMetric.adoc#, StateStoreCustomMetrics>> with their current values (`Map[StateStoreCustomMetric, Long]`)
 
 `StateStoreMetrics` is used (and <<creating-instance, created>>) when:
 

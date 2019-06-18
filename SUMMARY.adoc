@@ -12,7 +12,6 @@
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
-.. link:spark-sql-streaming-MemoryStateStore.adoc[MemoryStateStore]
 
 . link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]

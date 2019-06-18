@@ -1,16 +1,17 @@
 == [[StateStore]] StateStore Contract -- Kay-Value Store for State Management
 
-`StateStore` is the <<contract, contract>> of a <<version, versioned>> and possibly fault-tolerant <<implementations, key-value stores>> for state management (e.g. of <<spark-sql-streaming-Dataset-operators.adoc#, streaming aggregations>>).
+`StateStore` is the <<contract, abstraction>> of a <<version, versioned>> and possibly fault-tolerant <<implementations, key-value stores>> for streaming state data (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>).
 
-`StateStore` describes a key-value store that lives on every Spark executor for persistent keyed aggregates.
+`StateStore` supports *incremental checkpointing* in which only the key-value "Row" pairs that changed can be <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
 
-`StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for state store identification).
+`StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for identification).
 
-TIP: Read the motivation and design in https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit[State Store for Streaming Aggregations].
+[[implementations]]
+NOTE: <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> is the default and only known implementation of the <<contract, StateStore Contract>> in Spark Structured Streaming.
 
 [[contract]]
 .StateStore Contract
-[cols="1m,2",options="header",width="100%"]
+[cols="30m,70",options="header",width="100%"]
 |===
 | Method
 | Description
@@ -23,7 +24,7 @@ a| [[abort]]
 abort(): Unit
 ----
 
-Aborts the state changes
+Aborts (_discards_) the changes to the state store
 
 Used when:
 
@@ -39,7 +40,7 @@ a| [[commit]]
 commit(): Long
 ----
 
-Commits state changes
+Commits the changes to the state store (and returns the current version)
 
 Used when:
 
@@ -57,15 +58,15 @@ a| [[get]]
 get(key: UnsafeRow): UnsafeRow
 ----
 
+Gets the value of the (non-null) key
+
 Used when:
 
-* `StreamingDeduplicateExec` physical operator is requested to <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, doExecute>>
-
-* `StreamingGlobalLimitExec` physical operator is requested to <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#doExecute, doExecute>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>> physical operators are executed
 
 * `StateManagerImplBase` (of `FlatMapGroupsWithStateExecHelper`) is requested to `getState`
 
-* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#get, StreamingAggregationStateManagerImplV1>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#get, StreamingAggregationStateManagerImplV2>> are requested to get the current value of a non-null key
+* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#get, StreamingAggregationStateManagerImplV1>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#get, StreamingAggregationStateManagerImplV2>> are requested to get the value of a non-null key
 
 * `KeyToNumValuesStore` is requested to <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, get>>
 
@@ -76,10 +77,12 @@ a| [[getRange]]
 
 [source, scala]
 ----
-getRange(start: Option[UnsafeRow], end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
+getRange(
+  start: Option[UnsafeRow],
+  end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
 ----
 
-Gets the key-value pairs with optional approximate `start` and `end` extents
+Gets the key-value pairs for the specified range (with optional approximate `start` and `end` extents)
 
 Used when:
 
@@ -91,6 +94,8 @@ Used when:
 
 * <<spark-sql-streaming-KeyToNumValuesStore.adoc#iterator, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#iterator, KeyWithIndexToValueStore>> are requested to `iterator`
 
+NOTE: All the uses above assume the `start` and `end` as `None` that basically is <<iterator, iterator>>.
+
 | hasCommitted
 a| [[hasCommitted]]
 
@@ -98,6 +103,8 @@ a| [[hasCommitted]]
 ----
 hasCommitted: Boolean
 ----
+
+Returns whether all updates have been committed (`true`) or not (`false`)
 
 Used when:
 
@@ -113,7 +120,7 @@ a| [[id]]
 id: StateStoreId
 ----
 
-The <<spark-sql-streaming-StateStoreId.adoc#, ID of the state store>> (for logging purposes only)
+The <<spark-sql-streaming-StateStoreId.adoc#, ID>> of the state store
 
 Used when:
 
@@ -129,13 +136,15 @@ a| [[iterator]]
 iterator(): Iterator[UnsafeRowPair]
 ----
 
+Returns an iterator with all the kay-value pairs in the state store
+
 Used when:
 
-* `StateStoreRestoreExec` physical operator is requested to <<spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute, doExecute>>
+* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operator is requested to execute
 
-* <<spark-sql-streaming-HDFSBackedStateStore.adoc#getRange, HDFSBackedStateStore>> state store in particular and any <<getRange, StateStore>> in particular are requested to `getRange`
+* <<spark-sql-streaming-HDFSBackedStateStore.adoc#getRange, HDFSBackedStateStore>> state store in particular and any <<getRange, StateStore>> in general are requested to `getRange`
 
-* `StreamingAggregationStateManagerImplV1` state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#values, values>>
+* `StreamingAggregationStateManagerImplV1` state manager is requested for the <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#values, values>>
 
 * `StreamingAggregationStateManagerImplV2` state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#values, values>>
 
@@ -147,7 +156,7 @@ a| [[metrics]]
 metrics: StateStoreMetrics
 ----
 
-The <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>
+<<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>> of the state store
 
 Used when:
 
@@ -163,7 +172,7 @@ a| [[put]]
 put(key: UnsafeRow, value: UnsafeRow): Unit
 ----
 
-Stores a given value for a given non-null key
+Stores (_puts_) the value for the (non-null) key
 
 Used when:
 
@@ -173,7 +182,7 @@ Used when:
 
 * <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#put, StreamingAggregationStateManagerImplV1>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#put, StreamingAggregationStateManagerImplV2>> are requested to store a row in a state store
 
-* <<spark-sql-streaming-KeyToNumValuesStore.adoc#put, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#put, KeyWithIndexToValueStore>> are requested to store a new value for a key
+* <<spark-sql-streaming-KeyToNumValuesStore.adoc#put, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#put, KeyWithIndexToValueStore>> are requested to store a new value for a given key
 
 | remove
 a| [[remove]]
@@ -183,7 +192,7 @@ a| [[remove]]
 remove(key: UnsafeRow): Unit
 ----
 
-Removes a given key from the state store
+Removes the (non-null) key from the state store
 
 Used when:
 
@@ -205,56 +214,31 @@ a| [[version]]
 version: Long
 ----
 
+Version of the state store
+
 Used exclusively when `HDFSBackedStateStore` state store is requested for a <<spark-sql-streaming-HDFSBackedStateStore.adoc#newVersion, new version>> (that simply the current version incremented)
 
 |===
 
-[[implementations]]
-.StateStores
-[cols="1,2",options="header",width="100%"]
-|===
-| StateStore
-| Description
+[NOTE]
+====
+`StateStore` was introduced in https://github.com/apache/spark/commit/8c826880f5eaa3221c4e9e7d3fece54e821a0b98[[SPARK-13809\][SQL\] State store for streaming aggregations].
 
-| <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>>
-| [[HDFSBackedStateStore]] Uses a HDFS-compatible file system for state persistence
-
-| <<spark-sql-streaming-MemoryStateStore.adoc#, MemoryStateStore>>
-| [[MemoryStateStore]]
-|===
-
-[[internal-registries]]
-.StateStore's Internal Registries and Counters
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| loadedProviders
-| [[loadedProviders]] Registry of link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProviders] per `StateStoreProviderId`
-
-Used in...FIXME
-
-| _coordRef
-| [[_coordRef]] <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinator RPC endpoint>> (a `RpcEndpointRef` to link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]).
-
-Used in...FIXME
-|===
-
-NOTE: `StateStore` was introduced in https://github.com/apache/spark/commit/8c826880f5eaa3221c4e9e7d3fece54e821a0b98[[SPARK-13809\][SQL\] State store for streaming aggregations].
+Read the motivation and design in https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit[State Store for Streaming Aggregations].
+====
 
 [[logging]]
 [TIP]
 ====
-Enable `DEBUG`, `INFO` or `WARN` logging level for `org.apache.spark.sql.execution.streaming.state.StateStore$` logger to see what happens inside.
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.state.StateStore$` logger to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.execution.streaming.state.StateStore$=DEBUG
+log4j.logger.org.apache.spark.sql.execution.streaming.state.StateStore$=ALL
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
 === [[coordinatorRef]] Creating (and Caching) RPC Endpoint Reference to StateStoreCoordinator for Executors -- `coordinatorRef` Internal Object Method
@@ -406,3 +390,21 @@ verifyIfStoreInstanceActive(storeProviderId: StateStoreProviderId): Boolean
 `verifyIfStoreInstanceActive`...FIXME
 
 NOTE: `verifyIfStoreInstanceActive` is used exclusively when `StateStore` helper object is requested to <<doMaintenance, doMaintenance>> (from a running <<MaintenanceTask, MaintenanceTask daemon thread>>).
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| loadedProviders
+| [[loadedProviders]] Registry of <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProviders>> per `StateStoreProviderId`
+
+Used in...FIXME
+
+| _coordRef
+| [[_coordRef]] <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinator RPC endpoint>> (a `RpcEndpointRef` to <<spark-sql-streaming-StateStoreCoordinator.adoc#, StateStoreCoordinator>>)
+
+Used in...FIXME
+|===

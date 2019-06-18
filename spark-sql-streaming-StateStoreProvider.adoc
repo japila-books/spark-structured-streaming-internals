@@ -1,6 +1,6 @@
 == [[StateStoreProvider]] StateStoreProvider Contract
 
-`StateStoreProvider` is the <<contract, abstraction>> of <<implementations, state store providers>> that manage <<getStore, StateStores>> for a given <<stateStoreId, StateStoreId>>.
+`StateStoreProvider` is the <<contract, abstraction>> of <<implementations, state store providers>> that manage <<getStore, StateStores>> per <<stateStoreId, StateStoreId>>.
 
 NOTE: `StateStoreProvider` helper object uses <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property for the name of the class of the <<implementations, StateStoreProvider implementation>>.
 

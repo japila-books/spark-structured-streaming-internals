@@ -71,13 +71,13 @@
 setStoreMetrics(store: StateStore): Unit
 ----
 
-`setStoreMetrics` requests `store` for link:spark-sql-streaming-StateStore.adoc#metrics[metrics] to use them to record the following metrics of a physical operator:
+`setStoreMetrics` requests the specified <<spark-sql-streaming-StateStore.adoc#, StateStore>> for the <<spark-sql-streaming-StateStore.adoc#metrics, metrics>> and records the following metrics of a physical operator:
 
-* `numTotalStateRows` as `StateStore.numKeys`
+* <<numTotalStateRows, numTotalStateRows>> as the <<spark-sql-streaming-StateStoreMetrics.adoc#numKeys, number of keys>>
 
-* `stateMemory` as `StateStore.memoryUsedBytes`
+* <<stateMemory, stateMemory>> as the <<spark-sql-streaming-StateStoreMetrics.adoc#memoryUsedBytes, memory used (in bytes)>>
 
-`setStoreMetrics` records the implementation-specific metrics.
+`setStoreMetrics` records the <<spark-sql-streaming-StateStoreMetrics.adoc#customMetrics, custom metrics>>.
 
 [NOTE]
 ====
