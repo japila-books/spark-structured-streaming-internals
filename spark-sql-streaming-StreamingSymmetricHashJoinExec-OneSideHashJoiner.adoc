@@ -1,46 +1,8 @@
 == [[OneSideHashJoiner]] OneSideHashJoiner
 
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, doExecute>>).
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>>).
 
 NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
-
-[[internal-registries]]
-.OneSideHashJoiner's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| joinStateManager
-| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>
-
-Used when...FIXME
-
-| keyGenerator
-| [[keyGenerator]] `UnsafeProjection` to generate join keys
-
-Used when...FIXME
-
-| preJoinFilter
-| [[preJoinFilter]] `InternalRow => Boolean`
-
-Used when...FIXME
-
-| stateKeyWatermarkPredicateFunc
-| [[stateKeyWatermarkPredicateFunc]] `InternalRow => Boolean`
-
-Used when...FIXME
-
-| stateValueWatermarkPredicateFunc
-| [[stateValueWatermarkPredicateFunc]] `InternalRow => Boolean`
-
-Used when...FIXME
-
-| updatedStateRowsCount
-a| [[updatedStateRowsCount]][[numUpdatedStateRows]] Counter
-
-Used exclusively when requested to <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
-|===
 
 === [[storeAndJoinWithOtherSide]] `storeAndJoinWithOtherSide` Method
 
@@ -98,6 +60,44 @@ NOTE: `get` is used when...FIXME
 commitStateAndGetMetrics(): StateStoreMetrics
 ----
 
-`commitStateAndGetMetrics`...FIXME
+`commitStateAndGetMetrics` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#commit, commit>> and then for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
 
-NOTE: `commitStateAndGetMetrics` is used when...FIXME
+NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>>).
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| joinStateManager
+| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>
+
+Used when...FIXME
+
+| keyGenerator
+| [[keyGenerator]] `UnsafeProjection` to generate join keys
+
+Used when...FIXME
+
+| preJoinFilter
+| [[preJoinFilter]] `InternalRow => Boolean`
+
+Used when...FIXME
+
+| stateKeyWatermarkPredicateFunc
+| [[stateKeyWatermarkPredicateFunc]] `InternalRow => Boolean`
+
+Used when...FIXME
+
+| stateValueWatermarkPredicateFunc
+| [[stateValueWatermarkPredicateFunc]] `InternalRow => Boolean`
+
+Used when...FIXME
+
+| updatedStateRowsCount
+a| [[updatedStateRowsCount]][[numUpdatedStateRows]] Counter
+
+Used exclusively when requested to <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
+|===

@@ -29,9 +29,6 @@ stateStore: StateStore
 <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 |===
 
-[[metrics]]
-When requested for the <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>, `StateStoreHandler` simply requests the <<stateStore, StateStore>> for <<spark-sql-streaming-StateStore.adoc#metrics, them>>.
-
 [[extensions]]
 .StateStoreHandlers
 [cols="1,2",options="header",width="100%"]
@@ -60,6 +57,17 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinSta
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
+
+=== [[metrics]] Performance Metrics -- `metrics` Method
+
+[source, scala]
+----
+metrics: StateStoreMetrics
+----
+
+`metrics` simply requests the <<stateStore, StateStore>> for the <<spark-sql-streaming-StateStore.adoc#metrics, StateStoreMetrics>>.
+
+NOTE: `metrics` is used exclusively when `SymmetricHashJoinStateManager` is requested for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
 
 === [[commit]] Committing (Changes to) State Store -- `commit` Method
 

@@ -73,7 +73,7 @@ createSink(outputMode: OutputMode): Sink
 
 `createSink` creates a <<spark-sql-streaming-Sink.adoc#, streaming sink>> for <<spark-sql-streaming-StreamSinkProvider.adoc#, StreamSinkProvider>> or `FileFormat` data sources.
 
-TIP: Find out more on `FileFormat` data sources in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat — Data Sources to Read and Write Data In Files] section in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat Data Source] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 Internally, `createSink` creates a new instance of the <<providingClass, providingClass>> and branches off per type:
 

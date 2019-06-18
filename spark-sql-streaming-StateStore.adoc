@@ -1,4 +1,4 @@
-== [[StateStore]] StateStore Contract -- Kay-Value Store for State Management
+== [[StateStore]] StateStore Contract -- Kay-Value Store for Streaming State Data
 
 `StateStore` is the <<contract, abstraction>> of a <<version, versioned>> and possibly fault-tolerant <<implementations, key-value stores>> for streaming state data (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>).
 
@@ -313,7 +313,7 @@ When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProvider
 
 `MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> configuration property (default: `60s`).
 
-=== [[get-StateStore]] Retrieving StateStore by ID and Version -- `get` Factory Method
+=== [[get-StateStore]] Looking Up StateStore by ID and Version -- `get` Factory Method
 
 [source, scala]
 ----
@@ -327,7 +327,7 @@ get(
   hadoopConf: Configuration): StateStore
 ----
 
-`get` finds `StateStore` for `StateStoreProviderId`.
+`get` finds `StateStore` for the given `StateStoreProviderId`.
 
 Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (for `storeProviderId`) in <<loadedProviders, loadedProviders>> registry. If unavailable, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
 

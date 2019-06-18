@@ -7,7 +7,7 @@
 [[creating-instance]]
 `StateStoreId` takes the following when created:
 
-* [[checkpointRootLocation]] Root directory of the checkpoint files
+* [[checkpointRootLocation]] Root directory for state checkpointing
 * [[operatorId]] Operator ID
 * [[partitionId]] Partition ID
 * [[storeName]] Name of the state store (default: <<DEFAULT_STORE_NAME, default>>)

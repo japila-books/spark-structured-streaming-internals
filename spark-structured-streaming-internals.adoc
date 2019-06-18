@@ -188,7 +188,7 @@ Please note that most of the stream processing operators you may also have used 
 
 Once you're satisfied with building a stream processing pipeline (using the APIs of <<DataStreamReader, DataStreamReader>>, <<spark-sql-streaming-Dataset-operators.adoc#, Dataset>>, `RelationalGroupedDataset` and `KeyValueGroupedDataset`), you should define how and when the result of the streaming query is persisted in (_sent out to_) an external data system using a <<spark-sql-streaming-Sink.adoc#, streaming sink>>.
 
-TIP: Find out more on the APIs of https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-dataset-operators.html[Dataset], https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-RelationalGroupedDataset.html[RelationalGroupedDataset] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-KeyValueGroupedDataset.html[KeyValueGroupedDataset] sections in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL] book.
+TIP: Read up on the APIs of https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-dataset-operators.html[Dataset], https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-RelationalGroupedDataset.html[RelationalGroupedDataset] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-KeyValueGroupedDataset.html[KeyValueGroupedDataset] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 You should use <<spark-sql-streaming-Dataset-operators.adoc#writeStream, Dataset.writeStream>> method that simply creates a <<spark-sql-streaming-DataStreamWriter.adoc#, DataStreamWriter>>.
 

@@ -12,6 +12,8 @@ Structured Streaming attempts to unify streaming, interactive, and batch queries
 
 * <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>
 
+* <<spark-sql-streaming-join.adoc#, Streaming Join>>
+
 * <<spark-sql-streaming-stateful-stream-processing.adoc#, Stateful Stream Processing>>
 
 * <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>> Stream Processing Engines
@@ -44,7 +46,7 @@ val streamingQuery = spark.
 assert(streamingQuery.isStreaming)
 ----
 
-More information about Spark SQL, Datasets and logical plans is available in https://bit.ly/mastering-spark-sql[The Internals of Spark SQL].
+Read up on Spark SQL, Datasets and logical plans in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
 Structured Streaming models a stream of data as an infinite (and hence continuous) table that could be changed every streaming batch.
