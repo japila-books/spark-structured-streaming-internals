@@ -76,7 +76,7 @@ a| [[stateStoreId]]
 stateStoreId: StateStoreId
 ----
 
-Returns the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> (that was used at <<init, initialization>>)
+<<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> associated with the provider (at <<init, initialization>>)
 
 Used when:
 

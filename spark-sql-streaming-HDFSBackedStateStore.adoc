@@ -11,7 +11,7 @@
 * `ABORTED`
 
 [[id]]
-`HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> of the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#stateStoreId, HDFSBackedStateStoreProvider>>.
+`HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> of the owning <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#stateStoreId, HDFSBackedStateStoreProvider>>.
 
 [[toString]]
 When requested for the textual representation, `HDFSBackedStateStore` gives *HDFSStateStore[id=(op=[operatorId],part=[partitionId]),dir=[baseDir]]*.
