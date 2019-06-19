@@ -27,6 +27,14 @@ While <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, planning a s
 * <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
 * <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
 
+=== [[StateStoreRDD]] StateStoreRDD
+
+Right after a stateful streaming query is planned for execution (using <<IncrementalExecution, IncrementalExecution>>), the streaming query becomes a <<spark-sql-streaming-StateStoreRDD.adoc#, StateStoreRDD>>.
+
+When planned for execution, the `StateStoreRDD` is first asked for the <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations of a partition>> (which happens on the driver) and to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute it>> (later on an executor).
+
+`StateStoreRDD` uses <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> to uniquely identify the <<spark-sql-streaming-StateStore.adoc#, state store>> to use for (_associate with_) a stateful operator and a partition.
+
 === State Management
 
 The state in a stateful streaming query can be implicit or explicit.

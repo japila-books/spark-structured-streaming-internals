@@ -40,7 +40,7 @@ Internally, (and similarly to <<getPreferredLocations, getPreferredLocations>>) 
 
 In the end, `compute` computes <<dataRDD, dataRDD>> (using the input `partition` and `ctxt`) followed by executing <<storeUpdateFunction, storeUpdateFunction>> (with the store and the result).
 
-=== [[getPreferredLocations]] Getting Placement Preferences of Partition -- `getPreferredLocations` Method
+=== [[getPreferredLocations]] Placement Preferences of Partition -- `getPreferredLocations` Method
 
 [source, scala]
 ----
