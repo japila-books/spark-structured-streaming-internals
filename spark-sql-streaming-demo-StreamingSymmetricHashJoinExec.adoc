@@ -1,0 +1,74 @@
+== Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator
+
+The following code shows a <<spark-sql-streaming-join.adoc#, streaming join>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator).
+
+[source, scala]
+----
+// START: Only for easier debugging
+// Reduce the number of partitions
+// The state is then only for one partition
+// which should make monitoring easier
+val numShufflePartitions = 1
+import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
+
+assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
+// END: Only for easier debugging
+
+val left = spark.readStream.format("rate").load
+val right = spark.readStream.format("rate").load
+
+// Streaming inner join
+val equiStreamingJoin = left.join(right, Seq("value"), "inner")
+scala> equiStreamingJoin.explain
+== Physical Plan ==
+*(3) Project [value#63L, timestamp#62, timestamp#66]
++- StreamingSymmetricHashJoin [value#63L], [value#67L], Inner, condition = [ leftOnly = null, rightOnly = null, both = null, full = null ], state info [ checkpoint = <unknown>, runId = fac919ea-42c2-4dfd-829d-62cfe1c73ed2, opId = 0, ver = 0, numPartitions = 1], 0, state cleanup [ left = null, right = null ]
+   :- Exchange hashpartitioning(value#63L, 1)
+   :  +- *(1) Filter isnotnull(value#63L)
+   :     +- StreamingRelation rate, [timestamp#62, value#63L]
+   +- ReusedExchange [timestamp#66, value#67L], Exchange hashpartitioning(value#63L, 1)
+
+val queryName = "stream_stream_inner_join"
+val checkpointLocation = s"/tmp/checkpoint-$queryName"
+
+// Delete the checkpoint location from previous executions
+import java.nio.file.{Files, FileSystems}
+import java.util.Comparator
+import scala.collection.JavaConverters._
+if (Files.exists(path)) {
+  Files.walk(path)
+    .sorted(Comparator.reverseOrder())
+    .iterator
+    .asScala
+    .foreach(p => p.toFile.delete)
+}
+
+import org.apache.spark.sql.streaming.Trigger
+import scala.concurrent.duration._
+val batchInterval = 30.seconds
+val streamingQuery = equiStreamingJoin
+  .writeStream
+  .format("memory")
+  .queryName(queryName)
+  .option("checkpointLocation", checkpointLocation)
+  .outputMode(OutputMode.Append)
+  .trigger(Trigger.ProcessingTime(batchInterval))
+  .start
+
+// Wait batchInterval to have lastExecution available
+streamingQuery.awaitTermination(batchInterval.toMillis)
+
+scala> streamingQuery.explain
+== Physical Plan ==
+*(3) Project [value#342L, timestamp#341, timestamp#339]
++- StreamingSymmetricHashJoin [value#342L], [value#340L], Inner, condition = [ leftOnly = null, rightOnly = null, both = null, full = null ], state info [ checkpoint = file:/tmp/checkpoint-stream_stream_inner_join/state, runId = bcbef5c8-3736-4e4e-8066-02cea54e9549, opId = 0, ver = 1, numPartitions = 1], 0, state cleanup [ left = null, right = null ]
+   :- Exchange hashpartitioning(value#342L, 1)
+   :  +- *(1) Filter isnotnull(value#342L)
+   :     +- *(1) Project [timestamp#341, value#342L]
+   :        +- *(1) ScanV2 rate[timestamp#341, value#342L]
+   +- ReusedExchange [timestamp#339, value#340L], Exchange hashpartitioning(value#342L, 1)
+
+// In the end
+streamingQuery.stop()
+----

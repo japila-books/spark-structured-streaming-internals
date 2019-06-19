@@ -1,3 +1,9 @@
 == Streaming Join
 
 *Streaming Join* is...FIXME
+
+=== [[demos]] Demos
+
+Use the following demos to learn more:
+
+* <<spark-sql-streaming-demo-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator>>

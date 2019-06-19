@@ -119,6 +119,7 @@
 
 == Demos
 
+. link:spark-sql-streaming-demo-StreamingSymmetricHashJoinExec.adoc[Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator]
 . link:spark-sql-streaming-demo-groupBy-aggregation-append-memory.adoc[Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Memory Data Source (Append Output Mode)]
 . link:spark-sql-streaming-demo-groupBy-aggregation-append.adoc[Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Append Output Mode]
 . link:spark-sql-streaming-demo-groupByKey-count-Update.adoc[Demo: groupByKey Streaming Aggregation in Update Mode]
