@@ -1,6 +1,6 @@
 == [[SymmetricHashJoinStateManager]] SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiner>>.
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator to execute).
 
 === [[creating-instance]] Creating SymmetricHashJoinStateManager Instance
 
@@ -25,6 +25,17 @@ metrics: StateStoreMetrics
 `metrics` returns the combined <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>> of the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>>.
 
 NOTE: `metrics` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#commitStateAndGetMetrics, commitStateAndGetMetrics>>.
+
+=== [[allStateStoreNames]] `allStateStoreNames` Object Method
+
+[source, scala]
+----
+allStateStoreNames(joinSides: JoinSide*): Seq[String]
+----
+
+`allStateStoreNames`...FIXME
+
+NOTE: `allStateStoreNames` is used when...FIXME
 
 === [[internal-properties]] Internal Properties
 

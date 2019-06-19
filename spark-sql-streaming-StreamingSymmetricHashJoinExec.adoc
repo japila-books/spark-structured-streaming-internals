@@ -16,6 +16,8 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
+`StreamingSymmetricHashJoinExec` requires that the <<joinType, join type>> be `Inner`, `LeftOuter`, or `RightOuter` with the same data types of the <<leftKeys, left>> and the <<rightKeys, right>> keys.
+
 `StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`)
 
 [source, scala]
@@ -70,9 +72,6 @@ q.stop
 
 `StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
 
-[[metrics]]
-`StreamingSymmetricHashJoinExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
-
 When <<doExecute, executed>>, `StreamingSymmetricHashJoinExec`...FIXME
 
 [[output]]
@@ -80,6 +79,37 @@ The output schema of `StreamingSymmetricHashJoinExec` is...FIXME
 
 [[outputPartitioning]]
 The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
+
+=== [[creating-instance]] Creating StreamingSymmetricHashJoinExec Instance
+
+`StreamingSymmetricHashJoinExec` takes the following to be created:
+
+* [[leftKeys]] Catalyst expressions of the keys on the left side
+* [[rightKeys]] Catalyst expressions of the keys on the right side
+* [[joinType]] `JoinType`
+* [[condition]] Join condition (`JoinConditionSplitPredicates`)
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[eventTimeWatermark]] Event-time watermark
+* [[stateWatermarkPredicates]] State watermark (`JoinStateWatermarkPredicates`)
+* [[left]] Physical operator on the left side (`SparkPlan`)
+* [[right]] Physical operator on the right side (`SparkPlan`)
+
+`StreamingSymmetricHashJoinExec` initializes the <<internal-properties, internal properties>>.
+
+=== [[metrics]] Performance Metrics
+
+`StreamingSymmetricHashJoinExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
+
+=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+
+[source, scala]
+----
+shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
+----
+
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to check whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>>).
+
+`shouldRunAnotherBatch`...FIXME
 
 === [[doExecute]] Executing Physical Operator (Generating Recipe for Distributed Computation as RDD[InternalRow]) -- `doExecute` Method
 
@@ -90,23 +120,11 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a recipe for distributed computation over internal binary rows on Apache Spark (`RDD[InternalRow]`).
 
-`doExecute`...FIXME
+`doExecute` first requests the `StreamingQueryManager` for the <<spark-sql-streaming-StreamingQueryManager.adoc#stateStoreCoordinator, StateStoreCoordinatorRef>> to the `StateStoreCoordinator` RPC endpoint (for the driver).
 
-=== [[creating-instance]] Creating StreamingSymmetricHashJoinExec Instance
+`doExecute` then requests the `SymmetricHashJoinStateManager` for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#allStateStoreNames, names of the state stores>> for the left and right side of the streaming join.
 
-`StreamingSymmetricHashJoinExec` takes the following to be created:
-
-* [[leftKeys]] Catalyst expressions of the keys on the left side
-* [[rightKeys]] Catalyst expressions of the keys on the right side
-* [[joinType]] `JoinType`
-* [[condition]] Join condition (`JoinConditionSplitPredicates`)
-* [[stateInfo]] Optional <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
-* [[eventTimeWatermark]] Optional event-time watermark
-* [[stateWatermarkPredicates]] State watermark (`JoinStateWatermarkPredicates`)
-* [[left]] Physical operator on the left side (`SparkPlan`)
-* [[right]] Physical operator on the right side SparkPlan
-
-`StreamingSymmetricHashJoinExec` initializes the <<internal-properties, internal properties>>.
+In the end, `doExecute` requests the <<left, left>> and <<right, right>> physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
 
 === [[processPartitions]] `processPartitions` Internal Method
 
@@ -120,3 +138,33 @@ processPartitions(
 `processPartitions`...FIXME
 
 NOTE: `processPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<doExecute, execute>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| hadoopConfBcast
+a| [[hadoopConfBcast]] Hadoop Configuration broadcast (to the Spark cluster)
+
+Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
+
+| joinStateManager
+a| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>
+
+Used when `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#removeOldState, removeOldState>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#commitStateAndGetMetrics, commitStateAndGetMetrics>>, and for the <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#get, values for a given key>>
+
+| nullLeft
+a| [[nullLeft]] `GenericInternalRow` of the size of the output schema of the <<left, left physical operator>>
+
+| nullRight
+a| [[nullRight]] `GenericInternalRow` of the size of the output schema of the <<right, right physical operator>>
+
+| storeConf
+a| [[storeConf]] <<spark-sql-streaming-StateStoreConf.adoc#, StateStoreConf>>
+
+Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
+
+|===

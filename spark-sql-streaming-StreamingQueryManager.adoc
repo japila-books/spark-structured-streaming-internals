@@ -138,7 +138,7 @@ Used to:
 * <<postListenerEvent, Post a streaming event>> (and notify `StreamingQueryListener` listeners about streaming events)
 
 | stateStoreCoordinator
-a| [[stateStoreCoordinator]] link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef] to the *StateStoreCoordinator* RPC Endpoint
+a| [[stateStoreCoordinator]] <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinatorRef>> to the `StateStoreCoordinator` RPC Endpoint
 
 * link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#forDriver[Created] when `StreamingQueryManager` is <<creating-instance, created>>
 

@@ -1,6 +1,6 @@
 == [[OneSideHashJoiner]] OneSideHashJoiner
 
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>>).
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>> (through <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>).
 
 NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
 
@@ -15,7 +15,7 @@ storeAndJoinWithOtherSide(
 
 `storeAndJoinWithOtherSide`...FIXME
 
-NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, doExecute>>).
+NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>>).
 
 === [[creating-instance]] Creating OneSideHashJoiner Instance
 
@@ -42,7 +42,7 @@ removeOldState(): Iterator[UnsafeRowPair]
 
 NOTE: `removeOldState` is used when...FIXME
 
-=== [[get]] `get` Method
+=== [[get]] Getting Values For Key -- `get` Method
 
 [source, scala]
 ----
