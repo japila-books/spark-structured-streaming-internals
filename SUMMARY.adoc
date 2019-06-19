@@ -6,6 +6,21 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Datasets]
 
+== Streaming Join
+
+. link:spark-sql-streaming-join.adoc[Streaming Join]
+
+. link:spark-sql-streaming-StateStoreAwareZipPartitionsRDD.adoc[StateStoreAwareZipPartitionsRDD]
+
+. link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
+.. link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler]
+.. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
+.. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
+
+. link:spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc[OneSideHashJoiner]
+
+. link:spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc[StateStoreAwareZipPartitionsHelper]
+
 == Stateful Stream Processing
 
 . link:spark-sql-streaming-stateful-stream-processing.adoc[Stateful Stream Processing]
@@ -17,9 +32,6 @@
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
 
 . link:spark-sql-streaming-StateStoreId.adoc[StateStoreId]
-
-. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
-.. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps]
 
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef]
@@ -47,21 +59,13 @@
 
 . link:spark-sql-streaming-aggregation.adoc[Streaming Aggregation]
 
+. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
+.. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps]
+
 . link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager]
 .. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl]
 .. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1]
 .. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2]
-
-== Streaming Join
-
-. link:spark-sql-streaming-join.adoc[Streaming Join]
-
-. link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
-.. link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler]
-.. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
-.. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
-
-. link:spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc[OneSideHashJoiner]
 
 == Developing Streaming Applications
 

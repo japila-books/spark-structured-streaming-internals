@@ -1,0 +1,28 @@
+== [[StateStoreAwareZipPartitionsRDD]] StateStoreAwareZipPartitionsRDD
+
+`StateStoreAwareZipPartitionsRDD` is a `ZippedPartitionsRDD2` with the <<rdd1, left>> and <<rdd2, right>> parent RDDs.
+
+`StateStoreAwareZipPartitionsRDD` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>> (and requests <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#, StateStoreAwareZipPartitionsHelper>> for one).
+
+=== [[creating-instance]] Creating StateStoreAwareZipPartitionsRDD Instance
+
+`StateStoreAwareZipPartitionsRDD` takes the following to be created:
+
+* [[sc]] `SparkContext`
+* [[f]] Function (`(Iterator[A], Iterator[B]) => Iterator[V]`)
+* [[rdd1]] *Left RDD* - the RDD of the left side of a join (`RDD[A]`)
+* [[rdd2]] *Right RDD* - the RDD of the right side of a join (`RDD[B]`)
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[stateStoreNames]] Names of the <<spark-sql-streaming-StateStore.adoc#, state stores>>
+* [[storeCoordinator]] <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinatorRef>>
+
+=== [[getPreferredLocations]] Placement Preferences of Partition -- `getPreferredLocations` Method
+
+[source, scala]
+----
+getPreferredLocations(partition: Partition): Seq[String]
+----
+
+NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement preferences (aka _preferred task locations_), i.e. where tasks should be executed to be as close to the data as possible.
+
+`getPreferredLocations`...FIXME

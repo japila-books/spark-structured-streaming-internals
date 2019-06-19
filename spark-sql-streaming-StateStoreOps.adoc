@@ -1,7 +1,7 @@
 == [[StateStoreOps]] StateStoreOps -- Extension Methods for Creating StateStoreRDD
 
 [[dataRDD]]
-`StateStoreOps` is a *Scala implicit class* (for `RDD[T]` type) to <<mapPartitionsWithStateStore, create a StateStoreRDD>> for the following physical operators:
+`StateStoreOps` is a *Scala implicit class* of a data RDD (of type `RDD[T]`) to <<mapPartitionsWithStateStore, create a StateStoreRDD>> for the following physical operators:
 
 * <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
 

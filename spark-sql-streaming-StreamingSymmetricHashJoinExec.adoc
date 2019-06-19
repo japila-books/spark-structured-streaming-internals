@@ -16,7 +16,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (i.e. `EqualTo` and `EqualNullSafe`)
+`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`)
 
 [source, scala]
 ----

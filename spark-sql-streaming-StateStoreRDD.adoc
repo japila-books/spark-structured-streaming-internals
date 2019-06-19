@@ -13,7 +13,7 @@
 .StateStoreRDD, Physical and Logical Plans, and operators
 image::images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png[align="center"]
 
-`StateStoreRDD` uses `StateStoreCoordinator` for <<getPreferredLocations, preferred locations>> for job scheduling.
+`StateStoreRDD` uses `StateStoreCoordinator` for the <<getPreferredLocations, preferred locations of a partition>> for job scheduling.
 
 .StateStoreRDD and StateStoreCoordinator
 image::images/StateStoreRDD-StateStoreCoordinator.png[align="center"]
@@ -82,9 +82,9 @@ NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 | Name
 | Description
 
-| [[hadoopConfBroadcast]] `hadoopConfBroadcast`
-|
+| hadoopConfBroadcast
+| [[hadoopConfBroadcast]]
 
-| [[storeConf]] `storeConf`
-| Configuration parameters (as `StateStoreConf`) using the current `SQLConf` (from `SessionState`)
+| storeConf
+| [[storeConf]] Configuration parameters (as `StateStoreConf`) using the current `SQLConf` (from `SessionState`)
 |===
