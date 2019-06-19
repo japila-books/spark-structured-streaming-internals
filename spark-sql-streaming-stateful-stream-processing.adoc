@@ -29,7 +29,53 @@ While <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, planning a s
 
 === [[StateStoreRDD]] StateStoreRDD
 
-Right after a stateful streaming query is planned for execution (using <<IncrementalExecution, IncrementalExecution>>), the streaming query becomes a <<spark-sql-streaming-StateStoreRDD.adoc#, StateStoreRDD>>.
+Right after <<IncrementalExecution, query planning>>, a stateful streaming query (a single micro-batch actually) becomes an RDD with one or more <<spark-sql-streaming-StateStoreRDD.adoc#, StateStoreRDDs>>.
+
+You can find the `StateStoreRDDs` of a streaming query in the RDD lineage.
+
+[source, scala]
+----
+scala> :type streamingQuery
+org.apache.spark.sql.streaming.StreamingQuery
+
+scala> streamingQuery.explain
+== Physical Plan ==
+*(4) HashAggregate(keys=[window#13-T0ms, value#3L], functions=[count(1)])
++- StateStoreSave [window#13-T0ms, value#3L], state info [ checkpoint = file:/tmp/checkpoint-counts/state, runId = 1dec2d81-f2d0-45b9-8f16-39ede66e13e7, opId = 0, ver = 1, numPartitions = 1], Append, 10000, 2
+   +- *(3) HashAggregate(keys=[window#13-T0ms, value#3L], functions=[merge_count(1)])
+      +- StateStoreRestore [window#13-T0ms, value#3L], state info [ checkpoint = file:/tmp/checkpoint-counts/state, runId = 1dec2d81-f2d0-45b9-8f16-39ede66e13e7, opId = 0, ver = 1, numPartitions = 1], 2
+         +- *(2) HashAggregate(keys=[window#13-T0ms, value#3L], functions=[merge_count(1)])
+            +- Exchange hashpartitioning(window#13-T0ms, value#3L, 1)
+               +- *(1) HashAggregate(keys=[window#13-T0ms, value#3L], functions=[partial_count(1)])
+                  +- *(1) Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#2-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#13-T0ms, value#3L]
+                     +- *(1) Filter isnotnull(time#2-T0ms)
+                        +- EventTimeWatermark time#2: timestamp, interval
+                           +- LocalTableScan <empty>, [time#2, value#3L]
+
+import org.apache.spark.sql.execution.streaming.{StreamExecution, StreamingQueryWrapper}
+val se = streamingQuery.asInstanceOf[StreamingQueryWrapper].streamingQuery
+
+scala> :type se
+org.apache.spark.sql.execution.streaming.StreamExecution
+
+scala> :type se.lastExecution
+org.apache.spark.sql.execution.streaming.IncrementalExecution
+
+val rdd = se.lastExecution.toRdd
+scala> rdd.toDebugString
+res3: String =
+(1) MapPartitionsRDD[39] at toRdd at <console>:40 []
+ |  StateStoreRDD[38] at toRdd at <console>:40 [] // <-- here
+ |  MapPartitionsRDD[37] at toRdd at <console>:40 []
+ |  StateStoreRDD[36] at toRdd at <console>:40 [] // <-- here
+ |  MapPartitionsRDD[35] at toRdd at <console>:40 []
+ |  ShuffledRowRDD[17] at start at <pastie>:67 []
+ +-(1) MapPartitionsRDD[16] at start at <pastie>:67 []
+    |  MapPartitionsRDD[15] at start at <pastie>:67 []
+    |  MapPartitionsRDD[14] at start at <pastie>:67 []
+    |  MapPartitionsRDD[13] at start at <pastie>:67 []
+    |  ParallelCollectionRDD[12] at start at <pastie>:67 []
+----
 
 When planned for execution, the `StateStoreRDD` is first asked for the <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations of a partition>> (which happens on the driver) and to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute it>> (later on an executor).
 
