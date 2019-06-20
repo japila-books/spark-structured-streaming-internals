@@ -1,8 +1,6 @@
 == Streaming Aggregation
 
-*Streaming Aggregation* is...FIXME
-
-In Spark Structured Streaming, a streaming query is an example of streaming aggregation when it uses the following high-level operators:
+In Spark Structured Streaming, a streaming query is an example of *streaming aggregation* when it uses the following high-level operators:
 
 * <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>>, `Dataset.rollup`, `Dataset.cube` (that simply create a `RelationalGroupedDataset`)
 
@@ -10,7 +8,7 @@ In Spark Structured Streaming, a streaming query is an example of streaming aggr
 
 * SQL's `GROUP BY` clause (including `WITH CUBE` and `WITH ROLLUP`)
 
-Under the covers, the high-level operators create a streaming query with one or more `Aggregate` logical operators.
+Under the covers, the high-level operators create a logical query plan with one or more `Aggregate` logical operators.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Aggregate.html[Aggregate] logical operator in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 

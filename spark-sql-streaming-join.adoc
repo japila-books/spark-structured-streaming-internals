@@ -1,9 +1,19 @@
 == Streaming Join
 
-*Streaming Join* is...FIXME
+In Spark Structured Streaming, a streaming query is an example of *streaming join* when it uses `Dataset.join` or SQL's `JOIN` high-level query operators.
+
+Under the covers, the high-level operators create a logical query plan with one or more `Join` logical operators.
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 === [[demos]] Demos
 
 Use the following demos to learn more:
 
 * <<spark-sql-streaming-demo-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator>>
+
+=== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
+
+In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> that plans streaming queries for execution.
+
+While <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, planning a streaming query for execution>> (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy for planning streaming joins (`Join` logical operators) as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators.

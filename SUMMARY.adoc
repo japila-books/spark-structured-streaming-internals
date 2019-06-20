@@ -21,6 +21,18 @@
 
 . link:spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc[StateStoreAwareZipPartitionsHelper]
 
+== Streaming Aggregation
+
+. link:spark-sql-streaming-aggregation.adoc[Streaming Aggregation]
+
+. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
+.. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps]
+
+. link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1]
+.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2]
+
 == Stateful Stream Processing
 
 . link:spark-sql-streaming-stateful-stream-processing.adoc[Stateful Stream Processing]
@@ -54,18 +66,6 @@
 . link:spark-sql-streaming-EventTimeStatsAccum.adoc[EventTimeStatsAccum]
 
 . link:spark-sql-streaming-StateStoreConf.adoc[StateStoreConf]
-
-== Streaming Aggregation
-
-. link:spark-sql-streaming-aggregation.adoc[Streaming Aggregation]
-
-. link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD]
-.. link:spark-sql-streaming-StateStoreOps.adoc[StateStoreOps]
-
-. link:spark-sql-streaming-StreamingAggregationStateManager.adoc[StreamingAggregationStateManager]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc[StreamingAggregationStateManagerBaseImpl]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc[StreamingAggregationStateManagerImplV1]
-.. link:spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc[StreamingAggregationStateManagerImplV2]
 
 == Developing Streaming Applications
 
