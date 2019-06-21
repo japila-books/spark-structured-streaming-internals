@@ -63,7 +63,7 @@ val streamingQuery = countsPer5secWindow
 
 streamingQuery.processAllAvailable()
 
-val output = spark.table("counts").orderBy("window", "value")
+val output = spark.table(queryName).orderBy("window", "value")
 output.show(truncate = false)
 /**
 +------------------------------------------+-----+-----+
@@ -81,5 +81,6 @@ val lastWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
 val expectedWatermark = "1970-01-01T00:00:10.000Z"
 assert(lastWatermark == expectedWatermark)
 
+// Eventually...
 streamingQuery.stop()
 ----
