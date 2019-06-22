@@ -51,10 +51,9 @@ val right = rightEvents.toDS
 
 // Streaming inner join
 val equiStreamingJoin = left.join(right, Seq("value", "time"), "inner")
-scala> equiStreamingJoin.explain
 == Physical Plan ==
 *(3) Project [value#3L, time#2]
-+- StreamingSymmetricHashJoin [value#3L, time#2], [value#8L, time#7], Inner, condition = [ leftOnly = null, rightOnly = null, both = null, full = null ], state info [ checkpoint = <unknown>, runId = e4c7a2db-59b4-48ae-94d5-19986b81a222, opId = 0, ver = 0, numPartitions = 1], 0, state cleanup [ left = null, right = null ]
++- StreamingSymmetricHashJoin [value#3L, time#2], [value#8L, time#7], Inner, condition = [ leftOnly = null, rightOnly = null, both = null, full = null ], state info [ checkpoint = <unknown>, runId = c079027b-b68d-4289-a96f-b3c860e76e28, opId = 0, ver = 0, numPartitions = 1], 0, state cleanup [ left = null, right = null ]
    :- Exchange hashpartitioning(value#3L, time#2, 1)
    :  +- *(1) Filter isnotnull(time#2)
    :     +- StreamingRelation MemoryStream[time#2,value#3L], [time#2, value#3L]

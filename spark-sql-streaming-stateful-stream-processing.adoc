@@ -10,6 +10,7 @@ In Spark Structured Streaming, a streaming query is stateful when it uses the fo
 * <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>>
 * <<spark-sql-streaming-Dataset-operators.adoc#dropDuplicates, Dataset.dropDuplicates>>
 * `Dataset.join`
+* `Dataset.limit`
 * ...
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
