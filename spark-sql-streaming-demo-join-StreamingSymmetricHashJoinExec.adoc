@@ -77,7 +77,8 @@ if (Files.exists(path)) {
     .foreach(p => p.toFile.delete)
 }
 
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import org.apache.spark.sql.streaming.OutputMode.Append
+import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
 val batchInterval = 30.seconds
 val streamingQuery = equiStreamingJoin
@@ -85,7 +86,7 @@ val streamingQuery = equiStreamingJoin
   .format("memory")
   .queryName(queryName)
   .option("checkpointLocation", checkpointLocation)
-  .outputMode(OutputMode.Append)
+  .outputMode(Append)
   .trigger(Trigger.ProcessingTime(batchInterval))
   .start
 

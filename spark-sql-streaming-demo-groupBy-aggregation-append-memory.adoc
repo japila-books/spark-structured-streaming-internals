@@ -1,4 +1,4 @@
-== Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Memory Data Source (Append Output Mode)
+== Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator (Memory Data Source and Append Output Mode)
 
 The following code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> high-level operator and <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>> data source (for the streaming source and the sink).
 

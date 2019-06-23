@@ -16,6 +16,8 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 Use the following demos to learn more:
 
+* <<spark-sql-streaming-demo-groupBy-running-count-complete.adoc#, Demo: Streaming Query for Running Counts (Socket Source and Complete Output Mode)>>
+
 * <<spark-sql-streaming-demo-groupBy-aggregation-append-memory.adoc#, Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Memory Data Source (Append Output Mode)>>
 
 * <<spark-sql-streaming-demo-groupBy-aggregation-append.adoc#, Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Append Output Mode>>

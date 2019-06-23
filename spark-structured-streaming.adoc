@@ -1,6 +1,6 @@
-== Spark Structured Streaming -- Streaming Datasets
+== Spark Structured Streaming -- Streaming Queries
 
-*Spark Structured Streaming* (aka _Spark Streams_) is a module in Apache Spark for stream processing engines with a <<spark-sql-streaming-Dataset-operators.adoc#, high-level declarative streaming API>> built on top of Spark SQL.
+*Spark Structured Streaming* (aka _Spark Streams_) is a module in Apache Spark for <<spark-sql-streaming-StreamExecution.adoc#, stream processing engines>> with a tailor-made <<spark-sql-streaming-Dataset-operators.adoc#, high-level declarative streaming API>> (built on top of Spark SQL) and support for the good ol' SQL.
 
 The semantics of the Structured Streaming model is as follows (see the article https://databricks.com/blog/2016/07/28/structured-streaming-in-apache-spark.html[Structured Streaming In Apache Spark]):
 
@@ -16,13 +16,11 @@ Structured Streaming attempts to unify streaming, interactive, and batch queries
 
 * <<spark-sql-streaming-stateful-stream-processing.adoc#, Stateful Stream Processing>>
 
-* <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>> Stream Processing Engines
+* <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>> Stream Execution Engines
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, Arbitrary Stateful Streaming Aggregations>>
 
 In Structured Streaming, Spark developers describe custom streaming computations in the same way as with Spark SQL. Internally, Structured Streaming applies the user-defined structured query to the continuously and indefinitely arriving data to analyze real-time streaming data.
-
-With Structured Streaming, Spark 2 aims at simplifying *streaming analytics* with little to no need to reason about effective data streaming (trying to hide the unnecessary complexity in your streaming analytics architectures).
 
 Structured Streaming introduces the concept of *streaming datasets* that are _infinite datasets_ with primitives like input link:spark-sql-streaming-Source.adoc[streaming data sources] and output link:spark-sql-streaming-Sink.adoc[streaming data sinks].
 
@@ -70,6 +68,8 @@ val streamingQuery = spark.readStream.format("rate").load
 assert(streamingQuery.isStreaming)
 ----
 ====
+
+With Structured Streaming, Spark 2 aims at simplifying *streaming analytics* with little to no need to reason about effective data streaming (trying to hide the unnecessary complexity in your streaming analytics architectures).
 
 [source, scala]
 ----
@@ -174,40 +174,6 @@ TIP: Structured Streaming was introduced in https://issues.apache.org/jira/brows
 TIP: Read the official programming guide of Spark about http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html[Structured Streaming].
 
 NOTE: The feature has also been called *Streaming Spark SQL Query*, *Streaming DataFrames*, *Continuous DataFrame* or *Continuous Query*. There have been lots of names before the Spark project settled on Structured Streaming.
-
-=== [[example-socket-in-console-out]] Example -- Streaming Query for Running Counts (over Words from Socket with Output to Console)
-
-NOTE: The example is "borrowed" from http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html[the official documentation of Spark]. Changes and errors are only mine.
-
-TIP: You need to run `nc -lk 9999` first before running the example.
-
-[source, scala]
-----
-val lines = spark.readStream
-  .format("socket")
-  .option("host", "localhost")
-  .option("port", 9999)
-  .load
-  .as[String]
-
-val words = lines.flatMap(_.split("\\W+"))
-
-scala> words.printSchema
-root
- |-- value: string (nullable = true)
-
-val counter = words.groupBy("value").count
-
-// nc -lk 9999 is supposed to be up at this point
-
-import org.apache.spark.sql.streaming.OutputMode.Complete
-val query = counter.writeStream
-  .outputMode(Complete)
-  .format("console")
-  .start
-
-query.stop
-----
 
 === [[example-csv-in-console-out]] Example -- Streaming Query over CSV Files with Output to Console Every 5 Seconds
 
