@@ -10,7 +10,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 Use the following demos to learn more:
 
-* <<spark-sql-streaming-demo-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator>>
+* <<spark-sql-streaming-demo-join-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator>>
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
