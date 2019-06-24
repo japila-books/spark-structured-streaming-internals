@@ -1,61 +1,53 @@
 == [[OutputMode]] OutputMode
 
-*Output mode* (`OutputMode`) describes what data is written to a link:spark-sql-streaming-Sink.adoc[streaming sink] when there is new data available in link:spark-sql-streaming-Source.adoc[streaming data sources] (in a trigger / streaming batch).
+*Output mode* (`OutputMode`) of a streaming query describes what data is written to a <<spark-sql-streaming-Sink.adoc#, streaming sink>>.
 
-The output mode of a streaming query is specified using <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, DataStreamWriter.outputMode>> method.
+[[available-output-modes]]
+There are three available output modes:
+
+* <<Append, Append>>
+
+* <<Complete, Complete>>
+
+* <<Update, Update>>
+
+The output mode is specified on the _writing side_ of a streaming query using <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, DataStreamWriter.outputMode>> method (by alias or a value of `org.apache.spark.sql.streaming.OutputMode` object).
 
 [source, scala]
 ----
+import org.apache.spark.sql.streaming.OutputMode.Update
 val inputStream = spark
   .readStream
   .format("rate")
   .load
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-import scala.concurrent.duration._
-val consoleOutput = inputStream
   .writeStream
   .format("console")
-  .option("truncate", false)
-  .trigger(Trigger.ProcessingTime(10.seconds))
-  .queryName("rate-console")
-  .option("checkpointLocation", "checkpoint")
-  .outputMode(OutputMode.Update)  // <-- update output mode
+  .outputMode(Update) // <-- update output mode
   .start
 ----
 
-[[available-output-modes]]
-.Available Output Modes
-[cols="1m,1m,4",options="header",width="100%"]
-|===
-| OutputMode
-| Name
-| Behaviour
+=== [[Append]] Append Output Mode
 
-| Append
-| append
-a| [[Append]]
+*Append* (alias: *append*) is the <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, default output mode>> that writes "new" rows only.
 
-[[default-output-mode]]
-link:spark-sql-streaming-DataStreamWriter.adoc#outputMode[Default output mode] that writes "new" rows only.
+In <<spark-sql-streaming-aggregation.adoc#, streaming aggregations>>, a "new" row is when the intermediate state becomes final, i.e. when new events for the grouping key can only be considered late which is when watermark moves past the event time of the key.
 
-For streaming aggregations, "new" row is when the intermediate state becomes final, i.e. when new events for the grouping key can only be considered late which is when watermark moves past the event time of the key.
-
-`Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
+`Append` output mode requires that a streaming query defines event-time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
 Required for datasets with `FileFormat` format (to create link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink])
 
 `Append` is link:spark-sql-streaming-UnsupportedOperationChecker.adoc#multiple-flatMapGroupsWithState[mandatory] when multiple `flatMapGroupsWithState` operators are used in a structured query.
 
-| Complete
-| complete
-a| [[Complete]] Writes all rows of a Result Table (and corresponds to a traditional batch structured query).
+=== [[Complete]] Complete Output Mode
+
+*Complete* (alias: *complete*) writes all the rows of a Result Table (and corresponds to a traditional batch structured query).
 
 Complete mode does not drop old aggregation state and preserves all data in the Result Table.
 
-Supported only for streaming aggregation queries with link:spark-sql-streaming-Dataset-operators.adoc#groupBy[groupBy] or link:spark-sql-streaming-Dataset-operators.adoc#groupByKey[groupByKey] aggregations (as asserted by link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[UnsupportedOperationChecker]).
+Supported only for <<spark-sql-streaming-aggregation.adoc#, streaming aggregations>> (as asserted by link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[UnsupportedOperationChecker]).
 
-| Update
-| update
-| [[Update]] Write the rows that were updated (every time there are updates). If the query does not contain aggregations, it is equivalent to <<Append, Append>> mode.
+=== [[Update]] Update Output Mode
 
-|===
+*Update* (alias: *update*) writes only the rows that were updated (every time there are updates).
+
+For queries that are not <<spark-sql-streaming-aggregation.adoc#, streaming aggregations>>, `Update` is equivalent to the <<Append, Append>> output mode.

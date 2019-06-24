@@ -160,7 +160,7 @@ NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at th
 | [[doExecute-Append]] `Append`
 a|
 
-NOTE: `Append` is the link:spark-sql-streaming-OutputMode.adoc#default-output-mode[default output mode] when unspecified.
+NOTE: <<spark-sql-streaming-OutputMode.adoc#Append, Append>> is the default output mode when not specified explicitly.
 
 NOTE: `Append` output mode requires that a streaming query defines event time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
 
