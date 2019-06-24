@@ -1,6 +1,6 @@
-== [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring State of Streaming Aggregates
+== [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring Streaming State From State Store
 
-`StateStoreRestoreExec` is a unary physical operator that <<spark-sql-streaming-StateStoreReader.adoc#, reads (restores) a streaming state from a state store>> (for the keys from the <<child, child>> physical operator).
+`StateStoreRestoreExec` is a unary physical operator that <<spark-sql-streaming-StateStoreReader.adoc#, restores (reads) a streaming state from a state store>> (for the keys from the <<child, child>> physical operator).
 
 [NOTE]
 ====
@@ -26,47 +26,6 @@ The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s o
 
 [[outputPartitioning]]
 The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child>>'s output partitioning.
-
-=== [[demo]] Demo: StateStoreRestoreExec Operator in Physical Plan of Streaming Aggregation (Dataset.groupBy Operator)
-
-[source, scala]
-----
-val query = spark.
-  readStream.
-  format("rate").
-  load.
-  withWatermark(eventTime = "timestamp", delayThreshold = "20 seconds").
-  groupBy(window($"timestamp", "5 seconds") as "group").
-  agg(count("value") as "value_count").
-  orderBy($"value_count".asc)
-
-// Logical plan with Aggregate logical operator
-val logicalPlan = query.queryExecution.logical
-scala> println(logicalPlan.numberedTreeString)
-00 'Sort ['value_count ASC NULLS FIRST], true
-01 +- Aggregate [window#25-T20000ms], [window#25-T20000ms AS group#19, count(value#15L) AS value_count#24L]
-02    +- Filter isnotnull(timestamp#14-T20000ms)
-03       +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#25-T20000ms, timestamp#14-T20000ms, value#15L]
-04          +- EventTimeWatermark timestamp#14: timestamp, interval 20 seconds
-05             +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@6364e814, rate, [timestamp#14, value#15L]
-
-// Physical plan with StateStoreRestoreExec (as StateStoreRestore in the output)
-scala> query.explain
-== Physical Plan ==
-*(5) Sort [value_count#24L ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(value_count#24L ASC NULLS FIRST, 200)
-   +- *(4) HashAggregate(keys=[window#25-T20000ms], functions=[count(value#15L)])
-      +- StateStoreSave [window#25-T20000ms], state info [ checkpoint = <unknown>, runId = 13c39b49-2fda-4575-bffb-08e94614420a, opId = 0, ver = 0, numPartitions = 200], Append, 0, 2
-         +- *(3) HashAggregate(keys=[window#25-T20000ms], functions=[merge_count(value#15L)])
-            +- StateStoreRestore [window#25-T20000ms], state info [ checkpoint = <unknown>, runId = 13c39b49-2fda-4575-bffb-08e94614420a, opId = 0, ver = 0, numPartitions = 200], 2
-               +- *(2) HashAggregate(keys=[window#25-T20000ms], functions=[merge_count(value#15L)])
-                  +- Exchange hashpartitioning(window#25-T20000ms, 200)
-                     +- *(1) HashAggregate(keys=[window#25-T20000ms], functions=[partial_count(value#15L)])
-                        +- *(1) Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#14-T20000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#25-T20000ms, value#15L]
-                           +- *(1) Filter isnotnull(timestamp#14-T20000ms)
-                              +- EventTimeWatermark timestamp#14: timestamp, interval 20 seconds
-                                 +- StreamingRelation rate, [timestamp#14, value#15L]
-----
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 

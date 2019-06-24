@@ -1,6 +1,6 @@
-== [[StateStoreSaveExec]] StateStoreSaveExec Unary Physical Operator -- Saving State of Streaming Aggregates
+== [[StateStoreSaveExec]] StateStoreSaveExec Unary Physical Operator -- Saving Streaming State To State Store
 
-`StateStoreSaveExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.adoc#, writes a streaming state to a state store>> with <<spark-sql-streaming-WatermarkSupport.adoc#, support for streaming watermark>>.
+`StateStoreSaveExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.adoc#, saves a streaming state to a state store>> with <<spark-sql-streaming-WatermarkSupport.adoc#, support for streaming watermark>>.
 
 [NOTE]
 ====
@@ -62,74 +62,6 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StateStoreSaveExec=ALL
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
-
-=== [[demo]] Demo: StateStoreSaveExec Operator in Physical Plan of Streaming Aggregation (Dataset.groupBy Operator)
-
-[source, scala]
-----
-// START: Only for easier debugging
-// The state is then only for one partition
-// which should make monitoring easier
-val numShufflePartitions = 1
-import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
-spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
-
-assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
-// END: Only for easier debugging
-
-val counts = spark
-  .readStream
-  .format("rate")
-  .load
-  .groupBy(window($"timestamp", "5 seconds") as "group")
-  .agg(count("value") as "value_count") // <-- creates an Aggregate logical operator
-  .orderBy("group")  // <-- makes for easier checking
-scala> counts.explain
-== Physical Plan ==
-*(5) Sort [group#5 ASC NULLS FIRST], true, 0
-+- Exchange rangepartitioning(group#5 ASC NULLS FIRST, 1)
-   +- *(4) HashAggregate(keys=[window#11], functions=[count(value#1L)])
-      +- StateStoreSave [window#11], state info [ checkpoint = <unknown>, runId = 3c4d9c60-5fda-4053-aeef-4ddd2b485605, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
-         +- *(3) HashAggregate(keys=[window#11], functions=[merge_count(value#1L)])
-            +- StateStoreRestore [window#11], state info [ checkpoint = <unknown>, runId = 3c4d9c60-5fda-4053-aeef-4ddd2b485605, opId = 0, ver = 0, numPartitions = 1], 2
-               +- *(2) HashAggregate(keys=[window#11], functions=[merge_count(value#1L)])
-                  +- Exchange hashpartitioning(window#11, 1)
-                     +- *(1) HashAggregate(keys=[window#11], functions=[partial_count(value#1L)])
-                        +- *(1) Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#11, value#1L]
-                           +- *(1) Filter isnotnull(timestamp#0)
-                              +- StreamingRelation rate, [timestamp#0, value#1L]
-
-// Start the query and hence execute StateStoreSaveExec
-import org.apache.spark.sql.streaming.OutputMode
-val queryName = "rate2memory"
-val checkpointLocation = s"/tmp/checkpoint-$queryName"
-val query = counts
-  .writeStream
-  .format("memory")
-  .queryName(queryName)
-  .option("checkpointLocation", checkpointLocation)
-  .outputMode(OutputMode.Complete)
-  .start
-
-// Give the streaming query a moment (one micro-batch)
-// So lastExecution is available for the checkpointLocation
-import scala.concurrent.duration._
-query.awaitTermination(1.second.toMillis)
-
-import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
-val lastExecution = query
-  .asInstanceOf[StreamingQueryWrapper]
-  .streamingQuery
-  .lastExecution
-val logicalPlan = lastExecution.logical
-scala> println(logicalPlan.numberedTreeString)
-00 Sort [group#5 ASC NULLS FIRST], true
-01 +- Aggregate [window#11], [window#11 AS group#5, count(value#1L) AS value_count#10L]
-02    +- Filter isnotnull(timestamp#0)
-03       +- Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion((((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) as double) = (cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) THEN (CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) + cast(1 as bigint)) ELSE CEIL((cast((precisetimestampconversion(timestamp#0, TimestampType, LongType) - 0) as double) / cast(5000000 as double))) END + cast(0 as bigint)) - cast(1 as bigint)) * 5000000) + 0) + 5000000), LongType, TimestampType)) AS window#11, timestamp#0, value#1L]
-04          +- Project [timestamp#249 AS timestamp#0, value#250L AS value#1L]
-05             +- Streaming RelationV2 rate[timestamp#249, value#250L]
-----
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 
