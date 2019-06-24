@@ -1,6 +1,198 @@
 == Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator (Memory Data Source and Append Output Mode)
 
-The following code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> high-level operator and <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>> data source (for the streaming source and the sink).
+The following code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> (with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator) in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode and <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>> data source (for the streaming source and the sink).
+
+A streaming aggregation query in `Append` output mode <<spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark, is required>> to define a streaming watermark (with <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator) on at least one of the grouping expressions (directly or using <<spark-sql-streaming-window.adoc#, window>> function).
+
+NOTE: <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator has to be used before an aggregation operator (for the watermark to have an effect).
+
+In `Append` output mode the current watermark level is used for the following:
+
+* Output saved state rows that became expired (as *Expired state* in the below <<events, events>> table)
+
+* Drop late events, i.e. don't save them to a state store or include in aggregation (as *Late events* in the below <<events, events>> table)
+
+NOTE: Sorting is only supported on streaming aggregated Datasets with `Complete` output mode.
+
+[[events]]
+.Streaming Batches, Events, Watermark and State Rows
+[cols="^m,^.^1,^.^1",options="header",width="100%"]
+|===
+| Batch / Events
+| Current Watermark Level [ms]
+| Expired State, Late Events and Saved State Rows
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 1 ! 1 ! 1
+! 15 ! 2 ! 1
+!====
+
+^.^| *0*
+a|
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 1 ! 1 ! 1
+! 15 ! 2 ! 1
+!====
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 1 ! 1 ! 2
+! 15 ! 2 ! 2
+! 35 ! 3 ! 2
+!====
+
+^.^| *5000*
+
+(Maximum event time `15` minus the `delayThreshold` as defined using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator, i.e. `10`)
+
+a|
+
+*Expired State*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 1 ! 1 ! 1
+!====
+
+---
+
+*Late Events*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 1 ! 1 ! 2
+!====
+
+---
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 15 ! 2 ! 1
+! 15 ! 2 ! 2
+! 35 ! 3 ! 2
+!====
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 15 ! 1 ! 3
+! 15 ! 2 ! 3
+! 20 ! 3 ! 3
+! 26 ! 4 ! 3
+!====
+
+^.^| *25000*
+
+(Maximum event time from the previous batch is `35` and `10` seconds of `delayThreshold`)
+a|
+
+*Expired State*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 15 ! 2 ! 1
+! 15 ! 2 ! 2
+!====
+
+---
+
+*Late Events*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 15 ! 1 ! 3
+! 15 ! 2 ! 3
+! 20 ! 3 ! 3
+!====
+
+---
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 35 ! 3 ! 2
+! 26 ! 4 ! 3
+!====
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 36 ! 1 ! 4
+!====
+
+^.^| *25000*
+
+(Maximum event time from the previous batch is `26`)
+a|
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 35 ! 3 ! 2
+! 26 ! 4 ! 3
+! 36 ! 1 ! 4
+!====
+
+a|
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 50 ! 1 ! 5
+!====
+
+^.^| *26000*
+
+(Maximum event time from the previous batch is `36`)
+a|
+
+*Expired State*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 26 ! 4 ! 3
+!====
+
+---
+
+*Saved State Rows*
+
+[cols="^1 ,^1 ,^1",options="header"]
+!====
+! event_time ! id ! batch
+! 35 ! 3 ! 2
+! 36 ! 1 ! 4
+! 50 ! 1 ! 5
+!====
+
+|===
+
+NOTE: Event time watermark may advance based on the maximum event time from the previous events (from the previous batch exactly as the level advances every trigger so the earlier levels are already counted in).
+
+NOTE: Event time watermark can only change when the maximum event time is bigger than the current watermark minus the `delayThreshold` (as defined using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator).
 
 [source, scala]
 ----
@@ -44,24 +236,61 @@ val countsPer5secWindow = values
   .groupBy(window($"time", "5 seconds") as "window", $"value")
   .agg(count("*") as "count") // <-- creates an Aggregate logical operator
 
+scala> countsPer5secWindow.printSchema
+root
+ |-- window: struct (nullable = false)
+ |    |-- start: timestamp (nullable = true)
+ |    |-- end: timestamp (nullable = true)
+ |-- value: long (nullable = false)
+ |-- count: long (nullable = false)
+
 val queryName = "counts"
 val checkpointLocation = s"/tmp/checkpoint-$queryName"
 
 // Delete the checkpoint location from previous executions
 import java.nio.file.{Files, FileSystems}
-val path = FileSystems.getDefault().getPath(checkpointLocation)
-Files.deleteIfExists(path)
+import java.util.Comparator
+import scala.collection.JavaConverters._
+val path = FileSystems.getDefault.getPath(checkpointLocation)
+if (Files.exists(path)) {
+  Files.walk(path)
+    .sorted(Comparator.reverseOrder())
+    .iterator
+    .asScala
+    .foreach(p => p.toFile.delete)
+}
 
-import org.apache.spark.sql.streaming.OutputMode
+import org.apache.spark.sql.streaming.OutputMode.Append
 val streamingQuery = countsPer5secWindow
   .writeStream
   .format("memory")
   .queryName(queryName)
   .option("checkpointLocation", checkpointLocation)
-  .outputMode(OutputMode.Append)
+  .outputMode(Append)
   .start
 
+scala> streamingQuery.explain
+== Physical Plan ==
+*(4) HashAggregate(keys=[window#138-T0ms, value#128L], functions=[count(1)])
++- StateStoreSave [window#138-T0ms, value#128L], state info [ checkpoint = file:/tmp/checkpoint-counts/state, runId = 52ee0fdf-b64d-4954-84ac-1bb4597861b2, opId = 0, ver = 1, numPartitions = 1], Append, 10000, 2
+   +- *(3) HashAggregate(keys=[window#138-T0ms, value#128L], functions=[merge_count(1)])
+      +- StateStoreRestore [window#138-T0ms, value#128L], state info [ checkpoint = file:/tmp/checkpoint-counts/state, runId = 52ee0fdf-b64d-4954-84ac-1bb4597861b2, opId = 0, ver = 1, numPartitions = 1], 2
+         +- *(2) HashAggregate(keys=[window#138-T0ms, value#128L], functions=[merge_count(1)])
+            +- Exchange hashpartitioning(window#138-T0ms, value#128L, 1)
+               +- *(1) HashAggregate(keys=[window#138-T0ms, value#128L], functions=[partial_count(1)])
+                  +- *(1) Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#127-T0ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#138-T0ms, value#128L]
+                     +- *(1) Filter isnotnull(time#127-T0ms)
+                        +- EventTimeWatermark time#127: timestamp, interval
+                           +- LocalTableScan <empty>, [time#127, value#128L]
+
 streamingQuery.processAllAvailable()
+
+// Use web UI to monitor the state of state (no pun intended)
+// StateStoreSave and StateStoreRestore operators all have state metrics
+// Go to http://localhost:4040/SQL/ and click one of the Completed Queries with Job IDs
+
+// You may also want to check out checkpointed state
+// in /tmp/checkpoint-counts/state/0/0
 
 val output = spark.table(queryName).orderBy("window", "value")
 output.show(truncate = false)

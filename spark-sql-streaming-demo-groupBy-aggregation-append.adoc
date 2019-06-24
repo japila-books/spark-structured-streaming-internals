@@ -1,319 +1,162 @@
-== Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Append Output Mode
+== Demo: Streaming Aggregation with Kafka Data Source
 
-The following example code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> with link:spark-sql-streaming-Dataset-groupBy.adoc[Dataset.groupBy] high-level operator and link:spark-sql-streaming-OutputMode.adoc#Append[Append] output mode.
+The following example code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> (with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator) that reads records from Kafka (with <<spark-sql-streaming-kafka-data-source.adoc#, Kafka Data Source>>).
 
-`Append` output mode link:spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark[requires] that a streaming aggregation defines a watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on at least one of the grouping expressions (directly or using link:spark-sql-streaming-window.adoc[window] function).
+IMPORTANT: Start up Kafka cluster and spark-shell with `spark-sql-kafka-0-10` package before running the demo.
 
-NOTE: link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator has to be used before the aggregation operator (for the watermark to be used).
-
-In `Append` output mode the current watermark level is used to:
-
-1. Output saved state rows that became expired (as *Expired state* in the below <<events, events>> table)
-
-1. Drop late events, i.e. don't save them to a state store or include in aggregation (as *Late events* in the below <<events, events>> table)
-
-NOTE: Sorting is only supported on streaming aggregated Datasets with `Complete` output mode.
-
-[[events]]
-.Streaming Batches, Events, Watermark and State Rows
-[cols="^m,^.^1,^.^1",options="header",width="100%"]
-|===
-| Batch / Events
-| Current Watermark Level [ms]
-| Expired State, Late Events and Saved State Rows
-
-a|
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 1 ! 1 ! 1
-! 15 ! 2 ! 1
-!====
-
-^.^| *0*
-a|
-
-*Saved State Rows*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 1 ! 1 ! 1
-! 15 ! 2 ! 1
-!====
-
-a|
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 1 ! 1 ! 2
-! 15 ! 2 ! 2
-! 35 ! 3 ! 2
-!====
-
-^.^| *5000*
-
-(Maximum event time `15` minus the `delayThreshold` as defined using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator, i.e. `10`)
-
-a|
-
-*Expired State*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 1 ! 1 ! 1
-!====
-
----
-
-*Late Events*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 1 ! 1 ! 2
-!====
-
----
-
-*Saved State Rows*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 15 ! 2 ! 1
-! 15 ! 2 ! 2
-! 35 ! 3 ! 2
-!====
-
-a|
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 15 ! 1 ! 3
-! 15 ! 2 ! 3
-! 20 ! 3 ! 3
-! 26 ! 4 ! 3
-!====
-
-^.^| *25000*
-
-(Maximum event time from the previous batch is `35` and `10` seconds of `delayThreshold`)
-a|
-
-*Expired State*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 15 ! 2 ! 1
-! 15 ! 2 ! 2
-!====
-
----
-
-*Late Events*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 15 ! 1 ! 3
-! 15 ! 2 ! 3
-! 20 ! 3 ! 3
-!====
-
----
-
-*Saved State Rows*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 35 ! 3 ! 2
-! 26 ! 4 ! 3
-!====
-
-a|
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 36 ! 1 ! 4
-!====
-
-^.^| *25000*
-
-(Maximum event time from the previous batch is `26`)
-a|
-
-*Saved State Rows*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 35 ! 3 ! 2
-! 26 ! 4 ! 3
-! 36 ! 1 ! 4
-!====
-
-a|
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 50 ! 1 ! 5
-!====
-
-^.^| *26000*
-
-(Maximum event time from the previous batch is `36`)
-a|
-
-*Expired State*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 26 ! 4 ! 3
-!====
-
----
-
-*Saved State Rows*
-
-[cols="^1 ,^1 ,^1",options="header"]
-!====
-! event_time ! id ! batch
-! 35 ! 3 ! 2
-! 36 ! 1 ! 4
-! 50 ! 1 ! 5
-!====
-
-|===
-
-NOTE: Event time watermark may advance based on the maximum event time from the previous events (from the previous batch exactly as the level advances every trigger so the earlier levels are already counted in).
-
-NOTE: Event time watermark can only change when the maximum event time is bigger than the current watermark minus the `delayThreshold` (as defined using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator).
-
-[TIP]
-====
-Use the following to publish events to Kafka.
-
-```
-// 1st streaming batch
-$ cat /tmp/1
-1,1,1
-15,2,1
-
-$ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
-
-// Alternatively (and slower due to JVM bootup)
-$ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
-```
-====
+TIP: You may want to consider copying the following code to `append.txt` and using `:load append.txt` command in spark-shell to load it (rather than copying and pasting it).
 
 [source, scala]
 ----
-/**
- * Reading datasets with records from a Kafka topic
- */
-/**
-TIP (only when working with SNAPSHOT version)
-Remove the SNAPSHOT package from the local cache
-rm -rf \
-  ~/.ivy2/cache/org.apache.spark \
-  ~/.ivy2/jars/org.apache.spark_spark-sql-kafka-0-10_2.11-2.3.0-SNAPSHOT.jar
-*/
-
-/**
-TIP: Start spark-shell with spark-sql-kafka-0-10 package
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
-*/
-
-/**
-TIP: Copy the following code to append.txt and use :load command in spark-shell to load it
-:load append.txt
-*/
-
 // START: Only for easier debugging
 // The state is then only for one partition
-// which should make monitoring it easier
+// which should make monitoring easier
+val numShufflePartitions = 1
 import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
-spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, 1)
-scala> spark.sessionState.conf.numShufflePartitions
-res1: Int = 1
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
+
+assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
 // END: Only for easier debugging
 
-// Use streaming aggregation with groupBy operator to have StateStoreSaveExec operator
-// Since the demo uses Append output mode
-// it has to define a streaming event time watermark using withWatermark operator
-// UnsupportedOperationChecker makes sure that the requirement holds
-val idsPerBatch = spark.
-  readStream.
-  format("kafka").
-  option("subscribe", "topic1").
-  option("kafka.bootstrap.servers", "localhost:9092").
-  load.
-  withColumn("tokens", split('value, ",")).
-  withColumn("seconds", 'tokens(0) cast "long").
-  withColumn("event_time", to_timestamp(from_unixtime('seconds))). // <-- Event time has to be a timestamp
-  withColumn("id", 'tokens(1)).
-  withColumn("batch", 'tokens(2) cast "int").
-  withWatermark(eventTime = "event_time", delayThreshold = "10 seconds"). // <-- define watermark (before groupBy!)
-  groupBy($"event_time"). // <-- use event_time for grouping
-  agg(collect_list("batch") as "batches", collect_list("id") as "ids").
-  withColumn("event_time", to_timestamp($"event_time")) // <-- convert to human-readable date
+val records = spark
+  .readStream
+  .format("kafka")
+  .option("subscribePattern", """topic-\d{2}""") // topics with two digits at the end
+  .option("kafka.bootstrap.servers", ":9092")
+  .load
+scala> records.printSchema
+root
+ |-- key: binary (nullable = true)
+ |-- value: binary (nullable = true)
+ |-- topic: string (nullable = true)
+ |-- partition: integer (nullable = true)
+ |-- offset: long (nullable = true)
+ |-- timestamp: timestamp (nullable = true)
+ |-- timestampType: integer (nullable = true)
 
-// idsPerBatch is a streaming Dataset with just one Kafka source
-// so it knows nothing about output mode or the current streaming watermark yet
+// Since the streaming query uses Append output mode
+// it has to define a streaming event-time watermark (using Dataset.withWatermark operator)
+// UnsupportedOperationChecker makes sure that the requirement holds
+val ids = records
+  .withColumn("tokens", split($"value", ","))
+  .withColumn("seconds", 'tokens(0) cast "long")
+  .withColumn("event_time", to_timestamp(from_unixtime('seconds))) // <-- Event time has to be a timestamp
+  .withColumn("id", 'tokens(1))
+  .withColumn("batch", 'tokens(2) cast "int")
+  .withWatermark(eventTime = "event_time", delayThreshold = "10 seconds") // <-- define watermark (before groupBy!)
+  .groupBy($"event_time") // <-- use event_time for grouping
+  .agg(collect_list("batch") as "batches", collect_list("id") as "ids")
+  .withColumn("event_time", to_timestamp($"event_time")) // <-- convert to human-readable date
+scala> ids.printSchema
+root
+ |-- event_time: timestamp (nullable = true)
+ |-- batches: array (nullable = true)
+ |    |-- element: integer (containsNull = true)
+ |-- ids: array (nullable = true)
+ |    |-- element: string (containsNull = true)
+
+assert(ids.isStreaming, "ids is a streaming query")
+
+// ids knows nothing about the output mode or the current streaming watermark yet
 // - Output mode is defined on writing side
 // - streaming watermark is read from rows at runtime
 // That's why StatefulOperatorStateInfo is generic (and uses the default Append for output mode)
 // and no batch-specific values are printed out
 // They will be available right after the first streaming batch
 // Use explain on a streaming query to know the trigger-specific values
-scala> idsPerBatch.explain
+scala> ids.explain
 == Physical Plan ==
-*Project [event_time#36-T10000ms AS event_time#97, batches#90, ids#92]
-+- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[collect_list(batch#61, 0, 0), collect_list(id#48, 0, 0)])
-   +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
-      +- StateStoreSave [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,7c5641eb-8ff9-447b-b9ba-b347c057d08f,0,0), Append, 0
-         +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(batch#61, 0, 0), merge_collect_list(id#48, 0, 0)])
-            +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
-               +- StateStoreRestore [event_time#36-T10000ms], StatefulOperatorStateInfo(<unknown>,7c5641eb-8ff9-447b-b9ba-b347c057d08f,0,0)
-                  +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[merge_collect_list(batch#61, 0, 0), merge_collect_list(id#48, 0, 0)])
-                     +- Exchange hashpartitioning(event_time#36-T10000ms, 1)
-                        +- ObjectHashAggregate(keys=[event_time#36-T10000ms], functions=[partial_collect_list(batch#61, 0, 0), partial_collect_list(id#48, 0, 0)])
-                           +- EventTimeWatermark event_time#36: timestamp, interval 10 seconds
-                              +- *Project [cast(from_unixtime(cast(split(cast(value#1 as string), ,)[0] as bigint), yyyy-MM-dd HH:mm:ss, Some(Europe/Berlin)) as timestamp) AS event_time#36, split(cast(value#1 as string), ,)[1] AS id#48, cast(split(cast(value#1 as string), ,)[2] as int) AS batch#61]
-                                 +- StreamingRelation kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
+ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[collect_list(batch#141, 0, 0), collect_list(id#129, 0, 0)])
++- StateStoreSave [event_time#118-T10000ms], state info [ checkpoint = <unknown>, runId = a870e6e2-b925-4104-9886-b211c0be1b73, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
+   +- ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[merge_collect_list(batch#141, 0, 0), merge_collect_list(id#129, 0, 0)])
+      +- StateStoreRestore [event_time#118-T10000ms], state info [ checkpoint = <unknown>, runId = a870e6e2-b925-4104-9886-b211c0be1b73, opId = 0, ver = 0, numPartitions = 1], 2
+         +- ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[merge_collect_list(batch#141, 0, 0), merge_collect_list(id#129, 0, 0)])
+            +- Exchange hashpartitioning(event_time#118-T10000ms, 1)
+               +- ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[partial_collect_list(batch#141, 0, 0), partial_collect_list(id#129, 0, 0)])
+                  +- EventTimeWatermark event_time#118: timestamp, interval 10 seconds
+                     +- *(1) Project [cast(from_unixtime(cast(split(cast(value#8 as string), ,)[0] as bigint), yyyy-MM-dd HH:mm:ss, Some(Europe/Warsaw)) as timestamp) AS event_time#118, split(cast(value#8 as string), ,)[1] AS id#129, cast(split(cast(value#8 as string), ,)[2] as int) AS batch#141]
+                        +- StreamingRelation kafka, [key#7, value#8, topic#9, partition#10, offset#11L, timestamp#12, timestampType#13]
 
-// Start the query and hence StateStoreSaveExec
-// Note Append output mode
-import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val sq = idsPerBatch.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.ProcessingTime(5.seconds)).
-  outputMode(OutputMode.Append). // <-- Append output mode
-  start
+val queryName = "ids-kafka"
+val checkpointLocation = s"/tmp/checkpoint-$queryName"
 
--------------------------------------------
-Batch: 0
--------------------------------------------
-+----------+-------+---+
-|event_time|batches|ids|
-+----------+-------+---+
-+----------+-------+---+
-
-// there's only 1 stateful operator and hence 0 for the index in stateOperators
-scala> println(sq.lastProgress.stateOperators(0).prettyJson)
-{
-  "numRowsTotal" : 0,
-  "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 77
+// Delete the checkpoint location from previous executions
+import java.nio.file.{Files, FileSystems}
+import java.util.Comparator
+import scala.collection.JavaConverters._
+val path = FileSystems.getDefault.getPath(checkpointLocation)
+if (Files.exists(path)) {
+  Files.walk(path)
+    .sorted(Comparator.reverseOrder())
+    .iterator
+    .asScala
+    .foreach(p => p.toFile.delete)
 }
+
+// The following make for an easier demo
+// Kafka cluster is supposed to be up at this point
+// Make sure that a Kafka topic is available, e.g. topic-00
+// Use ./bin/kafka-console-producer.sh --broker-list :9092 --topic topic-00
+// And send a record, e.g. 1,1,1
+
+// Define the output mode
+// and start the query
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.OutputMode.Append
+import org.apache.spark.sql.streaming.Trigger
+val streamingQuery = ids
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .option("checkpointLocation", checkpointLocation)
+  .queryName(queryName)
+  .outputMode(Append)
+  .start
+
+val lastProgress = streamingQuery.lastProgress
+scala> :type lastProgress
+org.apache.spark.sql.streaming.StreamingQueryProgress
+
+assert(lastProgress.stateOperators.length == 1, "There should be one stateful operator")
+
+scala> println(lastProgress.stateOperators.head.prettyJson)
+{
+  "numRowsTotal" : 1,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 742,
+  "customMetrics" : {
+    "loadedMapCacheHitCount" : 1,
+    "loadedMapCacheMissCount" : 1,
+    "stateOnCurrentVersionSizeBytes" : 374
+  }
+}
+
+assert(lastProgress.sources.length == 1, "There should be one streaming source only")
+scala> println(lastProgress.sources.head.prettyJson)
+{
+  "description" : "KafkaV2[SubscribePattern[topic-\\d{2}]]",
+  "startOffset" : {
+    "topic-00" : {
+      "0" : 1
+    }
+  },
+  "endOffset" : {
+    "topic-00" : {
+      "0" : 1
+    }
+  },
+  "numInputRows" : 0,
+  "inputRowsPerSecond" : 0.0,
+  "processedRowsPerSecond" : 0.0
+}
+
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val incExec = streamingQuery.asInstanceOf[StreamingQueryWrapper].streamingQuery.lastExecution
+scala> :type incExec
+org.apache.spark.sql.execution.streaming.IncrementalExecution
+
+// FIXME What follows is more on the internals of watermark than Kafka data source itself
+// More it to a separate demo
 
 // Current watermark
 // We've just started so it's the default start time

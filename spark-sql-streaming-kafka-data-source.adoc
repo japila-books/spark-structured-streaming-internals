@@ -2,7 +2,24 @@
 
 *Kafka Data Source* is the streaming data source for https://kafka.apache.org/[Apache Kafka] in Spark Structured Streaming.
 
-Kafka Data Source can be used as a <<streaming-source, streaming source>> and a <<streaming-sink, streaming sink>> in <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing.
+Kafka Data Source provides a <<streaming-source, streaming source>> and a <<streaming-sink, streaming sink>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing.
+
+[TIP]
+====
+Use the following to publish events to Kafka.
+
+```
+// 1st streaming batch
+$ cat /tmp/1
+1,1,1
+15,2,1
+
+$ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
+
+// Alternatively (and slower due to JVM bootup)
+$ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
+```
+====
 
 === [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 External Module
 

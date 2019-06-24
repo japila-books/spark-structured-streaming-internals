@@ -1,10 +1,10 @@
 == Demo: Streaming Query for Running Counts (Socket Source and Complete Output Mode)
 
-The following code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> (with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator) that reads text lines from a socket (using socket data source) and outputs running counts of the words.
+The following code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> (with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator) in <<spark-sql-streaming-OutputMode.adoc#Complete, complete>> output mode that reads text lines from a socket (using socket data source) and outputs running counts of the words.
 
 NOTE: The example is "borrowed" from http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html[the official documentation of Spark]. Changes and errors are only mine.
 
-TIP: Run `nc -lk 9999` first before running the demo.
+IMPORTANT: Run `nc -lk 9999` first before running the demo.
 
 [source, scala]
 ----

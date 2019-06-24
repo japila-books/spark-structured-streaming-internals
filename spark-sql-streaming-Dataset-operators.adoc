@@ -58,7 +58,9 @@ a| [[withWatermark]]
 
 [source, scala]
 ----
-withWatermark(eventTime: String, delayThreshold: String): Dataset[T]
+withWatermark(
+  eventTime: String,
+  delayThreshold: String): Dataset[T]
 ----
 
 Defines a streaming event-time watermark for late events (on the given `eventTime` column with a delay threshold)
