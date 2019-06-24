@@ -1,0 +1,277 @@
+== Demo: Streaming Watermark with Aggregation in Append Output Mode
+
+The following code shows a streaming watermark (with <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator) which is <<spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark, required>> for a streaming aggregation (with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator) in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode.
+
+The streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using <<spark-sql-streaming-window.adoc#, window>> standard function).
+
+NOTE: <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator has to be used before an aggregation operator (for the watermark to have an effect).
+
+In <<spark-sql-streaming-OutputMode.adoc#Append, Append>> output mode the current event-time streaming watermark is used for the following:
+
+* Output saved state rows that became expired (*Expired events* in the demo)
+
+* Dropping late events, i.e. don't save them to a state store or include in aggregation (*Late events* in the demo)
+
+[source, scala]
+----
+// Reduce the number of partitions and hence the state stores
+// That is supposed to make debugging state checkpointing easier
+val numShufflePartitions = 1
+import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
+spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
+
+assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
+
+// Define event "format"
+// Use :paste mode in spark-shell
+import java.sql.Timestamp
+case class Event(time: Timestamp, value: Long, batch: Long)
+import scala.concurrent.duration._
+object Event {
+  def apply(secs: Long, value: Long, batch: Long): Event = {
+    Event(new Timestamp(secs.seconds.toMillis), value, batch)
+  }
+}
+
+// The source is memory for full control of the input
+import org.apache.spark.sql.execution.streaming.MemoryStream
+implicit val sqlCtx = spark.sqlContext
+val events = MemoryStream[Event]
+val values = events.toDS
+assert(values.isStreaming, "values must be a streaming Dataset")
+
+values.printSchema
+/**
+root
+ |-- time: timestamp (nullable = true)
+ |-- value: long (nullable = false)
+ |-- batch: long (nullable = false)
+*/
+
+import scala.concurrent.duration._
+val delayThreshold = 10.seconds
+val windowDuration = 5.seconds
+import org.apache.spark.sql.functions.window
+val countsPer5secWindow = values
+  .withWatermark(eventTime = "time", delayThreshold.toString) // defines watermark (before groupBy!)
+  .groupBy(window($"time", windowDuration.toString) as "sliding_window")
+  .agg(collect_list("batch") as "batches", collect_list("value") as "values")
+
+countsPer5secWindow.printSchema
+/**
+root
+ |-- sliding_window: struct (nullable = false)
+ |    |-- start: timestamp (nullable = true)
+ |    |-- end: timestamp (nullable = true)
+ |-- batches: array (nullable = true)
+ |    |-- element: long (containsNull = true)
+ |-- values: array (nullable = true)
+ |    |-- element: long (containsNull = true)
+*/
+
+val queryName = "watermark_demo"
+val checkpointLocation = s"/tmp/checkpoint-$queryName"
+
+// Delete the checkpoint location from previous executions
+import java.nio.file.{Files, FileSystems}
+import java.util.Comparator
+import scala.collection.JavaConverters._
+val path = FileSystems.getDefault.getPath(checkpointLocation)
+if (Files.exists(path)) {
+  Files.walk(path)
+    .sorted(Comparator.reverseOrder())
+    .iterator
+    .asScala
+    .foreach(p => p.toFile.delete)
+}
+
+// FIXME Use foreachBatch
+import org.apache.spark.sql.streaming.OutputMode.Append
+val streamingQuery = countsPer5secWindow
+  .writeStream
+  .format("memory")
+  .queryName(queryName)
+  .option("checkpointLocation", checkpointLocation)
+  .outputMode(Append)
+  .start
+
+assert(streamingQuery.status.message == "Waiting for data to arrive")
+
+type Millis = Long
+def toMillis(datetime: String): Millis = {
+  import java.time.format.DateTimeFormatter
+  import java.time.LocalDateTime
+  import java.time.ZoneOffset
+  LocalDateTime
+    .parse(datetime, DateTimeFormatter.ISO_DATE_TIME)
+    .toInstant(ZoneOffset.UTC)
+    .toEpochMilli
+}
+
+// Use web UI to monitor the state of state (no pun intended)
+// StateStoreSave and StateStoreRestore operators all have state metrics
+// Go to http://localhost:4040/SQL/ and click one of the Completed Queries with Job IDs
+
+// You may also want to check out checkpointed state
+// in /tmp/checkpoint-watermark_demo/state/0/0
+
+// The demo is aimed to show the following:
+// 1. The current watermark
+// 2. Check out the stats:
+// - expired state (below the current watermark, goes to output and purged later)
+// - late state (dropped as if never received and processed)
+// - saved state rows (above the current watermark)
+
+val batch = Seq(
+  Event(1,  1, batch = 1),
+  Event(15, 2, batch = 1))
+events.addData(batch)
+streamingQuery.processAllAvailable()
+
+val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+val currentWatermarkMs = toMillis(currentWatermark)
+
+val maxTime = batch.maxBy(_.time.toInstant.toEpochMilli).time.toInstant.toEpochMilli.millis.toSeconds
+val expectedMaxTime = 15
+assert(maxTime == expectedMaxTime, s"Maximum time across events per batch is $maxTime, but should be $expectedMaxTime")
+
+val expectedWatermarkMs = 5.seconds.toMillis
+assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark is $currentWatermarkMs, but should be $expectedWatermarkMs (maximum event time ${maxTime.seconds.toMillis} minus delayThreshold ${delayThreshold.toMillis})")
+
+// FIXME Saved State Rows
+// Use the metrics of the StateStoreSave operator
+// Or simply streamingQuery.lastProgress.stateOperators.head
+spark.table(queryName).orderBy("sliding_window").show(truncate = false)
+/**
++------------------------------------------+-------+------+
+|sliding_window                            |batches|values|
++------------------------------------------+-------+------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]    |[1]   |
++------------------------------------------+-------+------+
+*/
+
+val batch = Seq(
+  Event(1,  1, batch = 2),
+  Event(15, 2, batch = 2),
+  Event(35, 3, batch = 2))
+events.addData(batch)
+streamingQuery.processAllAvailable()
+
+val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+val currentWatermarkMs = toMillis(currentWatermark)
+
+val maxTime = batch.maxBy(_.time.toInstant.toEpochMilli).time.toInstant.toEpochMilli.millis.toSeconds
+val expectedMaxTime = 35
+assert(maxTime == expectedMaxTime, s"Maximum time across events per batch is $maxTime, but should be $expectedMaxTime")
+
+val expectedWatermarkMs = 25.seconds.toMillis
+assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark is $currentWatermarkMs, but should be $expectedWatermarkMs (maximum event time ${maxTime.seconds.toMillis} minus delayThreshold ${delayThreshold.toMillis})")
+
+// FIXME Expired State
+// FIXME Late Events
+// FIXME Saved State Rows
+spark.table(queryName).orderBy("sliding_window").show(truncate = false)
+/**
++------------------------------------------+---------+---------+
+|sliding_window                            |batches  |values   |
++------------------------------------------+---------+---------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
++------------------------------------------+---------+---------+
+*/
+
+val batch = Seq(
+  Event(15,1, batch = 3),
+  Event(15,2, batch = 3),
+  Event(20,3, batch = 3),
+  Event(26,4, batch = 3))
+events.addData(batch)
+streamingQuery.processAllAvailable()
+
+val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+val currentWatermarkMs = toMillis(currentWatermark)
+
+val maxTime = batch.maxBy(_.time.toInstant.toEpochMilli).time.toInstant.toEpochMilli.millis.toSeconds
+val expectedMaxTime = 26
+assert(maxTime == expectedMaxTime, s"Maximum time across events per batch is $maxTime, but should be $expectedMaxTime")
+
+// Current event-time watermark should be the same as previously
+// val expectedWatermarkMs = 25.seconds.toMillis
+// The current max time is merely 26 so subtracting delayThreshold gives merely 16
+assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark is $currentWatermarkMs, but should be $expectedWatermarkMs (maximum event time ${maxTime.seconds.toMillis} minus delayThreshold ${delayThreshold.toMillis})")
+
+// FIXME Expired State
+// FIXME Late Events
+// FIXME Saved State Rows
+spark.table(queryName).orderBy("sliding_window").show(truncate = false)
+/**
++------------------------------------------+---------+---------+
+|sliding_window                            |batches  |values   |
++------------------------------------------+---------+---------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
++------------------------------------------+---------+---------+
+*/
+
+val batch = Seq(
+  Event(36, 1, batch = 4))
+events.addData(batch)
+streamingQuery.processAllAvailable()
+
+val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+val currentWatermarkMs = toMillis(currentWatermark)
+
+val maxTime = batch.maxBy(_.time.toInstant.toEpochMilli).time.toInstant.toEpochMilli.millis.toSeconds
+val expectedMaxTime = 36
+assert(maxTime == expectedMaxTime, s"Maximum time across events per batch is $maxTime, but should be $expectedMaxTime")
+
+val expectedWatermarkMs = 26.seconds.toMillis
+assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark is $currentWatermarkMs, but should be $expectedWatermarkMs (maximum event time ${maxTime.seconds.toMillis} minus delayThreshold ${delayThreshold.toMillis})")
+
+// FIXME Expired State
+// FIXME Late Events
+// FIXME Saved State Rows
+spark.table(queryName).orderBy("sliding_window").show(truncate = false)
+/**
++------------------------------------------+---------+---------+
+|sliding_window                            |batches  |values   |
++------------------------------------------+---------+---------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
++------------------------------------------+---------+---------+
+*/
+
+val batch = Seq(
+  Event(50, 1, batch = 5)
+)
+events.addData(batch)
+streamingQuery.processAllAvailable()
+
+val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+val currentWatermarkMs = toMillis(currentWatermark)
+
+val maxTime = batch.maxBy(_.time.toInstant.toEpochMilli).time.toInstant.toEpochMilli.millis.toSeconds
+val expectedMaxTime = 50
+assert(maxTime == expectedMaxTime, s"Maximum time across events per batch is $maxTime, but should be $expectedMaxTime")
+
+val expectedWatermarkMs = 40.seconds.toMillis
+assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark is $currentWatermarkMs, but should be $expectedWatermarkMs (maximum event time ${maxTime.seconds.toMillis} minus delayThreshold ${delayThreshold.toMillis})")
+
+// FIXME Expired State
+// FIXME Late Events
+// FIXME Saved State Rows
+spark.table(queryName).orderBy("sliding_window").show(truncate = false)
+/**
++------------------------------------------+---------+---------+
+|sliding_window                            |batches  |values   |
++------------------------------------------+---------+---------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
+|[1970-01-01 01:00:25, 1970-01-01 01:00:30]|[3]      |[4]      |
+|[1970-01-01 01:00:35, 1970-01-01 01:00:40]|[2, 4]   |[3, 1]   |
++------------------------------------------+---------+---------+
+*/
+
+// Eventually...
+streamingQuery.stop()
+----
