@@ -20,7 +20,7 @@ Use the following demos to learn more:
 
 * <<spark-sql-streaming-demo-groupBy-aggregation-append-memory.adoc#, Demo: Streaming Aggregation with Dataset.groupBy High-Level Operator and Memory Data Source (Append Output Mode)>>
 
-* <<spark-sql-streaming-demo-groupBy-aggregation-append.adoc#, Demo: Streaming Aggregation with Kafka Data Source>>
+* <<spark-sql-streaming-demo-kafka-data-source.adoc#, Demo: Streaming Aggregation with Kafka Data Source>>
 
 * <<spark-sql-streaming-demo-groupByKey-count-Update.adoc#, Demo: groupByKey Streaming Aggregation in Update Mode>>
 

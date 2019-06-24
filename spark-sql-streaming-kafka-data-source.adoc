@@ -4,23 +4,6 @@
 
 Kafka Data Source provides a <<streaming-source, streaming source>> and a <<streaming-sink, streaming sink>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing.
 
-[TIP]
-====
-Use the following to publish events to Kafka.
-
-```
-// 1st streaming batch
-$ cat /tmp/1
-1,1,1
-15,2,1
-
-$ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
-
-// Alternatively (and slower due to JVM bootup)
-$ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
-```
-====
-
 === [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 External Module
 
 Kafka Data Source is part of the *spark-sql-kafka-0-10* external module that is distributed with the official distribution of Apache Spark, but it is not included in the CLASSPATH by default.
@@ -340,3 +323,24 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 +- Project [key#28 AS key#7, value#29 AS value#8, topic#30 AS topic#9, partition#31 AS partition#10, offset#32L AS offset#11L, timestamp#33 AS timestamp#12, timestampType#34 AS timestampType#13]
    +- Streaming RelationV2 kafka[key#28, value#29, topic#30, partition#31, offset#32L, timestamp#33, timestampType#34] (Options: [subscribepattern=kafka2console.*,kafka.bootstrap.servers=:9092])
 ----
+
+=== [[demo]] Demo: Streaming Aggregation with Kafka Data Source
+
+Check out <<spark-sql-streaming-demo-kafka-data-source.adoc#, Demo: Streaming Aggregation with Kafka Data Source>>.
+
+[TIP]
+====
+Use the following to publish events to Kafka.
+
+```
+// 1st streaming batch
+$ cat /tmp/1
+1,1,1
+15,2,1
+
+$ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
+
+// Alternatively (and slower due to JVM bootup)
+$ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
+```
+====
