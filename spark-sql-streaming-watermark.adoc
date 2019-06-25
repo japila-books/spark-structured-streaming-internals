@@ -1,0 +1,27 @@
+== Streaming Watermark
+
+*Streaming Watermark* (*Event-Time Watermark*) is a time threshold that is used to handle late and possibly out-of-order events and eventually limit the state of a <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful streaming query>> (and avoid unbounded state).
+
+In Spark Structured Streaming, you use <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> high-level operator to define a streaming watermark.
+
+Under the covers, the high-level operator creates a logical query plan with one or more <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operators.
+
+A streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using <<spark-sql-streaming-window.adoc#, window>> standard function).
+
+NOTE: <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator has to be used before an aggregation operator (for the watermark to have an effect).
+
+In <<spark-sql-streaming-OutputMode.adoc#Append, Append>> output mode the current event-time streaming watermark is used for the following:
+
+* Output saved state rows that became expired (*Expired events* in the demo)
+
+* Dropping late events, i.e. don't save them to a state store or include in aggregation (*Late events* in the demo)
+
+Streaming watermark is <<spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark, required>> for a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode.
+
+*Watermark delay* says how late and possibly out-of-order events are still acceptable and contribute to the final result of a stateful streaming query.
+
+=== [[demos]] Demos
+
+Use the following demos to learn more:
+
+* <<spark-sql-streaming-demo-watermark-aggregation-append.adoc#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>

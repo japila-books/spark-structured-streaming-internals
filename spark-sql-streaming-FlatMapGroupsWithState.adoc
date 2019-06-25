@@ -1,6 +1,6 @@
 == [[FlatMapGroupsWithState]] FlatMapGroupsWithState Unary Logical Operator
 
-`FlatMapGroupsWithState` is a unary logical operator that is <<creating-instance, created>> to represent the following operators:
+`FlatMapGroupsWithState` is a unary logical operator that is <<creating-instance, created>> to represent the following operators in a logical query plan of a streaming query:
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>>
 
@@ -13,7 +13,7 @@ A unary logical operator (`UnaryNode`) is a logical operator with a single <<chi
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan.html[UnaryNode] (and logical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`FlatMapGroupsWithState` is resolved (_translated_) to:
+`FlatMapGroupsWithState` is resolved (_planned_) to:
 
 * <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> unary physical operator for streaming datasets (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy)
 
@@ -45,9 +45,9 @@ NOTE: `apply` is used in <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatM
 
 === [[creating-instance]] Creating FlatMapGroupsWithState Instance
 
-`FlatMapGroupsWithState` takes the following when created:
+`FlatMapGroupsWithState` takes the following to be created:
 
-* [[func]] State function of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`
+* [[func]] State function (`(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
 * [[keyDeserializer]] Key deserializer Catalyst expression
 * [[valueDeserializer]] Value deserializer Catalyst expression
 * [[groupingAttributes]] Grouping attributes
@@ -57,4 +57,4 @@ NOTE: `apply` is used in <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatM
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
 * [[isMapGroupsWithState]] `isMapGroupsWithState` flag (default: `false`)
 * [[timeout]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
-* [[child]] Child logical operator
+* [[child]] Child logical operator (`LogicalPlan`)

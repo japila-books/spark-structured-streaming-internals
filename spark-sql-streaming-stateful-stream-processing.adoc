@@ -1,7 +1,5 @@
 == Stateful Stream Processing
 
-NOTE: Consider this page as _work in progress_ until the note disappears.
-
 *Stateful Stream Processing* is a stream processing with some state (implicit or explicit).
 
 In Spark Structured Streaming, a streaming query is stateful when it uses the following operators (or their SQL variants):

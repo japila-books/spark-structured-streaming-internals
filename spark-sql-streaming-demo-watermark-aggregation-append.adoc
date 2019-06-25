@@ -1,16 +1,6 @@
 == Demo: Streaming Watermark with Aggregation in Append Output Mode
 
-The following code shows a streaming watermark (with <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator) which is <<spark-sql-streaming-UnsupportedOperationChecker.adoc#streaming-aggregation-append-mode-requires-watermark, required>> for a streaming aggregation (with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator) in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode.
-
-The streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using <<spark-sql-streaming-window.adoc#, window>> standard function).
-
-NOTE: <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator has to be used before an aggregation operator (for the watermark to have an effect).
-
-In <<spark-sql-streaming-OutputMode.adoc#Append, Append>> output mode the current event-time streaming watermark is used for the following:
-
-* Output saved state rows that became expired (*Expired events* in the demo)
-
-* Dropping late events, i.e. don't save them to a state store or include in aggregation (*Late events* in the demo)
+The following demo shows the internals of <<spark-sql-streaming-watermark.adoc#, streaming watermark>> with a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode.
 
 [source, scala]
 ----
@@ -50,15 +40,23 @@ root
 
 import scala.concurrent.duration._
 val delayThreshold = 10.seconds
+val valuesWatermarked = values
+  .withWatermark(eventTime = "time", delayThreshold.toString) // defines watermark (before groupBy!)
+
+// EventTimeWatermark logical operator is planned as EventTimeWatermarkExec physical operator
+// Note that as a physical operator EventTimeWatermarkExec shows itself without the Exec suffix
+scala> valuesWatermarked.explain
+== Physical Plan ==
+EventTimeWatermark time#3: timestamp, interval 10 seconds
++- StreamingRelation MemoryStream[time#3,value#4L,batch#5L], [time#3, value#4L, batch#5L]
+
 val windowDuration = 5.seconds
 import org.apache.spark.sql.functions.window
-val countsPer5secWindow = values
-  .withWatermark(eventTime = "time", delayThreshold.toString) // defines watermark (before groupBy!)
+val countsPer5secWindow = valuesWatermarked
   .groupBy(window($"time", windowDuration.toString) as "sliding_window")
   .agg(collect_list("batch") as "batches", collect_list("value") as "values")
 
-countsPer5secWindow.printSchema
-/**
+scala> countsPer5secWindow.printSchema
 root
  |-- sliding_window: struct (nullable = false)
  |    |-- start: timestamp (nullable = true)
@@ -67,7 +65,6 @@ root
  |    |-- element: long (containsNull = true)
  |-- values: array (nullable = true)
  |    |-- element: long (containsNull = true)
-*/
 
 val queryName = "watermark_demo"
 val checkpointLocation = s"/tmp/checkpoint-$queryName"
@@ -85,7 +82,7 @@ if (Files.exists(path)) {
     .foreach(p => p.toFile.delete)
 }
 
-// FIXME Use foreachBatch
+// FIXME Use foreachBatch for batchId and the output Dataset
 import org.apache.spark.sql.streaming.OutputMode.Append
 val streamingQuery = countsPer5secWindow
   .writeStream
@@ -141,14 +138,39 @@ assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark
 // FIXME Saved State Rows
 // Use the metrics of the StateStoreSave operator
 // Or simply streamingQuery.lastProgress.stateOperators.head
-spark.table(queryName).orderBy("sliding_window").show(truncate = false)
-/**
+scala> spark.table(queryName).orderBy("sliding_window").show(truncate = false)
 +------------------------------------------+-------+------+
 |sliding_window                            |batches|values|
 +------------------------------------------+-------+------+
 |[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]    |[1]   |
 +------------------------------------------+-------+------+
-*/
+
+// With at least one execution we can review the execution plan
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+import org.apache.spark.sql.execution.streaming.StreamExecution
+val engine: StreamExecution = streamingQuery
+  .asInstanceOf[StreamingQueryWrapper]
+  .streamingQuery
+
+import org.apache.spark.sql.execution.streaming.IncrementalExecution
+val lastMicroBatch: IncrementalExecution = engine.lastExecution
+
+// Access executedPlan that is the optimized physical query plan ready for execution
+// All streaming optimizations have been applied at this point
+// We just need the EventTimeWatermarkExec physical operator
+val plan = lastMicroBatch.executedPlan
+
+// Let's find the EventTimeWatermarkExec physical operator in the plan
+// There should be one only
+import org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec
+val watermarkOp = plan.collect { case op: EventTimeWatermarkExec => op }.head
+
+// Let's check out the event-time watermark stats
+// They correspond to the concrete EventTimeWatermarkExec operator for a micro-batch
+import org.apache.spark.sql.execution.streaming.EventTimeStats
+val stats: EventTimeStats = watermarkOp.eventTimeStats.value
+scala> println(stats)
+EventTimeStats(-9223372036854775808,9223372036854775807,0.0,0)
 
 val batch = Seq(
   Event(1,  1, batch = 2),
@@ -172,13 +194,22 @@ assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark
 // FIXME Saved State Rows
 spark.table(queryName).orderBy("sliding_window").show(truncate = false)
 /**
-+------------------------------------------+---------+---------+
-|sliding_window                            |batches  |values   |
-+------------------------------------------+---------+---------+
-|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
-|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
-+------------------------------------------+---------+---------+
++------------------------------------------+-------+------+
+|sliding_window                            |batches|values|
++------------------------------------------+-------+------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]    |[1]   |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 2] |[2, 2]|
++------------------------------------------+-------+------+
 */
+
+// Check out the stats
+val plan = engine.lastExecution.executedPlan
+import org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec
+val watermarkOp = plan.collect { case op: EventTimeWatermarkExec => op }.head
+import org.apache.spark.sql.execution.streaming.EventTimeStats
+val stats: EventTimeStats = watermarkOp.eventTimeStats.value
+scala> println(stats)
+EventTimeStats(-9223372036854775808,9223372036854775807,0.0,0)
 
 val batch = Seq(
   Event(15,1, batch = 3),
@@ -205,13 +236,22 @@ assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark
 // FIXME Saved State Rows
 spark.table(queryName).orderBy("sliding_window").show(truncate = false)
 /**
-+------------------------------------------+---------+---------+
-|sliding_window                            |batches  |values   |
-+------------------------------------------+---------+---------+
-|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
-|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
-+------------------------------------------+---------+---------+
++------------------------------------------+-------+------+
+|sliding_window                            |batches|values|
++------------------------------------------+-------+------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]    |[1]   |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 2] |[2, 2]|
++------------------------------------------+-------+------+
 */
+
+// Check out the stats
+val plan = engine.lastExecution.executedPlan
+import org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec
+val watermarkOp = plan.collect { case op: EventTimeWatermarkExec => op }.head
+import org.apache.spark.sql.execution.streaming.EventTimeStats
+val stats: EventTimeStats = watermarkOp.eventTimeStats.value
+scala> println(stats)
+EventTimeStats(26000,15000,19000.0,4)
 
 val batch = Seq(
   Event(36, 1, batch = 4))
@@ -233,13 +273,22 @@ assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark
 // FIXME Saved State Rows
 spark.table(queryName).orderBy("sliding_window").show(truncate = false)
 /**
-+------------------------------------------+---------+---------+
-|sliding_window                            |batches  |values   |
-+------------------------------------------+---------+---------+
-|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
-|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
-+------------------------------------------+---------+---------+
++------------------------------------------+-------+------+
+|sliding_window                            |batches|values|
++------------------------------------------+-------+------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]    |[1]   |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 2] |[2, 2]|
++------------------------------------------+-------+------+
 */
+
+// Check out the stats
+val plan = engine.lastExecution.executedPlan
+import org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec
+val watermarkOp = plan.collect { case op: EventTimeWatermarkExec => op }.head
+import org.apache.spark.sql.execution.streaming.EventTimeStats
+val stats: EventTimeStats = watermarkOp.eventTimeStats.value
+scala> println(stats)
+EventTimeStats(-9223372036854775808,9223372036854775807,0.0,0)
 
 val batch = Seq(
   Event(50, 1, batch = 5)
@@ -262,15 +311,24 @@ assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark
 // FIXME Saved State Rows
 spark.table(queryName).orderBy("sliding_window").show(truncate = false)
 /**
-+------------------------------------------+---------+---------+
-|sliding_window                            |batches  |values   |
-+------------------------------------------+---------+---------+
-|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]      |[1]      |
-|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 1, 2]|[2, 2, 2]|
-|[1970-01-01 01:00:25, 1970-01-01 01:00:30]|[3]      |[4]      |
-|[1970-01-01 01:00:35, 1970-01-01 01:00:40]|[2, 4]   |[3, 1]   |
-+------------------------------------------+---------+---------+
++------------------------------------------+-------+------+
+|sliding_window                            |batches|values|
++------------------------------------------+-------+------+
+|[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]    |[1]   |
+|[1970-01-01 01:00:15, 1970-01-01 01:00:20]|[1, 2] |[2, 2]|
+|[1970-01-01 01:00:25, 1970-01-01 01:00:30]|[3]    |[4]   |
+|[1970-01-01 01:00:35, 1970-01-01 01:00:40]|[2, 4] |[3, 1]|
++------------------------------------------+-------+------+
 */
+
+// Check out the stats
+val plan = engine.lastExecution.executedPlan
+import org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec
+val watermarkOp = plan.collect { case op: EventTimeWatermarkExec => op }.head
+import org.apache.spark.sql.execution.streaming.EventTimeStats
+val stats: EventTimeStats = watermarkOp.eventTimeStats.value
+scala> println(stats)
+EventTimeStats(-9223372036854775808,9223372036854775807,0.0,0)
 
 // Eventually...
 streamingQuery.stop()

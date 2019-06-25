@@ -1,42 +1,19 @@
-== [[EventTimeWatermark]] EventTimeWatermark Unary Logical Operator
+== [[EventTimeWatermark]] EventTimeWatermark Unary Logical Operator -- Streaming Watermark
 
-`EventTimeWatermark` is a unary logical operator (`UnaryNode`) that is <<creating-instance, created>> as the result of <<spark-sql-streaming-Dataset-withWatermark.adoc#, Dataset.withWatermark>> operator.
-
-[source, scala]
-----
-val rates = spark
-  .readStream
-  .format("rate")
-  .load
-  .withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds") // <-- creates EventTimeWatermark logical operator
-scala> rates.explain(extended = true)
-== Parsed Logical Plan ==
-'EventTimeWatermark 'timestamp, interval 10 seconds
-+- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@2219ca9f, rate, [timestamp#693, value#694L]
-
-== Analyzed Logical Plan ==
-timestamp: timestamp, value: bigint
-EventTimeWatermark timestamp#693: timestamp, interval 10 seconds
-+- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@2219ca9f, rate, [timestamp#693, value#694L]
-
-== Optimized Logical Plan ==
-EventTimeWatermark timestamp#693: timestamp, interval 10 seconds
-+- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@2219ca9f, rate, [timestamp#693, value#694L]
-
-== Physical Plan ==
-EventTimeWatermark timestamp#693: timestamp, interval 10 seconds
-+- StreamingRelation rate, [timestamp#693, value#694L]
-----
-
-[[watermarkDelayMs]]
-[[delayKey]]
-`EventTimeWatermark` uses *spark.watermarkDelayMs* key (in the `Metadata` of the <<output, output attributes>>) to hold the event-time watermark delay (as a so-called _watermark attribute_ or _eventTime watermark_).
-
-NOTE: The *event-time watermark delay* is used to calculate the difference between the event time of an event (that is modeled as a row in the Dataset for a streaming batch) and the time in the past.
+`EventTimeWatermark` is a unary logical operator that is <<creating-instance, created>> to represent <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator in a logical query plan of a streaming query.
 
 [NOTE]
 ====
-`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when <<spark-sql-streaming-Dataset-withWatermark.adoc#, Dataset.withWatermark>> operator is used on a batch query.
+A unary logical operator (`UnaryNode`) is a logical operator with a single <<child, child>> logical operator.
+
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan.html[UnaryNode] (and logical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+====
+
+`EventTimeWatermark` is resolved (aka _planned_) to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator in <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy.
+
+[NOTE]
+====
+`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator is used on a batch query.
 
 [source, scala]
 ----
@@ -55,12 +32,11 @@ scala> println(q.queryExecution.logical.numberedTreeString) // <-- no EventTimeW
 ----
 ====
 
-`EventTimeWatermark` is converted (aka _planned_) to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator in <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy.
+=== [[creating-instance]] Creating EventTimeWatermark Instance
 
-[[creating-instance]]
 `EventTimeWatermark` takes the following to be created:
 
-* [[eventTime]] Name of the column with event-time watermarks
+* [[eventTime]] Name of the column for <<spark-sql-streaming-watermark.adoc#, event-time watermark>>
 * [[delay]] Delay (`CalendarInterval`)
 * [[child]] Child logical operator (`LogicalPlan`)
 
@@ -79,7 +55,6 @@ NOTE: `output` is part of the `QueryPlan` Contract to describe the attributes of
 
 [source, scala]
 ----
-// See q created above
 // FIXME How to access/show the eventTime column with the metadata updated to include spark.watermarkDelayMs?
 import org.apache.spark.sql.catalyst.plans.logical.EventTimeWatermark
 val etw = q.queryExecution.logical.asInstanceOf[EventTimeWatermark]
@@ -88,3 +63,9 @@ root
  |-- timestamp: timestamp (nullable = true)
  |-- value: long (nullable = true)
 ----
+
+=== [[watermarkDelayMs]][[delayKey]] `spark.watermarkDelayMs` Metadata Key
+
+`EventTimeWatermark` uses *spark.watermarkDelayMs* key (in the `Metadata` of the <<output, output attributes>>) to hold the event-time watermark delay (as a so-called _watermark attribute_ or _eventTime watermark_).
+
+The *event-time watermark delay* is used to calculate the difference between the event time of an event (modeled as a row in the streaming Dataset) and the time in the past.

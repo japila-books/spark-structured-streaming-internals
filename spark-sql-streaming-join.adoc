@@ -6,11 +6,13 @@ Under the covers, the high-level operators create a logical query plan with one 
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
+Streaming joins can be *stateless* or *stateful*. Joins of a streaming query and a batch query (aka _stream-static joins_) are stateless and no state management is necessary. Joins of two streaming queries (aka _stream-stream joins_) are stateful and require streaming state (with a <<spark-sql-streaming-watermark.adoc#, streaming watermark>>).
+
 === [[demos]] Demos
 
 Use the following demos to learn more:
 
-* <<spark-sql-streaming-demo-join-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator>>
+* <<spark-sql-streaming-demo-join-stream-stream-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join of Streaming Queries and StreamingSymmetricHashJoinExec Physical Operator>>
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 

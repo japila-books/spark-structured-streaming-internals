@@ -11,7 +11,7 @@
 [source, scala]
 ----
 import org.apache.spark.sql.streaming.Trigger
-val sq = spark
+val query = spark
   .readStream
   .format("rate")
   .load
@@ -22,13 +22,10 @@ val sq = spark
   .queryName("rate2console")
   .start
 
-import org.apache.spark.sql.streaming.StreamingQuery
-assert(sq.isInstanceOf[StreamingQuery])
-
 // The following gives access to the internals
 // And to MicroBatchExecution
 import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
-val engine = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
+val engine = query.asInstanceOf[StreamingQueryWrapper].streamingQuery
 import org.apache.spark.sql.execution.streaming.StreamExecution
 assert(engine.isInstanceOf[StreamExecution])
 

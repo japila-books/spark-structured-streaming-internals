@@ -1,4 +1,4 @@
-== Demo: Streaming Join and StreamingSymmetricHashJoinExec Physical Operator
+== Demo: Streaming Join of Streaming Queries and StreamingSymmetricHashJoinExec Physical Operator
 
 The following code shows a <<spark-sql-streaming-join.adoc#, streaming join>> of two streaming queries (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator).
 

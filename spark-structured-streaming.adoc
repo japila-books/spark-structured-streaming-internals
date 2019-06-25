@@ -22,6 +22,8 @@ The goal of Spark Structured Streaming is to unify streaming, interactive, and b
 
 * <<spark-sql-streaming-join.adoc#, Streaming Join>>
 
+* <<spark-sql-streaming-watermark.adoc#, Streaming Watermark>>
+
 * <<spark-sql-streaming-stateful-stream-processing.adoc#, Stateful Stream Processing>>
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, Arbitrary Stateful Streaming Aggregations>>
