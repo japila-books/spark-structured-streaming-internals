@@ -1,0 +1,52 @@
+== Demo: Exploring Checkpointed State
+
+The following demo shows the internals of the checkpointed state of a <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful streaming query>>.
+
+The demo uses the state checkpoint directory that was used in <<spark-sql-streaming-demo-watermark-aggregation-append.adoc#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>.
+
+[source, scala]
+----
+// Change the path to match your configuration
+val checkpointRootLocation = "/tmp/checkpoint-watermark_demo/state"
+val version = 1L
+
+import org.apache.spark.sql.execution.streaming.state.StateStoreId
+val storeId = StateStoreId(
+  checkpointRootLocation,
+  operatorId = 0,
+  partitionId = 0)
+
+// FIXME key and value schemas should match the watermark demo
+import org.apache.spark.sql.types.{IntegerType, StructField, StructType}
+val keySchema = StructType(StructField("f1", IntegerType, true) :: Nil)
+val valueSchema = keySchema
+
+val indexOrdinal = None
+import org.apache.spark.sql.execution.streaming.state.StateStoreConf
+val storeConf = StateStoreConf(spark.sessionState.conf)
+val hadoopConf = spark.sessionState.newHadoopConf()
+import org.apache.spark.sql.execution.streaming.state.StateStoreProvider
+val provider = StateStoreProvider.createAndInit(
+  storeId, keySchema, valueSchema, indexOrdinal, storeConf, hadoopConf)
+
+// You may want to use the following higher-level code instead
+import java.util.UUID
+val queryRunId = UUID.randomUUID
+import org.apache.spark.sql.execution.streaming.state.StateStoreProviderId
+val storeProviderId = StateStoreProviderId(storeId, queryRunId)
+import org.apache.spark.sql.execution.streaming.state.StateStore
+val store = StateStore.get(
+  storeProviderId,
+  keySchema,
+  valueSchema,
+  indexOrdinal,
+  version,
+  storeConf,
+  hadoopConf)
+
+import org.apache.spark.sql.execution.streaming.state.UnsafeRowPair
+def formatRowPair(rowPair: UnsafeRowPair) = {
+  s"(${rowPair.key.getLong(0)}, ${rowPair.value.getLong(0)})"
+}
+store.iterator.map(formatRowPair).foreach(println)
+----

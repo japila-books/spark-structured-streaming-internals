@@ -123,6 +123,7 @@
 
 == Demos
 
+. link:spark-sql-streaming-demo-exploring-checkpointed-state.adoc[Demo: Exploring Checkpointed State]
 . link:spark-sql-streaming-demo-watermark-aggregation-append.adoc[Demo: Streaming Watermark with Aggregation in Append Output Mode]
 . link:spark-sql-streaming-demo-groupBy-running-count-complete.adoc[Demo: Streaming Query for Running Counts (Socket Source and Complete Output Mode)]
 . link:spark-sql-streaming-demo-join-stream-stream-StreamingSymmetricHashJoinExec.adoc[Demo: Streaming Join of Streaming Queries and StreamingSymmetricHashJoinExec Physical Operator]

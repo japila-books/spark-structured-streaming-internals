@@ -26,7 +26,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 === [[stateStoreId]][[stateStoreId_]] StateStoreId -- Unique Identifier of State Store
 
-As a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.adoc#stateStoreId, StateStoreId>> (which is a unique identifier of a <<spark-sql-streaming-StateStore.adoc#, state store>> for an operator and a partition).
+As a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.adoc#stateStoreId, StateStoreId>> (which is a unique identifier of the <<spark-sql-streaming-StateStore.adoc#, state store>> for an operator and a partition).
 
 `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> at <<init, initialization>> (as requested by the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> contract).
 
@@ -69,9 +69,16 @@ NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#ge
 deltaFile(version: Long): Path
 ----
 
-`deltaFile` creates a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the `[version].delta` file in the <<baseDir, baseDir>>.
+`deltaFile` simply returns the Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the `[version].delta` file in the <<baseDir, state checkpoint base directory>>.
 
-NOTE: `deltaFile` is used when...FIXME
+[NOTE]
+====
+`deltaFile` is used when:
+
+* <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> is created (and creates the <<finalDeltaFile, final delta file>>)
+
+* `HDFSBackedStateStoreProvider` is requested to <<updateFromDeltaFile, updateFromDeltaFile>>
+====
 
 === [[fetchFiles]] `fetchFiles` Internal Method
 
