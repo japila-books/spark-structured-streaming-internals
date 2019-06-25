@@ -1,4 +1,4 @@
-== Internals of Streaming Datasets
+== Internals of Streaming Queries
 
 NOTE: The page is to keep notes about how to guide readers through the codebase and may disappear if merged with the other pages or become an intro page.
 
@@ -79,7 +79,7 @@ Spark Structured Streaming gives you two logical operators to represent streamin
 
 When <<spark-sql-streaming-DataStreamReader.adoc#load, DataStreamReader.load>> method is executed, `load` first looks up the requested data source (that you specified using <<spark-sql-streaming-DataStreamReader.adoc#format, DataStreamReader.format>>) and creates an instance of it (_instantiation_). That'd be *data source resolution* step (that I described in...FIXME).
 
-`DataStreamReader.load` is where you can find the intersection of the former <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>> V1 API with the new <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> V2 API.
+`DataStreamReader.load` is where you can find the intersection of the former <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> V1 API with the new <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> V2 API.
 
 For <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> or <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> data sources, `DataStreamReader.load` creates a logical query plan with a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> leaf logical operator. That is the new *V2 code path*.
 

@@ -53,7 +53,7 @@ Used exclusively when `StreamExecution` is requested to <<runStream, run the str
 | [[ContinuousExecution]] Used in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>
 
 | <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>>
-| [[MicroBatchExecution]] Used in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>
+| [[MicroBatchExecution]] Used in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>
 |===
 
 NOTE: `StreamExecution` does not support adaptive query execution and cost-based optimizer (and turns them off when requested to <<runStream, run stream processing>>).

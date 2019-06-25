@@ -1,6 +1,6 @@
 == [[MicroBatchExecution]] MicroBatchExecution -- Stream Execution Engine of Micro-Batch Stream Processing
 
-`MicroBatchExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>> of <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>.
+`MicroBatchExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>> of <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 
 `MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>) with the following:
 

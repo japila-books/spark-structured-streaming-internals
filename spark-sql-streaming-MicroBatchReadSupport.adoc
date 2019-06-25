@@ -1,6 +1,6 @@
 == [[MicroBatchReadSupport]] MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders
 
-`MicroBatchReadSupport` is the <<contract, abstraction>> of <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> in <<spark-sql-streaming-micro-batch-processing.adoc#, Micro-Batch Stream Processing>>.
+`MicroBatchReadSupport` is the <<contract, abstraction>> of <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 
 [[contract]]
 [[createMicroBatchReader]]
