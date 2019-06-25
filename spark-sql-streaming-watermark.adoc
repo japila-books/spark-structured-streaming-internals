@@ -1,6 +1,10 @@
 == Streaming Watermark
 
-*Streaming Watermark* (*Event-Time Watermark*) is a time threshold that is used to handle late and possibly out-of-order events and eventually limit the state of a <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful streaming query>> (and avoid unbounded state).
+*Streaming Watermark* (*Event-Time Watermark*) of a <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful streaming query>> is a *time threshold* to wait for late and possibly out-of-order events until a streaming state can be considered final.
+
+Streaming watermark is used to mark events that are older than the threshold as "too late", and not "interesting" to update partial non-final aggregates.
+
+With streaming watermark, memory usage of a streaming state can be controlled as late events can easily be dropped, and old aggregates that are never going to be updated removed. That avoids unbounded streaming state that would inevitably use up all the available memory of long-running streaming queries and end up in out of memory errors.
 
 In Spark Structured Streaming, you use <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> high-level operator to define a streaming watermark.
 
@@ -25,3 +29,7 @@ Streaming watermark is <<spark-sql-streaming-UnsupportedOperationChecker.adoc#st
 Use the following demos to learn more:
 
 * <<spark-sql-streaming-demo-watermark-aggregation-append.adoc#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>
+
+=== [[i-want-more]] Further Reading Or Watching
+
+* https://issues.apache.org/jira/browse/SPARK-18124[SPARK-18124 Observed delay based event time watermarks]
