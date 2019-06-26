@@ -45,10 +45,12 @@ val valuesWatermarked = values
 
 // EventTimeWatermark logical operator is planned as EventTimeWatermarkExec physical operator
 // Note that as a physical operator EventTimeWatermarkExec shows itself without the Exec suffix
-scala> valuesWatermarked.explain
+valuesWatermarked.explain
+/**
 == Physical Plan ==
 EventTimeWatermark time#3: timestamp, interval 10 seconds
 +- StreamingRelation MemoryStream[time#3,value#4L,batch#5L], [time#3, value#4L, batch#5L]
+*/
 
 val windowDuration = 5.seconds
 import org.apache.spark.sql.functions.window
@@ -56,7 +58,8 @@ val countsPer5secWindow = valuesWatermarked
   .groupBy(window($"time", windowDuration.toString) as "sliding_window")
   .agg(collect_list("batch") as "batches", collect_list("value") as "values")
 
-scala> countsPer5secWindow.printSchema
+countsPer5secWindow.printSchema
+/**
 root
  |-- sliding_window: struct (nullable = false)
  |    |-- start: timestamp (nullable = true)
@@ -65,6 +68,7 @@ root
  |    |-- element: long (containsNull = true)
  |-- values: array (nullable = true)
  |    |-- element: long (containsNull = true)
+*/
 
 val queryName = "watermark_demo"
 val checkpointLocation = s"/tmp/checkpoint-$queryName"
@@ -93,6 +97,22 @@ val streamingQuery = countsPer5secWindow
   .start
 
 assert(streamingQuery.status.message == "Waiting for data to arrive")
+
+streamingQuery.explain
+/**
+== Physical Plan ==
+ObjectHashAggregate(keys=[window#21-T10000ms], functions=[collect_list(batch#5L, 0, 0), collect_list(value#4L, 0, 0)])
++- StateStoreSave [window#21-T10000ms], state info [ checkpoint = file:/tmp/checkpoint-watermark_demo/state, runId = f1b3f7a6-95a9-4a15-af06-13325784b5b4, opId = 0, ver = 1, numPartitions = 1], Append, 5000, 2
+   +- ObjectHashAggregate(keys=[window#21-T10000ms], functions=[merge_collect_list(batch#5L, 0, 0), merge_collect_list(value#4L, 0, 0)])
+      +- StateStoreRestore [window#21-T10000ms], state info [ checkpoint = file:/tmp/checkpoint-watermark_demo/state, runId = f1b3f7a6-95a9-4a15-af06-13325784b5b4, opId = 0, ver = 1, numPartitions = 1], 2
+         +- ObjectHashAggregate(keys=[window#21-T10000ms], functions=[merge_collect_list(batch#5L, 0, 0), merge_collect_list(value#4L, 0, 0)])
+            +- Exchange hashpartitioning(window#21-T10000ms, 1)
+               +- ObjectHashAggregate(keys=[window#21-T10000ms], functions=[partial_collect_list(batch#5L, 0, 0), partial_collect_list(value#4L, 0, 0)])
+                  +- *(1) Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#21-T10000ms, value#4L, batch#5L]
+                     +- *(1) Filter isnotnull(time#3-T10000ms)
+                        +- EventTimeWatermark time#3: timestamp, interval 10 seconds
+                           +- LocalTableScan <empty>, [time#3, value#4L, batch#5L]
+*/
 
 type Millis = Long
 def toMillis(datetime: String): Millis = {
@@ -138,12 +158,14 @@ assert(currentWatermarkMs == expectedWatermarkMs, s"Current event-time watermark
 // FIXME Saved State Rows
 // Use the metrics of the StateStoreSave operator
 // Or simply streamingQuery.lastProgress.stateOperators.head
-scala> spark.table(queryName).orderBy("sliding_window").show(truncate = false)
+spark.table(queryName).orderBy("sliding_window").show(truncate = false)
+/**
 +------------------------------------------+-------+------+
 |sliding_window                            |batches|values|
 +------------------------------------------+-------+------+
 |[1970-01-01 01:00:00, 1970-01-01 01:00:05]|[1]    |[1]   |
 +------------------------------------------+-------+------+
+*/
 
 // With at least one execution we can review the execution plan
 import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
