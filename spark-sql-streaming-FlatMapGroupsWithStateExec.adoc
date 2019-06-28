@@ -11,60 +11,11 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> unary logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators in a logical query plan.
 
-`FlatMapGroupsWithStateExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a streaming query with link:spark-sql-streaming-FlatMapGroupsWithState.adoc[FlatMapGroupsWithState] logical operators for execution.
-
-`FlatMapGroupsWithStateExec` is a <<StateStoreWriter, stateful physical operator that can write to a state store>> (and `MicroBatchExecution` requests <<shouldRunAnotherBatch, whether to run another batch or not>> based on the <<timeoutConf, GroupStateTimeout>>).
+`FlatMapGroupsWithStateExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator for execution.
 
 `FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator with the <<outputObjAttr, output object attribute>>.
 
-[source, scala]
-----
-import java.sql.Timestamp
-import org.apache.spark.sql.streaming.GroupState
-val stateFunc = (key: Long, values: Iterator[(Timestamp, Long)], state: GroupState[Long]) => {
-  Iterator((key, values.size))
-}
-import java.sql.Timestamp
-import org.apache.spark.sql.streaming.{GroupState, GroupStateTimeout, OutputMode}
-val rateGroups = spark.
-  readStream.
-  format("rate").
-  load.
-  withWatermark(eventTime = "timestamp", delayThreshold = "10 seconds").  // required for EventTimeTimeout
-  as[(Timestamp, Long)].  // leave DataFrame for Dataset
-  groupByKey { case (time, value) => value % 2 }. // creates two groups
-  flatMapGroupsWithState(OutputMode.Update, GroupStateTimeout.EventTimeTimeout)(stateFunc)  // EventTimeTimeout requires watermark (defined above)
-
-// Check out the physical plan with FlatMapGroupsWithStateExec
-scala> rateGroups.explain
-== Physical Plan ==
-*SerializeFromObject [assertnotnull(input[0, scala.Tuple2, true])._1 AS _1#35L, assertnotnull(input[0, scala.Tuple2, true])._2 AS _2#36]
-+- FlatMapGroupsWithState <function3>, value#30: bigint, newInstance(class scala.Tuple2), [value#30L], [timestamp#20-T10000ms, value#21L], obj#34: scala.Tuple2, StatefulOperatorStateInfo(<unknown>,63491721-8724-4631-b6bc-3bb1edeb4baf,0,0), class[value[0]: bigint], Update, EventTimeTimeout, 0, 0
-   +- *Sort [value#30L ASC NULLS FIRST], false, 0
-      +- Exchange hashpartitioning(value#30L, 200)
-         +- AppendColumns <function1>, newInstance(class scala.Tuple2), [input[0, bigint, false] AS value#30L]
-            +- EventTimeWatermark timestamp#20: timestamp, interval 10 seconds
-               +- StreamingRelation rate, [timestamp#20, value#21L]
-
-// Execute the streaming query
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-import scala.concurrent.duration._
-val sq = rateGroups.
-  writeStream.
-  format("console").
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Update).  // Append is not supported
-  start
-
-// Eventually...
-sq.stop
-----
-
-[[metrics]]
-`FlatMapGroupsWithStateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
-
-.FlatMapGroupsWithStateExec in web UI (Details for Query)
-image::images/FlatMapGroupsWithStateExec-webui-query-details.png[align="center"]
+TIP: Check out <<spark-sql-streaming-demo-FlatMapGroupsWithStateExec.adoc#, Demo: The Internals of FlatMapGroupsWithStateExec Physical Operator>>.
 
 [[logging]]
 [TIP]
@@ -80,9 +31,37 @@ log4j.logger.org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
+=== [[creating-instance]] Creating FlatMapGroupsWithStateExec Instance
+
+`FlatMapGroupsWithStateExec` takes the following to be created:
+
+* [[func]] State function (`(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
+* [[keyDeserializer]] Key deserializer expression
+* [[valueDeserializer]] Value deserializer expression
+* [[groupingAttributes]] Grouping attributes (as used for grouping in link:spark-sql-streaming-KeyValueGroupedDataset.adoc#groupingAttributes[KeyValueGroupedDataset] for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
+* [[dataAttributes]] Data attributes
+* [[outputObjAttr]] Output object attribute (that is the reference to the single object field this operator outputs)
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[stateEncoder]] State encoder (`ExpressionEncoder[Any]`)
+* [[stateFormatVersion]] State format version
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
+* [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
+* [[batchTimestampMs]] `batchTimestampMs`
+* [[eventTimeWatermark]] Optional event time watermark
+* [[child]] Child physical operator
+
+`FlatMapGroupsWithStateExec` initializes the <<internal-properties, internal properties>>.
+
+=== [[metrics]] Performance Metrics (SQLMetrics)
+
+`FlatMapGroupsWithStateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
+
+.FlatMapGroupsWithStateExec in web UI (Details for Query)
+image::images/FlatMapGroupsWithStateExec-webui-query-details.png[align="center"]
+
 === [[StateStoreWriter]] FlatMapGroupsWithStateExec as StateStoreWriter
 
-`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that can write to a state store>>.
+`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that can write to a state store>>(and `MicroBatchExecution` requests <<shouldRunAnotherBatch, whether to run another batch or not>> based on the <<timeoutConf, GroupStateTimeout>>).
 
 `FlatMapGroupsWithStateExec` uses the <<timeoutConf, GroupStateTimeout>> (and possibly the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>>) when asked <<shouldRunAnotherBatch, whether to run another batch or not>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>> when requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
 
@@ -143,27 +122,6 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 1. Generates an output `Iterator[InternalRow]` with elements from ``StateStoreUpdater``'s link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForKeysWithData[updateStateForKeysWithData] and link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForTimedOutKeys[updateStateForTimedOutKeys]
 
 1. In the end, `storeUpdateFunction` creates a `CompletionIterator` that executes a completion function (aka `completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests `StateStore` to link:spark-sql-streaming-StateStore.adoc#commit[commit] followed by updating `numTotalStateRows` metric with the link:spark-sql-streaming-StateStore.adoc#numKeys[number of keys in the state store].
-
-=== [[creating-instance]] Creating FlatMapGroupsWithStateExec Instance
-
-`FlatMapGroupsWithStateExec` takes the following to be created:
-
-* [[func]] State function (`(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
-* [[keyDeserializer]] Key deserializer expression
-* [[valueDeserializer]] Value deserializer expression
-* [[groupingAttributes]] Grouping attributes (as used for grouping in link:spark-sql-streaming-KeyValueGroupedDataset.adoc#groupingAttributes[KeyValueGroupedDataset] for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
-* [[dataAttributes]] Data attributes
-* [[outputObjAttr]] Output object attribute (that is the reference to the single object field this operator outputs)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
-* [[stateEncoder]] State encoder (`ExpressionEncoder[Any]`)
-* [[stateFormatVersion]] State format version
-* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
-* [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
-* [[batchTimestampMs]] `batchTimestampMs`
-* [[eventTimeWatermark]] Optional event time watermark
-* [[child]] Child physical operator
-
-`FlatMapGroupsWithStateExec` initializes the <<internal-properties, internal properties>>.
 
 === [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
 

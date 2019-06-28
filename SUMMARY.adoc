@@ -6,6 +6,21 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
+== Demos
+
+. link:spark-sql-streaming-demo-FlatMapGroupsWithStateExec.adoc[Demo: The Internals of FlatMapGroupsWithStateExec Physical Operator]
+. link:spark-sql-streaming-demo-exploring-checkpointed-state.adoc[Demo: Exploring Checkpointed State]
+. link:spark-sql-streaming-demo-watermark-aggregation-append.adoc[Demo: Streaming Watermark with Aggregation in Append Output Mode]
+. link:spark-sql-streaming-demo-groupBy-running-count-complete.adoc[Demo: Streaming Query for Running Counts (Socket Source and Complete Output Mode)]
+. link:spark-sql-streaming-demo-join-stream-stream-StreamingSymmetricHashJoinExec.adoc[Demo: Streaming Join of Streaming Queries and StreamingSymmetricHashJoinExec Physical Operator]
+. link:spark-sql-streaming-demo-kafka-data-source.adoc[Demo: Streaming Aggregation with Kafka Data Source]
+. link:spark-sql-streaming-demo-groupByKey-count-Update.adoc[Demo: groupByKey Streaming Aggregation in Update Mode]
+. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
+. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
+. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
+. link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
+. link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
+
 == Streaming Watermark
 
 . link:spark-sql-streaming-watermark.adoc[Streaming Watermark]
@@ -120,20 +135,6 @@
 . link:spark-sql-streaming-webui.adoc[Web UI]
 
 . link:spark-sql-streaming-logging.adoc[Logging]
-
-== Demos
-
-. link:spark-sql-streaming-demo-exploring-checkpointed-state.adoc[Demo: Exploring Checkpointed State]
-. link:spark-sql-streaming-demo-watermark-aggregation-append.adoc[Demo: Streaming Watermark with Aggregation in Append Output Mode]
-. link:spark-sql-streaming-demo-groupBy-running-count-complete.adoc[Demo: Streaming Query for Running Counts (Socket Source and Complete Output Mode)]
-. link:spark-sql-streaming-demo-join-stream-stream-StreamingSymmetricHashJoinExec.adoc[Demo: Streaming Join of Streaming Queries and StreamingSymmetricHashJoinExec Physical Operator]
-. link:spark-sql-streaming-demo-kafka-data-source.adoc[Demo: Streaming Aggregation with Kafka Data Source]
-. link:spark-sql-streaming-demo-groupByKey-count-Update.adoc[Demo: groupByKey Streaming Aggregation in Update Mode]
-. link:spark-sql-streaming-StateStoreSaveExec-Complete.adoc[Demo: StateStoreSaveExec with Complete Output Mode]
-. link:spark-sql-streaming-StateStoreSaveExec-Update.adoc[Demo: StateStoreSaveExec with Update Output Mode]
-. link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
-. link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
-. link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
 
 == Extending Structured Streaming
 
