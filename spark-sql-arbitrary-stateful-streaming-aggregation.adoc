@@ -1,0 +1,7 @@
+== Arbitrary Stateful Streaming Aggregation
+
+*Arbitrary Stateful Streaming Aggregation* is a streaming aggregation query that uses the following `KeyValueGroupedDataset` operators:
+
+* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>> for implicit state logic
+
+* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> for explicit state logic

@@ -2,15 +2,17 @@
 
 [source, scala]
 ----
-flatMapGroupsWithState[S: Encoder, U: Encoder](
+KeyValueGroupedDataset[K, V].flatMapGroupsWithState[S: Encoder, U: Encoder](
   outputMode: OutputMode,
   timeoutConf: GroupStateTimeout)(
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ----
 
-NOTE: `flatMapGroupsWithState` requires link:spark-sql-streaming-OutputMode.adoc#Append[Append] or link:spark-sql-streaming-OutputMode.adoc#Update[Update] output modes.
+`flatMapGroupsWithState` operator is used for <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation (with Explicit State Logic)>>.
 
-NOTE: Every time the state function `func` is executed for a key, the state (as `GroupState[S]`) is for this key only.
+`flatMapGroupsWithState` requires that the output mode is either <<spark-sql-streaming-OutputMode.adoc#Append, Append>> or <<spark-sql-streaming-OutputMode.adoc#Update, Update>>.
+
+Every time the state function `func` is executed for a key, the state (as `GroupState[S]`) is for this key only.
 
 CAUTION: FIXME Why can't `flatMapGroupsWithState` work with Complete output mode?
 

@@ -24,9 +24,9 @@ The goal of Spark Structured Streaming is to unify streaming, interactive, and b
 
 * <<spark-sql-streaming-watermark.adoc#, Streaming Watermark>>
 
-* <<spark-sql-streaming-stateful-stream-processing.adoc#, Stateful Stream Processing>>
+* <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, Arbitrary Stateful Streaming Aggregations>>
+* <<spark-sql-streaming-stateful-stream-processing.adoc#, Stateful Stream Processing>>
 
 In Structured Streaming, Spark developers describe custom streaming computations in the same way as with Spark SQL. Internally, Structured Streaming applies the user-defined structured query to the continuously and indefinitely arriving data to analyze real-time streaming data.
 

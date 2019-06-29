@@ -21,6 +21,10 @@
 . link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
 . link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
 
+== Arbitrary Stateful Streaming Aggregation
+
+. link:spark-sql-arbitrary-stateful-streaming-aggregation.adoc[Arbitrary Stateful Streaming Aggregation]
+
 == Streaming Watermark
 
 . link:spark-sql-streaming-watermark.adoc[Streaming Watermark]
