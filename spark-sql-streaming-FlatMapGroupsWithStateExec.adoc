@@ -15,7 +15,7 @@ NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState
 
 `FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator with the <<outputObjAttr, output object attribute>>.
 
-TIP: Check out <<spark-sql-streaming-demo-FlatMapGroupsWithStateExec.adoc#, Demo: The Internals of FlatMapGroupsWithStateExec Physical Operator>>.
+TIP: Check out <<spark-sql-streaming-demo-FlatMapGroupsWithStateExec.adoc#, Demo: Internals of FlatMapGroupsWithStateExec Physical Operator>>.
 
 [[logging]]
 [TIP]

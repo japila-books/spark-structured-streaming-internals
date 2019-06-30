@@ -1,6 +1,6 @@
-== Demo: The Internals of FlatMapGroupsWithStateExec Physical Operator
+== Demo: Internals of FlatMapGroupsWithStateExec Physical Operator
 
-The following demo shows the internals of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator in a <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful streaming query>>.
+The following demo shows the internals of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator in a <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>.
 
 [source, scala]
 ----
