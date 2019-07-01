@@ -103,7 +103,7 @@ setTimeoutDuration(durationMs: Long): Unit
 setTimeoutDuration(duration: String): Unit
 ----
 
-Sets the timeout duration for this state key (in millis or as a string, e.g. "10 seconds", "1 hour").
+Specifies the *timeout duration* for the state key (in millis or as a string, e.g. "10 seconds", "1 hour") for <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, GroupStateTimeout.ProcessingTimeTimeout>>
 
 | setTimeoutTimestamp
 a| [[setTimeoutTimestamp]]
@@ -120,7 +120,7 @@ setTimeoutTimestamp(
   additionalDuration: String): Unit
 ----
 
-Throws a `UnsupportedOperationException` when used with no <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>>
+Specifies the *timeout timestamp* for the state key for <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>>
 
 | update
 a| [[update]]
@@ -130,6 +130,6 @@ a| [[update]]
 update(newState: S): Unit
 ----
 
-Sets the state to a new value
+Updates the state (sets the state to a new value)
 
 |===

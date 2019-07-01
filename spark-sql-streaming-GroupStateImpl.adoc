@@ -64,6 +64,50 @@ NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11
 
 `toString`...FIXME
 
+=== [[setTimeoutDuration]] Specifying Timeout Duration for ProcessingTimeTimeout -- `setTimeoutDuration` Method
+
+[source, scala]
+----
+setTimeoutDuration(durationMs: Long): Unit
+----
+
+NOTE: `setTimeoutDuration` is part of the <<spark-sql-streaming-GroupState.adoc#setTimeoutDuration, GroupState Contract>> to specify timeout duration for the state key (in millis or as a string).
+
+`setTimeoutDuration`...FIXME
+
+=== [[setTimeoutTimestamp]] Specifying Timeout Timestamp for EventTimeTimeout -- `setTimeoutTimestamp` Method
+
+[source, scala]
+----
+setTimeoutTimestamp(durationMs: Long): Unit
+----
+
+NOTE: `setTimeoutTimestamp` is part of the <<spark-sql-streaming-GroupState.adoc#setTimeoutTimestamp, GroupState Contract>> to specify timeout timestamp for the state key.
+
+`setTimeoutTimestamp`...FIXME
+
+=== [[update]] Updating State -- `update` Method
+
+[source, scala]
+----
+update(newValue: S): Unit
+----
+
+NOTE: `update` is part of the <<spark-sql-streaming-GroupState.adoc#update, GroupState Contract>> to update the state.
+
+`update`...FIXME
+
+=== [[remove]] Removing State -- `remove` Method
+
+[source, scala]
+----
+remove(): Unit
+----
+
+NOTE: `remove` is part of the <<spark-sql-streaming-GroupState.adoc#remove, GroupState Contract>> to remove the state.
+
+`remove`...FIXME
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -82,24 +126,27 @@ a| [[defined]] FIXME
 Used when...FIXME
 
 | updated
-a| [[updated]] FIXME
+a| [[updated]][[hasUpdated]] *Updated flag* that says whether the state has been <<update, updated>> or not
 
 Default: `false`
 
-Used when...FIXME
+Disabled (`false`) when `GroupStateImpl` is requested to <<remove, remove the state>>
+
+Enabled (`true`) when `GroupStateImpl` is requested to <<update, update the state>>
 
 | removed
-a| [[removed]] FIXME
+a| [[removed]][[hasRemoved]] *Removed flag* that says whether the state is marked <<remove, removed>> or not
 
 Default: `false`
 
-Used when...FIXME
+Disabled (`false`) when `GroupStateImpl` is requested to <<update, update the state>>
+
+Enabled (`true`) when `GroupStateImpl` is requested to <<remove, remove the state>>
 
 | timeoutTimestamp
-a| [[timeoutTimestamp]] FIXME
+a| [[timeoutTimestamp]][[getTimeoutTimestamp]] Current *timeout timestamp* (in millis) for <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>> or <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, GroupStateTimeout.ProcessingTimeTimeout>>
 
 [[NO_TIMESTAMP]] Default: `-1`
 
-Used when...FIXME
-
+Defined using <<setTimeoutTimestamp, setTimeoutTimestamp>> (for `EventTimeTimeout`) and <<setTimeoutDuration, setTimeoutDuration>> (for `ProcessingTimeTimeout`)
 |===

@@ -39,7 +39,7 @@ callFunctionAndUpdateState(
   hasTimedOut: Boolean): Iterator[InternalRow]
 ----
 
-`callFunctionAndUpdateState` creates a key object by requesting the given `StateData` for the `UnsafeRow` of the key and converts it to an object (using the internal <<getKeyObj, state key converter>>).
+`callFunctionAndUpdateState` creates a key object by requesting the given `StateData` for the `UnsafeRow` of the key (_keyRow_) and converts it to an object (using the internal <<getKeyObj, state key converter>>).
 
 `callFunctionAndUpdateState` creates value objects by taking every value row (from the given `valueRowIter` iterator) and converts them to objects (using the internal <<getValueObj, state value converter>>).
 
@@ -61,20 +61,34 @@ callFunctionAndUpdateState(
 
 For every output value from the user-defined state function, `callFunctionAndUpdateState` updates <<numOutputRows, numOutputRows>> performance metric and wraps the values to an internal row (using the internal <<getOutputRow, output value converter>>).
 
-In the end, `callFunctionAndUpdateState` returns a `Iterator[InternalRow]` which calls the <<onIteratorCompletion, completion function>> once all rows have been consumed (_processed_).
+In the end, `callFunctionAndUpdateState` returns a `Iterator[InternalRow]` which calls the <<onIteratorCompletion, completion function>> right after rows have been processed (so the iterator is considered fully consumed).
 
 NOTE: `callFunctionAndUpdateState` is used when `InputProcessor` is requested to <<processNewData, processNewData>> and <<processTimedOutState, processTimedOutState>>.
 
-==== [[onIteratorCompletion]] "All Rows Consumed" Callback -- `onIteratorCompletion` Internal Method
+==== [[onIteratorCompletion]] "All Rows Processed" Callback -- `onIteratorCompletion` Internal Method
 
 [source, scala]
 ----
 onIteratorCompletion: Unit
 ----
 
-`onIteratorCompletion`...FIXME
+`onIteratorCompletion` branches off per whether the `GroupStateImpl` has been marked <<spark-sql-streaming-GroupStateImpl.adoc#hasRemoved, removed>> and no <<spark-sql-streaming-GroupStateImpl.adoc#getTimeoutTimestamp, timeout timestamp>> is specified or not.
 
-NOTE: `onIteratorCompletion` is used when...FIXME
+When the `GroupStateImpl` has been marked <<spark-sql-streaming-GroupStateImpl.adoc#hasRemoved, removed>> and no <<spark-sql-streaming-GroupStateImpl.adoc#getTimeoutTimestamp, timeout timestamp>> is specified, `onIteratorCompletion` does the following:
+
+. Requests the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, StateManager>> (of the parent `FlatMapGroupsWithStateExec` operator) to <<spark-sql-streaming-StateManager.adoc#removeState, remove the state>> (from the <<store, StateStore>> for the key row of the given `StateData`)
+
+. Increments the <<numUpdatedStateRows, numUpdatedStateRows>> performance metric
+
+Otherwise, when the `GroupStateImpl` has not been marked <<spark-sql-streaming-GroupStateImpl.adoc#hasRemoved, removed>> or the <<spark-sql-streaming-GroupStateImpl.adoc#getTimeoutTimestamp, timeout timestamp>> is specified, `onIteratorCompletion` checks whether the timeout timestamp has changed by comparing the timeout timestamps of the <<spark-sql-streaming-GroupStateImpl.adoc#getTimeoutTimestamp, GroupStateImpl>> and the given `StateData`.
+
+(only when the `GroupStateImpl` has been <<spark-sql-streaming-GroupStateImpl.adoc#hasUpdated, updated>>, <<spark-sql-streaming-GroupStateImpl.adoc#hasRemoved, removed>> or the timeout timestamp changed) `onIteratorCompletion` does the following:
+
+. Requests the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, StateManager>> (of the parent `FlatMapGroupsWithStateExec` operator) to <<spark-sql-streaming-StateManager.adoc#putState, persist the state>> (in the <<store, StateStore>> with the key row, updated state object, and the timeout timestamp of the given `StateData`)
+
+. Increments the <<numUpdatedStateRows, numUpdatedStateRows>> performance metrics
+
+NOTE: `onIteratorCompletion` is used exclusively when `InputProcessor` is requested to <<callFunctionAndUpdateState, callFunctionAndUpdateState>> (right after rows have been processed)
 
 === [[internal-properties]] Internal Properties
 

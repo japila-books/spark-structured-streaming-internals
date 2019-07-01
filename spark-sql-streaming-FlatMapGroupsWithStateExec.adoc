@@ -157,7 +157,7 @@ NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWri
 | [[stateDeserializer]]
 
 | stateManager
-| [[stateManager]]
+| [[stateManager]] <<spark-sql-streaming-StateManager.adoc#, StateManager>>
 
 | stateSerializer
 | [[stateSerializer]]
