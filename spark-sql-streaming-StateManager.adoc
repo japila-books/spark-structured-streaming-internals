@@ -1,3 +1,89 @@
-== [[StateManager]] StateManager
+== [[StateManager]] StateManager Contract -- State Managers for Arbitrary Stateful Streaming Aggregation
 
-`StateManager` is...FIXME
+`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.adoc#, state stores>> and the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator used in <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>.
+
+[[contract]]
+.StateManager Contract
+[cols="30m,70",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| getAllState
+a| [[getAllState]]
+
+[source, scala]
+----
+getAllState(store: StateStore): Iterator[StateData]
+----
+
+Retrieves all the available state data (for all group keys) from the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+
+Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processTimedOutState>>
+
+| getState
+a| [[getState]]
+
+[source, scala]
+----
+getState(
+  store: StateStore,
+  keyRow: UnsafeRow): StateData
+----
+
+Gets the state data for the given key from the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+
+Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processNewData, processNewData>>
+
+| putState
+a| [[putState]]
+
+[source, scala]
+----
+putState(
+  store: StateStore,
+  keyRow: UnsafeRow,
+  state: Any,
+  timeoutTimestamp: Long): Unit
+----
+
+Persists the state under the given key in the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+
+Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> (<<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, right after all rows have been processed>>)
+
+| removeState
+a| [[removeState]]
+
+[source, scala]
+----
+removeState(
+  store: StateStore,
+  keyRow: UnsafeRow): Unit
+----
+
+Removes the state for the given key in the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+
+Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> (<<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, right after all rows have been processed>>)
+
+| stateSchema
+a| [[stateSchema]]
+
+[source, scala]
+----
+stateSchema: StructType
+----
+
+Schema of the state
+
+Used when:
+
+* `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>
+
+* `StateManagerImplBase` is requested for the <<spark-sql-streaming-StateManagerImplBase.adoc#stateDeserializerFunc, stateDeserializerFunc>>
+
+|===
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-StateManagerImplBase.adoc#, StateManagerImplBase>> is the one and only known direct implementation of the <<contract, StateManager Contract>> in Spark Structured Streaming.
+
+NOTE: `StateManager` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).

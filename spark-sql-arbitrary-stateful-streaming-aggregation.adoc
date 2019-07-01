@@ -10,4 +10,6 @@
 
 === [[internals]] Internals
 
-The most important execution step (in any streaming query with an arbitrary stateful streaming aggregation) is when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> which simply executes the *user-defined state function* (of the parent <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator) on a key object, value objects, and a newly-created <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>>.
+The most important execution step is when `InputProcessor` (of the parent <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator) is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> which executes the *user-defined state function* on a per-group state key object, value objects, and a <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>>.
+
+`FlatMapGroupsWithStateExec` physical operator uses <<spark-sql-streaming-StateManager.adoc#, state managers>> that are different than <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, state managers>> for <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>.

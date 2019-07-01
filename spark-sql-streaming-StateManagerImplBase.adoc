@@ -1,0 +1,3 @@
+== [[StateManagerImplBase]] StateManagerImplBase
+
+`StateManagerImplBase` is...FIXME

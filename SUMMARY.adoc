@@ -16,7 +16,9 @@
 . link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
 . link:spark-sql-streaming-StateManager.adoc[StateManager]
+.. link:spark-sql-streaming-StateManagerImplBase.adoc[StateManagerImplBase]
 
+. link:spark-sql-streaming-FlatMapGroupsWithStateExecHelper.adoc[FlatMapGroupsWithStateExecHelper Helper Class]
 . link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]
 
 == Demos

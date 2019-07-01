@@ -1,6 +1,6 @@
 == [[StreamingAggregationStateManager]] StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation
 
-`StreamingAggregationStateManager` is the <<contract, contract>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.adoc#, state stores>> and the physical operators used in streaming aggregations (<<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>).
+`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.adoc#, state stores>> and the physical operators used in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>> (e.g. <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>).
 
 [[contract]]
 .StreamingAggregationStateManager Contract
