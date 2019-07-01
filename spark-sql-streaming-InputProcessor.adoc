@@ -1,11 +1,11 @@
 == [[InputProcessor]] InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator
 
-`InputProcessor` is a helper class to manage the state store of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
+`InputProcessor` is a helper class to manage per-group state in the <<store, per-partition state store>> of a <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
 
-`InputProcessor` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and uses `InputProcessor` for the storeUpdateFunction while mapping over partitions with a state store).
+`InputProcessor` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and uses `InputProcessor` for the `storeUpdateFunction` while processing rows per partition with a corresponding per-partition state store).
 
 [[creating-instance]][[store]]
-`InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> to be created.
+`InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> to be created. The `StateStore` manages the per-group state (and is used when <<processNewData, processNewData>>, <<processTimedOutState, processTimedOutState>>, and <<onIteratorCompletion, onIteratorCompletion>>).
 
 === [[processNewData]] `processNewData` Method
 
@@ -14,9 +14,11 @@
 processNewData(dataIter: Iterator[InternalRow]): Iterator[InternalRow]
 ----
 
-`processNewData`...FIXME
+`processNewData` creates a grouped iterator of (of pairs of) per-group state keys and the row values from the given data iterator (`dataIter`) with the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#groupingAttributes, grouping attributes>> and the output schema of the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#child, child operator>> (of the parent `FlatMapGroupsWithStateExec` physical operator).
 
-NOTE: `processNewData` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
+For every per-group state key (in the grouped iterator), `processNewData` requests the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, StateManager>> (of the parent `FlatMapGroupsWithStateExec` physical operator) to <<spark-sql-streaming-StateManager.adoc#getState, get the state>> (from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>) and <<callFunctionAndUpdateState, callFunctionAndUpdateState>> (with the `hasTimedOut` flag off).
+
+NOTE: `processNewData` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
 
 === [[processTimedOutState]] `processTimedOutState` Method
 
