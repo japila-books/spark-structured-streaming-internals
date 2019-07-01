@@ -46,7 +46,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[stateFormatVersion]] State format version
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
 * [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
-* [[batchTimestampMs]] `batchTimestampMs`
+* [[batchTimestampMs]] Timeout threshold (`batchTimestampMs`)
 * [[eventTimeWatermark]] Event-time watermark
 * [[child]] Child physical operator
 
@@ -148,7 +148,13 @@ NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWri
 | Description
 
 | isTimeoutEnabled
-| [[isTimeoutEnabled]]
+| [[isTimeoutEnabled]] Flag that says whether the <<timeoutConf, GroupStateTimeout>> is not <<spark-sql-streaming-GroupStateTimeout.adoc#NoTimeout, NoTimeout>>
+
+Used when:
+
+* `FlatMapGroupsWithStateExec` is created (and creates the internal <<stateManager, StateManager>>)
+
+* `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processTimedOutState>>
 
 | stateAttributes
 | [[stateAttributes]]
