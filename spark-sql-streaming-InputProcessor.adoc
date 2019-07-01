@@ -4,8 +4,8 @@
 
 `InputProcessor` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>> (and uses `InputProcessor` for the storeUpdateFunction while mapping over partitions with a state store).
 
-[[store]]
-`InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> when created.
+[[creating-instance]][[store]]
+`InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> to be created.
 
 === [[processNewData]] `processNewData` Method
 
@@ -39,6 +39,76 @@ callFunctionAndUpdateState(
   hasTimedOut: Boolean): Iterator[InternalRow]
 ----
 
-`callFunctionAndUpdateState`...FIXME
+`callFunctionAndUpdateState` creates a key object by requesting the given `StateData` for the `UnsafeRow` of the key and converts it to an object (using the internal <<getKeyObj, state key converter>>).
+
+`callFunctionAndUpdateState` creates value objects by taking every value row (from the given `valueRowIter` iterator) and converts them to objects (using the internal <<getValueObj, state value converter>>).
+
+`callFunctionAndUpdateState` <<spark-sql-streaming-GroupStateImpl.adoc#createForStreaming, creates a new GroupStateImpl>> with the following:
+
+* The current state value (of the given `StateData`) that could possibly be `null`
+
+* The <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#batchTimestampMs, batchTimestampMs>> of the parent `FlatMapGroupsWithStateExec` operator (that could possibly be <<spark-sql-streaming-GroupStateImpl.adoc#NO_TIMESTAMP, -1>>)
+
+* The <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#eventTimeWatermark, event-time watermark>> of the parent `FlatMapGroupsWithStateExec` operator (that could possibly be <<spark-sql-streaming-GroupStateImpl.adoc#NO_TIMESTAMP, -1>>)
+
+* The <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#timeoutConf, GroupStateTimeout>> of the parent `FlatMapGroupsWithStateExec` operator
+
+* The <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#watermarkPresent, watermarkPresent>> flag of the parent `FlatMapGroupsWithStateExec` operator
+
+* The given `hasTimedOut` flag
+
+`callFunctionAndUpdateState` then executes the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#func, user-defined state function>> (of the parent `FlatMapGroupsWithStateExec` operator) on the key object, value objects, and the newly-created `GroupStateImpl`.
+
+For every output value from the user-defined state function, `callFunctionAndUpdateState` updates <<numOutputRows, numOutputRows>> performance metric and wraps the values to an internal row (using the internal <<getOutputRow, output value converter>>).
+
+In the end, `callFunctionAndUpdateState` returns a `Iterator[InternalRow]` which calls the <<onIteratorCompletion, completion function>> once all rows have been consumed (_processed_).
 
 NOTE: `callFunctionAndUpdateState` is used when `InputProcessor` is requested to <<processNewData, processNewData>> and <<processTimedOutState, processTimedOutState>>.
+
+==== [[onIteratorCompletion]] "All Rows Consumed" Callback -- `onIteratorCompletion` Internal Method
+
+[source, scala]
+----
+onIteratorCompletion: Unit
+----
+
+`onIteratorCompletion`...FIXME
+
+NOTE: `onIteratorCompletion` is used when...FIXME
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| getKeyObj
+a| [[getKeyObj]] A *state key converter* (of type `InternalRow => Any`) to deserialize a given row (for a per-group state key) to the current state value
+
+* The deserialization expression for keys is specified as the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#keyDeserializer, key deserializer expression>> when the parent `FlatMapGroupsWithStateExec` operator is created
+
+* The data type of state keys is specified as the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#groupingAttributes, grouping attributes>> when the parent `FlatMapGroupsWithStateExec` operator is created
+
+Used exclusively when `InputProcessor` is requested to <<callFunctionAndUpdateState, callFunctionAndUpdateState>>.
+
+| getOutputRow
+a| [[getOutputRow]] A *output value converter* (of type `Any => InternalRow`) to wrap a given output value (from the user-defined state function) to a row
+
+* The data type of the row is specified as the data type of the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#outputObjAttr, output object attribute>> when the parent `FlatMapGroupsWithStateExec` operator is created
+
+Used exclusively when `InputProcessor` is requested to <<callFunctionAndUpdateState, callFunctionAndUpdateState>>.
+
+| getValueObj
+a| [[getValueObj]] A *state value converter* (of type `InternalRow => Any`) to deserialize a given row (for a per-group state value) to the current state value
+
+* The deserialization expression for value is specified as the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#valueDeserializer, value deserializer expression>> when the parent `FlatMapGroupsWithStateExec` operator is created
+
+* The data type of state values is specified as the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#dataAttributes, data attributes>> when the parent `FlatMapGroupsWithStateExec` operator is created
+
+Used exclusively when `InputProcessor` is requested to <<callFunctionAndUpdateState, callFunctionAndUpdateState>>.
+
+| numOutputRows
+a| [[numOutputRows]] `numOutputRows` performance metric
+
+|===

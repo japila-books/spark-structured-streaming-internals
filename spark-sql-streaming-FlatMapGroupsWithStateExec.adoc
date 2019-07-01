@@ -35,7 +35,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 `FlatMapGroupsWithStateExec` takes the following to be created:
 
-* [[func]] State function (`(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
+* [[func]] *User-defined state function* that is applied to every group (of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
 * [[keyDeserializer]] Key deserializer expression
 * [[valueDeserializer]] Value deserializer expression
 * [[groupingAttributes]] Grouping attributes (as used for grouping in link:spark-sql-streaming-KeyValueGroupedDataset.adoc#groupingAttributes[KeyValueGroupedDataset] for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
@@ -47,7 +47,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
 * [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
 * [[batchTimestampMs]] `batchTimestampMs`
-* [[eventTimeWatermark]] Optional event time watermark
+* [[eventTimeWatermark]] Event-time watermark
 * [[child]] Child physical operator
 
 `FlatMapGroupsWithStateExec` initializes the <<internal-properties, internal properties>>.
@@ -168,5 +168,5 @@ NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWri
 | watermarkPresent
 | [[watermarkPresent]] Flag that says whether the <<child, child>> physical operator has a <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> (among the output attributes).
 
-Used exclusively when `InputProcessor` is requested to `callFunctionAndUpdateState`
+Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>>
 |===

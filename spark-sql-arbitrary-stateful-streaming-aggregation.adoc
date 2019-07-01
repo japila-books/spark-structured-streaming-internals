@@ -7,3 +7,7 @@
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> for explicit state logic
 
 `mapGroupsWithState` and `flatMapGroupsWithState` use <<spark-sql-streaming-GroupState.adoc#, GroupState>> as a *per-group streaming aggregation state*, i.e. created separately for every *group key* to hold a *state value* (of any type).
+
+=== [[internals]] Internals
+
+The most important execution step (in any streaming query with an arbitrary stateful streaming aggregation) is when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> which simply executes the *user-defined state function* (of the parent <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator) on a key object, value objects, and a newly-created <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>>.
