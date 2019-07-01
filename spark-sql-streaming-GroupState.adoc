@@ -1,59 +1,135 @@
-== [[GroupState]] GroupState -- State Per Group in Stateful Streaming Aggregation
+== [[GroupState]] GroupState -- Per-Group Streaming Aggregation State in Arbitrary Stateful Streaming Aggregation
 
-`GroupState` is the <<contract, contract>> for working with a state (of type `S`) per group for arbitrary stateful aggregation (using link:spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState[mapGroupsWithState] or link:spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState[flatMapGroupsWithState] operators).
+`GroupState` is an <<contract, abstraction>> of <<implementations, per-group streaming aggregation state>> (of any type `S`) for <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>> (using <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>> or <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> operators).
 
-NOTE: link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl] is the one and only implementation of `GroupState` available.
+`GroupState` is created separately for every *group key* to hold a state as a *per-group state value*.
 
-=== [[contract]] GroupState Contract
+[[implementations]]
+NOTE: <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>> is the default and only known implementation of the <<contract, GroupState Contract>> in Spark Structured Streaming.
 
-[source, scala]
-----
-package org.apache.spark.sql.streaming
-
-trait GroupState[S] extends LogicalGroupState[S] {
-  def exists: Boolean
-  def get: S
-  def getOption: Option[S]
-  def update(newState: S): Unit
-  def remove(): Unit
-  def hasTimedOut: Boolean
-  def setTimeoutDuration(durationMs: Long): Unit
-  def setTimeoutDuration(duration: String): Unit
-  def setTimeoutTimestamp(timestampMs: Long): Unit
-  def setTimeoutTimestamp(timestampMs: Long, additionalDuration: String): Unit
-  def setTimeoutTimestamp(timestamp: java.sql.Date): Unit
-  def setTimeoutTimestamp(timestamp: java.sql.Date, additionalDuration: String): Unit
-}
-----
-
+[[contract]]
 .GroupState Contract
-[cols="1,2",options="header",width="100%"]
+[cols="30m,70",options="header",width="100%"]
 |===
 | Method
 | Description
 
-| [[exists]] `exists`
-|
+| exists
+a| [[exists]]
 
-| [[get]] `get`
-| Gives the state
+[source, scala]
+----
+exists: Boolean
+----
 
-| [[getOption]] `getOption`
-| Gives the state as `Some(...)` if available or `None`
+Checks whether the state value exists or not
 
-| [[update]] `update`
-| Replaces the state with a new state (per group)
+If not exists, <<get, get>> throws a `NoSuchElementException`. Use <<getOption, getOption>> instead.
 
-| [[remove]] `remove`
-|
+| get
+a| [[get]]
 
-| [[hasTimedOut]] `hasTimedOut`
-|
+[source, scala]
+----
+get: S
+----
 
-| [[setTimeoutDuration]]
-|
+Gets the state value if it <<exists, exists>> or throws a `NoSuchElementException`
 
-| [[setTimeoutTimestamp]]
-|
+| getCurrentProcessingTimeMs
+a| [[getCurrentProcessingTimeMs]]
+
+[source, scala]
+----
+getCurrentProcessingTimeMs(): Long
+----
+
+Gets the current processing time (as milliseconds in epoch time)
+
+| getCurrentWatermarkMs
+a| [[getCurrentWatermarkMs]]
+
+[source, scala]
+----
+getCurrentWatermarkMs(): Long
+----
+
+Gets the current event time watermark (as milliseconds in epoch time)
+
+| getOption
+a| [[getOption]]
+
+[source, scala]
+----
+getOption: Option[S]
+----
+
+Gets the state value as a Scala `Option` (regardless whether it <<exists, exists>> or not)
+
+Used when:
+
+* `InputProcessor` is requested to `callFunctionAndUpdateState` (when the row iterator is consumed and a state value has been updated, removed or timeout changed)
+
+* `GroupStateImpl` is requested for the <<spark-sql-streaming-GroupStateImpl.adoc#toString, textual representation>>
+
+| hasTimedOut
+a| [[hasTimedOut]]
+
+[source, scala]
+----
+hasTimedOut: Boolean
+----
+
+Whether the state (for a given key) has timed out or not.
+
+Can only be `true` when timeouts are enabled using <<setTimeoutDuration, setTimeoutDuration>>
+
+| remove
+a| [[remove]]
+
+[source, scala]
+----
+remove(): Unit
+----
+
+Removes the state
+
+| setTimeoutDuration
+a| [[setTimeoutDuration]]
+
+[source, scala]
+----
+setTimeoutDuration(durationMs: Long): Unit
+setTimeoutDuration(duration: String): Unit
+----
+
+Sets the timeout duration for this state key (in millis or as a string, e.g. "10 seconds", "1 hour").
+
+| setTimeoutTimestamp
+a| [[setTimeoutTimestamp]]
+
+[source, scala]
+----
+setTimeoutTimestamp(timestamp: java.sql.Date): Unit
+setTimeoutTimestamp(
+  timestamp: java.sql.Date,
+  additionalDuration: String): Unit
+setTimeoutTimestamp(timestampMs: Long): Unit
+setTimeoutTimestamp(
+  timestampMs: Long,
+  additionalDuration: String): Unit
+----
+
+Throws a `UnsupportedOperationException` when used with no <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>>
+
+| update
+a| [[update]]
+
+[source, scala]
+----
+update(newState: S): Unit
+----
+
+Sets the state to a new value
 
 |===

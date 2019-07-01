@@ -6,7 +6,14 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
+== Arbitrary Stateful Streaming Aggregation
+
 . link:spark-sql-arbitrary-stateful-streaming-aggregation.adoc[Arbitrary Stateful Streaming Aggregation]
+
+. link:spark-sql-streaming-GroupState.adoc[GroupState]
+.. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
+
+. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
 == Demos
 
@@ -70,8 +77,6 @@
 
 . link:spark-sql-streaming-WatermarkSupport.adoc[WatermarkSupport]
 
-. link:spark-sql-streaming-GroupStateImpl.adoc[GroupStateImpl]
-
 . link:spark-sql-streaming-StatefulOperator.adoc[StatefulOperator]
 .. link:spark-sql-streaming-StateStoreReader.adoc[StateStoreReader]
 .. link:spark-sql-streaming-StateStoreWriter.adoc[StateStoreWriter]
@@ -109,9 +114,6 @@
 . link:spark-sql-streaming-KeyValueGroupedDataset.adoc[KeyValueGroupedDataset]
 .. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState Operator]
 .. link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState Operator]
-
-. link:spark-sql-streaming-GroupState.adoc[GroupState]
-.. link:spark-sql-streaming-GroupStateTimeout.adoc[GroupStateTimeout]
 
 . link:spark-sql-streaming-StreamingQueryManager.adoc[StreamingQueryManager]
 

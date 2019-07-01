@@ -5,3 +5,5 @@
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>> for implicit state logic
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> for explicit state logic
+
+`mapGroupsWithState` and `flatMapGroupsWithState` use <<spark-sql-streaming-GroupState.adoc#, GroupState>> as a *per-group streaming aggregation state*, i.e. created separately for every *group key* to hold a *state value* (of any type).
