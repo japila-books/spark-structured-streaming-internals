@@ -1,6 +1,6 @@
-== [[GroupState]] GroupState -- Per-Group Streaming Aggregation State in Arbitrary Stateful Streaming Aggregation
+== [[GroupState]] GroupState -- Per-Group State in Arbitrary Stateful Streaming Aggregation
 
-`GroupState` is an <<contract, abstraction>> of <<implementations, per-group streaming aggregation state>> (of any type `S`) for <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>> (using <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>> or <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> operators).
+`GroupState` is an <<contract, abstraction>> of <<implementations, per-group state>> (of any type `S`) for <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>> (using <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>> or <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> operators).
 
 `GroupState` is created separately for every *group key* to hold a state as a *per-group state value*.
 

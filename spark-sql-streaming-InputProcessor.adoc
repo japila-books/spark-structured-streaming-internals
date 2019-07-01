@@ -41,4 +41,4 @@ callFunctionAndUpdateState(
 
 `callFunctionAndUpdateState`...FIXME
 
-NOTE: `callFunctionAndUpdateState` is used exclusively when `InputProcessor` is requested to <<processNewData, processNewData>> and <<processTimedOutState, processTimedOutState>>.
+NOTE: `callFunctionAndUpdateState` is used when `InputProcessor` is requested to <<processNewData, processNewData>> and <<processTimedOutState, processTimedOutState>>.
