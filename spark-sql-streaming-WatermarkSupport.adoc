@@ -87,7 +87,7 @@ removeKeysOlderThanWatermark(store: StateStore): Unit
 
 `removeKeysOlderThanWatermark` then uses <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to link:spark-sql-streaming-StateStore.adoc#remove[remove matching rows from the store].
 
-NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StreamingDeduplicateExec` physical operator is <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, executed>>.
+NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StreamingDeduplicateExec` physical operator is requested to <<spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
 
 === [[removeKeysOlderThanWatermark-StreamingAggregationStateManager-store]] `removeKeysOlderThanWatermark` Method
 
@@ -100,4 +100,4 @@ removeKeysOlderThanWatermark(
 
 `removeKeysOlderThanWatermark`...FIXME
 
-NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StateStoreSaveExec` physical operator is <<spark-sql-streaming-StateStoreSaveExec.adoc#doExecute, executed>>.
+NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StateStoreSaveExec` physical operator is requested to <<spark-sql-streaming-StateStoreSaveExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.

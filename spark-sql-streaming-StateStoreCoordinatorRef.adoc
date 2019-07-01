@@ -40,7 +40,7 @@ Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-
 
 Used when:
 
-* `StateStoreAwareZipPartitionsRDD` is requested for the <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.adoc#getPreferredLocations, preferred locations of a partition>> (when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>>)
+* `StateStoreAwareZipPartitionsRDD` is requested for the <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.adoc#getPreferredLocations, preferred locations of a partition>> (when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>)
 
 * `StateStoreRDD` is requested for <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations for a task for a partition>>
 

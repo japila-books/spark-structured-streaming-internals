@@ -2,7 +2,7 @@
 
 `InputProcessor` is a helper class to manage the state store of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
 
-`InputProcessor` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>> (and uses `InputProcessor` for the storeUpdateFunction while mapping over partitions with a state store).
+`InputProcessor` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and uses `InputProcessor` for the storeUpdateFunction while mapping over partitions with a state store).
 
 [[creating-instance]][[store]]
 `InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> to be created.
@@ -16,7 +16,7 @@ processNewData(dataIter: Iterator[InternalRow]): Iterator[InternalRow]
 
 `processNewData`...FIXME
 
-NOTE: `processNewData` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>>.
+NOTE: `processNewData` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
 
 === [[processTimedOutState]] `processTimedOutState` Method
 
@@ -27,7 +27,7 @@ processTimedOutState(): Iterator[InternalRow]
 
 `processTimedOutState`...FIXME
 
-NOTE: `processTimedOutState` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, executed>>.
+NOTE: `processTimedOutState` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
 
 === [[callFunctionAndUpdateState]] `callFunctionAndUpdateState` Internal Method
 

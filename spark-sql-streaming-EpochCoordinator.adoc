@@ -46,7 +46,7 @@ a| `SetWriterPartitions`
 
 * [[SetWriterPartitions-numPartitions]] Number of partitions
 
-| [[SetWriterPartitions]] Sent out (in request-response synchronous mode) exclusively when `WriteToContinuousDataSourceExec` leaf physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, execute and generate an RDD>> (and requests a <<spark-sql-streaming-ContinuousWriteRDD.adoc#, ContinuousWriteRDD>> to collect that simply never finishes...and that's the _trick_ of continuous mode)
+| [[SetWriterPartitions]] Sent out (in request-response synchronous mode) exclusively when `WriteToContinuousDataSourceExec` leaf physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and requests a <<spark-sql-streaming-ContinuousWriteRDD.adoc#, ContinuousWriteRDD>> to collect that simply never finishes...and that's the _trick_ of continuous mode)
 
 a| `StopContinuousExecutionWrites`
 | [[StopContinuousExecutionWrites]] Sent out (in request-response synchronous mode) exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>> (and it finishes successfully or not)
