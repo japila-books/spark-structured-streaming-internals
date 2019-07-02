@@ -43,7 +43,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[outputObjAttr]] Output object attribute (that is the reference to the single object field this operator outputs)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
 * [[stateEncoder]] State encoder (`ExpressionEncoder[Any]`)
-* [[stateFormatVersion]] State format version
+* [[stateFormatVersion]] <<state-format-version, State format version>>
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
 * [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
 * [[batchTimestampMs]] Batch timeout threshold (`batchTimestampMs`)
@@ -51,6 +51,12 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[child]] Child physical operator
 
 `FlatMapGroupsWithStateExec` initializes the <<internal-properties, internal properties>>.
+
+=== [[state-format-version]] State Format Version
+
+When created, `FlatMapGroupsWithStateExec` is given the <<stateFormatVersion, state format version>> that is used exclusively to create the <<stateManager, StateManager>>.
+
+The state format version is based on <<spark-sql-streaming-properties.adoc#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>> internal configuration property (default: `2`).
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 
@@ -163,7 +169,9 @@ Used when:
 | [[stateDeserializer]]
 
 | stateManager
-| [[stateManager]] <<spark-sql-streaming-StateManager.adoc#, StateManager>>
+a| [[stateManager]] <<spark-sql-streaming-StateManager.adoc#, StateManager>> for the <<stateEncoder, state encoder>> and the <<isTimeoutEnabled, isTimeoutEnabled>> flag
+
+`StateManager` is created (<<spark-sql-streaming-FlatMapGroupsWithStateExecHelper.adoc#createStateManager, indirectly>>) based on the <<stateFormatVersion, stateFormatVersion>>
 
 | stateSerializer
 | [[stateSerializer]]

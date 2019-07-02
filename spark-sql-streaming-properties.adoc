@@ -60,7 +60,7 @@ Default: `(empty)`
 Use <<spark-sql-streaming-SQLConf.adoc#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
 
 | spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
-a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used by `flatMapGroupsWithState` operation in a streaming query.
+a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.adoc#, StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#state-format-version, FlatMapGroupsWithStateExec>> physical operator
 
 Default: `2`
 
@@ -68,6 +68,8 @@ Supported values:
 
 * `1`
 * `2`
+
+Among the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfs, checkpointed properties>> that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 
 | spark.sql.streaming.maxBatchesToRetainInMemory
 a| [[spark.sql.streaming.maxBatchesToRetainInMemory]] *(internal)* The maximum number of batches which will be retained in memory to avoid loading from files.

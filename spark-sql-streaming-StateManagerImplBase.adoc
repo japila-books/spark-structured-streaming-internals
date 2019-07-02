@@ -1,8 +1,8 @@
 == [[StateManagerImplBase]] StateManagerImplBase
 
-`StateManagerImplBase` is the <<contract, extension>> of the <<spark-sql-streaming-StateManager.adoc#, StateManager contract>> for <<implementations, state managers>> with the following features:
+`StateManagerImplBase` is the <<contract, extension>> of the <<spark-sql-streaming-StateManager.adoc#, StateManager contract>> for <<implementations, state managers>> of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator with the following features:
 
-* Use Spark SQL's Catalyst expressions for <<stateDeserializerExpr, state deserialization>> and <<stateSerializerExprs, state serialization>>
+* Use Catalyst expressions for <<stateSerializerExprs, state serialization>> and <<stateDeserializerExpr, deserialization>>
 
 * Use <<timeoutTimestampOrdinalInRow, timeoutTimestampOrdinalInRow>> when <<shouldStoreTimestamp, shouldStoreTimestamp>> with the <<shouldStoreTimestamp, shouldStoreTimestamp>> flag on
 
@@ -21,7 +21,7 @@ a| [[stateDeserializerExpr]]
 stateDeserializerExpr: Expression
 ----
 
-Catalyst expression to deserialize a state object from a row (`UnsafeRow`)
+*State deserializer*, i.e. a Catalyst expression to deserialize a state object from a row (`UnsafeRow`)
 
 Used exclusively for the <<stateDeserializerFunc, stateDeserializerFunc>>
 
@@ -33,7 +33,7 @@ a| [[stateSerializerExprs]]
 stateSerializerExprs: Seq[Expression]
 ----
 
-Catalyst expressions to serialize a state object to a row (`UnsafeRow`)
+*State serializer*, i.e. Catalyst expressions to serialize a state object to a row (`UnsafeRow`)
 
 Used exclusively for the <<stateSerializerFunc, stateSerializerFunc>>
 
@@ -59,10 +59,10 @@ Used when `StateManagerImplBase` is requested to <<getTimestamp, get>> and <<set
 | Description
 
 | <<spark-sql-streaming-StateManagerImplV1.adoc#, StateManagerImplV1>>
-| [[StateManagerImplV1]]
+| [[StateManagerImplV1]] Legacy <<spark-sql-streaming-StateManager.adoc#, StateManager>>
 
 | <<spark-sql-streaming-StateManagerImplV2.adoc#, StateManagerImplV2>>
-| [[StateManagerImplV2]]
+| [[StateManagerImplV2]] Default <<spark-sql-streaming-StateManager.adoc#, StateManager>>
 
 |===
 
