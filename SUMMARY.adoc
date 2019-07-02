@@ -17,6 +17,8 @@
 
 . link:spark-sql-streaming-StateManager.adoc[StateManager]
 .. link:spark-sql-streaming-StateManagerImplBase.adoc[StateManagerImplBase]
+.. link:spark-sql-streaming-StateManagerImplV1.adoc[StateManagerImplV1]
+.. link:spark-sql-streaming-StateManagerImplV2.adoc[StateManagerImplV2]
 
 . link:spark-sql-streaming-FlatMapGroupsWithStateExecHelper.adoc[FlatMapGroupsWithStateExecHelper Helper Class]
 . link:spark-sql-streaming-InputProcessor.adoc[InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator]

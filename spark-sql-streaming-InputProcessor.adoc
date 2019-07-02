@@ -133,9 +133,9 @@ a| [[getOutputRow]] A *output value converter* (of type `Any => InternalRow`) to
 Used exclusively when `InputProcessor` is requested to <<callFunctionAndUpdateState, callFunctionAndUpdateState>>.
 
 | getValueObj
-a| [[getValueObj]] A *state value converter* (of type `InternalRow => Any`) to deserialize a given row (for a per-group state value) to the current state value
+a| [[getValueObj]] A *state value converter* (of type `InternalRow => Any`) to deserialize a given row (for a per-group state value) to a Scala value
 
-* The deserialization expression for value is specified as the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#valueDeserializer, value deserializer expression>> when the parent `FlatMapGroupsWithStateExec` operator is created
+* The deserialization expression for values is specified as the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#valueDeserializer, value deserializer expression>> when the parent `FlatMapGroupsWithStateExec` operator is created
 
 * The data type of state values is specified as the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#dataAttributes, data attributes>> when the parent `FlatMapGroupsWithStateExec` operator is created
 

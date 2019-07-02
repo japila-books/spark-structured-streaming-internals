@@ -17,7 +17,7 @@ a| [[getAllState]]
 getAllState(store: StateStore): Iterator[StateData]
 ----
 
-Retrieves all the available state data (for all group keys) from the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+Retrieves all state data (for all keys) from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
 Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processTimedOutState>>
 
@@ -31,7 +31,7 @@ getState(
   keyRow: UnsafeRow): StateData
 ----
 
-Gets the state data for the given key from the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+Gets the state data for the key from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
 Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processNewData, processNewData>>
 
@@ -47,7 +47,7 @@ putState(
   timeoutTimestamp: Long): Unit
 ----
 
-Persists the state under the given key in the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+Persists (_puts_) the state value for the key in the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
 Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> (<<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, right after all rows have been processed>>)
 
@@ -61,7 +61,7 @@ removeState(
   keyRow: UnsafeRow): Unit
 ----
 
-Removes the state for the given key in the given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+Removes the state for the key from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
 Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> (<<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, right after all rows have been processed>>)
 
