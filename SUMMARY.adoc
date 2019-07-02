@@ -77,6 +77,7 @@
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
 
 . link:spark-sql-streaming-StateStoreId.adoc[StateStoreId]
+. link:spark-sql-streaming-StateStoreProviderId.adoc[StateStoreProviderId]
 
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef]

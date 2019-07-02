@@ -24,7 +24,7 @@ a| [[abort]]
 abort(): Unit
 ----
 
-Aborts (_discards_) the changes to the state store
+Aborts (_discards_) changes to the state store
 
 Used when:
 
@@ -104,7 +104,7 @@ a| [[hasCommitted]]
 hasCommitted: Boolean
 ----
 
-Returns whether all updates have been committed (`true`) or not (`false`)
+Returns whether all changes have been committed (`true`) or not (`false`)
 
 Used when:
 
