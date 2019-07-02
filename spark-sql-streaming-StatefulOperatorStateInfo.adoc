@@ -3,9 +3,9 @@
 [[creating-instance]]
 `StatefulOperatorStateInfo` identifies the state store for a given operator:
 
-* [[checkpointLocation]] Checkpoint directory
-* [[queryRunId]] `queryRunId`
-* [[operatorId]] `operatorId`
+* [[checkpointLocation]] Checkpoint directory (aka _checkpointLocation_)
+* [[queryRunId]] Run ID of a streaming query (`queryRunId`)
+* [[operatorId]] Stateful operator ID (`operatorId`)
 * [[storeVersion]] `storeVersion`
 * [[numPartitions]] Number of partitions
 

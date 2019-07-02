@@ -68,7 +68,7 @@ a| [[id]]
 id: UUID
 ----
 
-The unique identifier of the streaming query
+The unique identifier of the streaming query (that does not change across restarts unlike <<runId, runId>>)
 
 Used when...FIXME
 
@@ -138,7 +138,7 @@ a| [[runId]]
 runId: UUID
 ----
 
-The unique identifier of the current execution of the streaming query
+The unique identifier of the current execution of the streaming query (that is different every restart unlike <<id, id>>)
 
 Used when...FIXME
 

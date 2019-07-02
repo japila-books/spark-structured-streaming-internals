@@ -71,13 +71,12 @@
 . link:spark-sql-streaming-watermark.adoc[Streaming Watermark]
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
+.. link:spark-sql-streaming-StateStoreId.adoc[StateStoreId]
 .. link:spark-sql-streaming-HDFSBackedStateStore.adoc[HDFSBackedStateStore]
 
 . link:spark-sql-streaming-StateStoreProvider.adoc[StateStoreProvider]
+.. link:spark-sql-streaming-StateStoreProviderId.adoc[StateStoreProviderId]
 .. link:spark-sql-streaming-HDFSBackedStateStoreProvider.adoc[HDFSBackedStateStoreProvider]
-
-. link:spark-sql-streaming-StateStoreId.adoc[StateStoreId]
-. link:spark-sql-streaming-StateStoreProviderId.adoc[StateStoreProviderId]
 
 . link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 .. link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef]

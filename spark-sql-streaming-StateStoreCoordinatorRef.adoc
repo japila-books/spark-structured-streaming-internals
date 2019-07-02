@@ -36,7 +36,7 @@ getLocation(
   stateStoreProviderId: StateStoreProviderId): Option[String]
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#GetLocation, GetLocation>> synchronous message with the given `StateStoreProviderId` and waits for the location
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#GetLocation, GetLocation>> synchronous message with the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> and waits for the location
 
 Used when:
 
@@ -55,7 +55,7 @@ reportActiveInstance(
   executorId: String): Unit
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#ReportActiveInstance, ReportActiveInstance>> one-way asynchronous (fire-and-forget) message with the given `StateStoreProviderId`, `host` and `executorId`
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#ReportActiveInstance, ReportActiveInstance>> one-way asynchronous (fire-and-forget) message with the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>, `host` and `executorId`
 
 Used exclusively when `StateStore` helper object is requested for <<spark-sql-streaming-StateStore.adoc#reportActiveStoreInstance, reportActiveStoreInstance>> (when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, find the StateStore by StateStoreProviderId>>)
 
@@ -81,7 +81,7 @@ verifyIfInstanceActive(
   executorId: String): Boolean
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#VerifyIfInstanceActive, VerifyIfInstanceActive>> synchronous message with the given `StateStoreProviderId` and `executorId`, and waits for a `true` / `false` response
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#VerifyIfInstanceActive, VerifyIfInstanceActive>> synchronous message with the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> and `executorId`, and waits for a `true` / `false` response
 
 Used exclusively when `StateStore` helper object is requested for <<spark-sql-streaming-StateStore.adoc#verifyIfStoreInstanceActive, verifyIfStoreInstanceActive>> (when requested to <<spark-sql-streaming-StateStore.adoc#doMaintenance, doMaintenance>> from a running <<spark-sql-streaming-StateStore.adoc#MaintenanceTask, MaintenanceTask daemon thread>>)
 

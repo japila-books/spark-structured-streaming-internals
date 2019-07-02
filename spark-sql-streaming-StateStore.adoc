@@ -327,7 +327,7 @@ get(
   hadoopConf: Configuration): StateStore
 ----
 
-`get` finds `StateStore` for the given `StateStoreProviderId`.
+`get` finds `StateStore` for the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>.
 
 Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (for `storeProviderId`) in <<loadedProviders, loadedProviders>> registry. If unavailable, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
 
@@ -399,7 +399,7 @@ NOTE: `verifyIfStoreInstanceActive` is used exclusively when `StateStore` helper
 | Description
 
 | loadedProviders
-| [[loadedProviders]] Registry of <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProviders>> per `StateStoreProviderId`
+| [[loadedProviders]] *Loaded providers*, i.e. <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProviders>> per <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>
 
 Used in...FIXME
 

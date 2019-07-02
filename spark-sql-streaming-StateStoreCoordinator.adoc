@@ -17,7 +17,7 @@ The main purpose of `StateStoreCoordinator` is for `StateStoreRDD` to link:spark
 | Message Handler
 
 | DeactivateInstances
-a| [[DeactivateInstances]] Removes `StateStoreProviderIds` (from <<instances, instances>>) with `queryRunId` as `runId`
+a| [[DeactivateInstances]] Removes <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderIds>> (from <<instances, instances>>) with `queryRunId` as `runId`
 
 You should see the following DEBUG message in the logs:
 
@@ -26,7 +26,7 @@ Deactivating instances related to checkpoint location [runId]: [comma-separated 
 ```
 
 | GetLocation
-a| [[GetLocation]] Gives the location of `StateStoreProviderId` (from <<instances, instances>>) with the host and an executor id on that host.
+a| [[GetLocation]] Gives the location of <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> (from <<instances, instances>>) with the host and an executor id on that host.
 
 You should see the following DEBUG message in the logs:
 
@@ -35,7 +35,7 @@ Got location of the state store [id]: [executorId]
 ```
 
 | ReportActiveInstance
-a| [[ReportActiveInstance]] Registers `StateStoreProviderId` that is active on an executor (given host and port).
+a| [[ReportActiveInstance]] Registers <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> that is active on an executor (given host and port).
 
 You should see the following DEBUG message in the logs:
 
@@ -53,7 +53,7 @@ StateStoreCoordinator stopped
 ```
 
 | VerifyIfInstanceActive
-a| [[VerifyIfInstanceActive]] Verifies if `StateStoreProviderId` is registered (in <<instances, instances>>) on `executorId`
+a| [[VerifyIfInstanceActive]] Verifies if a given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> is registered (in <<instances, instances>>) on `executorId`
 
 You should see the following DEBUG message in the logs:
 

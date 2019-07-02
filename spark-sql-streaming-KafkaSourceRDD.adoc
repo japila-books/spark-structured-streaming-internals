@@ -7,7 +7,7 @@
 * `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[buildScan]
 * `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#getBatch[getBatch]
 
-=== [[getPreferredLocations]] `getPreferredLocations` Method
+=== [[getPreferredLocations]] Placement Preferences of Partition (Preferred Locations) -- `getPreferredLocations` Method
 
 CAUTION: FIXME
 

@@ -16,7 +16,7 @@
 * [[stateStoreNames]] Names of the <<spark-sql-streaming-StateStore.adoc#, state stores>>
 * [[storeCoordinator]] <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinatorRef>>
 
-=== [[getPreferredLocations]] Placement Preferences of Partition -- `getPreferredLocations` Method
+=== [[getPreferredLocations]] Placement Preferences of Partition (Preferred Locations) -- `getPreferredLocations` Method
 
 [source, scala]
 ----

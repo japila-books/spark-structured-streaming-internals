@@ -30,7 +30,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.WatermarkTracker=ALL
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
-=== [[apply]] `apply` Factory Method
+=== [[apply]] Creating WatermarkTracker -- `apply` Factory Method
 
 [source, scala]
 ----

@@ -91,7 +91,7 @@ abortIfNeeded(): Unit
 
 NOTE: `abortIfNeeded` is used when...FIXME
 
-=== [[getStateStore]] `getStateStore` Method
+=== [[getStateStore]] Looking Up StateStore -- `getStateStore` Method
 
 [source, scala]
 ----
