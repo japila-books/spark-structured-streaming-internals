@@ -35,17 +35,45 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
   // Let's use case class to make the demo a bit more advanced
   case class State(count: Long)
 
+  type AggregationKey = Long
+  type StateValue = Long
   import org.apache.spark.sql.streaming.GroupState
   def counter(
-      key: Long,
+      key: AggregationKey,
       values: Iterator[(Timestamp, Long)],
-      state: GroupState[State]): Iterator[(Long, State)] = {
-    println(s""">>> keyCounts(key = $key, state = ${state.getOption.getOrElse("<X>")})""")
-    println(s">>> >>> currentProcessingTimeMs: ${state.getCurrentProcessingTimeMs} ms")
-    println(s">>> >>> currentWatermarkMs: ${state.getCurrentWatermarkMs} ms")
+      state: GroupState[State]): Iterator[(AggregationKey, StateValue)] = {
+    val s = state.getOption.getOrElse("<undefined>")
+    val currentProcessingTimeMs = state.getCurrentProcessingTimeMs
+    val currentWatermarkMs = state.getCurrentWatermarkMs
+    println(s""">>> counter(key = $key, state = $s)""")
+    println(s">>> >>> Batch Processing Time = $currentProcessingTimeMs ms")
+    println(s">>> >>> currentWatermarkMs: $currentWatermarkMs ms")
     println(s">>> >>> hasTimedOut: ${state.hasTimedOut}")
-    val count = State(values.length)
-    Iterator((key, count))
+    val count = values.length
+    val result = if (state.exists && state.hasTimedOut) {
+      val s = state.get
+      println(s">>> counter: State expired for key=$key with count=${s.count}")
+      Iterator((key, s.count))
+    } else if (state.exists /** and not state.hasTimedOut */ ) {
+      val s = state.get
+      println(s">>> counter: Updating state for key=$key (current count=${s.count})")
+      val newState = State(s.count + count)
+      state.update(newState)
+      Iterator.empty
+    } else {
+      println(s">>> counter: Creating new state for key=$key with value=$count")
+      val newState = State(count)
+      state.update(newState)
+
+      // FIXME Why not simply setTimeoutDuration since it does the same calculation?!
+      val timeoutMs = state.getCurrentWatermarkMs + 1.second.toMillis
+      println(s">>> >>> timeout=$timeoutMs ms")
+      state.setTimeoutTimestamp(timeoutMs)
+
+      Iterator.empty
+    }
+    println("")
+    result
   }
 
   // FIXME Configurable from the command line
@@ -91,8 +119,8 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
   {
     val batch = Seq(
-      Event(secs = 1, value = 1), // under the watermark (5000 ms) so it's disregarded
-      Event(secs = 6, value = 3)) // above the watermark so it should be counted
+      Event(secs = 1, value = 1),
+      Event(secs = 6, value = 3))
     events.addData(batch)
     streamingQuery.processAllAvailable()
 
@@ -101,16 +129,7 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
   {
     val batch = Seq(
-      Event(secs = 17,  value = 3))  // advances the watermark
-    events.addData(batch)
-    streamingQuery.processAllAvailable()
-
-    spark.table(queryName).show(truncate = false)
-  }
-
-  {
-    val batch = Seq(
-      Event(secs = 18,  value = 3))  // advances the watermark
+      Event(secs = 200,  value = 3))
     events.addData(batch)
     streamingQuery.processAllAvailable()
 
