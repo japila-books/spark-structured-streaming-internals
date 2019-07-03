@@ -1,11 +1,14 @@
-== [[GroupState]] GroupState -- Per-Group State in Arbitrary Stateful Streaming Aggregation
+== [[GroupState]] GroupState -- Group State in Arbitrary Stateful Streaming Aggregation
 
-`GroupState` is an <<contract, abstraction>> of <<implementations, per-group state>> (of any type `S`) for <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>> (using <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>> or <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> operators).
+`GroupState` is an <<contract, abstraction>> of <<implementations, group state>> (of type `S`) for <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>.
 
-`GroupState` is created separately for every *group key* to hold a state as a *per-group state value*.
+`GroupState` is used with the following <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> operations:
 
-[[implementations]]
-NOTE: <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>> is the default and only known implementation of the <<contract, GroupState Contract>> in Spark Structured Streaming.
+* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>>
+
+* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>>
+
+`GroupState` is created separately for every *aggregation key* to hold a state as an *aggregation state value*.
 
 [[contract]]
 .GroupState Contract
@@ -133,3 +136,6 @@ update(newState: S): Unit
 Updates the state (sets the state to a new value)
 
 |===
+
+[[implementations]]
+NOTE: <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>> is the default and only known implementation of the <<contract, GroupState Contract>> in Spark Structured Streaming.

@@ -1,12 +1,14 @@
 == Arbitrary Stateful Streaming Aggregation
 
-*Arbitrary Stateful Streaming Aggregation* is a streaming aggregation query that uses the following `KeyValueGroupedDataset` operators:
+*Arbitrary Stateful Streaming Aggregation* is a streaming aggregation query that uses the following <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> operators:
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>> for implicit state logic
 
 * <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>> for explicit state logic
 
-`mapGroupsWithState` and `flatMapGroupsWithState` use <<spark-sql-streaming-GroupState.adoc#, GroupState>> as a *per-group streaming aggregation state*, i.e. created separately for every *group key* to hold a *state value* (of any type).
+`mapGroupsWithState` and `flatMapGroupsWithState` operators use <<spark-sql-streaming-GroupState.adoc#, GroupState>> as *group streaming aggregation state* that is created separately for every *aggregation key* with an *aggregation state value* (of a user-defined type).
+
+`mapGroupsWithState` and `flatMapGroupsWithState` operators use <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>> as an *aggregation state timeout* that defines when a <<spark-sql-streaming-GroupState.adoc#, GroupState>> can be considered *timed-out* (_expired_).
 
 === [[metrics]] Performance Metrics
 
