@@ -3,6 +3,7 @@
 . link:book-intro.adoc[Introduction]
 
 . link:spark-structured-streaming.adoc[Spark Structured Streaming and Streaming Queries]
+.. link:spark-structured-streaming-batch-processing-time.adoc[Batch Processing Time]
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
