@@ -6,15 +6,7 @@ package pl.japila.spark
   *
   * Use `nc -l 8888` to open a socket
   */
-object GroupbyAppendWatermarkExample extends App {
-
-  val appName = this.getClass.getSimpleName.replace("$", "")
-  val queryName = appName
-  val rootDir = "target"
-  val checkpointLocation = s"$rootDir/$queryName-checkpoint"
-  val numPartitions = 1
-  val master = "local[*]"
-  val warehouseDir = s"$rootDir/$queryName-warehouse"
+object GroupbyAppendWatermarkExample extends SparkStreamsApp {
 
   val source = "socket"
   val sink = "console"
@@ -24,16 +16,7 @@ object GroupbyAppendWatermarkExample extends App {
 
   val eventTimeCol = "eventTime"
 
-  import org.apache.spark.sql.SparkSession
-  val spark = SparkSession
-    .builder
-    .master(master)
-    .appName(appName)
-    .config("spark.sql.shuffle.partitions", numPartitions)
-    .config("spark.sql.warehouse.dir", warehouseDir)
-    .getOrCreate
   import spark.implicits._
-
   import org.apache.spark.sql.DataFrame
   val mytransform: DataFrame => DataFrame = { df =>
     import org.apache.spark.sql.functions._

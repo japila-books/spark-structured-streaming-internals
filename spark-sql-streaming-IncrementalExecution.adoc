@@ -104,7 +104,7 @@ Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlanner.html[SparkPlanner] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-=== [[state]] State Preparation Rule For Execution-Specific Configuration -- `state` Property
+=== [[state]] State Preparation Rule For Batch-Specific Configuration -- `state` Property
 
 [source, scala]
 ----
