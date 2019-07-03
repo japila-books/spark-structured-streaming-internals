@@ -43,7 +43,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[outputObjAttr]] Output object attribute (that is the reference to the single object field this operator outputs)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
 * [[stateEncoder]] State encoder (`ExpressionEncoder[Any]`)
-* [[stateFormatVersion]] <<state-format-version, State format version>>
+* [[stateFormatVersion]] State format version
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
 * [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
 * [[batchTimestampMs]] Batch timeout threshold (`batchTimestampMs`)
@@ -51,12 +51,6 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[child]] Child physical operator
 
 `FlatMapGroupsWithStateExec` initializes the <<internal-properties, internal properties>>.
-
-=== [[state-format-version]] State Format Version
-
-When created, `FlatMapGroupsWithStateExec` is given the <<stateFormatVersion, state format version>> that is used exclusively to create the <<stateManager, StateManager>>.
-
-The state format version is based on <<spark-sql-streaming-properties.adoc#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>> internal configuration property (default: `2`).
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 
@@ -96,6 +90,33 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Quer
 `IncrementalExecution` is used as the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, lastExecution>> of the available <<spark-sql-streaming-StreamExecution.adoc#extensions, streaming query execution engines>>. It is created in the *queryPlanning* phase (of the <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous-queryPlanning, ContinuousExecution>> execution engines) based on the current <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, OffsetSeqMetadata>>.
 
 NOTE: The <<eventTimeWatermark, optional event-time watermark>> can only be defined when the <<spark-sql-streaming-IncrementalExecution.adoc#state, state>> preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the *queryPlanning* phase.
+
+=== [[stateManager]] FlatMapGroupsWithStateExec and StateManager -- `stateManager` Property
+
+[source, scala]
+----
+stateManager: StateManager
+----
+
+While being created, `FlatMapGroupsWithStateExec` creates a <<spark-sql-streaming-StateManager.adoc#, StateManager>> (with the <<stateEncoder, state encoder>> and the <<isTimeoutEnabled, isTimeoutEnabled>> flag).
+
+A `StateManager` is <<spark-sql-streaming-FlatMapGroupsWithStateExecHelper.adoc#createStateManager, created>> per <<stateFormatVersion, state format version>> that is given while creating a `FlatMapGroupsWithStateExec` (to choose between the <<spark-sql-streaming-StateManagerImplBase.adoc#implementations, available implementations>>).
+
+The <<stateFormatVersion, state format version>> is controlled by <<spark-sql-streaming-properties.adoc#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>> internal configuration property (default: `2`).
+
+NOTE: <<spark-sql-streaming-StateManagerImplV2.adoc#, StateManagerImplV2>> is the default `StateManager`.
+
+The `StateManager` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<doExecute, executed>> (to generate a recipe for a distributed computation as an `RDD[InternalRow]`) for the following:
+
+* <<spark-sql-streaming-StateManager.adoc#stateSchema, State schema>> (for the <<spark-sql-streaming-StateStoreRDD.adoc#valueSchema, value schema>> of a <<spark-sql-streaming-StateStoreRDD.adoc#, StateStoreRDD>>)
+
+* <<spark-sql-streaming-StateManager.adoc#getState, State data for a key in a StateStore>> while <<spark-sql-streaming-InputProcessor.adoc#processNewData, processing new data>>
+
+* <<spark-sql-streaming-StateManager.adoc#getAllState, All state data (for all keys) in a StateStore>> while <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processing timed-out state data>>
+
+* <<spark-sql-streaming-StateManager.adoc#removeState, Removing the state for a key from a StateStore>> when <<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, all rows have been processed>>
+
+* <<spark-sql-streaming-StateManager.adoc#putState, Persisting the state for a key in a StateStore>> when <<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, all rows have been processed>>
 
 === [[keyExpressions]] `keyExpressions` Method
 
@@ -167,11 +188,6 @@ Used when:
 
 | stateDeserializer
 | [[stateDeserializer]]
-
-| stateManager
-a| [[stateManager]] <<spark-sql-streaming-StateManager.adoc#, StateManager>> for the <<stateEncoder, state encoder>> and the <<isTimeoutEnabled, isTimeoutEnabled>> flag
-
-`StateManager` is created (<<spark-sql-streaming-FlatMapGroupsWithStateExecHelper.adoc#createStateManager, indirectly>>) based on the <<stateFormatVersion, stateFormatVersion>>
 
 | stateSerializer
 | [[stateSerializer]]

@@ -60,7 +60,7 @@ Default: `(empty)`
 Use <<spark-sql-streaming-SQLConf.adoc#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
 
 | spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
-a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.adoc#, StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#state-format-version, FlatMapGroupsWithStateExec>> physical operator
+a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.adoc#, StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, FlatMapGroupsWithStateExec>> physical operator
 
 Default: `2`
 

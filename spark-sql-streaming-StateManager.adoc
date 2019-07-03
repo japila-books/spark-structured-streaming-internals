@@ -73,7 +73,9 @@ a| [[stateSchema]]
 stateSchema: StructType
 ----
 
-Schema of the state
+*State schema*
+
+NOTE: <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, It looks like>> (in <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, StateManager>> of the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator) `stateSchema` is used for the schema of state value objects (not state keys as they are described by the grouping attributes instead).
 
 Used when:
 

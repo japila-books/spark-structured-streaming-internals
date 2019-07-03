@@ -1,10 +1,6 @@
-== [[FlatMapGroupsWithStateExecHelper]] FlatMapGroupsWithStateExecHelper Helper Object
+== [[FlatMapGroupsWithStateExecHelper]] FlatMapGroupsWithStateExecHelper
 
-`FlatMapGroupsWithStateExecHelper` is a helper object that does the following:
-
-* <<createStateManager, Creates a StateManager>> (for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator)
-
-* FIXME: More?
+`FlatMapGroupsWithStateExecHelper` is a utility with the main purpose of <<createStateManager, creating a StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
 
 === [[createStateManager]] Creating StateManager -- `createStateManager` Method
 

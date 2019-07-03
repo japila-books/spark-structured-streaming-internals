@@ -63,13 +63,13 @@ NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 
 * [[dataRDD]] Data RDD (`RDD[T]` to update the aggregates in a state store)
 * [[storeUpdateFunction]] Store update function (`(StateStore, Iterator[T]) => Iterator[U]` where `T` is the type of rows in the <<dataRDD, data RDD>>)
-* [[checkpointLocation]] Path of the checkpoint location
+* [[checkpointLocation]] Checkpoint directory
 * [[queryRunId]] Run ID of the streaming query
 * [[operatorId]] Operator ID
 * [[storeVersion]] Version of the store
-* [[keySchema]] Schema of the keys
-* [[valueSchema]] Schema of the values
-* [[indexOrdinal]] Optional index
+* [[keySchema]] *Key schema* - schema of the keys
+* [[valueSchema]] *Value schema* - schema of the values
+* [[indexOrdinal]] Index
 * [[sessionState]] `SessionState`
 * [[storeCoordinator]] Optional <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinatorRef>>
 
