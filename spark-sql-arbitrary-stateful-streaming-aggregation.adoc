@@ -30,7 +30,7 @@ Arbitrary Stateful Streaming Aggregation uses *performance metrics* (of the <<sp
 
 One of the most important internal execution components of Arbitrary Stateful Streaming Aggregation is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
 
-When requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>, `FlatMapGroupsWithStateExec` first validates a selected <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>:
+When requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>, `FlatMapGroupsWithStateExec` first validates a selected <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>:
 
 * For <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, ProcessingTimeTimeout>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#batchTimestampMs, batch timeout threshold>> has to be defined
 

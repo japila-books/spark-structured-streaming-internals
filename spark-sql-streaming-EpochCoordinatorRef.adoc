@@ -41,5 +41,5 @@ get(id: String, env: SparkEnv): RpcEndpointRef
 
 * `ContinuousWriteRDD` is requested to <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute, compute a partition>>
 
-* `WriteToContinuousDataSourceExec` is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>
+* `WriteToContinuousDataSourceExec` is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>
 ====

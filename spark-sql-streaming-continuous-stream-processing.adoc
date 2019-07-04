@@ -49,7 +49,7 @@ WriteToContinuousDataSource ConsoleWriter[numRows=20, truncate=false]
 
 From now on, you may think of a streaming query as a soon-to-be-generated <<spark-sql-streaming-ContinuousWriteRDD.adoc#, ContinuousWriteRDD>> - an RDD data structure that Spark developers use to describe a distributed computation.
 
-When the streaming query is started (and the top-level `WriteToContinuousDataSourceExec` physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>), it simply requests the underlying `ContinuousWriteRDD` to collect.
+When the streaming query is started (and the top-level `WriteToContinuousDataSourceExec` physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>), it simply requests the underlying `ContinuousWriteRDD` to collect.
 
 That collect operator is how a Spark job is run (as tasks over all partitions of the RDD) as described by the <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute, ContinuousWriteRDD.compute>> "protocol" (a recipe for the tasks to be scheduled to run on Spark executors).
 

@@ -79,7 +79,7 @@ NOTE: <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, It l
 
 Used when:
 
-* `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>
+* `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>
 
 * `StateManagerImplBase` is requested for the <<spark-sql-streaming-StateManagerImplBase.adoc#stateDeserializerFunc, stateDeserializerFunc>>
 

@@ -19,4 +19,4 @@ stateStoreAwareZipPartitions[U: ClassTag, V: ClassTag](
 
 `stateStoreAwareZipPartitions` simply creates a new <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.adoc#, StateStoreAwareZipPartitionsRDD>>.
 
-NOTE: `stateStoreAwareZipPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
+NOTE: `stateStoreAwareZipPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.

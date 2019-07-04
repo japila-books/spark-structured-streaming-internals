@@ -1,6 +1,6 @@
 == [[OneSideHashJoiner]] OneSideHashJoiner
 
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>> (through <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>).
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (through <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>).
 
 NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
 
@@ -15,7 +15,7 @@ storeAndJoinWithOtherSide(
 
 `storeAndJoinWithOtherSide`...FIXME
 
-NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
+NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
 
 === [[creating-instance]] Creating OneSideHashJoiner Instance
 
@@ -62,7 +62,7 @@ commitStateAndGetMetrics(): StateStoreMetrics
 
 `commitStateAndGetMetrics` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#commit, commit>> and then for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
 
-NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
+NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
 
 === [[internal-properties]] Internal Properties
 

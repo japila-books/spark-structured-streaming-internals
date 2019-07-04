@@ -2,7 +2,7 @@
 
 `StateStoreAwareZipPartitionsRDD` is a `ZippedPartitionsRDD2` with the <<rdd1, left>> and <<rdd2, right>> parent RDDs.
 
-`StateStoreAwareZipPartitionsRDD` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and requests <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#, StateStoreAwareZipPartitionsHelper>> for one).
+`StateStoreAwareZipPartitionsRDD` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and requests <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#, StateStoreAwareZipPartitionsHelper>> for one).
 
 === [[creating-instance]] Creating StateStoreAwareZipPartitionsRDD Instance
 

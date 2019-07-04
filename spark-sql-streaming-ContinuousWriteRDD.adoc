@@ -2,7 +2,7 @@
 
 `ContinuousWriteRDD` is a specialized `RDD` (`RDD[Unit]`) that is used exclusively as the underlying RDD of `WriteToContinuousDataSourceExec` unary physical operator to <<compute, write records continuously>>.
 
-`ContinuousWriteRDD` is <<creating-instance, created>> exclusively when `WriteToContinuousDataSourceExec` unary physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
+`ContinuousWriteRDD` is <<creating-instance, created>> exclusively when `WriteToContinuousDataSourceExec` unary physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
 
 [[partitioner]]
 [[getPartitions]]
