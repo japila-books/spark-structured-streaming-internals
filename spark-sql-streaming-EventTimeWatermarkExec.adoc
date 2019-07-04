@@ -19,12 +19,10 @@ When <<doExecute, executed>>, `EventTimeWatermarkExec` monitors the values of th
 
 `EventTimeWatermarkExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical plan with <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operators for execution.
 
-NOTE: <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator in a logical query plan of a streaming query.
-
 [[creating-instance]]
 `EventTimeWatermarkExec` takes the following to be created:
 
-* [[eventTime]] Event-time watermark column
+* [[eventTime]] *Event time column* - the column with the (event) time for event-time watermark
 * [[delay]] Delay interval (`CalendarInterval`)
 * [[child]] Child physical operator (`SparkPlan`)
 
@@ -41,13 +39,13 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
-Internally, `doExecute` executes <<child, child>> physical operator and maps over the partitions (using `RDD.mapPartitions`) that does the following:
+Internally, `doExecute` executes the <<child, child>> physical operator and maps over the partitions (using `RDD.mapPartitions`).
 
-1. Creates an unsafe projection for <<eventTime, eventTime>> in the output schema of <<child, child>> physical operator.
+`doExecute` creates an unsafe projection (one per partition) for the <<eventTime, column with the event time>> in the output schema of the <<child, child>> physical operator. The unsafe projection is to extract event times from the (stream of) internal rows of the child physical operator.
 
-1. For every row (as `InternalRow`)
+For every row (`InternalRow`) per partition, `doExecute` requests the <<eventTimeStats, eventTimeStats>> accumulator to <<spark-sql-streaming-EventTimeStatsAccum.adoc#add, add the event time>>.
 
-* Adds <<eventTime, eventTime>> to <<eventTimeStats, eventTimeStats>> accumulator
+NOTE: The event time value is in seconds (not millis as the value is divided by `1000` ).
 
 === [[output]] Output Schema -- `output` Property
 

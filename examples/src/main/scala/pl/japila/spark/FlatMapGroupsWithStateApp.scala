@@ -10,13 +10,10 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
   import java.sql.Timestamp
   case class Event(time: Timestamp, value: Long)
   import scala.concurrent.duration._
-  object Event {
-    def apply(value: Long): Event = {
-      val ms = System.currentTimeMillis()
-      Event(new Timestamp(ms), value)
-    }
-    def apply(time: Duration, value: Long): Event = {
-      Event(new Timestamp(time.toMillis), value)
+  class EventGenerator(startTime: Long = System.currentTimeMillis()) {
+    def generate(value: Long, offset: Duration = 0.seconds): Event = {
+      val time = new Timestamp(startTime + offset.toMillis)
+      Event(time, value)
     }
   }
 
@@ -139,6 +136,8 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
        |the global count (across batches) is updated with the batch-only count
      """.stripMargin)
 
+  val eventGen = new EventGenerator
+
   // Sorry, it's simply to copy and paste event sections
   // and track the batches :)
   var batchNo: Int = 0
@@ -152,13 +151,20 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
         |No state available
       """.stripMargin)
     val batch = Seq(
-      Event(value = 1),
-      Event(value = 2))
+      eventGen.generate(value = 1, offset = 1.second),
+      eventGen.generate(value = 2, offset = 2.seconds))
     events.addData(batch)
     streamingQuery.processAllAvailable()
 
+    val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+    println(s"Current watermark: $currentWatermark")
+    println()
+    println(streamingQuery.lastProgress.prettyJson)
+
     spark.table(queryName).show(truncate = false)
   }
+
+  pause()
 
   {
     batchNo = batchNo + 1
@@ -169,25 +175,32 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
          |State available
       """.stripMargin)
     val batch = Seq(
-      Event(value = 1), // state available
-      Event(value = 1), // non-unique value
-      Event(value = 3)) // unique value, no state
+      eventGen.generate(value = 1, offset = 3.seconds),
+      eventGen.generate(value = 1, offset = 4.seconds),
+      eventGen.generate(value = 3, offset = 5.seconds))
     events.addData(batch)
     streamingQuery.processAllAvailable()
 
     spark.table(queryName).show(truncate = false)
   }
+
+  pause()
 
   {
+    batchNo = batchNo + 1
+    println(
+      s"""
+         |Batch $batchNo: 15-second pause
+         |Watermark should advance noticeably
+         |State available (unless expired earlier)
+      """.stripMargin)
     val batch = Seq(
-      Event(value = 3))
+      eventGen.generate(value = 3, offset = 20.seconds))
     events.addData(batch)
     streamingQuery.processAllAvailable()
 
     spark.table(queryName).show(truncate = false)
   }
 
-  // Not really needed, and exclusively so web UI is available
-  // http://localhost:4040/jobs/
-  streamingQuery.awaitTermination()
+  pause()
 }

@@ -23,14 +23,14 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-
 [[creating-instance]]
 `EventTimeStatsAccum` takes a single <<EventTimeStats, EventTimeStats>> to be created (default: <<zero, zero>>).
 
-=== [[add]] Accumulating Value (of Event-Time Column) -- `add` Method
+=== [[add]] Accumulating Value -- `add` Method
 
 [source, scala]
 ----
 add(v: Long): Unit
 ----
 
-NOTE: `add` is part of the AccumulatorV2 Contract to accumulate a given value.
+NOTE: `add` is part of the `AccumulatorV2` Contract to add (_accumulate_) a given value.
 
 `add` simply requests the <<currentStats, EventTimeStats>> to <<EventTimeStats-add, add>> the given `v` value.
 
