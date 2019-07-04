@@ -8,8 +8,6 @@ With streaming watermark, memory usage of a streaming state can be controlled as
 
 In Spark Structured Streaming, you use <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> high-level operator to define a streaming watermark.
 
-Under the covers, the high-level operator creates a logical query plan with one or more <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operators.
-
 A streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using <<spark-sql-streaming-window.adoc#, window>> standard function).
 
 NOTE: <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator has to be used before an aggregation operator (for the watermark to have an effect).
@@ -29,6 +27,16 @@ Streaming watermark is <<spark-sql-streaming-UnsupportedOperationChecker.adoc#st
 Use the following demos to learn more:
 
 * <<spark-sql-streaming-demo-watermark-aggregation-append.adoc#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>
+
+=== [[internals]] Internals
+
+Under the covers, <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> high-level operator creates a logical query plan with <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> logical operator.
+
+`EventTimeWatermark` logical operator is planned to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator that extracts the event times (from the data being processed) and adds them to an accumulator.
+
+Since the execution (data processing) happens on Spark executors, using the accumulator is the only _Spark-approved way_ for communication between the tasks (on the executors) and the driver. Using accumulator updates the driver with the current event-time watermark.
+
+During the query planning phase (in <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous-queryPlanning, ContinuousExecution>>) that also happens on the driver, `IncrementalExecution` is given the current <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark.
 
 === [[i-want-more]] Further Reading Or Watching
 
