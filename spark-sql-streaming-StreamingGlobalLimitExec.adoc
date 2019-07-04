@@ -43,7 +43,7 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and t
 
 `StreamingGlobalLimitExec` uses the performance metrics of the parent <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
 
-=== [[doExecute]] Executing Physical Operator (Generating Recipe for Distributed Computation as RDD[InternalRow]) -- `doExecute` Method
+=== [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 
 [source, scala]
 ----

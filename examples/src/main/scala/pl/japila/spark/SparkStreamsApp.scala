@@ -1,5 +1,7 @@
 package pl.japila.spark
 
+import java.io.{BufferedReader, InputStreamReader}
+
 /**
  * Base of Spark Structured Streaming (aka Spark Streams) applications
  */
@@ -43,6 +45,7 @@ trait SparkStreamsApp extends App {
     println("Pause processing")
     println("It is so you have time exploring logs and web UI @ http://localhost:4040 ")
     println("Press ENTER to continue...")
-    System.in.read()
+    val input = new BufferedReader(new InputStreamReader(System.in))
+    input.readLine()
   }
 }

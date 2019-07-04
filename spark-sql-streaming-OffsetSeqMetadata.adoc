@@ -1,6 +1,6 @@
 == [[OffsetSeqMetadata]] OffsetSeqMetadata
 
-`OffsetSeqMetadata` holds the metadata for the current values of the following:
+`OffsetSeqMetadata` holds the metadata for the current streaming batch:
 
 * [[batchWatermarkMs]] <<spark-sql-streaming-watermark.adoc#, Event-time watermark>>
 

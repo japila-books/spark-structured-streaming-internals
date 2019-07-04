@@ -150,22 +150,22 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 
 1. In the end, `storeUpdateFunction` creates a `CompletionIterator` that executes a completion function (aka `completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests `StateStore` to link:spark-sql-streaming-StateStore.adoc#commit[commit] followed by updating `numTotalStateRows` metric with the link:spark-sql-streaming-StateStore.adoc#numKeys[number of keys in the state store].
 
-=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 
 [source, scala]
 ----
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to check whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
-`shouldRunAnotherBatch` branches off per the <<timeoutConf, GroupStateTimeout>> as follows:
+`shouldRunAnotherBatch` uses the <<timeoutConf, GroupStateTimeout>> as follows:
 
-* Always `true` for <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, ProcessingTimeTimeout>>
+* With <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, EventTimeTimeout>>, `shouldRunAnotherBatch` is positive (`true`) only when the <<eventTimeWatermark, event-time watermark>> is defined and is older (below) the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> of the given `OffsetSeqMetadata`
 
-* For <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, EventTimeTimeout>> `shouldRunAnotherBatch` is `true` when the <<eventTimeWatermark, optional eventTimeWatermark>> is defined and is older (below) the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, batchWatermarkMs>> of the given `OffsetSeqMetadata`
+* With <<spark-sql-streaming-GroupStateTimeout.adoc#NoTimeout, NoTimeout>> (and other <<spark-sql-streaming-GroupStateTimeout.adoc#extensions, GroupStateTimeouts>> if there were any), `shouldRunAnotherBatch` is always negative (`false`)
 
-* `false` for <<spark-sql-streaming-GroupStateTimeout.adoc#NoTimeout, NoTimeout>> (and other <<spark-sql-streaming-GroupStateTimeout.adoc#extensions, GroupStateTimeouts>> if there were any but there is not)
+* With <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, ProcessingTimeTimeout>>, `shouldRunAnotherBatch` is always positive (`true`)
 
 === [[internal-properties]] Internal Properties
 
@@ -175,7 +175,7 @@ NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWri
 | Description
 
 | isTimeoutEnabled
-| [[isTimeoutEnabled]] Flag that says whether the <<timeoutConf, GroupStateTimeout>> is not <<spark-sql-streaming-GroupStateTimeout.adoc#NoTimeout, NoTimeout>>
+a| [[isTimeoutEnabled]] Flag that says whether the <<timeoutConf, GroupStateTimeout>> is not <<spark-sql-streaming-GroupStateTimeout.adoc#NoTimeout, NoTimeout>>
 
 Used when:
 
@@ -184,19 +184,19 @@ Used when:
 * `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processTimedOutState>>
 
 | stateAttributes
-| [[stateAttributes]]
+a| [[stateAttributes]]
 
 | stateDeserializer
-| [[stateDeserializer]]
+a| [[stateDeserializer]]
 
 | stateSerializer
-| [[stateSerializer]]
+a| [[stateSerializer]]
 
 | timestampTimeoutAttribute
-| [[timestampTimeoutAttribute]]
+a| [[timestampTimeoutAttribute]]
 
 | watermarkPresent
-| [[watermarkPresent]] Flag that says whether the <<child, child>> physical operator has a <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> (among the output attributes).
+a| [[watermarkPresent]] Flag that says whether the <<child, child>> physical operator has a <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> (among the output attributes).
 
 Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>>
 |===
