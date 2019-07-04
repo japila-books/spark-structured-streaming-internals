@@ -157,7 +157,7 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to check whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>>).
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to check whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
 `shouldRunAnotherBatch` branches off per the <<timeoutConf, GroupStateTimeout>> as follows:
 

@@ -100,16 +100,16 @@ getProgress(): StateOperatorProgress
 
 NOTE: `getProgress` is used exclusively when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#extractStateOperatorMetrics, extractStateOperatorMetrics>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
 
-=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 
 [source, scala]
 ----
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-`shouldRunAnotherBatch` is disabled (`false`) by default.
+`shouldRunAnotherBatch` is negative (`false`) by default (to indicate that another non-data batch is not required given the <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
 
-NOTE: `shouldRunAnotherBatch` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, shouldRunAnotherBatch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
+NOTE: `shouldRunAnotherBatch` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, check out whether the last batch execution requires another batch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
 
 === [[stateStoreCustomMetrics]] `stateStoreCustomMetrics` Internal Method
 

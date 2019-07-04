@@ -204,7 +204,7 @@ If the event time watermark candidate is greater than the current watermark (i.e
 Updating eventTime watermark to: [newWatermarkMs] ms
 ```
 
-`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with the new event time watermark and the current time.
+`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with the new event-time watermark and the current time.
 
 Otherwise, if the eventTime watermark candidate is not greater than the current watermark, `constructNextBatch` simply prints out the following DEBUG message to the logs:
 

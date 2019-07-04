@@ -2,14 +2,17 @@
 
 *Stateful Stream Processing* is a stream processing with some state (implicit or explicit).
 
-In Spark Structured Streaming, a streaming query is stateful when it uses the following operators (or their SQL variants):
+In Spark Structured Streaming, a streaming query is stateful when it is one of the following:
 
-* <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>>
-* <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>>
-* <<spark-sql-streaming-Dataset-operators.adoc#dropDuplicates, Dataset.dropDuplicates>>
-* `Dataset.join`
-* `Dataset.limit`
-* ...
+* <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>
+
+* <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>
+
+* <<spark-sql-streaming-join.adoc#, Streaming Join>>
+
+* <<spark-sql-streaming-deduplication.adoc#, Streaming Deduplication>>
+
+* <<spark-sql-streaming-limit.adoc#, Streaming Limit>>
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
@@ -25,6 +28,33 @@ While <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, planning a s
 * <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
 * <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
 * <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
+
+==== [[IncrementalExecution-shouldRunAnotherBatch]] Micro-Batch Stream Processing and Extra Non-Data Batch for StateStoreWriter Stateful Operators
+
+In <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (with <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, shouldRunAnotherBatch>> flag that allows <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriters>> stateful physical operators to <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, indicate whether the last batch execution requires another non-data batch>>.
+
+The <<StateStoreWriters-shouldRunAnotherBatch, following table>> shows the `StateStoreWriters` that redefine `shouldRunAnotherBatch` flag.
+
+[[StateStoreWriters-shouldRunAnotherBatch]]
+.StateStoreWriters and shouldRunAnotherBatch Flag
+[cols="30,70",options="header",width="100%"]
+|===
+| StateStoreWriter
+| shouldRunAnotherBatch Flag
+
+| <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+a| [[shouldRunAnotherBatch-FlatMapGroupsWithStateExec]] Based on <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#shouldRunAnotherBatch, GroupStateTimeout>>
+
+| <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+a| [[shouldRunAnotherBatch-StateStoreSaveExec]] Based on <<spark-sql-streaming-StateStoreSaveExec.adoc#shouldRunAnotherBatch, OutputMode>>
+
+| <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+a| [[shouldRunAnotherBatch-StreamingDeduplicateExec]] Based on <<spark-sql-streaming-StreamingDeduplicateExec.adoc#shouldRunAnotherBatch, event-time watermark>>
+
+| <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
+a| [[shouldRunAnotherBatch-StreamingSymmetricHashJoinExec]] Based on <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#shouldRunAnotherBatch, event-time watermark>>
+
+|===
 
 === [[StateStoreRDD]] StateStoreRDD
 

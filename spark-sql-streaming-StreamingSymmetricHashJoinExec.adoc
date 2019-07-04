@@ -48,14 +48,14 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 
 `StreamingSymmetricHashJoinExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
 
-=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 
 [source, scala]
 ----
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to check whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, metadata>>).
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to check whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
 `shouldRunAnotherBatch`...FIXME
 

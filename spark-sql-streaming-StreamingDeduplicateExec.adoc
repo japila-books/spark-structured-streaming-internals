@@ -219,6 +219,17 @@ The completion function does the following:
 `StreamingDeduplicateExec` takes the following when created:
 
 * [[keyExpressions]] Duplicate keys (as used in link:spark-sql-streaming-Dataset-operators.adoc#dropDuplicates[dropDuplicates] operator)
-* [[child]] Child physical plan (i.e. `SparkPlan`)
-* [[stateInfo]] Optional link:spark-sql-streaming-StatefulOperatorStateInfo.adoc[StatefulOperatorStateInfo]
-* [[eventTimeWatermark]] Optional event time watermark
+* [[child]] Child physical operator (`SparkPlan`)
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[eventTimeWatermark]] Event-time watermark
+
+=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
+
+[source, scala]
+----
+shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
+----
+
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to check whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+
+`shouldRunAnotherBatch`...FIXME

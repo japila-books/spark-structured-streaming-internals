@@ -72,6 +72,8 @@
 . link:spark-sql-streaming-stateful-stream-processing.adoc[Stateful Stream Processing]
 
 . link:spark-sql-streaming-watermark.adoc[Streaming Watermark]
+. link:spark-sql-streaming-deduplication.adoc[Streaming Deduplication]
+. link:spark-sql-streaming-limit.adoc[Streaming Limit]
 
 . link:spark-sql-streaming-StateStore.adoc[StateStore]
 .. link:spark-sql-streaming-StateStoreId.adoc[StateStoreId]

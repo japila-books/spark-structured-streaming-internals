@@ -157,16 +157,16 @@ The only two properties that may ever change are the <<runId, run ID>> (after a 
 
 NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to optimize a streaming physical plan using the <<state, state preparation rule>> (and creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
 
-=== [[shouldRunAnotherBatch]] `shouldRunAnotherBatch` Method
+=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 
 [source, scala]
 ----
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-`shouldRunAnotherBatch`...FIXME
+`shouldRunAnotherBatch` is enabled (`true`) if there is at least one <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>> operator (in the <<executedPlan, executedPlan physical query plan>>) that <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, requires another non-data batch>> (per the given <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp). Otherwise, `shouldRunAnotherBatch` is disabled (`false`).
 
-NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>>.
+NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>> (and checks out whether the last batch execution requires another non-data batch).
 
 === [[demo]] Demo: State Checkpoint Directory
 
