@@ -6,12 +6,17 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
   spark.sparkContext.setLogLevel("OFF")
 
   // Define event "format"
+  // Event time must be defined on a window or a timestamp
   import java.sql.Timestamp
   case class Event(time: Timestamp, value: Long)
   import scala.concurrent.duration._
   object Event {
-    def apply(secs: Long, value: Long): Event = {
-      Event(new Timestamp(secs.seconds.toMillis), value)
+    def apply(value: Long): Event = {
+      val ms = System.currentTimeMillis()
+      Event(new Timestamp(ms), value)
+    }
+    def apply(time: Duration, value: Long): Event = {
+      Event(new Timestamp(time.toMillis), value)
     }
   }
 
@@ -40,24 +45,36 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
   import org.apache.spark.sql.streaming.GroupState
   def counter(
       key: AggregationKey,
-      values: Iterator[(Timestamp, Long)],
+      values: Iterator[(Long, Long)],
       state: GroupState[State]): Iterator[(AggregationKey, StateValue)] = {
     val s = state.getOption.getOrElse("<undefined>")
     val currentProcessingTimeMs = state.getCurrentProcessingTimeMs
     val currentWatermarkMs = state.getCurrentWatermarkMs
-    println(s""">>> counter(key = $key, state = $s)""")
-    println(s">>> >>> Batch Processing Time = $currentProcessingTimeMs ms")
-    println(s">>> >>> currentWatermarkMs: $currentWatermarkMs ms")
-    println(s">>> >>> hasTimedOut: ${state.hasTimedOut}")
+    println(
+      s"""
+         |... counter(key=$key, state=$s)
+         |... ... Batch Processing Time: $currentProcessingTimeMs ms
+         |... ... currentWatermarkMs: $currentWatermarkMs ms
+         |... ... hasTimedOut: ${state.hasTimedOut}
+       """.stripMargin)
     val count = values.length
     val result = if (state.exists && state.hasTimedOut) {
       val s = state.get
-      println(s">>> counter: State expired for key=$key with count=${s.count}")
-      Iterator((key, s.count))
+      println(
+        s"""
+           |... counter: State expired for key=$key with count=${s.count}
+           |... ... Removing state
+         """.stripMargin)
+      state.remove()
+      val cnt = s.count
+      println(s">>> >>> (key=$key, count=$cnt) goes to the output")
+      Iterator((key, cnt))
     } else if (state.exists /** and not state.hasTimedOut */ ) {
       val s = state.get
-      println(s">>> counter: Updating state for key=$key (current count=${s.count})")
-      val newState = State(s.count + count)
+      val oldCount = s.count
+      val newCount = oldCount + count
+      println(s">>> counter: Updating state for key=$key with count=$newCount (old: $oldCount)")
+      val newState = State(newCount)
       state.update(newState)
       Iterator.empty
     } else {
@@ -67,7 +84,7 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
       // FIXME Why not simply setTimeoutDuration since it does the same calculation?!
       val timeoutMs = state.getCurrentWatermarkMs + 1.second.toMillis
-      println(s">>> >>> timeout=$timeoutMs ms")
+      println(s">>> >>> Setting timeout to $timeoutMs ms")
       state.setTimeoutTimestamp(timeoutMs)
 
       Iterator.empty
@@ -86,7 +103,7 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
   import org.apache.spark.sql.functions.current_timestamp
   val valuesCounted = valuesWatermarked
-    .as[(Timestamp, Long)] // convert DataFrame to Dataset to make groupByKey easier to write
+    .as[(Long, Long)] // convert DataFrame to Dataset to make groupByKey easier to write
     .groupByKey { case (_, value) => value }
     .flatMapGroupsWithState(flatMapOutputMode, timeoutConf)(counter)
     .toDF("value", "count")
@@ -107,10 +124,54 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
     .start
   assert(streamingQuery.status.message == "Waiting for data to arrive")
 
+  println(
+    s"""
+       |Demo: Stateful Counter
+       |
+       |Counting the number of values across batches (globally)
+       |
+       |State key: event value
+       |State value: number of values (across all batches)
+       |
+       |Every batch gives the occurrences per value (state key) only
+       |In order to have a global count across batches
+       |flatMap... gives us access to the state (per unique value) with the global count
+       |the global count (across batches) is updated with the batch-only count
+     """.stripMargin)
+
+  // Sorry, it's simply to copy and paste event sections
+  // and track the batches :)
+  var batchNo: Int = 0
+
   {
+    batchNo = batchNo + 1
+    println(
+      s"""
+        |Batch $batchNo: Unique values only
+        |All counts are 1s
+        |No state available
+      """.stripMargin)
     val batch = Seq(
-      Event(secs = 1, value = 1),
-      Event(secs = 15, value = 2))
+      Event(value = 1),
+      Event(value = 2))
+    events.addData(batch)
+    streamingQuery.processAllAvailable()
+
+    spark.table(queryName).show(truncate = false)
+  }
+
+  {
+    batchNo = batchNo + 1
+    println(
+      s"""
+         |Batch $batchNo: Multiple values
+         |Some counts are not 1
+         |State available
+      """.stripMargin)
+    val batch = Seq(
+      Event(value = 1), // state available
+      Event(value = 1), // non-unique value
+      Event(value = 3)) // unique value, no state
     events.addData(batch)
     streamingQuery.processAllAvailable()
 
@@ -119,17 +180,7 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
   {
     val batch = Seq(
-      Event(secs = 1, value = 1),
-      Event(secs = 6, value = 3))
-    events.addData(batch)
-    streamingQuery.processAllAvailable()
-
-    spark.table(queryName).show(truncate = false)
-  }
-
-  {
-    val batch = Seq(
-      Event(secs = 200,  value = 3))
+      Event(value = 3))
     events.addData(batch)
     streamingQuery.processAllAvailable()
 

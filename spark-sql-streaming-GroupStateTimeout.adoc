@@ -33,15 +33,3 @@ a| [[ProcessingTimeTimeout]] Timeout based on processing time
 `batchTimestampMs` is defined when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is created (with the <<spark-sql-streaming-IncrementalExecution.adoc#state, state>>). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a streaming batch>>.
 
 |===
-
-=== [[internals]] Internals
-
-Internally, `GroupStateTimeout` is used for the following:
-
-* <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> unary logical operator is created
-
-* `MapGroupsExec` unary physical operator is created
-
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> unary physical operator is created
-
-* <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>> is created, <<spark-sql-streaming-GroupStateImpl.adoc#createForStreaming, createForStreaming>>, and <<spark-sql-streaming-GroupStateImpl.adoc#createForBatch, createForBatch>>
