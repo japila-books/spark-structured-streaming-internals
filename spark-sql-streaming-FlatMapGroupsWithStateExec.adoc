@@ -47,7 +47,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
 * [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
 * [[batchTimestampMs]] <<spark-structured-streaming-batch-processing-time.adoc#, Batch Processing Time>>
-* [[eventTimeWatermark]] Event-time watermark
+* [[eventTimeWatermark]] <<spark-sql-streaming-watermark.adoc#, Event-time watermark>>
 * [[child]] Child physical operator
 
 `FlatMapGroupsWithStateExec` initializes the <<internal-properties, internal properties>>.

@@ -164,7 +164,9 @@ NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExec
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-`shouldRunAnotherBatch` is enabled (`true`) if there is at least one <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>> operator (in the <<executedPlan, executedPlan physical query plan>>) that <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, requires another non-data batch>> (per the given <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp). Otherwise, `shouldRunAnotherBatch` is disabled (`false`).
+`shouldRunAnotherBatch` is positive (`true`) if there is at least one <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>> operator (in the <<executedPlan, executedPlan physical query plan>>) that <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, requires another non-data batch>> (per the given <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
+
+Otherwise, `shouldRunAnotherBatch` is negative (`false`).
 
 NOTE: `shouldRunAnotherBatch` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>> (and checks out whether the last batch execution requires another non-data batch).
 

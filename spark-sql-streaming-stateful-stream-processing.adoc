@@ -46,7 +46,7 @@ The <<StateStoreWriters-shouldRunAnotherBatch, following table>> shows the `Stat
 a| [[shouldRunAnotherBatch-FlatMapGroupsWithStateExec]] Based on <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#shouldRunAnotherBatch, GroupStateTimeout>>
 
 | <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
-a| [[shouldRunAnotherBatch-StateStoreSaveExec]] Based on <<spark-sql-streaming-StateStoreSaveExec.adoc#shouldRunAnotherBatch, OutputMode>>
+a| [[shouldRunAnotherBatch-StateStoreSaveExec]] Based on <<spark-sql-streaming-StateStoreSaveExec.adoc#shouldRunAnotherBatch, OutputMode and event-time watermark>>
 
 | <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
 a| [[shouldRunAnotherBatch-StreamingDeduplicateExec]] Based on <<spark-sql-streaming-StreamingDeduplicateExec.adoc#shouldRunAnotherBatch, event-time watermark>>

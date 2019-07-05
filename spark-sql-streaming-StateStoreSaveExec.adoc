@@ -127,7 +127,7 @@ image::images/StateStoreSaveExec-webui-query-details.png[align="center"]
 * [[keyExpressions]] *Key expressions*, i.e. Catalyst attributes for the grouping keys
 * [[stateInfo]] Execution-specific <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> (default: `None`)
 * [[outputMode]] Execution-specific <<spark-sql-streaming-OutputMode.adoc#, output mode>> (default: `None`)
-* [[eventTimeWatermark]] Execution-specific event-time watermark (default: `None`)
+* [[eventTimeWatermark]] <<spark-sql-streaming-watermark.adoc#, Event-time watermark>> (default: `None`)
 * [[stateFormatVersion]] Version of the state format (based on the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
@@ -264,4 +264,10 @@ shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 
 NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
-`shouldRunAnotherBatch`...FIXME
+`shouldRunAnotherBatch` is positive (`true`) when all of the following are met:
+
+* <<outputMode, OutputMode>> is either <<spark-sql-streaming-OutputMode.adoc#Append, Append>> or <<spark-sql-streaming-OutputMode.adoc#Update, Update>>
+
+* <<eventTimeWatermark, Event-time watermark>> is defined and is older (below) the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> of the given `OffsetSeqMetadata`
+
+Otherwise, `shouldRunAnotherBatch` is negative (`false`).
