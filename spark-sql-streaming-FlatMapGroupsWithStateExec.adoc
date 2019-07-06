@@ -17,6 +17,8 @@ NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState
 
 TIP: Check out <<spark-sql-streaming-demo-FlatMapGroupsWithStateExec.adoc#, Demo: Internals of FlatMapGroupsWithStateExec Physical Operator>>.
 
+IMPORTANT: `FlatMapGroupsWithStateExec` is given an <<outputMode, OutputMode>> when created, but it does not seem to be used at all.
+
 [[logging]]
 [TIP]
 ====
@@ -138,17 +140,23 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
-Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
+`doExecute` first initializes the <<spark-sql-streaming-StateStoreWriter.adoc#metrics, metrics>> (which happens on the driver).
 
-`doExecute` then executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+`doExecute` then requests the <<child, child>> physical operator to execute and generate an `RDD[InternalRow]`.
 
-1. Creates a link:spark-sql-streaming-StateStoreUpdater.adoc[StateStoreUpdater]
+`doExecute` uses <<spark-sql-streaming-StateStoreOps.adoc#, StateStoreOps>> to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, create a StateStoreRDD>> with a `storeUpdateFunction` that does the following (for a partition):
 
-1. Filters out rows from `Iterator[InternalRow]` that match `watermarkPredicateForData` (when defined and <<timeoutConf, timeoutConf>> is `EventTimeTimeout`)
+. Creates an <<spark-sql-streaming-InputProcessor.adoc#, InputProcessor>> for a given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
-1. Generates an output `Iterator[InternalRow]` with elements from ``StateStoreUpdater``'s link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForKeysWithData[updateStateForKeysWithData] and link:spark-sql-streaming-StateStoreUpdater.adoc#updateStateForTimedOutKeys[updateStateForTimedOutKeys]
+. (only when the <<timeoutConf, GroupStateTimeout>> is <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, EventTimeTimeout>>) Filters out late data based on the <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, event-time watermark>>, i.e. rows from a given `Iterator[InternalRow]` that are older than the <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, event-time watermark>> are excluded from the steps that follow
 
-1. In the end, `storeUpdateFunction` creates a `CompletionIterator` that executes a completion function (aka `completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests `StateStore` to link:spark-sql-streaming-StateStore.adoc#commit[commit] followed by updating `numTotalStateRows` metric with the link:spark-sql-streaming-StateStore.adoc#numKeys[number of keys in the state store].
+. Requests the `InputProcessor` to <<spark-sql-streaming-InputProcessor.adoc#processNewData, create an iterator of a new data processed>> from the (possibly filtered) iterator
+
+. Requests the `InputProcessor` to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, create an iterator of a timed-out state data>>
+
+. Creates an iterator by concatenating the above iterators (with the new data processed first)
+
+. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to <<spark-sql-streaming-StateStore.adoc#commit, commit changes>> followed by <<spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics, setting the store-specific metrics>>.
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 

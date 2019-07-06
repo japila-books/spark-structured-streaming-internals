@@ -40,7 +40,7 @@ NOTE: `physicalOperator` can be link:spark-sql-streaming-FlatMapGroupsWithStateE
 TIP: Enable INFO logging level for one of the stateful physical operators to see the INFO message in the logs.
 
 | [[watermarkPredicateForData]] `watermarkPredicateForData`
-| Optional `Predicate` that uses <<watermarkExpression, watermarkExpression>> and the child output to match rows older than the watermark.
+| Optional `Predicate` that uses <<watermarkExpression, watermarkExpression>> and the child output to match rows older than the event-time watermark
 
 | [[watermarkPredicateForKeys]] `watermarkPredicateForKeys`
 | Optional `Predicate` that uses <<keyExpressions, keyExpressions>> to match rows older than the event time watermark.

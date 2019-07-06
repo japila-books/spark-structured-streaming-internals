@@ -7,7 +7,7 @@
 [[creating-instance]][[store]]
 `InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> to be created. The `StateStore` manages the per-group state (and is used when processing <<processNewData, new data>> and <<processTimedOutState, timed-out state data>>, and in the <<onIteratorCompletion, "all rows processed" callback>>).
 
-=== [[processNewData]] Processing New Data -- `processNewData` Method
+=== [[processNewData]] Processing New Data (Creating Iterator of New Data Processed) -- `processNewData` Method
 
 [source, scala]
 ----
@@ -20,7 +20,7 @@ For every per-group state key (in the grouped iterator), `processNewData` reques
 
 NOTE: `processNewData` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
 
-=== [[processTimedOutState]] Processing Timed-Out State Data -- `processTimedOutState` Method
+=== [[processTimedOutState]] Processing Timed-Out State Data (Creating Iterator of Timed-Out State Data) -- `processTimedOutState` Method
 
 [source, scala]
 ----
