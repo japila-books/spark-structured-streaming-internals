@@ -10,12 +10,12 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
   // Define event "format"
   // Event time must be defined on a window or a timestamp
   import java.sql.Timestamp
-  case class Event(time: Timestamp, value: Long)
+  case class Event(time: Timestamp, userId: Long)
   import scala.concurrent.duration._
-  class EventGenerator(startTime: Long = System.currentTimeMillis()) {
-    def generate(value: Long, offset: Duration = 0.seconds): Event = {
+  class EventGenerator(val startTime: Long = System.currentTimeMillis()) {
+    def generate(userId: Long, offset: Duration = 0.seconds): Event = {
       val time = new Timestamp(startTime + offset.toMillis)
-      Event(time, value)
+      Event(time, userId)
     }
   }
 
@@ -24,80 +24,111 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
   implicit val sqlCtx = spark.sqlContext
   import spark.implicits._
   val events = MemoryStream[Event]
-  val values = events.toDS
-  assert(values.isStreaming, "values must be a streaming Dataset")
+  val sessions = events.toDS
+  assert(sessions.isStreaming, "sessions must be a streaming Dataset")
 
   // FIXME Make it configurable from the command line
   import scala.concurrent.duration._
-  val delayThreshold = 10.seconds.toString
+  val delayThreshold = 10.seconds
   val eventTime = "time"
 
-  val valuesWatermarked = values
-    .withWatermark(eventTime, delayThreshold) // required for EventTimeTimeout
+  println(
+    s"""
+      |Setting watermark column and delay for EventTimeTimeout
+      |... eventTime column: $eventTime
+      |... delayThreshold:   $delayThreshold
+      |""".stripMargin)
+  val valuesWatermarked = sessions
+    .withWatermark(eventTime, delayThreshold.toString)
 
   // FIXME Make it configurable from the command line
   val stateDurationMs = 1.second.toMillis
 
-  // Could use Long directly, but...
-  // Let's use case class to make the demo a bit more advanced
-  case class State(count: Long)
+  case class Session(
+      userId: Long,
+      beginTimestamp: Long,
+      var clicks: Long = 0,
+      var endTimestamp: Long = 0) {
+    def duration: Long = endTimestamp - beginTimestamp
+    def recordClick(time: Timestamp): Unit = {
+      clicks = clicks + 1
+      val ms = time.getTime
+      if (ms > endTimestamp) {
+        endTimestamp = ms
+      }
+    }
+    def expire(time: Long): Unit = {
+      endTimestamp = time
+    }
+  }
 
-  type AggregationKey = Long
-  type StateValue = Long
+  type UserId = Long
   import org.apache.spark.sql.streaming.GroupState
-  def counter(
-      key: AggregationKey,
-      values: Iterator[(Long, Long)],
-      state: GroupState[State]): Iterator[(AggregationKey, StateValue)] = {
+  def countClicksPerSession(
+      userId: UserId,
+      values: Iterator[(Timestamp, UserId)],
+      state: GroupState[Session]): Iterator[Session] = {
     val s = state.getOption.getOrElse("<undefined>")
     val currentProcessingTimeMs = state.getCurrentProcessingTimeMs
     val currentWatermarkMs = state.getCurrentWatermarkMs
+    val hasTimedOut = state.hasTimedOut
     println(
       s"""
-         |... counter(key=$key, state=$s)
+         |... countClicksPerSession(userId=$userId, state=$s)
          |... ... Batch Processing Time: $currentProcessingTimeMs ms
          |... ... Event-Time Watermark:  $currentWatermarkMs ms
-         |... ... hasTimedOut: ${state.hasTimedOut}
+         |... ... hasTimedOut:           $hasTimedOut
        """.stripMargin)
-    val count = values.length
-    val result = if (state.exists && state.hasTimedOut) {
-      val s = state.get
-      val cnt = s.count
+    val result = if (hasTimedOut) {
+      val userSession = state.get
+      userSession.expire(currentProcessingTimeMs)
       println(
         s"""
-           |... counter: State expired for key=$key with count=$cnt
-           |... ... (key=$key, count=$cnt) goes to the output
+           |... countClicksPerSession: State expired for userId=$userId
+           |... ... userSession: $userSession
+           |... ... Goes to the output
            |... ... Removing state (to keep memory usage low)
          """.stripMargin)
       state.remove()
-      Iterator((key, cnt))
-    } else if (state.exists) {
-      val s = state.get
-      val oldCount = s.count
-      val newCount = oldCount + count
-      println(
-        s"""
-           |... counter: State exists for key=$key with count=$oldCount
-           |... ... Updating state with count=$newCount
-         """.stripMargin)
-      val newState = State(newCount)
-      state.update(newState)
-      Iterator.empty
+      Iterator(userSession)
     } else {
-      println(
-        s"""
-           |... counter: State does not exist for key=$key
-           |... ... Creating new state with count=$count
+      val session = if (state.exists) {
+        val session = state.get
+        for {
+          (time, _) <- values
+        } session.recordClick(time)
+        println(
+          s"""
+             |... countClicksPerSession: State exists for userId=$userId
+             |... ... userSession: $session
+           """.stripMargin)
+        session
+      } else {
+        // FIXME How to record events for a new session?
+        // Avoid two passes over values
+        // Iterator is a one-off data structure
+        // Once an element is accessed, it is gone forever
+        val vs = values.toSeq
+        val beginTimestamp = vs.maxBy { case (_, time) => time }._1
+        val session = Session(userId, beginTimestamp.getTime)
+        for {
+          (time, _) <- vs
+        } session.recordClick(time)
+        println(
+          s"""
+             |... countClicksPerSession: State does not exist for userId=$userId
+             |... ... userSession: $session
          """.stripMargin)
-      val newState = State(count)
-      state.update(newState)
+        session
+      }
+      state.update(session)
 
-      // FIXME Why not simply setTimeoutDuration since it does the same calculation?!
+      // timeout makes a session expired when no data received for stateDurationMs
       val timeoutMs = currentWatermarkMs + stateDurationMs
       println(
         s"""
            |... ... Setting state timeout to $timeoutMs ms
-           |... ... ($stateDurationMs ms later from now)
+           |... ... $stateDurationMs ms later after event-time watermark: $currentWatermarkMs ms
          """.stripMargin)
       state.setTimeoutTimestamp(timeoutMs)
 
@@ -117,10 +148,10 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
   import org.apache.spark.sql.functions.current_timestamp
   val valuesCounted = valuesWatermarked
-    .as[(Long, Long)] // convert DataFrame to Dataset to make groupByKey easier to write
-    .groupByKey { case (_, value) => value }
-    .flatMapGroupsWithState(flatMapOutputMode, timeoutConf)(counter)
-    .toDF("value", "count")
+    .as[(Timestamp, UserId)] // convert DataFrame to Dataset to make groupByKey easier to write
+    .groupByKey { case (_, userId) => userId }
+    .flatMapGroupsWithState(flatMapOutputMode, timeoutConf)(countClicksPerSession)
+    .select($"userId", $"clicks", $"endTimestamp" - $"beginTimestamp" as "duration")
     .withColumn("Batch Processing Time", current_timestamp())
 
   // FIXME Configurable from the command line
@@ -136,55 +167,62 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
     .option("checkpointLocation", checkpointLocation)
     .outputMode(queryOutputMode)
     .start
-  assert(streamingQuery.status.message == "Waiting for data to arrive")
+  val currentStatus = streamingQuery.status.message
+  val expectedStatus = "Waiting for data to arrive"
+  assert(
+    currentStatus == expectedStatus,
+    s"""Current status: $currentStatus not $expectedStatus""")
 
   println(
     s"""
        |Demo: Stateful Counter
        |
-       |Counting the number of values across batches (globally)
+       |Counting the number of clicks across batches (globally)
+       |User clicks (visits) pages generating events (who, when)
+       |As long as it uses the website actively (clicks within $stateDurationMs)
+       |Session (state) does not time-out => every update advances when it happens
        |
-       |State key: event value
-       |State value: number of values (across all batches)
+       |State key: userId
+       |State value: number of clicks (across batches to create a logical session)
        |
-       |Every batch gives the occurrences per value (state key) only
+       |Every batch gives the number of clicks
        |In order to have a global count across batches
        |flatMap... gives us access to the state (per unique value) with the global count
        |the global count (across batches) is updated with the batch-only count
      """.stripMargin)
 
   val eventGen = new EventGenerator
+  println(s"EventGenerator.startTime: ${eventGen.startTime}")
 
   // Sorry, it's simply to copy and paste event sections
   // and track the batches :)
+  // FIXME Create batch generator (to read data from a directory?)
   var batchNo: Int = 0
 
   {
     batchNo = batchNo + 1
     println(
       s"""
-        |Batch $batchNo: Unique values only
-        |All counts are 1s
-        |No state available
-        |Event-Time Watermark advances (to 2 seconds) so there will be extra non-data batch
-        |Session/state timeout is 1 second so the states expire
+        |Batch $batchNo
       """.stripMargin)
-    val batch = Seq(
-      eventGen.generate(value = 1, offset = 1.second),
-      eventGen.generate(value = 2, offset = 2.seconds))
+    val batch =
+      eventGen.generate(userId = 1, offset = 1.second) ::
+      Nil
     val currentOffset = events.addData(batch)
     streamingQuery.processAllAvailable()
     // the following is memory data source-specific
     events.commit(currentOffset.asInstanceOf[LongOffset])
 
     val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
-    println(s"Current watermark: $currentWatermark")
+    val currentWatermarkMs = toMillis(currentWatermark)
+    println(s"Current watermark: $currentWatermarkMs ms")
     println()
     println(streamingQuery.lastProgress.prettyJson)
 
     spark
       .table(queryName)
-      .orderBy("value", "Batch Processing Time")
+      .orderBy("userId", "Batch Processing Time")
+      .select($"userId", $"clicks", $"duration", $"Batch Processing Time")
       .show(truncate = false)
   }
 
@@ -195,14 +233,10 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
     println(
       s"""
          |Batch $batchNo
-         |Some counts are not 1
-         |State available and expired (key 1)
-         |Event-Time Watermark same (at 2 seconds) so no extra non-data batch
       """.stripMargin)
-    val batch = Seq(
-      eventGen.generate(value = 1, offset = 0.seconds),
-      eventGen.generate(value = 1, offset = 1.seconds),
-      eventGen.generate(value = 3, offset = 2.seconds))
+    val batch =
+      eventGen.generate(userId = 2, offset = 3.seconds) ::
+      Nil
     val currentOffset = events.addData(batch)
     streamingQuery.processAllAvailable()
     // the following is memory data source-specific
@@ -210,7 +244,8 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
     spark
       .table(queryName)
-      .orderBy("value", "Batch Processing Time")
+      .orderBy("userId", "Batch Processing Time")
+      .select($"userId", $"clicks", $"duration", $"Batch Processing Time")
       .show(truncate = false)
   }
 
@@ -221,12 +256,10 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
     println(
       s"""
          |Batch $batchNo
-         |Watermark should advance
       """.stripMargin)
-    val batch = Seq(
-      eventGen.generate(value = 3, offset = 3.seconds),
-      eventGen.generate(value = 3, offset = 4.seconds),
-      eventGen.generate(value = 4, offset = 1.seconds))
+    val batch =
+      eventGen.generate(userId = 2, offset = 4.seconds) ::
+      Nil
     val currentOffset = events.addData(batch)
     streamingQuery.processAllAvailable()
     // the following is memory data source-specific
@@ -234,31 +267,11 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
     spark
       .table(queryName)
-      .orderBy("value", "Batch Processing Time")
+      .orderBy("userId", "Batch Processing Time")
+      .select($"userId", $"clicks", $"duration", $"Batch Processing Time")
       .show(truncate = false)
   }
 
   pause()
 
-  {
-    batchNo = batchNo + 1
-    println(
-      s"""
-         |Batch $batchNo
-         |Watermark should advance
-      """.stripMargin)
-    val batch = Seq(
-      eventGen.generate(value = 3, offset = 1.seconds))
-    val currentOffset = events.addData(batch)
-    streamingQuery.processAllAvailable()
-    // the following is memory data source-specific
-    events.commit(currentOffset.asInstanceOf[LongOffset])
-
-    spark
-      .table(queryName)
-      .orderBy("value", "Batch Processing Time")
-      .show(truncate = false)
-  }
-
-  pause()
 }

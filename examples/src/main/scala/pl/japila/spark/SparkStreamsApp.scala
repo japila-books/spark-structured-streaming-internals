@@ -48,4 +48,15 @@ trait SparkStreamsApp extends App {
     val input = new BufferedReader(new InputStreamReader(System.in))
     input.readLine()
   }
+
+  type Millis = Long
+  def toMillis(datetime: String): Millis = {
+    import java.time.format.DateTimeFormatter
+    import java.time.LocalDateTime
+    import java.time.ZoneOffset
+    LocalDateTime
+      .parse(datetime, DateTimeFormatter.ISO_DATE_TIME)
+      .toInstant(ZoneOffset.UTC)
+      .toEpochMilli
+  }
 }
