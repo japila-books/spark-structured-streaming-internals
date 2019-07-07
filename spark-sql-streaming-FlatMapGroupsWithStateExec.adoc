@@ -13,11 +13,13 @@ NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState
 
 `FlatMapGroupsWithStateExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a <<spark-sql-streaming-FlatMapGroupsWithState.adoc#, FlatMapGroupsWithState>> logical operator for execution.
 
-`FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator with the <<outputObjAttr, output object attribute>>.
+`FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator and so produces a <<outputObjAttr, single output object>>.
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan-ObjectProducerExec.html[ObjectProducerExec — Physical Operators With Single Object Output] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 TIP: Check out <<spark-sql-streaming-demo-FlatMapGroupsWithStateExec.adoc#, Demo: Internals of FlatMapGroupsWithStateExec Physical Operator>>.
 
-IMPORTANT: `FlatMapGroupsWithStateExec` is given an <<outputMode, OutputMode>> when created, but it does not seem to be used at all.
+NOTE: `FlatMapGroupsWithStateExec` is given an <<outputMode, OutputMode>> when created, but it does not seem to be used at all. Check out the question https://stackoverflow.com/q/56921772/1305344[What's the purpose of OutputMode in flatMapGroupsWithState? How/where is it used?] on StackOverflow.
 
 [[logging]]
 [TIP]
