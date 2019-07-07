@@ -138,13 +138,17 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
     result
   }
 
+  import org.apache.spark.sql.streaming.OutputMode
+
+  // FIXME Configurable from the command line
+  val queryOutputMode = OutputMode.Update
+
+  // FIXME Configurable from the command line
+  val flatMapOutputMode = OutputMode.Update
+
   // FIXME Configurable from the command line
   import org.apache.spark.sql.streaming.GroupStateTimeout
   val timeoutConf = GroupStateTimeout.EventTimeTimeout
-
-  // FIXME Configurable from the command line
-  import org.apache.spark.sql.streaming.OutputMode
-  val flatMapOutputMode = OutputMode.Update
 
   import org.apache.spark.sql.functions.current_timestamp
   val valuesCounted = valuesWatermarked
@@ -156,9 +160,6 @@ object FlatMapGroupsWithStateApp extends SparkStreamsApp {
 
   // FIXME Configurable from the command line
   deleteCheckpointLocation()
-
-  // FIXME Configurable from the command line
-  val queryOutputMode = OutputMode.Update
 
   val streamingQuery = valuesCounted
     .writeStream

@@ -28,6 +28,7 @@
 
 . link:spark-sql-streaming-demos.adoc[Demos]
 . link:spark-sql-streaming-demo-FlatMapGroupsWithStateExec.adoc[Internals of FlatMapGroupsWithStateExec Physical Operator]
+. link:spark-sql-streaming-demo-arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.adoc[Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator]
 . link:spark-sql-streaming-demo-exploring-checkpointed-state.adoc[Exploring Checkpointed State]
 . link:spark-sql-streaming-demo-watermark-aggregation-append.adoc[Streaming Watermark with Aggregation in Append Output Mode]
 . link:spark-sql-streaming-demo-groupBy-running-count-complete.adoc[Streaming Query for Running Counts (Socket Source and Complete Output Mode)]
