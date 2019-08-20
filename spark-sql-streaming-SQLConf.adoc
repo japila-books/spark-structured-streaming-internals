@@ -44,6 +44,18 @@ a| [[continuousStreamingExecutorPollIntervalMs]] Used exclusively when `DataSour
 
 a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExecution` is requested for the <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>> (of a streaming query)
 
+| `fileSourceLogCleanupDelay`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.fileSource.log.cleanupDelay, spark.sql.streaming.fileSource.log.cleanupDelay>>
+
+a| [[fileSourceLogCleanupDelay]][[FILE_SOURCE_LOG_CLEANUP_DELAY]] Used exclusively when `FileStreamSourceLog` is requested for the <<spark-sql-streaming-FileStreamSourceLog.adoc#fileCleanupDelayMs, fileCleanupDelayMs>>
+
+| `fileSourceLogCompactInterval`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.fileSource.log.compactInterval, spark.sql.streaming.fileSource.log.compactInterval>>
+
+a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exclusively when `FileStreamSourceLog` is requested for the <<spark-sql-streaming-FileStreamSourceLog.adoc#defaultCompactInterval, default compaction interval>>
+
 | `FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>>

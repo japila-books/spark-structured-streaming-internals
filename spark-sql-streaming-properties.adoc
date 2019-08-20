@@ -64,6 +64,22 @@ Default: `(empty)`
 
 Use <<spark-sql-streaming-SQLConf.adoc#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
 
+| spark.sql.streaming.fileSource.log.cleanupDelay
+a| [[spark.sql.streaming.fileSource.log.cleanupDelay]] *(internal)* How long (in millis) a file is guaranteed to be visible for all readers.
+
+Default: `10` (minutes)
+
+Use <<spark-sql-streaming-SQLConf.adoc#fileSourceLogCleanupDelay, SQLConf.fileSourceLogCleanupDelay>> to get the current value.
+
+| spark.sql.streaming.fileSource.log.compactInterval
+a| [[spark.sql.streaming.fileSource.log.compactInterval]] *(internal)* Number of log files after which all the previous files are compacted into the next log file.
+
+Default: `10`
+
+Must be a positive value (greater than `0`)
+
+Use <<spark-sql-streaming-SQLConf.adoc#fileSourceLogCompactInterval, SQLConf.fileSourceLogCompactInterval>> to get the current value.
+
 | spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
 a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.adoc#, StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, FlatMapGroupsWithStateExec>> physical operator
 

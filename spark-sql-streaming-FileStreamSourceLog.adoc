@@ -1,6 +1,22 @@
 == [[FileStreamSourceLog]] FileStreamSourceLog
 
-`FileStreamSourceLog` is...FIXME
+`FileStreamSourceLog` is a concrete <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>> (of `FileEntry` metadata) for...FIXME
+
+`FileStreamSourceLog` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>.
+
+[[defaultCompactInterval]]
+`FileStreamSourceLog` uses <<spark-sql-streaming-SQLConf.adoc#fileSourceLogCompactInterval, spark.sql.streaming.fileSource.log.compactInterval>> configuration property (default: `10`) for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#defaultCompactInterval, default compaction interval>>.
+
+[[fileCleanupDelayMs]]
+`FileStreamSourceLog` uses <<spark-sql-streaming-SQLConf.adoc#fileSourceLogCleanupDelay, spark.sql.streaming.fileSource.log.cleanupDelay>> configuration property (default: `10` minutes) for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#fileCleanupDelayMs, fileCleanupDelayMs>>.
+
+=== [[creating-instance]] Creating FileStreamSourceLog Instance
+
+`FileStreamSourceLog` (like the parent <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>) takes the following to be created:
+
+* [[metadataLogVersion]] Metadata version
+* [[sparkSession]] `SparkSession`
+* [[path]] Path of the metadata log directory
 
 === [[add]] `add` Method
 
