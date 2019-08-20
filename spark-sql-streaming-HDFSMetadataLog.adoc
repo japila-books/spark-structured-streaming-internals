@@ -3,7 +3,7 @@
 `HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, MetadataLog>> that uses Hadoop HDFS for a reliable storage.
 
 [[metadataPath]]
-`HDFSMetadataLog` uses the given <<path, path>> as the root directory of metadata logs. The path is immediately converted to a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for file management.
+`HDFSMetadataLog` uses the given <<path, path>> as the *metadata directory* with metadata logs. The path is immediately converted to a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for file management.
 
 [[formats]]
 `HDFSMetadataLog` uses http://json4s.org/[Json4s] with the https://github.com/FasterXML/jackson-databind[Jackson] binding for JSON parsing (serialization and deserialization).
@@ -76,11 +76,11 @@ NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creati
 get(batchId: Long): Option[T]
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to...FIXME.
+NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to get metadata of a batch.
 
 `get`...FIXME
 
-=== [[get-range]] Retrieving Metadata For Batch Id Range -- `get` Method
+=== [[get-range]] Retrieving Metadata For Batches -- `get` Method
 
 [source, scala]
 ----
@@ -136,7 +136,7 @@ NOTE: `purge` is part of the <<spark-sql-streaming-MetadataLog.adoc#purge, Metad
 
 `purge`...FIXME
 
-=== [[getOrderedBatchFiles]] `getOrderedBatchFiles` Method
+=== [[getOrderedBatchFiles]] Retrieving Ordered Batch Metadata Files -- `getOrderedBatchFiles` Method
 
 [source, scala]
 ----
@@ -236,7 +236,7 @@ Used when:
 * `HDFSMetadataLog` is requested to <<get, get batch metadata>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 
 | fileManager
-a| [[fileManager]] `CheckpointFileManager`
+a| [[fileManager]] <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>>
 
 Used when...FIXME
 

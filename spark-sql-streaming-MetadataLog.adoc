@@ -26,13 +26,14 @@ a| [[get]]
 
 [source, scala]
 ----
-get(batchId: Long): Option[T]
+get(
+  batchId: Long): Option[T]
 get(
   startId: Option[Long],
   endId: Option[Long]): Array[(Long, T)]
 ----
 
-Retrieves metadata by batch id or batch range
+Retrieves (_gets_) metadata of one or more batches
 
 Used when...FIXME
 

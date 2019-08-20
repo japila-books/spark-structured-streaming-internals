@@ -82,13 +82,16 @@ a| [[stateStoreProviderClass]] Used when:
 | `STREAMING_AGGREGATION_STATE_FORMAT_VERSION`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>>
-a| [[STREAMING_AGGREGATION_STATE_FORMAT_VERSION]]
-
-Used when:
+a| [[STREAMING_AGGREGATION_STATE_FORMAT_VERSION]] Used when:
 
 * <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy is executed
 
 * `OffsetSeqMetadata` is requested for the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfs, relevantSQLConfs>> and the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfDefaultValues, relevantSQLConfDefaultValues>>
+
+| `STREAMING_CHECKPOINT_FILE_MANAGER_CLASS`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointFileManagerClass, spark.sql.streaming.checkpointFileManagerClass>>
+a| [[STREAMING_CHECKPOINT_FILE_MANAGER_CLASS]] Used exclusively when `CheckpointFileManager` helper object is requested to <<spark-sql-streaming-CheckpointFileManager.adoc#create, create a CheckpointFileManager>>
 
 | `streamingMetricsEnabled`
 

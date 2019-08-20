@@ -80,7 +80,7 @@ deltaFile(version: Long): Path
 * `HDFSBackedStateStoreProvider` is requested to <<updateFromDeltaFile, updateFromDeltaFile>>
 ====
 
-=== [[fetchFiles]] `fetchFiles` Internal Method
+=== [[fetchFiles]] Fetching All Delta And Snapshot Files -- `fetchFiles` Internal Method
 
 [source, scala]
 ----
@@ -110,7 +110,7 @@ NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#init, 
 
 `init` uses the `StateStoreConf` to requests for the <<spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>>).
 
-In the end, `init` requests the <<fm, CheckpointFileManager>> to create the <<baseDir, baseDir>> directory (with subdirectories).
+In the end, `init` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#mkdirs, create>> the <<baseDir, baseDir>> directory (with parent directories).
 
 === [[latestIterator]] `latestIterator` Internal Method
 
@@ -231,12 +231,27 @@ updateFromDeltaFile(
 
 NOTE: `updateFromDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, loadMap>>.
 
+=== [[readSnapshotFile]] `readSnapshotFile` Internal Method
+
+[source, scala]
+----
+readSnapshotFile(
+  version: Long): Option[MapType]
+----
+
+`readSnapshotFile`...FIXME
+
+NOTE: `readSnapshotFile` is used...FIXME
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
 |===
 | Name
 | Description
+
+| fm
+a| [[fm]] <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>>
 
 | loadedMaps
 a| [[loadedMaps]]

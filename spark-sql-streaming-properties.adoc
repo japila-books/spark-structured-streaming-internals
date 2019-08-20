@@ -37,6 +37,11 @@ Used when <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggre
 
 Among the <<spark-sql-streaming-OffsetSeqMetadata.adoc#relevantSQLConfs, checkpointed properties>> that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 
+| spark.sql.streaming.checkpointFileManagerClass
+a| [[spark.sql.streaming.checkpointFileManagerClass]] *(internal)* <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>> to use to write checkpoint files atomically
+
+Default: <<spark-sql-streaming-FileContextBasedCheckpointFileManager.adoc#, FileContextBasedCheckpointFileManager>> (with <<spark-sql-streaming-FileSystemBasedCheckpointFileManager.adoc#, FileSystemBasedCheckpointFileManager>> in case of unsupported file system used for storing metadata files)
+
 | spark.sql.streaming.checkpointLocation
 a| [[spark.sql.streaming.checkpointLocation]] Default checkpoint directory for storing checkpoint data
 
