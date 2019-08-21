@@ -92,7 +92,7 @@ NOTE: *text* as the value of `providerName` constructor parameter denotes *text 
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is part of the <<spark-sql-streaming-Source.adoc#getOffset, Source Contract>> to...FIXME.
+NOTE: `getOffset` is part of the <<spark-sql-streaming-Source.adoc#getOffset, Source Contract>> to find the latest <<spark-sql-streaming-Offset.adoc#, offset>>.
 
 `getOffset`...FIXME
 
@@ -156,3 +156,14 @@ fetchAllFiles(): Seq[(String, Long)]
 `fetchAllFiles`...FIXME
 
 NOTE: `fetchAllFiles` is used exclusively when `FileStreamSource` is requested to <<fetchMaxOffset, fetchMaxOffset>>.
+
+=== [[allFilesUsingMetadataLogFileIndex]] `allFilesUsingMetadataLogFileIndex` Internal Method
+
+[source, scala]
+----
+allFilesUsingMetadataLogFileIndex(): Seq[FileStatus]
+----
+
+`allFilesUsingMetadataLogFileIndex` simply creates a new <<spark-sql-streaming-MetadataLogFileIndex.adoc#, MetadataLogFileIndex>> and requests it to `allFiles`.
+
+NOTE: `allFilesUsingMetadataLogFileIndex` is used exclusively when `FileStreamSource` is requested to <<fetchAllFiles, fetchAllFiles>> (when requested for <<fetchMaxOffset, fetchMaxOffset>> when `FileStreamSource` is requested to <<getOffset, getOffset>>).

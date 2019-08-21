@@ -56,7 +56,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 `FileStreamSink` initializes the <<internal-properties, internal properties>>.
 
-=== [[addBatch]] `addBatch` Method
+=== [[addBatch]] "Adding" Batch of Data to Sink -- `addBatch` Method
 
 [source, scala]
 ----
@@ -115,14 +115,14 @@ hasMetadata(
 | Description
 
 | basePath
-a| [[basePath]] *Base path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the given <<path, path>>)
+a| [[basePath]] *Base path* (Hadoop's https://hadoop.apache.org/docs/r2.8.3/api/org/apache/hadoop/fs/Path.html[Path] for the given <<path, path>>)
 
 Used when...FIXME
 
 | logPath
-a| [[logPath]] *Metadata log path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the <<basePath, base path>> and the <<metadataDir, _spark_metadata>>)
+a| [[logPath]] *Metadata log path* (Hadoop's https://hadoop.apache.org/docs/r2.8.3/api/org/apache/hadoop/fs/Path.html[Path] for the <<basePath, base path>> and the <<metadataDir, _spark_metadata>>)
 
-Used when...FIXME
+Used exclusively to create the <<fileLog, FileStreamSinkLog>>
 
 | fileLog
 a| [[fileLog]] <<spark-sql-streaming-FileStreamSinkLog.adoc#, FileStreamSinkLog>> (for the <<spark-sql-streaming-FileStreamSinkLog.adoc#VERSION, version 1>> and the <<logPath, metadata log path>>)
@@ -130,7 +130,7 @@ a| [[fileLog]] <<spark-sql-streaming-FileStreamSinkLog.adoc#, FileStreamSinkLog>
 Used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>
 
 | hadoopConf
-a| [[hadoopConf]] FIXME
+a| [[hadoopConf]] Hadoop's http://hadoop.apache.org/docs/r2.8.3/api/org/apache/hadoop/conf/Configuration.html[Configuration]
 
 Used when...FIXME
 

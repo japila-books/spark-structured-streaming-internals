@@ -171,7 +171,7 @@ allFiles(): Array[T]
 
 * `FileStreamSource` is <<spark-sql-streaming-FileStreamSource.adoc#, created>>
 
-* `MetadataLogFileIndex` is created
+* `MetadataLogFileIndex` is <<spark-sql-streaming-MetadataLogFileIndex.adoc#, created>>
 ====
 
 === [[compact]] `compact` Internal Method
@@ -183,9 +183,13 @@ compact(
   logs: Array[T]): Boolean
 ----
 
+`compact` <<getValidBatchesBeforeCompactionBatch, getValidBatchesBeforeCompactionBatch>> (with the streaming batch and the <<compactInterval, compact interval>>).
+
 `compact`...FIXME
 
-NOTE: `compact` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, store the metadata of a batch>>.
+In the end, `compact` <<compactLogs, compactLogs>> and requests the parent `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, persist metadata of a streaming batch (to a metadata log file)>>.
+
+NOTE: `compact` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, persist metadata of a streaming batch>>.
 
 === [[getValidBatchesBeforeCompactionBatch]] `getValidBatchesBeforeCompactionBatch` Object Method
 

@@ -66,11 +66,16 @@ trait Source {
 Used when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a batch] and link:spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets[populateStartOffsets].
 
 | `getOffset`
-a| [[getOffset]] Finding the latest offset
+a| [[getOffset]]
 
-NOTE: link:spark-sql-streaming-Offset.adoc[Offset] is...FIXME
+[source, scala]
+----
+getOffset: Option[Offset]
+----
 
-Used exclusively when `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[runs streaming batches] (and link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData[constructing the next streaming micro-batch] for every streaming data source in a streaming Dataset)
+Finding the latest <<spark-sql-streaming-Offset.adoc#, offset>>
+
+Used exclusively when `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct a next streaming micro-batch>>
 
 | [[schema]] `schema`
 a| Schema of the data from this source

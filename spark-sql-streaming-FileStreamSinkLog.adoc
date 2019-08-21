@@ -1,11 +1,15 @@
 == [[FileStreamSinkLog]] FileStreamSinkLog
 
-`FileStreamSinkLog` is a concrete <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>> (of <<spark-sql-streaming-SinkFileStatus.adoc#, SinkFileStatus>> metadata) for...FIXME
-
-`FileStreamSinkLog` is <<creating-instance, created>> for <<spark-sql-streaming-FileStreamSink.adoc#fileLog, FileStreamSink>> and `MetadataLogFileIndex`.
+`FileStreamSinkLog` is a concrete <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>> (of <<spark-sql-streaming-SinkFileStatus.adoc#, SinkFileStatuses>>) for <<spark-sql-streaming-FileStreamSink.adoc#, FileStreamSink>> and <<spark-sql-streaming-MetadataLogFileIndex.adoc#, MetadataLogFileIndex>>.
 
 [[VERSION]]
 `FileStreamSinkLog` uses *1* for the version.
+
+[[ADD_ACTION]]
+`FileStreamSinkLog` uses *add* action to create new <<spark-sql-streaming-SinkFileStatus.adoc#, metadata logs>>.
+
+[[DELETE_ACTION]]
+`FileStreamSinkLog` uses *delete* action to mark <<spark-sql-streaming-SinkFileStatus.adoc#, metadata logs>> that should be excluded from <<compactLogs, compaction>>.
 
 === [[creating-instance]] Creating FileStreamSinkLog Instance
 
