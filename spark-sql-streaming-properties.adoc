@@ -80,6 +80,13 @@ Must be a positive value (greater than `0`)
 
 Use <<spark-sql-streaming-SQLConf.adoc#fileSourceLogCompactInterval, SQLConf.fileSourceLogCompactInterval>> to get the current value.
 
+| spark.sql.streaming.fileSource.log.deletion
+a| [[spark.sql.streaming.fileSource.log.deletion]] *(internal)* Whether to delete the expired log files in file stream source
+
+Default: `true`
+
+Use <<spark-sql-streaming-SQLConf.adoc#fileSourceLogDeletion, SQLConf.fileSourceLogDeletion>> to get the current value.
+
 | spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
 a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.adoc#, StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, FlatMapGroupsWithStateExec>> physical operator
 

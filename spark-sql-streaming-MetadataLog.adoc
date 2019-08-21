@@ -19,7 +19,7 @@ add(
   metadata: T): Boolean
 ----
 
-Stores (_adds_) metadata of a streaming batch
+Persists (_adds_) metadata of a streaming batch
 
 Used when:
 

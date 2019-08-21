@@ -21,7 +21,7 @@
 | [[CommitLog]] <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
 
 | <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>
-| [[CompactibleFileStreamLog]] Compactible metadata logs (that compact logs regularly)
+| [[CompactibleFileStreamLog]] Compactible metadata logs (that compact logs at regular interval)
 
 | <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>
 | [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-ahead log (WAL)>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
@@ -46,9 +46,9 @@ serialize(
   out: OutputStream): Unit
 ----
 
-`serialize`...FIXME
+`serialize` simply writes the log data (serialized using <<formats, Json4s (with Jackson binding)>> library).
 
-NOTE: `serialize` is used exclusively when `HDFSMetadataLog` is requested to <<writeBatchToFile, writeBatchToFile>> (when requested to <<add, store metadata of a streaming batch>>).
+NOTE: `serialize` is used exclusively when `HDFSMetadataLog` is requested to <<writeBatchToFile, write metadata of a streaming batch to a file (metadata log)>> (when <<add, storing metadata of a streaming batch>>).
 
 === [[deserialize]] Deserializing Metadata (Reading Metadata from Serialized Format) -- `deserialize` Method
 
@@ -72,7 +72,7 @@ CAUTION: FIXME
 
 NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creating-instance, created>> (and the internal <<fileManager, FileManager>> is created alongside).
 
-=== [[get]][[get-batchId]] Retrieving Metadata Of Batch -- `get` Method
+=== [[get]][[get-batchId]] Retrieving Metadata Of Streaming Batch -- `get` Method
 
 [source, scala]
 ----
@@ -96,7 +96,7 @@ NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataL
 
 `get`...FIXME
 
-=== [[add]] Adding Metadata of Batch -- `add` Method
+=== [[add]] Persisting Metadata of Streaming Batch -- `add` Method
 
 [source, scala]
 ----
@@ -105,11 +105,13 @@ add(
   metadata: T): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to add metadata of a streaming batch.
+NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to persist metadata of a streaming batch.
 
-`add` <<batchIdToPath, creates a batch metadata file>> for the given `batchId` and <<writeBatchToFile, writes the batch metadata to the file>> unless <<get, already done>>.
+`add` return `true` when the metadata of the streaming batch was not available and persisted successfully. Otherwise, `add` returns `false`.
 
-`add` returns `true` when the metadata has just been written for the batch (and the <<batchIdToPath, batchIdToPath>> for the given `batchId` was not available).
+Internally, `add` <<get, looks up metadata of the given streaming batch>> (`batchId`) and returns `false` when found.
+
+Otherwise, when not found, `add` <<batchIdToPath, creates a metadata log file>> for the given `batchId` and <<writeBatchToFile, writes metadata to the file>>. `add` returns `true` if successful.
 
 === [[getLatest]] Retrieving Latest Committed Batch Id with Metadata If Available -- `getLatest` Method
 
@@ -186,23 +188,6 @@ pathToBatchId(path: Path): Long
 * `HDFSMetadataLog` is requested to <<isBatchFile, isBatchFile>>, <<get-range, get metadata of a range of batches>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 ====
 
-=== [[writeBatchToFile]] Writing Batch Metadata to File -- `writeBatchToFile` Internal Method
-
-[source, scala]
-----
-writeBatchToFile(
-  metadata: T,
-  path: Path): Unit
-----
-
-`writeBatchToFile` requests the <<fileManager, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#createAtomic, createAtomic>> (for the specified `path` and the `overwriteIfPossible` flag disabled).
-
-`writeBatchToFile` then <<serialize, serializes the metadata>> (to the `CancellableFSDataOutputStream` output stream) and closes the stream.
-
-In case of an exception, `writeBatchToFile` simply requests the `CancellableFSDataOutputStream` output stream to `cancel` (so that the output file is not generated) and re-throws the exception.
-
-NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, add (persists) metadata of a streaming batch>>.
-
 === [[verifyBatchIds]] `verifyBatchIds` Object Method
 
 [source, scala]
@@ -273,6 +258,23 @@ getOrderedBatchFiles(): Array[FileStatus]
 `getOrderedBatchFiles`...FIXME
 
 NOTE: `getOrderedBatchFiles` does not seem to be used at all.
+
+=== [[writeBatchToFile]] Writing Batch Metadata to File (Metadata Log) -- `writeBatchToFile` Internal Method
+
+[source, scala]
+----
+writeBatchToFile(
+  metadata: T,
+  path: Path): Unit
+----
+
+`writeBatchToFile` requests the <<fileManager, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#createAtomic, createAtomic>> (for the specified `path` and the `overwriteIfPossible` flag disabled).
+
+`writeBatchToFile` then <<serialize, serializes the metadata>> (to the `CancellableFSDataOutputStream` output stream) and closes the stream.
+
+In case of an exception, `writeBatchToFile` simply requests the `CancellableFSDataOutputStream` output stream to `cancel` (so that the output file is not generated) and re-throws the exception.
+
+NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, store (persist) metadata of a streaming batch>>.
 
 === [[internal-properties]] Internal Properties
 

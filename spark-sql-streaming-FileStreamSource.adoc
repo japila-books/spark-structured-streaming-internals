@@ -87,12 +87,21 @@ NOTE: *text* as the value of `providerName` constructor parameter denotes *text 
 
 === [[getOffset]] `getOffset` Method
 
+[source, scala]
+----
+getOffset: Option[Offset]
+----
+
+NOTE: `getOffset` is part of the <<spark-sql-streaming-Source.adoc#getOffset, Source Contract>> to...FIXME.
+
+`getOffset`...FIXME
+
 The maximum offset (`getOffset`) is calculated by fetching all the files in `path` excluding files that start with `_` (underscore).
 
 When computing the maximum offset using `getOffset`, you should see the following DEBUG message in the logs:
 
 ```
-DEBUG Listed ${files.size} in ${(endTime.toDouble - startTime) / 1000000}ms
+Listed ${files.size} in ${(endTime.toDouble - startTime) / 1000000}ms
 ```
 
 When computing the maximum offset using `getOffset`, it also filters out the files that were already seen (tracked in `seenFiles` internal registry).
@@ -135,4 +144,15 @@ fetchMaxOffset(): FileStreamSourceOffset
 
 `fetchMaxOffset`...FIXME
 
-NOTE: `fetchMaxOffset` is used when...FIXME
+NOTE: `fetchMaxOffset` is used exclusively when `FileStreamSource` is requested to <<getOffset, getOffset>>.
+
+=== [[fetchAllFiles]] `fetchAllFiles` Internal Method
+
+[source, scala]
+----
+fetchAllFiles(): Seq[(String, Long)]
+----
+
+`fetchAllFiles`...FIXME
+
+NOTE: `fetchAllFiles` is used exclusively when `FileStreamSource` is requested to <<fetchMaxOffset, fetchMaxOffset>>.

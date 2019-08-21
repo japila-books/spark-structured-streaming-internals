@@ -55,7 +55,7 @@ a| [[isDeletingExpiredLog]]
 isDeletingExpiredLog: Boolean
 ----
 
-Used exclusively when `CompactibleFileStreamLog` is requested to <<add, store the metadata of a batch>>
+Used exclusively when `CompactibleFileStreamLog` is requested to <<add, store (add) metadata of a streaming batch>>
 
 |===
 
@@ -117,7 +117,7 @@ NOTE: `isBatchFile` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#is
 
 `isBatchFile`...FIXME
 
-=== [[serialize]] `serialize` Method
+=== [[serialize]] Serializing Metadata (Writing Metadata in Serialized Format) -- `serialize` Method
 
 [source, scala]
 ----
@@ -126,9 +126,11 @@ serialize(
   out: OutputStream): Unit
 ----
 
-NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to...FIXME.
+NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to serialize metadata (write metadata in serialized format).
 
-`serialize`...FIXME
+`serialize` firstly writes the version header (`v` and the <<metadataLogVersion, metadataLogVersion>>) out to the given output stream (in `UTF_8`).
+
+`serialize` then writes the log data (serialized using <<spark-sql-streaming-HDFSMetadataLog.adoc#formats, Json4s (with Jackson binding)>> library). Entries are separated by new lines.
 
 === [[deserialize]] Deserializing Metadata -- `deserialize` Method
 
@@ -185,18 +187,6 @@ compact(
 
 NOTE: `compact` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, store the metadata of a batch>>.
 
-=== [[deleteExpiredLog]] `deleteExpiredLog` Internal Method
-
-[source, scala]
-----
-deleteExpiredLog(
-  currentBatchId: Long): Unit
-----
-
-`deleteExpiredLog`...FIXME
-
-NOTE: `deleteExpiredLog` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, store metadata for a batch>>.
-
 === [[getValidBatchesBeforeCompactionBatch]] `getValidBatchesBeforeCompactionBatch` Object Method
 
 [source, scala]
@@ -238,6 +228,20 @@ getBatchIdFromFileName(fileName: String): Long
 `getBatchIdFromFileName` simply removes the <<COMPACT_FILE_SUFFIX, .compact>> suffix from the given `fileName` and converts the remaining part to a number.
 
 NOTE: `getBatchIdFromFileName` is used when `CompactibleFileStreamLog` is requested to <<pathToBatchId, pathToBatchId>>, <<isBatchFile, isBatchFile>>, and <<deleteExpiredLog, deleteExpiredLog>>.
+
+=== [[deleteExpiredLog]] `deleteExpiredLog` Internal Method
+
+[source, scala]
+----
+deleteExpiredLog(
+  currentBatchId: Long): Unit
+----
+
+`deleteExpiredLog` does nothing and simply returns when the current batch ID incremented (`currentBatchId + 1`) is below the <<compactInterval, compact interval>> plus the <<minBatchesToRetain, minBatchesToRetain>>.
+
+`deleteExpiredLog`...FIXME
+
+NOTE: `deleteExpiredLog` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, store metadata of a streaming batch>>.
 
 === [[internal-properties]] Internal Properties
 

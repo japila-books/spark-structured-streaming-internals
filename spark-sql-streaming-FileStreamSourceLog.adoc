@@ -10,6 +10,9 @@
 [[fileCleanupDelayMs]]
 `FileStreamSourceLog` uses <<spark-sql-streaming-SQLConf.adoc#fileSourceLogCleanupDelay, spark.sql.streaming.fileSource.log.cleanupDelay>> configuration property (default: `10` minutes) for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#fileCleanupDelayMs, fileCleanupDelayMs>>.
 
+[[isDeletingExpiredLog]]
+`FileStreamSourceLog` uses <<spark-sql-streaming-SQLConf.adoc#fileSourceLogDeletion, spark.sql.streaming.fileSource.log.deletion>> configuration property (default: `true`) for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#isDeletingExpiredLog, isDeletingExpiredLog>>.
+
 === [[creating-instance]] Creating FileStreamSourceLog Instance
 
 `FileStreamSourceLog` (like the parent <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>) takes the following to be created:

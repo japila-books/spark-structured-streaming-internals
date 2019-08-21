@@ -44,6 +44,12 @@ a| [[continuousStreamingExecutorPollIntervalMs]] Used exclusively when `DataSour
 
 a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExecution` is requested for the <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>> (of a streaming query)
 
+| `fileSourceLogDeletion`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.fileSource.log.deletion, spark.sql.streaming.fileSource.log.deletion>>
+
+a| [[fileSourceLogDeletion]][[FILE_SOURCE_LOG_DELETION]] Used exclusively when `FileStreamSourceLog` is requested for the <<spark-sql-streaming-FileStreamSourceLog.adoc#isDeletingExpiredLog, isDeletingExpiredLog>>
+
 | `fileSourceLogCleanupDelay`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.fileSource.log.cleanupDelay, spark.sql.streaming.fileSource.log.cleanupDelay>>

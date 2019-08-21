@@ -6,7 +6,7 @@
 ----
 import scala.concurrent.duration._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val out = in.
+val sq = in.
   writeStream.
   format("parquet").
   option("path", "parquet-output-dir").
@@ -44,17 +44,6 @@ log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSink=ALL
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
-=== [[addBatch]] `addBatch` Method
-
-[source, scala]
-----
-addBatch(batchId: Long, data: DataFrame): Unit
-----
-
-NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.
-
-`addBatch`...FIXME
-
 === [[creating-instance]] Creating FileStreamSink Instance
 
 `FileStreamSink` takes the following to be created:
@@ -66,6 +55,19 @@ NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink C
 * [[options]] Configuration options
 
 `FileStreamSink` initializes the <<internal-properties, internal properties>>.
+
+=== [[addBatch]] `addBatch` Method
+
+[source, scala]
+----
+addBatch(
+  batchId: Long,
+  data: DataFrame): Unit
+----
+
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.
+
+`addBatch`...FIXME
 
 === [[basicWriteJobStatsTracker]] Creating BasicWriteJobStatsTracker -- `basicWriteJobStatsTracker` Internal Method
 
@@ -85,6 +87,26 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 NOTE: `basicWriteJobStatsTracker` is used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>.
 
+=== [[hasMetadata]] `hasMetadata` Object Method
+
+[source, scala]
+----
+hasMetadata(
+  path: Seq[String],
+  hadoopConf: Configuration): Boolean
+----
+
+`hasMetadata`...FIXME
+
+[NOTE]
+====
+`hasMetadata` is used when:
+
+* `DataSource` (Spark SQL) is requested to resolve a `FileFormat` relation (`resolveRelation`) and creates a `HadoopFsRelation`
+
+* `FileStreamSource` is requested to <<spark-sql-streaming-FileStreamSource.adoc#fetchAllFiles, fetchAllFiles>>
+====
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -93,12 +115,12 @@ NOTE: `basicWriteJobStatsTracker` is used exclusively when `FileStreamSink` is r
 | Description
 
 | basePath
-| [[basePath]] *Base path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the given <<path, path>>)
+a| [[basePath]] *Base path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the given <<path, path>>)
 
 Used when...FIXME
 
 | logPath
-| [[logPath]] *Metadata log path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the <<basePath, base path>> and the <<metadataDir, _spark_metadata>>)
+a| [[logPath]] *Metadata log path* (Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the <<basePath, base path>> and the <<metadataDir, _spark_metadata>>)
 
 Used when...FIXME
 
@@ -108,7 +130,7 @@ a| [[fileLog]] <<spark-sql-streaming-FileStreamSinkLog.adoc#, FileStreamSinkLog>
 Used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>
 
 | hadoopConf
-| [[hadoopConf]] FIXME
+a| [[hadoopConf]] FIXME
 
 Used when...FIXME
 

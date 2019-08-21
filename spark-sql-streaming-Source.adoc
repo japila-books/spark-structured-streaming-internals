@@ -65,8 +65,8 @@ trait Source {
 
 Used when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a batch] and link:spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets[populateStartOffsets].
 
-| [[getOffset]] `getOffset`
-a| Finding the latest offset
+| `getOffset`
+a| [[getOffset]] Finding the latest offset
 
 NOTE: link:spark-sql-streaming-Offset.adoc[Offset] is...FIXME
 
