@@ -1,12 +1,12 @@
 == [[HDFSMetadataLog]] HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Reliable Storage
 
-`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, MetadataLog>> that uses Hadoop HDFS for a reliable storage.
+`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, MetadataLog>> that uses Hadoop DFS for a reliable storage.
 
 [[metadataPath]]
 `HDFSMetadataLog` uses the given <<path, path>> as the *metadata directory* with metadata logs. The path is immediately converted to a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for file management.
 
 [[formats]]
-`HDFSMetadataLog` uses http://json4s.org/[Json4s] with the https://github.com/FasterXML/jackson-databind[Jackson] binding for JSON parsing (serialization and deserialization).
+`HDFSMetadataLog` uses http://json4s.org/[Json4s] with the https://github.com/FasterXML/jackson-databind[Jackson] binding for <<serialize, serialization>> and <<deserialize, deserialization>> (to and from JSON format).
 
 `HDFSMetadataLog` is further customized by the <<extensions, extensions>>.
 
@@ -21,14 +21,15 @@
 | [[CommitLog]] <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
 
 | <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>
-| [[CompactibleFileStreamLog]] Compactible metadata logs
+| [[CompactibleFileStreamLog]] Compactible metadata logs (that compact logs regularly)
 
 | <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>
 | [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-ahead log (WAL)>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
 
 |===
 
-[[creating-instance]]
+=== [[creating-instance]] Creating HDFSMetadataLog Instance
+
 `HDFSMetadataLog` takes the following to be created:
 
 * [[sparkSession]] `SparkSession`
@@ -36,18 +37,20 @@
 
 While being <<creating-instance, created>> `HDFSMetadataLog` creates the <<path, path>> unless exists already.
 
-=== [[serialize]] Writing Metadata in Serialized Format -- `serialize` Method
+=== [[serialize]] Serializing Metadata (Writing Metadata in Serialized Format) -- `serialize` Method
 
 [source, scala]
 ----
-serialize(metadata: T, out: OutputStream): Unit
+serialize(
+  metadata: T,
+  out: OutputStream): Unit
 ----
 
 `serialize`...FIXME
 
-NOTE: `serialize` is used exclusively when `HDFSMetadataLog` is requested to <<writeBatchToFile, writeBatchToFile>> (when requested to <<add, store metadata for a batch>>).
+NOTE: `serialize` is used exclusively when `HDFSMetadataLog` is requested to <<writeBatchToFile, writeBatchToFile>> (when requested to <<add, store metadata of a streaming batch>>).
 
-=== [[deserialize]] Deserializing Metadata -- `deserialize` Method
+=== [[deserialize]] Deserializing Metadata (Reading Metadata from Serialized Format) -- `deserialize` Method
 
 [source, scala]
 ----
@@ -56,7 +59,7 @@ deserialize(in: InputStream): T
 
 `deserialize` deserializes a metadata (of type `T`) from a given `InputStream`.
 
-NOTE: `deserialize` is used exclusively when `HDFSMetadataLog` is requested to <<get, retrieve metadata for a batch>>.
+NOTE: `deserialize` is used exclusively when `HDFSMetadataLog` is requested to <<get, retrieve metadata of a batch>>.
 
 === [[createFileManager]] `createFileManager` Internal Method
 
@@ -69,7 +72,7 @@ CAUTION: FIXME
 
 NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creating-instance, created>> (and the internal <<fileManager, FileManager>> is created alongside).
 
-=== [[get]][[get-batchId]] Retrieving Metadata For Batch -- `get` Method
+=== [[get]][[get-batchId]] Retrieving Metadata Of Batch -- `get` Method
 
 [source, scala]
 ----
@@ -80,7 +83,7 @@ NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataL
 
 `get`...FIXME
 
-=== [[get-range]] Retrieving Metadata For Batches -- `get` Method
+=== [[get-range]] Retrieving Metadata of Range of Batches -- `get` Method
 
 [source, scala]
 ----
@@ -89,11 +92,11 @@ get(
   endId: Option[Long]): Array[(Long, T)]
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to...FIXME.
+NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to get metadata of range of batches.
 
 `get`...FIXME
 
-=== [[add]] Adding Metadata for Batch -- `add` Method
+=== [[add]] Adding Metadata of Batch -- `add` Method
 
 [source, scala]
 ----
@@ -136,17 +139,6 @@ NOTE: `purge` is part of the <<spark-sql-streaming-MetadataLog.adoc#purge, Metad
 
 `purge`...FIXME
 
-=== [[getOrderedBatchFiles]] Retrieving Ordered Batch Metadata Files -- `getOrderedBatchFiles` Method
-
-[source, scala]
-----
-getOrderedBatchFiles(): Array[FileStatus]
-----
-
-`getOrderedBatchFiles`...FIXME
-
-NOTE: `getOrderedBatchFiles` is used when...FIXME
-
 === [[batchIdToPath]] Creating Batch Metadata File -- `batchIdToPath` Method
 
 [source, scala]
@@ -156,7 +148,14 @@ batchIdToPath(batchId: Long): Path
 
 `batchIdToPath` simply creates a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for the file called by the specified `batchId` under the <<metadataPath, metadata directory>>.
 
-NOTE: `batchIdToPath` is used when...FIXME
+[NOTE]
+====
+`batchIdToPath` is used when:
+
+* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compact, compact>> and <<spark-sql-streaming-CompactibleFileStreamLog.adoc#allFiles, allFiles>>
+
+* `HDFSMetadataLog` is requested to <<add, add>>, <<get, get>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
+====
 
 === [[isBatchFile]] `isBatchFile` Method
 
@@ -167,18 +166,7 @@ isBatchFile(path: Path): Boolean
 
 `isBatchFile`...FIXME
 
-NOTE: `isBatchFile` is used when...FIXME
-
-=== [[parseVersion]] Retrieving Version (From Text Line) -- `parseVersion` Internal Method
-
-[source, scala]
-----
-parseVersion(text: String, maxSupportedVersion: Int): Int
-----
-
-`parseVersion`...FIXME
-
-NOTE: `parseVersion` is used when...FIXME
+NOTE: `isBatchFile` is used exclusively when `HDFSMetadataLog` is requested for the <<batchFilesFilter, PathFilter of batch files>>.
 
 === [[pathToBatchId]] `pathToBatchId` Method
 
@@ -189,7 +177,14 @@ pathToBatchId(path: Path): Long
 
 `pathToBatchId`...FIXME
 
-NOTE: `pathToBatchId` is used when...FIXME
+[NOTE]
+====
+`pathToBatchId` is used when:
+
+* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compactInterval, compact interval>>
+
+* `HDFSMetadataLog` is requested to <<isBatchFile, isBatchFile>>, <<get-range, get metadata of a range of batches>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
+====
 
 === [[writeBatchToFile]] Writing Batch Metadata to File -- `writeBatchToFile` Internal Method
 
@@ -206,7 +201,56 @@ writeBatchToFile(
 
 In case of an exception, `writeBatchToFile` simply requests the `CancellableFSDataOutputStream` output stream to `cancel` (so that the output file is not generated) and re-throws the exception.
 
-NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, add (persists) metadata for a batch>>.
+NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, add (persists) metadata of a streaming batch>>.
+
+=== [[verifyBatchIds]] `verifyBatchIds` Object Method
+
+[source, scala]
+----
+verifyBatchIds(
+  batchIds: Seq[Long],
+  startId: Option[Long],
+  endId: Option[Long]): Unit
+----
+
+`verifyBatchIds`...FIXME
+
+[NOTE]
+====
+`verifyBatchIds` is used when:
+
+* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.adoc#get, get>>
+
+* `HDFSMetadataLog` is requested to <<get-range, get>>
+====
+
+=== [[parseVersion]] Retrieving Version (From Text Line) -- `parseVersion` Internal Method
+
+[source, scala]
+----
+parseVersion(
+  text: String,
+  maxSupportedVersion: Int): Int
+----
+
+`parseVersion`...FIXME
+
+[NOTE]
+====
+`parseVersion` is used when:
+
+* `KafkaSourceInitialOffsetWriter` is requested to `deserialize`
+
+* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initial partition offsets>>
+
+* `CommitLog` is requested to <<spark-sql-streaming-CommitLog.adoc#deserialize, deserialize a metadata>>
+
+* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#deserialize, deserialize a metadata>>
+
+* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.adoc#deserialize, deserialize a metadata>>
+
+* `RateStreamMicroBatchReader` is requested to `deserialize` a metadata
+====
 
 === [[purgeAfter]] `purgeAfter` Method
 
@@ -219,6 +263,17 @@ purgeAfter(thresholdBatchId: Long): Unit
 
 NOTE: `purgeAfter` seems to be used exclusively in tests.
 
+=== [[getOrderedBatchFiles]] Retrieving Ordered Batch Metadata Files -- `getOrderedBatchFiles` Method
+
+[source, scala]
+----
+getOrderedBatchFiles(): Array[FileStatus]
+----
+
+`getOrderedBatchFiles`...FIXME
+
+NOTE: `getOrderedBatchFiles` does not seem to be used at all.
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -227,7 +282,7 @@ NOTE: `purgeAfter` seems to be used exclusively in tests.
 | Description
 
 | batchFilesFilter
-a| [[batchFilesFilter]] Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/PathFilter.html[PathFilter] of <<isBatchFile, batch files>> (with names being long numbers)
+a| [[batchFilesFilter]] Hadoop's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/PathFilter.html[PathFilter] of <<isBatchFile, batch files>> (with names being long numbers)
 
 Used when:
 

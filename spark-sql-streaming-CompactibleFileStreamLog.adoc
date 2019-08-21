@@ -1,6 +1,6 @@
 == [[CompactibleFileStreamLog]] CompactibleFileStreamLog Contract -- Compactible Metadata Logs
 
-`CompactibleFileStreamLog` is the <<contract, extension>> of the <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog contract>> for <<implementations, compactible metadata logs>> that <<compactLogs, compactLogs>> every <<compactInterval, compactInterval>>.
+`CompactibleFileStreamLog` is the <<contract, extension>> of the <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog contract>> for <<implementations, compactible metadata logs>> that <<compactLogs, compactLogs>> every <<compactInterval, compact interval>>.
 
 [[minBatchesToRetain]][[spark.sql.streaming.minBatchesToRetain]]
 `CompactibleFileStreamLog` uses <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) for <<deleteExpiredLog, deleteExpiredLog>>.
@@ -130,7 +130,7 @@ NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#seri
 
 `serialize`...FIXME
 
-=== [[deserialize]] `deserialize` Method
+=== [[deserialize]] Deserializing Metadata -- `deserialize` Method
 
 [source, scala]
 ----
@@ -247,6 +247,6 @@ NOTE: `getBatchIdFromFileName` is used when `CompactibleFileStreamLog` is reques
 | Description
 
 | compactInterval
-a| [[compactInterval]]
+a| [[compactInterval]] *Compact interval*
 
 |===
