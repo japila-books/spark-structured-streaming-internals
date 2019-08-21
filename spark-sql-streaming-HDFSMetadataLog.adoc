@@ -105,7 +105,7 @@ add(
   metadata: T): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to add metadata for a batch.
+NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to add metadata of a streaming batch.
 
 `add` <<batchIdToPath, creates a batch metadata file>> for the given `batchId` and <<writeBatchToFile, writes the batch metadata to the file>> unless <<get, already done>>.
 

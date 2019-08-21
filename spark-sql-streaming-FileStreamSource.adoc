@@ -125,3 +125,14 @@ The method to create a result batch is given at instantiation time (as `dataFram
 NOTE: It extends `HDFSMetadataLog[Seq[String]]`.
 
 CAUTION: FIXME Review `HDFSMetadataLog`
+
+=== [[fetchMaxOffset]] `fetchMaxOffset` Internal Method
+
+[source, scala]
+----
+fetchMaxOffset(): FileStreamSourceOffset
+----
+
+`fetchMaxOffset`...FIXME
+
+NOTE: `fetchMaxOffset` is used when...FIXME

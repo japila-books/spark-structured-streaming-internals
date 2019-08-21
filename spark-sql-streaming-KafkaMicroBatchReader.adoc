@@ -127,3 +127,14 @@ getSortedExecutorList(): Array[String]
 `getSortedExecutorList` requests the `BlockManager` to request the `BlockManagerMaster` to get the peers (the other nodes in a Spark cluster), creates a `ExecutorCacheTaskLocation` for every pair of host and executor ID, and in the end, sort it in descending order.
 
 NOTE: `getSortedExecutorList` is used exclusively when `KafkaMicroBatchReader` is requested to <<planInputPartitions, planInputPartitions>> (and calculates offset ranges).
+
+=== [[getOrCreateInitialPartitionOffsets]] `getOrCreateInitialPartitionOffsets` Internal Method
+
+[source, scala]
+----
+getOrCreateInitialPartitionOffsets(): PartitionOffsetMap
+----
+
+`getOrCreateInitialPartitionOffsets`...FIXME
+
+NOTE: `getOrCreateInitialPartitionOffsets` is used when...FIXME

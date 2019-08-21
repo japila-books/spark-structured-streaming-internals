@@ -1,6 +1,6 @@
 == [[MetadataLog]] MetadataLog Contract -- Metadata Storage
 
-`MetadataLog` is the <<contract, abstraction>> of <<implementations, store metadata>> that can <<add, persist>>, <<get, retrieve>>, and <<purge, remove>> metadata (of type `T`).
+`MetadataLog` is the <<contract, abstraction>> of <<implementations, metadata stores>> that can <<add, persist>>, <<get, retrieve>>, and <<purge, remove>> metadata (of type `T`).
 
 [[contract]]
 .MetadataLog Contract
@@ -19,7 +19,27 @@ add(
   metadata: T): Boolean
 ----
 
-Adds metadata for a batch
+Stores (_adds_) metadata of a streaming batch
+
+Used when:
+
+* `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getOrCreateInitialPartitionOffsets, getOrCreateInitialPartitionOffsets>>
+
+* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initialPartitionOffsets>>
+
+* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#add, store metadata of a streaming batch>> and to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compact, compact>>
+
+* `FileStreamSource` is requested to <<spark-sql-streaming-FileStreamSource.adoc#fetchMaxOffset, fetchMaxOffset>>
+
+* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.adoc#add, store (add) metadata of a streaming batch>>
+
+* `ManifestFileCommitProtocol` is requested to <<spark-sql-streaming-ManifestFileCommitProtocol.adoc#commitJob, commitJob>>
+
+* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct a next streaming micro-batch>> and <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a single streaming micro-batch>>
+
+* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.adoc#addOffset, addOffset>> and <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
+
+* `RateStreamMicroBatchReader` is created (`creationTimeMs`)
 
 | get
 a| [[get]]

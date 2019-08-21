@@ -1,3 +1,16 @@
 == [[ManifestFileCommitProtocol]] ManifestFileCommitProtocol
 
 `ManifestFileCommitProtocol` is...FIXME
+
+=== [[commitJob]] `commitJob` Method
+
+[source, scala]
+----
+commitJob(
+  jobContext: JobContext,
+  taskCommits: Seq[TaskCommitMessage]): Unit
+----
+
+NOTE: `commitJob` is part of the `FileCommitProtocol` contract to...FIXME.
+
+`commitJob`...FIXME

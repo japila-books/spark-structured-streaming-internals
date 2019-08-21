@@ -70,7 +70,7 @@ Used exclusively when `CompactibleFileStreamLog` is requested to <<add, store th
 | [[FileStreamSinkLog]]
 
 | <<spark-sql-streaming-FileStreamSourceLog.adoc#, FileStreamSourceLog>>
-| [[FileStreamSourceLog]]
+| [[FileStreamSourceLog]] `CompactibleFileStreamLog` (of `FileEntry` metadata) of <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>
 
 |===
 
@@ -141,7 +141,7 @@ NOTE: `deserialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#de
 
 `deserialize`...FIXME
 
-=== [[add]] Storing Metadata Of Batch -- `add` Method
+=== [[add]] Storing Metadata Of Streaming Batch -- `add` Method
 
 [source, scala]
 ----
