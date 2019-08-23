@@ -1,6 +1,6 @@
 == [[KafkaSourceOffset]] KafkaSourceOffset
 
-`KafkaSourceOffset` is a `OffsetV2` that...FIXME
+`KafkaSourceOffset` is an <<spark-sql-streaming-Offset.adoc#, Offset>> that...FIXME
 
 [[partitionToOffsets]]
 [[creating-instance]]

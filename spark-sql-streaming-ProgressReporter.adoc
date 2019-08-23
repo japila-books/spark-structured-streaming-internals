@@ -416,7 +416,7 @@ formatTimestamp(millis: Long): String
 
 NOTE: `formatTimestamp` is used when...FIXME
 
-=== [[recordTriggerOffsets]] `recordTriggerOffsets` Method
+=== [[recordTriggerOffsets]] Recording Trigger Offsets (StreamProgress) -- `recordTriggerOffsets` Method
 
 [source, scala]
 ----
@@ -425,7 +425,7 @@ recordTriggerOffsets(
   to: StreamProgress): Unit
 ----
 
-`recordTriggerOffsets`...FIXME
+`recordTriggerOffsets` simply sets (_records_) the <<currentTriggerStartOffsets, currentTriggerStartOffsets>> and <<currentTriggerEndOffsets, currentTriggerEndOffsets>> internal registries to the <<spark-sql-streaming-Offset.adoc#json, json>> representations of the `from` and `to` <<spark-sql-streaming-StreamProgress.adoc#, StreamProgresses>>.
 
 [NOTE]
 ====

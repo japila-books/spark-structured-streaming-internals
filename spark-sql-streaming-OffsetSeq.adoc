@@ -30,3 +30,14 @@ toStreamProgress(sources: Seq[BaseStreamingSource]): StreamProgress
 
 * [[offsets]] Collection of <<spark-sql-streaming-Offset.adoc#, Offsets>>
 * [[metadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> (default: `None`)
+
+=== [[toString]] Textual Representation -- `toString` Method
+
+[source, scala]
+----
+toString: String
+----
+
+NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()++[java.lang.Object] contract for the string representation of the object.
+
+`toString`...FIXME

@@ -7,9 +7,8 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
-== Offsets and Metadata Checkpointing
+== Metadata Checkpointing and Offsets
 
-. link:spark-sql-streaming-Offset.adoc[Offset]
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
 .. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
 
@@ -25,6 +24,8 @@
 . link:spark-sql-streaming-CheckpointFileManager.adoc[CheckpointFileManager]
 .. link:spark-sql-streaming-FileContextBasedCheckpointFileManager.adoc[FileContextBasedCheckpointFileManager]
 .. link:spark-sql-streaming-FileSystemBasedCheckpointFileManager.adoc[FileSystemBasedCheckpointFileManager]
+
+. link:spark-sql-streaming-Offset.adoc[Offset]
 
 == Arbitrary Stateful Streaming Aggregation
 

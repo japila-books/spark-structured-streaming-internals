@@ -13,7 +13,7 @@
 * [[sparkSession]] `SparkSession`
 * [[path]] Path of the metadata log directory
 
-=== [[serialize]] Serializing Metadata -- `serialize` Method
+=== [[serialize]] Serializing Metadata (Writing Metadata in Serialized Format) -- `serialize` Method
 
 [source, scala]
 ----
@@ -22,7 +22,7 @@ serialize(
   out: OutputStream): Unit
 ----
 
-NOTE: `serialize` is part of <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to write a metadata in serialized format.
+NOTE: `serialize` is part of <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to serialize metadata (write metadata in serialized format).
 
 `serialize` firstly writes out the version prefixed with `v` on a single line (e.g. `v1`) followed by the <<metadata, optional metadata>> in JSON format.
 
