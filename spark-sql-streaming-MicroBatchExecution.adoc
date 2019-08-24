@@ -508,16 +508,24 @@ In *awaitBatchLock* code block (it is not a time-tracking section), `runBatch` a
 
 NOTE: <<awaitProgressLockCondition, awaitProgressLockCondition>> is used mainly when `StreamExecution` <<processAllAvailable, processAllAvailable>> (and also when `awaitOffset`, but that seems mainly for testing).
 
-=== [[stop]] `stop` Method
+=== [[stop]] Stopping Execution of Streaming Query -- `stop` Method
 
 [source, scala]
 ----
 stop(): Unit
 ----
 
-NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop the execution of the streaming query.
+NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop execution of the streaming query.
 
-`stop`...FIXME
+`stop` sets the <<spark-sql-streaming-StreamExecution.adoc#state, state>> to `TERMINATED`.
+
+When the <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, stream execution thread>> is alive, `stop` requests the current `SparkContext` to `cancelJobGroup` identified by the <<spark-sql-streaming-StreamExecution.adoc#runId, runId>> and waits for this thread to die. Just to make sure that there are no more streaming jobs, `stop` requests the current `SparkContext` to `cancelJobGroup` identified by the <<spark-sql-streaming-StreamExecution.adoc#runId, runId>> again.
+
+In the end, `stop` prints out the following INFO message to the logs:
+
+```
+Query [prettyIdString] was stopped
+```
 
 === [[isNewDataAvailable]] Checking Whether New Data Is Available (Per Available and Committed Offsets) -- `isNewDataAvailable` Internal Method
 

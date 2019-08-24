@@ -160,7 +160,7 @@ a| [[status]]
 status: StreamingQueryStatus
 ----
 
-The `StreamingQueryStatus` of the streaming query (as `StreamExecution` link:spark-sql-streaming-ProgressReporter.adoc#currentStatus[has accumulated] being a `ProgressReporter` while running the streaming query)
+<<spark-sql-streaming-StreamingQueryStatus.adoc#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` link:spark-sql-streaming-ProgressReporter.adoc#currentStatus[has accumulated] being a `ProgressReporter` while running the streaming query)
 
 Used when...FIXME
 
@@ -172,8 +172,6 @@ a| [[stop]]
 stop(): Unit
 ----
 
-Stops the execution of the streaming query
-
-Used exclusively when `StreamingQueryWrapper` is requested to <<spark-sql-streaming-StreamingQueryWrapper.adoc#stop, stop the streaming query>>
+Stops execution of the streaming query
 
 |===
