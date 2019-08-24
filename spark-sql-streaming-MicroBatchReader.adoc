@@ -1,6 +1,10 @@
 == [[MicroBatchReader]] MicroBatchReader Contract -- DataSourceReaders For Micro-Batch Stream Processing
 
-`MicroBatchReader` is the <<contract, extension>> of the `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> that can read continually in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> mode.
+`MicroBatchReader` is the <<contract, extension>> of the `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contract for <<implementations, streaming sources>> that can read continually in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> mode.
+
+`MicroBatchReader` is part of the novel Data Source API V2 in Spark SQL.
+
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-data-source-api-v2.html[Data Source API V2] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 [[contract]]
 .MicroBatchReader Contract
@@ -27,6 +31,8 @@ a| [[deserializeOffset]]
 Offset deserializeOffset(String json)
 ----
 
+Deserializes the <<spark-sql-streaming-Offset.adoc#, offset>> (from JSON format)
+
 Used when...FIXME
 
 | getEndOffset
@@ -36,6 +42,8 @@ a| [[getEndOffset]]
 ----
 Offset getEndOffset()
 ----
+
+End <<spark-sql-streaming-Offset.adoc#, offset>> for this reader
 
 Used when...FIXME
 
@@ -58,6 +66,8 @@ void setOffsetRange(
   Optional<Offset> start,
   Optional<Offset> end)
 ----
+
+Sets the desired offset range for input partitions created from this reader (for data scan)
 
 Used when...FIXME
 

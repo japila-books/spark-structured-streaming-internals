@@ -1,6 +1,6 @@
-== [[Source]] Streaming Data Source
+== [[Source]] Streaming Source
 
-*Streaming Data Source* is a "continuous" stream of data and is described using the <<contract, Source Contract>>.
+*Streaming Source* is a "continuous" stream of data and is described using the <<contract, Source Contract>>.
 
 `Source` can <<getBatch, generate a streaming DataFrame>> (aka *batch*) given start and end offsets in a batch.
 
@@ -73,7 +73,7 @@ a| [[getOffset]]
 getOffset: Option[Offset]
 ----
 
-Finding the latest <<spark-sql-streaming-Offset.adoc#, offset>>
+Latest (maximum available) <<spark-sql-streaming-Offset.adoc#, offset>> (or `None` when never received any data)
 
 Used exclusively when `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct a next streaming micro-batch>>
 

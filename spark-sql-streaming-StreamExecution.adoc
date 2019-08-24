@@ -706,7 +706,7 @@ FIXME INFO message
 | [[awaitProgressLock]] Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention)
 
 | awaitProgressLockCondition
-| [[awaitProgressLockCondition]]
+a| [[awaitProgressLockCondition]] Lock
 
 | callSite
 | [[callSite]]
@@ -748,9 +748,9 @@ Set exclusively when `StreamExecution` is requested to <<runBatch-getBatch, requ
 Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (while <<runBatch, running a single streaming batch>>).
 
 | noNewData
-| [[noNewData]] Flag that indicates whether there are new offsets (_data_) available for processing or not
+a| [[noNewData]] Flag that indicates whether there are new offsets (_data_) available for processing or not
 
-Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming micro-batch>> when no new offsets are available.
+* Enabled (`true`) when <<constructNextBatch, constructing the next streaming micro-batch>> when no new offsets are available
 
 | offsetLog
 a| [[offsetLog]] *Offset Write-Ahead Log* (<<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>>) to record offsets in when ready for processing.

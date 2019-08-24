@@ -153,20 +153,70 @@ Internally, `logicalPlan`...FIXME
 
 [source, scala]
 ----
-constructNextBatch(): Unit
+constructNextBatch(
+  noDataBatchesEnabled: Boolean): Boolean
 ----
 
-NOTE: `constructNextBatch` can only be executed when the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag is enabled (`true`).
+NOTE: `constructNextBatch` will only be executed when the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag is enabled (`true`).
 
-`constructNextBatch` firstly requests the <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, streaming sources>> for their latest available offset.
+`constructNextBatch` performs the following steps:
 
-NOTE: FIXME: Describe me (`latestOffsets`)
+. <<constructNextBatch-latestOffsets, Requesting the latest offsets from every streaming source>> (of the streaming query)
+
+. <<constructNextBatch-availableOffsets, Updating StreamProgress with the latest available offsets>>
+
+. <<constructNextBatch-offsetSeqMetadata, Updating batch metadata with the current event-time watermark and batch timestamp>>
+
+. <<constructNextBatch-shouldConstructNextBatch, Checking whether to construct (or skip) the next micro-batch>>
+
+In the end, `constructNextBatch` returns <<constructNextBatch-shouldConstructNextBatch, whether the next streaming micro-batch was constructed or skipped>>.
+
+NOTE: `constructNextBatch` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run the activated streaming query>>.
+
+==== [[constructNextBatch-latestOffsets]] Requesting Latest Offsets from Streaming Sources
+
+`constructNextBatch` firstly requests the latest available offsets from every <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, streaming source>>.
+
+NOTE: `constructNextBatch` checks out the latest offset in every streaming data source sequentially, i.e. one data source at a time.
+
+.StreamExecution's Getting Offsets From Streaming Sources
+image::images/StreamExecution-constructNextBatch.png[align="center"]
+
+For every <<spark-sql-streaming-Source.adoc#, streaming source>> (Data Source API V1), `constructNextBatch` <<spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage, updates the status message>> to the following:
+
+```
+Getting offsets from [source]
+```
+
+In *getOffset* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` requests the `Source` for the <<getOffset, latest offset>>.
+
+For every <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> (Data Source API V2), `constructNextBatch` <<spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage, updates the status message>> to the following:
+
+```
+Getting offsets from [source]
+```
+
+In *setOffsetRange* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` finds the available offsets of the source (in the <<availableOffsets, available offset>> internal registry) and, if found, requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.adoc#deserializeOffset, deserialize the offset>> (from <<spark-sql-streaming-Offset.adoc#json, JSON format>>). `constructNextBatch` requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.adoc#setOffsetRange, set the desired offset range>>.
+
+In *getEndOffset* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.adoc#getEndOffset, end offset>>.
+
+==== [[constructNextBatch-availableOffsets]] Updating StreamProgress with Latest Available Offsets
 
 `constructNextBatch` registers (_adds_) the latest available offsets with the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, StreamProgress>>.
 
+==== [[constructNextBatch-offsetSeqMetadata]] Updating Batch Metadata with Current Event-Time Watermark and Batch Timestamp
+
 `constructNextBatch` updates the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, batch metadata>> with the current <<spark-sql-streaming-WatermarkTracker.adoc#currentWatermark, event-time watermark>> (from the <<watermarkTracker, WatermarkTracker>>) and the batch timestamp.
 
-`constructNextBatch` checks whether or not the next streaming micro-batch should be constructed (`lastExecutionRequiresAnotherBatch`). `constructNextBatch` uses the very last <<spark-sql-streaming-StreamExecution.adoc#lastExecution, IncrementalExecution>> if the <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, last execution requires another micro-batch>> (using the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, batch metadata>>) and the given `noDataBatchesEnabled` flag is enabled (`true`). `constructNextBatch` also <<isNewDataAvailable, checks out whether new data is available (per available and committed offsets)>>.
+==== [[constructNextBatch-shouldConstructNextBatch]] Checking Whether to Construct or Skip Next Micro-Batch
+
+`constructNextBatch` checks whether or not the next streaming micro-batch should be constructed (`lastExecutionRequiresAnotherBatch`).
+
+`constructNextBatch` uses the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, last IncrementalExecution>> if the <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, last execution requires another micro-batch>> (using the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, batch metadata>>) and the given `noDataBatchesEnabled` flag is enabled (`true`).
+
+`constructNextBatch` also <<isNewDataAvailable, checks out whether new data is available (based on available and committed offsets)>>.
+
+NOTE: `shouldConstructNextBatch` local flag is enabled (`true`) when <<isNewDataAvailable, there is new data available (based on offsets)>> or the <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, last execution requires another micro-batch>> (and the given `noDataBatchesEnabled` flag is enabled).
 
 `constructNextBatch` prints out the following TRACE message to the logs:
 
@@ -175,62 +225,21 @@ NOTE: FIXME: Describe me (`latestOffsets`)
 noDataBatchesEnabled = [noDataBatchesEnabled], lastExecutionRequiresAnotherBatch = [lastExecutionRequiresAnotherBatch], isNewDataAvailable = [isNewDataAvailable], shouldConstructNextBatch = [shouldConstructNextBatch]
 ----
 
-`constructNextBatch` branches off per whether to <<constructNextBatch-shouldConstructNextBatch-enabled, constructs>> or <<constructNextBatch-shouldConstructNextBatch-disabled, skip>> the next batch (`shouldConstructNextBatch` in the above TRACE message).
+`constructNextBatch` branches off per whether to <<constructNextBatch-shouldConstructNextBatch-enabled, constructs>> or <<constructNextBatch-shouldConstructNextBatch-disabled, skip>> the next batch (per `shouldConstructNextBatch` flag in the above TRACE message).
 
-In the end, `constructNextBatch` returns the value of the `shouldConstructNextBatch` flag.
-
-==== [[constructNextBatch-shouldConstructNextBatch-enabled]] Constructing Next Batch (`shouldConstructNextBatch` Flag Enabled)
+==== [[constructNextBatch-shouldConstructNextBatch-enabled]] Constructing Next Micro-Batch -- `shouldConstructNextBatch` Flag Enabled
 
 NOTE: FIXME (`if (shouldConstructNextBatch) ...`)
 
-==== [[constructNextBatch-shouldConstructNextBatch-disabled]] Skipping Next Batch (`shouldConstructNextBatch` Flag Disabled)
+With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag enabled (`true`), `constructNextBatch`...FIXME
 
-NOTE: FIXME (`if (shouldConstructNextBatch) ... else ...`)
+==== [[constructNextBatch-shouldConstructNextBatch-disabled]] Skipping Next Micro-Batch -- `shouldConstructNextBatch` Flag Disabled
+
+With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag disabled (`false`), `constructNextBatch` turns the <<noNewData, noNewData>> flag on (`true`) and wakes up (_notifies_) all threads waiting for the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLockCondition, awaitProgressLockCondition>> lock.
 
 ==== OLD / Review
 
-`constructNextBatch` is made up of the following three parts:
-
-. Firstly, <<constructNextBatch-hasNewData, checking if there is new data available>> by requesting new offsets from every streaming source
-
-. <<constructNextBatch-hasNewData-true, There is some data to process>> (and so the next batch is constructed)
-
-. <<constructNextBatch-hasNewData-false, No data is available>>
-
-NOTE: `constructNextBatch` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run the activated streaming query>>.
-
-==== [[constructNextBatch-hasNewData]] Checking Whether New Data Is Available (by Requesting New Offsets from Sources)
-
-`constructNextBatch` starts by checking whether or not a new data is available in any of the streaming sources (in the <<logicalPlan, logical query plan>>).
-
-`constructNextBatch` acquires <<awaitProgressLock, awaitProgressLock>> and link:spark-sql-streaming-Source.adoc#getOffset[gets the latest offset] from <<uniqueSources, every streaming data source>>.
-
-NOTE: `constructNextBatch` checks out the latest offset in every streaming data source sequentially, i.e. one data source at a time.
-
-.StreamExecution's Getting Offsets From Streaming Sources
-image::images/StreamExecution-constructNextBatch.png[align="center"]
-
-NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#getOffset[get the latest offset] (using `Source.getOffset` method).
-
-`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Getting offsets from [source]* for every streaming data source.
-
-In *getOffset* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `constructNextBatch` gets the offsets.
-
-`constructNextBatch` prints out the following DEBUG message to the logs:
-
-```
-getOffset took [time] ms
-```
-
-`constructNextBatch` adds the streaming sources that have the available offsets to <<availableOffsets, availableOffsets>>.
-
-If there is no <<dataAvailable, data available>> (i.e. no offsets unprocessed in any of the streaming data sources), `constructNextBatch` turns <<noNewData, noNewData>> flag on.
-
-In the end (of this checking-data block), `constructNextBatch` releases <<awaitProgressLock, awaitProgressLock>>
-
 ==== [[constructNextBatch-hasNewData-true]] New Data Available
-
-When new data is available, `constructNextBatch` updates the event time watermark (tracked using <<offsetSeqMetadata, offsetSeqMetadata>>) if it finds one in the <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, last IncrementalExecution>>.
 
 If <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>> is available (which may not when `constructNextBatch` is executed the very first time), `constructNextBatch` takes the executed physical plan (i.e. `SparkPlan`) and collects all `EventTimeWatermarkExec` physical operators with the count of link:spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats[eventTimeStats] greater than `0`.
 
@@ -266,7 +275,7 @@ Event time didn't move: [newWatermarkMs] <= [batchWatermarkMs]
 
 NOTE: Although `constructNextBatch` collects all the `EventTimeWatermarkExec` physical operators in the executed physical plan of <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>>, only the first matters if available.
 
-NOTE: A physical plan can have as many `EventTimeWatermarkExec` physical operators as link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator was used to create a streaming query.
+NOTE: A physical plan can have as many `EventTimeWatermarkExec` physical operators as link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operators used in a streaming query.
 
 [NOTE]
 ====
@@ -353,13 +362,6 @@ NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streamin
 ```
 batch [currentBatchId] doesn't exist
 ```
-
-[[constructNextBatch-purge]]
-In the end, `constructNextBatch` purges <<offsetLog, OffsetSeqLog>> and <<batchCommitLog, BatchCommitLog>> when <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property.
-
-==== [[constructNextBatch-hasNewData-false]] No New Data Available
-
-If there is no new data available, `constructNextBatch` acquires a lock on <<awaitProgressLock, awaitProgressLock>>, wakes up all waiting threads that are waiting for the stream to progress (using <<awaitProgressLockCondition, awaitProgressLockCondition>>), followed by releasing the lock on <<awaitProgressLock, awaitProgressLock>>.
 
 === [[runBatch]] Running Single Streaming Micro-Batch -- `runBatch` Internal Method
 
