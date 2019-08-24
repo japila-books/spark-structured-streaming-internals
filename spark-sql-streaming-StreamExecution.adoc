@@ -260,6 +260,51 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=ALL
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
+=== [[availableOffsets]] `availableOffsets` Property
+
+[source, scala]
+----
+availableOffsets: StreamProgress
+----
+
+NOTE: `availableOffsets` is part of the <<spark-sql-streaming-ProgressReporter.adoc#availableOffsets, ProgressReporter Contract>> to...FIXME.
+
+<<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> that tracks the latest available offsets (of the <<uniqueSources, streaming sources>>) before their processing
+
+NOTE: link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] is an enhanced `immutable.Map` from Scala with streaming sources as keys and their link:spark-sql-streaming-Offset.adoc[Offsets] as values.
+
+Set when (in order):
+
+1. `StreamExecution` resumes and <<populateStartOffsets, populates the start offsets>> with the latest offsets from the <<offsetLog, offset log>> that may have already been processed (and committed to the <<batchCommitLog, batch commit log>> so they are used as the current <<committedOffsets, committed offsets>>)
+
+1. `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and gets offsets from the sources)
+
+[NOTE]
+====
+You can see <<availableOffsets, availableOffsets>> in DEBUG messages in the logs when `StreamExecution` resumes and <<populateStartOffsets, populates the start offsets>>.
+
+[options="wrap"]
+----
+Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
+----
+====
+
+Used when:
+
+* `StreamExecution` starts <<runBatches, running streaming batches>> for the first time (i.e. <<currentBatchId, current batch id>> is `-1` which is right at the initialization time)
+
+* `StreamExecution` <<dataAvailable, checks whether a new data is available in the sources>> (and is not recorded in <<committedOffsets, committed offsets>>)
+
+* `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and records offsets in the <<offsetLog, write-ahead offset log>>)
+
+* `StreamExecution` <<runBatch, runs a streaming batch>> (and fetches data from the sources that has not been processed yet, i.e. not in <<committedOffsets, committed offsets>> registry)
+
+* `StreamExecution` finishes <<runBatches, running streaming batches>> when data was available in the sources and the offsets have just been committed to a sink (and being added to <<committedOffsets, committed offsets>> registry)
+
+* `StreamExecution` <<toDebugString, prints out debug information>> when a streaming query has terminated due to an exception
+
+NOTE: `availableOffsets` works in tandem with the <<committedOffsets, committedOffsets>> internal registry.
+
 === [[resolvedCheckpointRoot]] Fully-Qualified (Resolved) Path to Checkpoint Root Directory -- `resolvedCheckpointRoot` Property
 
 [source, scala]
@@ -657,47 +702,6 @@ FIXME INFO message
 | Name
 | Description
 
-| availableOffsets
-a| [[availableOffsets]] <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> that tracks the offsets that are available to be processed, but have not yet be committed to the sink.
-
-NOTE: `availableOffsets` is part of the <<spark-sql-streaming-ProgressReporter.adoc#availableOffsets, ProgressReporter Contract>>.
-
-NOTE: link:spark-sql-streaming-StreamProgress.adoc[StreamProgress] is an enhanced `immutable.Map` from Scala with streaming sources as keys and their link:spark-sql-streaming-Offset.adoc[Offsets] as values.
-
----
-
-Set when (in order):
-
-1. `StreamExecution` resumes and <<populateStartOffsets, populates the start offsets>> with the latest offsets from the <<offsetLog, offset log>> that may have already been processed (and committed to the <<batchCommitLog, batch commit log>> so they are used as the current <<committedOffsets, committed offsets>>)
-
-1. `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and gets offsets from the sources)
-
-[NOTE]
-====
-You can see <<availableOffsets, availableOffsets>> in DEBUG messages in the logs when `StreamExecution` resumes and <<populateStartOffsets, populates the start offsets>>.
-
-[options="wrap"]
-----
-Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
-----
-====
-
-Used when:
-
-* `StreamExecution` starts <<runBatches, running streaming batches>> for the first time (i.e. <<currentBatchId, current batch id>> is `-1` which is right at the initialization time)
-
-* `StreamExecution` <<dataAvailable, checks whether a new data is available in the sources>> (and is not recorded in <<committedOffsets, committed offsets>>)
-
-* `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and records offsets in the <<offsetLog, write-ahead offset log>>)
-
-* `StreamExecution` <<runBatch, runs a streaming batch>> (and fetches data from the sources that has not been processed yet, i.e. not in <<committedOffsets, committed offsets>> registry)
-
-* `StreamExecution` finishes <<runBatches, running streaming batches>> when data was available in the sources and the offsets have just been committed to a sink (and being added to <<committedOffsets, committed offsets>> registry)
-
-* `StreamExecution` <<toDebugString, prints out debug information>> when a streaming query has terminated due to an exception
-
-NOTE: `availableOffsets` works in tandem with <<committedOffsets, committedOffsets>> registry.
-
 | awaitProgressLock
 | [[awaitProgressLock]] Java's fair reentrant mutual exclusion https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html[java.util.concurrent.locks.ReentrantLock] (that favors granting access to the longest-waiting thread under contention)
 
@@ -725,7 +729,7 @@ a| [[currentBatchId]] Current batch number
 | [[initializationLatch]]
 
 | lastExecution
-| [[lastExecution]] Last link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution]
+a| [[lastExecution]] <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> from the very recent (_last_) execution
 
 | newData
 a| [[newData]]
@@ -800,7 +804,7 @@ a| [[streamMetrics]] <<spark-sql-streaming-MetricsReporter.adoc#, MetricsReporte
 Uses <<name, name>> if defined (can be `null`) or falls back to <<id, id>>
 
 | uniqueSources
-a| [[uniqueSources]] Unique link:spark-sql-streaming-Source.adoc[streaming data sources] in a streaming Dataset (after being collected as `StreamingExecutionRelation` from the corresponding <<logicalPlan, logical query plan>>).
+a| [[uniqueSources]] Unique <<spark-sql-streaming-BaseStreamingSource.adoc#, streaming sources>> (after being collected as `StreamingExecutionRelation` from the <<logicalPlan, logical query plan>>).
 
 NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] is a leaf logical operator (i.e. `LogicalPlan`) that represents a streaming data source (and corresponds to a single link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] in <<analyzedPlan, analyzed logical query plan>> of a streaming Dataset).
 

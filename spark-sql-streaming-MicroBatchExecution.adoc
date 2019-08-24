@@ -149,12 +149,45 @@ NOTE: `logicalPlan` is a Scala lazy value and so the resolution happens only onc
 
 Internally, `logicalPlan`...FIXME
 
-=== [[constructNextBatch]] Constructing Next Streaming Micro-Batch -- `constructNextBatch` Internal Method
+=== [[constructNextBatch]] Constructing Or Skipping Next Streaming Micro-Batch -- `constructNextBatch` Internal Method
 
 [source, scala]
 ----
 constructNextBatch(): Unit
 ----
+
+NOTE: `constructNextBatch` can only be executed when the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag is enabled (`true`).
+
+`constructNextBatch` firstly requests the <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, streaming sources>> for their latest available offset.
+
+NOTE: FIXME: Describe me (`latestOffsets`)
+
+`constructNextBatch` registers (_adds_) the latest available offsets with the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, StreamProgress>>.
+
+`constructNextBatch` updates the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, batch metadata>> with the current <<spark-sql-streaming-WatermarkTracker.adoc#currentWatermark, event-time watermark>> (from the <<watermarkTracker, WatermarkTracker>>) and the batch timestamp.
+
+`constructNextBatch` checks whether or not the next streaming micro-batch should be constructed (`lastExecutionRequiresAnotherBatch`). `constructNextBatch` uses the very last <<spark-sql-streaming-StreamExecution.adoc#lastExecution, IncrementalExecution>> if the <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, last execution requires another micro-batch>> (using the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, batch metadata>>) and the given `noDataBatchesEnabled` flag is enabled (`true`). `constructNextBatch` also <<isNewDataAvailable, checks out whether new data is available (per available and committed offsets)>>.
+
+`constructNextBatch` prints out the following TRACE message to the logs:
+
+[options="wrap"]
+----
+noDataBatchesEnabled = [noDataBatchesEnabled], lastExecutionRequiresAnotherBatch = [lastExecutionRequiresAnotherBatch], isNewDataAvailable = [isNewDataAvailable], shouldConstructNextBatch = [shouldConstructNextBatch]
+----
+
+`constructNextBatch` branches off per whether to <<constructNextBatch-shouldConstructNextBatch-enabled, constructs>> or <<constructNextBatch-shouldConstructNextBatch-disabled, skip>> the next batch (`shouldConstructNextBatch` in the above TRACE message).
+
+In the end, `constructNextBatch` returns the value of the `shouldConstructNextBatch` flag.
+
+==== [[constructNextBatch-shouldConstructNextBatch-enabled]] Constructing Next Batch (`shouldConstructNextBatch` Flag Enabled)
+
+NOTE: FIXME (`if (shouldConstructNextBatch) ...`)
+
+==== [[constructNextBatch-shouldConstructNextBatch-disabled]] Skipping Next Batch (`shouldConstructNextBatch` Flag Disabled)
+
+NOTE: FIXME (`if (shouldConstructNextBatch) ... else ...`)
+
+==== OLD / Review
 
 `constructNextBatch` is made up of the following three parts:
 
@@ -484,7 +517,7 @@ NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, Stre
 
 `stop`...FIXME
 
-=== [[isNewDataAvailable]] `isNewDataAvailable` Internal Method
+=== [[isNewDataAvailable]] Checking Whether New Data Is Available (Per Available and Committed Offsets) -- `isNewDataAvailable` Internal Method
 
 [source, scala]
 ----
@@ -507,7 +540,7 @@ a| [[isCurrentBatchConstructed]] Flag to control whether to <<runBatch, run a st
 
 Default: `false`
 
-* When disabled (`false`) changed to whatever <<constructNextBatch, constructing the next streaming micro-batch>> gives back when <<runActivatedStream, running activated streaming query>>
+* When disabled (`false`), changed to whatever <<constructNextBatch, constructing the next streaming micro-batch>> gives back when <<runActivatedStream, running activated streaming query>>
 
 * Disabled (`false`) after <<runBatch, running a streaming micro-batch>> (when enabled after <<constructNextBatch, constructing the next streaming micro-batch>>)
 
