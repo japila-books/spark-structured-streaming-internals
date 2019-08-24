@@ -129,6 +129,8 @@ sources: Seq[BaseStreamingSource]
 
 <<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming sources>> of the streaming query
 
+Used when <<finishTrigger, finishing a trigger (and updating progress and marking current status as trigger inactive)>>
+
 | sparkSession
 a| [[sparkSession]]
 

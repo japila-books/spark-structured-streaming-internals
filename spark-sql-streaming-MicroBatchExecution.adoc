@@ -48,13 +48,13 @@ assert(microBatchEngine.trigger == Trigger.Once)
 * [[sparkSession]] `SparkSession`
 * [[name]] Name of the streaming query
 * [[checkpointRoot]] Path of the checkpoint directory
-* [[analyzedPlan]] Analyzed logical query plan (`LogicalPlan`)
-* [[sink]] <<spark-sql-streaming-BaseStreamingSink.adoc#, BaseStreamingSink>>
+* [[analyzedPlan]] Analyzed logical query plan of the streaming query (`LogicalPlan`)
+* [[sink]] <<spark-sql-streaming-BaseStreamingSink.adoc#, Streaming sink>>
 * [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
 * [[triggerClock]] Trigger clock (`Clock`)
 * [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
 * [[extraOptions]] Extra options (`Map[String, String]`)
-* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the (temporary) checkpoint directory on stop
+* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 
 `MicroBatchExecution` initializes the <<internal-properties, internal properties>>.
 
@@ -179,8 +179,8 @@ NOTE: `constructNextBatch` is used exclusively when `MicroBatchExecution` is req
 
 NOTE: `constructNextBatch` checks out the latest offset in every streaming data source sequentially, i.e. one data source at a time.
 
-.StreamExecution's Getting Offsets From Streaming Sources
-image::images/StreamExecution-constructNextBatch.png[align="center"]
+.MicroBatchExecution's Getting Offsets From Streaming Sources
+image::images/MicroBatchExecution-constructNextBatch.png[align="center"]
 
 For every <<spark-sql-streaming-Source.adoc#, streaming source>> (Data Source API V1), `constructNextBatch` <<spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage, updates the status message>> to the following:
 
@@ -202,7 +202,7 @@ In *getEndOffset* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, t
 
 ==== [[constructNextBatch-availableOffsets]] Updating StreamProgress with Latest Available Offsets
 
-`constructNextBatch` registers (_adds_) the latest available offsets with the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, StreamProgress>>.
+`constructNextBatch` updates the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, StreamProgress>> with the latest available offsets.
 
 ==== [[constructNextBatch-offsetSeqMetadata]] Updating Batch Metadata with Current Event-Time Watermark and Batch Timestamp
 
@@ -527,14 +527,16 @@ In the end, `stop` prints out the following INFO message to the logs:
 Query [prettyIdString] was stopped
 ```
 
-=== [[isNewDataAvailable]] Checking Whether New Data Is Available (Per Available and Committed Offsets) -- `isNewDataAvailable` Internal Method
+=== [[isNewDataAvailable]] Checking Whether New Data Is Available (Based on Available and Committed Offsets) -- `isNewDataAvailable` Internal Method
 
 [source, scala]
 ----
 isNewDataAvailable: Boolean
 ----
 
-`isNewDataAvailable`...FIXME
+`isNewDataAvailable` checks whether there is a streaming source (in the <<availableOffsets, available offsets>>) for which <<committedOffsets, committed offsets>> are different from the available offsets or not available (committed) at all.
+
+`isNewDataAvailable` is positive (`true`) when there is at least one such streaming source.
 
 NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> and <<constructNextBatch, construct the next streaming micro-batch>>.
 
@@ -558,15 +560,23 @@ Default: `false`
 
 * Disabled (`false`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, re-starting a streaming query from a checkpoint>> when the latest offset checkpointed (written) to the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, offset write-ahead log>> has been successfully processed and <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, committed>> to the <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>>
 
+| readerToDataSourceMap
+a| [[readerToDataSourceMap]] (`Map[MicroBatchReader, (DataSourceV2, Map[String, String])]`)
+
 | sources
-a| [[sources]] <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSources>>
+a| [[sources]] <<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming sources>> (of the <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelations>> of the <<analyzedPlan, analyzed logical query plan>> of the streaming query)
 
 Default: (empty)
 
-Used when...FIXME
+NOTE: `sources` is part of the <<spark-sql-streaming-ProgressReporter.adoc#sources, ProgressReporter Contract>> for the <<spark-sql-streaming-BaseStreamingSource.adoc#, streaming sources>> of the streaming query.
 
-| readerToDataSourceMap
-a| [[readerToDataSourceMap]] (`Map[MicroBatchReader, (DataSourceV2, Map[String, String])]`)
+* Initialized when `MicroBatchExecution` is requested for the <<logicalPlan, transformed logical query plan>>
+
+Used when:
+
+* <<populateStartOffsets, Populating start offsets>> (for the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available>> and <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed>> offsets)
+
+* <<constructNextBatch, Constructing or skipping next streaming micro-batch>> (and persisting offsets to write-ahead log)
 
 | triggerExecutor
 a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
