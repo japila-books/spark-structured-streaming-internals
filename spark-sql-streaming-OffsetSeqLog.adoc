@@ -1,8 +1,8 @@
-== [[OffsetSeqLog]] OffsetSeqLog -- HDFSMetadataLog for Write-Ahead Log (WAL)
+== [[OffsetSeqLog]] OffsetSeqLog -- HDFSMetadataLog for Offset Write-Ahead Log (WAL)
 
 `OffsetSeqLog` is a <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog>> with <<OffsetSeq, OffsetSeq>> metadata.
 
-`OffsetSeqLog` is <<creating-instance, created>> exclusively for the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, write-ahead log (WAL) of offsets>> of <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>>.
+`OffsetSeqLog` is <<creating-instance, created>> exclusively for the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, write-ahead log (WAL) of offsets>> of <<spark-sql-streaming-StreamExecution.adoc#, stream execution engines>> (i.e. <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>>).
 
 [[OffsetSeq]][[offsets]][[metadata]]
 `OffsetSeqLog` uses <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeq>> for metadata which holds an ordered collection of zero or more offsets and optional metadata (as link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata] for keeping track of event time watermark as set up by a Spark developer and what was found in the records).

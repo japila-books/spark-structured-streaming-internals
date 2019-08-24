@@ -41,6 +41,23 @@ assert(microBatchEngine.trigger == Trigger.Once)
 
 * `MicroBatchExecution` is requested to <<runBatch, run a single streaming micro-batch>>
 
+=== [[creating-instance]] Creating MicroBatchExecution Instance
+
+`MicroBatchExecution` takes the following to be created:
+
+* [[sparkSession]] `SparkSession`
+* [[name]] Name of the streaming query
+* [[checkpointRoot]] Path of the checkpoint directory
+* [[analyzedPlan]] Analyzed logical query plan (`LogicalPlan`)
+* [[sink]] <<spark-sql-streaming-BaseStreamingSink.adoc#, BaseStreamingSink>>
+* [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
+* [[triggerClock]] Trigger clock (`Clock`)
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
+* [[extraOptions]] Extra options (`Map[String, String]`)
+* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the (temporary) checkpoint directory on stop
+
+`MicroBatchExecution` initializes the <<internal-properties, internal properties>>.
+
 === [[populateStartOffsets]] Populating Start Offsets -- `populateStartOffsets` Internal Method
 
 [source, scala]
@@ -478,23 +495,6 @@ isNewDataAvailable: Boolean
 
 NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> and <<constructNextBatch, construct the next streaming micro-batch>>.
 
-=== [[creating-instance]] Creating MicroBatchExecution Instance
-
-`MicroBatchExecution` takes the following to be created:
-
-* [[sparkSession]] `SparkSession`
-* [[name]] Name of the streaming query
-* [[checkpointRoot]] Path of the checkpoint directory
-* [[analyzedPlan]] Analyzed logical query plan (`LogicalPlan`)
-* [[sink]] <<spark-sql-streaming-BaseStreamingSink.adoc#, BaseStreamingSink>>
-* [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
-* [[triggerClock]] Trigger clock (`Clock`)
-* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
-* [[extraOptions]] Extra options (`Map[String, String]`)
-* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
-
-`MicroBatchExecution` initializes the <<internal-properties, internal properties>>.
-
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -503,9 +503,17 @@ NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to <<
 | Description
 
 | isCurrentBatchConstructed
-a| [[isCurrentBatchConstructed]] Flag that...FIXME
+a| [[isCurrentBatchConstructed]] Flag to control whether to <<runBatch, run a streaming micro-batch>> (`true`) or not (`false`)
 
 Default: `false`
+
+* When disabled (`false`) changed to whatever <<constructNextBatch, constructing the next streaming micro-batch>> gives back when <<runActivatedStream, running activated streaming query>>
+
+* Disabled (`false`) after <<runBatch, running a streaming micro-batch>> (when enabled after <<constructNextBatch, constructing the next streaming micro-batch>>)
+
+* Enabled (`true`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, re-starting a streaming query from a checkpoint>> (using the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>>)
+
+* Disabled (`false`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, re-starting a streaming query from a checkpoint>> when the latest offset checkpointed (written) to the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, offset write-ahead log>> has been successfully processed and <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, committed>> to the <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>>
 
 | sources
 a| [[sources]] <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSources>>

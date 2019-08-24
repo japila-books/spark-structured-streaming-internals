@@ -292,15 +292,15 @@ NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for 
 
 === [[commitLog]] Offset Commit Log -- `commits` Metadata Checkpoint Directory
 
-`StreamExecution` uses *offset commit log* (<<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>>) for completed streaming batches (with a single file per batch with a file name being the batch id) or committed epochs.
+`StreamExecution` uses *offset commit log* (<<spark-sql-streaming-CommitLog.adoc#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>>) for streaming batches successfully executed (with a single file per batch with a file name being the batch id) or committed epochs.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
-`commitLog` is used by the <<extensions, extensions>> for the following:
+`commitLog` is used by the <<extensions, stream execution engines>> for the following:
 
-* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>> (that in turn requests to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate the start offsets>> at the very beginning of the query execution and later regularly every <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, single batch>>)
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>> (that in turn requests to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate the start offsets>> at the very beginning of the streaming query execution and later regularly every <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, single batch>>)
 
-* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, retrieve the start offsets>> at the very beginning of the query execution and later regularly every <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>)
+* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, retrieve the start offsets>> at the very beginning of the streaming query execution and later regularly every <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>)
 
 === [[stopSources]] `stopSources` Method
 
@@ -749,7 +749,7 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces Stre
 Turned on (i.e. enabled) when <<constructNextBatch, constructing the next streaming micro-batch>> when no new offsets are available.
 
 | offsetLog
-a| [[offsetLog]] *Offset write-ahead log* (<<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>>) to record offsets in when ready for processing.
+a| [[offsetLog]] *Offset Write-Ahead Log* (<<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>>) to record offsets in when ready for processing.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
