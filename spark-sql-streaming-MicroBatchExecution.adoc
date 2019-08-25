@@ -58,11 +58,35 @@ assert(microBatchEngine.trigger == Trigger.Once)
 
 `MicroBatchExecution` initializes the <<internal-properties, internal properties>>.
 
+=== [[triggerExecutor]] MicroBatchExecution and TriggerExecutor -- `triggerExecutor` Property
+
+[source, scala]
+----
+triggerExecutor: TriggerExecutor
+----
+
+`triggerExecutor` is the <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> of the streaming query that is how micro-batches are executed at regular intervals.
+
+`triggerExecutor` is initialized based on the given <<trigger, Trigger>> (that was used to create the `MicroBatchExecution`):
+
+* <<spark-sql-streaming-TriggerExecutor.adoc#, ProcessingTimeExecutor>> for <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>>
+
+* <<spark-sql-streaming-TriggerExecutor.adoc#, OneTimeExecutor>> for <<spark-sql-streaming-Trigger.adoc#OneTimeTrigger, OneTimeTrigger>> (aka <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> trigger)
+
+`triggerExecutor` throws an `IllegalStateException` when the <<trigger, Trigger>> is not one of the <<spark-sql-streaming-Trigger.adoc#available-implementations, built-in implementations>>.
+
+```
+Unknown type of trigger: [trigger]
+```
+
+NOTE: `triggerExecutor` is used exclusively when `StreamExecution` is requested to <<runActivatedStream, run an activated streaming query>> (at regular intervals).
+
 === [[populateStartOffsets]] Populating Start Offsets -- `populateStartOffsets` Internal Method
 
 [source, scala]
 ----
-populateStartOffsets(sparkSessionToRunBatches: SparkSession): Unit
+populateStartOffsets(
+  sparkSessionToRunBatches: SparkSession): Unit
 ----
 
 `populateStartOffsets` requests <<offsetLog, OffsetSeqLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest committed batch id with its metadata if available].
@@ -577,16 +601,6 @@ Used when:
 * <<populateStartOffsets, Populating start offsets>> (for the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available>> and <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed>> offsets)
 
 * <<constructNextBatch, Constructing or skipping next streaming micro-batch>> (and persisting offsets to write-ahead log)
-
-| triggerExecutor
-a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.adoc#, TriggerExecutor>> for the <<trigger, Trigger>>:
-
-* `ProcessingTimeExecutor` for `ProcessingTime`
-* `OneTimeExecutor` for `OneTimeTrigger` (aka link:spark-sql-streaming-Trigger.adoc#Once[Once] trigger)
-
-Used when `StreamExecution` starts <<runBatches, running streaming batches>>.
-
-NOTE: `StreamExecution` throws a `IllegalStateException` when the <<trigger, Trigger>> is not one of the <<spark-sql-streaming-Trigger.adoc#available-implementations, two built-in implementations>>: `OneTimeExecutor` or `ProcessingTimeExecutor`.
 
 | watermarkTracker
 a| [[watermarkTracker]] <<spark-sql-streaming-WatermarkTracker.adoc#, WatermarkTracker>> that is created when `MicroBatchExecution` is requested to <<populateStartOffsets, populate start offsets>> (when requested to <<runActivatedStream, run an activated streaming query>>)

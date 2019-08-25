@@ -34,7 +34,9 @@ a| Executes `batchRunner` at regular intervals (as defined using link:spark-sql-
 
 [source, scala]
 ----
-ProcessingTimeExecutor(processingTime: ProcessingTime, clock: Clock = new SystemClock())
+ProcessingTimeExecutor(
+  processingTime: ProcessingTime,
+  clock: Clock = new SystemClock())
 ----
 
 NOTE: Processing terminates when `batchRunner` returns `false`.
