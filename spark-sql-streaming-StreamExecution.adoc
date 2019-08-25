@@ -562,7 +562,7 @@ When no <<dataAvailable, data was available>> in the sources to process, `batchR
 
 `batchRunner` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Waiting for next trigger* and returns whether the query is currently active or not (so <<triggerExecutor, TriggerExecutor>> can decide whether to finish executing the batches or not)
 
-=== [[getBatchDescriptionString]] `getBatchDescriptionString` Method
+=== [[getBatchDescriptionString]] Human-Readable Description of Spark Jobs -- `getBatchDescriptionString` Method
 
 [source, scala]
 ----
@@ -759,9 +759,9 @@ a| [[committedOffsets]] *Committed offsets* (<<spark-sql-streaming-StreamProgres
 `committedOffsets` is a part of the link:spark-sql-streaming-ProgressReporter.adoc#committedOffsets[ProgressReporter Contract]
 
 | currentBatchId
-a| [[currentBatchId]] Current batch number
+a| [[currentBatchId]] ID (number) of the current streaming batch
 
-* `-1` when `StreamExecution` is <<creating-instance, created>>
+* Starts at `-1` when `StreamExecution` is <<creating-instance, created>>
 
 * `0` when `StreamExecution` <<populateStartOffsets, populates start offsets>> (and <<offsetLog, OffsetSeqLog>> is empty, i.e. no offset files in `offsets` directory in checkpoint)
 

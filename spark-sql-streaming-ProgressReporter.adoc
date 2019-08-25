@@ -107,7 +107,7 @@ a| [[runId]]
 runId: UUID
 ----
 
-https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html[Universally unique identifier (UUID)] of the single run of the streaming query (that changes between restarts)
+https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html[Universally unique identifier (UUID)] of the single run of the streaming query (that changes every restart)
 
 | sink
 a| [[sink]]
