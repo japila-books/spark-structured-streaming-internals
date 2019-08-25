@@ -1,4 +1,4 @@
-== [[Offset]] Offset -- Position of Streaming Query
+== [[Offset]] Offset -- Read Position of Streaming Query
 
 `Offset` is the <<contract, base>> of <<extensions, stream positions>> that represent progress of a streaming query in <<json, json>> format.
 

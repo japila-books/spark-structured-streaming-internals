@@ -273,6 +273,28 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly when the <<extensions, concrete StreamExecutions>> are.
 
+=== [[offsetLog]] Offset Write-Ahead Log -- `offsetLog` Property
+
+[source, scala]
+----
+offsetLog: OffsetSeqLog
+----
+
+`offsetLog` is <<spark-sql-streaming-OffsetSeqLog.adoc#, Offset Write-Ahead Log>> with `offsets` <<checkpointFile, metadata checkpoint directory>> to persist offsets (offset range) of the data about to be processed in every trigger.
+
+NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
+
+The number of entries in the `OffsetSeqLog` is controlled using <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`). <<extensions, Stream execution engines>> discard (_purge_) offsets from the `offsets` metadata log when the <<currentBatchId, current batch ID>> (in <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>>) or the <<spark-sql-streaming-ContinuousExecution.adoc#commit, epoch committed>> (in <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>>) is above the threshold.
+
+[NOTE]
+====
+`offsetLog` is used when:
+
+* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>, <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>, and <<spark-sql-streaming-ContinuousExecution.adoc#addOffset, addOffset>>
+
+* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets>> and <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct (or skip) the next streaming micro-batch>>
+====
+
 === [[state]] State of Streaming Query Execution -- `state` Property
 
 [source, scala]
@@ -793,15 +815,6 @@ Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces Stre
 a| [[noNewData]] Flag that indicates whether there are new offsets (_data_) available for processing or not
 
 * Enabled (`true`) when <<constructNextBatch, constructing the next streaming micro-batch>> when no new offsets are available
-
-| offsetLog
-a| [[offsetLog]] *Offset Write-Ahead Log* (<<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>> with `offsets` <<checkpointFile, metadata checkpoint directory>>) to record offsets in when ready for processing.
-
-NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
-
-Used when `StreamExecution` <<populateStartOffsets, populates the start offsets>> and <<constructNextBatch, constructs the next streaming micro-batch>> (first to store the current batch's offsets in a write-ahead log and retrieve the previous batch's offsets right afterwards).
-
-NOTE: `StreamExecution` <<constructNextBatch-purge, discards offsets from the offset metadata log>> when the <<currentBatchId, current batch id>> is above link:spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain[spark.sql.streaming.minBatchesToRetain] Spark property (which defaults to `100`).
 
 | pollingDelayMs
 | [[pollingDelayMs]] Time delay before polling new data again when no data was available

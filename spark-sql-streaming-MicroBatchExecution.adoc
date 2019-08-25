@@ -81,72 +81,6 @@ Unknown type of trigger: [trigger]
 
 NOTE: `triggerExecutor` is used exclusively when `StreamExecution` is requested to <<runActivatedStream, run an activated streaming query>> (at regular intervals).
 
-=== [[populateStartOffsets]] Populating Start Offsets -- `populateStartOffsets` Internal Method
-
-[source, scala]
-----
-populateStartOffsets(
-  sparkSessionToRunBatches: SparkSession): Unit
-----
-
-`populateStartOffsets` requests <<offsetLog, OffsetSeqLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest committed batch id with its metadata if available].
-
-NOTE: The batch id could not be available in metadata log if a streaming query started with a new metadata log or no batch was committed before.
-
-With the latest committed batch id with the metadata (from <<offsetLog, OffsetSeqLog>>) `populateStartOffsets` sets <<currentBatchId, current batch id>> to the latest committed batch id, and <<availableOffsets, availableOffsets>> to its offsets (considering them unprocessed yet).
-
-NOTE: `populateStartOffsets` may re-execute the latest committed batch.
-
-If the latest batch id is greater than `0`, `populateStartOffsets` requests <<offsetLog, OffsetSeqLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[second latest batch with its metadata] (or reports a `IllegalStateException` if not found). `populateStartOffsets` sets <<committedOffsets, committed offsets>> to the second latest committed offsets.
-
-`populateStartOffsets` updates the offset metadata.
-
-CAUTION: FIXME Why is the update needed?
-
-`populateStartOffsets` requests <<batchCommitLog, BatchCommitLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest processed batch id with its metadata if available].
-
-(only when the latest batch in <<offsetLog, OffsetSeqLog>> is also the latest batch in <<batchCommitLog, BatchCommitLog>>) With the latest processed batch id with the metadata (from <<batchCommitLog, BatchCommitLog>>), `populateStartOffsets` sets <<currentBatchId, current batch id>> as the next after the latest processed batch. `populateStartOffsets` sets <<committedOffsets, committed offsets>> to <<availableOffsets, availableOffsets>>.
-
-CAUTION: FIXME Describe what happens with `availableOffsets`.
-
-`populateStartOffsets` <<constructNextBatch, constructs the next streaming micro-batch>>.
-
-CAUTION: FIXME Describe the WARN message when `latestCommittedBatchId < latestBatchId - 1`.
-
-[options="wrap"]
-----
-WARN Batch completion log latest batch id is [latestCommittedBatchId], which is not trailing batchid [latestBatchId] by one
-----
-
-`populateStartOffsets` prints out the following DEBUG message to the logs:
-
-```
-Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
-```
-
-CAUTION: FIXME Include an example of Resuming at batch
-
-When the latest committed batch id with the metadata could not be found in <<batchCommitLog, BatchCommitLog>>, `populateStartOffsets` prints out the following INFO message to the logs:
-
-```
-no commit log present
-```
-
-CAUTION: FIXME Include an example of the case when no commit log present.
-
-When the latest committed batch id with the metadata could not be found in <<offsetLog, OffsetSeqLog>>, it is assumed that the streaming query is started for the first time.
-
-`populateStartOffsets` prints out the following INFO message to the logs:
-
-```
-Starting new streaming query.
-```
-
-[[populateStartOffsets-currentBatchId-0]]
-`populateStartOffsets` sets <<currentBatchId, current batch id>> to `0` and <<constructNextBatch, constructs the next streaming micro-batch>>.
-
-NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, runActivatedStream>>.
-
 === [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
 
 [source, scala]
@@ -167,7 +101,7 @@ NOTE: _trigger_ and _batch_ are considered equivalent and used interchangeably.
 
 The batch runner <<spark-sql-streaming-ProgressReporter.adoc#startTrigger, initializes query progress for the new trigger>>.
 
-[[runActivatedStream-triggerExecution]]
+[[runActivatedStream-triggerExecution]][[runActivatedStream-triggerExecution-populateStartOffsets]]
 In *triggerExecution* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, the batch runner <<populateStartOffsets, populates start offsets>> (when <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>> is the default `-1` that is right after `MicroBatchExecution` was <<spark-sql-streaming-StreamExecution.adoc#, created>>).
 
 The batch runner prints out the following INFO message to the logs:
@@ -230,7 +164,73 @@ NOTE: `logicalPlan` is a Scala lazy value and so the resolution happens only onc
 
 Internally, `logicalPlan`...FIXME
 
-=== [[constructNextBatch]] Constructing Or Skipping Next Streaming Micro-Batch -- `constructNextBatch` Internal Method
+=== [[populateStartOffsets]] Populating Start Offsets -- `populateStartOffsets` Internal Method
+
+[source, scala]
+----
+populateStartOffsets(
+  sparkSessionToRunBatches: SparkSession): Unit
+----
+
+`populateStartOffsets` requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest committed batch id with its metadata if available].
+
+NOTE: The batch id could not be available in metadata log if a streaming query started with a new metadata log or no batch was committed before.
+
+With the latest committed batch id with the metadata (from <<offsetLog, OffsetSeqLog>>) `populateStartOffsets` sets <<currentBatchId, current batch id>> to the latest committed batch id, and <<availableOffsets, availableOffsets>> to its offsets (considering them unprocessed yet).
+
+NOTE: `populateStartOffsets` may re-execute the latest committed batch.
+
+If the latest batch id is greater than `0`, `populateStartOffsets` requests <<offsetLog, OffsetSeqLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[second latest batch with its metadata] (or reports a `IllegalStateException` if not found). `populateStartOffsets` sets <<committedOffsets, committed offsets>> to the second latest committed offsets.
+
+`populateStartOffsets` updates the offset metadata.
+
+CAUTION: FIXME Why is the update needed?
+
+`populateStartOffsets` requests <<batchCommitLog, BatchCommitLog>> for the link:spark-sql-streaming-HDFSMetadataLog.adoc#getLatest[latest processed batch id with its metadata if available].
+
+(only when the latest batch in <<offsetLog, OffsetSeqLog>> is also the latest batch in <<batchCommitLog, BatchCommitLog>>) With the latest processed batch id with the metadata (from <<batchCommitLog, BatchCommitLog>>), `populateStartOffsets` sets <<currentBatchId, current batch id>> as the next after the latest processed batch. `populateStartOffsets` sets <<committedOffsets, committed offsets>> to <<availableOffsets, availableOffsets>>.
+
+CAUTION: FIXME Describe what happens with `availableOffsets`.
+
+`populateStartOffsets` <<constructNextBatch, constructs the next streaming micro-batch>>.
+
+CAUTION: FIXME Describe the WARN message when `latestCommittedBatchId < latestBatchId - 1`.
+
+[options="wrap"]
+----
+WARN Batch completion log latest batch id is [latestCommittedBatchId], which is not trailing batchid [latestBatchId] by one
+----
+
+`populateStartOffsets` prints out the following DEBUG message to the logs:
+
+```
+Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
+```
+
+CAUTION: FIXME Include an example of Resuming at batch
+
+When the latest committed batch id with the metadata could not be found in <<batchCommitLog, BatchCommitLog>>, `populateStartOffsets` prints out the following INFO message to the logs:
+
+```
+no commit log present
+```
+
+CAUTION: FIXME Include an example of the case when no commit log present.
+
+When the latest committed batch id with the metadata could not be found in <<offsetLog, OffsetSeqLog>>, it is assumed that the streaming query is started for the first time.
+
+`populateStartOffsets` prints out the following INFO message to the logs:
+
+```
+Starting new streaming query.
+```
+
+[[populateStartOffsets-currentBatchId-0]]
+`populateStartOffsets` sets <<currentBatchId, current batch id>> to `0` and <<constructNextBatch, constructs the next streaming micro-batch>>.
+
+NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> (<<runActivatedStream-triggerExecution-populateStartOffsets, before the first micro-batch>>).
+
+=== [[constructNextBatch]] Constructing (Or Skipping) Next Streaming Micro-Batch -- `constructNextBatch` Internal Method
 
 [source, scala]
 ----
