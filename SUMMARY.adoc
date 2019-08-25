@@ -13,8 +13,10 @@
 .. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
 
 . link:spark-sql-streaming-CommitLog.adoc[CommitLog]
+.. link:spark-sql-streaming-CommitMetadata.adoc[CommitMetadata]
+
 . link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
-. link:spark-sql-streaming-OffsetSeq.adoc[OffsetSeq]
+.. link:spark-sql-streaming-OffsetSeq.adoc[OffsetSeq]
 
 . link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
 .. link:spark-sql-streaming-FileStreamSourceLog.adoc[FileStreamSourceLog]

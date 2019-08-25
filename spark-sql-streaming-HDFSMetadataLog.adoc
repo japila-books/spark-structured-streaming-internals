@@ -113,7 +113,7 @@ Internally, `add` <<get, looks up metadata of the given streaming batch>> (`batc
 
 Otherwise, when not found, `add` <<batchIdToPath, creates a metadata log file>> for the given `batchId` and <<writeBatchToFile, writes metadata to the file>>. `add` returns `true` if successful.
 
-=== [[getLatest]] Retrieving Latest Committed Batch Id with Metadata If Available -- `getLatest` Method
+=== [[getLatest]] Latest Committed Batch Id with Metadata (When Available) -- `getLatest` Method
 
 [source, scala]
 ----
