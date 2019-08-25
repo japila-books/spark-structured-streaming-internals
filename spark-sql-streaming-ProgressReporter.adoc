@@ -250,7 +250,7 @@ NOTE: `updateProgress` synchronizes concurrent access to the <<progressBuffer, p
 
 NOTE: `updateProgress` is used exclusively when `ProgressReporter` <<finishTrigger, finishes a trigger>>.
 
-=== [[startTrigger]] Setting State For New Trigger -- `startTrigger` Method
+=== [[startTrigger]] Initializing Query Progress for New Trigger -- `startTrigger` Method
 
 [source, scala]
 ----
@@ -291,7 +291,7 @@ Starting Trigger Calculation
 
 NOTE: `startTrigger` is used exclusively when `StreamExecution` starts link:spark-sql-streaming-StreamExecution.adoc#runStream[running batches] (as part of link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] executing a batch runner).
 
-=== [[finishTrigger]] Finishing Trigger (Updating Progress and Marking Current Status As Trigger Inactive) -- `finishTrigger` Method
+=== [[finishTrigger]] Finalizing Query Progress for Trigger -- `finishTrigger` Method
 
 [source, scala]
 ----

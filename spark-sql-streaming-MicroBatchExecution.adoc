@@ -157,11 +157,30 @@ runActivatedStream(
 
 NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated <<spark-sql-streaming-StreamingQuery.adoc#, streaming query>>.
 
-`runActivatedStream` simply requests the <<triggerExecutor, TriggerExecutor>> to execute batches using the <<batchRunner, batch runner>>.
+`runActivatedStream` simply requests the <<triggerExecutor, TriggerExecutor>> to execute micro-batches using the <<batchRunner, batch runner>> (until `MicroBatchExecution` is no longer <<spark-sql-streaming-StreamExecution.adoc#isActive, active>>).
 
 ==== [[batchRunner]] Batch Runner
 
-The batch runner (of the <<triggerExecutor, TriggerExecutor>>) is executed as long as the  <<spark-sql-streaming-StreamExecution.adoc#isActive, is active>>
+The batch runner (of the <<triggerExecutor, TriggerExecutor>>) is executed as long as the `MicroBatchExecution` is <<spark-sql-streaming-StreamExecution.adoc#isActive, active>>.
+
+NOTE: _trigger_ and _batch_ are considered equivalent and used interchangeably.
+
+The batch runner <<spark-sql-streaming-ProgressReporter.adoc#startTrigger, initializes query progress for the new trigger>>.
+
+[[runActivatedStream-triggerExecution]]
+In *triggerExecution* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, the batch runner...FIXME
+
+The batch runner <<spark-sql-streaming-ProgressReporter.adoc#finishTrigger, finalizes query progress for the trigger>> (with a flag that indicates whether the current batch had new data).
+
+With the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag enabled (`true`), the batch runner increments the <<currentBatchId, currentBatchId>> and turns the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag off (`false`).
+
+With the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag disabled (`false`), the batch runner simply sleeps (as long as configured using the <<spark-sql-streaming-StreamExecution.adoc#pollingDelayMs, spark.sql.streaming.pollingDelay>> configuration property).
+
+In the end, the batch runner <<spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage, updates the status message>> to the following status and returns whether the `MicroBatchExecution` is <<spark-sql-streaming-StreamExecution.adoc#isActive, active>> or not.
+
+```
+Waiting for next trigger
+```
 
 === [[logicalPlan]] Resolving Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
 
@@ -546,7 +565,7 @@ stop(): Unit
 
 NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop a streaming query.
 
-`stop` sets the <<spark-sql-streaming-StreamExecution.adoc#state, state>> to `TERMINATED`.
+`stop` sets the <<spark-sql-streaming-StreamExecution.adoc#state, state>> to <<spark-sql-streaming-StreamExecution.adoc#TERMINATED, TERMINATED>>.
 
 When the <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, stream execution thread>> is alive, `stop` requests the current `SparkContext` to `cancelJobGroup` identified by the <<spark-sql-streaming-StreamExecution.adoc#runId, runId>> and waits for this thread to die. Just to make sure that there are no more streaming jobs, `stop` requests the current `SparkContext` to `cancelJobGroup` identified by the <<spark-sql-streaming-StreamExecution.adoc#runId, runId>> again.
 

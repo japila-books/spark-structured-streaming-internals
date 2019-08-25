@@ -135,4 +135,10 @@ a| [[streamingNoDataMicroBatchesEnabled]][[STREAMING_NO_DATA_MICRO_BATCHES_ENABL
 
 a| [[streamingNoDataProgressEventInterval]] Used exclusively for <<spark-sql-streaming-ProgressReporter.adoc#noDataProgressEventInterval, ProgressReporter>>
 
+| `streamingPollingDelay`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.pollingDelay, spark.sql.streaming.pollingDelay>>
+
+a| [[streamingPollingDelay]][[STREAMING_POLLING_DELAY]] Used exclusively when `StreamExecution` is <<spark-sql-streaming-StreamExecution.adoc#, created>>
+
 |===

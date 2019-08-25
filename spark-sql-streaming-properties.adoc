@@ -161,9 +161,9 @@ a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of link:spark-sql-str
 Default: `100`
 
 | spark.sql.streaming.pollingDelay
-a| [[spark.sql.streaming.pollingDelay]] *(internal)* Time delay (in ms) before `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch].
+a| [[spark.sql.streaming.pollingDelay]] *(internal)* How long (in millis) to delay `StreamExecution` before link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch]
 
-Default: `10`
+Default: `10` (milliseconds)
 
 | spark.sql.streaming.stateStore.maintenanceInterval
 a| [[spark.sql.streaming.stateStore.maintenanceInterval]] The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.adoc#MaintenanceTask[maintenance task].
