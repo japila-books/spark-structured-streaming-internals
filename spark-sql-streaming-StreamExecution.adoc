@@ -108,12 +108,6 @@ When <<start, started>>, `StreamExecution` starts a <<queryExecutionThread, stre
 .StreamExecution's Starting Streaming Query (on Execution Thread)
 image::images/StreamExecution-start.png[align="center"]
 
-`StreamExecution` can be in three <<state, states>>:
-
-* `INITIALIZED` when the instance was created.
-* `ACTIVE` when batches are pulled from the sources.
-* `TERMINATED` when executing streaming batches has been terminated due to an error, all batches were successfully processed or `StreamExecution` <<stop, has been stopped>>.
-
 `StreamExecution` is a link:spark-sql-streaming-ProgressReporter.adoc[ProgressReporter] and <<postEvent, reports status of the streaming query>> (i.e. when it starts, progresses and terminates) by posting `StreamingQueryListener` events.
 
 [source, scala]
@@ -260,6 +254,60 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=ALL
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
+
+=== [[creating-instance]] Creating StreamExecution Instance
+
+`StreamExecution` takes the following when created:
+
+* [[sparkSession]] `SparkSession`
+* [[name]] Name of the streaming query (can also be `null`)
+* [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
+* [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
+* [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
+* [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
+* [[triggerClock]] `Clock`
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>> (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
+* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
+
+`StreamExecution` initializes the <<internal-properties, internal properties>>.
+
+NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly when the <<extensions, concrete StreamExecutions>> are.
+
+=== [[state]] State of Streaming Query Execution -- `state` Property
+
+[source, scala]
+----
+state: AtomicReference[State]
+----
+
+`state` indicates the internal state of execution of the streaming query (as https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference]).
+
+[[states]]
+.States
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| ACTIVE
+a| [[ACTIVE]] `StreamExecution` has been requested to <<runStream, run stream processing>> (and is about to <<runActivatedStream, run the activated streaming query>>)
+
+| INITIALIZING
+a| [[INITIALIZING]] `StreamExecution` has been <<creating-instance, created>>
+
+| TERMINATED
+a| [[TERMINATED]] Used to indicate that:
+
+* `MicroBatchExecution` has been requested to <<spark-sql-streaming-MicroBatchExecution.adoc#stop, stop>>
+
+* `ContinuousExecution` has been requested to <<spark-sql-streaming-ContinuousExecution.adoc#stop, stop>>
+
+* `StreamExecution` has been requested to <<runStream, run stream processing>> (and has finished <<runActivatedStream, running the activated streaming query>>)
+
+| RECONFIGURING
+a| [[RECONFIGURING]] Used only when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>> (and the <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> indicated that <<spark-sql-streaming-ContinuousReader.adoc#needsReconfiguration, needs reconfiguration>>)
+
+|===
 
 === [[availableOffsets]] `availableOffsets` Property
 
@@ -555,24 +603,6 @@ In the end, `start` pauses the main thread (using the <<startLatch, startLatch>>
 
 NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#startQuery, start a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
-=== [[creating-instance]] Creating StreamExecution Instance
-
-`StreamExecution` takes the following when created:
-
-* [[sparkSession]] `SparkSession`
-* [[name]] Name of the streaming query (can also be `null`)
-* [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
-* [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
-* [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
-* [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
-* [[triggerClock]] `Clock`
-* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>> (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
-* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
-
-`StreamExecution` initializes the <<internal-properties, internal properties>>.
-
-NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly when the <<extensions, concrete StreamExecutions>> are.
-
 === [[checkpointFile]] Path to Checkpoint Directory -- `checkpointFile` Internal Method
 
 [source, scala]
@@ -696,6 +726,17 @@ FIXME INFO message
 
 `offsetSeqMetadata` is restored (_re-created_) from a checkpointed state when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets>>.
 
+=== [[isActive]] `isActive` Method
+
+[source, scala]
+----
+isActive: Boolean
+----
+
+NOTE: `isActive` is part of the <<spark-sql-streaming-StreamingQuery.adoc#isActive, StreamingQuery Contract>> to indicate whether a streaming query is active (`true`) or not (`false`).
+
+`isActive` is enabled (`true`) as long as the <<state, State>>
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -787,14 +828,6 @@ queryName [id = xyz, runId = abc]
 | [[startLatch]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html[java.util.concurrent.CountDownLatch] with count `1`.
 
 Used when `StreamExecution` is requested to <<start, start>> to pause the main thread until `StreamExecution` was requested to <<runStream, run the streaming query>>.
-
-| state
-a| [[state]] Java's https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html[java.util.concurrent.atomic.AtomicReference] for the state of a streaming query execution:
-
-* `INITIALIZING` (default)
-* [[ACTIVE]] `ACTIVE` (after the first execution of <<runBatches, runBatches>>)
-* `TERMINATED`
-* [[RECONFIGURING]] `RECONFIGURING`
 
 | streamDeathCause
 | [[streamDeathCause]] `StreamingQueryException`

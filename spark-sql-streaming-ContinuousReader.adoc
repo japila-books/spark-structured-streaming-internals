@@ -61,7 +61,9 @@ a| [[needsReconfiguration]]
 boolean needsReconfiguration()
 ----
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run the streaming query in continuous mode>>.
+Indicates that the reader needs reconfiguration (e.g. to generate new input partitions)
+
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>
 
 | setStartOffset
 a| [[setStartOffset]]

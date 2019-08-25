@@ -157,7 +157,11 @@ runActivatedStream(
 
 NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated <<spark-sql-streaming-StreamingQuery.adoc#, streaming query>>.
 
-`runActivatedStream`...FIXME
+`runActivatedStream` simply requests the <<triggerExecutor, TriggerExecutor>> to execute batches using the <<batchRunner, batch runner>>.
+
+==== [[batchRunner]] Batch Runner
+
+The batch runner (of the <<triggerExecutor, TriggerExecutor>>) is executed as long as the  <<spark-sql-streaming-StreamExecution.adoc#isActive, is active>>
 
 === [[logicalPlan]] Resolving Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
 
@@ -533,14 +537,14 @@ In *awaitBatchLock* code block (it is not a time-tracking section), `runBatch` a
 
 NOTE: <<awaitProgressLockCondition, awaitProgressLockCondition>> is used mainly when `StreamExecution` <<processAllAvailable, processAllAvailable>> (and also when `awaitOffset`, but that seems mainly for testing).
 
-=== [[stop]] Stopping Execution of Streaming Query -- `stop` Method
+=== [[stop]] Stopping Stream Processing (Execution of Streaming Query) -- `stop` Method
 
 [source, scala]
 ----
 stop(): Unit
 ----
 
-NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop execution of the streaming query.
+NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.adoc#stop, StreamingQuery Contract>> to stop a streaming query.
 
 `stop` sets the <<spark-sql-streaming-StreamExecution.adoc#state, state>> to `TERMINATED`.
 

@@ -80,6 +80,8 @@ a| [[isActive]]
 isActive: Boolean
 ----
 
+Indicates whether the streaming query is active (`true`) or not (`false`)
+
 Used when...FIXME
 
 | lastProgress
@@ -172,6 +174,6 @@ a| [[stop]]
 stop(): Unit
 ----
 
-Stops execution of the streaming query
+Stops the streaming query
 
 |===

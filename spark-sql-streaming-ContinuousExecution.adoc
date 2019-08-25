@@ -240,7 +240,7 @@ Data source [name] does not support continuous processing.
 
 `ContinuousExecution` initializes the <<internal-properties, internal properties>>.
 
-=== [[stop]] Stopping Streaming Query -- `stop` Method
+=== [[stop]] Stopping Stream Processing (Execution of Streaming Query) -- `stop` Method
 
 [source, scala]
 ----
