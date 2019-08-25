@@ -141,6 +141,13 @@ Supported values:
 
 Cannot be changed between query restarts from the same checkpoint location.
 
+| spark.sql.streaming.noDataMicroBatches.enabled
+a| [[spark.sql.streaming.noDataMicroBatches.enabled]] Flag to control whether the <<spark-sql-streaming-MicroBatchExecution.adoc#, streaming micro-batch engine>> should execute batches with no data to process for eager state management for stateful streaming queries (`true`) or not (`false`).
+
+Default: `true`
+
+Use <<spark-sql-streaming-SQLConf.adoc#streamingNoDataMicroBatchesEnabled, SQLConf.streamingNoDataMicroBatchesEnabled>> to get the current value
+
 | spark.sql.streaming.noDataProgressEventInterval
 a| [[spark.sql.streaming.noDataProgressEventInterval]] *(internal)* How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#finishTrigger, finish a trigger>>
 

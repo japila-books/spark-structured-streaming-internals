@@ -151,10 +151,11 @@ NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is r
 
 [source, scala]
 ----
-runActivatedStream(sparkSessionForStream: SparkSession): Unit
+runActivatedStream(
+  sparkSessionForStream: SparkSession): Unit
 ----
 
-NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated streaming query.
+NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated <<spark-sql-streaming-StreamingQuery.adoc#, streaming query>>.
 
 `runActivatedStream`...FIXME
 

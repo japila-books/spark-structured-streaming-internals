@@ -30,10 +30,11 @@ a| [[runActivatedStream]]
 
 [source, scala]
 ----
-runActivatedStream(sparkSessionForStream: SparkSession): Unit
+runActivatedStream(
+  sparkSessionForStream: SparkSession): Unit
 ----
 
-Executes the activated streaming query
+Executes (_runs_) the activated <<spark-sql-streaming-StreamingQuery.adoc#, streaming query>>
 
 Used exclusively when `StreamExecution` is requested to <<runStream, run the streaming query>> (when transitioning from `INITIALIZING` to `ACTIVE` state)
 

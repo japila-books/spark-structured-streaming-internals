@@ -123,6 +123,12 @@ a| [[streamingMetricsEnabled]] Used exclusively when `StreamExecution` is reques
 
 a| [[STREAMING_MULTIPLE_WATERMARK_POLICY]]
 
+| `streamingNoDataMicroBatchesEnabled`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.noDataMicroBatches.enabled, spark.sql.streaming.noDataMicroBatches.enabled>>
+
+a| [[streamingNoDataMicroBatchesEnabled]][[STREAMING_NO_DATA_MICRO_BATCHES_ENABLED]] Used exclusively when `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>>
+
 | `streamingNoDataProgressEventInterval`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.noDataProgressEventInterval, spark.sql.streaming.noDataProgressEventInterval>>
