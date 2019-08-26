@@ -7,3 +7,23 @@
 [[creating-instance]]
 [[baseMap]]
 `StreamProgress` takes a `Map` of <<spark-sql-streaming-Offset.adoc#, Offsets>> per `BaseStreamingSource` when created.
+
+=== [[toOffsetSeq]] Converting to OffsetSeq -- `toOffsetSeq` Method
+
+[source, scala]
+----
+toOffsetSeq(
+  source: Seq[BaseStreamingSource],
+  metadata: OffsetSeqMetadata): OffsetSeq
+----
+
+`toOffsetSeq`...FIXME
+
+[NOTE]
+====
+`toOffsetSeq` is used when:
+
+* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>> (to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, commit available offsets for a batch to the write-ahead log>>)
+
+* `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.adoc#runStream, run stream processing>> (that <<spark-sql-streaming-StreamExecution.adoc#runStream-catch-Throwable, failed with a Throwable>>)
+====

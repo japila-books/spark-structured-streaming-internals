@@ -7,28 +7,6 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
-== Offsets and Metadata Checkpointing
-
-. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
-. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
-
-. link:spark-sql-streaming-CommitLog.adoc[CommitLog]
-.. link:spark-sql-streaming-CommitMetadata.adoc[CommitMetadata]
-
-. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
-.. link:spark-sql-streaming-OffsetSeq.adoc[OffsetSeq]
-
-. link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
-.. link:spark-sql-streaming-FileStreamSourceLog.adoc[FileStreamSourceLog]
-
-. link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
-
-. link:spark-sql-streaming-CheckpointFileManager.adoc[CheckpointFileManager]
-.. link:spark-sql-streaming-FileContextBasedCheckpointFileManager.adoc[FileContextBasedCheckpointFileManager]
-.. link:spark-sql-streaming-FileSystemBasedCheckpointFileManager.adoc[FileSystemBasedCheckpointFileManager]
-
-. link:spark-sql-streaming-Offset.adoc[Offset]
-
 == Arbitrary Stateful Streaming Aggregation
 
 . link:spark-sql-arbitrary-stateful-streaming-aggregation.adoc[Arbitrary Stateful Streaming Aggregation]
@@ -260,6 +238,28 @@
 .. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract]
 
 . link:spark-sql-streaming-WatermarkTracker.adoc[WatermarkTracker]
+
+== Offsets and Metadata Checkpointing (Fault-Tolerance and Reliability)
+
+. link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
+. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
+
+. link:spark-sql-streaming-CommitLog.adoc[CommitLog]
+.. link:spark-sql-streaming-CommitMetadata.adoc[CommitMetadata]
+
+. link:spark-sql-streaming-OffsetSeqLog.adoc[OffsetSeqLog]
+.. link:spark-sql-streaming-OffsetSeq.adoc[OffsetSeq]
+
+. link:spark-sql-streaming-CompactibleFileStreamLog.adoc[CompactibleFileStreamLog]
+.. link:spark-sql-streaming-FileStreamSourceLog.adoc[FileStreamSourceLog]
+
+. link:spark-sql-streaming-OffsetSeqMetadata.adoc[OffsetSeqMetadata]
+
+. link:spark-sql-streaming-CheckpointFileManager.adoc[CheckpointFileManager]
+.. link:spark-sql-streaming-FileContextBasedCheckpointFileManager.adoc[FileContextBasedCheckpointFileManager]
+.. link:spark-sql-streaming-FileSystemBasedCheckpointFileManager.adoc[FileSystemBasedCheckpointFileManager]
+
+. link:spark-sql-streaming-Offset.adoc[Offset]
 
 == Continuous Stream Processing (Structured Streaming V2)
 

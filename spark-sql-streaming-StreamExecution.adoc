@@ -282,7 +282,7 @@ offsetLog: OffsetSeqLog
 
 `offsetLog` is a <<spark-sql-streaming-OffsetSeqLog.adoc#, Hadoop DFS-based metadata storage>> (of <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeqs>>) with `offsets` <<checkpointFile, metadata directory>>.
 
-`offsetLog` is used as *Write-Ahead Log of Offsets* to persist offsets (offset range) of the data about to be processed in every trigger.
+`offsetLog` is used as *Write-Ahead Log of Offsets* to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, persist offsets>> of the data about to be processed in every trigger.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
@@ -505,7 +505,7 @@ NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<run
 
 [[runBatches-catch-isInterruptedByStop]]
 [[runBatches-catch-IOException]]
-[[runBatches-catch-Throwable]]
+[[runStream-catch-Throwable]]
 CAUTION: FIXME Describe `catch` block for exception handling
 
 [[runStream-finally]]

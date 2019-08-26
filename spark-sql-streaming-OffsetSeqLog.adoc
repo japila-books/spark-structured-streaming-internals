@@ -44,7 +44,7 @@ v1
 51
 ```
 
-=== [[deserialize]] Deserializing Metadata (Reading Metadata from Serialized Format) -- `deserialize` Method
+=== [[deserialize]] Deserializing Metadata (Reading OffsetSeq from Serialized Format) -- `deserialize` Method
 
 [source, scala]
 ----
