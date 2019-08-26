@@ -164,7 +164,7 @@ NOTE: `logicalPlan` is a Scala lazy value and so the resolution happens only onc
 
 Internally, `logicalPlan`...FIXME
 
-=== [[populateStartOffsets]] Populating Start Offsets (From Checkpoint When Available) -- `populateStartOffsets` Internal Method
+=== [[populateStartOffsets]] Populating Start Offsets From Offsets and Commits Checkpoints -- `populateStartOffsets` Internal Method
 
 [source, scala]
 ----

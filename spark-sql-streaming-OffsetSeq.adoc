@@ -4,11 +4,19 @@
 
 `OffsetSeq` is <<creating-instance, created>> when...MEFIXME
 
+=== [[creating-instance]] Creating OffsetSeq Instance
+
+`OffsetSeq` takes the following when created:
+
+* [[offsets]] Collection of <<spark-sql-streaming-Offset.adoc#, Offsets>>
+* [[metadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> (default: `None`)
+
 === [[toStreamProgress]] `toStreamProgress` Method
 
 [source, scala]
 ----
-toStreamProgress(sources: Seq[BaseStreamingSource]): StreamProgress
+toStreamProgress(
+  sources: Seq[BaseStreamingSource]): StreamProgress
 ----
 
 `toStreamProgress` then creates a new <<spark-sql-streaming-StreamProgress.adoc#creating-instance, StreamProgress>> with the only `sources` that have the <<offsets, offsets>> defined.
@@ -24,13 +32,6 @@ toStreamProgress(sources: Seq[BaseStreamingSource]): StreamProgress
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, getStartOffsets>>
 ====
 
-=== [[creating-instance]] Creating OffsetSeq Instance
-
-`OffsetSeq` takes the following when created:
-
-* [[offsets]] Collection of <<spark-sql-streaming-Offset.adoc#, Offsets>>
-* [[metadata]] <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> (default: `None`)
-
 === [[toString]] Textual Representation -- `toString` Method
 
 [source, scala]
@@ -41,3 +42,19 @@ toString: String
 NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()++[java.lang.Object] contract for the string representation of the object.
 
 `toString`...FIXME
+
+=== [[fill]] Creating OffsetSeq Instance -- `fill` Factory Methods
+
+[source, scala]
+----
+fill(
+  offsets: Offset*): OffsetSeq // <1>
+fill(
+  metadata: Option[String],
+  offsets: Offset*): OffsetSeq
+----
+<1> Uses no metadata (`None`)
+
+`fill` simply creates an <<creating-instance, OffsetSeq>> for the given variable sequence of <<spark-sql-streaming-Offset.adoc#, Offsets>> and the optional <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> (in JSON format).
+
+NOTE: `fill` is used when...FIXME

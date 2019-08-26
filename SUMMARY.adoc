@@ -7,10 +7,10 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
-== Metadata Checkpointing and Offsets
+== Offsets and Metadata Checkpointing
 
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
-.. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
+. link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
 
 . link:spark-sql-streaming-CommitLog.adoc[CommitLog]
 .. link:spark-sql-streaming-CommitMetadata.adoc[CommitMetadata]
@@ -215,6 +215,7 @@
 . link:spark-sql-streaming-KafkaMicroBatchReader.adoc[KafkaMicroBatchReader]
 .. link:spark-sql-streaming-KafkaOffsetRangeCalculator.adoc[KafkaOffsetRangeCalculator]
 . link:spark-sql-streaming-KafkaContinuousInputPartition.adoc[KafkaContinuousInputPartition]
+. link:spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc[KafkaSourceInitialOffsetWriter]
 
 == Text Socket Data Source
 
@@ -225,6 +226,7 @@
 
 . link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]
 . link:spark-sql-streaming-RateStreamSource.adoc[RateStreamSource]
+. link:spark-sql-streaming-RateStreamMicroBatchReader.adoc[RateStreamMicroBatchReader]
 
 == Console Data Sink
 

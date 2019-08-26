@@ -273,14 +273,16 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly when the <<extensions, concrete StreamExecutions>> are.
 
-=== [[offsetLog]] Offset Write-Ahead Log -- `offsetLog` Property
+=== [[offsetLog]] Write-Ahead Log (WAL) of Offsets -- `offsetLog` Property
 
 [source, scala]
 ----
 offsetLog: OffsetSeqLog
 ----
 
-`offsetLog` is <<spark-sql-streaming-OffsetSeqLog.adoc#, Offset Write-Ahead Log>> with `offsets` <<checkpointFile, metadata checkpoint directory>> to persist offsets (offset range) of the data about to be processed in every trigger.
+`offsetLog` is a <<spark-sql-streaming-OffsetSeqLog.adoc#, Hadoop DFS-based metadata storage>> (of <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeqs>>) with `offsets` <<checkpointFile, metadata directory>>.
+
+`offsetLog` is used as *Write-Ahead Log of Offsets* to persist offsets (offset range) of the data about to be processed in every trigger.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 

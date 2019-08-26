@@ -1,21 +1,27 @@
-== [[HDFSMetadataLog]] HDFSMetadataLog -- MetadataLog with Hadoop HDFS for Reliable Storage
+== [[HDFSMetadataLog]] HDFSMetadataLog -- Hadoop DFS-based Metadata Storage
 
-`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, MetadataLog>> that uses Hadoop DFS for a reliable storage.
+`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, metadata storage>> (of type `T`) that uses Hadoop DFS for fault-tolerance and reliability.
 
 [[metadataPath]]
 `HDFSMetadataLog` uses the given <<path, path>> as the *metadata directory* with metadata logs. The path is immediately converted to a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for file management.
 
 [[formats]]
-`HDFSMetadataLog` uses http://json4s.org/[Json4s] with the https://github.com/FasterXML/jackson-databind[Jackson] binding for <<serialize, serialization>> and <<deserialize, deserialization>> (to and from JSON format).
+`HDFSMetadataLog` uses http://json4s.org/[Json4s] with the https://github.com/FasterXML/jackson-databind[Jackson] binding for metadata <<serialize, serialization>> and <<deserialize, deserialization>> (to and from JSON format).
 
 `HDFSMetadataLog` is further customized by the <<extensions, extensions>>.
 
 [[extensions]]
-.HDFSMetadataLogs
+.HDFSMetadataLogs (Direct Extensions Only)
 [cols="30,70",options="header",width="100%"]
 |===
 | HDFSMetadataLog
 | Description
+
+| _Anonymous_
+| [[KafkaSource]] `HDFSMetadataLog` of <<spark-sql-streaming-KafkaSourceOffset.adoc#, KafkaSourceOffsets>> for <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>
+
+| _Anonymous_
+| [[RateStreamMicroBatchReader]] `HDFSMetadataLog` of <<spark-sql-streaming-Offset.adoc#LongOffset, LongOffsets>> for <<spark-sql-streaming-RateStreamMicroBatchReader.adoc#, RateStreamMicroBatchReader>>
 
 | <<spark-sql-streaming-CommitLog.adoc#, CommitLog>>
 | [[CommitLog]] <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
@@ -23,8 +29,11 @@
 | <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>
 | [[CompactibleFileStreamLog]] Compactible metadata logs (that compact logs at regular interval)
 
+| <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#, KafkaSourceInitialOffsetWriter>>
+| [[KafkaSourceInitialOffsetWriter]] `HDFSMetadataLog` of <<spark-sql-streaming-KafkaSourceOffset.adoc#, KafkaSourceOffsets>> for <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>
+
 | <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>
-| [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-ahead log (WAL)>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
+| [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-Ahead Log (WAL)>> of <<spark-sql-streaming-StreamExecution.adoc#, stream execution engines>>
 
 |===
 
@@ -60,17 +69,6 @@ deserialize(in: InputStream): T
 `deserialize` deserializes a metadata (of type `T`) from a given `InputStream`.
 
 NOTE: `deserialize` is used exclusively when `HDFSMetadataLog` is requested to <<get, retrieve metadata of a batch>>.
-
-=== [[createFileManager]] `createFileManager` Internal Method
-
-[source, scala]
-----
-createFileManager(): FileManager
-----
-
-CAUTION: FIXME
-
-NOTE: `createFileManager` is used exclusively when `HDFSMetadataLog` is <<creating-instance, created>> (and the internal <<fileManager, FileManager>> is created alongside).
 
 === [[get]][[get-batchId]] Retrieving Metadata Of Streaming Batch -- `get` Method
 
@@ -224,17 +222,17 @@ parseVersion(
 ====
 `parseVersion` is used when:
 
-* `KafkaSourceInitialOffsetWriter` is requested to `deserialize`
+* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#deserialize, deserialize metadata>>
 
 * `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initial partition offsets>>
 
-* `CommitLog` is requested to <<spark-sql-streaming-CommitLog.adoc#deserialize, deserialize a metadata>>
+* `CommitLog` is requested to <<spark-sql-streaming-CommitLog.adoc#deserialize, deserialize metadata>>
 
-* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#deserialize, deserialize a metadata>>
+* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#deserialize, deserialize metadata>>
 
-* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.adoc#deserialize, deserialize a metadata>>
+* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.adoc#deserialize, deserialize metadata>>
 
-* `RateStreamMicroBatchReader` is requested to `deserialize` a metadata
+* `RateStreamMicroBatchReader` is requested to <<spark-sql-streaming-RateStreamMicroBatchReader.adoc#deserialize, deserialize metadata>>
 ====
 
 === [[purgeAfter]] `purgeAfter` Method
@@ -247,17 +245,6 @@ purgeAfter(thresholdBatchId: Long): Unit
 `purgeAfter`...FIXME
 
 NOTE: `purgeAfter` seems to be used exclusively in tests.
-
-=== [[getOrderedBatchFiles]] Retrieving Ordered Batch Metadata Files -- `getOrderedBatchFiles` Method
-
-[source, scala]
-----
-getOrderedBatchFiles(): Array[FileStatus]
-----
-
-`getOrderedBatchFiles`...FIXME
-
-NOTE: `getOrderedBatchFiles` does not seem to be used at all.
 
 === [[writeBatchToFile]] Writing Batch Metadata to File (Metadata Log) -- `writeBatchToFile` Internal Method
 
@@ -275,6 +262,17 @@ writeBatchToFile(
 In case of an exception, `writeBatchToFile` simply requests the `CancellableFSDataOutputStream` output stream to `cancel` (so that the output file is not generated) and re-throws the exception.
 
 NOTE: `writeBatchToFile` is used exclusively when `HDFSMetadataLog` is requested to <<add, store (persist) metadata of a streaming batch>>.
+
+=== [[getOrderedBatchFiles]] Retrieving Ordered Batch Metadata Files -- `getOrderedBatchFiles` Method
+
+[source, scala]
+----
+getOrderedBatchFiles(): Array[FileStatus]
+----
+
+`getOrderedBatchFiles`...FIXME
+
+NOTE: `getOrderedBatchFiles` does not seem to be used at all.
 
 === [[internal-properties]] Internal Properties
 
