@@ -145,8 +145,6 @@
 .. link:spark-sql-streaming-SourceProgress.adoc[SourceProgress]
 .. link:spark-sql-streaming-SinkProgress.adoc[SinkProgress]
 
-. link:spark-sql-streaming-StreamProgress.adoc[StreamProgress Custom Scala Map]
-
 . link:spark-sql-streaming-webui.adoc[Web UI]
 
 . link:spark-sql-streaming-logging.adoc[Logging]
@@ -260,6 +258,7 @@
 .. link:spark-sql-streaming-FileSystemBasedCheckpointFileManager.adoc[FileSystemBasedCheckpointFileManager]
 
 . link:spark-sql-streaming-Offset.adoc[Offset]
+. link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
 
 == Continuous Stream Processing (Structured Streaming V2)
 

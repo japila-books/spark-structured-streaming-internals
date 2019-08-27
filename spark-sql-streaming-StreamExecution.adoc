@@ -333,7 +333,7 @@ a| [[RECONFIGURING]] Used only when `ContinuousExecution` is requested to <<spar
 
 |===
 
-=== [[availableOffsets]] `availableOffsets` Property
+=== [[availableOffsets]] Available Offsets StreamProgress -- `availableOffsets` Property
 
 [source, scala]
 ----
