@@ -1,10 +1,10 @@
 == [[OffsetSeq]] OffsetSeq
 
-`OffsetSeq` is the metadata managed by <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>.
+`OffsetSeq` is the metadata managed by <<spark-sql-streaming-OffsetSeqLog.adoc#, Hadoop DFS-based metadata storage>>.
 
 `OffsetSeq` is <<creating-instance, created>> (possibly using the <<fill, fill>> factory methods) when:
 
-* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.adoc#deserialize, deserialize metadata>>
+* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.adoc#deserialize, deserialize metadata>> (retrieve metadata from a persistent storage)
 
 * `StreamProgress` is requested to <<spark-sql-streaming-StreamProgress.adoc#toOffsetSeq, convert itself to OffsetSeq>> (most importantly when `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>> to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, commit available offsets for a batch to the write-ahead log>>)
 

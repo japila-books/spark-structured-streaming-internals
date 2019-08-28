@@ -239,6 +239,8 @@
 
 == Offsets and Metadata Checkpointing (Fault-Tolerance and Reliability)
 
+. link:spark-sql-streaming-offsets-and-metadata-checkpointing.adoc[Offsets and Metadata Checkpointing]
+
 . link:spark-sql-streaming-MetadataLog.adoc[MetadataLog]
 . link:spark-sql-streaming-HDFSMetadataLog.adoc[HDFSMetadataLog]
 

@@ -1,0 +1,9 @@
+== Offsets and Metadata Checkpointing
+
+Every time a streaming query is started, <<spark-sql-streaming-StreamExecution.adoc#extensions, stream execution engines>> use checkpoint location to get so-called *start offsets* (to start query processing from).
+
+* <<spark-sql-streaming-OffsetSeqLog.adoc#, Hadoop DFS-based metadata storage>> of <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeqs>>
+
+* <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeq>> and <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>>
+
+* <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> and <<spark-sql-streaming-StreamExecution.adoc#, StreamExecutions>> (<<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed>> and <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available>> offsets)

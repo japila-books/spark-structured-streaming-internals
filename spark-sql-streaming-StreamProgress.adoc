@@ -1,10 +1,10 @@
-== [[StreamProgress]] StreamProgress
+== [[StreamProgress]] StreamProgress -- Collection of Offsets per Streaming Source
 
 `StreamProgress` is a collection of <<spark-sql-streaming-Offset.adoc#, Offsets>> per <<spark-sql-streaming-BaseStreamingSource.adoc#, streaming source>>.
 
 `StreamProgress` is <<creating-instance, created>> when:
 
-* `StreamExecution` is <<spark-sql-streaming-StreamExecution.adoc#, created>> (and creates <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, Committed Offsets>> and <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, Available Offsets>>)
+* `StreamExecution` is <<spark-sql-streaming-StreamExecution.adoc#, created>> (and creates <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed>> and <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available>> offsets)
 
 * `OffsetSeq` is requested to <<spark-sql-streaming-OffsetSeq.adoc#toStreamProgress, convert to StreamProgress>>
 

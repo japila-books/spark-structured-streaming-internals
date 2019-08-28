@@ -131,7 +131,7 @@ NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requeste
 
 `runContinuous` creates an *epoch update thread* that...FIXME
 
-==== [[getStartOffsets]] Retrieving Start Offsets -- `getStartOffsets` Internal Method
+==== [[getStartOffsets]] Getting Start Offsets From Checkpoint -- `getStartOffsets` Internal Method
 
 [source, scala]
 ----

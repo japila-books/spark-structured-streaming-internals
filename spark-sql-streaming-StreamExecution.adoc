@@ -378,6 +378,26 @@ Used when:
 
 NOTE: `availableOffsets` works in tandem with the <<committedOffsets, committedOffsets>> internal registry.
 
+=== [[committedOffsets]] Committed Offsets (StreamProgress) -- `committedOffsets` Property
+
+[source, scala]
+----
+committedOffsets: StreamProgress
+----
+
+`committedOffsets` is a <<spark-sql-streaming-StreamProgress.adoc#, collection of offsets per streaming source>> to track what data (<<spark-sql-streaming-Offset.adoc#, offset>>) has already been processed and committed (to a sink or state stores) for every streaming source.
+
+[NOTE]
+====
+`committedOffsets` is used when:
+
+* `MicroBatchExecution` stream execution engine is requested for the <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, start offsets (from checkpoint)>>, to <<spark-sql-streaming-MicroBatchExecution.adoc#isNewDataAvailable, check whether new data is available>> and <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a single streaming micro-batch>>
+
+* `ContinuousExecution` stream execution engine is requested for the <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, start offsets (from checkpoint)>> and to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit epoch>>
+
+* `StreamExecution` is requested for the <<toDebugString, internal string representation>>
+====
+
 === [[resolvedCheckpointRoot]] Fully-Qualified (Resolved) Path to Checkpoint Root Directory -- `resolvedCheckpointRoot` Property
 
 [source, scala]
@@ -712,7 +732,7 @@ $ jstack <driver-pid> | grep -e "stream execution thread"
 ```
 ====
 
-=== [[toDebugString]] `toDebugString` Internal Method
+=== [[toDebugString]] Internal String Representation -- `toDebugString` Internal Method
 
 [source, scala]
 ----
@@ -776,11 +796,6 @@ a| [[awaitProgressLockCondition]] Lock
 
 | callSite
 | [[callSite]]
-
-| committedOffsets
-a| [[committedOffsets]] *Committed offsets* (<<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> of pairs of the streaming sources and the offsets they already processed)
-
-`committedOffsets` is a part of the link:spark-sql-streaming-ProgressReporter.adoc#committedOffsets[ProgressReporter Contract]
 
 | currentBatchId
 a| [[currentBatchId]] ID (number) of the current streaming batch
