@@ -1,9 +1,26 @@
 == Offsets and Metadata Checkpointing
 
-Every time a streaming query is started, <<spark-sql-streaming-StreamExecution.adoc#extensions, stream execution engines>> use checkpoint location to get so-called *start offsets* (to start query processing from).
+Every time a streaming query is started, <<spark-sql-streaming-StreamExecution.adoc#extensions, stream execution engines>> use checkpoint location to resume stream processing and get so-called *start offsets* (to start query processing from).
+
+`StreamExecution` resumes (populates the start offsets) from the latest checkpointed offsets from the <<offsetLog, offset log>> that may have already been processed (and committed to the <<batchCommitLog, batch commit log>> so they are used as the current <<committedOffsets, committed offsets>>).
 
 * <<spark-sql-streaming-OffsetSeqLog.adoc#, Hadoop DFS-based metadata storage>> of <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeqs>>
 
 * <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeq>> and <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>>
 
 * <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> and <<spark-sql-streaming-StreamExecution.adoc#, StreamExecutions>> (<<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed>> and <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available>> offsets)
+
+=== Logging
+
+You can observe the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> in DEBUG message logs of `MicroBatchExecution` when it resumes stream processing (and <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populates the start offsets from checkpoint>>).
+
+[options="wrap"]
+----
+Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
+----
+
+=== Limitations (Assumptions)
+
+It is assumed that the order of <<spark-sql-streaming-ProgressReporter.adoc#sources, streaming sources>> in a <<spark-sql-streaming-StreamExecution.adoc#analyzedPlan, streaming query>> matches the order of the <<spark-sql-streaming-OffsetSeq.adoc#offsets, offsets>> of <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeq>> (in <<spark-sql-streaming-StreamExecution.adoc#offsetLog, offsetLog>>) and <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, availableOffsets>>.
+
+In other words, a streaming query can be modified and then restarted from a checkpoint (to maintain stream processing state) only when the number of streaming sources and their order are preserved across restarts.
