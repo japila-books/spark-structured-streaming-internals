@@ -1,12 +1,12 @@
-== [[StreamExecution]] StreamExecution -- Base of Streaming Query Execution Engines
+== [[StreamExecution]] StreamExecution -- Base of Stream Execution Engines
 
-`StreamExecution` is the <<contract, base>> of <<extensions, streaming query execution engines>> that can <<runActivatedStream, run>> a <<logicalPlan, structured query>> at regular intervals on a <<queryExecutionThread, stream execution thread>>.
+`StreamExecution` is the <<contract, base>> of <<extensions, stream execution engines>> (aka _streaming query processing engines_) that <<runActivatedStream, run>> an activated <<logicalPlan, structured query>> (on a <<queryExecutionThread, stream execution thread>>).
 
-NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* can all be considered synonyms, and `StreamExecution` uses <<logicalPlan, analyzed logical plan>> internally to refer to it.
+NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are all considered high-level synonyms for an executable entity that stream execution engines run using the <<logicalPlan, analyzed logical plan>> internally.
 
 [[contract]]
-.StreamExecution Contract
-[cols="1m,3",options="header",width="100%"]
+.StreamExecution Contract (Abstract Methods Only)
+[cols="30m,70",options="header",width="100%"]
 |===
 | Property
 | Description
@@ -257,17 +257,17 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 === [[creating-instance]] Creating StreamExecution Instance
 
-`StreamExecution` takes the following when created:
+`StreamExecution` takes the following to be created:
 
 * [[sparkSession]] `SparkSession`
 * [[name]] Name of the streaming query (can also be `null`)
 * [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
-* [[sink]] <<spark-sql-streaming-Sink.adoc#, Streaming sink>>
+* [[sink]] <<spark-sql-streaming-BaseStreamingSink.adoc#, Streaming sink>>
 * [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
 * [[triggerClock]] `Clock`
-* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>> (that is only used when creating `IncrementalExecution` for a streaming batch in <<runBatch-queryPlanning, query planning>>)
-* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
+* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag (to control whether to delete the checkpoint directory on stop)
 
 `StreamExecution` initializes the <<internal-properties, internal properties>>.
 
@@ -432,7 +432,7 @@ stopSources(): Unit
 ====
 `stopSources` is used when:
 
-* `StreamExecution` is requested to <<runStream, run stream processing>> (and terminates)
+* `StreamExecution` is requested to <<runStream, run stream processing>> (and <<runStream-finally, terminates>> successfully or not)
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run the streaming query in continuous mode>> (and terminates)
 ====
@@ -507,8 +507,26 @@ NOTE: <<triggerExecutor, TriggerExecutor>> finishes executing batches when <<run
 [[runStream-catch-Throwable]]
 CAUTION: FIXME Describe `catch` block for exception handling
 
-[[runStream-finally]]
-CAUTION: FIXME Describe `finally` block for query termination
+==== [[runStream-finally]] Running Stream Processing -- `finally` Block
+
+`runStream` releases the <<startLatch, startLatch>> and <<initializationLatch, initializationLatch>> locks.
+
+`runStream` <<stopSources, stopSources>>.
+
+`runStream` sets the <<state, state>> to <<TERMINATED, TERMINATED>>.
+
+`runStream` sets the <<spark-sql-streaming-ProgressReporter.adoc#currentStatus, StreamingQueryStatus>> with the `isTriggerActive` and `isDataAvailable` flags off (`false`).
+
+`runStream` removes the <<streamMetrics, stream metrics reporter>> from the application's `MetricsSystem`.
+
+`runStream` requests the <<spark-sql-streaming-StreamingQueryManager.adoc#, StreamingQueryManager>> to <<spark-sql-streaming-StreamingQueryManager.adoc#notifyQueryTermination, handle termination of a streaming query>>.
+
+`runStream` creates a new <<spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent, QueryTerminatedEvent>> (with the <<id, id>> and <<runId, run id>> of the streaming query) and <<postEvent, posts it>>.
+
+[[runStream-finally-deleteCheckpointOnStop]]
+With the <<deleteCheckpointOnStop, deleteCheckpointOnStop>> flag enabled and no <<exception, StreamingQueryException>> reported, `runStream` deletes the <<resolvedCheckpointRoot, checkpoint directory>> recursively.
+
+In the end, `runStream` releases the <<terminationLatch, terminationLatch>> lock.
 
 ==== [[runBatches-batch-runner]] TriggerExecutor's Batch Runner
 
@@ -759,6 +777,17 @@ isActive: Boolean
 NOTE: `isActive` is part of the <<spark-sql-streaming-StreamingQuery.adoc#isActive, StreamingQuery Contract>> to indicate whether a streaming query is active (`true`) or not (`false`).
 
 `isActive` is enabled (`true`) as long as the <<state, State>>
+
+=== [[exception]] `exception` Method
+
+[source, scala]
+----
+exception: Option[StreamingQueryException]
+----
+
+NOTE: `exception` is part of the <<spark-sql-streaming-StreamingQuery.adoc#exception, StreamingQuery Contract>> to indicate whether a streaming query...FIXME
+
+`exception`...FIXME
 
 === [[internal-properties]] Internal Properties
 
