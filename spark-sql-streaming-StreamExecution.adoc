@@ -1,6 +1,6 @@
 == [[StreamExecution]] StreamExecution -- Base of Stream Execution Engines
 
-`StreamExecution` is the <<contract, base>> of <<extensions, stream execution engines>> (aka _streaming query processing engines_) that <<runActivatedStream, run>> an activated <<logicalPlan, structured query>> (on a <<queryExecutionThread, stream execution thread>>).
+`StreamExecution` is the <<contract, base>> of <<extensions, stream execution engines>> (aka _streaming query processing engines_) that can <<runActivatedStream, run>> a <<logicalPlan, structured query>> (on a <<queryExecutionThread, stream execution thread>>).
 
 NOTE: *Continuous query*, *streaming query*, *continuous Dataset*, *streaming Dataset* are all considered high-level synonyms for an executable entity that stream execution engines run using the <<logicalPlan, analyzed logical plan>> internally.
 
@@ -262,7 +262,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 * [[sparkSession]] `SparkSession`
 * [[name]] Name of the streaming query (can also be `null`)
 * [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
-* [[analyzedPlan]] Analyzed logical query plan (i.e. `LogicalPlan`)
+* [[analyzedPlan]] Streaming query (as an analyzed logical query plan, i.e. `LogicalPlan`)
 * [[sink]] <<spark-sql-streaming-BaseStreamingSink.adoc#, Streaming sink>>
 * [[trigger]] <<spark-sql-streaming-Trigger.adoc#, Trigger>>
 * [[triggerClock]] `Clock`
@@ -419,14 +419,20 @@ NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used in
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, retrieve the start offsets>> at the very beginning of the streaming query execution and later regularly every <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>)
 
-=== [[stopSources]] `stopSources` Method
+=== [[stopSources]] Stopping Streaming Sources -- `stopSources` Method
 
 [source, scala]
 ----
 stopSources(): Unit
 ----
 
-`stopSources`...FIXME
+`stopSources` requests every <<uniqueSources, streaming source>> (in the <<analyzedPlan, streaming query>>) to <<spark-sql-streaming-BaseStreamingSource.adoc#stop, stop>>.
+
+In case of an non-fatal exception, `stopSources` prints out the following WARN message to the logs:
+
+```
+Failed to stop streaming source: [source]. Resources may have leaked.
+```
 
 [NOTE]
 ====
