@@ -8,11 +8,13 @@
 
 * `OffsetSeq` is requested to <<spark-sql-streaming-OffsetSeq.adoc#toStreamProgress, convert to StreamProgress>>
 
-[[creating-instance]]
-[[baseMap]]
-`StreamProgress` takes a `Map` of <<spark-sql-streaming-Offset.adoc#, Offsets>> per `BaseStreamingSource` when created.
-
 `StreamProgress` is an extension of Scala's https://www.scala-lang.org/api/2.11.11/index.html#scala.collection.immutable.Map[scala.collection.immutable.Map] with <<spark-sql-streaming-BaseStreamingSource.adoc#, streaming sources>> as keys and their <<spark-sql-streaming-Offset.adoc#, Offsets>> as values.
+
+=== [[creating-instance]] Creating StreamProgress Instance
+
+`StreamProgress` takes the following to be created:
+
+* [[baseMap]] Optional collection of <<spark-sql-streaming-Offset.adoc#, offsets>> per <<spark-sql-streaming-BaseStreamingSource.adoc#, streaming source>> (`Map[BaseStreamingSource, Offset]`) (default: empty)
 
 === [[get]] Looking Up Offset by Streaming Source -- `get` Method
 

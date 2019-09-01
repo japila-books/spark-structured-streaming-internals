@@ -340,9 +340,11 @@ a| [[RECONFIGURING]] Used only when `ContinuousExecution` is requested to <<spar
 availableOffsets: StreamProgress
 ----
 
-`availableOffsets` is a <<spark-sql-streaming-StreamProgress.adoc#, collection of offsets per streaming source>> to track what data (by <<spark-sql-streaming-Offset.adoc#, offset>>) is available to be processed for every <<spark-sql-streaming-ProgressReporter.adoc#sources, streaming source>> in the <<analyzedPlan, streaming query>> but have not yet been committed (and registered as <<committedOffsets, committed>>).
+`availableOffsets` is a <<spark-sql-streaming-StreamProgress.adoc#, collection of offsets per streaming source>> to track what data (by <<spark-sql-streaming-Offset.adoc#, offset>>) is available for processing for every <<spark-sql-streaming-ProgressReporter.adoc#sources, streaming source>> in the <<analyzedPlan, streaming query>> (and have not yet been <<committedOffsets, committed>>).
 
 `availableOffsets` works in tandem with the <<committedOffsets, committedOffsets>> internal registry.
+
+`availableOffsets` is <<spark-sql-streaming-StreamProgress.adoc#creating-instance, empty>> when `StreamExecution` is <<creating-instance, created>> (i.e. no offsets are reported for any streaming source in the streaming query).
 
 [NOTE]
 ====

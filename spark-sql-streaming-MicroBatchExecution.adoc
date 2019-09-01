@@ -254,7 +254,7 @@ NOTE: `constructNextBatch` will only be executed when the <<isCurrentBatchConstr
 
 . <<constructNextBatch-latestOffsets, Requesting the latest offsets from every streaming source>> (of the streaming query)
 
-. <<constructNextBatch-availableOffsets, Updating StreamProgress with the latest available offsets>>
+. <<constructNextBatch-availableOffsets, Updating availableOffsets StreamProgress with the latest available offsets>>
 
 . <<constructNextBatch-offsetSeqMetadata, Updating batch metadata with the current event-time watermark and batch timestamp>>
 
@@ -291,9 +291,9 @@ In *setOffsetRange* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken,
 
 In *getEndOffset* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.adoc#getEndOffset, end offset>>.
 
-==== [[constructNextBatch-availableOffsets]] Updating StreamProgress with Latest Available Offsets
+==== [[constructNextBatch-availableOffsets]] Updating availableOffsets StreamProgress with Latest Available Offsets
 
-`constructNextBatch` updates the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, StreamProgress>> with the latest available offsets.
+`constructNextBatch` updates the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, availableOffsets StreamProgress>> with the latest reported offsets.
 
 ==== [[constructNextBatch-offsetSeqMetadata]] Updating Batch Metadata with Current Event-Time Watermark and Batch Timestamp
 
