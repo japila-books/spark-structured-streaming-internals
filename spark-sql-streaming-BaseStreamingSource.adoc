@@ -1,3 +1,51 @@
 == [[BaseStreamingSource]] BaseStreamingSource Contract -- Base of Streaming Sources
 
-`BaseStreamingSource` is...FIXME
+`BaseStreamingSource` is the <<contract, abstraction>> of <<extensions, streaming sources and readers>> that can be <<stop, stopped>>.
+
+The main purpose of `BaseStreamingSource` is to share a common abstraction between the former Data Source API V1 and the modern Data Source API V2 (before Spark Structured Streaming migrates to the Data Source API V2 fully).
+
+[[contract]]
+.BaseStreamingSource Contract
+[cols="30m,70",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| stop
+a| [[stop]]
+
+[source, java]
+----
+void stop()
+----
+
+Stops the streaming source or reader (and frees any resources it may have allocated)
+
+Used when:
+
+* `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.adoc#stopSources, stop streaming sources and readers>>
+
+* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, load data from a MicroBatchReadSupport data source>> (for read schema)
+
+|===
+
+[[extensions]]
+.BaseStreamingSources (Direct Implementations and Extensions Only)
+[cols="30,70",options="header",width="100%"]
+|===
+| BaseStreamingSource
+| Description
+
+| <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>
+| [[ContinuousReader]] Data source readers in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> (based on Data Source API V2)
+
+| `MemoryStreamBase`
+| [[MemoryStreamBase]] Base implementation of <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>> (for <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>) and <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>> (for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>)
+
+| <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>
+| [[MicroBatchReader]] Data source readers in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (based on Data Source API V2)
+
+| <<spark-sql-streaming-Source.adoc#, Source>>
+| [[Source]] Streaming data sources (based on Data Source API V1)
+
+|===

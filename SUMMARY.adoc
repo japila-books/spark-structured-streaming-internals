@@ -153,8 +153,8 @@
 
 . link:spark-sql-streaming-DataSource.adoc[DataSource]
 
-. link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource Contract]
-. link:spark-sql-streaming-BaseStreamingSink.adoc[BaseStreamingSink Contract]
+. link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource]
+. link:spark-sql-streaming-BaseStreamingSink.adoc[BaseStreamingSink]
 
 . link:spark-sql-streaming-Source.adoc[Streaming Source]
 .. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider]
@@ -162,8 +162,8 @@
 . link:spark-sql-streaming-Sink.adoc[Streaming Sink]
 .. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 
-. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport Contract]
-.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter Contract]
+. link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport]
+.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter]
 
 == File-Based Data Source
 

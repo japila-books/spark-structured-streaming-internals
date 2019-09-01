@@ -1,4 +1,4 @@
-== [[Source]] Streaming Source
+== [[Source]] Source Contract -- Streaming Sources
 
 *Streaming Source* is a "continuous" stream of data and is described using the <<contract, Source Contract>>.
 
