@@ -1,6 +1,6 @@
 == [[MicroBatchExecution]] MicroBatchExecution -- Stream Execution Engine of Micro-Batch Stream Processing
 
-`MicroBatchExecution` is a <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>> of <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
+`MicroBatchExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>> of <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 
 `MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>) with the following:
 
@@ -16,9 +16,9 @@ val query = spark
   .format("rate")
   .load
   .writeStream
-  .format("console")
+  .format("console")          // <-- not a StreamWriteSupport sink
   .option("truncate", false)
-  .trigger(Trigger.Once) // <-- Gives MicroBatchExecution
+  .trigger(Trigger.Once)      // <-- Gives MicroBatchExecution
   .queryName("rate2console")
   .start
 
@@ -33,13 +33,6 @@ import org.apache.spark.sql.execution.streaming.MicroBatchExecution
 val microBatchEngine = engine.asInstanceOf[MicroBatchExecution]
 assert(microBatchEngine.trigger == Trigger.Once)
 ----
-
-[[BATCH_ID_KEY]][[streaming.sql.batchId]]
-`MicroBatchExecution` defines *streaming.sql.batchId* local property for the current *batch* or *epoch IDs* that is used for the following:
-
-* `DataWritingSparkTask` is requested to run
-
-* `MicroBatchExecution` is requested to <<runBatch, run a single streaming micro-batch>>
 
 === [[creating-instance]] Creating MicroBatchExecution Instance
 
@@ -104,13 +97,13 @@ The batch runner <<spark-sql-streaming-ProgressReporter.adoc#startTrigger, initi
 [[runActivatedStream-triggerExecution]][[runActivatedStream-triggerExecution-populateStartOffsets]]
 The batch runner starts *triggerExecution* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, execution phase>> that includes:
 
-. <<populateStartOffsets, Populating start offsets (from metadata logs)>> at the very first batch
+. <<populateStartOffsets, Populating start offsets from checkpoint>> at the very first batch
 
-. <<constructNextBatch, Constructing the next streaming micro-batch>>
+. <<constructNextBatch, Constructing or skipping the next streaming micro-batch>>
 
 . <<runBatch, Running the streaming micro-batch>>
 
-While <<populateStartOffsets, populating start offsets (from the offsets and commits metadata logs)>> at the very first batch the batch runner prints out the following INFO message to the logs:
+While <<populateStartOffsets, populating start offsets from checkpoint>> at the very first batch the batch runner prints out the following INFO message to the logs:
 
 ```
 Stream started from [committedOffsets]
@@ -155,21 +148,6 @@ In the end, the batch runner <<spark-sql-streaming-ProgressReporter.adoc#updateS
 Waiting for next trigger
 ```
 
-=== [[logicalPlan]] Resolving Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
-
-[source, scala]
-----
-logicalPlan: LogicalPlan
-----
-
-NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> to resolve the analyzed logical plan of a streaming query.
-
-`logicalPlan` resolves (_replaces_) <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>>, <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> logical operators.
-
-NOTE: `logicalPlan` is a Scala lazy value and so the resolution happens only once at the first access and is cached for later use afterwards.
-
-Internally, `logicalPlan`...FIXME
-
 === [[populateStartOffsets]] Populating Start Offsets From Checkpoint (Resuming from Checkpoint) -- `populateStartOffsets` Internal Method
 
 [source, scala]
@@ -180,7 +158,7 @@ populateStartOffsets(
 
 `populateStartOffsets` requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>> for the <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, latest committed batch id with metadata>> (i.e. <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeq>>).
 
-NOTE: The batch id could not be available in the write-ahead log when a streaming query started with a new log or no batch was not persisted (_added_) to the log before.
+NOTE: The batch id could not be available in the write-ahead log when a streaming query started with a new log or no batch was persisted (_added_) to the log before.
 
 `populateStartOffsets` branches off based on whether the latest committed batch was <<populateStartOffsets-getLatest-available, available>> or <<populateStartOffsets-getLatest-not-available, not>>.
 
@@ -217,9 +195,10 @@ When the latest committed batch id with metadata was found which is exactly the 
 
 When the latest committed batch id with metadata was found, but it is not exactly the second latest batch ID (found in the <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>>), `populateStartOffsets` prints out the following WARN message to the logs:
 
-```
+[options="wrap"]
+----
 Batch completion log latest batch id is [latestCommittedBatchId], which is not trailing batchid [latestBatchId] by one
-```
+----
 
 When no commit log present in the <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>>, `populateStartOffsets` prints out the following INFO message to the logs:
 
@@ -229,13 +208,14 @@ no commit log present
 
 In the end, `populateStartOffsets` prints out the following DEBUG message to the logs:
 
-```
+[options="wrap"]
+----
 Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
-```
+----
 
 ==== [[populateStartOffsets-getLatest-not-available]] No Latest Committed Batch
 
-When the latest committed batch id with the metadata could not be found in the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>>, it is assumed that the streaming query is started for the very first time (or the <<spark-sql-streaming-StreamExecution.adoc#checkpointRoot, checkpoint location>> changed).
+When the latest committed batch id with the metadata could not be found in the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>>, it is assumed that the streaming query is started for the very first time (or the <<spark-sql-streaming-StreamExecution.adoc#checkpointRoot, checkpoint location>> has changed).
 
 `populateStartOffsets` prints out the following INFO message to the logs:
 
@@ -264,7 +244,7 @@ NOTE: `constructNextBatch` will only be executed when the <<isCurrentBatchConstr
 
 . <<constructNextBatch-offsetSeqMetadata, Updating batch metadata with the current event-time watermark and batch timestamp>>
 
-. <<constructNextBatch-shouldConstructNextBatch, Checking whether to construct (or skip) the next micro-batch>>
+. <<constructNextBatch-shouldConstructNextBatch, Checking whether to construct the next micro-batch or not (skip it)>>
 
 In the end, `constructNextBatch` returns <<constructNextBatch-shouldConstructNextBatch, whether the next streaming micro-batch was constructed or skipped>>.
 
@@ -308,7 +288,7 @@ In *getEndOffset* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, t
 
 `constructNextBatch` updates the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, batch metadata>> with the current <<spark-sql-streaming-WatermarkTracker.adoc#currentWatermark, event-time watermark>> (from the <<watermarkTracker, WatermarkTracker>>) and the batch timestamp.
 
-==== [[constructNextBatch-shouldConstructNextBatch]] Checking Whether to Construct or Skip Next Micro-Batch
+==== [[constructNextBatch-shouldConstructNextBatch]] Checking Whether to Construct Next Micro-Batch or Not (Skip It)
 
 `constructNextBatch` checks whether or not the next streaming micro-batch should be constructed (`lastExecutionRequiresAnotherBatch`).
 
@@ -639,6 +619,59 @@ isNewDataAvailable: Boolean
 `isNewDataAvailable` is positive (`true`) when there is at least one such streaming source.
 
 NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> and <<constructNextBatch, construct the next streaming micro-batch>>.
+
+=== [[logicalPlan]] Analyzed Logical Plan With Unique StreamingExecutionRelation Operators -- `logicalPlan` Lazy Property
+
+[source, scala]
+----
+logicalPlan: LogicalPlan
+----
+
+NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.adoc#logicalPlan, StreamExecution Contract>> to be the analyzed logical plan of the streaming query.
+
+`logicalPlan` resolves (_replaces_) <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>>, <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> logical operators. `logicalPlan` uses the transformed logical plan to set the <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, uniqueSources>> and <<sources, sources>> internal registries to be the <<spark-sql-streaming-StreamingExecutionRelation.adoc#source, BaseStreamingSources>> of all the `StreamingExecutionRelations` unique and not, respectively.
+
+NOTE: `logicalPlan` is a Scala lazy value and so the initialization is guaranteed to happen only once at the first access (and is cached for later use afterwards).
+
+Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>>.
+
+For every <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>> logical operator, `logicalPlan` tries to replace it with the <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> that was used earlier for the same `StreamingRelation` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `DataSource` to <<spark-sql-streaming-DataSource.adoc#createSource, create a streaming Source>> with the metadata path as `sources/uniqueID` directory in the <<spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot, checkpoint root directory>>. `logicalPlan` prints out the following INFO message to the logs:
+
+```
+Using Source [source] from DataSourceV1 named '[sourceName]' [dataSourceV1]
+```
+
+For every <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operator with a <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> data source (which is not on the list of <<spark-sql-streaming-properties.adoc#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>), `logicalPlan` tries to replace it with the <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `MicroBatchReadSupport` to <<spark-sql-streaming-MicroBatchReadSupport.adoc#createMicroBatchReader, create a MicroBatchReader>> with the metadata path as `sources/uniqueID` directory in the <<spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot, checkpoint root directory>>. `logicalPlan` prints out the following INFO message to the logs:
+
+```
+Using MicroBatchReader [reader] from DataSourceV2 named '[sourceName]' [dataSourceV2]
+```
+
+For every other <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operator, `logicalPlan` tries to replace it with the <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `StreamingRelation` for the underlying <<spark-sql-streaming-StreamingRelation.adoc#dataSource, DataSource>> that is in turn requested to <<spark-sql-streaming-DataSource.adoc#createSource, create a streaming Source>> with the metadata path as `sources/uniqueID` directory in the <<spark-sql-streaming-StreamExecution.adoc#resolvedCheckpointRoot, checkpoint root directory>>. `logicalPlan` prints out the following INFO message to the logs:
+
+```
+Using Source [source] from DataSourceV2 named '[sourceName]' [dataSourceV2]
+```
+
+`logicalPlan` requests the transformed analyzed logical plan for all `StreamingExecutionRelations` that are then requested for <<spark-sql-streaming-StreamingExecutionRelation.adoc#source, BaseStreamingSources>>, and saves them as the <<sources, sources>> internal registry.
+
+In the end, `logicalPlan` sets the <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, uniqueSources>> internal registry to be the unique `BaseStreamingSources` above.
+
+`logicalPlan` throws an `AssertionError` when not executed on the <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, stream execution thread>>.
+
+```
+logicalPlan must be initialized in QueryExecutionThread but the current thread was [currentThread]
+```
+
+=== [[BATCH_ID_KEY]][[streaming.sql.batchId]] `streaming.sql.batchId` Local Property
+
+`MicroBatchExecution` defines *streaming.sql.batchId* as the name of the local property to be the current *batch* or *epoch IDs* (that Spark tasks can use)
+
+`streaming.sql.batchId` is used when:
+
+* `MicroBatchExecution` is requested to <<runBatch, run a single streaming micro-batch>> (and sets the property to be the current batch ID)
+
+* `DataWritingSparkTask` is requested to run (and needs an epoch ID)
 
 === [[internal-properties]] Internal Properties
 
