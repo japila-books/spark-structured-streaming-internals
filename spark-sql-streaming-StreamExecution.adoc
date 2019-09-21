@@ -297,7 +297,7 @@ The number of entries in the `OffsetSeqLog` is controlled using <<spark-sql-stre
 * `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets>> and <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct (or skip) the next streaming micro-batch>>
 ====
 
-=== [[state]] State of Streaming Query Execution -- `state` Property
+=== [[state]] State of Streaming Query (Execution) -- `state` Property
 
 [source, scala]
 ----
@@ -329,7 +329,7 @@ a| [[TERMINATED]] Used to indicate that:
 * `StreamExecution` has been requested to <<runStream, run stream processing>> (and has finished <<runActivatedStream, running the activated streaming query>>)
 
 | RECONFIGURING
-a| [[RECONFIGURING]] Used only when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>> (and the <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> indicated that <<spark-sql-streaming-ContinuousReader.adoc#needsReconfiguration, needs reconfiguration>>)
+a| [[RECONFIGURING]] Used only when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>> (and the <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> indicated a <<spark-sql-streaming-ContinuousReader.adoc#needsReconfiguration, need for reconfiguration>>)
 
 |===
 
@@ -784,7 +784,7 @@ isActive: Boolean
 
 NOTE: `isActive` is part of the <<spark-sql-streaming-StreamingQuery.adoc#isActive, StreamingQuery Contract>> to indicate whether a streaming query is active (`true`) or not (`false`).
 
-`isActive` is enabled (`true`) as long as the <<state, State>>
+`isActive` is enabled (`true`) as long as the <<state, State>> is not <<TERMINATED, TERMINATED>>.
 
 === [[exception]] `exception` Method
 

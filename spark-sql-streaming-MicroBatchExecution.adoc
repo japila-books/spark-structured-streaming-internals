@@ -102,15 +102,21 @@ NOTE: _trigger_ and _batch_ are considered equivalent and used interchangeably.
 The batch runner <<spark-sql-streaming-ProgressReporter.adoc#startTrigger, initializes query progress for the new trigger>>.
 
 [[runActivatedStream-triggerExecution]][[runActivatedStream-triggerExecution-populateStartOffsets]]
-In *triggerExecution* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, the batch runner <<populateStartOffsets, populates start offsets (from the offsets and commits metadata logs)>> (when <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>> is the default `-1` that is right after `MicroBatchExecution` was <<spark-sql-streaming-StreamExecution.adoc#, created>>).
+The batch runner starts *triggerExecution* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, execution phase>> that includes:
 
-The batch runner prints out the following INFO message to the logs:
+. <<populateStartOffsets, Populating start offsets (from metadata logs)>> at the very first batch
+
+. <<constructNextBatch, Constructing the next streaming micro-batch>>
+
+. <<runBatch, Running the streaming micro-batch>>
+
+While <<populateStartOffsets, populating start offsets (from the offsets and commits metadata logs)>> at the very first batch the batch runner prints out the following INFO message to the logs:
 
 ```
 Stream started from [committedOffsets]
 ```
 
-The batch runner sets the human-readable description of any Spark job submitted (that streaming sources may submit to get new data) to the <<spark-sql-streaming-StreamExecution.adoc#getBatchDescriptionString, batch description>>.
+The batch runner sets the human-readable description for any Spark job submitted (that streaming sources may submit to get new data) as the <<spark-sql-streaming-StreamExecution.adoc#getBatchDescriptionString, batch description>>.
 
 [[runActivatedStream-triggerExecution-isCurrentBatchConstructed]]
 The batch runner <<constructNextBatch, constructs the next streaming micro-batch>> (when the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag is off).
