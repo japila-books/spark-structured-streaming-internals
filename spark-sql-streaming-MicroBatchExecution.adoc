@@ -279,6 +279,7 @@ For every <<spark-sql-streaming-Source.adoc#, streaming source>> (Data Source AP
 Getting offsets from [source]
 ```
 
+[[constructNextBatch-getOffset]]
 In *getOffset* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` requests the `Source` for the <<getOffset, latest offset>>.
 
 For every <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> (Data Source API V2), `constructNextBatch` <<spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage, updates the status message>> to the following:
@@ -287,8 +288,10 @@ For every <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> (Data
 Getting offsets from [source]
 ```
 
+[[constructNextBatch-setOffsetRange]]
 In *setOffsetRange* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` finds the available offsets of the source (in the <<availableOffsets, available offset>> internal registry) and, if found, requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.adoc#deserializeOffset, deserialize the offset>> (from <<spark-sql-streaming-Offset.adoc#json, JSON format>>). `constructNextBatch` requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.adoc#setOffsetRange, set the desired offset range>>.
 
+[[constructNextBatch-getEndOffset]]
 In *getEndOffset* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.adoc#getEndOffset, end offset>>.
 
 ==== [[constructNextBatch-availableOffsets]] Updating availableOffsets StreamProgress with Latest Available Offsets

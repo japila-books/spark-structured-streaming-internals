@@ -329,14 +329,16 @@ In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, 
 
 NOTE: `finishTrigger` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>.
 
-=== [[reportTimeTaken]] Reporting Execution Time -- `reportTimeTaken` Method
+=== [[reportTimeTaken]] Time-Tracking Section (Recording Execution Time for Progress Reporting) -- `reportTimeTaken` Method
 
 [source, scala]
 ----
-reportTimeTaken[T](triggerDetailKey: String)(body: => T): T
+reportTimeTaken[T](
+  triggerDetailKey: String)(
+  body: => T): T
 ----
 
-`reportTimeTaken` measures the time to execute `body` and records it in the <<currentDurationsMs, currentDurationsMs>> internal registry.
+`reportTimeTaken` measures the time to execute `body` and records it in the <<currentDurationsMs, currentDurationsMs>> internal registry under `triggerDetailKey` key. If the `triggerDetailKey` key was recorded already, the current execution time is added.
 
 In the end, `reportTimeTaken` prints out the following DEBUG message to the logs and returns the result of executing `body`.
 
@@ -346,14 +348,21 @@ In the end, `reportTimeTaken` prints out the following DEBUG message to the logs
 
 [NOTE]
 ====
-`reportTimeTaken` is used when `StreamExecution` wants to record the time taken for (as `triggerDetailKey` in the DEBUG message above):
+`reportTimeTaken` is used when the <<spark-sql-streaming-StreamExecution.adoc#extensions, stream execution engines>> are requested to execute the following phases (that appear as `triggerDetailKey` in the DEBUG message in the logs):
 
-* `addBatch`
-* `getBatch`
-* `getOffset`
-* `queryPlanning`
-* `triggerExecution`
-* `walCommit` when writing offsets to log
+* `MicroBatchExecution`
+** <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-triggerExecution, triggerExecution>>
+** <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-getOffset, getOffset>>
+** <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-setOffsetRange, setOffsetRange>>
+** <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-getEndOffset, getEndOffset>>
+** <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, walCommit>>
+** <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-getBatch, getBatch>>
+** <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, queryPlanning>>
+** <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-addBatch, addBatch>>
+
+* `ContinuousExecution`
+** <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous-queryPlanning, queryPlanning>>
+** <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous-runContinuous, runContinuous>>
 ====
 
 === [[updateStatusMessage]] Updating Status Message -- `updateStatusMessage` Method

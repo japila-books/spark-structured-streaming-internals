@@ -123,6 +123,7 @@ NOTE: The <<spark-sql-streaming-EpochCoordinator.adoc#, EpochCoordinator RPC end
 
 `runContinuous` creates a daemon <<runContinuous-epoch-update-thread, epoch update thread>> and starts it immediately.
 
+[[runContinuous-runContinuous]]
 In *runContinuous* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runContinuous` requests the physical query plan (of the <<spark-sql-streaming-StreamExecution.adoc#lastExecution, IncrementalExecution>>) to execute (that simply requests the physical operator to `doExecute` and generate an `RDD[InternalRow]`).
 
 NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
