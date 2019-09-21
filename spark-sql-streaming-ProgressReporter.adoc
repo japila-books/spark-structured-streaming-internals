@@ -479,15 +479,6 @@ NOTE: `recentProgress` is used when...FIXME
 | currentDurationsMs
 a| [[currentDurationsMs]] http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap[scala.collection.mutable.HashMap] of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
 
-The action names can be as follows:
-
-* `addBatch`
-* `getBatch` (when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a streaming batch])
-* `getOffset`
-* `queryPlanning`
-* `triggerExecution`
-* `walCommit` when writing offsets to log
-
 Starts empty when `ProgressReporter` <<startTrigger, sets the state for a new batch>> with new entries added or updated when <<reportTimeTaken, reporting execution time>> (of an action).
 
 [TIP]

@@ -1,8 +1,10 @@
 == Micro-Batch Stream Processing (Structured Streaming V1)
 
-*Micro-Batch Stream Processing* is a stream processing model in Spark Structured Streaming (often referred as *Structured Streaming V1*) that is used for <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>> triggers.
+*Micro-Batch Stream Processing* is a stream processing model in Spark Structured Streaming that is used for <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>> triggers.
 
 Micro-batch stream processing uses <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine and <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> data sources.
+
+Micro-batch stream processing is often referred to as *Structured Streaming V1*.
 
 [source, scala]
 ----
@@ -29,3 +31,21 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 
 // sq.stop
 ----
+
+=== [[execution-phases]] Execution Phases (Processing Cycle)
+
+Once <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>>, the query execution goes through the following *execution phases* every trigger:
+
+. <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-triggerExecution, triggerExecution>>
+. <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-getOffset, getOffset>> for <<spark-sql-streaming-Source.adoc#, Sources>> or <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-setOffsetRange, setOffsetRange>> for <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReaders>>
+. <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-getEndOffset, getEndOffset>>
+. <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, walCommit>>
+. <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-getBatch, getBatch>>
+. <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, queryPlanning>>
+. <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-addBatch, addBatch>>
+
+Execution phases with execution times are available using <<spark-sql-streaming-StreamingQuery.adoc#lastProgress, StreamingQueryProgress>> under `durationMs`.
+
+```
+FIXME: Demo
+```
