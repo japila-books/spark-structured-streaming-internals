@@ -1,15 +1,14 @@
 == [[KafkaOffsetRangeCalculator]] KafkaOffsetRangeCalculator
 
-`KafkaOffsetRangeCalculator` is <<apply, created>> when `KafkaMicroBatchReader` is <<spark-sql-streaming-KafkaMicroBatchReader.adoc#rangeCalculator, created>> with the only purpose of <<getRanges, calculating offset ranges>> (when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>).
+`KafkaOffsetRangeCalculator` is <<apply, created>> for <<spark-sql-streaming-KafkaMicroBatchReader.adoc#rangeCalculator, KafkaMicroBatchReader>> to <<getRanges, calculate offset ranges>> (when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>).
 
-[[minPartitions]]
-[[creating-instance]]
+[[minPartitions]][[creating-instance]]
 `KafkaOffsetRangeCalculator` takes an optional *minimum number of partitions per executor* (`minPartitions`) to be created (that can either be undefined or greater than `0`).
 
 [[apply]]
 When created with a `DataSourceOptions`, `KafkaOffsetRangeCalculator` uses <<spark-sql-streaming-kafka-data-source.adoc#minPartitions, minPartitions>> option for the <<minPartitions, minimum number of partitions per executor>>.
 
-=== [[getRanges]] Calculating Offset Ranges -- `getRanges` Method
+=== [[getRanges]] Offset Ranges -- `getRanges` Method
 
 [source, scala]
 ----
@@ -19,19 +18,21 @@ getRanges(
   executorLocations: Seq[String] = Seq.empty): Seq[KafkaOffsetRange]
 ----
 
-`getRanges` finds the common `TopicPartitions` (i.e. the `TopicPartitions` included in the given `untilOffsets` and `fromOffsets`).
+`getRanges` finds the common `TopicPartitions` that are the keys that are used in the `fromOffsets` and `untilOffsets` collections (_intersection_).
 
-For every `TopicPartition`, `getRanges` creates a <<KafkaOffsetRange, KafkaOffsetRange>> (with the <<preferredLoc, preferredLoc>> undefined). `getRanges` filters out the `TopicPartitions` that <<size, have no records to consume>>.
+For every common `TopicPartition`, `getRanges` creates a <<KafkaOffsetRange, KafkaOffsetRange>> with the from and until offsets from the `fromOffsets` and `untilOffsets` collections (and the <<preferredLoc, preferredLoc>> undefined). `getRanges` filters out the `TopicPartitions` that <<size, have no records to consume>> (i.e. the difference between until and from offsets is not greater than `0`).
 
 At this point, `getRanges` knows the `TopicPartitions` with records to consume.
 
-For the <<minPartitions, minPartitions>> undefined or smaller than the number of `KafkaOffsetRanges` (i.e. `TopicPartitions` to consume records from), `getRanges` <<getLocation, finds the preferred executor>> for a `TopicPartition` (and the given `executorLocations`).
+`getRanges` branches off based on the defined <<minPartitions, minimum number of partitions per executor>> and the number of `KafkaOffsetRanges` (`TopicPartitions` with records to consume).
 
-Otherwise (with the <<minPartitions, minPartitions>> defined and greater than the number of `KafkaOffsetRanges`), `getRanges`...FIXME
+For the <<minPartitions, minimum number of partitions per executor>> undefined or smaller than the number of `KafkaOffsetRanges` (`TopicPartitions` to consume records from), `getRanges` updates every `KafkaOffsetRange` with the <<getLocation, preferred executor>> based on the `TopicPartition` and the `executorLocations`).
+
+Otherwise (with the <<minPartitions, minimum number of partitions per executor>> defined and greater than the number of `KafkaOffsetRanges`), `getRanges` splits `KafkaOffsetRanges` into smaller ones.
 
 NOTE: `getRanges` is used exclusively when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>.
 
-=== [[KafkaOffsetRange]] KafkaOffsetRange Class
+=== [[KafkaOffsetRange]] KafkaOffsetRange Class -- TopicPartition with From and Until Offsets and Optional Preferred Location
 
 `KafkaOffsetRange` is a case class with the following attributes:
 

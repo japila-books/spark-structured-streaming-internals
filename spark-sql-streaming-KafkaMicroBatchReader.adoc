@@ -92,7 +92,7 @@ NOTE: `stop` is part of the <<spark-sql-streaming-BaseStreamingSource.adoc#stop,
 planInputPartitions(): java.util.List[InputPartition[InternalRow]]
 ----
 
-NOTE: `planInputPartitions` is part of the `DataSourceReader` contract to...FIXME.
+NOTE: `planInputPartitions` is part of the `DataSourceReader` contract in Spark SQL for the number of `InputPartitions` to use as RDD partitions (when `DataSourceV2ScanExec` physical operator is requested for the partitions).
 
 `planInputPartitions` first finds the new partitions (`TopicPartitions` that are in the <<endPartitionOffsets, endPartitionOffsets>> but not in the <<startPartitionOffsets, startPartitionOffsets>>) and requests the <<kafkaOffsetReader, KafkaOffsetReader>> to
 <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets, fetch their earliest offsets>>.
