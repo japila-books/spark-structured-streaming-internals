@@ -32,7 +32,7 @@ Otherwise (with the <<minPartitions, minimum number of partitions per executor>>
 
 NOTE: `getRanges` is used exclusively when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>.
 
-=== [[KafkaOffsetRange]] KafkaOffsetRange Class -- TopicPartition with From and Until Offsets and Optional Preferred Location
+=== [[KafkaOffsetRange]] KafkaOffsetRange -- TopicPartition with From and Until Offsets and Optional Preferred Location
 
 `KafkaOffsetRange` is a case class with the following attributes:
 

@@ -1,0 +1,3 @@
+== [[KafkaMicroBatchInputPartitionReader]] KafkaMicroBatchInputPartitionReader
+
+`KafkaMicroBatchInputPartitionReader` is an `InputPartitionReader` (of `InternalRows`) that...FIXME
