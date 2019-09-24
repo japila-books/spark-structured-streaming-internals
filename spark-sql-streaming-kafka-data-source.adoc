@@ -24,7 +24,7 @@ NOTE: Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ book.versio
 
 === [[streaming-source]] Streaming Source
 
-With <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 module>> you can use *kafka* data source format for reading records from one or more Kafka topics as a streaming Dataset.
+With <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 module>> you can use *kafka* data source format for loading data (reading records) from one or more Kafka topics as a streaming Dataset.
 
 [source, scala]
 ----
@@ -35,6 +35,8 @@ val records = spark
   .option("kafka.bootstrap.servers", ":9092")
   .load
 ----
+
+Kafka data source supports many options for reading.
 
 Internally, the *kafka* data source format for reading is available through <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> that is a <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
 

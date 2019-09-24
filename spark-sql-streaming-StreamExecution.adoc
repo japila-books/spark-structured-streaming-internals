@@ -767,7 +767,7 @@ NOTE: `offsetSeqMetadata` is part of the <<spark-sql-streaming-ProgressReporter.
 
 NOTE: `MicroBatchExecution` uses the <<spark-sql-streaming-MicroBatchExecution.adoc#watermarkTracker, WatermarkTracker>> for the current event-time watermark and the <<spark-sql-streaming-MicroBatchExecution.adoc#triggerClock, trigger clock>> for the current batch timestamp.
 
-`offsetSeqMetadata` is stored (_checkpointed_) in the *walCommit* phase of <<spark-sql-streaming-MicroBatchExecution.adoc#walCommit, MicroBatchExecution>> (and printed out as INFO message to the logs).
+`offsetSeqMetadata` is stored (_checkpointed_) in <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, walCommit phase>> of `MicroBatchExecution` (and printed out as INFO message to the logs).
 
 ```
 FIXME INFO message

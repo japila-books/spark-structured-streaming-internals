@@ -1,10 +1,10 @@
-== [[StreamSourceProvider]] StreamSourceProvider -- Streaming Data Source Provider
+== [[StreamSourceProvider]] StreamSourceProvider -- Streaming Source Provider
 
-`StreamSourceProvider` is the <<contract, contract>> of <<implementations, data source providers>> that can <<createSource, create a streaming data source>> for a format (e.g. text file) or system (e.g. Apache Kafka).
+`StreamSourceProvider` is the <<contract, contract>> of <<implementations, data source providers>> that can <<createSource, create a streaming source>> for a format (e.g. text file) or system (e.g. Apache Kafka).
 
 [[contract]]
 .StreamSourceProvider Contract
-[cols="1m,3",options="header",width="100%"]
+[cols="30m,70",options="header",width="100%"]
 |===
 | Method
 | Description
@@ -22,7 +22,7 @@ createSource(
   parameters: Map[String, String]): Source
 ----
 
-Creates a <<spark-sql-streaming-Source.adoc#, streaming source>> for a format or system (to continually read data)
+Creates a <<spark-sql-streaming-Source.adoc#, streaming source>>
 
 NOTE: `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by link:spark-sql-streaming-StreamingQueryManager.adoc#createQuery[StreamingQueryManager].
 
@@ -49,4 +49,4 @@ Used exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSou
 NOTE: `StreamSourceProvider` is an experimental contract.
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> is the default implementation of the <<contract, StreamSourceProvider Contract>> in Spark Structured Streaming.
+NOTE: <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> is the only known `StreamSourceProvider` in Spark Structured Streaming.

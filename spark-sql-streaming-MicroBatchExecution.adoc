@@ -368,7 +368,7 @@ FIXME True? Example?
 
 `constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Writing offsets to log*.
 
-[[walCommit]][[constructNextBatch-walCommit]]
+[[constructNextBatch-walCommit]]
 In *walCommit* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section],
 `constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets in the batch] to <<offsetLog, OffsetSeqLog>>.
 
@@ -462,7 +462,7 @@ runBatch(sparkSessionToRunBatch: SparkSession): Unit
 
 NOTE: `runBatch` is used when...FIXME
 
-==== [[runBatch-getBatch]] getBatch Phase -- Requesting New (and Hence Unprocessed) Data From Streaming Sources
+==== [[runBatch-getBatch]] getBatch Phase -- Requesting Unprocessed Data From Streaming Sources
 
 Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>> internal registry).
 

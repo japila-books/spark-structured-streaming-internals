@@ -1,9 +1,8 @@
 == [[MicroBatchReadSupport]] MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders
 
-`MicroBatchReadSupport` is the <<contract, abstraction>> of <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
+`MicroBatchReadSupport` is the <<contract, extension>> of the `DataSourceV2` for <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 
-[[contract]]
-[[createMicroBatchReader]]
+[[contract]][[createMicroBatchReader]]
 `ContinuousReadSupport` defines a single `createMicroBatchReader` method to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
 
 [source, java]
@@ -22,18 +21,18 @@ MicroBatchReader createMicroBatchReader(
 
 [[implementations]]
 .MicroBatchReadSupports
-[cols="1,3",options="header",width="100%"]
+[cols="30,70",options="header",width="100%"]
 |===
 | MicroBatchReadSupport
 | Description
 
 | <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>>
-| [[KafkaSourceProvider]] Data source provider for *kafka* format
+| [[KafkaSourceProvider]] Data source provider for `kafka` format
 
 | <<spark-sql-streaming-RateStreamProvider.adoc#, RateStreamProvider>>
-| [[RateStreamProvider]]
+| [[RateStreamProvider]] Data source provider for `rate` format
 
 | <<spark-sql-streaming-TextSocketSourceProvider.adoc#, TextSocketSourceProvider>>
-| [[TextSocketSourceProvider]]
+| [[TextSocketSourceProvider]] Data source provider for `socket` format
 
 |===

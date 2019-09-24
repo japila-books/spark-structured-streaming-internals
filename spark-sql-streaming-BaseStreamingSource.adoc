@@ -19,7 +19,7 @@ a| [[stop]]
 void stop()
 ----
 
-Stops the streaming source or reader (and frees any resources it may have allocated)
+Stops the streaming source or reader (and frees up any resources it may have allocated)
 
 Used when:
 

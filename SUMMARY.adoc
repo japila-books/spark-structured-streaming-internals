@@ -238,8 +238,8 @@
 . link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
 .. link:spark-sql-streaming-MicroBatchWriter.adoc[MicroBatchWriter]
 
-. link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport Contract]
-.. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader Contract]
+. link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport]
+.. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader]
 
 . link:spark-sql-streaming-WatermarkTracker.adoc[WatermarkTracker]
 
