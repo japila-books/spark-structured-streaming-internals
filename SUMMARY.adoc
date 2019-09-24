@@ -7,19 +7,15 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
-== Extending Structured Streaming
+== Extending Structured Streaming with New Data Sources
+
+. link:spark-sql-streaming-extending-new-data-sources.adoc[Extending Structured Streaming with New Data Sources]
 
 . link:spark-sql-streaming-BaseStreamingSource.adoc[BaseStreamingSource]
 . link:spark-sql-streaming-BaseStreamingSink.adoc[BaseStreamingSink]
 
-. link:spark-sql-streaming-Source.adoc[Streaming Source]
-.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider]
-
-. link:spark-sql-streaming-Sink.adoc[Streaming Sink]
-.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
-
 . link:spark-sql-streaming-StreamWriteSupport.adoc[StreamWriteSupport]
-.. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter]
+. link:spark-sql-streaming-StreamWriter.adoc[StreamWriter]
 
 . link:spark-sql-streaming-DataSource.adoc[DataSource]
 
@@ -231,18 +227,6 @@
 . link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 . link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 
-== Micro-Batch Stream Processing (Structured Streaming V1)
-
-. link:spark-sql-streaming-micro-batch-stream-processing.adoc[Micro-Batch Stream Processing]
-
-. link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
-.. link:spark-sql-streaming-MicroBatchWriter.adoc[MicroBatchWriter]
-
-. link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport]
-.. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader]
-
-. link:spark-sql-streaming-WatermarkTracker.adoc[WatermarkTracker]
-
 == Offsets and Metadata Checkpointing (Fault-Tolerance and Reliability)
 
 . link:spark-sql-streaming-offsets-and-metadata-checkpointing.adoc[Offsets and Metadata Checkpointing]
@@ -267,6 +251,24 @@
 
 . link:spark-sql-streaming-Offset.adoc[Offset]
 . link:spark-sql-streaming-StreamProgress.adoc[StreamProgress]
+
+== Micro-Batch Stream Processing (Structured Streaming V1)
+
+. link:spark-sql-streaming-micro-batch-stream-processing.adoc[Micro-Batch Stream Processing]
+
+. link:spark-sql-streaming-MicroBatchExecution.adoc[MicroBatchExecution]
+.. link:spark-sql-streaming-MicroBatchWriter.adoc[MicroBatchWriter]
+
+. link:spark-sql-streaming-MicroBatchReadSupport.adoc[MicroBatchReadSupport]
+.. link:spark-sql-streaming-MicroBatchReader.adoc[MicroBatchReader]
+
+. link:spark-sql-streaming-WatermarkTracker.adoc[WatermarkTracker]
+
+. link:spark-sql-streaming-Source.adoc[Streaming Source (Data Source V1)]
+.. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider]
+
+. link:spark-sql-streaming-Sink.adoc[Streaming Sink (Data Source V1)]
+.. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 
 == Continuous Stream Processing (Structured Streaming V2)
 
