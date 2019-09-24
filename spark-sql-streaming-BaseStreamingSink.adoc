@@ -1,3 +1,23 @@
-== [[BaseStreamingSink]] BaseStreamingSink Contract
+== [[BaseStreamingSink]] BaseStreamingSink Contract -- Base of Streaming Sinks
 
-`BaseStreamingSink` is...FIXME
+`BaseStreamingSink` is the abstraction of <<extensions, streaming writers and sinks>> with the only purpose of sharing a common abstraction between the former Data Source API V1 (<<Sink, Sink API>>) and the modern Data Source API V2 (until Spark Structured Streaming migrates to the Data Source API V2 fully).
+
+`BaseStreamingSink` defines no methods.
+
+[[extensions]]
+.BaseStreamingSinks (Extensions Only)
+[cols="30,70",options="header",width="100%"]
+|===
+| BaseStreamingSink
+| Description
+
+| `MemorySinkBase`
+| [[MemorySinkBase]] Base for sinks in `memory` data source
+
+| <<spark-sql-streaming-Sink.adoc#, Sink>>
+| [[Sink]] Streaming sinks for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (based on Data Source API V1)
+
+| <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>>
+| [[StreamWriteSupport]] Data source writers (based on Data Source API V2)
+
+|===
