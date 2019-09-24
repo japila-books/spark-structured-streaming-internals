@@ -226,7 +226,7 @@ Starting new streaming query.
 [[populateStartOffsets-currentBatchId-0]]
 `populateStartOffsets` sets the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, current batch ID>> to `0` and creates a new <<watermarkTracker, WatermarkTracker>>.
 
-=== [[constructNextBatch]] Constructing (Or Skipping) Next Streaming Micro-Batch -- `constructNextBatch` Internal Method
+=== [[constructNextBatch]] Constructing Or Skipping Next Streaming Micro-Batch -- `constructNextBatch` Internal Method
 
 [source, scala]
 ----
@@ -250,9 +250,9 @@ In the end, `constructNextBatch` returns <<constructNextBatch-shouldConstructNex
 
 NOTE: `constructNextBatch` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run the activated streaming query>>.
 
-==== [[constructNextBatch-latestOffsets]] Requesting Latest Offsets from Streaming Sources
+==== [[constructNextBatch-latestOffsets]] Requesting Latest Offsets from Streaming Sources (getOffset, setOffsetRange and getEndOffset Phases)
 
-`constructNextBatch` firstly requests the latest available offsets from every <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, streaming source>>.
+`constructNextBatch` firstly requests every <<spark-sql-streaming-StreamExecution.adoc#uniqueSources, streaming source>> for the latest offsets.
 
 NOTE: `constructNextBatch` checks out the latest offset in every streaming data source sequentially, i.e. one data source at a time.
 
@@ -309,150 +309,48 @@ noDataBatchesEnabled = [noDataBatchesEnabled], lastExecutionRequiresAnotherBatch
 
 ==== [[constructNextBatch-shouldConstructNextBatch-enabled]] Constructing Next Micro-Batch -- `shouldConstructNextBatch` Flag Enabled
 
-NOTE: FIXME (`if (shouldConstructNextBatch) ...`)
-
-With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag enabled (`true`), `constructNextBatch`...FIXME
-
-==== [[constructNextBatch-shouldConstructNextBatch-disabled]] Skipping Next Micro-Batch -- `shouldConstructNextBatch` Flag Disabled
-
-With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag disabled (`false`), `constructNextBatch` turns the <<noNewData, noNewData>> flag on (`true`) and wakes up (_notifies_) all threads waiting for the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLockCondition, awaitProgressLockCondition>> lock.
-
-==== OLD / Review
-
-==== [[constructNextBatch-hasNewData-true]] New Data Available
-
-If <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>> is available (which may not when `constructNextBatch` is executed the very first time), `constructNextBatch` takes the executed physical plan (i.e. `SparkPlan`) and collects all `EventTimeWatermarkExec` physical operators with the count of link:spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats[eventTimeStats] greater than `0`.
-
-NOTE: The executed physical plan is available as `executedPlan` property of link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution] (which is a custom `QueryExecution`).
-
-`constructNextBatch` prints out the following DEBUG message to the logs:
+With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag enabled (`true`), `constructNextBatch` <<spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage, updates the status message>> to the following:
 
 ```
-Observed event time stats: [eventTimeStats]
+Writing offsets to log
 ```
-
-`constructNextBatch` calculates the difference between the maximum value of `eventTimeStats` and link:spark-sql-streaming-EventTimeWatermarkExec.adoc#delayMs[delayMs] for every `EventTimeWatermarkExec` physical operator.
-
-NOTE: The maximum value of `eventTimeStats` is the youngest time, i.e. the time the closest to the current time.
-
-`constructNextBatch` then takes the first difference (if available at all) and uses it as a possible new event time watermark.
-
-If the event time watermark candidate is greater than the current watermark (i.e. later time-wise), `constructNextBatch` prints out the following INFO message to the logs:
-
-```
-Updating eventTime watermark to: [newWatermarkMs] ms
-```
-
-`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with the new event-time watermark and the current time.
-
-Otherwise, if the eventTime watermark candidate is not greater than the current watermark, `constructNextBatch` simply prints out the following DEBUG message to the logs:
-
-```
-Event time didn't move: [newWatermarkMs] <= [batchWatermarkMs]
-```
-
-`constructNextBatch` creates a new <<offsetSeqMetadata, OffsetSeqMetadata>> with just the current time.
-
-NOTE: Although `constructNextBatch` collects all the `EventTimeWatermarkExec` physical operators in the executed physical plan of <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>>, only the first matters if available.
-
-NOTE: A physical plan can have as many `EventTimeWatermarkExec` physical operators as link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operators used in a streaming query.
-
-[NOTE]
-====
-link:spark-sql-streaming-WatermarkSupport.adoc[Streaming watermark] can be changed between a streaming query's restarts (and be different between what is checkpointed and the current version of the query).
-
-FIXME True? Example?
-====
-
-`constructNextBatch` then adds the offsets to metadata log.
-
-`constructNextBatch` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Writing offsets to log*.
 
 [[constructNextBatch-walCommit]]
-In *walCommit* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section],
-`constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#add[adds the offsets in the batch] to <<offsetLog, OffsetSeqLog>>.
+In *walCommit* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `constructNextBatch` requests the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, availableOffsets StreamProgress>> to <<spark-sql-streaming-StreamProgress.adoc#toOffsetSeq, convert to OffsetSeq>> (with the <<sources, BaseStreamingSources>> and the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, current batch metadata (event-time watermark and timestamp)>>) that is in turn <<spark-sql-streaming-HDFSMetadataLog.adoc#add, added>> to the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, write-ahead log>> for the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, current batch ID>>.
 
-[NOTE]
-====
-While writing the offsets to the metadata log, `constructNextBatch` uses the following internal registries:
+`constructNextBatch` prints out the following INFO message to the logs:
 
-* <<currentBatchId, currentBatchId>> for the current batch id
+```
+Committed offsets for batch [currentBatchId]. Metadata [offsetSeqMetadata]
+```
 
-* <<availableOffsets, StreamProgress>> for the available offsets
+NOTE: FIXME (`if (currentBatchId != 0) ...`)
 
-* <<sources, sources>> for the streaming sources
+NOTE: FIXME (`if (minLogEntriesToMaintain < currentBatchId) ...`)
 
-* <<offsetSeqMetadata, OffsetSeqMetadata>>
-====
+`constructNextBatch` turns the <<spark-sql-streaming-StreamExecution.adoc#noNewData, noNewData>> internal flag off (`false`).
 
-`constructNextBatch` reports a `AssertionError` when writing to the metadata log has failed.
+In case of a failure while <<spark-sql-streaming-HDFSMetadataLog.adoc#add, adding the available offsets>> to the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, write-ahead log>>, `constructNextBatch` throws an `AssertionError`:
 
 ```
 Concurrent update to the log. Multiple streaming jobs detected for [currentBatchId]
 ```
 
-[TIP]
-====
-Use link:spark-sql-streaming-StreamingQuery.adoc#lastProgress[StreamingQuery.lastProgress] to access `walCommit` duration.
+==== [[constructNextBatch-shouldConstructNextBatch-disabled]] Skipping Next Micro-Batch -- `shouldConstructNextBatch` Flag Disabled
 
-[source, scala]
-----
-scala> :type sq
-org.apache.spark.sql.streaming.StreamingQuery
-sq.lastProgress.durationMs.get("walCommit")
-----
-====
-
-[TIP]
-====
-Enable INFO logging level for `org.apache.spark.sql.execution.streaming.StreamExecution` logger to be notified about `walCommit` duration.
-
-```
-17/08/11 09:04:17 INFO StreamExecution: Streaming query made progress: {
-  "id" : "ec8f8228-90f6-4e1f-8ad2-80222affed63",
-  "runId" : "f605c134-cfb0-4378-88c1-159d8a7c232e",
-  "name" : "rates-to-console",
-  "timestamp" : "2017-08-11T07:04:17.373Z",
-  "batchId" : 0,
-  "numInputRows" : 0,
-  "processedRowsPerSecond" : 0.0,
-  "durationMs" : {
-    "addBatch" : 38,
-    "getBatch" : 1,
-    "getOffset" : 0,
-    "queryPlanning" : 1,
-    "triggerExecution" : 62,
-    "walCommit" : 19          // <-- walCommit
-  },
-```
-====
-
-`constructNextBatch` commits the offsets for the batch (only when <<currentBatchId, current batch id>> is not ``0``, i.e. when the <<populateStartOffsets-currentBatchId-0, query has just been started>> and `constructNextBatch` is called the first time).
-
-`constructNextBatch` link:spark-sql-streaming-HDFSMetadataLog.adoc#get[takes the previously-committed batch] (from <<offsetLog, OffsetSeqLog>>), extracts the stored offsets per source.
-
-NOTE: `constructNextBatch` uses <<spark-sql-streaming-OffsetSeq.adoc#toStreamProgress, OffsetSeq.toStreamProgress>> and <<sources, sources>> registry to extract the offsets per source.
-
-`constructNextBatch` requests every streaming source to link:spark-sql-streaming-Source.adoc#commit[commit the offsets]
-
-NOTE: `constructNextBatch` uses the `Source` contract to link:spark-sql-streaming-Source.adoc#commit[commit the offsets] (using `Source.commit` method).
-
-`constructNextBatch` reports a `IllegalStateException` when <<currentBatchId, current batch id>> is `0`.
-
-```
-batch [currentBatchId] doesn't exist
-```
+With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag disabled (`false`), `constructNextBatch` turns the <<spark-sql-streaming-StreamExecution.adoc#noNewData, noNewData>> flag on (`true`) and wakes up (_notifies_) all threads waiting for the <<spark-sql-streaming-StreamExecution.adoc#awaitProgressLockCondition, awaitProgressLockCondition>> lock.
 
 === [[runBatch]] Running Single Streaming Micro-Batch -- `runBatch` Internal Method
 
 [source, scala]
 ----
-runBatch(sparkSessionToRunBatch: SparkSession): Unit
+runBatch(
+  sparkSessionToRunBatch: SparkSession): Unit
 ----
 
 `runBatch` performs the following steps (aka _phases_):
 
-1. <<runBatch-getBatch, getBatch Phase -- Requesting New (and Hence Unprocessed) Data From Streaming Sources>>
+1. <<runBatch-getBatch, getBatch Phase -- Requesting Unprocessed Data From Streaming Sources>>
 1. <<runBatch-withNewSources, withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
 1. <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
 1. <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
@@ -516,14 +414,13 @@ While replacing `StreamingExecutionRelation` operators, `runBatch` records the o
 ====
 `CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` function.
 
-Find more about `current_timestamp` function in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-functions-datetime.html#current_timestamp[Mastering Apache Spark 2] gitbook.
-====
+Find out more about `current_timestamp` function in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-functions-datetime.html#current_timestamp[The Internals of Spark SQL] gitbook.
 
-[NOTE]
-====
+---
+
 `CurrentDate` Catalyst expression corresponds to `current_date` function.
 
-Find more about `current_date` function in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-functions-datetime.html#current_date[Mastering Apache Spark 2] gitbook.
+Find out more about `current_date` function in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-functions-datetime.html#current_date[The Internals of Spark SQL] gitbook.
 ====
 
 ==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch
@@ -697,7 +594,7 @@ Default: `false`
 a| [[readerToDataSourceMap]] (`Map[MicroBatchReader, (DataSourceV2, Map[String, String])]`)
 
 | sources
-a| [[sources]] <<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming sources>> (of the <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelations>> of the <<analyzedPlan, analyzed logical query plan>> of the streaming query)
+a| [[sources]] <<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming sources and readers>> (of the <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelations>> of the <<analyzedPlan, analyzed logical query plan>> of the streaming query)
 
 Default: (empty)
 
