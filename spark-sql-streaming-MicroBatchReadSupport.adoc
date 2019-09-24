@@ -3,7 +3,7 @@
 `MicroBatchReadSupport` is the <<contract, extension>> of the `DataSourceV2` for <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 
 [[contract]][[createMicroBatchReader]]
-`ContinuousReadSupport` defines a single `createMicroBatchReader` method to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
+`MicroBatchReadSupport` defines a single `createMicroBatchReader` method to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
 
 [source, java]
 ----

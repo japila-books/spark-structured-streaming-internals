@@ -1,6 +1,6 @@
 == [[ForeachBatchSink]] ForeachBatchSink
 
-`ForeachBatchSink` is a <<spark-sql-streaming-Sink.adoc#, streaming sink>> that is used for the <<spark-sql-streaming-DataStreamWriter.adoc#foreachBatch, foreachBatch>> source.
+`ForeachBatchSink` is a <<spark-sql-streaming-Sink.adoc#, streaming sink>> that is used for the <<spark-sql-streaming-DataStreamWriter.adoc#foreachBatch, DataStreamWriter.foreachBatch>> streaming operator.
 
 `ForeachBatchSink` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start execution of the streaming query>> (with the <<spark-sql-streaming-DataStreamWriter.adoc#foreachBatch, foreachBatch>> source).
 

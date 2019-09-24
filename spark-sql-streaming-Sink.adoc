@@ -1,67 +1,49 @@
-== [[Sink]] Streaming Sink -- Adding Batches of Data to Storage
+== [[Sink]] Sink Contract -- Streaming Sinks for Micro-Batch Stream Processing
 
-`Sink` is the <<contract, contract>> for *streaming writes*, i.e. <<contract, adding batches to an output>> every trigger.
+`Sink` is the <<contract, extension>> of the <<spark-sql-streaming-BaseStreamingSink.adoc#, BaseStreamingSink contract>> for <<implementations, streaming sinks>> that can <<addBatch, add batches to an output>>.
 
-NOTE: `Sink` is part of the so-called *Structured Streaming V1* that is currently being rewritten to StreamWriteSupport in V2.
+`Sink` is part of Data Source API V1 and used in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> only.
 
 [[contract]]
-`Sink` is a single-method interface with `addBatch` method.
+.Sink Contract
+[cols="30m,70",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| addBatch
+a| [[addBatch]]
 
 [source, scala]
 ----
-package org.apache.spark.sql.execution.streaming
-
-trait Sink {
-  def addBatch(batchId: Long, data: DataFrame): Unit
-}
+addBatch(
+  batchId: Long,
+  data: DataFrame): Unit
 ----
 
-[[addBatch]]
-`addBatch` is used to "add" a batch of data to the sink (for `batchId` batch).
+Adds a batch of data to the sink
 
-`addBatch` is used when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch[runs a batch].
+Used exclusively when <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-addBatch, add a streaming batch to a sink (addBatch phase)>> while <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, running an activated streaming query>>.
 
-[[available-implementations]]
+|===
+
+[[implementations]]
 .Sinks
-[width="100%",cols="1,2",options="header"]
+[cols="30,70",options="header",width="100%"]
 |===
-| Format / Operator
 | Sink
+| Description
 
-| `console`
-|
+| <<spark-sql-streaming-FileStreamSink.adoc#, FileStreamSink>>
+| [[FileStreamSink]] Used in file-based data sources (`FileFormat`)
 
-a| Any `FileFormat`
+| <<spark-sql-streaming-ForeachBatchSink.adoc#, ForeachBatchSink>>
+| [[ForeachBatchSink]] Used for <<spark-sql-streaming-DataStreamWriter.adoc#foreachBatch, DataStreamWriter.foreachBatch>> streaming operator
 
-* `csv`
-* `hive`
-* `json`
-* `libsvm`
-* `orc`
-* `parquet`
-* `text`
-| link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink]
+| <<spark-sql-streaming-KafkaSink.adoc#, KafkaSink>>
+| [[KafkaSink]] Used for <<spark-sql-streaming-kafka-data-source.adoc#, kafka>> output format
 
-| link:spark-sql-streaming-DataStreamWriter.adoc#foreach[foreach] operator
-| link:spark-sql-streaming-ForeachSink.adoc[ForeachSink]
+| <<spark-sql-streaming-MemorySink.adoc#, MemorySink>>
+| [[MemorySink]] Used for `memory` output format
 
-| `kafka`
-| link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
-
-| `memory`
-| link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 |===
-
-TIP: You can create your own streaming format implementing link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider].
-
-When creating a custom `Sink` it is recommended to accept the options (e.g. `Map[String, String]`) that the `DataStreamWriter` link:spark-sql-streaming-DataStreamWriter.adoc#option[was configured with]. You can then use the options to fine-tune the write path.
-
-[source, scala]
-----
-class HighPerfSink(options: Map[String, String]) extends Sink {
-  override def addBatch(batchId: Long, data: DataFrame): Unit = {
-    val bucketName = options.get("bucket").orNull
-    ...
-  }
-}
-----

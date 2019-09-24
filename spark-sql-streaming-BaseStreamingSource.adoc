@@ -1,8 +1,8 @@
 == [[BaseStreamingSource]] BaseStreamingSource Contract -- Base of Streaming Sources
 
-`BaseStreamingSource` is the <<contract, abstraction>> of <<extensions, streaming sources and readers>> that can be <<stop, stopped>>.
+`BaseStreamingSource` is the <<contract, abstraction>> of <<extensions, streaming readers and sources>> that can be <<stop, stopped>>.
 
-The main purpose of `BaseStreamingSource` is to share a common abstraction between the former Data Source API V1 and the modern Data Source API V2 (before Spark Structured Streaming migrates to the Data Source API V2 fully).
+The main purpose of `BaseStreamingSource` is to share a common abstraction between the former Data Source API V1 (<<Source, Source API>>) and the modern Data Source API V2 (until Spark Structured Streaming migrates to the Data Source API V2 fully).
 
 [[contract]]
 .BaseStreamingSource Contract
@@ -30,7 +30,7 @@ Used when:
 |===
 
 [[extensions]]
-.BaseStreamingSources (Direct Implementations and Extensions Only)
+.BaseStreamingSources (Extensions Only)
 [cols="30,70",options="header",width="100%"]
 |===
 | BaseStreamingSource
@@ -46,6 +46,6 @@ Used when:
 | [[MicroBatchReader]] Data source readers in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (based on Data Source API V2)
 
 | <<spark-sql-streaming-Source.adoc#, Source>>
-| [[Source]] Streaming data sources (based on Data Source API V1)
+| [[Source]] Streaming sources for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (based on Data Source API V1)
 
 |===

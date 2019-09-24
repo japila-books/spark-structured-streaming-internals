@@ -23,7 +23,7 @@ commit(end: Offset): Unit
 
 Commits data up to the end <<spark-sql-streaming-Offset.adoc#, offset>>, i.e. informs the source that Spark has completed processing all data for offsets less than or equal to the end offset and will only request offsets greater than the end offset in the future.
 
-Used exclusively when <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, write offsets to a commit log (walCommit phase)>> while <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, running activated streaming query>>.
+Used exclusively when <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, write offsets to a commit log (walCommit phase)>> while <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, running an activated streaming query>>.
 
 | getBatch
 a| [[getBatch]]
@@ -77,9 +77,9 @@ Schema of the source
 | Description
 
 | <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>
-| [[FileStreamSource]] Used for file-based data sources (`FileFormat`)
+| [[FileStreamSource]] Used in file-based data sources (`FileFormat`)
 
 | <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>
-| [[KafkaSource]] Streaming source of <<spark-sql-streaming-kafka-data-source.adoc#, kafka>> data source
+| [[KafkaSource]] Used in <<spark-sql-streaming-kafka-data-source.adoc#, kafka>> data source
 
 |===
