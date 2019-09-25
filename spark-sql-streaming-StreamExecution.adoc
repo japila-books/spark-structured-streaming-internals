@@ -669,28 +669,34 @@ NOTE: `postEvent` uses `SparkSession` to access the current `StreamingQueryManag
 * `StreamExecution` <<runBatches, runs streaming batches>> (and announces starting a streaming query by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent[QueryStartedEvent] and query termination by posting a link:spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent[QueryTerminatedEvent])
 ====
 
-=== [[processAllAvailable]] Waiting Until No Data Available in Sources or Query Has Been Terminated -- `processAllAvailable` Method
+=== [[processAllAvailable]] Waiting Until No New Data Available in Sources or Query Has Been Terminated -- `processAllAvailable` Method
 
 [source, scala]
 ----
 processAllAvailable(): Unit
 ----
 
-NOTE: `processAllAvailable` is a part of link:spark-sql-streaming-StreamingQuery.adoc#processAllAvailable[StreamingQuery Contract].
+NOTE: `processAllAvailable` is a part of <<spark-sql-streaming-StreamingQuery.adoc#processAllAvailable, StreamingQuery Contract>>.
 
-`processAllAvailable` reports <<streamDeathCause, streamDeathCause>> exception if defined (and returns).
+`processAllAvailable` reports the <<streamDeathCause, StreamingQueryException>> if reported (and returns immediately).
 
-NOTE: <<streamDeathCause, streamDeathCause>> is defined exclusively when `StreamExecution` <<runBatches, runs streaming batches>> (and terminated with an exception).
+NOTE: <<streamDeathCause, streamDeathCause>> is reported exclusively when `StreamExecution` is requested to <<runStream, run stream execution>> (that terminated with an exception).
 
-`processAllAvailable` returns when <<isActive, isActive>> flag is turned off (which is when `StreamExecution` is in `TERMINATED` state).
+`processAllAvailable` returns immediately when `StreamExecution` is no longer <<isActive, active>> (in `TERMINATED` state).
 
-`processAllAvailable` acquires a lock on <<awaitProgressLock, awaitProgressLock>> and turns <<noNewData, noNewData>> flag off.
+`processAllAvailable` acquires a lock on the <<awaitProgressLock, awaitProgressLock>> and turns the <<noNewData, noNewData>> internal flag off (`false`).
 
-`processAllAvailable` keeps waiting 10 seconds for <<awaitProgressLockCondition, awaitProgressLockCondition>> until <<noNewData, noNewData>> flag is turned on or `StreamExecution` is no longer <<isActive, active>>.
+`processAllAvailable` keeps polling with 10-second pauses (locked on <<awaitProgressLockCondition, awaitProgressLockCondition>>) until <<noNewData, noNewData>> flag is turned on (`true`) or `StreamExecution` is no longer <<isActive, active>> (in `TERMINATED` state).
 
-NOTE: <<noNewData, noNewData>> flag is turned on exclusively when `StreamExecution` <<constructNextBatch, constructs the next streaming micro-batch>> (and finds that <<constructNextBatch-hasNewData-false, no data is available>>).
+NOTE: The 10-second pause is hardcoded and cannot be changed.
 
 In the end, `processAllAvailable` releases <<awaitProgressLock, awaitProgressLock>> lock.
+
+`processAllAvailable` throws an `IllegalStateException` when executed on the <<queryExecutionThread, stream execution thread>>:
+
+```
+Cannot wait for a query state from the same thread that is running the query
+```
 
 === [[queryExecutionThread]] Stream Execution Thread -- `queryExecutionThread` Property
 
@@ -811,6 +817,29 @@ image::images/StreamExecution-getBatchDescriptionString-webUI.png[align="center"
 * `StreamExecution` is requested to <<runStream, run stream processing>> (as the job group description of any Spark jobs triggerred as part of query execution)
 ====
 
+=== [[noNewData]] No New Data Available -- `noNewData` Internal Flag
+
+[source, scala]
+----
+noNewData: Boolean
+----
+
+`noNewData` is a flag that indicates that a batch has completed with no new data left and <<processAllAvailable, processAllAvailable>> could stop waiting till all streaming data is processed.
+
+Default: `false`
+
+Turned on (`true`) when:
+
+* `MicroBatchExecution` stream execution engine is requested to <<constructNextBatch, construct or skip the next streaming micro-batch>> (while <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-shouldConstructNextBatch-disabled, skipping the next micro-batch>>)
+
+* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.adoc#addOffset, addOffset>>
+
+Turned off (`false`) when:
+
+* `MicroBatchExecution` stream execution engine is requested to <<constructNextBatch, construct or skip the next streaming micro-batch>> (right after the <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, walCommit>> phase)
+
+* `StreamExecution` is requested to <<processAllAvailable, processAllAvailable>>
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -857,11 +886,6 @@ NOTE: `newData` is part of the <<spark-sql-streaming-ProgressReporter.adoc#newDa
 Set exclusively when `StreamExecution` is requested to <<runBatch-getBatch, requests unprocessed data from streaming sources>> (while <<runBatch, running a single streaming batch>>).
 
 Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (while <<runBatch, running a single streaming batch>>).
-
-| noNewData
-a| [[noNewData]] Flag that indicates whether there are new offsets (_data_) available for processing or not
-
-* Enabled (`true`) when <<constructNextBatch, constructing the next streaming micro-batch>> when no new offsets are available
 
 | pollingDelayMs
 | [[pollingDelayMs]] Time delay before polling new data again when no data was available

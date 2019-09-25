@@ -103,9 +103,9 @@ a| [[processAllAvailable]]
 processAllAvailable(): Unit
 ----
 
-Waits the streaming query until there are no data available in sources or the query has been terminated.
+Pauses (_blocks_) the current thread until the streaming query has no more data to be processed or has been <<stop, stopped>>
 
-Used when...FIXME
+Intended for testing
 
 | recentProgress
 a| [[recentProgress]]
