@@ -301,14 +301,14 @@
 
 == Query Planning and Execution
 
-. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution -- Base of Streaming Query Execution Engines]
-.. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper -- Serializable StreamExecution]
+. link:spark-sql-streaming-StreamExecution.adoc[StreamExecution]
+.. link:spark-sql-streaming-StreamingQueryWrapper.adoc[StreamingQueryWrapper]
 
 . link:spark-sql-streaming-TriggerExecutor.adoc[TriggerExecutor]
 
 . link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution]
 
-. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus -- Notification Bus for Streaming Events]
+. link:spark-sql-streaming-StreamingQueryListenerBus.adoc[StreamingQueryListenerBus]
 
 . link:spark-sql-streaming-StreamMetadata.adoc[StreamMetadata]
 

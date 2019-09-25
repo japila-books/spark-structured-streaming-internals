@@ -717,19 +717,23 @@ In the end, `processAllAvailable` releases <<awaitProgressLock, awaitProgressLoc
 queryExecutionThread: QueryExecutionThread
 ----
 
-`queryExecutionThread` is a Java thread of execution (https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread]) that <<runStream, runs the structured query>> when started.
+`queryExecutionThread` is a Java thread of execution (https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html[java.util.Thread]) that <<runStream, runs a streaming query>>.
+
+`queryExecutionThread` is started (as a daemon thread) when `StreamExecution` is requested to <<start, start>>. At that time, `start` prints out the following INFO message to the logs (with the <<prettyIdString, prettyIdString>> and the <<resolvedCheckpointRoot, resolvedCheckpointRoot>>):
+
+```
+Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+```
+
+When started, `queryExecutionThread` sets the <<callSite, call site>> and <<runStream, runs the streaming query>>.
 
 `queryExecutionThread` uses the name *stream execution thread for [id]* (that uses <<prettyIdString, prettyIdString>> for the id, i.e. `queryName [id = [id], runId = [runId]]`).
 
-`queryExecutionThread` is a `QueryExecutionThread` that is really a custom `UninterruptibleThread` from Apache Spark with `runUninterruptibly` method for running a block of code without being interrupted by `Thread.interrupt()`).
-
-`queryExecutionThread` is started (as a daemon thread) when `StreamExecution` is requested to <<start, start>>.
-
-When started, `queryExecutionThread` sets the thread-local properties as the <<callSite, call site>> and <<runBatches, runs the streaming query>>.
+`queryExecutionThread` is a `QueryExecutionThread` that is a custom `UninterruptibleThread` from Apache Spark with `runUninterruptibly` method for running a block of code without being interrupted by `Thread.interrupt()`.
 
 [TIP]
 ====
-Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor the streaming threads.
+Use Java's http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html[jconsole] or https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstack.html[jstack] to monitor stream execution threads.
 
 ```
 $ jstack <driver-pid> | grep -e "stream execution thread"
