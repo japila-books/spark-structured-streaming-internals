@@ -611,24 +611,6 @@ When no <<dataAvailable, data was available>> in the sources to process, `batchR
 
 `batchRunner` link:spark-sql-streaming-ProgressReporter.adoc#updateStatusMessage[updates the status message] to *Waiting for next trigger* and returns whether the query is currently active or not (so <<triggerExecutor, TriggerExecutor>> can decide whether to finish executing the batches or not)
 
-=== [[getBatchDescriptionString]] Human-Readable Description of Spark Jobs -- `getBatchDescriptionString` Method
-
-[source, scala]
-----
-getBatchDescriptionString: String
-----
-
-`getBatchDescriptionString`...FIXME
-
-[NOTE]
-====
-`getBatchDescriptionString` is used when:
-
-* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, runActivatedStream>> (and sets the job description)
-
-* `StreamExecution` is requested to <<runStream, runStream>> (and sets job group)
-====
-
 === [[start]] Starting Streaming Query (on Stream Execution Thread) -- `start` Method
 
 [source, scala]
@@ -800,6 +782,34 @@ exception: Option[StreamingQueryException]
 NOTE: `exception` is part of the <<spark-sql-streaming-StreamingQuery.adoc#exception, StreamingQuery Contract>> to indicate whether a streaming query...FIXME
 
 `exception`...FIXME
+
+=== [[getBatchDescriptionString]] Human-Readable HTML Description of Spark Jobs (for web UI) -- `getBatchDescriptionString` Method
+
+[source, scala]
+----
+getBatchDescriptionString: String
+----
+
+`getBatchDescriptionString` is a human-readable description (in HTML format) that uses the optional <<name, name>> if defined, the <<id, id>>, the <<runId, runId>> and `batchDescription` that can be *init* (for the <<currentBatchId, current batch ID>> negative) or the <<currentBatchId, current batch ID>> itself.
+
+`getBatchDescriptionString` is of the following format:
+
+[subs=-macros]
+----
+[name]<br/>id = [id]<br/>runId = [runId]<br/>batch = [batchDescription]
+----
+
+.Monitoring Streaming Query using web UI (Spark Jobs)
+image::images/StreamExecution-getBatchDescriptionString-webUI.png[align="center"]
+
+[NOTE]
+====
+`getBatchDescriptionString` is used when:
+
+* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>> (as the job description of any Spark jobs triggerred as part of query execution)
+
+* `StreamExecution` is requested to <<runStream, run stream processing>> (as the job group description of any Spark jobs triggerred as part of query execution)
+====
 
 === [[internal-properties]] Internal Properties
 

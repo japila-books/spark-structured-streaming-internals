@@ -1,23 +1,10 @@
 == [[StreamingQuery]] StreamingQuery Contract
 
-`StreamingQuery` is the <<contract, contract>> for a streaming query that is executed continuously and concurrently (i.e. on a separate thread).
+`StreamingQuery` is the <<contract, contract>> of streaming queries that are executed continuously and concurrently (i.e. on a <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, separate thread>>).
 
 NOTE: `StreamingQuery` is called *continuous query* or *streaming query*.
 
-NOTE: `StreamingQuery` is a Scala trait with the only implementation being link:spark-sql-streaming-StreamExecution.adoc[StreamExecution] (and less importanly `StreamingQueryWrapper` for serializing a non-serializable `StreamExecution`).
-
-`StreamingQuery` can be in two states:
-
-* active (started)
-* inactive (stopped)
-
-If inactive, `StreamingQuery` may have transitioned into the state due to an `StreamingQueryException` (that is available under `exception`).
-
-`StreamingQuery` tracks current state of all the sources, i.e. `SourceStatus`, as `sourceStatuses`.
-
-There could only be a single link:spark-sql-streaming-Sink.adoc[Sink] for a `StreamingQuery` with many link:spark-sql-streaming-Source.adoc[Sources].
-
-`StreamingQuery` can be stopped by `stop` or an exception.
+NOTE: `StreamingQuery` is a Scala trait with the only implementation being <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> (and less importanly <<spark-sql-streaming-StreamingQueryWrapper.adoc#, StreamingQueryWrapper>> for serializing a non-serializable `StreamExecution`).
 
 [[contract]]
 .StreamingQuery Contract
@@ -177,3 +164,16 @@ stop(): Unit
 Stops the streaming query
 
 |===
+
+`StreamingQuery` can be in two states:
+
+* active (started)
+* inactive (stopped)
+
+If inactive, `StreamingQuery` may have transitioned into the state due to an `StreamingQueryException` (that is available under `exception`).
+
+`StreamingQuery` tracks current state of all the sources, i.e. `SourceStatus`, as `sourceStatuses`.
+
+There could only be a single link:spark-sql-streaming-Sink.adoc[Sink] for a `StreamingQuery` with many link:spark-sql-streaming-Source.adoc[Sources].
+
+`StreamingQuery` can be stopped by `stop` or an exception.
