@@ -35,7 +35,7 @@ getBatch(
   end: Offset): DataFrame
 ----
 
-Streaming `DataFrame` with data that is between the start and end <<spark-sql-streaming-Offset.adoc#, offsets>>
+Streaming `DataFrame` with data between the start and end <<spark-sql-streaming-Offset.adoc#, offsets>>
 
 Start offset can be undefined (`None`) to indicate that the batch should begin with the first record
 

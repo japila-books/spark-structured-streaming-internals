@@ -1,6 +1,6 @@
 == [[MicroBatchExecution]] MicroBatchExecution -- Stream Execution Engine of Micro-Batch Stream Processing
 
-`MicroBatchExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>> of <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
+`MicroBatchExecution` is the <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 
 `MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>) with the following:
 
@@ -33,6 +33,8 @@ import org.apache.spark.sql.execution.streaming.MicroBatchExecution
 val microBatchEngine = engine.asInstanceOf[MicroBatchExecution]
 assert(microBatchEngine.trigger == Trigger.Once)
 ----
+
+Once <<creating-instance, created>>, `MicroBatchExecution` (as a <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>>) is requested to <<runActivatedStream, run an activated streaming query>>.
 
 === [[creating-instance]] Creating MicroBatchExecution Instance
 
@@ -348,23 +350,59 @@ runBatch(
   sparkSessionToRunBatch: SparkSession): Unit
 ----
 
-`runBatch` performs the following steps (aka _phases_):
+`runBatch` prints out the following DEBUG message to the logs (with the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, current batch ID>>):
 
-1. <<runBatch-getBatch, getBatch Phase -- Requesting Unprocessed Data From Streaming Sources>>
-1. <<runBatch-withNewSources, withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
-1. <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
-1. <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
-1. <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
-1. <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
-1. <<runBatch-awaitBatchLock, awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress>>
+```
+Running batch [currentBatchId]
+```
 
-NOTE: `runBatch` is used when...FIXME
+`runBatch` then performs the following steps (aka _phases_):
+
+. <<runBatch-getBatch, getBatch Phase -- Requesting Unprocessed Data From Streaming Sources>>
+. <<runBatch-withNewSources, withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
+. <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
+. <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
+. <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
+. <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
+. <<runBatch-awaitBatchLock, awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress>>
+
+In the end, `runBatch` prints out the following DEBUG message to the logs (with the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, current batch ID>>):
+
+```
+Completed batch [currentBatchId]
+```
+
+NOTE: `runBatch` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> (and there is new data to process).
 
 ==== [[runBatch-getBatch]] getBatch Phase -- Requesting Unprocessed Data From Streaming Sources
 
-Internally, `runBatch` first requests the link:spark-sql-streaming-Source.adoc[streaming sources] for unprocessed data (and stores them as `DataFrames` in <<newData, newData>> internal registry).
+In *getBatch* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runBatch` goes over the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> and...FIXME
 
-In *getBatch* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` goes over the <<availableOffsets, available offsets per source>> and processes the offsets that <<committedOffsets, have not been committed yet>>.
+==== [[runBatch-getBatch-Source]] getBatch Phase and Streaming Sources
+
+For a <<spark-sql-streaming-Source.adoc#, Source>> (with the available <<spark-sql-streaming-Offset.adoc#, offsets>> different from the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> registry), `runBatch` does the following:
+
+* Requests the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> for the committed offsets for the `Source` (if available)
+
+* Requests the `Source` for a <<spark-sql-streaming-Source.adoc#getBatch, dataframe for the offset range>> (the current and available offsets)
+
+`runBatch` prints out the following DEBUG message to the logs.
+
+```
+Retrieving data from [source]: [current] -> [available]
+```
+
+In the end, `runBatch` returns the `Source` and the logical plan of the streaming dataset (for the offset range).
+
+In case the `Source` gives a dataframe that is not streaming, `runBatch` throws an `AssertionError`:
+
+```
+DataFrame returned by getBatch from [source] did not have isStreaming=true\[nlogicalQueryPlan]
+```
+
+==== [[runBatch-getBatch-MicroBatchReader]] getBatch Phase and MicroBatchReaders
+
+For a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> (with the available <<spark-sql-streaming-Offset.adoc#, offsets>> different from the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> registry), `runBatch`...FIXME
 
 `runBatch` then requests link:spark-sql-streaming-Source.adoc#getBatch[every source for the data] (as `DataFrame` with the new records).
 
