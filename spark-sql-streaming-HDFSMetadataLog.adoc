@@ -94,7 +94,7 @@ NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataL
 
 `get`...FIXME
 
-=== [[add]] Persisting Metadata of Streaming Batch -- `add` Method
+=== [[add]] Persisting Metadata of Streaming Micro-Batch -- `add` Method
 
 [source, scala]
 ----

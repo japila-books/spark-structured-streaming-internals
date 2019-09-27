@@ -364,9 +364,9 @@ Running batch [currentBatchId]
 . <<runBatch-triggerLogicalPlan, Adapting Transformed Logical Plan to Sink with StreamWriteSupport>>
 . <<runBatch-setLocalProperty, Setting Local Properties>>
 . <<runBatch-queryPlanning, queryPlanning Phase -- Creating and Preparing IncrementalExecution for Execution>>
-. <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
-. <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
-. <<runBatch-awaitBatchLock, awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress>>
+. <<runBatch-nextBatch, nextBatch Phase -- Creating DataFrame (with IncrementalExecution for New Data)>>
+. <<runBatch-addBatch, addBatch Phase -- Adding DataFrame With New Data to Sink>>
+. <<runBatch-updateWatermark-commitLog, Updating Watermark and Committing Offsets to Offset Commit Log>>
 
 In the end, `runBatch` prints out the following DEBUG message to the logs (with the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, current batch ID>>):
 
@@ -516,42 +516,44 @@ In the end (of the `queryPlanning` phase), `runBatch` requests the `IncrementalE
 
 TIP: Read up on the `executedPlan` query execution phase in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[The Internals of Spark SQL].
 
-==== [[runBatch-nextBatch]] nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)
+==== [[runBatch-nextBatch]] nextBatch Phase -- Creating DataFrame (with IncrementalExecution for New Data)
 
 .StreamExecution Creates DataFrame with New Data
 image::images/StreamExecution-runBatch-nextBatch.png[align="center"]
 
-`runBatch` creates a `DataFrame` with the new link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution] (as `QueryExecution`) and its analyzed output schema.
+`runBatch` creates a new `DataFrame` with the new <<runBatch-queryPlanning, IncrementalExecution>>.
 
-NOTE: The new `DataFrame` represents the result of a streaming query.
+The `DataFrame` represents the result of executing the current micro-batch of the streaming query.
 
-==== [[runBatch-addBatch]] addBatch Phase -- Adding Current Streaming Batch to Sink
+==== [[runBatch-addBatch]] addBatch Phase -- Adding DataFrame With New Data to Sink
 
-.StreamExecution Creates DataFrame with New Data
+.StreamExecution Adds DataFrame With New Data to Sink
 image::images/StreamExecution-runBatch-addBatch.png[align="center"]
 
-In *addBatch* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` requests the one and only streaming <<sink, Sink>> to link:spark-sql-streaming-Sink.adoc#addBatch[add the results of a streaming query] (as the `DataFrame` created in <<runBatch-nextBatch, nextBatch Phase>>).
+In *addBatch* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runBatch` adds the `DataFrame` with new data to the <<sink, BaseStreamingSink>>.
 
-NOTE: `runBatch` uses link:spark-sql-streaming-Sink.adoc#addBatch[Sink.addBatch] method to request the `Sink` to add the results.
+For a <<spark-sql-streaming-Sink.adoc#, Sink>> (Data Source API V1), `runBatch` simply requests the `Sink` to <<spark-sql-streaming-Sink.adoc#addBatch, add the DataFrame>> (with the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, batch ID>>).
 
-NOTE: `runBatch` uses `SQLExecution.withNewExecutionId` to execute and track all the Spark actions (under one execution id) that `Sink` can use when requested to add the results.
+For a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> (Data Source API V2), `runBatch` simply requests the `DataFrame` with new data to collect (which simply forces execution of the <<spark-sql-streaming-MicroBatchWriter.adoc#, MicroBatchWriter>>).
 
-NOTE: The new `DataFrame` will only be executed in `Sink.addBatch`.
+NOTE: `runBatch` uses `SQLExecution.withNewExecutionId` to execute and track all the Spark jobs under one execution id (so it is reported as one single multi-job execution, e.g. in web UI).
 
-NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before executing `Sink.addBatch` and a `SparkListenerSQLExecutionEnd` event right afterwards.
+NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before execution and a `SparkListenerSQLExecutionEnd` event right afterwards.
 
 [TIP]
 ====
-Register `SparkListener` to get notified about the SQL execution events.
+Register `SparkListener` to get notified about the SQL execution events (`SparkListenerSQLExecutionStart` and `SparkListenerSQLExecutionEnd`).
 
-You can find more information on `SparkListener` in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-SparkListener.html[Mastering Apache Spark 2] gitbook.
+Read up on `SparkListener` in http://books.japila.pl/apache-spark-internals/apache-spark-internals/2.4.3/spark-scheduler-SparkListener.html[The Internals of Apache Spark].
 ====
 
-==== [[runBatch-awaitBatchLock]] awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress
+==== [[runBatch-updateWatermark-commitLog]] Updating Watermark and Committing Offsets to Offset Commit Log
 
-In *awaitBatchLock* code block (it is not a time-tracking section), `runBatch` acquires a lock on <<awaitProgressLock, awaitProgressLock>>, wakes up all waiting threads on <<awaitProgressLockCondition, awaitProgressLockCondition>> and immediatelly releases <<awaitProgressLock, awaitProgressLock>> lock.
+`runBatch` requests the <<watermarkTracker, WatermarkTracker>> to <<spark-sql-streaming-WatermarkTracker.adoc#updateWatermark, update event-time watermark>> (with the `executedPlan` of the <<runBatch-queryPlanning, IncrementalExecution>>).
 
-NOTE: <<awaitProgressLockCondition, awaitProgressLockCondition>> is used mainly when `StreamExecution` <<processAllAvailable, processAllAvailable>> (and also when `awaitOffset`, but that seems mainly for testing).
+`runBatch` requests the <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>> to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, persisting metadata of the streaming micro-batch>> (with the current <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, batch ID>> and <<spark-sql-streaming-WatermarkTracker.adoc#currentWatermark, event-time watermark>> of the <<watermarkTracker, WatermarkTracker>>).
+
+In the end, `runBatch` <<spark-sql-streaming-StreamProgress.adoc#plusplus, adds>> the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> to the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed offsets>> (and updates the <<spark-sql-streaming-Offset.adoc#, offsets>> of every <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>> with new data in the current micro-batch).
 
 === [[stop]] Stopping Stream Processing (Execution of Streaming Query) -- `stop` Method
 
