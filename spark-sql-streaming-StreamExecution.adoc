@@ -421,6 +421,17 @@ NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used in
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, retrieve the start offsets>> at the very beginning of the streaming query execution and later regularly every <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>)
 
+=== [[lastExecution]] IncrementalExecution -- `lastExecution` Property
+
+[source, scala]
+----
+lastExecution: IncrementalExecution
+----
+
+NOTE: `lastExecution` is part of the <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, ProgressReporter Contract>> for the `QueryExecution` of a streaming query.
+
+`lastExecution` is a <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> of the most recent (_last_) execution.
+
 === [[stopSources]] Stopping Streaming Sources and Readers -- `stopSources` Method
 
 [source, scala]
@@ -867,9 +878,6 @@ a| [[currentBatchId]] Current batch ID
 
 | initializationLatch
 | [[initializationLatch]]
-
-| lastExecution
-a| [[lastExecution]] <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> from the very recent (_last_) execution
 
 | newData
 a| [[newData]]

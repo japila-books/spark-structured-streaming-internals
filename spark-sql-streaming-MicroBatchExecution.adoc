@@ -363,7 +363,7 @@ Running batch [currentBatchId]
 . <<runBatch-newAttributePlan, Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)>>
 . <<runBatch-triggerLogicalPlan, Adapting Transformed Logical Plan to Sink with StreamWriteSupport>>
 . <<runBatch-setLocalProperty, Setting Local Properties>>
-. <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
+. <<runBatch-queryPlanning, queryPlanning Phase -- Creating and Preparing IncrementalExecution for Execution>>
 . <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
 . <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
 . <<runBatch-awaitBatchLock, awaitBatchLock Phase -- Waking Up Threads Waiting For Stream to Progress>>
@@ -493,30 +493,28 @@ a| <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>
 a| `false`
 |===
 
-==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch
+==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating and Preparing IncrementalExecution for Execution
 
 .StreamExecution's Query Planning (queryPlanning Phase)
 image::images/StreamExecution-runBatch-queryPlanning.png[align="center"]
 
-In *queryPlanning* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[creates] a new `IncrementalExecution` with the following:
+In *queryPlanning* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runBatch` creates a new <<spark-sql-streaming-StreamExecution.adoc#lastExecution, IncrementalExecution>> with the following:
 
-* Transformed <<logicalPlan, logical query plan>> with <<runBatch-newBatchesPlan, logical relations>> for every streaming source and reader (and <<runBatch-triggerLogicalPlan, corresponding attributes>>)
+* <<runBatch-triggerLogicalPlan, Transformed logical plan>>
 
-* the streaming query's <<outputMode, output mode>>
+* <<outputMode, Output mode>>
 
-* `state` <<checkpointFile, checkpoint directory>> for managing state
+* `state` <<checkpointFile, checkpoint directory>>
 
-* <<runId, current run id>>
+* <<spark-sql-streaming-StreamExecution.adoc#runId, Run id>>
 
-* <<currentBatchId, current batch id>>
+* <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, Batch id>>
 
-* <<offsetSeqMetadata, OffsetSeqMetadata>>
+* <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, Batch Metadata (Event-Time Watermark and Timestamp)>>
 
-The new `IncrementalExecution` is recorded in <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, lastExecution>> property.
+In the end (of the `queryPlanning` phase), `runBatch` requests the `IncrementalExecution` to prepare the transformed logical plan for execution (i.e. execute the `executedPlan` query execution phase).
 
-Before leaving *queryPlanning* section, `runBatch` forces preparation of the physical plan for execution (i.e. requesting <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, IncrementalExecution>> for link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan]).
-
-NOTE: link:spark-sql-streaming-IncrementalExecution.adoc#executedPlan[executedPlan] is a physical plan (i.e. `SparkPlan`) ready for execution with link:spark-sql-streaming-IncrementalExecution.adoc#preparations[state optimization rules] applied.
+TIP: Read up on the `executedPlan` query execution phase in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[The Internals of Spark SQL].
 
 ==== [[runBatch-nextBatch]] nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)
 
