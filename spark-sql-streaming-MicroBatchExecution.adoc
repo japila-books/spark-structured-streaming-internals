@@ -361,7 +361,7 @@ Running batch [currentBatchId]
 . <<runBatch-getBatch, getBatch Phase -- Creating Logical Query Plans For Unprocessed Data From Sources and MicroBatchReaders>>
 . <<runBatch-newBatchesPlan, Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data>>
 . <<runBatch-newAttributePlan, Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)>>
-. <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
+. <<runBatch-triggerLogicalPlan, Adapting Transformed Logical Plan to Sink with StreamWriteSupport>>
 . <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
 . <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
 . <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
@@ -460,9 +460,19 @@ Invalid batch: [output] != [dataPlan.output]
 Read up https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-functions-datetime.html[The Internals of Spark SQL] to learn more about the standard functions.
 ====
 
-==== [[runBatch-triggerLogicalPlan]] triggerLogicalPlan Phase -- Transforming Catalyst Expressions
+==== [[runBatch-triggerLogicalPlan]] Adapting Transformed Logical Plan to Sink with StreamWriteSupport
 
-CAUTION: FIXME
+`runBatch` adapts the <<runBatch-newAttributePlan, transformed logical plan (with new data and current batch timestamp)>> for the new <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> sinks (per the type of the <<sink, BaseStreamingSink>>).
+
+For a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> (Data Source API V2), `runBatch` requests the `StreamWriteSupport` for a <<spark-sql-streaming-StreamWriteSupport.adoc#createStreamWriter, StreamWriter>> (for the <<spark-sql-streaming-StreamExecution.adoc#runId, runId>>, the output schema, the <<outputMode, OutputMode>>, and the <<extraOptions, extra options>>). `runBatch` then creates a `WriteToDataSourceV2` logical operator with a new <<spark-sql-streaming-MicroBatchWriter.adoc#, MicroBatchWriter>> as a child operator (for the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, current batch ID>> and the <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>).
+
+For a <<spark-sql-streaming-Sink.adoc#, Sink>> (Data Source API V1), `runBatch` changes nothing.
+
+For any other <<sink, BaseStreamingSink>> type, `runBatch` simply throws an `IllegalArgumentException`:
+
+```
+unknown sink type for [sink]
+```
 
 ==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch
 

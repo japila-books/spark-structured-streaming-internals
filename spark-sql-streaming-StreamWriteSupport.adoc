@@ -2,8 +2,7 @@
 
 `StreamWriteSupport` is the <<contract, abstraction>> of <<implementations, DataSourceV2 sinks>> that <<createStreamWriter, create StreamWriters>> for streaming write (when used in streaming queries in <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>>).
 
-[[contract]]
-[[createStreamWriter]]
+[[contract]][[createStreamWriter]]
 [source, java]
 ----
 StreamWriter createStreamWriter(
