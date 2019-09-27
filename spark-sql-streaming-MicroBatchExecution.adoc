@@ -359,7 +359,7 @@ Running batch [currentBatchId]
 `runBatch` then performs the following steps (aka _phases_):
 
 . <<runBatch-getBatch, getBatch Phase -- Creating Logical Query Plans For Unprocessed Data From Sources and MicroBatchReaders>>
-. <<runBatch-withNewSources, withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
+. <<runBatch-newBatchesPlan, Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data>>
 . <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
 . <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
 . <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
@@ -427,22 +427,26 @@ Retrieving data from [reader]: [current] -> [availableV2]
 
 In the end, `runBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.adoc#readSchema, read schema>> and creates a `StreamingDataSourceV2Relation` logical operator (with the read schema, the `DataSourceV2`, options, and the `MicroBatchReader`).
 
-==== [[runBatch-withNewSources]] withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation
+==== [[runBatch-newBatchesPlan]] Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data
 
-.StreamExecution's Running Single Streaming Batch (withNewSources Phase)
-image::images/StreamExecution-runBatch-withNewSources.png[align="center"]
+.StreamExecution's Running Single Streaming Batch (and Transforming Logical Plan for New Data)
+image::images/StreamExecution-runBatch-newBatchesPlan.png[align="center"]
 
-In *withNewSources* phase, `runBatch` transforms <<logicalPlan, logical query plan>> and replaces every link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator with the logical plan of the `DataFrame` with the input data in a batch for the corresponding streaming source.
+`runBatch` transforms the <<logicalPlan, analyzed logical plan>> to include <<runBatch-getBatch, Sources and MicroBatchReaders with new data>> (i.e. data that has arrived since the last batch).
 
-NOTE: link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical operator is used to represent a streaming source in the <<logicalPlan, logical query plan>> of a streaming `Dataset`.
+For every <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> (with a <<spark-sql-streaming-BaseStreamingSource.adoc#, Source or MicroBatchReader>>), `runBatch` tries to find the corresponding logical plan for processing new data.
 
-`runBatch` finds the corresponding `DataFrame` (with the input data) per streaming source in <<newData, newData>> internal registry. If found, `runBatch` takes the logical plan of the `DataFrame`. If not, `runBatch` creates a `LocalRelation` logical relation (for the output schema).
+NOTE: <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> logical operator is used to represent a streaming source or reader in the <<logicalPlan, logical query plan>> (of a streaming query).
 
-NOTE: <<newData, newData>> internal registry contains entries for streaming sources that have new data available in the current batch.
+If the logical plan is found, `runBatch` makes the plan a child operator of `Project` (with `Aliases`) logical operator and replaces the `StreamingExecutionRelation`.
 
-While replacing `StreamingExecutionRelation` operators, `runBatch` records the output schema of the streaming source (from `StreamingExecutionRelation`) and the `DataFrame` with the new data (in `replacements` temporary internal buffer).
+Otherwise, if not found, `runBatch` simply creates an empty streaming `LocalRelation` (for scanning data from an empty local collection).
 
-`runBatch` makes sure that the output schema of the streaming source with a new data in the batch has not changed. If the output schema has changed, `runBatch` reports...FIXME
+In case the number of columns in dataframes with new data and ``StreamingExecutionRelation``'s do not match, `runBatch` throws an `AssertionError`:
+
+```
+Invalid batch: [output] != [dataPlan.output]
+```
 
 ==== [[runBatch-triggerLogicalPlan]] triggerLogicalPlan Phase -- Transforming Catalyst Expressions
 
@@ -472,7 +476,7 @@ image::images/StreamExecution-runBatch-queryPlanning.png[align="center"]
 
 In *queryPlanning* link:spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken[time-tracking section], `runBatch` link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[creates] a new `IncrementalExecution` with the following:
 
-* Transformed <<logicalPlan, logical query plan>> with <<runBatch-withNewSources, logical relations>> for every streaming source and <<runBatch-triggerLogicalPlan, corresponding attributes>>
+* Transformed <<logicalPlan, logical query plan>> with <<runBatch-newBatchesPlan, logical relations>> for every streaming source and reader (and <<runBatch-triggerLogicalPlan, corresponding attributes>>)
 
 * the streaming query's <<outputMode, output mode>>
 

@@ -72,7 +72,7 @@ org.apache.spark.sql.execution.streaming.StreamExecution
 
 NOTE: `StreamExecution` does not support adaptive query execution and cost-based optimizer (and turns them off when requested to <<runStream, run stream processing>>).
 
-`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<runBatch-addBatch, adds the results to a sink>>.
+`StreamExecution` is the *execution environment* of a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-addBatch, adds the results to a sink>>.
 
 NOTE: `StreamExecution` corresponds to a link:spark-sql-streaming-StreamingQuery.adoc[single streaming query] with one or more link:spark-sql-streaming-Source.adoc[streaming sources] and exactly one link:spark-sql-streaming-Sink.adoc[streaming sink].
 
@@ -883,9 +883,9 @@ Registry of the <<spark-sql-streaming-BaseStreamingSource.adoc#, streaming sourc
 
 NOTE: `newData` is part of the <<spark-sql-streaming-ProgressReporter.adoc#newData, ProgressReporter Contract>>.
 
-Set exclusively when `StreamExecution` is requested to <<runBatch-getBatch, requests unprocessed data from streaming sources>> (while <<runBatch, running a single streaming batch>>).
+Set exclusively when `StreamExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-getBatch, requests unprocessed data from streaming sources>> (while <<runBatch, running a single streaming batch>>).
 
-Used exclusively when `StreamExecution` <<runBatch-withNewSources, replaces StreamingExecutionRelations in a logical query plan with relations with new data>> (while <<runBatch, running a single streaming batch>>).
+Used exclusively when `StreamExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-newBatchesPlan, transform the logical plan (of the streaming query) to include the Sources and the MicroBatchReaders with new data>> (while <<runBatch, running a single streaming batch>>).
 
 | pollingDelayMs
 | [[pollingDelayMs]] Time delay before polling new data again when no data was available
