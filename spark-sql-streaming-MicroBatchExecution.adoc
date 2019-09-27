@@ -358,7 +358,7 @@ Running batch [currentBatchId]
 
 `runBatch` then performs the following steps (aka _phases_):
 
-. <<runBatch-getBatch, getBatch Phase -- Requesting Unprocessed Data From Streaming Sources>>
+. <<runBatch-getBatch, getBatch Phase -- Creating Logical Query Plans For Unprocessed Data From Sources and MicroBatchReaders>>
 . <<runBatch-withNewSources, withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation>>
 . <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
 . <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
@@ -374,11 +374,16 @@ Completed batch [currentBatchId]
 
 NOTE: `runBatch` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> (and there is new data to process).
 
-==== [[runBatch-getBatch]] getBatch Phase -- Requesting Unprocessed Data From Streaming Sources
+==== [[runBatch-getBatch]] getBatch Phase -- Creating Logical Query Plans For Unprocessed Data From Sources and MicroBatchReaders
 
-In *getBatch* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runBatch` goes over the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> and...FIXME
+In *getBatch* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, time-tracking section>>, `runBatch` goes over the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> and processes every <<runBatch-getBatch-Source, Source>> and <<runBatch-getBatch-MicroBatchReader, MicroBatchReader>> (associated with the available offsets) to create logical query plans (`newData`) for data processing (per offset ranges).
 
-==== [[runBatch-getBatch-Source]] getBatch Phase and Streaming Sources
+NOTE: `runBatch` requests sources and readers for data per offset range sequentially, one by one.
+
+.StreamExecution's Running Single Streaming Batch (getBatch Phase)
+image::images/StreamExecution-runBatch-getBatch.png[align="center"]
+
+==== [[runBatch-getBatch-Source]] getBatch Phase and Sources
 
 For a <<spark-sql-streaming-Source.adoc#, Source>> (with the available <<spark-sql-streaming-Offset.adoc#, offsets>> different from the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> registry), `runBatch` does the following:
 
@@ -394,34 +399,33 @@ Retrieving data from [source]: [current] -> [available]
 
 In the end, `runBatch` returns the `Source` and the logical plan of the streaming dataset (for the offset range).
 
-In case the `Source` gives a dataframe that is not streaming, `runBatch` throws an `AssertionError`:
+In case the `Source` returns a dataframe that is not streaming, `runBatch` throws an `AssertionError`:
 
 ```
-DataFrame returned by getBatch from [source] did not have isStreaming=true\[nlogicalQueryPlan]
+DataFrame returned by getBatch from [source] did not have isStreaming=true\n[logicalQueryPlan]
 ```
 
 ==== [[runBatch-getBatch-MicroBatchReader]] getBatch Phase and MicroBatchReaders
 
-For a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> (with the available <<spark-sql-streaming-Offset.adoc#, offsets>> different from the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> registry), `runBatch`...FIXME
+For a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> (with the available <<spark-sql-streaming-Offset.adoc#, offsets>> different from the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> registry),  `runBatch` does the following:
 
-`runBatch` then requests link:spark-sql-streaming-Source.adoc#getBatch[every source for the data] (as `DataFrame` with the new records).
+* Requests the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> for the committed offsets for the `MicroBatchReader` (if available)
 
-NOTE: `runBatch` requests the streaming sources for new DataFrames sequentially, source by source.
+* Requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.adoc#deserializeOffset, deserialize the committed offsets>> (if available)
 
-.StreamExecution's Running Single Streaming Batch (getBatch Phase)
-image::images/StreamExecution-runBatch-getBatch.png[align="center"]
+* Requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.adoc#deserializeOffset, deserialize the available offsets>> (only for <<spark-sql-streaming-Offset.adoc#SerializedOffset, SerializedOffsets>>)
 
-`runBatch` prints out the following DEBUG message to the logs:
+* Requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.adoc#setOffsetRange, set the offset range>> (the current and available offsets)
 
-```
-Retrieving data from [source]: [current] -> [available]
-```
-
-`runBatch` prints out the following DEBUG message to the logs:
+`runBatch` prints out the following DEBUG message to the logs.
 
 ```
-getBatch took [timeTaken] ms
+Retrieving data from [reader]: [current] -> [availableV2]
 ```
+
+`runBatch` looks up the `DataSourceV2` and the options for the `MicroBatchReader` (in the <<readerToDataSourceMap, readerToDataSourceMap>> internal registry).
+
+In the end, `runBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.adoc#readSchema, read schema>> and creates a `StreamingDataSourceV2Relation` logical operator (with the read schema, the `DataSourceV2`, options, and the `MicroBatchReader`).
 
 ==== [[runBatch-withNewSources]] withNewSources Phase -- Replacing StreamingExecutionRelations (in Logical Plan) With Relations With New Data or Empty LocalRelation
 
