@@ -362,6 +362,7 @@ Running batch [currentBatchId]
 . <<runBatch-newBatchesPlan, Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data>>
 . <<runBatch-newAttributePlan, Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)>>
 . <<runBatch-triggerLogicalPlan, Adapting Transformed Logical Plan to Sink with StreamWriteSupport>>
+. <<runBatch-setLocalProperty, Setting Local Properties>>
 . <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
 . <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
 . <<runBatch-addBatch, addBatch Phase -- Adding Current Streaming Batch to Sink>>
@@ -473,6 +474,24 @@ For any other <<sink, BaseStreamingSink>> type, `runBatch` simply throws an `Ill
 ```
 unknown sink type for [sink]
 ```
+
+==== [[runBatch-setLocalProperty]] Setting Local Properties
+
+`runBatch` sets the <<runBatch-setLocalProperty-local-properties, local properties>>.
+
+[[runBatch-setLocalProperty-local-properties]]
+.runBatch's Local Properties
+[cols="30,70",options="header",width="100%"]
+|===
+| Local Property
+| Value
+
+| <<BATCH_ID_KEY, streaming.sql.batchId>>
+a| <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, currentBatchId>>
+
+| <<spark-sql-streaming-StreamExecution.adoc#IS_CONTINUOUS_PROCESSING, __is_continuous_processing>>
+a| `false`
+|===
 
 ==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch
 
