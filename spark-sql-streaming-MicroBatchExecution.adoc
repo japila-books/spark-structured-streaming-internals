@@ -360,6 +360,7 @@ Running batch [currentBatchId]
 
 . <<runBatch-getBatch, getBatch Phase -- Creating Logical Query Plans For Unprocessed Data From Sources and MicroBatchReaders>>
 . <<runBatch-newBatchesPlan, Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data>>
+. <<runBatch-newAttributePlan, Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)>>
 . <<runBatch-triggerLogicalPlan, triggerLogicalPlan Phase -- Transforming Catalyst Expressions>>
 . <<runBatch-queryPlanning, queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch>>
 . <<runBatch-nextBatch, nextBatch Phase -- Creating Dataset (with IncrementalExecution for New Data)>>
@@ -432,7 +433,7 @@ In the end, `runBatch` requests the `MicroBatchReader` for the <<spark-sql-strea
 .StreamExecution's Running Single Streaming Batch (and Transforming Logical Plan for New Data)
 image::images/StreamExecution-runBatch-newBatchesPlan.png[align="center"]
 
-`runBatch` transforms the <<logicalPlan, analyzed logical plan>> to include <<runBatch-getBatch, Sources and MicroBatchReaders with new data>> (i.e. data that has arrived since the last batch).
+`runBatch` transforms the <<logicalPlan, analyzed logical plan>> to include <<runBatch-getBatch, Sources and MicroBatchReaders with new data>> (`newBatchesPlan` with logical plans to process data that has arrived since the last batch).
 
 For every <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> (with a <<spark-sql-streaming-BaseStreamingSource.adoc#, Source or MicroBatchReader>>), `runBatch` tries to find the corresponding logical plan for processing new data.
 
@@ -448,26 +449,20 @@ In case the number of columns in dataframes with new data and ``StreamingExecuti
 Invalid batch: [output] != [dataPlan.output]
 ```
 
-==== [[runBatch-triggerLogicalPlan]] triggerLogicalPlan Phase -- Transforming Catalyst Expressions
+==== [[runBatch-newAttributePlan]] Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)
 
-`runBatch` transforms Catalyst expressions in `withNewSources` new logical plan (using `replacements` temporary internal buffer).
-
-* Catalyst `Attribute` is replaced with one if recorded in `replacements` internal buffer (that corresponds to the attribute in the `DataFrame` with the new input data in the batch)
-
-* `CurrentTimestamp` and `CurrentDate` Catalyst expressions are replaced with `CurrentBatchTimestamp` expression (with `batchTimestampMs` from <<offsetSeqMetadata, OffsetSeqMetadata>>).
+`runBatch` replaces all `CurrentTimestamp` and `CurrentDate` expressions in the <<runBatch-newBatchesPlan, transformed logical plan (with new data)>> with the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchTimestampMs, current batch timestamp>> (based on the <<spark-sql-streaming-StreamExecution.adoc#offsetSeqMetadata, batch metadata>>).
 
 [NOTE]
 ====
-`CurrentTimestamp` Catalyst expression corresponds to `current_timestamp` function.
+`CurrentTimestamp` and `CurrentDate` expressions correspond to `current_timestamp` and `current_date` standard function, respectively.
 
-Find out more about `current_timestamp` function in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-functions-datetime.html#current_timestamp[The Internals of Spark SQL] gitbook.
-
----
-
-`CurrentDate` Catalyst expression corresponds to `current_date` function.
-
-Find out more about `current_date` function in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-functions-datetime.html#current_date[The Internals of Spark SQL] gitbook.
+Read up https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-functions-datetime.html[The Internals of Spark SQL] to learn more about the standard functions.
 ====
+
+==== [[runBatch-triggerLogicalPlan]] triggerLogicalPlan Phase -- Transforming Catalyst Expressions
+
+CAUTION: FIXME
 
 ==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating IncrementalExecution for Current Streaming Batch
 
