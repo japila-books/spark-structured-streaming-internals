@@ -141,4 +141,10 @@ a| [[streamingNoDataProgressEventInterval]] Used exclusively for <<spark-sql-str
 
 a| [[streamingPollingDelay]][[STREAMING_POLLING_DELAY]] Used exclusively when `StreamExecution` is <<spark-sql-streaming-StreamExecution.adoc#, created>>
 
+| `streamingProgressRetention`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.numRecentProgressUpdates, spark.sql.streaming.numRecentProgressUpdates>>
+
+a| [[streamingProgressRetention]][[STREAMING_PROGRESS_RETENTION]] Used exclusively when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#updateProgress, update progress of streaming query>> (and possibly remove an excess)
+
 |===

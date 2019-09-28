@@ -221,6 +221,21 @@ Configure logging of the <<implementations, concrete stream execution progress r
 * <<spark-sql-streaming-MicroBatchExecution.adoc#logging, MicroBatchExecution>>
 ====
 
+=== [[progressBuffer]] `progressBuffer` Internal Property
+
+[source, scala]
+----
+progressBuffer: Queue[StreamingQueryProgress]
+----
+
+`progressBuffer` is a https://www.scala-lang.org/api/2.12.x/scala/collection/mutable/Queue.html[scala.collection.mutable.Queue] of <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgresses>>.
+
+`progressBuffer` has a new `StreamingQueryProgress` added when `ProgressReporter` is requested to <<updateProgress, update progress of a streaming query>>.
+
+When the size (the number of `StreamingQueryProgresses`) is above <<spark-sql-streaming-properties.adoc#spark.sql.streaming.numRecentProgressUpdates, spark.sql.streaming.numRecentProgressUpdates>> threshold, the oldest `StreamingQueryProgress` is removed (_dequeued_).
+
+`progressBuffer` is used when `ProgressReporter` is requested for the <<lastProgress, last>> and the <<recentProgress, recent StreamingQueryProgresses>>
+
 === [[status]] `status` Method
 
 [source, scala]
@@ -393,17 +408,6 @@ updateStatusMessage(message: String): Unit
 * `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>>, <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>>
 ====
 
-=== [[extractSourceToNumInputRows]] `extractSourceToNumInputRows` Internal Method
-
-[source, scala]
-----
-extractSourceToNumInputRows(): Map[BaseStreamingSource, Long]
-----
-
-`extractSourceToNumInputRows`...FIXME
-
-NOTE: `extractSourceToNumInputRows` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
-
 === [[extractExecutionStats]] Generating Execution Statistics -- `extractExecutionStats` Internal Method
 
 [source, scala]
@@ -441,6 +445,17 @@ extractStateOperatorMetrics(
 
 NOTE: `extractStateOperatorMetrics` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
 
+=== [[extractSourceToNumInputRows]] `extractSourceToNumInputRows` Internal Method
+
+[source, scala]
+----
+extractSourceToNumInputRows(): Map[BaseStreamingSource, Long]
+----
+
+`extractSourceToNumInputRows`...FIXME
+
+NOTE: `extractSourceToNumInputRows` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
+
 === [[formatTimestamp]] `formatTimestamp` Internal Method
 
 [source, scala]
@@ -472,7 +487,7 @@ recordTriggerOffsets(
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
 ====
 
-=== [[lastProgress]] `lastProgress` Method
+=== [[lastProgress]] Last StreamingQueryProgress -- `lastProgress` Method
 
 [source, scala]
 ----
@@ -554,12 +569,5 @@ Default: `-1L`
 a| [[metricWarningLogged]] Flag to...FIXME
 
 Default: `false`
-
-| progressBuffer
-a| [[progressBuffer]] https://www.scala-lang.org/api/2.12.x/scala/collection/mutable/Queue.html[scala.collection.mutable.Queue] of <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgresses>>
-
-Elements are added and removed when `ProgressReporter` is requested to <<updateProgress, update progress>>.
-
-Used when `ProgressReporter` is requested for the <<lastProgress, lastProgress>> and <<recentProgress, recentProgress>>
 
 |===

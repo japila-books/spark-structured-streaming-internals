@@ -156,9 +156,11 @@ Default: `10000L`
 Use <<spark-sql-streaming-SQLConf.adoc#streamingNoDataProgressEventInterval, SQLConf.streamingNoDataProgressEventInterval>> to get the current value
 
 | spark.sql.streaming.numRecentProgressUpdates
-a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of link:spark-sql-streaming-ProgressReporter.adoc#updateProgress[progress updates to retain] for a streaming query
+a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgresses>> to retain in <<spark-sql-streaming-ProgressReporter.adoc#progressBuffer, progressBuffer>> internal registry when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#updateProgress, update progress of streaming query>>
 
 Default: `100`
+
+Use <<spark-sql-streaming-SQLConf.adoc#streamingProgressRetention, SQLConf.streamingProgressRetention>> to get the current value
 
 | spark.sql.streaming.pollingDelay
 a| [[spark.sql.streaming.pollingDelay]] *(internal)* How long (in millis) to delay `StreamExecution` before link:spark-sql-streaming-MicroBatchExecution.adoc#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch]
