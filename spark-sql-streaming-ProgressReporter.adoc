@@ -409,7 +409,8 @@ NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is req
 
 [source, scala]
 ----
-extractStateOperatorMetrics(hasNewData: Boolean): Seq[StateOperatorProgress]
+extractStateOperatorMetrics(
+  hasNewData: Boolean): Seq[StateOperatorProgress]
 ----
 
 `extractStateOperatorMetrics`...FIXME

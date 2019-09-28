@@ -421,7 +421,7 @@ NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used in
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<spark-sql-streaming-ContinuousExecution.adoc#getStartOffsets, retrieve the start offsets>> at the very beginning of the streaming query execution and later regularly every <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit>>)
 
-=== [[lastExecution]] IncrementalExecution -- `lastExecution` Property
+=== [[lastExecution]] Last Query Execution Of Streaming Query (IncrementalExecution) -- `lastExecution` Property
 
 [source, scala]
 ----
@@ -430,7 +430,56 @@ lastExecution: IncrementalExecution
 
 NOTE: `lastExecution` is part of the <<spark-sql-streaming-ProgressReporter.adoc#lastExecution, ProgressReporter Contract>> for the `QueryExecution` of a streaming query.
 
-`lastExecution` is a <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> of the most recent (_last_) execution.
+`lastExecution` is a <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> (a `QueryExecution` of a streaming query) of the most recent (_last_) execution.
+
+`lastExecution` is created when the <<extensions, stream execution engines>> are requested for the following:
+
+* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a single streaming micro-batch>> (when in <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, queryPlanning Phase>>)
+
+* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query>> (when in <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous-queryPlanning, queryPlanning Phase>>)
+
+`lastExecution` is used when:
+
+* `StreamExecution` is requested to <<explain, explain a streaming query>> (via <<explainInternal, explainInternal>>)
+
+* `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#extractStateOperatorMetrics, extractStateOperatorMetrics>>, <<spark-sql-streaming-ProgressReporter.adoc#extractExecutionStats, extractExecutionStats>>, and <<spark-sql-streaming-ProgressReporter.adoc#extractSourceToNumInputRows, extractSourceToNumInputRows>>
+
+* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-shouldConstructNextBatch, construct or skip the next streaming micro-batch>> (based on <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, StateStoreWriters in a streaming query>>), <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a single streaming micro-batch>> (when in <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-addBatch, addBatch Phase>> and <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-updateWatermark-commitLog, updating watermark and committing offsets to offset commit log>>)
+
+* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query>> (when in <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous-runContinuous, runContinuous Phase>>)
+
+* For debugging query execution of streaming queries (using `debugCodegen`)
+
+=== [[explain]] Explaining Streaming Query -- `explain` Method
+
+[source, scala]
+----
+explain(): Unit // <1>
+explain(extended: Boolean): Unit
+----
+<1> Turns the `extended` flag off (`false`)
+
+`explain` simply prints out <<explainInternal, explainInternal>> to the standard output.
+
+NOTE: `explain` is used when...FIXME
+
+=== [[explainInternal]] `explainInternal` Method
+
+[source, scala]
+----
+explainInternal(extended: Boolean): String
+----
+
+`explainInternal`...FIXME
+
+[NOTE]
+====
+`explainInternal` is used when:
+
+* `StreamExecution` is requested to <<explain, explain a streaming query>>
+
+* `StreamingQueryWrapper` is requested to <<spark-sql-streaming-StreamingQueryWrapper.adoc#explainInternal, explainInternal>>
+====
 
 === [[stopSources]] Stopping Streaming Sources and Readers -- `stopSources` Method
 
