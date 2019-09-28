@@ -1,6 +1,6 @@
 == [[ProgressReporter]] ProgressReporter Contract
 
-`ProgressReporter` is the <<contract, contract>> of <<implementations, stream execution progress reporters>> that report the statistics of a streaming query.
+`ProgressReporter` is the <<contract, contract>> of <<implementations, stream execution progress reporters>> that report the statistics of execution of a streaming query.
 
 [[contract]]
 .ProgressReporter Contract
@@ -47,7 +47,7 @@ a| [[logicalPlan]]
 logicalPlan: LogicalPlan
 ----
 
-The logical query plan of the streaming query
+Logical query plan of the streaming query
 
 Used when `ProgressReporter` is requested for the following:
 
@@ -73,7 +73,7 @@ a| [[newData]]
 newData: Map[BaseStreamingSource, LogicalPlan]
 ----
 
-<<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming sources>> with the new data (as a `LogicalPlan`)
+<<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming readers and sources>> with the new data (as a `LogicalPlan`)
 
 Used when:
 
@@ -117,7 +117,7 @@ a| [[sink]]
 sink: BaseStreamingSink
 ----
 
-The one and only <<spark-sql-streaming-BaseStreamingSink.adoc#, streaming sink>> of the streaming query
+The one and only <<spark-sql-streaming-BaseStreamingSink.adoc#, streaming writer or sink>> of the streaming query
 
 | sources
 a| [[sources]]
@@ -127,7 +127,7 @@ a| [[sources]]
 sources: Seq[BaseStreamingSource]
 ----
 
-<<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming sources>> of the streaming query
+<<spark-sql-streaming-BaseStreamingSource.adoc#, Streaming readers and sources>> of the streaming query
 
 Used when <<finishTrigger, finishing a trigger (and updating progress and marking current status as trigger inactive)>>
 
@@ -211,6 +211,16 @@ scala> offsets.foreach(println)
 source = RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8] => offset = 293
 ----
 
+[[logging]]
+[TIP]
+====
+Configure logging of the <<implementations, concrete stream execution progress reporters>> to see what happens inside a `ProgressReporter`:
+
+* <<spark-sql-streaming-ContinuousExecution.adoc#logging, ContinuousExecution>>
+
+* <<spark-sql-streaming-MicroBatchExecution.adoc#logging, MicroBatchExecution>>
+====
+
 === [[status]] `status` Method
 
 [source, scala]
@@ -222,7 +232,7 @@ status: StreamingQueryStatus
 
 NOTE: `status` is used when `StreamingQueryWrapper` is requested for the current status of a streaming query (that is part of link:spark-sql-streaming-StreamingQuery.adoc#status[StreamingQuery Contract]).
 
-=== [[updateProgress]] Updating Progress -- `updateProgress` Internal Method
+=== [[updateProgress]] Updating Progress of Streaming Query -- `updateProgress` Internal Method
 
 [source, scala]
 ----
@@ -248,7 +258,7 @@ Streaming query made progress: [newProgress]
 
 NOTE: `updateProgress` synchronizes concurrent access to the <<progressBuffer, progressBuffer>> internal registry.
 
-NOTE: `updateProgress` is used exclusively when `ProgressReporter` <<finishTrigger, finishes a trigger>>.
+NOTE: `updateProgress` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finish up a trigger>>.
 
 === [[startTrigger]] Initializing Query Progress for New Trigger -- `startTrigger` Method
 
@@ -291,7 +301,7 @@ Starting Trigger Calculation
 
 NOTE: `startTrigger` is used exclusively when `StreamExecution` starts link:spark-sql-streaming-StreamExecution.adoc#runStream[running batches] (as part of link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] executing a batch runner).
 
-=== [[finishTrigger]] Finalizing Query Progress for Trigger -- `finishTrigger` Method
+=== [[finishTrigger]] Finishing Up Streaming Batch (Trigger) and Generating StreamingQueryProgress -- `finishTrigger` Method
 
 [source, scala]
 ----
@@ -327,7 +337,7 @@ Otherwise, when no data was available (using the input `hasNewData` flag), `fini
 
 In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, StreamingQueryStatus>> (i.e. sets it to `false`).
 
-NOTE: `finishTrigger` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>.
+NOTE: `finishTrigger` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>> (after <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-triggerExecution, triggerExecution Phase>> at the end of a streaming batch).
 
 === [[reportTimeTaken]] Time-Tracking Section (Recording Execution Time for Progress Reporting) -- `reportTimeTaken` Method
 
@@ -394,16 +404,30 @@ extractSourceToNumInputRows(): Map[BaseStreamingSource, Long]
 
 NOTE: `extractSourceToNumInputRows` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
 
-=== [[extractExecutionStats]] Extracting Execution Statistics -- `extractExecutionStats` Internal Method
+=== [[extractExecutionStats]] Generating Execution Statistics -- `extractExecutionStats` Internal Method
 
 [source, scala]
 ----
 extractExecutionStats(hasNewData: Boolean): ExecutionStats
 ----
 
-`extractExecutionStats`...FIXME
+`extractExecutionStats` generates an <<spark-sql-streaming-ExecutionStats.adoc#, ExecutionStats>> of the <<lastExecution, last execution>> of the streaming query.
 
-NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finishTrigger>>.
+Internally, `extractExecutionStats` generate *watermark* metric (using the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
+
+NOTE: <<spark-sql-streaming-EventTimeWatermark.adoc#, EventTimeWatermark>> unary logical operator represents <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator in a streaming query.
+
+`extractExecutionStats` <<extractStateOperatorMetrics, extractStateOperatorMetrics>>.
+
+`extractExecutionStats` <<extractSourceToNumInputRows, extractSourceToNumInputRows>>.
+
+`extractExecutionStats` finds the <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> unary physical operator (with non-zero <<spark-sql-streaming-EventTimeStatsAccum.adoc#, EventTimeStats>>) and generates *max*, *min*, and *avg* statistics.
+
+In the end, `extractExecutionStats` creates a <<spark-sql-streaming-ExecutionStats.adoc#, ExecutionStats>> with the execution statistics.
+
+If the input `hasNewData` flag is turned off (`false`), `extractExecutionStats` returns an <<spark-sql-streaming-ExecutionStats.adoc#, ExecutionStats>> with no input rows and event-time statistics (that require data to be processed to have any sense).
+
+NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finish up a streaming batch (trigger) and generate a StreamingQueryProgress>>.
 
 === [[extractStateOperatorMetrics]] `extractStateOperatorMetrics` Internal Method
 

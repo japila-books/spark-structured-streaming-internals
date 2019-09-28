@@ -1,4 +1,4 @@
-== [[BaseStreamingSource]] BaseStreamingSource Contract -- Base of Streaming Sources
+== [[BaseStreamingSource]] BaseStreamingSource Contract -- Base of Streaming Readers and Sources
 
 `BaseStreamingSource` is the <<contract, abstraction>> of <<extensions, streaming readers and sources>> that can be <<stop, stopped>>.
 

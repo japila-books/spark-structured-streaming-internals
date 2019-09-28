@@ -36,6 +36,20 @@ assert(microBatchEngine.trigger == Trigger.Once)
 
 Once <<creating-instance, created>>, `MicroBatchExecution` (as a <<spark-sql-streaming-StreamExecution.adoc#, stream execution engine>>) is requested to <<runActivatedStream, run an activated streaming query>>.
 
+[[logging]]
+[TIP]
+====
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MicroBatchExecution` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.MicroBatchExecution=ALL
+```
+
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+====
+
 === [[creating-instance]] Creating MicroBatchExecution Instance
 
 `MicroBatchExecution` takes the following to be created:

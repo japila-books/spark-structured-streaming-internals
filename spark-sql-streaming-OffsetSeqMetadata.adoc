@@ -1,4 +1,4 @@
-== [[OffsetSeqMetadata]] OffsetSeqMetadata
+== [[OffsetSeqMetadata]] OffsetSeqMetadata -- Metadata of Streaming Batch
 
 `OffsetSeqMetadata` holds the metadata for the current streaming batch:
 
