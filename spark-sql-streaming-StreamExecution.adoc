@@ -514,7 +514,7 @@ runStream(): Unit
 
 `runStream` simply prepares the environment to <<runActivatedStream, execute the activated streaming query>>.
 
-NOTE: `runStream` is used exclusively when the <<queryExecutionThread, stream execution thread>> is requested to start (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
+NOTE: `runStream` is used exclusively when the <<queryExecutionThread, stream execution thread>> is requested to <<start, start>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start an execution of the streaming query>>).
 
 Internally, `runStream` sets the job group (to all the Spark jobs started by this thread) as follows:
 

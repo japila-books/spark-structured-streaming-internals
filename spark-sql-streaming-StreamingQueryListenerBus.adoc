@@ -45,7 +45,24 @@ CAUTION: FIXME
 
 === [[doPostEvent]] `doPostEvent` Method
 
-CAUTION: FIXME
+[source, scala]
+----
+doPostEvent(
+  listener: StreamingQueryListener,
+  event: StreamingQueryListener.Event): Unit
+----
+
+NOTE: `doPostEvent` is part of Spark Core's `ListenerBus` contract to post an event to the specified listener.
+
+`doPostEvent` branches per the type of <<spark-sql-streaming-StreamingQueryListener.adoc#events, StreamingQueryListener.Event>> and requests the <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>> for the following:
+
+* For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent, QueryStartedEvent>>, requests the `StreamingQueryListener` to <<spark-sql-streaming-StreamingQueryListener.adoc#onQueryStarted, onQueryStarted>>
+
+* For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryProgressEvent, QueryProgressEvent>>, requests the `StreamingQueryListener` to <<spark-sql-streaming-StreamingQueryListener.adoc#onQueryProgress, onQueryProgress>>
+
+* For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent, QueryTerminatedEvent>>, requests the `StreamingQueryListener` to <<spark-sql-streaming-StreamingQueryListener.adoc#onQueryTerminated, onQueryTerminated>>
+
+For any other event, `doPostEvent` simply does nothing (_swallows it_).
 
 === [[postToAll]] `postToAll` Method
 
