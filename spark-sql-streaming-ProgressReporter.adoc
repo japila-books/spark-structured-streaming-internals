@@ -433,7 +433,7 @@ If the input `hasNewData` flag is turned off (`false`), `extractExecutionStats` 
 
 NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finish up a streaming batch (trigger) and generate a StreamingQueryProgress>>.
 
-=== [[extractStateOperatorMetrics]] `extractStateOperatorMetrics` Internal Method
+=== [[extractStateOperatorMetrics]] Generating StateStoreWriter Metrics (StateOperatorProgress) -- `extractStateOperatorMetrics` Internal Method
 
 [source, scala]
 ----
@@ -441,9 +441,13 @@ extractStateOperatorMetrics(
   hasNewData: Boolean): Seq[StateOperatorProgress]
 ----
 
-`extractStateOperatorMetrics`...FIXME
+`extractStateOperatorMetrics` requests the <<lastExecution, QueryExecution>> for the optimized execution plan (`executedPlan`) and finds all <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>> physical operators and requests them for <<spark-sql-streaming-StateStoreWriter.adoc#getProgress, StateOperatorProgress>>.
 
-NOTE: `extractStateOperatorMetrics` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
+`extractStateOperatorMetrics` clears (_zeros_) the *numRowsUpdated* metric for the given `hasNewData` turned off (`false`).
+
+`extractStateOperatorMetrics` returns an empty collection for the <<lastExecution, QueryExecution>> uninitialized (`null`).
+
+NOTE: `extractStateOperatorMetrics` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, generate execution statistics>>.
 
 === [[extractSourceToNumInputRows]] `extractSourceToNumInputRows` Internal Method
 
