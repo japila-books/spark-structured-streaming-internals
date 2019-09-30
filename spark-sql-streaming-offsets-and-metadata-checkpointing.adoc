@@ -1,8 +1,10 @@
 == Offsets and Metadata Checkpointing
 
-Every time a streaming query is started, <<spark-sql-streaming-StreamExecution.adoc#extensions, stream execution engines>> use checkpoint location to resume stream processing and get so-called *start offsets* (to start query processing from).
+A streaming query can be started from scratch or from checkpoint (that gives fault-tolerance as the state is preserved even when a failure happens).
 
-`StreamExecution` resumes (populates the start offsets) from the latest checkpointed offsets from the <<offsetLog, offset log>> that may have already been processed (and committed to the <<batchCommitLog, batch commit log>> so they are used as the current <<committedOffsets, committed offsets>>).
+<<spark-sql-streaming-StreamExecution.adoc#extensions, Stream execution engines>> use *checkpoint location* to resume stream processing and get *start offsets* to start query processing from.
+
+`StreamExecution` resumes (populates the start offsets) from the latest checkpointed offsets from the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-Ahead Log (WAL) of Offsets>> that may have already been processed (and, if so, committed to the <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>>).
 
 * <<spark-sql-streaming-OffsetSeqLog.adoc#, Hadoop DFS-based metadata storage>> of <<spark-sql-streaming-OffsetSeq.adoc#, OffsetSeqs>>
 
@@ -10,13 +12,19 @@ Every time a streaming query is started, <<spark-sql-streaming-StreamExecution.a
 
 * <<spark-sql-streaming-StreamProgress.adoc#, StreamProgress>> and <<spark-sql-streaming-StreamExecution.adoc#, StreamExecutions>> (<<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed>> and <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available>> offsets)
 
-=== Micro-Batch Stream Processing
+=== [[micro-batch-stream-processing]] Micro-Batch Stream Processing
 
-In <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>, the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> registry is populated with the <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, latest offsets>> from the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-Ahead Log (WAL)>> when `MicroBatchExecution` stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets from checkpoint>>.
+In <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>, the <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> registry is populated with the <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, latest offsets>> from the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-Ahead Log (WAL)>> when `MicroBatchExecution` stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets from checkpoint>> (if available) when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>> (<<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-triggerExecution-populateStartOffsets, before the first "zero" micro-batch>>).
 
-The <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> are then <<spark-sql-streaming-StreamProgress.adoc#plusplus, added>> to the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed offsets>> when the latest batch ID available (as described above) is exactly the <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, latest batch ID>> committed to <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>> when `MicroBatchExecution` stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets from checkpoint>>.
+The <<spark-sql-streaming-StreamExecution.adoc#availableOffsets, available offsets>> are then <<spark-sql-streaming-StreamProgress.adoc#plusplus, added>> to the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committed offsets>> when the latest batch ID available (as described above) is exactly the <<spark-sql-streaming-HDFSMetadataLog.adoc#getLatest, latest batch ID>> committed to the <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset Commit Log>> when `MicroBatchExecution` stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, populate start offsets from checkpoint>>.
 
-When a streaming query is resumed (restarted) from a checkpoint, `MicroBatchExecution` prints out the following INFO message:
+When a streaming query is started from scratch (with no checkpoint that has offsets in the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>>), `MicroBatchExecution` prints out the following INFO message:
+
+```
+Starting new streaming query.
+```
+
+When a streaming query is resumed (restarted) from a checkpoint with offsets in the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>>, `MicroBatchExecution` prints out the following INFO message:
 
 [options="wrap"]
 ----

@@ -458,7 +458,7 @@ extractSourceToNumInputRows(): Map[BaseStreamingSource, Long]
 
 `extractSourceToNumInputRows`...FIXME
 
-NOTE: `extractSourceToNumInputRows` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, extractExecutionStats>>.
+NOTE: `extractSourceToNumInputRows` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, generate execution statistics>>.
 
 === [[formatTimestamp]] `formatTimestamp` Internal Method
 

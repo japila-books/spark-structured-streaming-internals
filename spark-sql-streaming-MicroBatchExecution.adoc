@@ -100,7 +100,7 @@ runActivatedStream(
 
 NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.adoc#runActivatedStream, StreamExecution Contract>> to run the activated <<spark-sql-streaming-StreamingQuery.adoc#, streaming query>>.
 
-`runActivatedStream` simply requests the <<triggerExecutor, TriggerExecutor>> to execute micro-batches using the <<batchRunner, batch runner>> (until `MicroBatchExecution` is no longer <<spark-sql-streaming-StreamExecution.adoc#isActive, active>>).
+`runActivatedStream` simply requests the <<triggerExecutor, TriggerExecutor>> to execute micro-batches using the <<batchRunner, batch runner>> (until `MicroBatchExecution` is <<spark-sql-streaming-StreamExecution.adoc#isActive, terminated>> due to a query stop or a failure).
 
 ==== [[batchRunner]][[batch-runner]] TriggerExecutor's Batch Runner
 
@@ -108,18 +108,19 @@ The batch runner (of the <<triggerExecutor, TriggerExecutor>>) is executed as lo
 
 NOTE: _trigger_ and _batch_ are considered equivalent and used interchangeably.
 
-The batch runner <<spark-sql-streaming-ProgressReporter.adoc#startTrigger, initializes query progress for the new trigger>>.
+[[runActivatedStream-startTrigger]]
+The batch runner <<spark-sql-streaming-ProgressReporter.adoc#startTrigger, initializes query progress for the new trigger>> (aka _startTrigger_).
 
 [[runActivatedStream-triggerExecution]][[runActivatedStream-triggerExecution-populateStartOffsets]]
-The batch runner starts *triggerExecution* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, execution phase>> that includes:
+The batch runner starts *triggerExecution* <<spark-sql-streaming-ProgressReporter.adoc#reportTimeTaken, execution phase>> that is made up of the following steps:
 
-. <<populateStartOffsets, Populating start offsets from checkpoint>> at the very first batch
+. <<populateStartOffsets, Populating start offsets from checkpoint>> before the first "zero" batch (at every start or restart)
 
 . <<constructNextBatch, Constructing or skipping the next streaming micro-batch>>
 
 . <<runBatch, Running the streaming micro-batch>>
 
-While <<populateStartOffsets, populating start offsets from checkpoint>> at the very first batch the batch runner prints out the following INFO message to the logs:
+At the start or restart (_resume_) of a streaming query (when the <<currentBatchId, current batch ID>> is uninitialized and `-1`), the batch runner <<populateStartOffsets, populates start offsets from checkpoint>> and then prints out the following INFO message to the logs (using the <<spark-sql-streaming-StreamExecution.adoc#committedOffsets, committedOffsets>> internal registry):
 
 ```
 Stream started from [committedOffsets]
@@ -178,7 +179,7 @@ NOTE: The batch id could not be available in the write-ahead log when a streamin
 
 `populateStartOffsets` branches off based on whether the latest committed batch was <<populateStartOffsets-getLatest-available, available>> or <<populateStartOffsets-getLatest-not-available, not>>.
 
-NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> (<<runActivatedStream-triggerExecution-populateStartOffsets, before the first micro-batch>>).
+NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> (<<runActivatedStream-triggerExecution-populateStartOffsets, before the first "zero" micro-batch>>).
 
 ==== [[populateStartOffsets-getLatest-available]] Latest Committed Batch Available
 
@@ -186,9 +187,9 @@ When the latest committed batch id with the metadata was available in the <<spar
 
 * Sets the <<spark-sql-streaming-StreamExecution.adoc#currentBatchId, current batch ID>> to the latest committed batch ID found
 
-* Turns the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag on (`true`)
+* Turns the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag on (`true`)
 
-* Sets the <<availableOffsets, available offsets>> to the offsets found in the metadata
+* Sets the <<availableOffsets, available offsets>> to the offsets (from the metadata)
 
 When the latest batch ID found is greater than `0`, `populateStartOffsets` requests the <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Offset Write-Ahead Log>> for the <<spark-sql-streaming-HDFSMetadataLog.adoc#get, second latest batch ID with metadata>> or throws an `IllegalStateException` if not found.
 
