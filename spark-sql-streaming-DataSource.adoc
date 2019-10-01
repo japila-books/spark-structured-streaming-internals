@@ -1,31 +1,25 @@
-== [[DataSource]] DataSource -- Pluggable Data Source
+== [[DataSource]] DataSource — Pluggable Data Provider Framework
 
 `DataSource` is...FIXME
 
 `DataSource` is <<creating-instance, created>> when...FIXME
 
-TIP: Read https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-datasource.html[DataSource &mdash; Pluggable Data Sources] (for Spark SQL's batch structured queries).
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSource.html[DataSource -- Pluggable Data Provider Framework]  in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
-[[internal-registries]]
-.DataSource's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Description
+=== [[creating-instance]] Creating DataSource Instance
 
-| providingClass
-a| [[providingClass]] https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html[java.lang.Class] that corresponds to the <<className, className>> (that can be a fully-qualified class name or an alias of the data source)
+`DataSource` takes the following to be created:
 
-| sourceInfo
-a| [[sourceInfo]] `SourceInfo` with the name, the schema, and optional partitioning columns of a source.
+* [[sparkSession]] `SparkSession`
+* [[className]] `className`, i.e. the fully-qualified class name or an alias of the data source
+* [[paths]] Paths (default: `Nil`, i.e. an empty collection)
+* [[userSpecifiedSchema]] Optional user-defined schema (default: `None`)
+* [[partitionColumns]] Names of the partition columns (default: (empty))
+* [[bucketSpec]] Optional `BucketSpec` (default: `None`)
+* [[options]] Configuration options (default: empty)
+* [[catalogTable]] Optional `CatalogTable` (default: `None`)
 
-Used when:
-
-* `DataSource` <<createSource, creates a FileStreamSource>> (that requires the schema and the optional partitioning columns)
-
-* `StreamingRelation` is link:spark-sql-streaming-StreamingRelation.adoc#apply[created] (for a `DataSource`)
-
-|===
+`DataSource` initializes the <<internal-properties, internal properties>>.
 
 === [[sourceSchema]] Describing Name and Schema of Streaming Source -- `sourceSchema` Internal Method
 
@@ -38,31 +32,39 @@ sourceSchema(): SourceInfo
 
 NOTE: `sourceSchema` is used exclusively when `DataSource` is requested for the <<sourceInfo, SourceInfo>>.
 
-=== [[creating-instance]] Creating DataSource Instance
-
-`DataSource` takes the following when created:
-
-* [[sparkSession]] `SparkSession`
-* [[className]] `className`, i.e. the fully-qualified class name or an alias of the data source
-* [[paths]] Paths (default: `Nil`, i.e. an empty collection)
-* [[userSpecifiedSchema]] Optional user-defined schema (default: `None`)
-* [[partitionColumns]] Names of the partition columns (default: empty)
-* [[bucketSpec]] Optional `BucketSpec` (default: `None`)
-* [[options]] Configuration options (default: empty)
-* [[catalogTable]] Optional `CatalogTable` (default: `None`)
-
-`DataSource` initializes the <<internal-registries, internal registries and counters>>.
-
-=== [[createSource]] Creating Streaming Source -- `createSource` Method
+=== [[createSource]] Creating Streaming Source (Micro-Batch Stream Processing / Data Source API V1) -- `createSource` Method
 
 [source, scala]
 ----
-createSource(metadataPath: String): Source
+createSource(
+  metadataPath: String): Source
 ----
 
-`createSource`...FIXME
+`createSource` creates a new instance of the <<providingClass, data source class>> and branches off per the type, e.g. <<createSource-StreamSourceProvider, StreamSourceProvider>>, <<createSource-FileFormat, FileFormat>> and <<createSource-other, other>>.
 
 NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>.
+
+==== [[createSource-StreamSourceProvider]] StreamSourceProvider
+
+For a <<spark-sql-streaming-StreamSourceProvider.adoc#, StreamSourceProvider>>, `createSource` requests the `StreamSourceProvider` to <<spark-sql-streaming-StreamSourceProvider.adoc#createSource, create a source>>.
+
+==== [[createSource-FileFormat]] FileFormat
+
+For a `FileFormat`, `createSource` creates a new <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>.
+
+`createSource` throws an `IllegalArgumentException` when `path` option was not specified for a `FileFormat` data source:
+
+```
+'path' is not specified
+```
+
+==== [[createSource-other]] Other
+
+For any other data source type, `createSource` simply throws an `UnsupportedOperationException`:
+
+```
+Data source [className] does not support streamed reading
+```
 
 === [[createSink]] Creating Streaming Sink -- `createSink` Method
 
@@ -100,3 +102,24 @@ Data source [className] does not support streamed writing
 ```
 
 NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, create and start a streaming query>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| providingClass
+a| [[providingClass]] https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html[java.lang.Class] for the <<className, className>> (that can be a fully-qualified class name or an alias of the data source)
+
+| sourceInfo
+a| [[sourceInfo]] `SourceInfo` with the name, the schema, and optional partitioning columns of a source.
+
+Used when:
+
+* `DataSource` <<createSource, creates a FileStreamSource>> (that requires the schema and the optional partitioning columns)
+
+* `StreamingRelation` is link:spark-sql-streaming-StreamingRelation.adoc#apply[created] (for a `DataSource`)
+
+|===
