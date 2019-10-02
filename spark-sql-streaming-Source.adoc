@@ -1,4 +1,4 @@
-== [[Source]] Source Contract -- Streaming Sources for Micro-Batch Stream Processing
+== [[Source]] Source Contract -- Streaming Sources for Micro-Batch Stream Processing (Data Source API V1)
 
 `Source` is the <<contract, extension>> of the <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource contract>> for <<implementations, streaming sources>> that work with "continuous" stream of data identified by <<spark-sql-streaming-Offset.adoc#, offsets>>.
 

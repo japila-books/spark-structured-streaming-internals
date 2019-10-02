@@ -51,7 +51,7 @@ load(path: String): DataFrame // <1>
 ----
 <1> Explicit `path` (that could also be specified as an <<option, option>>)
 
-"Loads" data as a streaming `DataFrame` (that is internally a logical plan with a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> or <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>> leaf logical operators)
+Creates a streaming `DataFrame` that represents "loading" streaming data (and is internally a logical plan with a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> or <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>> leaf logical operators)
 
 | <<option, option>>
 a|

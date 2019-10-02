@@ -263,10 +263,10 @@
 
 . link:spark-sql-streaming-WatermarkTracker.adoc[WatermarkTracker]
 
-. link:spark-sql-streaming-Source.adoc[Streaming Source (Data Source V1)]
+. link:spark-sql-streaming-Source.adoc[Source]
 .. link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider]
 
-. link:spark-sql-streaming-Sink.adoc[Streaming Sink (Data Source V1)]
+. link:spark-sql-streaming-Sink.adoc[Sink]
 .. link:spark-sql-streaming-StreamSinkProvider.adoc[StreamSinkProvider]
 
 == Continuous Stream Processing (Structured Streaming V2)

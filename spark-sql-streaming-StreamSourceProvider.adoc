@@ -1,6 +1,8 @@
-== [[StreamSourceProvider]] StreamSourceProvider -- Streaming Source Provider
+== [[StreamSourceProvider]] StreamSourceProvider Contract -- Streaming Source Providers for Micro-Batch Stream Processing (Data Source API V1)
 
 `StreamSourceProvider` is the <<contract, contract>> of <<implementations, data source providers>> that can <<createSource, create a streaming source>> for a format (e.g. text file) or system (e.g. Apache Kafka).
+
+`StreamSourceProvider` is part of Data Source API V1 and used in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> only.
 
 [[contract]]
 .StreamSourceProvider Contract
@@ -40,13 +42,11 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ----
 
-Describes a <<spark-sql-streaming-Source.adoc#, streaming source>> with a name and the schema
+The name and schema of the <<spark-sql-streaming-Source.adoc#, streaming source>>
 
-Used exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.adoc#sourceSchema, describe the name and the schema of a streaming source>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>)
+Used exclusively when `DataSource` is requested for <<spark-sql-streaming-DataSource.adoc#sourceSchema, metadata of a streaming source>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>)
 
 |===
-
-NOTE: `StreamSourceProvider` is an experimental contract.
 
 [[implementations]]
 NOTE: <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> is the only known `StreamSourceProvider` in Spark Structured Streaming.

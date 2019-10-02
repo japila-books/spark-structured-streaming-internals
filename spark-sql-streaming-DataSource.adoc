@@ -1,10 +1,6 @@
 == [[DataSource]] DataSource — Pluggable Data Provider Framework
 
-`DataSource` is...FIXME
-
-`DataSource` is <<creating-instance, created>> when...FIXME
-
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSource.html[DataSource -- Pluggable Data Provider Framework]  in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSource.html[DataSource &mdash; Pluggable Data Provider Framework]  in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
 === [[creating-instance]] Creating DataSource Instance
 
@@ -21,16 +17,34 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 `DataSource` initializes the <<internal-properties, internal properties>>.
 
-=== [[sourceSchema]] Describing Name and Schema of Streaming Source -- `sourceSchema` Internal Method
+=== [[sourceSchema]] Generating Metadata of Streaming Source (Data Source API V1) -- `sourceSchema` Internal Method
 
 [source, scala]
 ----
 sourceSchema(): SourceInfo
 ----
 
-`sourceSchema`...FIXME
+`sourceSchema` creates a new instance of the <<providingClass, data source class>> and branches off per the type, e.g. <<sourceSchema-StreamSourceProvider, StreamSourceProvider>>, <<sourceSchema-FileFormat, FileFormat>> and <<sourceSchema-other, other types>>.
 
 NOTE: `sourceSchema` is used exclusively when `DataSource` is requested for the <<sourceInfo, SourceInfo>>.
+
+==== [[sourceSchema-StreamSourceProvider]] StreamSourceProvider
+
+For a <<spark-sql-streaming-StreamSourceProvider.adoc#, StreamSourceProvider>>, `sourceSchema` requests the `StreamSourceProvider` for the <<spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema, name and schema>> (of the <<spark-sql-streaming-Source.adoc#, streaming source>>).
+
+In the end, `sourceSchema` returns the name and the schema as part of `SourceInfo` (with partition columns unspecified).
+
+==== [[sourceSchema-FileFormat]] FileFormat
+
+For a `FileFormat`, `sourceSchema`...FIXME
+
+==== [[sourceSchema-other]] Other Types
+
+For any other data source type, `sourceSchema` simply throws an `UnsupportedOperationException`:
+
+```
+Data source [className] does not support streamed reading
+```
 
 === [[createSource]] Creating Streaming Source (Micro-Batch Stream Processing / Data Source API V1) -- `createSource` Method
 
@@ -114,12 +128,21 @@ NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to <
 a| [[providingClass]] https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html[java.lang.Class] for the <<className, className>> (that can be a fully-qualified class name or an alias of the data source)
 
 | sourceInfo
-a| [[sourceInfo]] `SourceInfo` with the name, the schema, and optional partitioning columns of a source.
+a| [[sourceInfo]]
+
+[source, scala]
+----
+sourceInfo: SourceInfo
+----
+
+Metadata of a <<spark-sql-streaming-Source.adoc#, Source>> with the alias (short name), the schema, and optional partitioning columns
+
+`sourceInfo` is a lazy value and so initialized once (the very first time) when accessed.
 
 Used when:
 
-* `DataSource` <<createSource, creates a FileStreamSource>> (that requires the schema and the optional partitioning columns)
+* `DataSource` is requested to <<createSource, create a source (for a FileFormat data source)>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>)
 
-* `StreamingRelation` is link:spark-sql-streaming-StreamingRelation.adoc#apply[created] (for a `DataSource`)
+* `StreamingRelation` utility is requested for a <<spark-sql-streaming-StreamingRelation.adoc#apply, StreamingRelation>> (when `DataStreamReader` is requested for a <<spark-sql-streaming-DataStreamReader.adoc#load, streaming DataFrame>>)
 
 |===

@@ -39,18 +39,16 @@ rate
 
 NOTE: `StreamingRelation` is link:spark-sql-streaming-StreamExecution.adoc#logicalPlan[resolved] (aka _planned_) to link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] (right after `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[starts running batches]).
 
-=== [[apply]] Creating StreamingRelation for DataSource -- `apply` Factory Method
+=== [[apply]] Creating StreamingRelation for DataSource -- `apply` Object Method
 
 [source, scala]
 ----
 apply(dataSource: DataSource): StreamingRelation
 ----
 
-`apply` <<creating-instance, creates a StreamingRelation>> for the input streaming link:spark-sql-streaming-DataSource.adoc[DataSource] and the link:spark-sql-streaming-DataSource.adoc#sourceInfo[short name and the schema of the streaming source] (behind the `DataSource`).
+`apply` creates a `StreamingRelation` for the given <<spark-sql-streaming-DataSource.adoc#, DataSource>> (that represents a streaming source).
 
-NOTE: `apply` creates a `StreamingRelation` logical operator (for the input link:spark-sql-streaming-DataSource.adoc[DataSource]) that represents a streaming source.
-
-NOTE: `apply` is used exclusively when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.adoc#load[load data from a streaming source to a streaming Dataset].
+NOTE: `apply` is used exclusively when `DataStreamReader` is requested for a <<spark-sql-streaming-DataStreamReader.adoc#load, streaming DataFrame>>.
 
 === [[creating-instance]] Creating StreamingRelation Instance
 
