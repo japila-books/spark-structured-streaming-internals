@@ -40,7 +40,7 @@ createSource(
   metadataPath: String): Source
 ----
 
-`createSource` creates a new instance of the <<providingClass, data source class>> and branches off per the type, e.g. <<createSource-StreamSourceProvider, StreamSourceProvider>>, <<createSource-FileFormat, FileFormat>> and <<createSource-other, other>>.
+`createSource` creates a new instance of the <<providingClass, data source class>> and branches off per the type, e.g. <<createSource-StreamSourceProvider, StreamSourceProvider>>, <<createSource-FileFormat, FileFormat>> and <<createSource-other, other types>>.
 
 NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>.
 
@@ -58,7 +58,7 @@ For a `FileFormat`, `createSource` creates a new <<spark-sql-streaming-FileStrea
 'path' is not specified
 ```
 
-==== [[createSource-other]] Other
+==== [[createSource-other]] Other Types
 
 For any other data source type, `createSource` simply throws an `UnsupportedOperationException`:
 

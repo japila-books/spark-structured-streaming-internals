@@ -23,7 +23,7 @@ NOTE: `StreamingExecutionRelation` is also resolved (aka _planned_) to a link:sp
 * [[source]] link:spark-sql-streaming-Source.adoc[Streaming source]
 * [[output]] Output attributes
 
-=== [[apply]] Creating StreamingExecutionRelation (for MemoryStream Source) -- `apply` Factory Method
+=== [[apply]] Creating StreamingExecutionRelation (based on a Source) -- `apply` Object Method
 
 [source, scala]
 ----
@@ -32,4 +32,4 @@ apply(source: Source): StreamingExecutionRelation
 
 `apply` creates a `StreamingExecutionRelation` for the input `source` and with the attributes of the link:spark-sql-streaming-Source.adoc#schema[schema] of the `source`.
 
-NOTE: `apply` is used exclusively when `MemoryStream` link:spark-sql-streaming-MemoryStream.adoc#creating-instance[is created] (and the link:spark-sql-streaming-MemoryStream.adoc#logicalPlan[logical plan initialized]).
+NOTE: `apply` _seems_ to be used for tests only.

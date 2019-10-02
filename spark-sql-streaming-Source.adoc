@@ -67,6 +67,8 @@ schema: StructType
 
 Schema of the source
 
+NOTE: `schema` _seems_ to be used for tests only and a duplication of <<spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema, StreamSourceProvider.sourceSchema>>.
+
 |===
 
 [[implementations]]
@@ -77,9 +79,9 @@ Schema of the source
 | Description
 
 | <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>
-| [[FileStreamSource]] Used in file-based data sources (`FileFormat`)
+| [[FileStreamSource]] Part of file-based data sources (`FileFormat`)
 
 | <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>
-| [[KafkaSource]] Used in <<spark-sql-streaming-kafka-data-source.adoc#, kafka>> data source
+| [[KafkaSource]] Part of <<spark-sql-streaming-kafka-data-source.adoc#, kafka>> data source
 
 |===
