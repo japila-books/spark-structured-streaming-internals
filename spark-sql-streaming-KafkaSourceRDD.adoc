@@ -1,27 +1,12 @@
 == [[KafkaSourceRDD]] KafkaSourceRDD
 
-`KafkaSourceRDD` is an `RDD` of Kafka's https://kafka.apache.org/0102/javadoc/org/apache/kafka/clients/consumer/ConsumerRecords.html[ConsumerRecords] (with keys and values being collections of bytes, i.e. `Array[Byte]`).
+`KafkaSourceRDD` is an `RDD` of Kafka's https://kafka.apache.org/0102/javadoc/org/apache/kafka/clients/consumer/ConsumerRecords.html[ConsumerRecords] (`RDD[ConsumerRecord[Array[Byte], Array[Byte]]]`) and no parent RDDs.
 
-`KafkaSourceRDD` is created when:
+`KafkaSourceRDD` is <<creating-instance, created>> when:
 
-* `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#buildScan[buildScan]
-* `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#getBatch[getBatch]
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, build a distributed data scan with column pruning>>
 
-=== [[getPreferredLocations]] Placement Preferences of Partition (Preferred Locations) -- `getPreferredLocations` Method
-
-CAUTION: FIXME
-
-=== [[compute]] `compute` Method
-
-CAUTION: FIXME
-
-=== [[getPartitions]] `getPartitions` Method
-
-CAUTION: FIXME
-
-=== [[persist]] `persist` Method
-
-CAUTION: FIXME
+* `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.adoc#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
 
 === [[creating-instance]] Creating KafkaSourceRDD Instance
 
@@ -36,4 +21,81 @@ Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offs
 * [[failOnDataLoss]] Flag to...FIXME
 * [[reuseKafkaConsumer]] Flag to...FIXME
 
-`KafkaSourceRDD` initializes the <<internal-registries, internal registries and counters>>.
+=== [[getPreferredLocations]] Placement Preferences of Partition (Preferred Locations) -- `getPreferredLocations` Method
+
+[source, scala]
+----
+getPreferredLocations(
+  split: Partition): Seq[String]
+----
+
+NOTE: `getPreferredLocations` is part of the `RDD` contract to specify placement preferences.
+
+`getPreferredLocations` converts the given `Partition` to a `KafkaSourceRDDPartition` and...FIXME
+
+=== [[compute]] Computing Partition -- `compute` Method
+
+[source, scala]
+----
+compute(
+  thePart: Partition,
+  context: TaskContext
+): Iterator[ConsumerRecord[Array[Byte], Array[Byte]]]
+----
+
+NOTE: `compute` is part of the `RDD` contract to compute a given partition.
+
+`compute` uses `KafkaDataConsumer` utility to <<spark-sql-streaming-KafkaDataConsumer.adoc#acquire, acquire a cached KafkaDataConsumer>> (for a partition).
+
+`compute` <<resolveRange, resolves the range>> (based on the `offsetRange` of the given partition that is assumed a `KafkaSourceRDDPartition`).
+
+`compute` returns a `NextIterator` so that `getNext` uses the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.adoc#get, get a record>>.
+
+When the beginning and ending offsets (of the offset range) are equal, `compute` prints out the following INFO message to the logs, requests the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.adoc#release, release>> and returns an empty iterator.
+
+```
+Beginning offset [fromOffset] is the same as ending offset skipping [topic] [partition]
+```
+
+`compute` throws an `AssertionError` when the beginning offset (`fromOffset`) is after the ending offset (`untilOffset`):
+
+[options="wrap"]
+----
+Beginning offset [fromOffset] is after the ending offset [untilOffset] for topic [topic] partition [partition]. You either provided an invalid fromOffset, or the Kafka topic has been damaged
+----
+
+=== [[getPartitions]] `getPartitions` Method
+
+[source, scala]
+----
+getPartitions: Array[Partition]
+----
+
+NOTE: `getPartitions` is part of the `RDD` contract to...FIXME.
+
+`getPartitions`...FIXME
+
+=== [[persist]] Persisting RDD -- `persist` Method
+
+[source, scala]
+----
+persist: Array[Partition]
+----
+
+NOTE: `persist` is part of the `RDD` contract to persist an RDD.
+
+`persist`...FIXME
+
+=== [[resolveRange]] `resolveRange` Internal Method
+
+[source, scala]
+----
+resolveRange(
+  consumer: KafkaDataConsumer,
+  range: KafkaSourceRDDOffsetRange
+): KafkaSourceRDDOffsetRange
+----
+
+`resolveRange`...FIXME
+
+NOTE: `resolveRange` is used when...FIXME

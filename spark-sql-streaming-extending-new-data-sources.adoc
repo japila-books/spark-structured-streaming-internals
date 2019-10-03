@@ -10,7 +10,7 @@ Structured Streaming supports two <<spark-sql-streaming-StreamExecution.adoc#, s
 
 <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> supports the new modern Data Source API V2 only with continuous-specific APIs for streaming sources and sinks.
 
-The following are the questions to think of (and answer) while considering development of a new data source. They are supposed to give you a sense of how much work and time it takes as well as what Spark version to support (e.g. 2.2 vs 2.4).
+The following are the questions to think of (and answer) while considering development of a new data source for Structured Streaming. They are supposed to give you a sense of how much work and time it takes as well as what Spark version to support (e.g. 2.2 vs 2.4).
 
 * Data Source API V1
 * Data Source API V2

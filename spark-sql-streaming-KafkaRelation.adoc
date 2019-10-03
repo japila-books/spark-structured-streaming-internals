@@ -3,7 +3,7 @@
 [[schema]]
 `KafkaRelation` represents a *collection of rows* with a <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined schema>> (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
 `KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createRelation, create a BaseRelation>>.
 
@@ -24,12 +24,12 @@ Default: `spark.network.timeout` configuration if set or `120s`
 [[logging]]
 [TIP]
 ====
-Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaRelation` to see what happens inside.
+Enable `ALL` logging levels for `org.apache.spark.sql.kafka010.KafkaRelation` to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaRelation=DEBUG
+log4j.logger.org.apache.spark.sql.kafka010.KafkaRelation=ALL
 ```
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.

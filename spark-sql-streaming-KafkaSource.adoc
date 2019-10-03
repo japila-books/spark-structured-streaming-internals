@@ -25,80 +25,53 @@ image::images/KafkaSource-creating-instance.png[align="center"]
 
 `KafkaSource` also supports batch Datasets.
 
-[[internal-registries]]
-.KafkaSource's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| [[currentPartitionOffsets]] `currentPartitionOffsets`
-| Current partition offsets (as `Map[TopicPartition, Long]`)
-
-Initially `NONE` and set when `KafkaSource` is requested to <<getOffset, get the maximum available offsets>> or <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
-|===
-
 [[logging]]
 [TIP]
 ====
-Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaSource` to see what happens inside.
+Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaSource` to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=DEBUG
+log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
-=== [[rateLimit]] `rateLimit` Internal Method
+=== [[creating-instance]] Creating KafkaSource Instance
+
+`KafkaSource` takes the following to be created:
+
+* [[sqlContext]] link:spark-sql-sqlcontext.adoc[SQLContext]
+* [[kafkaReader]] link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
+* [[executorKafkaParams]] Parameters of executors (reading from Kafka)
+* [[sourceOptions]] Collection of key-value options
+* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] offsets in JSON format)
+* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Starting offsets>> (as defined using <<spark-sql-streaming-kafka-data-source.adoc#startingOffsets, startingOffsets>> option)
+* [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
+
+`KafkaSource` initializes the <<internal-properties, internal properties>>.
+
+=== [[getBatch]] Generating Streaming DataFrame with Records From Kafka for Streaming Micro-Batch -- `getBatch` Method
 
 [source, scala]
 ----
-rateLimit(
-  limit: Long,
-  from: Map[TopicPartition, Long],
-  until: Map[TopicPartition, Long]): Map[TopicPartition, Long]
+getBatch(
+  start: Option[Offset],
+  end: Offset): DataFrame
 ----
 
-`rateLimit` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[fetchEarliestOffsets].
+NOTE: `getBatch` is part of the <<spark-sql-streaming-Source.adoc#getBatch, Source Contract>> to generate a streaming `DataFrame` with data between the start and end <<spark-sql-streaming-Offset.adoc#, offsets>>.
 
-CAUTION: FIXME
+`getBatch` creates a streaming `DataFrame` with a query plan with `LogicalRDD` logical operator to scan data from a <<spark-sql-streaming-KafkaSourceRDD.adoc#, KafkaSourceRDD>>.
 
-NOTE: `rateLimit` is used exclusively when `KafkaSource` <<getOffset, gets available offsets>> (when <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option is specified).
-
-=== [[getSortedExecutorList]] `getSortedExecutorList` Method
-
-CAUTION: FIXME
-
-=== [[reportDataLoss]] `reportDataLoss` Internal Method
-
-CAUTION: FIXME
-
-[NOTE]
-====
-`reportDataLoss` is used when `KafkaSource` does the following:
-
-* <<fetchAndVerify, fetches and verifies specific offsets>>
-* <<getBatch, generates a DataFrame with records from Kafka for a batch>>
-====
-
-=== [[getBatch]] Generating DataFrame with Records From Kafka for Streaming Batch -- `getBatch` Method
-
-[source, scala]
-----
-getBatch(start: Option[Offset], end: Offset): DataFrame
-----
-
-NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getBatch[Source Contract].
-
-`getBatch` initializes <<initialPartitionOffsets, initial partition offsets>> (unless initialized already).
+Internally, `getBatch` initializes <<initialPartitionOffsets, initial partition offsets>> (unless initialized already).
 
 You should see the following INFO message in the logs:
 
 ```
-INFO KafkaSource: GetBatch called with start = [start], end = [end]
+GetBatch called with start = [start], end = [end]
 ```
 
 `getBatch` requests `KafkaSourceOffset` for link:spark-sql-streaming-KafkaSourceOffset.adoc#getPartitionOffsets[end partition offsets] for the input `end` offset (known as `untilPartitionOffsets`).
@@ -116,7 +89,7 @@ Cannot find earliest offsets of [partitions]. Some data may have been missed
 You should see the following INFO message in the logs:
 
 ```
-INFO KafkaSource: Partitions added: [partitionOffsets]
+Partitions added: [newPartitionOffsets]
 ```
 
 `getBatch` <<reportDataLoss, reports a data loss>> if the new partitions don't have their offsets `0`.
@@ -134,7 +107,7 @@ Added partition [partition] starts from [offset] instead of 0. Some data may hav
 You should see the following DEBUG message in the logs:
 
 ```
-DEBUG KafkaSource: TopicPartitions: [comma-separated topicPartitions]
+TopicPartitions: [topicPartitions]
 ```
 
 `getBatch` <<getSortedExecutorList, gets the executors>> (sorted by `executorId` and `host` of the registered block managers).
@@ -144,7 +117,7 @@ IMPORTANT: That is when `getBatch` goes very low-level to allow for cached `Kafk
 You should see the following DEBUG message in the logs:
 
 ```
-DEBUG KafkaSource: Sorted executors: [comma-separated sortedExecutors]
+Sorted executors: [sortedExecutors]
 ```
 
 `getBatch` creates a `KafkaSourceRDDOffsetRange` per `TopicPartition`.
@@ -162,12 +135,12 @@ IMPORTANT: `getBatch` creates a `KafkaSourceRDD` with `reuseKafkaConsumer` flag 
 You should see the following INFO message in the logs:
 
 ```
-INFO KafkaSource: GetBatch generating RDD of offset range: [comma-separated offsetRanges sorted by topicPartition]
+GetBatch generating RDD of offset range: [offsetRanges]
 ```
 
 `getBatch` sets <<currentPartitionOffsets, currentPartitionOffsets>> if it was empty (which is when...FIXME)
 
-In the end, `getBatch` creates a `DataFrame` from the RDD of `InternalRow` and <<schema, schema>>.
+In the end, `getBatch` creates a streaming `DataFrame` for the `KafkaSourceRDD` and the <<schema, schema>>.
 
 === [[getOffset]] Fetching Offsets (From Metadata Log or Kafka Directly) -- `getOffset` Method
 
@@ -356,20 +329,6 @@ DEBUG KafkaSource: GetOffset: [offsets]
 
 In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc#creating-instance[KafkaSourceOffset] with `offsets` (as `Map[TopicPartition, Long]`).
 
-=== [[creating-instance]] Creating KafkaSource Instance
-
-`KafkaSource` takes the following when created:
-
-* [[sqlContext]] link:spark-sql-sqlcontext.adoc[SQLContext]
-* [[kafkaReader]] link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
-* [[executorKafkaParams]] Parameters of executors (reading from Kafka)
-* [[sourceOptions]] Collection of key-value options
-* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] offsets in JSON format)
-* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Starting offsets>> (as defined using <<spark-sql-streaming-kafka-data-source.adoc#startingOffsets, startingOffsets>> option)
-* [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
-
-`KafkaSource` initializes the <<internal-registries, internal registries and counters>>.
-
 === [[fetchAndVerify]] Fetching and Verifying Specific Offsets -- `fetchAndVerify` Internal Method
 
 [source, scala]
@@ -433,7 +392,9 @@ Initial offsets: [offsets]
 
 [source, scala]
 ----
-serialize(metadata: KafkaSourceOffset, out: OutputStream): Unit
+serialize(
+  metadata: KafkaSourceOffset,
+  out: OutputStream): Unit
 ----
 
 NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to...FIXME.
@@ -447,3 +408,61 @@ NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#seri
 `serialize` then requests the `KafkaSourceOffset` for a JSON-serialized representation and the `BufferedWriter` to write it out.
 
 In the end, `serialize` requests the `BufferedWriter` to flush (the underlying stream).
+
+=== [[rateLimit]] `rateLimit` Internal Method
+
+[source, scala]
+----
+rateLimit(
+  limit: Long,
+  from: Map[TopicPartition, Long],
+  until: Map[TopicPartition, Long]): Map[TopicPartition, Long]
+----
+
+`rateLimit` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[fetchEarliestOffsets].
+
+CAUTION: FIXME
+
+NOTE: `rateLimit` is used exclusively when `KafkaSource` <<getOffset, gets available offsets>> (when <<maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option is specified).
+
+=== [[getSortedExecutorList]] `getSortedExecutorList` Method
+
+CAUTION: FIXME
+
+=== [[reportDataLoss]] `reportDataLoss` Internal Method
+
+CAUTION: FIXME
+
+[NOTE]
+====
+`reportDataLoss` is used when `KafkaSource` does the following:
+
+* <<fetchAndVerify, fetches and verifies specific offsets>>
+* <<getBatch, generates a DataFrame with records from Kafka for a batch>>
+====
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| currentPartitionOffsets
+| [[currentPartitionOffsets]] Current partition offsets (as `Map[TopicPartition, Long]`)
+
+Initially `NONE` and set when `KafkaSource` is requested to <<getOffset, get the maximum available offsets>> or <<getBatch, generate a DataFrame with records from Kafka for a batch>>.
+
+| pollTimeoutMs
+a| [[pollTimeoutMs]]
+
+| sc
+a| [[sc]] Spark Core's `SparkContext` (of the <<sqlContext, SQLContext>>)
+
+Used when:
+
+* <<getBatch, Generating a DataFrame with records from Kafka for a streaming micro-batch>> (and creating a <<spark-sql-streaming-KafkaSourceRDD.adoc#, KafkaSourceRDD>>)
+
+* Initializing the <<pollTimeoutMs, pollTimeoutMs>> internal property
+
+|===

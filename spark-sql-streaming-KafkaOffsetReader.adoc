@@ -32,62 +32,30 @@ Default: `1000`
 [[kafkaSchema]]
 `KafkaOffsetReader` defines the <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined fixed schema>>.
 
-[[internal-registries]]
-.KafkaOffsetReader's Internal Registries and Counters
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| _consumer
-a| [[_consumer]] Kafka's https://kafka.apache.org/21/javadoc/org/apache/kafka/clients/consumer/Consumer.html[Consumer] (`Consumer[Array[Byte], Array[Byte]]`)
-
-<<createConsumer, Initialized>> when `KafkaOffsetReader` is <<creating-instance, created>>.
-
-Used when `KafkaOffsetReader`:
-
-* <<fetchTopicPartitions, fetchTopicPartitions>>
-* <<fetchSpecificOffsets, fetches offsets for selected TopicPartitions>>
-* <<fetchEarliestOffsets, fetchEarliestOffsets>>
-* <<fetchLatestOffsets, fetchLatestOffsets>>
-* <<resetConsumer, resetConsumer>>
-* <<close, is closed>>
-
-| execContext
-a| [[execContext]] https://www.scala-lang.org/api/2.12.8/scala/concurrent/ExecutionContextExecutorService.html[scala.concurrent.ExecutionContextExecutorService]
-
-| groupId
-a| [[groupId]]
-
-| kafkaReaderThread
-a| [[kafkaReaderThread]] https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html[java.util.concurrent.ExecutorService]
-
-| maxOffsetFetchAttempts
-a| [[maxOffsetFetchAttempts]]
-
-| nextId
-a| [[nextId]]
-
-Initially `0`
-
-| offsetFetchAttemptIntervalMs
-a| [[offsetFetchAttemptIntervalMs]]
-
-|===
-
 [[logging]]
 [TIP]
 ====
-Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaOffsetReader` to see what happens inside.
+Enable `ALL` logging levels for `org.apache.spark.sql.kafka010.KafkaOffsetReader` to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=DEBUG
+log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=ALL
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
+
+=== [[creating-instance]] Creating KafkaOffsetReader Instance
+
+`KafkaOffsetReader` takes the following to be created:
+
+* [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
+* [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
+* [[readerOptions]] Options (as name-value pairs)
+* [[driverGroupIdPrefix]] Prefix of the group ID
+
+`KafkaOffsetReader` initializes the <<internal-properties, internal properties>>.
 
 === [[nextGroupId]] `nextGroupId` Internal Method
 
@@ -158,17 +126,6 @@ withRetriesWithoutInterrupt(
 `withRetriesWithoutInterrupt`...FIXME
 
 NOTE: `withRetriesWithoutInterrupt` is used when...FIXME
-
-=== [[creating-instance]] Creating KafkaOffsetReader Instance
-
-`KafkaOffsetReader` takes the following when created:
-
-* [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
-* [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
-* [[readerOptions]] Options (as name-value pairs)
-* [[driverGroupIdPrefix]] Prefix of the group ID
-
-`KafkaOffsetReader` initializes the <<internal-registries, internal registries and counters>>.
 
 === [[fetchSpecificOffsets]] Fetching Offsets for Selected TopicPartitions -- `fetchSpecificOffsets` Method
 
@@ -282,3 +239,46 @@ toString(): String
 NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()++[java.lang.Object] Contract for a string representation of the object.
 
 `toString`...FIXME
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| _consumer
+a| [[_consumer]] Kafka's https://kafka.apache.org/21/javadoc/org/apache/kafka/clients/consumer/Consumer.html[Consumer] (`Consumer[Array[Byte], Array[Byte]]`)
+
+<<createConsumer, Initialized>> when `KafkaOffsetReader` is <<creating-instance, created>>.
+
+Used when `KafkaOffsetReader`:
+
+* <<fetchTopicPartitions, fetchTopicPartitions>>
+* <<fetchSpecificOffsets, fetches offsets for selected TopicPartitions>>
+* <<fetchEarliestOffsets, fetchEarliestOffsets>>
+* <<fetchLatestOffsets, fetchLatestOffsets>>
+* <<resetConsumer, resetConsumer>>
+* <<close, is closed>>
+
+| execContext
+a| [[execContext]] https://www.scala-lang.org/api/2.12.8/scala/concurrent/ExecutionContextExecutorService.html[scala.concurrent.ExecutionContextExecutorService]
+
+| groupId
+a| [[groupId]]
+
+| kafkaReaderThread
+a| [[kafkaReaderThread]] https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html[java.util.concurrent.ExecutorService]
+
+| maxOffsetFetchAttempts
+a| [[maxOffsetFetchAttempts]]
+
+| nextId
+a| [[nextId]]
+
+Initially `0`
+
+| offsetFetchAttemptIntervalMs
+a| [[offsetFetchAttemptIntervalMs]]
+
+|===

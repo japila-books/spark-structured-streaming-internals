@@ -70,7 +70,7 @@ NOTE: `resolveRange` is used exclusively when `KafkaMicroBatchInputPartitionRead
 | Description
 
 | consumer
-a| [[consumer]] `KafkaDataConsumer` for the partition (per <<offsetRange, KafkaOffsetRange>>)
+a| [[consumer]] <<spark-sql-streaming-KafkaDataConsumer.adoc#, KafkaDataConsumer>> for the partition (per <<offsetRange, KafkaOffsetRange>>)
 
 Used in <<next, next>>, <<close, close>>, and <<resolveRange, resolveRange>>
 

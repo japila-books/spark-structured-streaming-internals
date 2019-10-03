@@ -183,6 +183,7 @@
 . link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset]
 . link:spark-sql-streaming-KafkaSink.adoc[KafkaSink]
 . link:spark-sql-streaming-KafkaOffsetRangeLimit.adoc[KafkaOffsetRangeLimit]
+. link:spark-sql-streaming-KafkaDataConsumer.adoc[KafkaDataConsumer]
 
 . link:spark-sql-streaming-KafkaMicroBatchReader.adoc[KafkaMicroBatchReader]
 .. link:spark-sql-streaming-KafkaOffsetRangeCalculator.adoc[KafkaOffsetRangeCalculator]
