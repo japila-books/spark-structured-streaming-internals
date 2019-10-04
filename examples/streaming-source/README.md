@@ -8,6 +8,8 @@ The project contains the sources of a `demo` streaming data source with the foll
 
 Among the other features are:
 
+* Resuming execution from `checkpointLocation`
+    * Restarting query preserves the latest batch and offset processed (committed)
 * `SparkContext.runJob` to simulate requesting remote data for `Source.getBatch`
     * Use web UI to see the jobs with the same description as the micro-batch (cf. `StreamExecution.getBatchDescriptionString`)
 

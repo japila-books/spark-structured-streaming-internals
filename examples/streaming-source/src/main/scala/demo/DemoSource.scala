@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.execution.datasources.DataSource
-import org.apache.spark.sql.execution.streaming.{LongOffset, Offset, Source, StreamingRelation}
+import org.apache.spark.sql.execution.streaming.{LongOffset, Offset, SerializedOffset, Source, StreamingRelation}
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SQLContext, SparkSession, UsePrivateSqlHack}
 
@@ -59,14 +59,25 @@ class DemoSource(sqlContext: SQLContext) extends Source {
    */
   override def getBatch(start: Option[Offset], end: Offset): DataFrame = {
     println(s">>> DemoSource.getBatch($start, $end)")
-    val from = start.map { case o: LongOffset => o.offset }.getOrElse(0L)
-    val to = end.asInstanceOf[LongOffset].offset
+    // Offset is assumed LongOffset
+    // but could also be SerializedOffset from checkpoint (when restarted)
+    val from = start.flatMap(LongOffset.convert).map(_.offset).getOrElse(0L)
+    val to = LongOffset.convert(end).map(_.offset).getOrElse(0L)
+    println(s">>> >>> Offsets: $from to $to")
+
+    if (_offset.isEmpty) {
+      println(">>> >>> The query is restarted from checkpoint")
+      println(">>> >>> and for some reason getBatch is called before getOffset")
+      println(s">>> >>> The source has to account for that and store the end offset = $to")
+      advanceOffset(to)
+    }
 
     // A Spark job for demonstration purposes
     // MicroBatchExecution engine sets StreamExecution.getBatchDescriptionString
     // So any Spark job from any source gets the same description, e.g in web UI
     val sc = sqlContext.sparkContext
     val numPartitions = (to - from).toInt
+    println(s">>> >>> numPartitions = $numPartitions")
     val rdd = sc.textFile("build.sbt", numPartitions)
     val f: (TaskContext, Iterator[String]) => Int = { (ctx, ss) =>
       val r = ss.size
@@ -119,7 +130,7 @@ class DemoSource(sqlContext: SQLContext) extends Source {
     ???
   }
 
-  private def advanceOffset(progress: Int): Unit = {
+  private def advanceOffset(progress: Long): Unit = {
     _offset.map { off =>
       val newOff = off + progress
       println(s">>> >>> Advancing offset from $off to $newOff")

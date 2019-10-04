@@ -27,6 +27,7 @@ object Main extends App {
     .queryName("demo")
     .format("console")
     .trigger(Trigger.ProcessingTime(5, TimeUnit.SECONDS))
+    .option("checkpointLocation", "target/checkpointLocation")
     .start
   stream.awaitTermination()
 }
