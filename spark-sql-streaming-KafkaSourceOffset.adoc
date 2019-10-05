@@ -1,20 +1,30 @@
 == [[KafkaSourceOffset]] KafkaSourceOffset
 
-`KafkaSourceOffset` is an <<spark-sql-streaming-Offset.adoc#, Offset>> that...FIXME
+`KafkaSourceOffset` is a custom <<spark-sql-streaming-Offset.adoc#, Offset>> for <<spark-sql-streaming-kafka-data-source.adoc#, kafka data source>>.
 
-[[partitionToOffsets]]
-[[creating-instance]]
-`KafkaSourceOffset` takes a collection of Kafka `TopicPartitions` and their offsets when created.
+`KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
 
-=== [[creating-instance]] Creating KafkaSourceOffset Instance
+* `KafkaContinuousReader` is requested to <<spark-sql-streaming-KafkaContinuousReader.adoc#setStartOffset, setStartOffset>>, <<spark-sql-streaming-KafkaContinuousReader.adoc#deserializeOffset, deserializeOffset>>, and <<spark-sql-streaming-KafkaContinuousReader.adoc#mergeOffsets, mergeOffsets>>
 
-CAUTION: FIXME
+* `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getStartOffset, getStartOffset>>, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getEndOffset, getEndOffset>>, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#deserializeOffset, deserializeOffset>>, and <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getOrCreateInitialPartitionOffsets, getOrCreateInitialPartitionOffsets>>
 
-=== [[getPartitionOffsets]] Getting Partition Offsets -- `getPartitionOffsets` Method
+* `KafkaOffsetReader` is requested to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchSpecificOffsets, fetchSpecificOffsets>>
+
+* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initial partition offsets (of 0th batch)>> and <<spark-sql-streaming-KafkaSource.adoc#getOffset, getOffset>>
+
+* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#deserialize, deserialize a KafkaSourceOffset (from an InputStream)>>
+
+* `KafkaSourceOffset` is requested for <<getPartitionOffsets, partition offsets>>
+
+[[creating-instance]][[partitionToOffsets]]
+`KafkaSourceOffset` takes a collection of Kafka `TopicPartitions` with offsets to be created.
+
+=== [[getPartitionOffsets]] Partition Offsets -- `getPartitionOffsets` Method
 
 [source, scala]
 ----
-getPartitionOffsets(offset: Offset): Map[TopicPartition, Long]
+getPartitionOffsets(
+  offset: Offset): Map[TopicPartition, Long]
 ----
 
 `getPartitionOffsets` takes <<partitionToOffsets, KafkaSourceOffset.partitionToOffsets>> from `offset`.
@@ -29,4 +39,46 @@ If however `offset` is `SerializedOffset`, `getPartitionOffsets` deserializes th
 Invalid conversion from offset of [class] to KafkaSourceOffset
 ```
 
-NOTE: `getPartitionOffsets` is used exclusively when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#getBatch[generates a DataFrame with records from Kafka for a batch].
+[NOTE]
+====
+`getPartitionOffsets` is used when:
+
+* `KafkaContinuousReader` is requested to <<spark-sql-streaming-KafkaContinuousReader.adoc#planInputPartitions, planInputPartitions>>
+
+* `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.adoc#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
+====
+
+=== [[json]] JSON-Encoded Offset -- `json` Method
+
+[source, scala]
+----
+json: String
+----
+
+NOTE: `json` is part of the <<spark-sql-streaming-Offset.adoc#json, Offset Contract>> for a JSON-encoded offset.
+
+`json`...FIXME
+
+=== [[apply]] Creating KafkaSourceOffset Instance -- `apply` Utility Method
+
+[source, scala]
+----
+apply(
+  offsetTuples: (String, Int, Long)*): KafkaSourceOffset // <1>
+apply(
+  offset: SerializedOffset): KafkaSourceOffset
+----
+<1> Used in tests only
+
+`apply`...FIXME
+
+[NOTE]
+====
+`apply` is used when:
+
+* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#deserialize, deserialize a KafkaSourceOffset (from an InputStream)>>
+
+* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initial partition offsets (of 0th batch)>>
+
+* `KafkaSourceOffset` is requested to <<getPartitionOffsets, getPartitionOffsets>>
+====

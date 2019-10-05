@@ -12,39 +12,15 @@
 
 `KafkaMicroBatchReader` uses the <<executorKafkaParams, Kafka properties for executors>> to create <<spark-sql-streaming-KafkaMicroBatchInputPartition.adoc#, KafkaMicroBatchInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
 
-[[internal-registries]]
-.KafkaMicroBatchReader's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| endPartitionOffsets
-a| [[endPartitionOffsets]] Ending offsets for the assigned partitions (`Map[TopicPartition, Long]`)
-
-Used when...FIXME
-
-| rangeCalculator
-a| [[rangeCalculator]] <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#, KafkaOffsetRangeCalculator>> (for the given <<options, DataSourceOptions>>)
-
-Used exclusively when `KafkaMicroBatchReader` is requested to <<planInputPartitions, planInputPartitions>> (to calculate offset ranges)
-
-| startPartitionOffsets
-a| [[startPartitionOffsets]] Starting offsets for the assigned partitions (`Map[TopicPartition, Long]`)
-
-Used when...FIXME
-
-|===
-
 [[logging]]
 [TIP]
 ====
-Enable `WARN`, `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaMicroBatchReader` to see what happens inside.
+Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaMicroBatchReader` to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaMicroBatchReader=DEBUG
+log4j.logger.org.apache.spark.sql.kafka010.KafkaMicroBatchReader=ALL
 ```
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
@@ -137,4 +113,69 @@ getOrCreateInitialPartitionOffsets(): PartitionOffsetMap
 
 `getOrCreateInitialPartitionOffsets`...FIXME
 
-NOTE: `getOrCreateInitialPartitionOffsets` is used when...FIXME
+NOTE: `getOrCreateInitialPartitionOffsets` is used exclusively for the <<initialPartitionOffsets, initialPartitionOffsets>> internal registry.
+
+=== [[getStartOffset]] `getStartOffset` Method
+
+[source, scala]
+----
+getStartOffset: Offset
+----
+
+NOTE: `getStartOffset` is part of the <<spark-sql-streaming-MicroBatchReader.adoc#getStartOffset, MicroBatchReader Contract>> to get the start (beginning) <<spark-sql-streaming-Offset.adoc#, offsets>>.
+
+`getStartOffset`...FIXME
+
+=== [[getEndOffset]] `getEndOffset` Method
+
+[source, scala]
+----
+getEndOffset: Offset
+----
+
+NOTE: `getEndOffset` is part of the <<spark-sql-streaming-MicroBatchReader.adoc#getEndOffset, MicroBatchReader Contract>> to get the end <<spark-sql-streaming-Offset.adoc#, offsets>>.
+
+`getEndOffset`...FIXME
+
+=== [[deserializeOffset]] `deserializeOffset` Method
+
+[source, scala]
+----
+deserializeOffset(json: String): Offset
+----
+
+NOTE: `deserializeOffset` is part of the <<spark-sql-streaming-MicroBatchReader.adoc#deserializeOffset, MicroBatchReader Contract>> to deserialize an <<spark-sql-streaming-Offset.adoc#, offset>> (from JSON format).
+
+`deserializeOffset`...FIXME
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| endPartitionOffsets
+a| [[endPartitionOffsets]] Ending offsets for the assigned partitions (`Map[TopicPartition, Long]`)
+
+Used when...FIXME
+
+| initialPartitionOffsets
+a| [[initialPartitionOffsets]]
+
+[source, scala]
+----
+initialPartitionOffsets: Map[TopicPartition, Long]
+----
+
+| rangeCalculator
+a| [[rangeCalculator]] <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#, KafkaOffsetRangeCalculator>> (for the given <<options, DataSourceOptions>>)
+
+Used exclusively when `KafkaMicroBatchReader` is requested to <<planInputPartitions, planInputPartitions>> (to calculate offset ranges)
+
+| startPartitionOffsets
+a| [[startPartitionOffsets]] Starting offsets for the assigned partitions (`Map[TopicPartition, Long]`)
+
+Used when...FIXME
+
+|===

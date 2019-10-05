@@ -43,3 +43,39 @@ planInputPartitions(): java.util.List[InputPartition[InternalRow]]
 NOTE: `planInputPartitions` is part of the `DataSourceReader` contract to...FIXME.
 
 `planInputPartitions`...FIXME
+
+=== [[setStartOffset]] `setStartOffset` Method
+
+[source, java]
+----
+setStartOffset(
+  start: Optional[Offset]): Unit
+----
+
+NOTE: `setStartOffset` is part of the <<spark-sql-streaming-ContinuousReader.adoc#setStartOffset, ContinuousReader Contract>> to...FIXME.
+
+`setStartOffset`...FIXME
+
+=== [[deserializeOffset]] `deserializeOffset` Method
+
+[source, java]
+----
+deserializeOffset(
+  json: String): Offset
+----
+
+NOTE: `deserializeOffset` is part of the <<spark-sql-streaming-ContinuousReader.adoc#deserializeOffset, ContinuousReader Contract>> to...FIXME.
+
+`deserializeOffset`...FIXME
+
+=== [[mergeOffsets]] `mergeOffsets` Method
+
+[source, java]
+----
+mergeOffsets(
+  offsets: Array[PartitionOffset]): Offset
+----
+
+NOTE: `mergeOffsets` is part of the <<spark-sql-streaming-ContinuousReader.adoc#mergeOffsets, ContinuousReader Contract>> to...FIXME.
+
+`mergeOffsets`...FIXME

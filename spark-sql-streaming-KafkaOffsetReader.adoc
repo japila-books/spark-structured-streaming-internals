@@ -35,7 +35,7 @@ Default: `1000`
 [[logging]]
 [TIP]
 ====
-Enable `ALL` logging levels for `org.apache.spark.sql.kafka010.KafkaOffsetReader` to see what happens inside.
+Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaOffsetReader` to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 

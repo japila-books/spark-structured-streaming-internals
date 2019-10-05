@@ -314,7 +314,16 @@ Starting Trigger Calculation
 
 |===
 
-NOTE: `startTrigger` is used exclusively when `StreamExecution` starts link:spark-sql-streaming-StreamExecution.adoc#runStream[running batches] (as part of link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] executing a batch runner).
+[NOTE]
+====
+`startTrigger` is used when:
+
+* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>> (at the <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-startTrigger, beginning of every trigger>>)
+
+* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run an activated streaming query>> (at the beginning of every trigger)
+
+`StreamExecution` starts link:spark-sql-streaming-StreamExecution.adoc#runStream[running batches] (as part of link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] executing a batch runner).
+====
 
 === [[finishTrigger]] Finishing Up Streaming Batch (Trigger) and Generating StreamingQueryProgress -- `finishTrigger` Method
 
@@ -553,6 +562,19 @@ Default: `-1L`
 
 | currentTriggerStartOffsets
 a| [[currentTriggerStartOffsets]]
+
+[source, scala]
+----
+currentTriggerStartOffsets: Map[BaseStreamingSource, String]
+----
+
+Start offsets (in <<spark-sql-streaming-Offset.adoc#json, JSON format>>) per <<spark-sql-streaming-BaseStreamingSource.adoc#, source>>
+
+Used exclusively when <<finishTrigger, finishing up a streaming batch (trigger) and generating StreamingQueryProgress>> (for a <<spark-sql-streaming-SourceProgress.adoc#, SourceProgress>>)
+
+Reset (`null`) when <<startTrigger, initializing a query progress for a new trigger>>
+
+Initialized when <<recordTriggerOffsets, recording trigger offsets (StreamProgress)>>
 
 | currentTriggerStartTimestamp
 a| [[currentTriggerStartTimestamp]] Timestamp of when the current batch/trigger has started

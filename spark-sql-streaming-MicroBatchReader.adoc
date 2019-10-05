@@ -31,7 +31,7 @@ a| [[deserializeOffset]]
 Offset deserializeOffset(String json)
 ----
 
-Deserializes the <<spark-sql-streaming-Offset.adoc#, offset>> (from JSON format)
+Deserializes <<spark-sql-streaming-Offset.adoc#, offset>> (from JSON format)
 
 Used when...FIXME
 
@@ -43,7 +43,7 @@ a| [[getEndOffset]]
 Offset getEndOffset()
 ----
 
-End <<spark-sql-streaming-Offset.adoc#, offset>> for this reader
+End <<spark-sql-streaming-Offset.adoc#, offset>> of this reader
 
 Used when...FIXME
 
@@ -54,6 +54,8 @@ a| [[getStartOffset]]
 ----
 Offset getStartOffset()
 ----
+
+Start (beginning) <<spark-sql-streaming-Offset.adoc#, offsets>> of this reader
 
 Used when...FIXME
 
