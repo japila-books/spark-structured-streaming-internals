@@ -114,10 +114,11 @@ a| [[values]]
 
 [source, scala]
 ----
-values(store: StateStore): Iterator[UnsafeRow]
+values(
+  store: StateStore): Iterator[UnsafeRow]
 ----
 
-Returns all the values in the <<spark-sql-streaming-StateStore.adoc#, state store>>
+All values in the <<spark-sql-streaming-StateStore.adoc#, state store>>
 
 Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
 
