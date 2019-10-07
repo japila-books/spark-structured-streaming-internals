@@ -9,7 +9,6 @@ The following demo shows the internals of <<spark-sql-streaming-FlatMapGroupsWit
 val numShufflePartitions = 1
 import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
 spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
-
 assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
 
 // Define event "format"

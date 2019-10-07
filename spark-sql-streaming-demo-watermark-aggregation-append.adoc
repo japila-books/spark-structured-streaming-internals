@@ -1,6 +1,8 @@
 == Demo: Streaming Watermark with Aggregation in Append Output Mode
 
-The following demo shows the internals of <<spark-sql-streaming-watermark.adoc#, streaming watermark>> with a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, append>> output mode.
+The following demo shows the behaviour and the internals of <<spark-sql-streaming-watermark.adoc#, streaming watermark>> with a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, Append>> output mode.
+
+The demo also shows the behaviour and the internals of <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator in <<spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append, Append output mode>>.
 
 [source, scala]
 ----
@@ -9,7 +11,6 @@ The following demo shows the internals of <<spark-sql-streaming-watermark.adoc#,
 val numShufflePartitions = 1
 import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
 spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
-
 assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
 
 // Define event "format"
@@ -38,10 +39,15 @@ root
  |-- batch: long (nullable = false)
 */
 
+// Streaming aggregation using groupBy operator to demo StateStoreSaveExec operator
+// Define required watermark for late events for Append output mode
+
 import scala.concurrent.duration._
 val delayThreshold = 10.seconds
+val eventTime = "time"
+
 val valuesWatermarked = values
-  .withWatermark(eventTime = "time", delayThreshold.toString) // defines watermark (before groupBy!)
+  .withWatermark(eventTime, delayThreshold.toString) // defines watermark (before groupBy!)
 
 // EventTimeWatermark logical operator is planned as EventTimeWatermarkExec physical operator
 // Note that as a physical operator EventTimeWatermarkExec shows itself without the Exec suffix
@@ -55,7 +61,7 @@ EventTimeWatermark time#3: timestamp, interval 10 seconds
 val windowDuration = 5.seconds
 import org.apache.spark.sql.functions.window
 val countsPer5secWindow = valuesWatermarked
-  .groupBy(window($"time", windowDuration.toString) as "sliding_window")
+  .groupBy(window(col(eventTime), windowDuration.toString) as "sliding_window")
   .agg(collect_list("batch") as "batches", collect_list("value") as "values")
 
 countsPer5secWindow.printSchema
@@ -68,6 +74,28 @@ root
  |    |-- element: long (containsNull = true)
  |-- values: array (nullable = true)
  |    |-- element: long (containsNull = true)
+*/
+
+// valuesPerGroupWindowed is a streaming Dataset with just one source
+// It knows nothing about output mode or watermark yet
+// That's why StatefulOperatorStateInfo is generic
+// and no batch-specific values are printed out
+// That will be available after the first streaming batch
+// Use sq.explain to know the runtime-specific values
+countsPer5secWindow.explain
+/**
+== Physical Plan ==
+ObjectHashAggregate(keys=[window#23-T10000ms], functions=[collect_list(batch#5L, 0, 0), collect_list(value#4L, 0, 0)])
++- StateStoreSave [window#23-T10000ms], state info [ checkpoint = <unknown>, runId = 14d3a62d-2ac6-4825-a228-c5f327eb5a50, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
+   +- ObjectHashAggregate(keys=[window#23-T10000ms], functions=[merge_collect_list(batch#5L, 0, 0), merge_collect_list(value#4L, 0, 0)])
+      +- StateStoreRestore [window#23-T10000ms], state info [ checkpoint = <unknown>, runId = 14d3a62d-2ac6-4825-a228-c5f327eb5a50, opId = 0, ver = 0, numPartitions = 1], 2
+         +- ObjectHashAggregate(keys=[window#23-T10000ms], functions=[merge_collect_list(batch#5L, 0, 0), merge_collect_list(value#4L, 0, 0)])
+            +- Exchange hashpartitioning(window#23-T10000ms, 1)
+               +- ObjectHashAggregate(keys=[window#23-T10000ms], functions=[partial_collect_list(batch#5L, 0, 0), partial_collect_list(value#4L, 0, 0)])
+                  +- *(1) Project [named_struct(start, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 0), LongType, TimestampType), end, precisetimestampconversion(((((CASE WHEN (cast(CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) as double) = (cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) THEN (CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) + 1) ELSE CEIL((cast((precisetimestampconversion(time#3-T10000ms, TimestampType, LongType) - 0) as double) / 5000000.0)) END + 0) - 1) * 5000000) + 5000000), LongType, TimestampType)) AS window#23-T10000ms, value#4L, batch#5L]
+                     +- *(1) Filter isnotnull(time#3-T10000ms)
+                        +- EventTimeWatermark time#3: timestamp, interval 10 seconds
+                           +- StreamingRelation MemoryStream[time#3,value#4L,batch#5L], [time#3, value#4L, batch#5L]
 */
 
 val queryName = "watermark_demo"
@@ -87,13 +115,15 @@ if (Files.exists(path)) {
 }
 
 // FIXME Use foreachBatch for batchId and the output Dataset
-import org.apache.spark.sql.streaming.OutputMode.Append
+// Start the query and hence StateStoreSaveExec
+import scala.concurrent.duration._
+import org.apache.spark.sql.streaming.OutputMode
 val streamingQuery = countsPer5secWindow
   .writeStream
   .format("memory")
   .queryName(queryName)
   .option("checkpointLocation", checkpointLocation)
-  .outputMode(Append)
+  .outputMode(OutputMode.Append) // <-- Use Append output mode
   .start
 
 assert(streamingQuery.status.message == "Waiting for data to arrive")
@@ -128,6 +158,20 @@ val batch = Seq(
   Event(15, 2, batch = 1))
 events.addData(batch)
 streamingQuery.processAllAvailable()
+
+println(streamingQuery.lastProgress.stateOperators(0).prettyJson)
+/**
+{
+  "numRowsTotal" : 1,
+  "numRowsUpdated" : 0,
+  "memoryUsedBytes" : 1054,
+  "customMetrics" : {
+    "loadedMapCacheHitCount" : 4,
+    "loadedMapCacheMissCount" : 0,
+    "stateOnCurrentVersionSizeBytes" : 414
+  }
+}
+*/
 
 val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
 val currentWatermarkMs = toMillis(currentWatermark)

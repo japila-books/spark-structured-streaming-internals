@@ -167,7 +167,7 @@ For <<spark-sql-streaming-OutputMode.adoc#Append, Append>> output mode, `doExecu
 
 1. Creates an iterator that <<spark-sql-streaming-StateStore.adoc#remove, removes the late rows from the state store>> when requested the next row and in the end <<spark-sql-streaming-StateStore.adoc#commit, commits the state updates>>
 
-TIP: Refer to <<spark-sql-streaming-StateStoreSaveExec-Append.adoc#, Demo: StateStoreSaveExec with Append Output Mode>> for an example of `StateStoreSaveExec` with `Append` output mode.
+TIP: Refer to <<spark-sql-streaming-demo-watermark-aggregation-append.adoc#, Demo: Streaming Watermark with Aggregation in Append Output Mode>> for an example of `StateStoreSaveExec` with `Append` output mode.
 
 CAUTION: FIXME When is "Filtering state store on:" printed out?
 
