@@ -43,7 +43,7 @@ trait SparkStreamsApp extends App {
 
   def pause() = {
     println("Pause processing")
-    println("It is so you have time exploring logs and web UI @ http://localhost:4040 ")
+    println("It is so you have time exploring logs and web UI @ http://localhost:4040 (FIXME: the port)")
     println("Press ENTER to continue...")
     val input = new BufferedReader(new InputStreamReader(System.in))
     input.readLine()

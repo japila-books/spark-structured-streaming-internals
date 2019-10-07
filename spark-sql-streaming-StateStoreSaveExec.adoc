@@ -67,7 +67,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 `StateStoreSaveExec` uses the performance metrics of the parent <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
 
-[cols="40%,60%",options="header"]
+[cols="30,70",options="header",width="100%"]
 |===
 | Name (in UI)
 | Description
@@ -91,7 +91,7 @@ For <<outputMode, Update>> output mode, `numOutputRows` is the number of rows th
 | number of total state rows
 a| [[numTotalStateRows]] Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store] (_numTotalStateRows_)
 
-Corresponds to `numRowsTotal` in `stateOperators` in link:spark-sql-streaming-StreamingQueryProgress.adoc[StreamingQueryProgress] (and is available as `sq.lastProgress.stateOperators(0).numRowsTotal` for ``0``th operator).
+Corresponds to `numRowsTotal` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | number of updated state rows
 a| [[numUpdatedStateRows]] Number of the state keys that <<spark-sql-streaming-StateStore.adoc#put, were stored as updates in the state store>> in a trigger and for the keys in the result rows of the upstream physical operator (aka _numUpdatedStateRows_)
@@ -106,7 +106,7 @@ CAUTION: FIXME Check that out in an example
 
 CAUTION: FIXME Check that out in an example
 
-NOTE: You can see the current value as `numRowsUpdated` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> (that is available as `StreamingQuery.lastProgress.stateOperators(n).numRowsUpdated` for ``n``th operator).
+Corresponds to `numRowsUpdated` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | memory used by state
 a| [[stateMemory]] Memory used by the <<spark-sql-streaming-StateStore.adoc#, StateStore>> (aka _stateMemory_)
