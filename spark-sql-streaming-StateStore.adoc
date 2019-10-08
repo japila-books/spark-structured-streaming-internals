@@ -1,6 +1,6 @@
 == [[StateStore]] StateStore Contract -- Kay-Value Store for Streaming State Data
 
-`StateStore` is the <<contract, abstraction>> of a <<version, versioned>> and possibly fault-tolerant <<implementations, key-value stores>> for streaming state data (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>).
+`StateStore` is the <<contract, abstraction>> of a <<version, versioned>> and possibly fault-tolerant <<implementations, key-value stores>> for managing state in <<spark-sql-streaming-stateful-stream-processing.adoc, Stateful Stream Processing>> (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>).
 
 `StateStore` supports *incremental checkpointing* in which only the key-value "Row" pairs that changed can be <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
 

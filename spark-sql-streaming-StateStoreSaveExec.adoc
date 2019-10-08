@@ -89,7 +89,7 @@ For <<outputMode, Complete>> output mode, `numOutputRows` is the number of rows 
 For <<outputMode, Update>> output mode, `numOutputRows` is the number of rows that were updated in a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (and is therefore equivalent to the <<numUpdatedStateRows, numUpdatedStateRows>> metric)
 
 | number of total state rows
-a| [[numTotalStateRows]] Number of the state keys in the link:spark-sql-streaming-StateStore.adoc[state store] (_numTotalStateRows_)
+a| [[numTotalStateRows]] Number of the state keys in a <<spark-sql-streaming-StateStore.adoc#, state store>> (_numTotalStateRows_)
 
 Corresponds to `numRowsTotal` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
 
@@ -98,18 +98,14 @@ a| [[numUpdatedStateRows]] Number of the state keys that <<spark-sql-streaming-S
 
 * For <<outputMode, Complete>> output mode, `numUpdatedStateRows` is the number of rows (which should be exactly the number of output rows from the upstream operator)
 
-CAUTION: FIXME Check that out in an example
-
 * For <<outputMode, Append>> output mode, `numUpdatedStateRows` is the number of rows with keys that have not expired yet (per required <<watermarkPredicateForData, watermarkPredicateForData>>)
 
 * For <<outputMode, Update>> output mode, `numUpdatedStateRows` is the number of keys that have not expired yet if watermark has been defined at all (and is therefore equivalent to the <<numOutputRows, numOutputRows>> metric)
 
-CAUTION: FIXME Check that out in an example
-
 Corresponds to `numRowsUpdated` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | memory used by state
-a| [[stateMemory]] Memory used by the <<spark-sql-streaming-StateStore.adoc#, StateStore>> (aka _stateMemory_)
+a| [[stateMemory]] Memory used by a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (aka _stateMemory_)
 |===
 
 .StateStoreSaveExec in web UI (Details for Query)

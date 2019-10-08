@@ -17,14 +17,14 @@
 [[DEFAULT_STORE_NAME]]
 The name of the *default state store* (for reading state store data that was generated before store names were used, i.e. in Spark 2.2 and earlier) is *default*.
 
-=== [[storeCheckpointLocation]] `storeCheckpointLocation` Method
+=== [[storeCheckpointLocation]] State Checkpoint Base Directory of Stateful Operator -- `storeCheckpointLocation` Method
 
 [source, scala]
 ----
 storeCheckpointLocation(): Path
 ----
 
-`storeCheckpointLocation` gives the Hadoop HDFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the checkpoint location (for the stateful operator by <<operatorId, operator ID>>, the partition by the <<partitionId, partition ID>> in the <<checkpointRootLocation, checkpoint root location>>).
+`storeCheckpointLocation` is Hadoop DFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the checkpoint location (for the stateful operator by <<operatorId, operator ID>>, the partition by the <<partitionId, partition ID>> in the <<checkpointRootLocation, checkpoint root location>>).
 
 If the <<DEFAULT_STORE_NAME, default store name>> is used (for Spark 2.2 and earlier), the <<storeName, storeName>> is not included in the path.
 

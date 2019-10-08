@@ -86,7 +86,38 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
   // Sorry, it's simply to copy and paste event sections
   // and track the batches :)
   // FIXME Create batch generator (to read data from a directory?)
+  // Batch number would then be assigned automatically
+  // the batch ID would be whatever this generator tracks internally
   var batchNo: Int = 0
+
+  {
+    println(
+      s"""
+         |Batch $batchNo
+      """.stripMargin)
+
+    println(
+      s"""
+         |There's actually batch 0
+         |(unless resumed from checkpoint)
+         |It is started immediately after a streaming query is started
+         |It has no data (and hence no Spark jobs ran and in web UI)
+         |Let's see the stats
+         |""".stripMargin)
+
+    val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
+    val currentWatermarkMs = toMillis(currentWatermark)
+    println(s"Current watermark: $currentWatermarkMs ms")
+    val progressCount = streamingQuery.recentProgress.length
+    println(s"Number of the recent progress reports: $progressCount")
+    println()
+    println(streamingQuery.lastProgress.prettyJson)
+
+    spark
+      .table(queryName)
+      .orderBy("sliding_window")
+      .show(truncate = false)
+  }
 
   {
     batchNo = batchNo + 1
@@ -104,6 +135,8 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
     val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
     val currentWatermarkMs = toMillis(currentWatermark)
     println(s"Current watermark: $currentWatermarkMs ms")
+    val progressCount = streamingQuery.recentProgress.length
+    println(s"Number of the recent progress reports: $progressCount")
     println()
     println(streamingQuery.lastProgress.prettyJson)
 

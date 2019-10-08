@@ -1,14 +1,13 @@
-== [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider -- Default StateStoreProvider
+== [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider -- Hadoop DFS-based StateStoreProvider
 
-`HDFSBackedStateStoreProvider` is the default <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (as specified by the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property).
+`HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> that uses Hadoop DFS for <<baseDir, state checkpointing>>.
 
-`HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` helper object is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize a StateStoreProvider>>.
+`HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property.
+
+`HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the <<spark-sql-streaming-StateStore.adoc#, state store>> to use for a stateful operator and a partition.
 
 [[creating-instance]]
 `HDFSBackedStateStoreProvider` takes no arguments to be created.
-
-[[baseDir]]
-`HDFSBackedStateStoreProvider` uses the *state checkpoint base directory* (that is the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, storeCheckpointLocation>> of the <<stateStoreId, StateStoreId>>) for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files. The checkpoint directory is created when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
 
 [[logging]]
 [TIP]
@@ -24,9 +23,22 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStore
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
+=== [[baseDir]] State Checkpoint Base Directory -- `baseDir` Lazy Internal Property
+
+[source,scala]
+----
+baseDir: Path
+----
+
+`baseDir` is the base directory (as Hadoop DFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path]) for <<spark-sql-streaming-offsets-and-metadata-checkpointing.adoc#, state checkpointing>> (for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files).
+
+`baseDir` is initialized lazily since it is not yet known when `HDFSBackedStateStoreProvider` is <<creating-instance, created>>.
+
+`baseDir` is initialized and created based on the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, state checkpoint base directory>> of the <<stateStoreId, StateStoreId>> when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
+
 === [[stateStoreId]][[stateStoreId_]] StateStoreId -- Unique Identifier of State Store
 
-As a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.adoc#stateStoreId, StateStoreId>> (which is a unique identifier of the <<spark-sql-streaming-StateStore.adoc#, state store>> for an operator and a partition).
+As a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.adoc#stateStoreId, StateStoreId>> (which is a unique identifier of the <<spark-sql-streaming-StateStore.adoc#, state store>> for a stateful operator and a partition).
 
 `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> at <<init, initialization>> (as requested by the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> contract).
 
@@ -106,9 +118,9 @@ init(
 
 NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#init, StateStoreProvider Contract>> to initialize itself.
 
-`init` assigns the values of the input arguments to <<stateStoreId, stateStoreId>>, <<keySchema, keySchema>>, <<valueSchema, valueSchema>>, <<storeConf, storeConf>>, and <<hadoopConf, hadoopConf>>.
+`init` records the values of the input arguments as the <<stateStoreId, stateStoreId>>, <<keySchema, keySchema>>, <<valueSchema, valueSchema>>, <<storeConf, storeConf>>, and <<hadoopConf, hadoopConf>> internal properties.
 
-`init` uses the `StateStoreConf` to requests for the <<spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>>).
+`init` requests the given `StateStoreConf` for the <<spark-sql-streaming-StateStoreConf.adoc#maxVersionsToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then recorded in the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> internal property).
 
 In the end, `init` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#mkdirs, create>> the <<baseDir, baseDir>> directory (with parent directories).
 
@@ -167,20 +179,7 @@ NOTE: `close` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#close
 
 `close`...FIXME
 
-=== [[putStateIntoStateCacheMap]] `putStateIntoStateCacheMap` Internal Method
-
-[source, scala]
-----
-putStateIntoStateCacheMap(
-  newVersion: Long,
-  map: ConcurrentHashMap[UnsafeRow, UnsafeRow]): Unit
-----
-
-`putStateIntoStateCacheMap`...FIXME
-
-NOTE: `putStateIntoStateCacheMap` is used when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commitUpdates>> and <<loadMap, loadMap>>.
-
-=== [[commitUpdates]] `commitUpdates` Internal Method
+=== [[commitUpdates]] Committing State (New Version) -- `commitUpdates` Internal Method
 
 [source, scala]
 ----
@@ -194,16 +193,40 @@ commitUpdates(
 
 NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.adoc#commit, commit state changes>>.
 
-=== [[loadMap]] `loadMap` Internal Method
+=== [[loadMap]] Loading State For Specified Version -- `loadMap` Internal Method
 
 [source, scala]
 ----
-loadMap(version: Long): ConcurrentHashMap[UnsafeRow, UnsafeRow]
+loadMap(
+  version: Long): ConcurrentHashMap[UnsafeRow, UnsafeRow]
 ----
 
 `loadMap`...FIXME
 
 NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, retrieve the state store for a specified version>> and <<latestIterator, latestIterator>>.
+
+=== [[putStateIntoStateCacheMap]] `putStateIntoStateCacheMap` Internal Method
+
+[source, scala]
+----
+putStateIntoStateCacheMap(
+  newVersion: Long,
+  map: ConcurrentHashMap[UnsafeRow, UnsafeRow]): Unit
+----
+
+`putStateIntoStateCacheMap` registers state for a given version, i.e. adds the `map` state under the `newVersion` key in the <<loadedMaps, loadedMaps>> internal registry.
+
+With the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> threshold as `0` or below, `putStateIntoStateCacheMap` simply removes all entries from the <<loadedMaps, loadedMaps>> internal registry and returns.
+
+`putStateIntoStateCacheMap` removes the oldest state version(s) in the <<loadedMaps, loadedMaps>> internal registry until its size is at the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> threshold.
+
+With the size of the <<loadedMaps, loadedMaps>> internal registry is at the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> threshold, `putStateIntoStateCacheMap` does two more optimizations per `newVersion`
+
+* It does not add the given state when the version of the oldest state is earlier (larger) than the given `newVersion`
+
+* It removes the oldest state when older (smaller) than the given `newVersion`
+
+NOTE: `putStateIntoStateCacheMap` is used when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commit state (as a new version)>> and <<loadMap, load state for a specified version>>.
 
 === [[writeSnapshotFile]] `writeSnapshotFile` Internal Method
 
@@ -258,14 +281,16 @@ a| [[loadedMaps]]
 
 [source, scala]
 ----
-loadedMaps: TreeMap[Long, ConcurrentHashMap[UnsafeRow, UnsafeRow]]
+loadedMaps: TreeMap[
+  Long,                                     // state version
+  ConcurrentHashMap[UnsafeRow, UnsafeRow]]  // state (as keys and values)
 ----
 
-https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[java.util.TreeMap] of FIXME sorted according to the reversed natural ordering of the keys
+https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[java.util.TreeMap] of state versions sorted according to the reversed ordering of the versions (i.e. long numbers)
 
 The current size estimation of `loadedMaps` is the <<memoryUsedBytes, memoryUsedBytes>> metric in the <<metrics, metrics>>.
 
-A new entry (a version and the associated map) is added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>
+A new entry (a version and the associated map) is added exclusively when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
 
 Used when...FIXME
 
@@ -277,7 +302,7 @@ a| [[numberOfVersionsToRetainInMemory]]
 numberOfVersionsToRetainInMemory: Int
 ----
 
-`numberOfVersionsToRetainInMemory` is the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property that sets the upper limit on the number of entries in the <<loadedMaps, loadedMaps>> internal registry.
+`numberOfVersionsToRetainInMemory` is the maximum number of entries in the <<loadedMaps, loadedMaps>> internal registry and is configured by the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration.
 
-`numberOfVersionsToRetainInMemory` is used when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
+`numberOfVersionsToRetainInMemory` is a threshold when `HDFSBackedStateStoreProvider` removes the last key from the <<loadedMaps, loadedMaps>> internal registry (per reverse ordering of state versions) when requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
 |===
