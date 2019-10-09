@@ -102,7 +102,7 @@ Used when:
 
 |===
 
-=== [[createAndInit]] Creating and Initializing StateStoreProvider -- `createAndInit` Factory Method
+=== [[createAndInit]] Creating and Initializing StateStoreProvider -- `createAndInit` Object Method
 
 [source, scala]
 ----

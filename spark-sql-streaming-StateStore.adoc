@@ -2,7 +2,7 @@
 
 `StateStore` is the <<contract, abstraction>> of a <<version, versioned>> and possibly fault-tolerant <<implementations, key-value stores>> for managing state in <<spark-sql-streaming-stateful-stream-processing.adoc, Stateful Stream Processing>> (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>).
 
-`StateStore` supports *incremental checkpointing* in which only the key-value "Row" pairs that changed can be <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
+`StateStore` supports *incremental checkpointing* in which only the key-value "Row" pairs that changed are <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
 
 `StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for identification).
 
@@ -290,7 +290,8 @@ NOTE: `stop` seems only be used in tests.
 
 [source, scala]
 ----
-reportActiveStoreInstance(storeProviderId: StateStoreProviderId): Unit
+reportActiveStoreInstance(
+  storeProviderId: StateStoreProviderId): Unit
 ----
 
 `reportActiveStoreInstance` takes the current host and `executorId` (from the `BlockManager` on the Spark executor) and requests the <<coordinatorRef, StateStoreCoordinatorRef>> to <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#reportActiveInstance, reportActiveInstance>>.
@@ -303,7 +304,7 @@ In the end, `reportActiveStoreInstance` prints out the following INFO message to
 Reported that the loaded instance [storeProviderId] is active
 ```
 
-NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` helper object is requested to <<get-StateStore, find the StateStore by StateStoreProviderId>>.
+NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` utility is requested to <<get-StateStore, find the StateStore by StateStoreProviderId>>.
 
 === [[MaintenanceTask]] `MaintenanceTask` Daemon Thread
 
@@ -313,7 +314,7 @@ When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProvider
 
 `MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> configuration property (default: `60s`).
 
-=== [[get-StateStore]] Looking Up StateStore by ID and Version -- `get` Factory Method
+=== [[get-StateStore]] Looking Up StateStore by ID and Version -- `get` Object Method
 
 [source, scala]
 ----
@@ -329,7 +330,7 @@ get(
 
 `get` finds `StateStore` for the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>.
 
-Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (for `storeProviderId`) in <<loadedProviders, loadedProviders>> registry. If unavailable, `get` link:spark-sql-streaming-StateStoreProvider.adoc#createAndInit[creates and initializes one].
+Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (for `storeProviderId`) in the <<loadedProviders, loadedProviders>> internal registry. If unavailable, `get` uses the `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize one>>.
 
 `get` will also <<startMaintenanceIfNeeded, start the periodic maintenance task>> (unless already started) and <<reportActiveStoreInstance, announce the new StateStoreProvider>>.
 

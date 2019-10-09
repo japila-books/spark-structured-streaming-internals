@@ -179,7 +179,7 @@ NOTE: `close` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#close
 
 `close`...FIXME
 
-=== [[commitUpdates]] Committing State (New Version) -- `commitUpdates` Internal Method
+=== [[commitUpdates]] Committing State Changes (As New Version of State) -- `commitUpdates` Internal Method
 
 [source, scala]
 ----
@@ -189,7 +189,7 @@ commitUpdates(
   output: DataOutputStream): Unit
 ----
 
-`commitUpdates`...FIXME
+`commitUpdates` <<finalizeDeltaFile, finalizeDeltaFile>> (with the given `DataOutputStream`) followed by <<putStateIntoStateCacheMap, caching the new version of state>> (with the given `newVersion` and the `map` state).
 
 NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.adoc#commit, commit state changes>>.
 
@@ -205,7 +205,7 @@ loadMap(
 
 NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, retrieve the state store for a specified version>> and <<latestIterator, latestIterator>>.
 
-=== [[putStateIntoStateCacheMap]] `putStateIntoStateCacheMap` Internal Method
+=== [[putStateIntoStateCacheMap]] Caching New Version of State -- `putStateIntoStateCacheMap` Internal Method
 
 [source, scala]
 ----
@@ -265,6 +265,18 @@ readSnapshotFile(
 `readSnapshotFile`...FIXME
 
 NOTE: `readSnapshotFile` is used...FIXME
+
+=== [[finalizeDeltaFile]] `finalizeDeltaFile` Internal Method
+
+[source, scala]
+----
+finalizeDeltaFile(
+  output: DataOutputStream): Unit
+----
+
+`finalizeDeltaFile` simply writes `-1` to the given `DataOutputStream` (to indicate end of file) and closes it.
+
+NOTE: `finalizeDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commit state changes (a new version of state)>>.
 
 === [[internal-properties]] Internal Properties
 

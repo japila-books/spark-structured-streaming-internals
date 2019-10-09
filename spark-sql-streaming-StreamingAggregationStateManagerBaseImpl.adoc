@@ -31,7 +31,8 @@ NOTE: `StreamingAggregationStateManagerBaseImpl` is a Scala abstract class and c
 
 [source, scala]
 ----
-commit(store: StateStore): Long
+commit(
+  store: StateStore): Long
 ----
 
 NOTE: `commit` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#commit, StreamingAggregationStateManager Contract>> to commit changes to a <<spark-sql-streaming-StateStore.adoc#, state store>>.

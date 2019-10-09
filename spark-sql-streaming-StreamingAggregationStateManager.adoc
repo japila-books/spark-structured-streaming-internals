@@ -14,10 +14,11 @@ a| [[commit]]
 
 [source, scala]
 ----
-commit(store: StateStore): Long
+commit(
+  store: StateStore): Long
 ----
 
-Commits all the updates to the <<spark-sql-streaming-StateStore.adoc#, state store>> and returns the new version
+Commits all updates (_changes_) to the <<spark-sql-streaming-StateStore.adoc#, state store>> and returns the new version
 
 Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
 

@@ -167,8 +167,6 @@ TIP: Refer to <<spark-sql-streaming-demo-watermark-aggregation-append.adoc#, Dem
 
 CAUTION: FIXME When is "Filtering state store on:" printed out?
 
-CAUTION: FIXME Track numUpdatedStateRows metric
-
 ---
 
 1. Uses link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData[watermarkPredicateForData] predicate to exclude matching rows and (like in <<doExecute-Complete, Complete>> output mode) link:spark-sql-streaming-StateStore.adoc#put[stores all the remaining rows] in `StateStore`.
