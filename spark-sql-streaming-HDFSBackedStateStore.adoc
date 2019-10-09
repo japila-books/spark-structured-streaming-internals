@@ -16,17 +16,20 @@
 [[toString]]
 When requested for the textual representation, `HDFSBackedStateStore` gives *HDFSStateStore[id=(op=[operatorId],part=[partitionId]),dir=[baseDir]]*.
 
-[[creating-instance]]
-`HDFSBackedStateStore` takes the following to be created:
-
-* [[version]] Current version
-* [[mapToUpdate]] Key-value registry of `UnsafeRows` (as https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html[java.util.concurrent.ConcurrentHashMap])
-
 [[logging]]
 [TIP]
 ====
 `HDFSBackedStateStore` is an internal class of <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> and uses its <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#logging, logger>>.
 ====
+
+=== [[creating-instance]] Creating HDFSBackedStateStore Instance
+
+`HDFSBackedStateStore` takes the following to be created:
+
+* [[version]] Version
+* [[mapToUpdate]] State (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`)
+
+`HDFSBackedStateStore` initializes the <<internal-properties, internal properties>>.
 
 === [[writeUpdateToDeltaFile]] `writeUpdateToDeltaFile` Internal Method
 
@@ -104,7 +107,7 @@ NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.adoc#abort, StateS
 
 `abort`...FIXME
 
-=== [[metrics]] `metrics` Method
+=== [[metrics]] Performance Metrics -- `metrics` Method
 
 [source, scala]
 ----
@@ -113,7 +116,17 @@ metrics: StateStoreMetrics
 
 NOTE: `metrics` is part of the <<spark-sql-streaming-StateStore.adoc#metrics, StateStore Contract>> to get the <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>.
 
-`metrics`...FIXME
+`metrics` requests the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#getMetricsForProvider, performance metrics>> of the parent `HDFSBackedStateStoreProvider`.
+
+The performance metrics of the provider used are only the ones listed in <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#supportedCustomMetrics, supportedCustomMetrics>>.
+
+In the end, `metrics` returns a new <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>> with the following:
+
+* <<spark-sql-streaming-StateStoreMetrics.adoc#numKeys, Total number of keys>> as the size of <<mapToUpdate, mapToUpdate>>
+
+* <<spark-sql-streaming-StateStoreMetrics.adoc#memoryUsedBytes, Memory used (in bytes)>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#memoryUsedBytes, memoryUsedBytes>> metric (of the parent provider)
+
+* <<spark-sql-streaming-StateStoreMetrics.adoc#customMetrics, StateStoreCustomMetrics>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#supportedCustomMetrics, supportedCustomMetrics>> and the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>> metric of the parent provider
 
 === [[internal-properties]] Internal Properties
 

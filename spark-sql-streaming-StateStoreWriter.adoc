@@ -4,37 +4,29 @@
 
 [[metrics]]
 .StateStoreWriter's Performance Metrics
-[cols="1m,2,2",options="header",width="100%"]
+[cols="2,2",options="header",width="100%"]
 |===
-| Key
 | Name (in web UI)
 | Description
 
-| numOutputRows
 | number of output rows
 | [[numOutputRows]]
 
-| numTotalStateRows
 | number of total state rows
 | [[numTotalStateRows]]
 
-| numUpdatedStateRows
 | number of updated state rows
 | [[numUpdatedStateRows]]
 
-| allUpdatesTimeMs
 | total time to update rows
 | [[allUpdatesTimeMs]]
 
-| allRemovalsTimeMs
 | total time to remove rows
 | [[allRemovalsTimeMs]]
 
-| commitTimeMs
 | time to commit changes
 | [[commitTimeMs]]
 
-| stateMemory
 | memory used by state
 | [[stateMemory]]
 

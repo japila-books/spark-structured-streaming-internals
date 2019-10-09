@@ -69,7 +69,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 [cols="30,70",options="header",width="100%"]
 |===
-| Name (in UI)
+| Name (in web UI)
 | Description
 
 | total time to update rows

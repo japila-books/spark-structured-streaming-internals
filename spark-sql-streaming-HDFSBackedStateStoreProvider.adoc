@@ -1,6 +1,6 @@
 == [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider -- Hadoop DFS-based StateStoreProvider
 
-`HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> that uses Hadoop DFS for <<baseDir, state checkpointing>>.
+`HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> that uses a Hadoop DFS-compatible file system for <<baseDir, versioned state checkpointing>>.
 
 `HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property.
 
@@ -22,6 +22,27 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStore
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
+
+=== [[metrics]] Performance Metrics
+
+[cols="30,70",options="header",width="100%"]
+|===
+| Name (in web UI)
+| Description
+
+| memoryUsedBytes
+a| [[memoryUsedBytes]] Estimated size of the <<loadedMaps, loadedMaps>> internal registry
+
+| count of cache hit on states cache in provider
+a| [[metricLoadedMapCacheHit]][[loadedMapCacheHitCount]] The number of times <<loadMap, loadMap>> found (_hit_) a given state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
+
+| count of cache miss on states cache in provider
+a| [[metricLoadedMapCacheMiss]][[loadedMapCacheMissCount]] The number of times <<loadMap, loadMap>> could not find (_missed_) a given state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
+
+| estimated size of state only on current version
+a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Estimated size of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#mapToUpdate, current state>> (of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>>)
+
+|===
 
 === [[baseDir]] State Checkpoint Base Directory -- `baseDir` Lazy Internal Property
 
@@ -67,7 +88,8 @@ HDFSStateStoreProvider[id = (op=[operatorId],part=[partitionId]),dir = [baseDir]
 
 [source, scala]
 ----
-getStore(version: Long): StateStore
+getStore(
+  version: Long): StateStore
 ----
 
 NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, StateStoreProvider Contract>> to get the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a given version.
@@ -179,6 +201,40 @@ NOTE: `close` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#close
 
 `close`...FIXME
 
+=== [[getMetricsForProvider]] `getMetricsForProvider` Method
+
+[source, scala]
+----
+getMetricsForProvider(): Map[String, Long]
+----
+
+`getMetricsForProvider` returns the following <<metrics, performance metrics>>:
+
+* <<memoryUsedBytes, memoryUsedBytes>>
+
+* <<metricLoadedMapCacheHit, metricLoadedMapCacheHit>>
+
+* <<metricLoadedMapCacheMiss, metricLoadedMapCacheMiss>>
+
+NOTE: `getMetricsForProvider` is used exclusively when `HDFSBackedStateStore` is requested for <<spark-sql-streaming-HDFSBackedStateStore.adoc#metrics, performance metrics>>.
+
+=== [[supportedCustomMetrics]] Supported StateStoreCustomMetrics -- `supportedCustomMetrics` Method
+
+[source, scala]
+----
+supportedCustomMetrics: Seq[StateStoreCustomMetric]
+----
+
+NOTE: `supportedCustomMetrics` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#supportedCustomMetrics, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStoreCustomMetric.adoc#, StateStoreCustomMetrics>> of a state store provider.
+
+`supportedCustomMetrics` includes the following <<spark-sql-streaming-StateStoreCustomMetric.adoc#, StateStoreCustomMetrics>>:
+
+* <<metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>>
+
+* <<metricLoadedMapCacheHit, metricLoadedMapCacheHit>>
+
+* <<metricLoadedMapCacheMiss, metricLoadedMapCacheMiss>>
+
 === [[commitUpdates]] Committing State Changes (As New Version of State) -- `commitUpdates` Internal Method
 
 [source, scala]
@@ -201,7 +257,7 @@ loadMap(
   version: Long): ConcurrentHashMap[UnsafeRow, UnsafeRow]
 ----
 
-`loadMap`...FIXME
+`loadMap` firstly tries to find the version of the state in the <<loadedMaps, loadedMaps>> internal registry and, if found, returns it. Before that, `loadMap` increments the <<loadedMapCacheHitCount, loadedMapCacheHitCount>> metric.
 
 NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, retrieve the state store for a specified version>> and <<latestIterator, latestIterator>>.
 
