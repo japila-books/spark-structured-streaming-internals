@@ -11,8 +11,8 @@
 | BaseStreamingSink
 | Description
 
-| `MemorySinkBase`
-| [[MemorySinkBase]] Base for sinks in `memory` data source
+| <<spark-sql-streaming-MemorySinkBase.adoc#, MemorySinkBase>>
+| [[MemorySinkBase]] Base contract for data sinks in <<spark-sql-streaming-memory-data-source.adoc#, memory data source>>
 
 | <<spark-sql-streaming-Sink.adoc#, Sink>>
 | [[Sink]] Streaming sinks for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (based on Data Source API V1)

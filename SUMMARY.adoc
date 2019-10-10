@@ -224,10 +224,17 @@
 
 . link:spark-sql-streaming-ForeachBatchSink.adoc[ForeachBatchSink]
 
-== Memory Data Sink
+== Memory Data Source
+
+. link:spark-sql-streaming-memory-data-source.adoc[Memory Data Source]
+
+. link:spark-sql-streaming-MemorySinkBase.adoc[MemorySinkBase]
+
+. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
 
 . link:spark-sql-streaming-MemorySinkV2.adoc[MemorySinkV2]
-. link:spark-sql-streaming-MemorySink.adoc[MemorySink]
+.. link:spark-sql-streaming-MemoryStreamWriter.adoc[MemoryStreamWriter]
+
 . link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 
 == Offsets and Metadata Checkpointing (Fault-Tolerance and Reliability)

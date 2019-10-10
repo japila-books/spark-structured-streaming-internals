@@ -81,7 +81,16 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
   println(
     s"""
        |Demo: Stateful Aggregation with Watermark and Append Output Mode
+       |
+       |Observe $checkpointLocation/state directory that gets populated with delta and snapshot files
+       |- The directories are the operator ID and the partition ID, e.g. 0/0 for 0th op and 0th partition
+       |- The numbers in the names of the state files are state versions (and micro-batch IDs actually)
+       |- The directory is available only after the first micro-batch finishes
+       |
+       |Just for more logs (and fun!) HDFSBackedStateStoreProvider logging level is ALL
      """.stripMargin)
+
+  pause()
 
   // Sorry, it's simply to copy and paste event sections
   // and track the batches :)

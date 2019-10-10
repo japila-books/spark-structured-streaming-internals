@@ -1,22 +1,10 @@
 == [[MemorySink]] MemorySink
 
-`MemorySink` is a streaming link:spark-sql-streaming-Sink.adoc[Sink] that <<addBatch, stores records in memory>>. It is particularly useful for testing.
+`MemorySink` is a <<spark-sql-streaming-Sink.adoc#, streaming sink>> that <<addBatch, stores batches (records) in memory>>.
+
+`MemorySink` is intended only for testing or demos.
 
 `MemorySink` is used for `memory` format and requires a query name (by `queryName` method or `queryName` option).
-
-[source, scala]
-----
-val spark: SparkSession = ???
-val logs = spark.readStream.textFile("logs/*.out")
-
-scala> val outStream = logs.writeStream
-  .format("memory")
-  .queryName("logs")
-  .start()
-outStream: org.apache.spark.sql.streaming.StreamingQuery = org.apache.spark.sql.execution.streaming.StreamingQueryWrapper@690337df
-
-scala> sql("select * from logs").show(truncate = false)
-----
 
 NOTE: `MemorySink` was introduced in the https://github.com/apache/spark/pull/12119[pull request for [SPARK-14288\][SQL\] Memory Sink for streaming].
 
@@ -40,51 +28,67 @@ NOTE: At this point you can query the table as if it were a regular non-streamin
 
 A new link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] is started (using link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[StreamingQueryManager.startQuery]) and returned.
 
-[[internal-registries]]
-.MemorySink's Internal Registries and Counters
-[cols="1,2",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| [[batches]] `batches`
-| FIXME
-
-Used when...FIXME
-|===
-
+[[logging]]
 [TIP]
 ====
-Enable `DEBUG` logging level for `org.apache.spark.sql.execution.streaming.MemorySink` logger to see what happens in `MemorySink`.
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MemorySink` logger to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.execution.streaming.MemorySink=DEBUG
+log4j.logger.org.apache.spark.sql.execution.streaming.MemorySink=ALL
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
-=== [[addBatch]] `addBatch` Method
+=== [[creating-instance]] Creating MemorySink Instance
+
+`MemorySink` takes the following to be created:
+
+* [[schema]] Output schema
+* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
+
+`MemorySink` initializes the <<batches, batches>> internal property.
+
+=== [[batches]] In-Memory Buffer of Streaming Batches -- `batches` Internal Property
 
 [source, scala]
 ----
-addBatch(batchId: Long, data: DataFrame): Unit
+batches: ArrayBuffer[AddedData]
 ----
+
+`batches` holds data from streaming batches that have been <<addBatch, added>> (_written_) to this sink.
+
+For <<spark-sql-streaming-OutputMode.adoc#Append, Append>> and <<spark-sql-streaming-OutputMode.adoc#Update, Update>> output modes, `batches` holds rows from all batches.
+
+For <<spark-sql-streaming-OutputMode.adoc#Complete, Complete>> output mode, `batches` holds rows from the last batch only.
+
+`batches` can be cleared (_emptied_) using <<clear, clear>>.
+
+=== [[addBatch]] Adding Batch of Data to Sink -- `addBatch` Method
+
+[source, scala]
+----
+addBatch(
+  batchId: Long,
+  data: DataFrame): Unit
+----
+
+NOTE: `addBatch` is part of the <<spark-sql-streaming-Sink.adoc#addBatch, Sink Contract>> to "add" a batch of data to the sink.
 
 `addBatch` checks if `batchId` has already been committed (i.e. added to <<batches, batches>> internal registry).
 
-If `batchId` was already committed, you should see the following DEBUG message in the logs:
+If `batchId` was already committed, `addBatch` simply prints out the following DEBUG message to the logs and returns.
 
 ```
-DEBUG Skipping already committed batch: [batchId]
+Skipping already committed batch: [batchId]
 ```
 
-Otherwise, if the `batchId` is not already committed, you should see the following DEBUG message in the logs:
+Otherwise, if the `batchId` is not already committed, `addBatch` prints out the following DEBUG message to the logs:
 
 ```
-DEBUG Committing batch [batchId] to [this]
+Committing batch [batchId] to [this]
 ```
 
 For `Append` and `Update` output modes, `addBatch` collects records from `data` and registers `batchId` (i.e. adds to <<batches, batches>> internal registry).
@@ -99,4 +103,13 @@ When the output mode is invalid, `addBatch` reports a `IllegalArgumentException`
 Output mode [outputMode] is not supported by MemorySink
 ```
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.
+=== [[clear]] Clearing Up Internal Batch Buffer -- `clear` Method
+
+[source, scala]
+----
+clear(): Unit
+----
+
+`clear` simply removes (_clears_) all data from the <<batches, batches>> internal registry.
+
+NOTE: `clear` is used exclusively in tests.

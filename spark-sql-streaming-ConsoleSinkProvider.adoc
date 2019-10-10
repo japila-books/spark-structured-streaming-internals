@@ -1,6 +1,6 @@
 == [[ConsoleSinkProvider]] ConsoleSinkProvider
 
-`ConsoleSinkProvider` is a `DataSourceV2` with <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> for *console* data source format
+`ConsoleSinkProvider` is a `DataSourceV2` with <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> for *console* data source format.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceV2.html[DataSourceV2 Contract] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 

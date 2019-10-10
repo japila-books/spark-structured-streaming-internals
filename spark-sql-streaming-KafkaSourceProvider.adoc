@@ -54,12 +54,12 @@ a| [[RECEIVE_BUFFER_CONFIG]] Only when not set in the <<specifiedKafkaParams, sp
 [[logging]]
 [TIP]
 ====
-Enable `INFO` or `DEBUG` logging levels for `org.apache.spark.sql.kafka010.KafkaSourceProvider` to see what happens inside.
+Enable `ALL` logging levels for `org.apache.spark.sql.kafka010.KafkaSourceProvider` logger to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaSourceProvider=DEBUG
+log4j.logger.org.apache.spark.sql.kafka010.KafkaSourceProvider=ALL
 ```
 
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.

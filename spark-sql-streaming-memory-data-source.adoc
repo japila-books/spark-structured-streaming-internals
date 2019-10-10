@@ -1,0 +1,40 @@
+== Memory Data Source
+
+*Memory Data Source* is...FIXME
+
+.Memory Sink in Micro-Batch Stream Processing
+[source, scala]
+----
+val queryName = "memoryDemo"
+val sq = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("memory")
+  .queryName(queryName)
+  .start
+
+// The name of the streaming query is an in-memory table
+val showAll = sql(s"select * from $queryName")
+scala> showAll.show(truncate = false)
++-----------------------+-----+
+|timestamp              |value|
++-----------------------+-----+
+|2019-10-10 15:19:16.431|42   |
+|2019-10-10 15:19:17.431|43   |
++-----------------------+-----+
+
+import org.apache.spark.sql.streaming.StreamingQuery
+assert(sq.isInstanceOf[StreamingQuery])
+
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val se = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
+
+import org.apache.spark.sql.execution.streaming.MemorySink
+val sink = se.sink.asInstanceOf[MemorySink]
+
+assert(sink.toString == "MemorySink")
+
+sink.clear()
+----

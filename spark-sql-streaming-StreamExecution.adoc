@@ -43,11 +43,11 @@ Used exclusively when `StreamExecution` is requested to <<runStream, run the str
 .Streaming Query and Stream Execution Engine
 [source, scala]
 ----
-scala> :type query
-org.apache.spark.sql.streaming.StreamingQuery
+import org.apache.spark.sql.streaming.StreamingQuery
+assert(sq.isInstanceOf[StreamingQuery])
 
 import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
-val se = query.asInstanceOf[StreamingQueryWrapper].streamingQuery
+val se = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
 
 scala> :type se
 org.apache.spark.sql.execution.streaming.StreamExecution
