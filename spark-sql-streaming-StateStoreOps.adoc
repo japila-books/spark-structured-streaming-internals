@@ -18,13 +18,6 @@ NOTE: http://docs.scala-lang.org/overviews/core/implicit-classes.html[Implicit C
 [source, scala]
 ----
 mapPartitionsWithStateStore[U](
-  sqlContext: SQLContext,
-  stateInfo: StatefulOperatorStateInfo,
-  keySchema: StructType,
-  valueSchema: StructType,
-  indexOrdinal: Option[Int])(
-  storeUpdateFunction: (StateStore, Iterator[T]) => Iterator[U]): StateStoreRDD[T, U] // <1>
-mapPartitionsWithStateStore[U](
   stateInfo: StatefulOperatorStateInfo,
   keySchema: StructType,
   valueSchema: StructType,
@@ -32,6 +25,14 @@ mapPartitionsWithStateStore[U](
   sessionState: SessionState,
   storeCoordinator: Option[StateStoreCoordinatorRef])(
   storeUpdateFunction: (StateStore, Iterator[T]) => Iterator[U]): StateStoreRDD[T, U]
+// Used for testing only
+mapPartitionsWithStateStore[U](
+  sqlContext: SQLContext,
+  stateInfo: StatefulOperatorStateInfo,
+  keySchema: StructType,
+  valueSchema: StructType,
+  indexOrdinal: Option[Int])(
+  storeUpdateFunction: (StateStore, Iterator[T]) => Iterator[U]): StateStoreRDD[T, U] // <1>
 ----
 <1> Uses `sqlContext.streams.stateStoreCoordinator` to access `StateStoreCoordinator`
 

@@ -104,13 +104,13 @@ a| [[hasCommitted]]
 hasCommitted: Boolean
 ----
 
-Returns whether all changes have been committed (`true`) or not (`false`)
+Flag to indicate whether state changes have been committed (`true`) or not (`false`)
 
 Used when:
 
-* `StateStoreOps` implicit class is requested to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (when a task finishes, possibly with an error, to check whether to <<abort, abort>> state updates)
+* `RDD` (via `StateStoreOps` implicit class) is requested to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (and a task finishes and may need to <<abort, abort state updates>>)
 
-* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#abortIfNeeded, abortIfNeeded>> (when a task finishes, possibly with an error, to check whether to <<abort, abort state updates>>)
+* `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#abortIfNeeded, abortIfNeeded>> (when a task finishes and may need to <<abort, abort state updates>>))
 
 | id
 a| [[id]]
