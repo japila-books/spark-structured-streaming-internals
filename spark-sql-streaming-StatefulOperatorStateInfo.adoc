@@ -1,19 +1,25 @@
 == [[StatefulOperatorStateInfo]] StatefulOperatorStateInfo
 
 [[creating-instance]]
-`StatefulOperatorStateInfo` identifies the state store for a given operator:
+`StatefulOperatorStateInfo` identifies the state store for a given stateful physical operator:
 
-* [[checkpointLocation]] Checkpoint directory (aka _checkpointLocation_)
-* [[queryRunId]] Run ID of a streaming query (`queryRunId`)
+* [[checkpointLocation]] Checkpoint directory (`checkpointLocation`)
+* [[queryRunId]] <<spark-sql-streaming-StreamingQuery.adoc#runId, Run ID>> of a streaming query (`queryRunId`)
 * [[operatorId]] Stateful operator ID (`operatorId`)
-* [[storeVersion]] `storeVersion`
+* [[storeVersion]] <<state-version, State version>> (`storeVersion`)
 * [[numPartitions]] Number of partitions
 
-`StatefulOperatorStateInfo` is <<creating-instance, created>> exclusively when `IncrementalExecution` is requested for <<nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>.
+`StatefulOperatorStateInfo` is <<creating-instance, created>> exclusively when `IncrementalExecution` is requested for <<spark-sql-streaming-IncrementalExecution.adoc#nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>.
 
 [[toString]]
-When requested for a textual representation, `StatefulOperatorStateInfo` returns the following:
+When requested for a textual representation (`toString`), `StatefulOperatorStateInfo` returns the following:
 
 ```
 state info [ checkpoint = [checkpointLocation], runId = [queryRunId], opId = [operatorId], ver = [storeVersion], numPartitions = [numPartitions]]
 ```
+
+=== [[state-version]] State Version and Batch ID
+
+When <<creating-instance, created>> (when `IncrementalExecution` is requested for the <<spark-sql-streaming-IncrementalExecution.adoc#nextStatefulOperationStateInfo, next StatefulOperatorStateInfo>>), a `StatefulOperatorStateInfo` is given a <<storeVersion, state version>>.
+
+The <<storeVersion, state version>> is exactly the <<spark-sql-streaming-IncrementalExecution.adoc#currentBatchId, batch ID>> of the <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>>.

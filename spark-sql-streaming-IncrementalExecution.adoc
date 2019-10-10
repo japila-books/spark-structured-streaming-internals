@@ -148,7 +148,7 @@ nextStatefulOperationStateInfo(): StatefulOperatorStateInfo
 
 [NOTE]
 ====
-The only changing part of `StatefulOperatorStateInfo` across executions of the `nextStatefulOperationStateInfo` method is the the next <<statefulOperatorId, statefulOperator ID>>.
+The only changing part of `StatefulOperatorStateInfo` across calls of the `nextStatefulOperationStateInfo` method is the the next <<statefulOperatorId, statefulOperator ID>>.
 
 All the other properties (the <<state-checkpoint-location, state checkpoint location>>, the <<runId, run ID>>, the <<currentBatchId, current batch ID>>, and the <<numStateStores, number of state stores>>) are the same within a single `IncrementalExecution` instance.
 

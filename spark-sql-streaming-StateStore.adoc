@@ -328,7 +328,9 @@ get(
   hadoopConf: Configuration): StateStore
 ----
 
-`get` finds `StateStore` for the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>.
+`get` finds `StateStore` for the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> and version.
+
+NOTE: The version is either the <<spark-sql-streaming-EpochTracker.adoc#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>) or the <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#storeVersion, current batch ID>> (in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>).
 
 Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (for `storeProviderId`) in the <<loadedProviders, loadedProviders>> internal registry. If unavailable, `get` uses the `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize one>>.
 
