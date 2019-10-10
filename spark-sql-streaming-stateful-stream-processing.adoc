@@ -8,7 +8,7 @@ In Spark Structured Streaming, a streaming query is stateful when it is one of t
 
 * <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>
 
-* <<spark-sql-streaming-join.adoc#, Streaming Join>>
+* <<spark-sql-streaming-join.adoc#, Stream-Stream Join>>
 
 * <<spark-sql-streaming-deduplication.adoc#, Streaming Deduplication>>
 
@@ -18,7 +18,7 @@ In Spark Structured Streaming, a streaming query is stateful when it is one of t
 
 Spark Structured Streaming uses <<spark-sql-streaming-StateStore.adoc#, StateStores>> for versioned and possibly fault-tolerant key-value state stores.
 
-State stores are checkpointed incrementally to avoid state loss and performance.
+State stores are checkpointed incrementally to avoid state loss and for better performance.
 
 State stores are managed by <<spark-sql-streaming-StateStoreProvider.adoc#, State Store Providers>> with <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> being the default and only known implementation. `HDFSBackedStateStoreProvider` uses Hadoop DFS for <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#baseDir, state checkpointing and fault-tolerance>>.
 
@@ -28,11 +28,11 @@ The lifecycle of a `StateStoreProvider` begins when `StateStore` utility (on a S
 
 IMPORTANT: Since `StateStore` and `StateStoreProvider` helper objects are Scala objects that makes it possible that there can only be one instance of `StateStore` and `StateStoreProvider` on a single JVM. Scala objects are (sort of) singletons which means that there will be exactly one instance of each per JVM and that is exactly the JVM of a Spark executor. As long as the executor is up and running state versions are cached and no Hadoop DFS is used (except for the initial load).
 
-`StateStore` helper object requests `StateStoreProvider` helper object to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, createAndInit>> that creates the `StateStoreProvider` implementation (based on <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property) and requests it to <<spark-sql-streaming-StateStoreProvider.adoc#init, initialize>>.
+`StateStore` utility requests `StateStoreProvider` helper object to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, createAndInit>> that creates the `StateStoreProvider` implementation (based on <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property) and requests it to <<spark-sql-streaming-StateStoreProvider.adoc#init, initialize>>.
 
 The initialized `StateStoreProvider` is cached in <<spark-sql-streaming-StateStore.adoc#loadedProviders, loadedProviders>> internal lookup table (for a <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>>) for later lookups.
 
-`StateStoreProvider` helper object then requests the `StateStoreProvider` to <<spark-sql-streaming-StateStoreProvider.adoc#getStore, getStore>> for a given version.
+`StateStoreProvider` utility then requests the `StateStoreProvider` for the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, state store for a specified version>>. (e.g. a <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> in case of <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#getStore, HDFSBackedStateStoreProvider>>).
 
 An instance of `StateStoreProvider` is requested to <<spark-sql-streaming-StateStoreProvider.adoc#doMaintenance, do its own maintenance>> or <<spark-sql-streaming-StateStoreProvider.adoc#close, close>> (when <<spark-sql-streaming-StateStoreProvider.adoc#verifyIfStoreInstanceActive, a corresponding StateStore is inactive>>) in <<spark-sql-streaming-StateStoreProvider.adoc#MaintenanceTask, MaintenanceTask daemon thread>> that runs periodically every <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> configuration property (default: `60s`).
 
@@ -133,7 +133,7 @@ res3: String =
     |  ParallelCollectionRDD[12] at start at <pastie>:67 []
 ----
 
-When planned for execution, the `StateStoreRDD` is first asked for the <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations of a partition>> (which happens on the driver) and to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute it>> (later on an executor).
+When planned for execution, the `StateStoreRDD` is first asked for the <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations of a partition>> (which happens on the driver) and to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute it>> (later on Spark executors).
 
 `StateStoreRDD` uses <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> to uniquely identify the <<spark-sql-streaming-StateStore.adoc#, state store>> to use for (_associate with_) a stateful operator and a partition.
 

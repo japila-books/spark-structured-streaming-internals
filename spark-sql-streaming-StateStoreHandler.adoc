@@ -95,12 +95,14 @@ NOTE: `abortIfNeeded` is used when...FIXME
 
 [source, scala]
 ----
-getStateStore(keySchema: StructType, valueSchema: StructType): StateStore
+getStateStore(
+  keySchema: StructType,
+  valueSchema: StructType): StateStore
 ----
 
 `getStateStore`...FIXME
 
-NOTE: `getStateStore` is used when <<spark-sql-streaming-KeyToNumValuesStore.adoc#stateStore, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#stateStore, KeyWithIndexToValueStore>> are created.
+NOTE: `getStateStore` is used when <<spark-sql-streaming-KeyToNumValuesStore.adoc#stateStore, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#stateStore, KeyWithIndexToValueStore>> are created (for <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>).
 
 === [[StateStoreType]] `StateStoreType` Contract (Sealed Trait)
 

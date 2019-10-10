@@ -43,12 +43,13 @@ a| [[getStore]]
 
 [source, scala]
 ----
-getStore(version: Long): StateStore
+getStore(
+  version: Long): StateStore
 ----
 
-Returns the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for the specified version
+<<spark-sql-streaming-StateStore.adoc#, StateStore>> for the specified version
 
-Used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, get the StateStore for the given ID and version>>
+Used exclusively when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, get the StateStore for a given provider ID>>
 
 | init
 a| [[init]]

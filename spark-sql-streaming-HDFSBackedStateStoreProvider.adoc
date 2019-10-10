@@ -6,10 +6,12 @@
 
 `HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the <<spark-sql-streaming-StateStore.adoc#, state store>> to use for a stateful operator and a partition.
 
-[[creating-instance]]
-`HDFSBackedStateStoreProvider` takes no arguments to be created.
+`HDFSStateStoreProvider` uses <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStores>> to manage state (<<getStore, one per version>>).
 
 `HDFSBackedStateStoreProvider` manages versioned state in delta and snapshot files (and uses a <<loadedMaps, cache>> internally for faster access to state versions).
+
+[[creating-instance]]
+`HDFSBackedStateStoreProvider` takes no arguments to be created.
 
 [[logging]]
 [TIP]
@@ -86,7 +88,7 @@ NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11
 HDFSStateStoreProvider[id = (op=[operatorId],part=[partitionId]),dir = [baseDir]]
 ```
 
-=== [[getStore]] Retrieving State Store by Version -- `getStore` Method
+=== [[getStore]] Retrieving State for Specified Version -- `getStore` Method
 
 [source, scala]
 ----
@@ -94,9 +96,25 @@ getStore(
   version: Long): StateStore
 ----
 
-NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, StateStoreProvider Contract>> to get the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a given version.
+NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a specified version.
 
-`getStore`...FIXME
+`getStore` creates a new empty state map (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`).
+
+(only for versions greater than `0`) `getStore` <<loadMap, loads the state for the version>> into the new state map.
+
+`getStore` creates a new <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> for the version and the new state map.
+
+In the end, `getStore` prints out the following INFO message to the logs and returns the new `HDFSBackedStateStore`.
+
+```
+Retrieved version [version] of [this] for update
+```
+
+`getStore` throws an `IllegalArgumentException` when the given version is negative (less than `0`):
+
+```
+Version cannot be less than 0
+```
 
 === [[deltaFile]] `deltaFile` Internal Method
 
