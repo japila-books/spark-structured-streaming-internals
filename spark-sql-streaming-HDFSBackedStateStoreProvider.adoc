@@ -9,6 +9,8 @@
 [[creating-instance]]
 `HDFSBackedStateStoreProvider` takes no arguments to be created.
 
+`HDFSBackedStateStoreProvider` manages versioned state in delta and snapshot files (and uses a <<loadedMaps, cache>> internally for faster access to state versions).
+
 [[logging]]
 [TIP]
 ====
@@ -259,6 +261,8 @@ loadMap(
 
 `loadMap` firstly tries to find the version of the state in the <<loadedMaps, loadedMaps>> internal registry and, if found, returns it. Before that, `loadMap` increments the <<loadedMapCacheHitCount, loadedMapCacheHitCount>> metric.
 
+`loadMap`...FIXME
+
 NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, retrieve the state store for a specified version>> and <<latestIterator, latestIterator>>.
 
 === [[putStateIntoStateCacheMap]] Caching New Version of State -- `putStateIntoStateCacheMap` Internal Method
@@ -334,6 +338,39 @@ finalizeDeltaFile(
 
 NOTE: `finalizeDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commit state changes (a new version of state)>>.
 
+=== [[loadedMaps]] Lookup Table (Cache) of States By Version -- `loadedMaps` Internal Method
+
+[source, scala]
+----
+loadedMaps: TreeMap[
+  Long,                                    // version
+  ConcurrentHashMap[UnsafeRow, UnsafeRow]] // state (as keys and values)
+----
+
+`loadedMaps` is a https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[java.util.TreeMap] of state versions sorted according to the reversed ordering of the versions (i.e. long numbers).
+
+A new entry (a version and the state updates) can only be added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> (and only when the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is above `0`).
+
+`loadedMaps` is mainly used when `HDFSBackedStateStoreProvider` is requested to <<loadMap, loadMap>>. Positive hits (when a version could be found in the cache) is available as the <<loadedMapCacheHitCount, count of cache hit on states cache in provider>> performance metric while misses are counted in the <<loadedMapCacheMissCount, count of cache miss on states cache in provider>> performance metric.
+
+NOTE: With no or missing versions in cache <<loadedMapCacheMissCount, count of cache miss on states cache in provider>> metric should be above `0` while <<loadedMapCacheHitCount, count of cache hit on states cache in provider>> always `0` (or smaller than the other metric).
+
+The estimated size of `loadedMaps` is available as the <<memoryUsedBytes, memoryUsedBytes>> performance metric.
+
+The <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is used as the threshold of the number of elements in `loadedMaps`. When `0` or negative, every <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> removes all elements in (_clears_) `loadedMaps`.
+
+NOTE: It is possible to change the configuration at restart of a structured query.
+
+The state deltas (the values) in `loadedMaps` are cleared (all entries removed) when `HDFSBackedStateStoreProvider` is requested to <<close, close>>.
+
+Used when `HDFSBackedStateStoreProvider` is requested for the following:
+
+* <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>
+
+* <<loadMap, loadMap>>
+
+* <<latestIterator, latestIterator>>
+
 === [[internal-properties]] Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -343,24 +380,6 @@ NOTE: `finalizeDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider
 
 | fm
 a| [[fm]] <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>>
-
-| loadedMaps
-a| [[loadedMaps]]
-
-[source, scala]
-----
-loadedMaps: TreeMap[
-  Long,                                     // state version
-  ConcurrentHashMap[UnsafeRow, UnsafeRow]]  // state (as keys and values)
-----
-
-https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[java.util.TreeMap] of state versions sorted according to the reversed ordering of the versions (i.e. long numbers)
-
-The current size estimation of `loadedMaps` is the <<memoryUsedBytes, memoryUsedBytes>> metric in the <<metrics, metrics>>.
-
-A new entry (a version and the associated map) is added exclusively when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
-
-Used when...FIXME
 
 | numberOfVersionsToRetainInMemory
 a| [[numberOfVersionsToRetainInMemory]]
