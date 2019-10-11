@@ -18,7 +18,7 @@ commit(
   store: StateStore): Long
 ----
 
-Commits all updates (_changes_) to the <<spark-sql-streaming-StateStore.adoc#, state store>> and returns the new version
+Commits all updates (_changes_) to the given <<spark-sql-streaming-StateStore.adoc#, state store>> and returns the new version
 
 Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
 
@@ -67,10 +67,11 @@ a| [[iterator]]
 
 [source, scala]
 ----
-iterator(store: StateStore): Iterator[UnsafeRowPair]
+iterator(
+  store: StateStore): Iterator[UnsafeRowPair]
 ----
 
-Returns all the `UnsafeRow` key-value pairs in the <<spark-sql-streaming-StateStore.adoc#, state store>>
+Returns all `UnsafeRow` key-value pairs in the given <<spark-sql-streaming-StateStore.adoc#, state store>>
 
 Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
 
@@ -91,10 +92,12 @@ a| [[put]]
 
 [source, scala]
 ----
-put(store: StateStore, row: UnsafeRow): Unit
+put(
+  store: StateStore,
+  row: UnsafeRow): Unit
 ----
 
-Stores the row in the <<spark-sql-streaming-StateStore.adoc#, state store>>
+Stores (_puts_) the given row in the given <<spark-sql-streaming-StateStore.adoc#, state store>>
 
 Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
 
@@ -103,10 +106,12 @@ a| [[remove]]
 
 [source, scala]
 ----
-remove(store: StateStore, key: UnsafeRow): Unit
+remove(
+  store: StateStore,
+  key: UnsafeRow): Unit
 ----
 
-Removes the key from the <<spark-sql-streaming-StateStore.adoc#, state store>>
+Removes the key-value pair from the given <<spark-sql-streaming-StateStore.adoc#, state store>> per key
 
 Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed (directly or indirectly as a <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, WatermarkSupport>>)
 

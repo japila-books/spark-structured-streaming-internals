@@ -65,7 +65,12 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 
-`StateStoreSaveExec` uses the performance metrics as <<spark-sql-streaming-StateStoreWriter.adoc#metrics, other stateful physical operators that write to a state store>>. The main difference is in how they are computed.
+`StateStoreSaveExec` uses the performance metrics as <<spark-sql-streaming-StateStoreWriter.adoc#metrics, other stateful physical operators that write to a state store>>.
+
+.StateStoreSaveExec in web UI (Details for Query)
+image::images/StateStoreSaveExec-webui-query-details.png[align="center"]
+
+The following table shows how the performance metrics are computed (and so their exact meaning).
 
 [cols="30,70",options="header",width="100%"]
 |===
@@ -75,41 +80,48 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 | total time to update rows
 a| [[allUpdatesTimeMs]]
 
+* For <<outputMode, Append>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> to filter out expired rows (per the required <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) and the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store rows in a state store>> (the number of rows is the <<numUpdatedStateRows, number of updated state rows>> metric)
+
+* For <<outputMode, Update>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> to filter out expired rows (per the optional <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) and the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store rows in a state store>> (the number of rows is the <<numUpdatedStateRows, number of updated state rows>> metric)
+
 | total time to remove rows
 a| [[allRemovalsTimeMs]]
 
+* For <<outputMode, Append>> output mode, the time taken for the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#remove, remove all expired entries from a state store>> (per <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForKeys, watermarkPredicateForKeys>> predicate) that is the total time of iterating over <<spark-sql-streaming-StreamingAggregationStateManager.adoc#iterator, all entries in the state store>> (the number of entries <<spark-sql-streaming-StreamingAggregationStateManager.adoc#remove, removed from a state store>> is the difference between the number of output rows of the <<child, child operator>> and the <<numTotalStateRows, number of total state rows>> metric)
+
+* For <<outputMode, Complete>> output mode, always `0`
+
+* For <<outputMode, Update>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> for the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark, remove all expired entries from a state store>> (per <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForKeys, watermarkPredicateForKeys>> predicate)
+
 | time to commit changes
-a| [[commitTimeMs]]
+a| [[commitTimeMs]] The <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> for the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#commit, commit changes to a state store>>
 
 | number of output rows
 a| [[numOutputRows]]
 
-* For <<outputMode, Complete>> output mode, `numOutputRows` is the number of rows in a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (i.e. all <<spark-sql-streaming-StreamingAggregationStateManager.adoc#values, values>> for a <<spark-sql-streaming-StateStore.adoc#, StateStore>> in the <<stateManager, StreamingAggregationStateManager>>)
+* For <<outputMode, Complete>> output mode, the number of rows in a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (i.e. all <<spark-sql-streaming-StreamingAggregationStateManager.adoc#values, values>> in a <<spark-sql-streaming-StateStore.adoc#, StateStore>> in the <<stateManager, StreamingAggregationStateManager>> that should be equivalent to the <<numTotalStateRows, number of total state rows>> metric)
 
-* For <<outputMode, Update>> output mode, `numOutputRows` is the number of rows that were updated in a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (and is therefore equivalent to the <<numUpdatedStateRows, numUpdatedStateRows>> metric)
+* For <<outputMode, Update>> output mode, the number of rows that the <<stateManager, StreamingAggregationStateManager>> was requested to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store in a state store>> (that did not expire per the optional <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) that is equivalent to the <<numUpdatedStateRows, number of updated state rows>> metric)
 
 | number of total state rows
-a| [[numTotalStateRows]] Number of the state keys in a <<spark-sql-streaming-StateStore.adoc#, state store>> (_numTotalStateRows_)
+a| [[numTotalStateRows]] Number of entries in a <<spark-sql-streaming-StateStore.adoc#, state store>> at the very end of <<doExecute, executing the StateStoreSaveExec operator>> (aka _numTotalStateRows_)
 
 Corresponds to `numRowsTotal` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | number of updated state rows
-a| [[numUpdatedStateRows]] Number of the state keys that <<spark-sql-streaming-StateStore.adoc#put, were stored as updates in the state store>> in a trigger and for the keys in the result rows of the upstream physical operator (aka _numUpdatedStateRows_)
+a| [[numUpdatedStateRows]] Number of the entries that <<spark-sql-streaming-StateStore.adoc#put, were stored as updates in a state store>> in a trigger and for the keys in the result rows of the upstream physical operator (aka _numUpdatedStateRows_)
 
-* For <<outputMode, Complete>> output mode, `numUpdatedStateRows` is the number of rows (which should be exactly the number of output rows from the upstream operator)
+* For <<outputMode, Append>> output mode, the number of input rows that have not expired yet (per the required <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) and that the <<stateManager, StreamingAggregationStateManager>> was requested to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store in a state store>> (the time taken is the <<allUpdatesTimeMs, total time to update rows>> metric)
 
-* For <<outputMode, Append>> output mode, `numUpdatedStateRows` is the number of rows with keys that have not expired yet (per required <<watermarkPredicateForData, watermarkPredicateForData>>)
+* For <<outputMode, Complete>> output mode, the number of input rows (which should be exactly the number of output rows from the <<child, child operator>>)
 
-* For <<outputMode, Update>> output mode, `numUpdatedStateRows` is the number of keys that have not expired yet if watermark has been defined at all (and is therefore equivalent to the <<numOutputRows, numOutputRows>> metric)
+* For <<outputMode, Update>> output mode, the number of rows that the <<stateManager, StreamingAggregationStateManager>> was requested to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store in a state store>> (that did not expire per the optional <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) that is equivalent to the <<numOutputRows, number of output rows>> metric)
 
 Corresponds to `numRowsUpdated` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | memory used by state
-a| [[stateMemory]] Memory used by a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (aka _stateMemory_)
+a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the <<spark-sql-streaming-StateStoreMetrics.adoc#memoryUsedBytes, StateStoreMetrics>> of the <<spark-sql-streaming-StateStore.adoc#metrics, StateStore>>)
 |===
-
-.StateStoreSaveExec in web UI (Details for Query)
-image::images/StateStoreSaveExec-webui-query-details.png[align="center"]
 
 === [[creating-instance]] Creating StateStoreSaveExec Instance
 
@@ -175,7 +187,7 @@ CAUTION: FIXME When is "Filtering state store on:" printed out?
 
 1. link:spark-sql-streaming-StateStore.adoc#getRange[Takes all the rows] from `StateStore` and returns a `NextIterator` that:
 
-* In `getNext`, finds the first row that matches link:spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForKeys[watermarkPredicateForKeys] predicate, link:spark-sql-streaming-StateStore.adoc#remove[removes it] from `StateStore`, and returns it back.
+* In `getNext`, finds the first row that matches <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForKeys, watermarkPredicateForKeys>> predicate, link:spark-sql-streaming-StateStore.adoc#remove[removes it] from `StateStore`, and returns it back.
 +
 If no row was found, `getNext` also marks the iterator as finished.
 
