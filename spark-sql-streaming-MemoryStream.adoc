@@ -1,132 +1,57 @@
-== [[MemoryStream]] MemoryStream
+== [[MemoryStream]] MemoryStream -- Streaming Reader for Micro-Batch Stream Processing
 
-`MemoryStream` is a streaming  link:spark-sql-streaming-Source.adoc[Source] that produces values to memory.
+`MemoryStream` is a concrete <<spark-sql-streaming-MemoryStreamBase.adoc#, streaming source>> of <<spark-sql-streaming-memory-data-source.adoc#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.adoc#, reading>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 
-`MemoryStream` uses the internal <<batches, batches>> collection of link:spark-sql-dataset.adoc[datasets].
-
-[CAUTION]
-====
-This source is *not* for production use due to design contraints, e.g. infinite in-memory collection of lines read and no fault recovery.
-
-`MemoryStream` is designed primarily for unit tests, tutorials and debugging.
-====
-
-[source, scala]
-----
-val spark: SparkSession = ???
-
-implicit val ctx = spark.sqlContext
-
-import org.apache.spark.sql.execution.streaming.MemoryStream
-// It uses two implicits: Encoder[Int] and SQLContext
-val intsIn = MemoryStream[Int]
-
-val ints = intsIn.toDF
-  .withColumn("t", current_timestamp())
-  .withWatermark("t", "5 minutes")
-  .groupBy(window($"t", "5 minutes") as "window")
-  .agg(count("*") as "total")
-
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-import scala.concurrent.duration._
-val totalsOver5mins = ints.
-  writeStream.
-  format("memory").
-  queryName("totalsOver5mins").
-  outputMode(OutputMode.Append).
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  start
-
-scala> val zeroOffset = intsIn.addData(0, 1, 2)
-zeroOffset: org.apache.spark.sql.execution.streaming.Offset = #0
-
-totalsOver5mins.processAllAvailable()
-spark.table("totalsOver5mins").show
-
-scala> intsOut.show
-+-----+
-|value|
-+-----+
-|    0|
-|    1|
-|    2|
-+-----+
-
-memoryQuery.stop()
-----
-
-```
-17/02/28 20:06:01 DEBUG StreamExecution: Starting Trigger Calculation
-17/02/28 20:06:01 DEBUG StreamExecution: getOffset took 0 ms
-17/02/28 20:06:01 DEBUG StreamExecution: triggerExecution took 0 ms
-17/02/28 20:06:01 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map(watermark -> 1970-01-01T00:00:00.000Z))
-17/02/28 20:06:01 INFO StreamExecution: Streaming query made progress: {
-  "id" : "ec5addda-0e46-4c3c-b2c2-604a854ee19a",
-  "runId" : "d850cabc-94d0-4931-8a2d-e054086e39c3",
-  "name" : "totalsOver5mins",
-  "timestamp" : "2017-02-28T19:06:01.175Z",
-  "numInputRows" : 0,
-  "inputRowsPerSecond" : 0.0,
-  "durationMs" : {
-    "getOffset" : 0,
-    "triggerExecution" : 0
-  },
-  "eventTime" : {
-    "watermark" : "1970-01-01T00:00:00.000Z"
-  },
-  "stateOperators" : [ ],
-  "sources" : [ {
-    "description" : "MemoryStream[value#1]",
-    "startOffset" : null,
-    "endOffset" : null,
-    "numInputRows" : 0,
-    "inputRowsPerSecond" : 0.0
-  } ],
-  "sink" : {
-    "description" : "MemorySink"
-  }
-}
-```
-
+[[logging]]
 [TIP]
 ====
-Enable `DEBUG` logging level for `org.apache.spark.sql.execution.streaming.MemoryStream` logger to see what happens inside.
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MemoryStream` logger to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
 ```
-log4j.logger.org.apache.spark.sql.execution.streaming.MemoryStream=DEBUG
+log4j.logger.org.apache.spark.sql.execution.streaming.MemoryStream=ALL
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
 === [[creating-instance]] Creating MemoryStream Instance
 
+`MemoryStream` takes the following to be created:
+
+* [[id]] ID
+* [[sqlContext]] `SQLContext`
+
+`MemoryStream` initializes the <<internal-properties, internal properties>>.
+
+=== [[apply]] Creating MemoryStream Instance -- `apply` Object Factory
+
 [source, scala]
 ----
-apply[A : Encoder](implicit sqlContext: SQLContext): MemoryStream[A]
+apply[A : Encoder](
+  implicit sqlContext: SQLContext): MemoryStream[A]
 ----
 
-`MemoryStream` object defines `apply` method that you can use to create instances of `MemoryStream` streaming sources.
+`apply` uses an `memoryStreamId` internal counter to <<creating-instance, create a new MemoryStream>> with a unique <<id, ID>> and the implicit `SQLContext`.
 
-=== [[addData]] Adding Data to Source (addData methods)
+=== [[addData]] Adding Data to Source -- `addData` Method
 
 [source, scala]
 ----
-addData(data: A*): Offset
-addData(data: TraversableOnce[A]): Offset
+addData(
+  data: TraversableOnce[A]): Offset
 ----
 
-`addData` methods add the input `data` to <<batches, batches>> internal collection.
+`addData` adds the given `data` to the <<batches, batches>> internal registry.
 
-When executed, `addData` adds a `DataFrame` (created using link:spark-sql-dataset.adoc#toDS[toDS] implicit method) and increments the internal `currentOffset` offset.
-
-You should see the following DEBUG message in the logs:
+Internally, `addData` prints out the following DEBUG message to the logs:
 
 ```
-DEBUG MemoryStream: Adding ds: [ds]
+Adding: [data]
 ```
+
+In the end, `addData` increments the <<currentOffset, current offset>> and adds the data to the <<batches, batches>> internal registry.
 
 === [[getBatch]] Generating Next Streaming Batch -- `getBatch` Method
 
@@ -140,7 +65,16 @@ You should see the following DEBUG message in the logs:
 DEBUG MemoryStream: MemoryBatch [[startOrdinal], [endOrdinal]]: [newBlocks]
 ```
 
-=== [[logicalPlan]] StreamingExecutionRelation Logical Plan
+=== [[logicalPlan]] Logical Plan -- `logicalPlan` Internal Property
+
+[source, scala]
+----
+logicalPlan: LogicalPlan
+----
+
+NOTE: `logicalPlan` is part of the <<spark-sql-streaming-MemoryStreamBase.adoc#logicalPlan, MemoryStreamBase Contract>> for the logical query plan of the memory stream.
+
+`logicalPlan` is simply a <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> (for this memory source and the <<spark-sql-streaming-MemoryStreamBase.adoc#attributes, attributes>>).
 
 `MemoryStream` uses link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical plan to build link:spark-sql-dataset.adoc[Datasets] or link:spark-sql-dataset.adoc#ofRows[DataFrames] when requested.
 
@@ -159,3 +93,76 @@ res15: org.apache.spark.sql.catalyst.plans.logical.LogicalPlan = MemoryStream[va
 === [[schema]] Schema (schema method)
 
 `MemoryStream` works with the data of the link:spark-sql-schema.adoc[schema] as described by the link:spark-sql-Encoder.adoc[Encoder] (of the `Dataset`).
+
+=== [[toString]] Textual Representation -- `toString` Method
+
+[source, scala]
+----
+toString: String
+----
+
+NOTE: `toString` is part of the https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html[java.lang.Object] contract for the string representation of the object.
+
+`toString` uses the <<output, output schema>> to return the following textual representation:
+
+```
+MemoryStream[[output]]
+```
+
+=== [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method
+
+[source, scala]
+----
+planInputPartitions(): java.util.List[InputPartition[InternalRow]]
+----
+
+NOTE: `planInputPartitions` is part of the `DataSourceReader` contract in Spark SQL for the number of `InputPartitions` to use as RDD partitions (when `DataSourceV2ScanExec` physical operator is requested for the partitions of the input RDD).
+
+`planInputPartitions`...FIXME
+
+`planInputPartitions` prints out a DEBUG message to the logs with the <<generateDebugString, generateDebugString>> (with the batches after the <<lastOffsetCommitted, last committed offset>>).
+
+`planInputPartitions`...FIXME
+
+=== [[generateDebugString]] `generateDebugString` Internal Method
+
+[source, scala]
+----
+generateDebugString(
+  rows: Seq[UnsafeRow],
+  startOrdinal: Int,
+  endOrdinal: Int): String
+----
+
+`generateDebugString` resolves and binds the <<spark-sql-streaming-MemoryStreamBase.adoc#encoder, encoder>> for the data.
+
+In the end, `generateDebugString` returns the following string:
+
+```
+MemoryBatch [[startOrdinal], [endOrdinal]]: [rows]
+```
+
+NOTE: `generateDebugString` is used exclusively when `MemoryStream` is requested to <<planInputPartitions, planInputPartitions>>.
+
+=== [[internal-properties]] Internal Properties
+
+[cols="30m,70",options="header",width="100%"]
+|===
+| Name
+| Description
+
+| batches
+a| [[batches]] Batch data (`ListBuffer[Array[UnsafeRow]]`)
+
+| currentOffset
+a| [[currentOffset]] Current <<spark-sql-streaming-Offset.adoc#, offset>> (as <<spark-sql-streaming-Offset.adoc#, LongOffset>>)
+
+| lastOffsetCommitted
+a| [[lastOffsetCommitted]] Last committed <<spark-sql-streaming-Offset.adoc#, offset>> (as <<spark-sql-streaming-Offset.adoc#, LongOffset>>)
+
+| output
+a| [[output]] Output schema (`Seq[Attribute]`) of the <<logicalPlan, logical query plan>>
+
+Used exclusively for <<toString, toString>>
+
+|===

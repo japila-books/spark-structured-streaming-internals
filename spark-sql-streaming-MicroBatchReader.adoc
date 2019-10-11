@@ -1,4 +1,4 @@
-== [[MicroBatchReader]] MicroBatchReader Contract -- Data Source Readers in Micro-Batch Stream Processing
+== [[MicroBatchReader]] MicroBatchReader Contract -- Data Source Readers in Micro-Batch Stream Processing (Data Source API V2)
 
 `MicroBatchReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
 

@@ -235,6 +235,7 @@
 . link:spark-sql-streaming-MemorySinkV2.adoc[MemorySinkV2]
 .. link:spark-sql-streaming-MemoryStreamWriter.adoc[MemoryStreamWriter]
 
+. link:spark-sql-streaming-MemoryStreamBase.adoc[MemoryStreamBase]
 . link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
 
 == Offsets and Metadata Checkpointing (Fault-Tolerance and Reliability)

@@ -39,7 +39,7 @@ Used when:
 | <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>
 | [[ContinuousReader]] Data source readers in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> (based on Data Source API V2)
 
-| `MemoryStreamBase`
+| <<spark-sql-streaming-MemoryStreamBase.adoc#, MemoryStreamBase>>
 | [[MemoryStreamBase]] Base implementation of <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>> (for <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>) and <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>> (for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>)
 
 | <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>

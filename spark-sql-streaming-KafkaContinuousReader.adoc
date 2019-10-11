@@ -33,14 +33,14 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 * [[initialOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Initial offsets>>
 * [[failOnDataLoss]] `failOnDataLoss` flag
 
-=== [[planInputPartitions]] `planInputPartitions` Method
+=== [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method
 
 [source, scala]
 ----
 planInputPartitions(): java.util.List[InputPartition[InternalRow]]
 ----
 
-NOTE: `planInputPartitions` is part of the `DataSourceReader` contract to...FIXME.
+NOTE: `planInputPartitions` is part of the `DataSourceReader` contract in Spark SQL for the number of `InputPartitions` to use as RDD partitions (when `DataSourceV2ScanExec` physical operator is requested for the partitions of the input RDD).
 
 `planInputPartitions`...FIXME
 

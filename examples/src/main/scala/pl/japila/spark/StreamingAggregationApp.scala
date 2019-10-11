@@ -114,6 +114,10 @@ object StreamingAggregationApp extends SparkStreamsApp {
          |- Don't get confused with the one Spark job that did get run
          |- This is for the show operator to display the in-memory table (of the memory sink)
          |
+         |Note that "stateOperators" entry in the progress report that follows is empty
+         |- No stateful operator was actually executed
+         |- Can't explain why (FIXME)
+         |
          |Let's analyze the stats
          |""".stripMargin)
 

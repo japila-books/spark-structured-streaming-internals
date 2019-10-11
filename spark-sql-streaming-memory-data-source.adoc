@@ -2,6 +2,58 @@
 
 *Memory Data Source* is...FIXME
 
+[CAUTION]
+====
+Memory Data Source is *not* for production use due to design contraints, e.g. infinite in-memory collection of lines read and no fault recovery.
+
+`MemoryStream` is designed primarily for unit tests, tutorials and debugging.
+====
+
+.Memory Source in Micro-Batch Stream Processing
+[source, scala]
+----
+val spark: SparkSession = ???
+
+implicit val ctx = spark.sqlContext
+
+import org.apache.spark.sql.execution.streaming.MemoryStream
+// It uses two implicits: Encoder[Int] and SQLContext
+val intsIn = MemoryStream[Int]
+
+val ints = intsIn.toDF
+  .withColumn("t", current_timestamp())
+  .withWatermark("t", "5 minutes")
+  .groupBy(window($"t", "5 minutes") as "window")
+  .agg(count("*") as "total")
+
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
+import scala.concurrent.duration._
+val totalsOver5mins = ints.
+  writeStream.
+  format("memory").
+  queryName("totalsOver5mins").
+  outputMode(OutputMode.Append).
+  trigger(Trigger.ProcessingTime(10.seconds)).
+  start
+
+scala> val zeroOffset = intsIn.addData(0, 1, 2)
+zeroOffset: org.apache.spark.sql.execution.streaming.Offset = #0
+
+totalsOver5mins.processAllAvailable()
+spark.table("totalsOver5mins").show
+
+scala> intsOut.show
++-----+
+|value|
++-----+
+|    0|
+|    1|
+|    2|
++-----+
+
+memoryQuery.stop()
+----
+
 .Memory Sink in Micro-Batch Stream Processing
 [source, scala]
 ----

@@ -61,7 +61,7 @@ NOTE: `stop` is part of the <<spark-sql-streaming-BaseStreamingSource.adoc#stop,
 
 `stop` simply requests the <<kafkaOffsetReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#close, close>>.
 
-=== [[planInputPartitions]] Input Partitions -- `planInputPartitions` Method
+=== [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method
 
 [source, scala]
 ----

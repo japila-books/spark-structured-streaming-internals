@@ -1,0 +1,3 @@
+== [[MemoryStreamBase]] MemoryStreamBase
+
+`MemoryStreamBase` is...FIXME
