@@ -1,10 +1,34 @@
-== [[StateStoreWriter]] StateStoreWriter Contract -- Stateful Physical Operators That Write to StateStore
+== [[StateStoreWriter]] StateStoreWriter Contract -- Stateful Physical Operators That Write to State Store
 
 `StateStoreWriter` is the extension of the <<spark-sql-streaming-StatefulOperator.adoc#, StatefulOperator Contract>> for <<implementations, physical operators>> that write to a state store and collect the <<metrics, write metrics>> for <<getProgress, execution progress reporting>>.
 
-[[metrics]]
-.StateStoreWriter's Performance Metrics
-[cols="2,2",options="header",width="100%"]
+[[implementations]]
+.StateStoreWriters
+[cols="30,70",options="header",width="100%"]
+|===
+| StateStoreWriter
+| Description
+
+| <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+| [[FlatMapGroupsWithStateExec]]
+
+| <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+| [[StateStoreSaveExec]]
+
+| <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+| [[StreamingDeduplicateExec]]
+
+| <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
+| [[StreamingGlobalLimitExec]]
+
+| <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
+| [[StreamingSymmetricHashJoinExec]]
+
+|===
+
+=== [[metrics]] Performance Metrics (SQLMetrics)
+
+[cols="30,70",options="header",width="100%"]
 |===
 | Name (in web UI)
 | Description
@@ -29,30 +53,6 @@
 
 | memory used by state
 | [[stateMemory]]
-
-|===
-
-[[implementations]]
-.StateStoreWriters
-[cols="1,2",options="header",width="100%"]
-|===
-| StateStoreWriter
-| Description
-
-| <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
-| [[FlatMapGroupsWithStateExec]]
-
-| <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
-| [[StateStoreSaveExec]]
-
-| <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
-| [[StreamingDeduplicateExec]]
-
-| <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
-| [[StreamingGlobalLimitExec]]
-
-| <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
-| [[StreamingSymmetricHashJoinExec]]
 
 |===
 

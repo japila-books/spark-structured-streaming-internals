@@ -14,4 +14,4 @@ Just browse [src/main/scala](src/main/scala/pl/japila/spark) directory and read 
 
 * [FlatMapGroupsWithStateApp](src/main/scala/pl/japila/spark/FlatMapGroupsWithStateApp.scala)
 * [GroupbyAppendWatermarkExample](src/main/scala/pl/japila/spark/GroupbyAppendWatermarkExample.scala)
-* [StreamingAggregationAppendModeApp](src/main/scala/pl/japila/spark/StreamingAggregationAppendModeApp.scala)
+* [StreamingAggregationApp](src/main/scala/pl/japila/spark/StreamingAggregationApp.scala)

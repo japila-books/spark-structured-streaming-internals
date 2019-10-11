@@ -2,16 +2,32 @@ package pl.japila.spark
 
 import org.apache.spark.sql.execution.streaming.LongOffset
 
-/**
- * Demo: Stateful Aggregation with Watermark and Append Output Mode
- *
- * Used to demo the following:
- *
- * * <a href="https://jaceklaskowski.gitbooks.io/spark-structured-streaming/spark-sql-streaming-StateStoreSaveExec.html">StateStoreSaveExec Physical Operator</a> with Append output mode
- */
-object StreamingAggregationAppendModeApp extends SparkStreamsApp {
+object StreamingAggregationApp extends SparkStreamsApp {
 
   // FIXME Compare to FlatMapGroupsWithStateApp
+  // FIXME It should also kick GroupbyAppendWatermarkExample out
+
+  // FIXME Configurable from the command line
+  import org.apache.spark.sql.streaming.OutputMode
+  val queryOutputMode = OutputMode.Append
+
+  println(
+    s"""
+       |Demo: Streaming Aggregation (Micro-Batch Stream Processing)
+       |https://jaceklaskowski.gitbooks.io/spark-structured-streaming/spark-sql-streaming-aggregation.html
+       |
+       |Output Mode: $queryOutputMode
+       |
+       |Observe $checkpointLocation/state directory that gets populated with delta and snapshot files
+       |- The directories are per operator and partitions IDs, e.g. 0/0 for 0th op and 0th partition
+       |- The numbers in the names of the state files are state versions (and micro-batch IDs actually)
+       |- The directory is available only after the first micro-batch finishes
+       |
+       |Just for more logs (and fun!) logging levels of the MVPs are at ALL level
+       |(MVPs = most valuable players)
+     """.stripMargin)
+
+  pause()
 
   // FIXME Make it configurable from the command line
   spark.sparkContext.setLogLevel("OFF")
@@ -28,9 +44,10 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
   }
 
   // Using memory data source for full control of the input
-  import org.apache.spark.sql.execution.streaming.MemoryStream
-  implicit val sqlCtx = spark.sqlContext
+  import org.apache.spark.sql.SQLContext
+  implicit val sqlCtx: SQLContext = spark.sqlContext
   import spark.implicits._
+  import org.apache.spark.sql.execution.streaming.MemoryStream
   val events = MemoryStream[Event]
   val sessions = events.toDS
   assert(sessions.isStreaming, "sessions must be a streaming Dataset")
@@ -48,11 +65,6 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
        |""".stripMargin)
   val valuesWatermarked = sessions
     .withWatermark(eventTime, delayThreshold.toString)
-
-  import org.apache.spark.sql.streaming.OutputMode
-
-  // FIXME Configurable from the command line
-  val queryOutputMode = OutputMode.Append
 
   import org.apache.spark.sql.functions._
   val windowDuration = 5.seconds
@@ -78,20 +90,6 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
     currentStatus == expectedStatus,
     s"""Current status: $currentStatus not $expectedStatus""")
 
-  println(
-    s"""
-       |Demo: Stateful Aggregation with Watermark and Append Output Mode
-       |
-       |Observe $checkpointLocation/state directory that gets populated with delta and snapshot files
-       |- The directories are the operator ID and the partition ID, e.g. 0/0 for 0th op and 0th partition
-       |- The numbers in the names of the state files are state versions (and micro-batch IDs actually)
-       |- The directory is available only after the first micro-batch finishes
-       |
-       |Just for more logs (and fun!) HDFSBackedStateStoreProvider logging level is ALL
-     """.stripMargin)
-
-  pause()
-
   // Sorry, it's simply to copy and paste event sections
   // and track the batches :)
   // FIXME Create batch generator (to read data from a directory?)
@@ -108,10 +106,15 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
     println(
       s"""
          |There's actually batch 0
-         |(unless resumed from checkpoint)
-         |It is started immediately after a streaming query is started
+         |- unless resumed from checkpoint which is not the case here
+         |- the app always starts from scratch (no earlier state)
+         |
+         |The batch 0 is started immediately after a streaming query is started
          |It has no data (and hence no Spark jobs ran and in web UI)
-         |Let's see the stats
+         |- Don't get confused with the one Spark job that did get run
+         |- This is for the show operator to display the in-memory table (of the memory sink)
+         |
+         |Let's analyze the stats
          |""".stripMargin)
 
     val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
@@ -127,6 +130,8 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
       .orderBy("sliding_window")
       .show(truncate = false)
   }
+
+  pause()
 
   {
     batchNo = batchNo + 1
@@ -174,6 +179,8 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
     val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
     val currentWatermarkMs = toMillis(currentWatermark)
     println(s"Current watermark: $currentWatermarkMs ms")
+    val progressCount = streamingQuery.recentProgress.length
+    println(s"Number of the recent progress reports: $progressCount")
     println()
     println(streamingQuery.lastProgress.prettyJson)
 
@@ -203,6 +210,8 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
     val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
     val currentWatermarkMs = toMillis(currentWatermark)
     println(s"Current watermark: $currentWatermarkMs ms")
+    val progressCount = streamingQuery.recentProgress.length
+    println(s"Number of the recent progress reports: $progressCount")
     println()
     println(streamingQuery.lastProgress.prettyJson)
 
@@ -229,6 +238,8 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
     val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
     val currentWatermarkMs = toMillis(currentWatermark)
     println(s"Current watermark: $currentWatermarkMs ms")
+    val progressCount = streamingQuery.recentProgress.length
+    println(s"Number of the recent progress reports: $progressCount")
     println()
     println(streamingQuery.lastProgress.prettyJson)
 
@@ -255,6 +266,8 @@ object StreamingAggregationAppendModeApp extends SparkStreamsApp {
     val currentWatermark = streamingQuery.lastProgress.eventTime.get("watermark")
     val currentWatermarkMs = toMillis(currentWatermark)
     println(s"Current watermark: $currentWatermarkMs ms")
+    val progressCount = streamingQuery.recentProgress.length
+    println(s"Number of the recent progress reports: $progressCount")
     println()
     println(streamingQuery.lastProgress.prettyJson)
 
