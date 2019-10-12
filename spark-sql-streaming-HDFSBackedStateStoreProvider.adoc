@@ -134,6 +134,17 @@ deltaFile(version: Long): Path
 * `HDFSBackedStateStoreProvider` is requested to <<updateFromDeltaFile, updateFromDeltaFile>>
 ====
 
+=== [[snapshotFile]] `snapshotFile` Internal Method
+
+[source, scala]
+----
+snapshotFile(version: Long): Path
+----
+
+`snapshotFile` simply returns the Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the `[version].snapshot` file in the <<baseDir, state checkpoint base directory>>.
+
+NOTE: `snapshotFile` is used when `HDFSBackedStateStoreProvider` is requested to <<writeSnapshotFile, writeSnapshotFile>> or <<readSnapshotFile, readSnapshotFile>>.
+
 === [[fetchFiles]] Fetching All Delta And Snapshot Files -- `fetchFiles` Internal Method
 
 [source, scala]
@@ -306,18 +317,57 @@ With the size of the <<loadedMaps, loadedMaps>> internal registry is at the <<nu
 
 NOTE: `putStateIntoStateCacheMap` is used when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commit state (as a new version)>> and <<loadMap, load state for a specified version>>.
 
-=== [[writeSnapshotFile]] `writeSnapshotFile` Internal Method
+=== [[writeSnapshotFile]] Writing Compressed Snapshot File for Specified Version -- `writeSnapshotFile` Internal Method
 
 [source, scala]
 ----
 writeSnapshotFile(
   version: Long,
-  map: MapType): Unit
+  map: ConcurrentHashMap[UnsafeRow, UnsafeRow]): Unit
 ----
 
-`writeSnapshotFile`...FIXME
+`writeSnapshotFile` <<snapshotFile, snapshotFile>> for the given version.
 
-NOTE: `writeSnapshotFile` is used when...FIXME
+`writeSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#createAtomic, create the snapshot file>> (with overwriting enabled) and <<compressStream, compress the stream>>.
+
+For every key-value `UnsafeRow` pair in the given map, `writeSnapshotFile` writes the size of the key followed by the key itself (as bytes). `writeSnapshotFile` then writes the size of the value followed by the value itself (as bytes).
+
+In the end, `writeSnapshotFile` prints out the following INFO message to the logs:
+
+```
+Written snapshot file for version [version] of [this] at [targetFile]
+```
+
+In case of any `Throwable` exception, `writeSnapshotFile` <<cancelDeltaFile, cancelDeltaFile>> and re-throws the exception.
+
+NOTE: `writeSnapshotFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<doSnapshot, doSnapshot>>.
+
+=== [[compressStream]] `compressStream` Internal Method
+
+[source, scala]
+----
+compressStream(
+  outputStream: DataOutputStream): DataOutputStream
+----
+
+`compressStream` creates a new `LZ4CompressionCodec` (based on the <<sparkConf, SparkConf>>) and requests it to create a `LZ4BlockOutputStream` with the given `DataOutputStream`.
+
+In the end, `compressStream` creates a new `DataOutputStream` with the `LZ4BlockOutputStream`.
+
+NOTE: `compressStream` is used when...FIXME
+
+=== [[cancelDeltaFile]] `cancelDeltaFile` Internal Method
+
+[source, scala]
+----
+cancelDeltaFile(
+  compressedStream: DataOutputStream,
+  rawStream: CancellableFSDataOutputStream): Unit
+----
+
+`cancelDeltaFile`...FIXME
+
+NOTE: `cancelDeltaFile` is used when...FIXME
 
 === [[updateFromDeltaFile]] `updateFromDeltaFile` Internal Method
 
@@ -410,4 +460,8 @@ numberOfVersionsToRetainInMemory: Int
 `numberOfVersionsToRetainInMemory` is the maximum number of entries in the <<loadedMaps, loadedMaps>> internal registry and is configured by the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration.
 
 `numberOfVersionsToRetainInMemory` is a threshold when `HDFSBackedStateStoreProvider` removes the last key from the <<loadedMaps, loadedMaps>> internal registry (per reverse ordering of state versions) when requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
+
+| sparkConf
+a| [[sparkConf]] `SparkConf`
+
 |===
