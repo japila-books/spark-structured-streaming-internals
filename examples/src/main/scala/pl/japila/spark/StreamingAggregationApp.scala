@@ -118,6 +118,10 @@ object StreamingAggregationApp extends SparkStreamsApp {
          |- No stateful operator was actually executed
          |- Can't explain why (FIXME)
          |
+         |You should also notice that after you started the query with memory sink
+         |The only completed query in SQL tab in web UI is "Execute CreateViewCommand"
+         |That's how the memory sink (DataStreamWriter actually) makes sure that the temporary table is registered
+         |
          |Let's analyze the stats
          |""".stripMargin)
 
@@ -128,11 +132,6 @@ object StreamingAggregationApp extends SparkStreamsApp {
     println(s"Number of the recent progress reports: $progressCount")
     println()
     println(streamingQuery.lastProgress.prettyJson)
-
-    spark
-      .table(queryName)
-      .orderBy("sliding_window")
-      .show(truncate = false)
   }
 
   pause()
