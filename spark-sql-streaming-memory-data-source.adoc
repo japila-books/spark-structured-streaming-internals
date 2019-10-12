@@ -1,6 +1,28 @@
 == Memory Data Source
 
-*Memory Data Source* is...FIXME
+*Memory Data Source* is made up of the following two base implementations to support the older DataSource API V1 and the modern DataSource API V2:
+
+* <<spark-sql-streaming-MemoryStreamBase.adoc#, MemoryStreamBase>>
+
+* <<spark-sql-streaming-MemorySinkBase.adoc#, MemorySinkBase>>
+
+Memory data source supports <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>> stream processing modes.
+
+[cols="30,35,35",options="header",width="100%"]
+|===
+| Stream Processing
+| Source
+| Sink
+
+| <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch>>
+| <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>>
+| <<spark-sql-streaming-MemorySink.adoc#, MemorySink>>
+
+| <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>>
+| <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>>
+| <<spark-sql-streaming-MemorySinkV2.adoc#, MemorySinkV2>>
+
+|===
 
 [CAUTION]
 ====
@@ -36,9 +58,7 @@ val totalsOver5mins = ints.
   trigger(Trigger.ProcessingTime(10.seconds)).
   start
 
-scala> val zeroOffset = intsIn.addData(0, 1, 2)
-zeroOffset: org.apache.spark.sql.execution.streaming.Offset = #0
-
+val zeroOffset = intsIn.addData(0, 1, 2)
 totalsOver5mins.processAllAvailable()
 spark.table("totalsOver5mins").show
 

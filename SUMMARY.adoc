@@ -228,15 +228,15 @@
 
 . link:spark-sql-streaming-memory-data-source.adoc[Memory Data Source]
 
-. link:spark-sql-streaming-MemorySinkBase.adoc[MemorySinkBase]
+. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
+. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
 
 . link:spark-sql-streaming-MemorySink.adoc[MemorySink]
-
 . link:spark-sql-streaming-MemorySinkV2.adoc[MemorySinkV2]
 .. link:spark-sql-streaming-MemoryStreamWriter.adoc[MemoryStreamWriter]
 
 . link:spark-sql-streaming-MemoryStreamBase.adoc[MemoryStreamBase]
-. link:spark-sql-streaming-MemoryStream.adoc[MemoryStream]
+. link:spark-sql-streaming-MemorySinkBase.adoc[MemorySinkBase]
 
 == Offsets and Metadata Checkpointing (Fault-Tolerance and Reliability)
 
@@ -290,7 +290,6 @@
 . link:spark-sql-streaming-ContinuousReadSupport.adoc[ContinuousReadSupport Contract]
 . link:spark-sql-streaming-ContinuousReader.adoc[ContinuousReader Contract]
 
-. link:spark-sql-streaming-ContinuousMemoryStream.adoc[ContinuousMemoryStream]
 . link:spark-sql-streaming-RateStreamContinuousReader.adoc[RateStreamContinuousReader]
 
 . link:spark-sql-streaming-EpochCoordinator.adoc[EpochCoordinator RPC Endpoint]
