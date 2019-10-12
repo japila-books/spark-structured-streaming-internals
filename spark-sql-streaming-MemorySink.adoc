@@ -77,30 +77,38 @@ addBatch(
 
 NOTE: `addBatch` is part of the <<spark-sql-streaming-Sink.adoc#addBatch, Sink Contract>> to "add" a batch of data to the sink.
 
-`addBatch` checks if `batchId` has already been committed (i.e. added to <<batches, batches>> internal registry).
+`addBatch` branches off based on whether the given `batchId` has already been <<addBatch-committed, committed>> or <<addBatch-not-committed, not>>.
 
-If `batchId` was already committed, `addBatch` simply prints out the following DEBUG message to the logs and returns.
+A batch ID is considered *committed* when the given batch ID is greater than the <<latestBatchId, latest batch ID>> (if available).
 
-```
-Skipping already committed batch: [batchId]
-```
+==== [[addBatch-not-committed]] Batch Not Committed
 
-Otherwise, if the `batchId` is not already committed, `addBatch` prints out the following DEBUG message to the logs:
+With the `batchId` not committed, `addBatch` prints out the following DEBUG message to the logs:
 
 ```
 Committing batch [batchId] to [this]
 ```
 
-For `Append` and `Update` output modes, `addBatch` collects records from `data` and registers `batchId` (i.e. adds to <<batches, batches>> internal registry).
+`addBatch` collects records from the given `data`.
 
-NOTE: `addBatch` uses `collect` operator to collect records. It is when the records are "downloaded" to the driver's memory.
+NOTE: `addBatch` uses `Dataset.collect` operator to collect records.
 
-For `Complete` output mode, `addBatch` collects records (as for the other output modes), but before registering `batchId` clears <<batches, batches>> internal registry.
+For <<outputMode, Append>> and <<outputMode, Update>> output modes, `addBatch` adds the data (as a `AddedData`) to the <<batches, batches>> internal registry.
 
-When the output mode is invalid, `addBatch` reports a `IllegalArgumentException` with the following error message.
+For <<outputMode, Complete>> output mode, `addBatch` clears the <<batches, batches>> internal registry first before adding the data (as a `AddedData`).
+
+For any other output mode, `addBatch` reports an `IllegalArgumentException`:
 
 ```
 Output mode [outputMode] is not supported by MemorySink
+```
+
+==== [[addBatch-committed]] Batch Committed
+
+With the `batchId` committed, `addBatch` simply prints out the following DEBUG message to the logs and returns.
+
+```
+Skipping already committed batch: [batchId]
 ```
 
 === [[clear]] Clearing Up Internal Batch Buffer -- `clear` Method

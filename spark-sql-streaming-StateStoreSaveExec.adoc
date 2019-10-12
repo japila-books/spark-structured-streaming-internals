@@ -78,11 +78,15 @@ The following table shows how the performance metrics are computed (and so their
 | Description
 
 | total time to update rows
-a| [[allUpdatesTimeMs]]
+a| [[allUpdatesTimeMs]] <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, Time taken>> to read the input rows and <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store them in a state store>> (possibly filtering out expired rows per <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate)
 
-* For <<outputMode, Append>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> to filter out expired rows (per the required <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) and the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store rows in a state store>> (the number of rows is the <<numUpdatedStateRows, number of updated state rows>> metric)
+The number of rows stored is the <<numUpdatedStateRows, number of updated state rows>> metric
 
-* For <<outputMode, Update>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> to filter out expired rows (per the optional <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) and the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store rows in a state store>> (the number of rows is the <<numUpdatedStateRows, number of updated state rows>> metric)
+* For <<outputMode, Append>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> to filter out expired rows (per the required <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) and the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store rows in a state store>>
+
+* For <<outputMode, Complete>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> to go over all the input rows and request the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store rows in a state store>>
+
+* For <<outputMode, Update>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> to filter out expired rows (per the optional <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, watermarkPredicateForData>> predicate) and the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, store rows in a state store>>
 
 | total time to remove rows
 a| [[allRemovalsTimeMs]]
@@ -94,10 +98,12 @@ a| [[allRemovalsTimeMs]]
 * For <<outputMode, Update>> output mode, the <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> for the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark, remove all expired entries from a state store>> (per <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForKeys, watermarkPredicateForKeys>> predicate)
 
 | time to commit changes
-a| [[commitTimeMs]] The <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, time taken>> for the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#commit, commit changes to a state store>>
+a| [[commitTimeMs]] <<spark-sql-streaming-StateStoreWriter.adoc#timeTakenMs, Time taken>> for the <<stateManager, StreamingAggregationStateManager>> to <<spark-sql-streaming-StreamingAggregationStateManager.adoc#commit, commit changes to a state store>>
 
 | number of output rows
 a| [[numOutputRows]]
+
+* For <<outputMode, Append>> output mode, the metric does not seem to be used
 
 * For <<outputMode, Complete>> output mode, the number of rows in a <<spark-sql-streaming-StateStore.adoc#, StateStore>> (i.e. all <<spark-sql-streaming-StreamingAggregationStateManager.adoc#values, values>> in a <<spark-sql-streaming-StateStore.adoc#, StateStore>> in the <<stateManager, StreamingAggregationStateManager>> that should be equivalent to the <<numTotalStateRows, number of total state rows>> metric)
 

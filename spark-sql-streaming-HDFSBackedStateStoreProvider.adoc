@@ -88,7 +88,7 @@ NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11
 HDFSStateStoreProvider[id = (op=[operatorId],part=[partitionId]),dir = [baseDir]]
 ```
 
-=== [[getStore]] Retrieving State for Specified Version -- `getStore` Method
+=== [[getStore]] Retrieving State for Specified Version For Update -- `getStore` Method
 
 [source, scala]
 ----
