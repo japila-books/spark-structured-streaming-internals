@@ -145,14 +145,34 @@ snapshotFile(version: Long): Path
 
 NOTE: `snapshotFile` is used when `HDFSBackedStateStoreProvider` is requested to <<writeSnapshotFile, writeSnapshotFile>> or <<readSnapshotFile, readSnapshotFile>>.
 
-=== [[fetchFiles]] Fetching All Delta And Snapshot Files -- `fetchFiles` Internal Method
+=== [[fetchFiles]] Listing All Delta And Snapshot Files In State Checkpoint Directory -- `fetchFiles` Internal Method
 
 [source, scala]
 ----
 fetchFiles(): Seq[StoreFile]
 ----
 
-`fetchFiles`...FIXME
+`fetchFiles` requests the <<fm, CheckpointFileManager>> for <<spark-sql-streaming-CheckpointFileManager.adoc#list, all the files>> in the <<baseDir, state checkpoint directory>>.
+
+For every file, `fetchFiles` splits the name into two parts with `.` (dot) as a separator (files with more or less than two parts are simply ignored) and registers a new `StoreFile` for `snapshot` and `delta` files:
+
+* For `snapshot` files, `fetchFiles` creates a new `StoreFile` with `isSnapshot` flag on (`true`)
+
+* For `delta` files, `fetchFiles` creates a new `StoreFile` with `isSnapshot` flag off (`false`)
+
+NOTE: `delta` files are only registered if there was no `snapshot` file for the version.
+
+`fetchFiles` prints out the following WARN message to the logs for any other files:
+
+```
+Could not identify file [path] for [this]
+```
+
+In the end, `fetchFiles` sorts the `StoreFiles` based on their version, prints out the following DEBUG message to the logs, and returns the files.
+
+```
+Current set of files for [this]: [storeFiles]
+```
 
 NOTE: `fetchFiles` is used when `HDFSBackedStateStoreProvider` is requested to <<latestIterator, latestIterator>>, <<doSnapshot, doSnapshot>> and <<cleanup, cleanup>>.
 
@@ -188,12 +208,14 @@ latestIterator(): Iterator[UnsafeRowPair]
 
 NOTE: `latestIterator` seems to be used exclusively in tests.
 
-=== [[doSnapshot]] `doSnapshot` Internal Method
+=== [[doSnapshot]] Snapshoting -- `doSnapshot` Internal Method
 
 [source, scala]
 ----
 doSnapshot(): Unit
 ----
+
+`doSnapshot` <<fetchFiles, fetchFiles>>.
 
 `doSnapshot`...FIXME
 

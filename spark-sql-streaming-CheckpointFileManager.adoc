@@ -86,6 +86,8 @@ list(
 ----
 <1> Uses `PathFilter` that accepts all files in the path
 
+Lists all files in the given path
+
 Used when:
 
 * `HDFSBackedStateStoreProvider` is requested for <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#fetchFiles, all delta and snapshot files>>
