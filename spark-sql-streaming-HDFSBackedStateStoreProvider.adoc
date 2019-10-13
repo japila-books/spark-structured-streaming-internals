@@ -215,11 +215,56 @@ NOTE: `latestIterator` seems to be used exclusively in tests.
 doSnapshot(): Unit
 ----
 
-`doSnapshot` <<fetchFiles, fetchFiles>>.
+`doSnapshot` <<fetchFiles, lists all delta and snapshot files in the state checkpoint directory>> (`files`) and prints out the following DEBUG message to the logs:
 
-`doSnapshot`...FIXME
+```
+fetchFiles() took [time] ms.
+```
 
-NOTE: `doSnapshot` is used when...FIXME
+`doSnapshot` returns immediately when there are no delta and snapshot files.
+
+`doSnapshot` takes the version of the latest file (`lastVersion`).
+
+`doSnapshot` <<filesForVersion, finds the snapshot file and delta files for the version>> (among the files and for the last version).
+
+`doSnapshot` looks up the last version in the <<loadedMaps, internal state cache>>.
+
+When the last version was found in the cache and the number of delta files is above <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>> internal threshold, `doSnapshot` <<writeSnapshotFile, writes a compressed snapshot file for the last version>>.
+
+In the end, `doSnapshot` prints out the following DEBUG message to the logs:
+
+```
+writeSnapshotFile() took [time] ms.
+```
+
+In case of non-fatal errors, `doSnapshot` simply prints out the following WARN message to the logs:
+
+```
+Error doing snapshots for [this]
+```
+
+NOTE: `doSnapshot` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<doMaintenance, doMaintenance>>.
+
+=== [[filesForVersion]] Finding Snapshot File and Delta Files For Version -- `filesForVersion` Internal Method
+
+[source, scala]
+----
+filesForVersion(
+  allFiles: Seq[StoreFile],
+  version: Long): Seq[StoreFile]
+----
+
+`filesForVersion` finds the latest snapshot version among the given `allFiles` files up to and including the given version (it may or may not be available).
+
+If a snapshot file was found (among the given file up to and including the given version), `filesForVersion` takes all delta files between the version of the snapshot file (exclusive) and the given version (inclusive) from the given `allFiles` files.
+
+NOTE: The number of delta files should be the given version minus the snapshot version.
+
+If a snapshot file was not found, `filesForVersion` takes all delta files up to the given version (inclusive) from the given `allFiles` files.
+
+In the end, `filesForVersion` returns a snapshot version (if available) and all delta files up to the given version (inclusive).
+
+NOTE: `filesForVersion` is used when `HDFSBackedStateStoreProvider` is requested to <<doSnapshot, doSnapshot>> and <<cleanup, cleanup>>.
 
 === [[cleanup]] Cleaning Up -- `cleanup` Internal Method
 
@@ -230,18 +275,24 @@ cleanup(): Unit
 
 `cleanup`...FIXME
 
-NOTE: `cleanup` is used exclusively when <<doMaintenance, doMaintenance>>.
+NOTE: `cleanup` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<doMaintenance, doMaintenance>>.
 
-=== [[doMaintenance]] Doing Maintenance -- `doMaintenance` Method
+=== [[doMaintenance]] State Maintenance (Snapshotting and Cleaning Up) -- `doMaintenance` Method
 
 [source, scala]
 ----
 doMaintenance(): Unit
 ----
 
-NOTE: `doMaintenance` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#doMaintenance, StateStoreProvider Contract>> to do maintenance if needed.
+NOTE: `doMaintenance` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#doMaintenance, StateStoreProvider Contract>> to do optional state maintenance.
 
-`doMaintenance`...FIXME
+`doMaintenance` simply <<doSnapshot, doSnapshot>> followed by <<cleanup, cleanup>>.
+
+In case of any non-fatal errors, `doMaintenance` simply prints out the following WARN message to the logs:
+
+```
+Error performing snapshot and cleaning up [this]
+```
 
 === [[close]] Closing State Store Provider -- `close` Method
 

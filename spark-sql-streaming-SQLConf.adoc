@@ -87,6 +87,12 @@ a| [[minBatchesToRetain]] Used when:
 `spark.sql.shuffle.partitions`
 a| [[SHUFFLE_PARTITIONS]] See https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-properties.html#spark.sql.shuffle.partitions[spark.sql.shuffle.partitions] in The Internals of Spark SQL.
 
+| `stateStoreMinDeltasForSnapshot`
+
+<<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>>
+
+a| [[stateStoreMinDeltasForSnapshot]] Used (as <<spark-sql-streaming-StateStoreConf.adoc#minDeltasForSnapshot, StateStoreConf.minDeltasForSnapshot>>) exclusively when `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#doSnapshot, doSnapshot>>
+
 | `stateStoreProviderClass`
 
 <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>

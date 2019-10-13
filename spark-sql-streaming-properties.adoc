@@ -172,6 +172,13 @@ a| [[spark.sql.streaming.stateStore.maintenanceInterval]] The initial delay and 
 
 Default: `60s`
 
+| spark.sql.streaming.stateStore.minDeltasForSnapshot
+a| [[spark.sql.streaming.stateStore.minDeltasForSnapshot]] *(internal)* Minimum number of state store delta files that need to be generated before HDFSBackedStateStore will consider generating a snapshot (consolidate the deltas into a snapshot)
+
+Default: `10`
+
+Use <<spark-sql-streaming-SQLConf.adoc#stateStoreMinDeltasForSnapshot, SQLConf.stateStoreMinDeltasForSnapshot>> to get the current value.
+
 | spark.sql.streaming.stateStore.providerClass
 a| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name of the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
 

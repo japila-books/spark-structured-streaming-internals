@@ -308,11 +308,11 @@ NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` utility 
 
 === [[MaintenanceTask]] `MaintenanceTask` Daemon Thread
 
-`MaintenanceTask` is a daemon thread that <<doMaintenance, triggers maintenance work of every registered StateStoreProvider>>.
+`MaintenanceTask` is a daemon thread that <<doMaintenance, triggers maintenance work of registered StateStoreProviders>>.
 
-When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProviders>> registry.
+When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProviders>> internal registry.
 
-`MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> configuration property (default: `60s`).
+`MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> (default: `60s`).
 
 === [[get-StateStore]] Looking Up StateStore by Provider ID -- `get` Object Method
 
@@ -360,7 +360,7 @@ NOTE: `startMaintenanceIfNeeded` does nothing when the maintenance task has alre
 
 NOTE: `startMaintenanceIfNeeded` is used exclusively when `StateStore` is requested to <<get, find the StateStore by StateStoreProviderId>>.
 
-==== [[doMaintenance]] Doing Maintenance of Registered State Store Providers -- `doMaintenance` Internal Object Method
+==== [[doMaintenance]] Doing State Maintenance of Registered State Store Providers -- `doMaintenance` Internal Object Method
 
 [source, scala]
 ----

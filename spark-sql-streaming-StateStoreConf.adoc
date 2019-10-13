@@ -9,6 +9,9 @@
 | Name
 | Configuration Property
 
+| minDeltasForSnapshot
+| [[minDeltasForSnapshot]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>>
+
 | maxVersionsToRetainInMemory
 | [[maxVersionsToRetainInMemory]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
 
