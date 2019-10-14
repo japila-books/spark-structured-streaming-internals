@@ -9,6 +9,15 @@ Dataset API comes with a set of <<operators, operators>> that are of particular 
 | Operator
 | Description
 
+| <<spark-sql-streaming-Dataset-crossJoin.adoc#, crossJoin>>
+a| [[crossJoin]]
+
+[source, scala]
+----
+crossJoin(
+  right: Dataset[_]): DataFrame
+----
+
 | <<spark-sql-streaming-Dataset-dropDuplicates.adoc#, dropDuplicates>>
 a| [[dropDuplicates]]
 
@@ -52,6 +61,46 @@ groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
 ----
 
 Aggregates rows by a typed grouping function (and gives a <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>>)
+
+| <<spark-sql-streaming-Dataset-join.adoc#, join>>
+a| [[join]]
+
+[source, scala]
+----
+join(
+  right: Dataset[_]): DataFrame
+join(
+  right: Dataset[_],
+  joinExprs: Column): DataFrame
+join(
+  right: Dataset[_],
+  joinExprs: Column,
+  joinType: String): DataFrame
+join(
+  right: Dataset[_],
+  usingColumns: Seq[String]): DataFrame
+join(
+  right: Dataset[_],
+  usingColumns: Seq[String],
+  joinType: String): DataFrame
+join(
+  right: Dataset[_],
+  usingColumn: String): DataFrame
+----
+
+| <<spark-sql-streaming-Dataset-joinWith.adoc#, joinWith>>
+a| [[joinWith]]
+
+[source, scala]
+----
+joinWith[U](
+  other: Dataset[U],
+  condition: Column): Dataset[(T, U)]
+joinWith[U](
+  other: Dataset[U],
+  condition: Column,
+  joinType: String): Dataset[(T, U)]
+----
 
 | <<spark-sql-streaming-Dataset-withWatermark.adoc#, withWatermark>>
 a| [[withWatermark]]
