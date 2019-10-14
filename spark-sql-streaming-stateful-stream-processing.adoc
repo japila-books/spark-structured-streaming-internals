@@ -1,8 +1,8 @@
 == Stateful Stream Processing
 
-*Stateful Stream Processing* is a stream processing with some state (implicit or explicit).
+*Stateful Stream Processing* is a stream processing with state (implicit or explicit).
 
-In Spark Structured Streaming, a streaming query is stateful when it is one of the following:
+In Spark Structured Streaming, a streaming query is stateful when is one of the following (that makes use of <<spark-sql-streaming-StateStore.adoc#, StateStores>>):
 
 * <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>
 
@@ -16,7 +16,7 @@ In Spark Structured Streaming, a streaming query is stateful when it is one of t
 
 === [[versioned-state-statestores-and-statestoreproviders]] Versioned State, StateStores and StateStoreProviders
 
-Spark Structured Streaming uses <<spark-sql-streaming-StateStore.adoc#, StateStores>> for versioned and possibly fault-tolerant key-value state stores.
+Spark Structured Streaming uses <<spark-sql-streaming-StateStore.adoc#, StateStores>> for versioned and fault-tolerant key-value state stores.
 
 State stores are checkpointed incrementally to avoid state loss and for increased performance.
 
@@ -135,9 +135,17 @@ res3: String =
     |  ParallelCollectionRDD[12] at start at <pastie>:67 []
 ----
 
-When planned for execution, the `StateStoreRDD` is first asked for the <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations of a partition>> (which happens on the driver) and to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute it>> (later on Spark executors).
+=== [[StateStoreCoordinator]] StateStoreCoordinator RPC Endpoint, StateStoreRDD and Preferred Locations
 
-`StateStoreRDD` uses <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> to uniquely identify the <<spark-sql-streaming-StateStore.adoc#, state store>> to use for (_associate with_) a stateful operator and a partition.
+Since execution of a stateful streaming query happens on Spark executors whereas planning is on the driver, Spark Structured Streaming uses RPC environment for tracking locations of the state stores in use. That makes the tasks (of a structured query) to be scheduled where the state (of a partition) is.
+
+When planned for execution, the `StateStoreRDD` is first asked for the <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations of a partition>> (which happens on the driver) that are later used to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute it>> (on Spark executors).
+
+Spark Structured Streaming uses RPC environment to keep track of <<spark-sql-streaming-StateStore.adoc#, StateStores>> (their <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> actually) for RDD planning.
+
+Every time <<spark-sql-streaming-StateStoreRDD.adoc#, StateStoreRDD>> is requested for the <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations of a partition>>, it communicates with the <<spark-sql-streaming-StateStoreCoordinator.adoc#, StateStoreCoordinator RPC endpoint>> that knows the locations of the required `StateStores` (per host and executor ID).
+
+`StateStoreRDD` uses <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> with <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> to uniquely identify the <<spark-sql-streaming-StateStore.adoc#, state store>> to use for (_associate with_) a stateful operator and a partition.
 
 === State Management
 

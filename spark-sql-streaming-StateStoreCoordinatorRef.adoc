@@ -57,7 +57,7 @@ reportActiveInstance(
 
 Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#ReportActiveInstance, ReportActiveInstance>> one-way asynchronous (fire-and-forget) message with the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>, `host` and `executorId`
 
-Used exclusively when `StateStore` helper object is requested for <<spark-sql-streaming-StateStore.adoc#reportActiveStoreInstance, reportActiveStoreInstance>> (when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, find the StateStore by StateStoreProviderId>>)
+Used exclusively when `StateStore` utility is requested for <<spark-sql-streaming-StateStore.adoc#reportActiveStoreInstance, reportActiveStoreInstance>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, look up the StateStore by StateStoreProviderId>>)
 
 | stop
 a| [[stop]]
