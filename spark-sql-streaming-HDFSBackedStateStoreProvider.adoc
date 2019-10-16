@@ -455,17 +455,39 @@ updateFromDeltaFile(
 
 NOTE: `updateFromDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, loadMap>>.
 
-=== [[readSnapshotFile]] `readSnapshotFile` Internal Method
+=== [[readSnapshotFile]] Loading State Snapshot File For Specified Version -- `readSnapshotFile` Internal Method
 
 [source, scala]
 ----
 readSnapshotFile(
-  version: Long): Option[MapType]
+  version: Long): Option[ConcurrentHashMap[UnsafeRow, UnsafeRow]]
 ----
 
-`readSnapshotFile`...FIXME
+`readSnapshotFile` <<snapshotFile, creates the path of the snapshot file>> for the given `version`.
 
-NOTE: `readSnapshotFile` is used...FIXME
+`readSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#open, open the snapshot file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
+
+`readSnapshotFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in a `ConcurrentHashMap[UnsafeRow, UnsafeRow]`:
+
+* `readSnapshotFile` assumes that the first integer is the size of a key (buffer) followed the key itself (of the size). `readSnapshotFile` creates an `UnsafeRow` for the key (with the number of fields as indicated by the number of fields of the <<keySchema, key schema>>).
+
+* `readSnapshotFile` assumes that the next integer is the size of a value (buffer) followed the value itself (of the size). `readSnapshotFile` creates an `UnsafeRow` for the value (with the number of fields as indicated by the number of fields of the <<valueSchema, value schema>>).
+
+In the end, `readSnapshotFile` prints out the following INFO message to the logs and returns the key-value map.
+
+```
+Read snapshot file for version [version] of [this] from [fileToRead]
+```
+
+In case of `FileNotFoundException` `readSnapshotFile` returns `None` (to indicate no snapshot state file).
+
+`readSnapshotFile` throws an `IOException` for the size of a key or a value below `0`:
+
+```
+Error reading snapshot file [fileToRead] of [this]: [key|value] size cannot be [keySize|valueSize]
+```
+
+NOTE: `readSnapshotFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the state for a specified version>>.
 
 === [[finalizeDeltaFile]] `finalizeDeltaFile` Internal Method
 
@@ -520,7 +542,38 @@ Used when `HDFSBackedStateStoreProvider` is requested for the following:
 | Description
 
 | fm
-a| [[fm]] <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>>
+a| [[fm]] <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>> for the <<baseDir, state checkpoint base directory>> (and the <<hadoopConf, Hadoop Configuration>>)
+
+Used when:
+
+* Creating a new <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> (to create the <<spark-sql-streaming-HDFSBackedStateStore.adoc#deltaFileStream, CancellableFSDataOutputStream>> for the <<spark-sql-streaming-HDFSBackedStateStore.adoc#finalDeltaFile, finalDeltaFile>>)
+
+* `HDFSBackedStateStoreProvider` is requested to <<init, initialize>> (to create the <<baseDir, state checkpoint base directory>>), <<updateFromDeltaFile, updateFromDeltaFile>>, <<writeSnapshotFile, write the compressed snapshot file for a specified state version>>, <<readSnapshotFile, readSnapshotFile>>, <<cleanup, clean up>>, and <<fetchFiles, list all delta and snapshot files in the state checkpoint directory>>
+
+| hadoopConf
+a| [[hadoopConf]] Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/conf/Configuration.html[Configuration] of the <<fm, CheckpointFileManager>>
+
+Given when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>
+
+| keySchema
+a| [[keySchema]]
+
+[source, scala]
+----
+keySchema: StructType
+----
+
+Schema of the state keys
+
+| valueSchema
+a| [[valueSchema]]
+
+[source, scala]
+----
+valueSchema: StructType
+----
+
+Schema of the state values
 
 | numberOfVersionsToRetainInMemory
 a| [[numberOfVersionsToRetainInMemory]]
