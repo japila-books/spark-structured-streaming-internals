@@ -38,10 +38,10 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 a| [[memoryUsedBytes]] Estimated size of the <<loadedMaps, loadedMaps>> internal registry
 
 | count of cache hit on states cache in provider
-a| [[metricLoadedMapCacheHit]][[loadedMapCacheHitCount]] The number of times <<loadMap, loadMap>> found (_hit_) a given state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
+a| [[metricLoadedMapCacheHit]][[loadedMapCacheHitCount]] The number of times <<loadMap, loadMap>> found (_hit_) a requested state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
 
 | count of cache miss on states cache in provider
-a| [[metricLoadedMapCacheMiss]][[loadedMapCacheMissCount]] The number of times <<loadMap, loadMap>> could not find (_missed_) a given state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
+a| [[metricLoadedMapCacheMiss]][[loadedMapCacheMissCount]] The number of times <<loadMap, loadMap>> could not find (_missed_) a requested state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
 
 | estimated size of state only on current version
 a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Estimated size of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#mapToUpdate, current state>> (of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>>)
@@ -88,7 +88,7 @@ NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11
 HDFSStateStoreProvider[id = (op=[operatorId],part=[partitionId]),dir = [baseDir]]
 ```
 
-=== [[getStore]] Retrieving State for Specified Version For Update -- `getStore` Method
+=== [[getStore]] Load Specified Version of State Store For Update -- `getStore` Method
 
 [source, scala]
 ----
@@ -353,7 +353,7 @@ commitUpdates(
 
 NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.adoc#commit, commit state changes>>.
 
-=== [[loadMap]] Loading State For Specified Version -- `loadMap` Internal Method
+=== [[loadMap]] Loading Specified Version of State (From Snapshot and Delta Files) -- `loadMap` Internal Method
 
 [source, scala]
 ----
@@ -361,11 +361,30 @@ loadMap(
   version: Long): ConcurrentHashMap[UnsafeRow, UnsafeRow]
 ----
 
-`loadMap` firstly tries to find the version of the state in the <<loadedMaps, loadedMaps>> internal registry and, if found, returns it. Before that, `loadMap` increments the <<loadedMapCacheHitCount, loadedMapCacheHitCount>> metric.
+`loadMap` firstly tries to find the state version in the <<loadedMaps, loadedMaps>> internal cache and, if found, returns it immediately and increments the <<loadedMapCacheHitCount, loadedMapCacheHitCount>> metric.
 
-`loadMap`...FIXME
+If the requested state version could not be found in the <<loadedMaps, loadedMaps>> internal cache, `loadMap` prints out the following WARN message to the logs:
 
-NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, retrieve the state store for a specified version>> and <<latestIterator, latestIterator>>.
+[options="wrap"]
+----
+The state for version [version] doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
+----
+
+`loadMap` increments the <<loadedMapCacheMissCount, loadedMapCacheMissCount>> metric.
+
+`loadMap` <<readSnapshotFile, tries to load the state snapshot file for the version>> and, if found, <<putStateIntoStateCacheMap, puts the version of state in the internal cache>> and returns it.
+
+If not found, `loadMap` tries to find the most recent state version by decrementing the requested version until one is found in the <<loadedMaps, loadedMaps>> internal cache or <<readSnapshotFile, loaded from a state snapshot (file)>>.
+
+`loadMap` <<updateFromDeltaFile, updateFromDeltaFile>> for all the remaining versions (from the snapshot version up to the requested one). `loadMap` <<putStateIntoStateCacheMap, puts the final version of state in the internal cache>> (the closest snapshot and the remaining delta versions) and returns it.
+
+In the end, `loadMap` prints out the following DEBUG message to the logs:
+
+```
+Loading state for [version] takes [elapsedMs] ms.
+```
+
+NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, load the specified version of a state store for update>> and <<latestIterator, latestIterator>>.
 
 === [[putStateIntoStateCacheMap]] Caching New Version of State -- `putStateIntoStateCacheMap` Internal Method
 
