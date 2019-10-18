@@ -6,7 +6,7 @@
 
 `SymmetricHashJoinStateManager` takes the following to be created:
 
-* [[joinSide]] `JoinSide`
+* [[joinSide]] <<joinSide-internals, JoinSide>>
 * [[inputValueAttributes]] Input value attributes
 * [[joinKeys]] Join keys (`Seq[Expression]`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
@@ -14,6 +14,16 @@
 * [[hadoopConf]] Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/conf/Configuration.html[Configuration]
 
 `SymmetricHashJoinStateManager` initializes the <<internal-properties, internal properties>>.
+
+=== [[joinSide-internals]] Join Side Marker -- `JoinSide` Internal Enum
+
+`JoinSide` can be one of the two possible values:
+
+* [[LeftSide]][[left]] `LeftSide` (alias: `left`)
+
+* [[RightSide]][[right]] `RightSide` (alias: `right`)
+
+They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> with an <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>>).
 
 === [[metrics]] Performance Metrics -- `metrics` Method
 
@@ -36,6 +46,19 @@ allStateStoreNames(joinSides: JoinSide*): Seq[String]
 `allStateStoreNames`...FIXME
 
 NOTE: `allStateStoreNames` is used when...FIXME
+
+=== [[getStateStoreName]] `getStateStoreName` Object Method
+
+[source, scala]
+----
+getStateStoreName(
+  joinSide: JoinSide,
+  storeType: StateStoreType): String
+----
+
+`getStateStoreName`...FIXME
+
+NOTE: `getStateStoreName` is used when...FIXME
 
 === [[internal-properties]] Internal Properties
 

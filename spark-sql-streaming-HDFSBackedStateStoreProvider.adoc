@@ -88,7 +88,7 @@ NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11
 HDFSStateStoreProvider[id = (op=[operatorId],part=[partitionId]),dir = [baseDir]]
 ```
 
-=== [[getStore]] Load Specified Version of State Store For Update -- `getStore` Method
+=== [[getStore]] Loading Specified Version of State (Store) For Update -- `getStore` Method
 
 [source, scala]
 ----
@@ -98,19 +98,15 @@ getStore(
 
 NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a specified version.
 
-`getStore` creates a new empty state map (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`).
+`getStore` creates a new empty state (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`) and <<loadMap, loads the specified version of state (from snapshot and delta files)>> for versions greater than `0`.
 
-(only for versions greater than `0`) `getStore` <<loadMap, loads the state for the version>> into the new state map.
-
-`getStore` creates a new <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> for the version and the new state map.
-
-In the end, `getStore` prints out the following INFO message to the logs and returns the new `HDFSBackedStateStore`.
+In the end, `getStore` creates a new <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> for the specified version with the new state and prints out the following INFO message to the logs:
 
 ```
 Retrieved version [version] of [this] for update
 ```
 
-`getStore` throws an `IllegalArgumentException` when the given version is negative (less than `0`):
+`getStore` throws an `IllegalArgumentException` when the specified version is less than `0` (negative):
 
 ```
 Version cannot be less than 0

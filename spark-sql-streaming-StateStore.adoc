@@ -328,15 +328,15 @@ get(
   hadoopConf: Configuration): StateStore
 ----
 
-`get` finds `StateStore` for the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> and version.
+`get` finds `StateStore` for the specified <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> and version.
 
 NOTE: The version is either the <<spark-sql-streaming-EpochTracker.adoc#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>) or the <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#storeVersion, current batch ID>> (in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>).
 
-Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (for `storeProviderId`) in the <<loadedProviders, loadedProviders>> internal registry. If unavailable, `get` uses the `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize one>>.
+Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> (by `storeProviderId`) in the <<loadedProviders, loadedProviders>> internal cache. If unavailable, `get` uses the `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize one>>.
 
 `get` will also <<startMaintenanceIfNeeded, start the periodic maintenance task>> (unless already started) and <<reportActiveStoreInstance, announce the new StateStoreProvider>>.
 
-In the end, `get` link:spark-sql-streaming-StateStoreProvider.adoc#getStore[gets] the `StateStore` (for the `version`).
+In the end, `get` requests the `StateStoreProvider` to <<spark-sql-streaming-StateStoreProvider.adoc#getStore, look up the StateStore by the specified version>>.
 
 [NOTE]
 ====
@@ -344,7 +344,7 @@ In the end, `get` link:spark-sql-streaming-StateStoreProvider.adoc#getStore[gets
 
 * `StateStoreRDD` is requested to <<spark-sql-streaming-StateStoreRDD.adoc#compute, compute a partition>>
 
-* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, getStateStore>>
+* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, look up a StateStore (by key and value schemas)>>
 ====
 
 ==== [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Object Method
@@ -402,7 +402,7 @@ NOTE: `verifyIfStoreInstanceActive` is used exclusively when `StateStore` helper
 | Description
 
 | loadedProviders
-| [[loadedProviders]] *Loaded providers*, i.e. <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProviders>> per <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>
+| [[loadedProviders]] *Loaded providers* internal cache, i.e. <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProviders>> per <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>
 
 Used in...FIXME
 

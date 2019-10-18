@@ -21,7 +21,7 @@ NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` 
 
 `OneSideHashJoiner` takes the following to be created:
 
-* [[joinSide]] `JoinSide`
+* [[joinSide]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#joinSide-internals, JoinSide>>
 * [[inputAttributes]] Input attributes (`Seq[Attribute]`)
 * [[joinKeys]] Join keys (`Seq[Expression]`)
 * [[inputIter]] Input internal rows (`Iterator[InternalRow]`)

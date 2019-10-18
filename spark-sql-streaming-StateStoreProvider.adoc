@@ -47,9 +47,9 @@ getStore(
   version: Long): StateStore
 ----
 
-<<spark-sql-streaming-StateStore.adoc#, StateStore>> for the specified version
+Finds the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for the specified version
 
-Used exclusively when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, get the StateStore for a given provider ID>>
+Used exclusively when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, look up the StateStore by a given provider ID>>
 
 | init
 a| [[init]]
