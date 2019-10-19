@@ -38,10 +38,10 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 a| [[memoryUsedBytes]] Estimated size of the <<loadedMaps, loadedMaps>> internal registry
 
 | count of cache hit on states cache in provider
-a| [[metricLoadedMapCacheHit]][[loadedMapCacheHitCount]] The number of times <<loadMap, loadMap>> found (_hit_) a requested state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
+a| [[metricLoadedMapCacheHit]][[loadedMapCacheHitCount]] The number of times <<loadMap, loading the specified version of state>> was successful and found (_hit_) the requested state version in the <<loadedMaps, loadedMaps>> internal cache
 
 | count of cache miss on states cache in provider
-a| [[metricLoadedMapCacheMiss]][[loadedMapCacheMissCount]] The number of times <<loadMap, loadMap>> could not find (_missed_) a requested state version cached (in the <<loadedMaps, loadedMaps>> internal registry)
+a| [[metricLoadedMapCacheMiss]][[loadedMapCacheMissCount]] The number of times <<loadMap, loading the specified version of state>> could not find (_missed_) the requested state version in the <<loadedMaps, loadedMaps>> internal cache
 
 | estimated size of state only on current version
 a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Estimated size of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#mapToUpdate, current state>> (of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>>)
@@ -98,7 +98,7 @@ getStore(
 
 NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a specified version.
 
-`getStore` creates a new empty state (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`) and <<loadMap, loads the specified version of state (from snapshot and delta files)>> for versions greater than `0`.
+`getStore` creates a new empty state (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`) and <<loadMap, loads the specified version of state (from internal cache or snapshot and delta files)>> for versions greater than `0`.
 
 In the end, `getStore` creates a new <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> for the specified version with the new state and prints out the following INFO message to the logs:
 
@@ -170,7 +170,7 @@ In the end, `fetchFiles` sorts the `StoreFiles` based on their version, prints o
 Current set of files for [this]: [storeFiles]
 ```
 
-NOTE: `fetchFiles` is used when `HDFSBackedStateStoreProvider` is requested to <<latestIterator, latestIterator>>, <<doSnapshot, doSnapshot>> and <<cleanup, cleanup>>.
+NOTE: `fetchFiles` is used when `HDFSBackedStateStoreProvider` is requested to <<doSnapshot, doSnapshot>> and <<cleanup, cleanup>>.
 
 === [[init]] Initializing StateStoreProvider -- `init` Method
 
@@ -192,17 +192,6 @@ NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#init, 
 `init` requests the given `StateStoreConf` for the <<spark-sql-streaming-StateStoreConf.adoc#maxVersionsToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then recorded in the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> internal property).
 
 In the end, `init` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#mkdirs, create>> the <<baseDir, baseDir>> directory (with parent directories).
-
-=== [[latestIterator]] `latestIterator` Internal Method
-
-[source, scala]
-----
-latestIterator(): Iterator[UnsafeRowPair]
-----
-
-`latestIterator`...FIXME
-
-NOTE: `latestIterator` seems to be used exclusively in tests.
 
 === [[doSnapshot]] Snapshoting -- `doSnapshot` Internal Method
 
@@ -349,7 +338,7 @@ commitUpdates(
 
 NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.adoc#commit, commit state changes>>.
 
-=== [[loadMap]] Loading Specified Version of State (From Snapshot and Delta Files) -- `loadMap` Internal Method
+=== [[loadMap]] Loading Specified Version of State (from Internal Cache or Snapshot and Delta Files) -- `loadMap` Internal Method
 
 [source, scala]
 ----
@@ -380,7 +369,7 @@ In the end, `loadMap` prints out the following DEBUG message to the logs:
 Loading state for [version] takes [elapsedMs] ms.
 ```
 
-NOTE: `loadMap` is used when `HDFSBackedStateStoreProvider` is requested to <<getStore, load the specified version of a state store for update>> and <<latestIterator, latestIterator>>.
+NOTE: `loadMap` is used exclusively when `HDFSBackedStateStoreProvider` is requested for the <<getStore, specified version of a state store for update>>.
 
 === [[putStateIntoStateCacheMap]] Caching New Version of State -- `putStateIntoStateCacheMap` Internal Method
 
@@ -403,7 +392,7 @@ With the size of the <<loadedMaps, loadedMaps>> internal registry is at the <<nu
 
 * It removes the oldest state when older (smaller) than the given `newVersion`
 
-NOTE: `putStateIntoStateCacheMap` is used when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commit state (as a new version)>> and <<loadMap, load state for a specified version>>.
+NOTE: `putStateIntoStateCacheMap` is used when `HDFSBackedStateStoreProvider` is requested to <<commitUpdates, commit state (as a new version)>> and <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>.
 
 === [[writeSnapshotFile]] Writing Compressed Snapshot File for Specified Version -- `writeSnapshotFile` Internal Method
 
@@ -468,7 +457,7 @@ updateFromDeltaFile(
 
 `updateFromDeltaFile`...FIXME
 
-NOTE: `updateFromDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, loadMap>>.
+NOTE: `updateFromDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>.
 
 === [[readSnapshotFile]] Loading State Snapshot File For Specified Version -- `readSnapshotFile` Internal Method
 
@@ -502,7 +491,7 @@ In case of `FileNotFoundException` `readSnapshotFile` returns `None` (to indicat
 Error reading snapshot file [fileToRead] of [this]: [key|value] size cannot be [keySize|valueSize]
 ```
 
-NOTE: `readSnapshotFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the state for a specified version>>.
+NOTE: `readSnapshotFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>.
 
 === [[finalizeDeltaFile]] `finalizeDeltaFile` Internal Method
 
@@ -529,7 +518,7 @@ loadedMaps: TreeMap[
 
 A new entry (a version and the state updates) can only be added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> (and only when the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is above `0`).
 
-`loadedMaps` is mainly used when `HDFSBackedStateStoreProvider` is requested to <<loadMap, loadMap>>. Positive hits (when a version could be found in the cache) is available as the <<loadedMapCacheHitCount, count of cache hit on states cache in provider>> performance metric while misses are counted in the <<loadedMapCacheMissCount, count of cache miss on states cache in provider>> performance metric.
+`loadedMaps` is mainly used when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>. Positive hits (when a version could be found in the cache) is available as the <<loadedMapCacheHitCount, count of cache hit on states cache in provider>> performance metric while misses are counted in the <<loadedMapCacheMissCount, count of cache miss on states cache in provider>> performance metric.
 
 NOTE: With no or missing versions in cache <<loadedMapCacheMissCount, count of cache miss on states cache in provider>> metric should be above `0` while <<loadedMapCacheHitCount, count of cache hit on states cache in provider>> always `0` (or smaller than the other metric).
 
@@ -543,11 +532,9 @@ The state deltas (the values) in `loadedMaps` are cleared (all entries removed) 
 
 Used when `HDFSBackedStateStoreProvider` is requested for the following:
 
-* <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>
+* <<putStateIntoStateCacheMap, Cache a version of state>>
 
-* <<loadMap, loadMap>>
-
-* <<latestIterator, latestIterator>>
+* <<loadMap, Loading the specified version of state (from the internal cache or snapshot and delta files)>>
 
 === [[internal-properties]] Internal Properties
 
