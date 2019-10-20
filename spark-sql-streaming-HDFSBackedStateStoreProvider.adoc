@@ -371,6 +371,86 @@ Loading state for [version] takes [elapsedMs] ms.
 
 NOTE: `loadMap` is used exclusively when `HDFSBackedStateStoreProvider` is requested for the <<getStore, specified version of a state store for update>>.
 
+=== [[readSnapshotFile]] Loading State Snapshot File For Specified Version -- `readSnapshotFile` Internal Method
+
+[source, scala]
+----
+readSnapshotFile(
+  version: Long): Option[ConcurrentHashMap[UnsafeRow, UnsafeRow]]
+----
+
+`readSnapshotFile` <<snapshotFile, creates the path of the snapshot file>> for the given `version`.
+
+`readSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#open, open the snapshot file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
+
+`readSnapshotFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in a state map (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`):
+
+* First integer is the size of a key (buffer) followed by the key itself (of the size). `readSnapshotFile` creates an `UnsafeRow` for the key (with the number of fields as indicated by the number of fields of the <<keySchema, key schema>>).
+
+* Next integer is the size of a value (buffer) followed by the value itself (of the size). `readSnapshotFile` creates an `UnsafeRow` for the value (with the number of fields as indicated by the number of fields of the <<valueSchema, value schema>>).
+
+In the end, `readSnapshotFile` prints out the following INFO message to the logs and returns the key-value map.
+
+```
+Read snapshot file for version [version] of [this] from [fileToRead]
+```
+
+In case of `FileNotFoundException` `readSnapshotFile` simply returns `None` (to indicate no snapshot state file was available and so no state for the version).
+
+`readSnapshotFile` throws an `IOException` for the size of a key or a value below `0`:
+
+```
+Error reading snapshot file [fileToRead] of [this]: [key|value] size cannot be [keySize|valueSize]
+```
+
+NOTE: `readSnapshotFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>.
+
+=== [[updateFromDeltaFile]] Updating State with State Changes For Specified Version (per Delta File) -- `updateFromDeltaFile` Internal Method
+
+[source, scala]
+----
+updateFromDeltaFile(
+  version: Long,
+  map: ConcurrentHashMap[UnsafeRow, UnsafeRow]): Unit
+----
+
+[NOTE]
+====
+`updateFromDeltaFile` is very similar code-wise to <<readSnapshotFile, readSnapshotFile>> with the two main differences:
+
+* `updateFromDeltaFile` is given the state map to update (while <<readSnapshotFile, readSnapshotFile>> loads the state from a snapshot file)
+
+* `updateFromDeltaFile` removes a key from the state map when the value (size) is `-1` (while <<readSnapshotFile, readSnapshotFile>> throws an `IOException`)
+
+The following description is almost an exact copy of <<readSnapshotFile, readSnapshotFile>> just for completeness.
+====
+
+`updateFromDeltaFile` <<deltaFile, creates the path of the delta file>> for the requested `version`.
+
+`updateFromDeltaFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#open, open the delta file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
+
+`updateFromDeltaFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in the given state map:
+
+* First integer is the size of a key (buffer) followed by the key itself (of the size). `updateFromDeltaFile` creates an `UnsafeRow` for the key (with the number of fields as indicated by the number of fields of the <<keySchema, key schema>>).
+
+* Next integer is the size of a value (buffer) followed by the value itself (of the size). `updateFromDeltaFile` creates an `UnsafeRow` for the value (with the number of fields as indicated by the number of fields of the <<valueSchema, value schema>>) or removes the corresponding key from the state map (if the value size is `-1`)
+
+NOTE: `updateFromDeltaFile` removes the key-value entry from the state map if the value (size) is `-1`.
+
+In the end, `updateFromDeltaFile` prints out the following INFO message to the logs and returns the key-value map.
+
+```
+Read delta file for version [version] of [this] from [fileToRead]
+```
+
+`updateFromDeltaFile` throws an `IllegalStateException` in case of `FileNotFoundException` while opening the delta file for the specified version:
+
+```
+Error reading delta file [fileToRead] of [this]: [fileToRead] does not exist
+```
+
+NOTE: `updateFromDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>.
+
 === [[putStateIntoStateCacheMap]] Caching New Version of State -- `putStateIntoStateCacheMap` Internal Method
 
 [source, scala]
@@ -445,53 +525,6 @@ cancelDeltaFile(
 `cancelDeltaFile`...FIXME
 
 NOTE: `cancelDeltaFile` is used when...FIXME
-
-=== [[updateFromDeltaFile]] `updateFromDeltaFile` Internal Method
-
-[source, scala]
-----
-updateFromDeltaFile(
-  version: Long,
-  map: MapType): Unit
-----
-
-`updateFromDeltaFile`...FIXME
-
-NOTE: `updateFromDeltaFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>.
-
-=== [[readSnapshotFile]] Loading State Snapshot File For Specified Version -- `readSnapshotFile` Internal Method
-
-[source, scala]
-----
-readSnapshotFile(
-  version: Long): Option[ConcurrentHashMap[UnsafeRow, UnsafeRow]]
-----
-
-`readSnapshotFile` <<snapshotFile, creates the path of the snapshot file>> for the given `version`.
-
-`readSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#open, open the snapshot file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
-
-`readSnapshotFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in a `ConcurrentHashMap[UnsafeRow, UnsafeRow]`:
-
-* `readSnapshotFile` assumes that the first integer is the size of a key (buffer) followed the key itself (of the size). `readSnapshotFile` creates an `UnsafeRow` for the key (with the number of fields as indicated by the number of fields of the <<keySchema, key schema>>).
-
-* `readSnapshotFile` assumes that the next integer is the size of a value (buffer) followed the value itself (of the size). `readSnapshotFile` creates an `UnsafeRow` for the value (with the number of fields as indicated by the number of fields of the <<valueSchema, value schema>>).
-
-In the end, `readSnapshotFile` prints out the following INFO message to the logs and returns the key-value map.
-
-```
-Read snapshot file for version [version] of [this] from [fileToRead]
-```
-
-In case of `FileNotFoundException` `readSnapshotFile` returns `None` (to indicate no snapshot state file).
-
-`readSnapshotFile` throws an `IOException` for the size of a key or a value below `0`:
-
-```
-Error reading snapshot file [fileToRead] of [this]: [key|value] size cannot be [keySize|valueSize]
-```
-
-NOTE: `readSnapshotFile` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>.
 
 === [[finalizeDeltaFile]] `finalizeDeltaFile` Internal Method
 
