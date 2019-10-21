@@ -1,6 +1,6 @@
 == [[SymmetricHashJoinStateManager]] SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (when <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator is requested to execute).
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (when <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator is requested to execute for the <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, left and right sides of the stream-stream join>>).
 
 === [[creating-instance]] Creating SymmetricHashJoinStateManager Instance
 
@@ -59,6 +59,49 @@ getStateStoreName(
 `getStateStoreName`...FIXME
 
 NOTE: `getStateStoreName` is used when...FIXME
+
+=== [[removeByKeyCondition]] `removeByKeyCondition` Method
+
+[source, scala]
+----
+removeByKeyCondition(
+  removalCondition: UnsafeRow => Boolean): Iterator[UnsafeRowPair]
+----
+
+`removeByKeyCondition`...FIXME
+
+NOTE: `removeByKeyCondition` is used when...FIXME
+
+=== [[removeByValueCondition]] `removeByValueCondition` Method
+
+[source, scala]
+----
+removeByValueCondition(
+  removalCondition: UnsafeRow => Boolean): Iterator[UnsafeRowPair]
+----
+
+`removeByValueCondition`...FIXME
+
+NOTE: `removeByValueCondition` is used when...FIXME
+
+=== [[append]] `append` Method
+
+[source, scala]
+----
+append(
+  key: UnsafeRow,
+  value: UnsafeRow): Unit
+----
+
+`append` requests the <<keyToNumValues, KeyToNumValuesStore>> for the <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, get the number of values>> for the specified key.
+
+In the end, `append` requests the stores for the following:
+
+* <<keyWithIndexToValue, KeyWithIndexToValueStore>> to <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#put, store the given key with the number of values for the key and the given value>>
+
+* <<keyToNumValues, KeyToNumValuesStore>> to <<spark-sql-streaming-KeyToNumValuesStore.adoc#put, store the given key with the number of values for the key incremented>>.
+
+NOTE: `append` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>.
 
 === [[internal-properties]] Internal Properties
 

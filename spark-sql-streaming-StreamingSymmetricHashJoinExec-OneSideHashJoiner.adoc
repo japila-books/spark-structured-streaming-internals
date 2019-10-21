@@ -1,6 +1,6 @@
 == [[OneSideHashJoiner]] OneSideHashJoiner
 
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (through <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>).
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (through <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> for the left and right sides of the stream-stream join).
 
 NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
 
@@ -38,9 +38,15 @@ NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` 
 removeOldState(): Iterator[UnsafeRowPair]
 ----
 
-`removeOldState`...FIXME
+`removeOldState` branches off per the <<stateWatermarkPredicate, JoinStateWatermarkPredicate>>:
 
-NOTE: `removeOldState` is used when...FIXME
+* For `JoinStateKeyWatermarkPredicate`, `removeOldState` requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByKeyCondition, removeByKeyCondition>> (with the <<stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>>)
+
+* For `JoinStateValueWatermarkPredicate`, `removeOldState` requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByValueCondition, removeByValueCondition>> (with the <<stateValueWatermarkPredicateFunc, stateValueWatermarkPredicateFunc>>)
+
+* For any other predicates, `removeOldState` returns an empty iterator (no rows to process)
+
+NOTE: `removeOldState` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions (of the left and right side of a stream-stream join)>>.
 
 === [[get]] Getting Values For Key -- `get` Method
 
@@ -62,7 +68,7 @@ commitStateAndGetMetrics(): StateStoreMetrics
 
 `commitStateAndGetMetrics` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#commit, commit>> and then for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
 
-NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
+NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
 
 === [[internal-properties]] Internal Properties
 

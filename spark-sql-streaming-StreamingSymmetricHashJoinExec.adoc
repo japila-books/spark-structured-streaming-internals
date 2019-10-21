@@ -1,6 +1,6 @@
 == [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.adoc#, Streaming Join>> (a `Join` logical operator of two streaming queries at execution time).
+`StreamingSymmetricHashJoinExec` is a binary physical operator for a <<spark-sql-streaming-join.adoc#, stream-stream join>> (a `Join` logical operator of two streaming queries at execution time).
 
 [NOTE]
 ====
@@ -68,7 +68,7 @@ NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime repres
 
 In the end, `doExecute` requests the <<left, left>> and <<right, right>> child physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
 
-=== [[processPartitions]] Processing Partitions -- `processPartitions` Internal Method
+=== [[processPartitions]] Processing Partitions (of Left and Right Side of Stream-Stream Join) -- `processPartitions` Internal Method
 
 [source, scala]
 ----
