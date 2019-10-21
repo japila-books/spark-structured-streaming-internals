@@ -9,7 +9,7 @@
 `StateStoreAwareZipPartitionsRDD` takes the following to be created:
 
 * [[sc]] `SparkContext`
-* [[f]] Function (`(Iterator[A], Iterator[B]) => Iterator[V]`)
+* [[f]] Function (`(Iterator[A], Iterator[B]) => Iterator[V]`, e.g. <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, processPartitions>>)
 * [[rdd1]] *Left RDD* - the RDD of the left side of a join (`RDD[A]`)
 * [[rdd2]] *Right RDD* - the RDD of the right side of a join (`RDD[B]`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
@@ -25,4 +25,4 @@ getPreferredLocations(partition: Partition): Seq[String]
 
 NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement preferences (aka _preferred task locations_), i.e. where tasks should be executed to be as close to the data as possible.
 
-`getPreferredLocations`...FIXME
+`getPreferredLocations` simply requests the <<storeCoordinator, StateStoreCoordinatorRef>> for <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#getLocation, the location>> of every <<stateStoreNames, state store>> (with the <<stateInfo, StatefulOperatorStateInfo>> and the partition ID) and returns unique executor IDs (so that processing a partition happens on the executor with the proper state store for the operator and the partition).

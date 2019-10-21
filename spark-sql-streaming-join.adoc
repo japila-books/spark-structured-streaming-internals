@@ -20,7 +20,7 @@ Streaming joins can be *stateless* or <<spark-sql-streaming-stateful-stream-proc
 
 * Require equality predicate
 
-* No support for `crossJoin`
+* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#supported-join-types, Supports>> `Inner`, `LeftOuter`, and `RightOuter` join types
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
@@ -30,7 +30,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 In Spark Structured Streaming <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is responsible for planning streaming queries for execution.
 
-At <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, query planning>>, `IncrementalExecution` uses the <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy for planning streaming joins (`Join` logical operators) as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators.
+At <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, query planning>>, `IncrementalExecution` uses the <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy for planning <<stream-stream-joins, stream-stream joins>> as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators.
 
 [source, scala]
 ----

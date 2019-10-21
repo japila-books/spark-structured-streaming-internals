@@ -1,6 +1,6 @@
 == [[SymmetricHashJoinStateManager]] SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator to execute).
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (when <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator is requested to execute).
 
 === [[creating-instance]] Creating SymmetricHashJoinStateManager Instance
 

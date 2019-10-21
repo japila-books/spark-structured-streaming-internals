@@ -1,6 +1,6 @@
 == [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a `Join` logical operator of two streaming queries at execution time.
+`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.adoc#, Streaming Join>> (a `Join` logical operator of two streaming queries at execution time).
 
 [NOTE]
 ====
@@ -9,13 +9,7 @@ A binary physical operator (`BinaryExecNode`) is a physical operator with <<left
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[BinaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-[NOTE]
-====
-`Join` logical operator represents `Dataset.join` operator in a logical query plan.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
-
+[[supported-join-types]]
 `StreamingSymmetricHashJoinExec` requires that the <<joinType, join type>> be `Inner`, `LeftOuter`, or `RightOuter` with the same data types of the <<leftKeys, left>> and the <<rightKeys, right>> keys.
 
 `StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`)
@@ -66,13 +60,13 @@ NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWri
 doExecute(): RDD[InternalRow]
 ----
 
-NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a recipe for distributed computation over internal binary rows on Apache Spark (`RDD[InternalRow]`).
+NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of a physical operator as a recipe for distributed computation over internal binary rows on Apache Spark (`RDD[InternalRow]`).
 
 `doExecute` first requests the `StreamingQueryManager` for the <<spark-sql-streaming-StreamingQueryManager.adoc#stateStoreCoordinator, StateStoreCoordinatorRef>> to the `StateStoreCoordinator` RPC endpoint (for the driver).
 
-`doExecute` then requests the `SymmetricHashJoinStateManager` for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#allStateStoreNames, names of the state stores>> for the left and right side of the streaming join.
+`doExecute` then uses `SymmetricHashJoinStateManager` utility to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#allStateStoreNames, get the names of the state stores>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, left>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, right>> sides of the streaming join.
 
-In the end, `doExecute` requests the <<left, left>> and <<right, right>> physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
+In the end, `doExecute` requests the <<left, left>> and <<right, right>> child physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
 
 === [[processPartitions]] Processing Partitions -- `processPartitions` Internal Method
 
