@@ -34,7 +34,7 @@ a| [[doMaintenance]]
 doMaintenance(): Unit = {}
 ----
 
-Doing optional state maintenance
+Optional state maintenance
 
 Used exclusively when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#doMaintenance, perform maintenance of registered state store providers>> (on a separate <<spark-sql-streaming-StateStore.adoc#MaintenanceTask, MaintenanceTask daemon thread>>)
 

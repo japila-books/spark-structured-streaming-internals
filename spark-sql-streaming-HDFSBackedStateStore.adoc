@@ -2,7 +2,7 @@
 
 `HDFSBackedStateStore` is a concrete <<spark-sql-streaming-StateStore.adoc#, StateStore>> that uses a Hadoop DFS-compatible file system for versioned state persistence.
 
-`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for a <<getStore, state store for a given version>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, retrieve the StateStore for a given ID and version>>).
+`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#getStore, specified version of state (store) for update>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, look up a StateStore by provider id>>).
 
 [[id]]
 `HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> of the owning <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#stateStoreId, HDFSBackedStateStoreProvider>>.
@@ -21,7 +21,7 @@ When requested for the textual representation, `HDFSBackedStateStore` gives *HDF
 `HDFSBackedStateStore` takes the following to be created:
 
 * [[version]] Version
-* [[mapToUpdate]] State (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`)
+* [[mapToUpdate]] State Map (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`)
 
 `HDFSBackedStateStore` initializes the <<internal-properties, internal properties>>.
 

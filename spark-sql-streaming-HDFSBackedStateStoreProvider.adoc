@@ -193,43 +193,6 @@ NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#init, 
 
 In the end, `init` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#mkdirs, create>> the <<baseDir, baseDir>> directory (with parent directories).
 
-=== [[doSnapshot]] Snapshoting -- `doSnapshot` Internal Method
-
-[source, scala]
-----
-doSnapshot(): Unit
-----
-
-`doSnapshot` <<fetchFiles, lists all delta and snapshot files in the state checkpoint directory>> (`files`) and prints out the following DEBUG message to the logs:
-
-```
-fetchFiles() took [time] ms.
-```
-
-`doSnapshot` returns immediately when there are no delta and snapshot files.
-
-`doSnapshot` takes the version of the latest file (`lastVersion`).
-
-`doSnapshot` <<filesForVersion, finds the snapshot file and delta files for the version>> (among the files and for the last version).
-
-`doSnapshot` looks up the last version in the <<loadedMaps, internal state cache>>.
-
-When the last version was found in the cache and the number of delta files is above <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>> internal threshold, `doSnapshot` <<writeSnapshotFile, writes a compressed snapshot file for the last version>>.
-
-In the end, `doSnapshot` prints out the following DEBUG message to the logs:
-
-```
-writeSnapshotFile() took [time] ms.
-```
-
-In case of non-fatal errors, `doSnapshot` simply prints out the following WARN message to the logs:
-
-```
-Error doing snapshots for [this]
-```
-
-NOTE: `doSnapshot` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<doMaintenance, doMaintenance>>.
-
 === [[filesForVersion]] Finding Snapshot File and Delta Files For Version -- `filesForVersion` Internal Method
 
 [source, scala]
@@ -251,17 +214,6 @@ In the end, `filesForVersion` returns a snapshot version (if available) and all 
 
 NOTE: `filesForVersion` is used when `HDFSBackedStateStoreProvider` is requested to <<doSnapshot, doSnapshot>> and <<cleanup, cleanup>>.
 
-=== [[cleanup]] Cleaning Up -- `cleanup` Internal Method
-
-[source, scala]
-----
-cleanup(): Unit
-----
-
-`cleanup`...FIXME
-
-NOTE: `cleanup` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<doMaintenance, doMaintenance>>.
-
 === [[doMaintenance]] State Maintenance (Snapshotting and Cleaning Up) -- `doMaintenance` Method
 
 [source, scala]
@@ -269,15 +221,91 @@ NOTE: `cleanup` is used exclusively when `HDFSBackedStateStoreProvider` is reque
 doMaintenance(): Unit
 ----
 
-NOTE: `doMaintenance` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#doMaintenance, StateStoreProvider Contract>> to do optional state maintenance.
+NOTE: `doMaintenance` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#doMaintenance, StateStoreProvider Contract>> for optional state maintenance.
 
-`doMaintenance` simply <<doSnapshot, doSnapshot>> followed by <<cleanup, cleanup>>.
+`doMaintenance` simply does <<doSnapshot, state snapshoting>> followed by <<cleanup, cleaning up (removing old state files)>>.
 
 In case of any non-fatal errors, `doMaintenance` simply prints out the following WARN message to the logs:
 
 ```
 Error performing snapshot and cleaning up [this]
 ```
+
+==== [[doSnapshot]] State Snapshoting (Rolling Up Delta Files into Snapshot File) -- `doSnapshot` Internal Method
+
+[source, scala]
+----
+doSnapshot(): Unit
+----
+
+`doSnapshot` <<fetchFiles, lists all delta and snapshot files in the state checkpoint directory>> (`files`) and prints out the following DEBUG message to the logs:
+
+```
+fetchFiles() took [time] ms.
+```
+
+`doSnapshot` returns immediately (and does nothing) when there are no delta and snapshot files.
+
+`doSnapshot` takes the version of the latest file (`lastVersion`).
+
+`doSnapshot` <<filesForVersion, finds the snapshot file and delta files for the version>> (among the files and for the last version).
+
+`doSnapshot` looks up the last version in the <<loadedMaps, internal state cache>>.
+
+When the last version was found in the cache and the number of delta files is above <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>> internal threshold, `doSnapshot` <<writeSnapshotFile, writes a compressed snapshot file for the last version>>.
+
+In the end, `doSnapshot` prints out the following DEBUG message to the logs:
+
+```
+writeSnapshotFile() took [time] ms.
+```
+
+In case of non-fatal errors, `doSnapshot` simply prints out the following WARN message to the logs:
+
+```
+Error doing snapshots for [this]
+```
+
+NOTE: `doSnapshot` is used exclusively when `HDFSBackedStateStoreProvider` is requested to <<doMaintenance, do state maintenance (state snapshotting and cleaning up)>>.
+
+==== [[cleanup]] Cleaning Up (Removing Old State Files) -- `cleanup` Internal Method
+
+[source, scala]
+----
+cleanup(): Unit
+----
+
+`cleanup` <<fetchFiles, lists all delta and snapshot files in the state checkpoint directory>> (`files`) and prints out the following DEBUG message to the logs:
+
+```
+fetchFiles() took [time] ms.
+```
+
+`cleanup` returns immediately (and does nothing) when there are no delta and snapshot files.
+
+`cleanup` takes the version of the latest state file (`lastVersion`) and decrements it by <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) that gives the earliest version to retain (and all older state files to be removed).
+
+`cleanup` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#delete, delete the path>> of every old state file.
+
+`cleanup` prints out the following DEBUG message to the logs:
+
+```
+deleting files took [time] ms.
+```
+
+In the end, `cleanup` prints out the following INFO message to the logs:
+
+```
+Deleted files older than [version] for [this]: [filesToDelete]
+```
+
+In case of a non-fatal exception, `cleanup` prints out the following WARN message to the logs:
+
+```
+Error cleaning up files for [this]
+```
+
+NOTE: `cleanup` is used exclusively when `HDFSBackedStateStoreProvider` is requested for <<doMaintenance, state maintenance (state snapshotting and cleaning up)>>.
 
 === [[close]] Closing State Store Provider -- `close` Method
 

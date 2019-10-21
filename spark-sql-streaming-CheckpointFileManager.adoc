@@ -41,7 +41,7 @@ a| [[delete]]
 delete(path: Path): Unit
 ----
 
-Deletes a path recursively (if it exists)
+Deletes the given path recursively (if exists)
 
 Used when:
 
