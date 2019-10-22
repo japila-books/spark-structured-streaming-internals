@@ -64,8 +64,8 @@ root
  |-- value: long (nullable = true)
 ----
 
-=== [[watermarkDelayMs]][[delayKey]] `spark.watermarkDelayMs` Metadata Key
+=== [[watermarkDelayMs]][[delayKey]] Metadata Key of Watermark Attribute -- `spark.watermarkDelayMs` Metadata Key
 
-`EventTimeWatermark` uses *spark.watermarkDelayMs* key (in the `Metadata` of the <<output, output attributes>>) to hold the event-time watermark delay (as a so-called _watermark attribute_ or _eventTime watermark_).
+*spark.watermarkDelayMs* metadata key (in the `Metadata` of the <<output, output attributes>>) is used to hold the event-time watermark delay (as a so-called _watermark attribute_ or _eventTime watermark_).
 
 The *event-time watermark delay* is used to calculate the difference between the event time of an event (modeled as a row in the streaming Dataset) and the time in the past.

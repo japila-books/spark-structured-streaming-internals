@@ -4,6 +4,20 @@
 
 NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
 
+=== [[creating-instance]] Creating OneSideHashJoiner Instance
+
+`OneSideHashJoiner` takes the following to be created:
+
+* [[joinSide]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#joinSide-internals, JoinSide>>
+* [[inputAttributes]] Input attributes (`Seq[Attribute]`)
+* [[joinKeys]] Join keys (`Seq[Expression]`)
+* [[inputIter]] Input rows (`Iterator[InternalRow]`)
+* [[preJoinFilterExpr]] Optional pre-join filter Catalyst expression
+* [[postJoinFilter]] Post-join filter (`(InternalRow) => Boolean`)
+* [[stateWatermarkPredicate]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>>
+
+`OneSideHashJoiner` initializes the <<internal-registries, internal registries and counters>>.
+
 === [[storeAndJoinWithOtherSide]] `storeAndJoinWithOtherSide` Method
 
 [source, scala]
@@ -13,23 +27,16 @@ storeAndJoinWithOtherSide(
   generateJoinedRow: (InternalRow, InternalRow) => JoinedRow): Iterator[InternalRow]
 ----
 
+`storeAndJoinWithOtherSide` tries to find the <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> among the <<inputAttributes, input attributes>>.
+
+`storeAndJoinWithOtherSide` uses the `WatermarkSupport` utility for a <<spark-sql-streaming-WatermarkSupport.adoc#watermarkExpression, watermark expression>> (based on the watermark attribute and the current <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#eventTimeWatermark, event-time watermark>>).
+
+[[storeAndJoinWithOtherSide-nonLateRows]]
+With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new predicate for the watermark expression and the <<inputAttributes, input attributes>> that is then used to filter out (_exclude_) late rows from the <<inputIter, input>>. Otherwise, the input rows are left unchanged (i.e. no rows are considered late and excluded).
+
 `storeAndJoinWithOtherSide`...FIXME
 
 NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
-
-=== [[creating-instance]] Creating OneSideHashJoiner Instance
-
-`OneSideHashJoiner` takes the following to be created:
-
-* [[joinSide]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#joinSide-internals, JoinSide>>
-* [[inputAttributes]] Input attributes (`Seq[Attribute]`)
-* [[joinKeys]] Join keys (`Seq[Expression]`)
-* [[inputIter]] Input internal rows (`Iterator[InternalRow]`)
-* [[preJoinFilterExpr]] Optional pre-join filter Catalyst expression
-* [[postJoinFilter]] Post-join filter (`(InternalRow) => Boolean`)
-* [[stateWatermarkPredicate]] Optional `JoinStateWatermarkPredicate`
-
-`OneSideHashJoiner` initializes the <<internal-registries, internal registries and counters>>.
 
 === [[removeOldState]] `removeOldState` Method
 
@@ -93,7 +100,7 @@ Used when...FIXME
 Used when...FIXME
 
 | stateKeyWatermarkPredicateFunc
-| [[stateKeyWatermarkPredicateFunc]] `InternalRow => Boolean`
+| [[stateKeyWatermarkPredicateFunc]] Predicate for late rows based on the <<stateWatermarkPredicate, stateWatermarkPredicate>> (`InternalRow => Boolean`)
 
 Used when...FIXME
 

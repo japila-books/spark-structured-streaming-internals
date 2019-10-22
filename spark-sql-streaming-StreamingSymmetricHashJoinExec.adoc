@@ -32,7 +32,7 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 * [[condition]] Join condition (`JoinConditionSplitPredicates`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
 * [[eventTimeWatermark]] Event-time watermark
-* [[stateWatermarkPredicates]] State watermark (`JoinStateWatermarkPredicates`)
+* [[stateWatermarkPredicates]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicates>>
 * [[left]] Physical operator on the left side (`SparkPlan`)
 * [[right]] Physical operator on the right side (`SparkPlan`)
 
@@ -138,6 +138,12 @@ processPartitions(
   leftInputIter: Iterator[InternalRow],
   rightInputIter: Iterator[InternalRow]): Iterator[InternalRow]
 ----
+
+`processPartitions` creates a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, LeftSide>> and all other properties for the left-hand join side (`leftSideJoiner`).
+
+`processPartitions` creates a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, RightSide>> and all other properties for the right-hand join side (`rightSideJoiner`).
+
+`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one.
 
 `processPartitions`...FIXME
 

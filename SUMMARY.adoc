@@ -7,6 +7,23 @@
 
 . link:spark-structured-streaming-internals.adoc[Internals of Streaming Queries]
 
+== Streaming Join
+
+. link:spark-sql-streaming-join.adoc[Streaming Join]
+
+. link:spark-sql-streaming-StateStoreAwareZipPartitionsRDD.adoc[StateStoreAwareZipPartitionsRDD]
+
+. link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
+.. link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler]
+.. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
+.. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
+
+. link:spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc[OneSideHashJoiner]
+
+. link:spark-sql-streaming-JoinStateWatermarkPredicate.adoc[JoinStateWatermarkPredicate]
+
+. link:spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc[StateStoreAwareZipPartitionsHelper]
+
 == Extending Structured Streaming with New Data Sources
 
 . link:spark-sql-streaming-extending-new-data-sources.adoc[Extending Structured Streaming with New Data Sources]
@@ -35,21 +52,6 @@
 . link:spark-sql-streaming-demo-custom-sink-webui.adoc[Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)]
 . link:spark-sql-streaming-demo-current_timestamp.adoc[current_timestamp Function For Processing Time in Streaming Queries]
 . link:spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.adoc[Using StreamingQueryManager for Query Termination Management]
-
-== Streaming Join
-
-. link:spark-sql-streaming-join.adoc[Streaming Join]
-
-. link:spark-sql-streaming-StateStoreAwareZipPartitionsRDD.adoc[StateStoreAwareZipPartitionsRDD]
-
-. link:spark-sql-streaming-SymmetricHashJoinStateManager.adoc[SymmetricHashJoinStateManager]
-.. link:spark-sql-streaming-StateStoreHandler.adoc[StateStoreHandler]
-.. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
-.. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
-
-. link:spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc[OneSideHashJoiner]
-
-. link:spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc[StateStoreAwareZipPartitionsHelper]
 
 == Streaming Aggregation
 

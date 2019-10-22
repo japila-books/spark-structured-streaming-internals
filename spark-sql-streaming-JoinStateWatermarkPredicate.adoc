@@ -1,0 +1,3 @@
+== [[JoinStateWatermarkPredicate]] JoinStateWatermarkPredicate
+
+`JoinStateWatermarkPredicate` is...FIXME
