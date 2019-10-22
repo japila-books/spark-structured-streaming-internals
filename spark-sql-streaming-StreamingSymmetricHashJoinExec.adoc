@@ -68,9 +68,41 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Ensu
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Distribution-HashClusteredDistribution.html[HashClusteredDistribution] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 ====
 
-=== [[metrics]] Performance Metrics
+=== [[metrics]] Performance Metrics (SQLMetrics)
 
-`StreamingSymmetricHashJoinExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
+`StreamingSymmetricHashJoinExec` uses the performance metrics as <<spark-sql-streaming-StateStoreWriter.adoc#metrics, other stateful physical operators that write to a state store>>.
+
+.StreamingSymmetricHashJoinExec in web UI (Details for Query)
+image::images/StreamingSymmetricHashJoinExec-webui-query-details.png[align="center"]
+
+The following table shows how the performance metrics are computed (and so their exact meaning).
+
+[cols="30,70",options="header",width="100%"]
+|===
+| Name (in web UI)
+| Description
+
+| total time to update rows
+a| [[allUpdatesTimeMs]] Processing time of all rows
+
+| total time to remove rows
+a| [[allRemovalsTimeMs]]
+
+| time to commit changes
+a| [[commitTimeMs]]
+
+| number of output rows
+a| [[numOutputRows]] Total number of output rows
+
+| number of total state rows
+a| [[numTotalStateRows]]
+
+| number of updated state rows
+a| [[numUpdatedStateRows]]
+
+| memory used by state
+a| [[stateMemory]]
+|===
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 

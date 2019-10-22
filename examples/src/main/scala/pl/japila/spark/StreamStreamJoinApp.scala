@@ -85,8 +85,8 @@ object StreamStreamJoinApp extends SparkStreamsApp {
          |Batch $batchNo
       """.stripMargin)
     val batch = Seq(
-      Event(1,  1, batch = batchNo),
-      Event(15, 2, batch = batchNo))
+      Event(1,  value = 11, batch = batchNo),
+      Event(15, value = 12, batch = batchNo))
     val leftOffset = leftEventStream.addData(batch)
     val rightOffset = rightEventStream.addData(batch)
     streamingQuery.processAllAvailable()
