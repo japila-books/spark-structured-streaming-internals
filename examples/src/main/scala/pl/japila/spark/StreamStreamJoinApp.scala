@@ -1,13 +1,12 @@
 package pl.japila.spark
 
 object StreamStreamJoinApp extends SparkStreamsApp {
-  import spark.implicits._
 
   // FIXME Compare to StreamingAggregationApp
 
   // FIXME Configurable from the command line
   import org.apache.spark.sql.streaming.OutputMode
-  val queryOutputMode = OutputMode.Complete
+  val queryOutputMode = OutputMode.Append
 
   println(
     s"""
@@ -56,13 +55,50 @@ object StreamStreamJoinApp extends SparkStreamsApp {
   deleteCheckpointLocation()
 
   // Stream-Stream INNER JOIN
-  val sq = leftEvents.join(rightEvents)
+  val joinedEvents = leftEvents.join(rightEvents)
     .where(leftEvents("value") === rightEvents("value"))
     .where(leftEvents("value") > 10)
     .where(rightEvents("value") % 2 === 0)
 
-  sq.explain(extended = true)
+  joinedEvents.explain(extended = true)
 
+  val streamingQuery = joinedEvents
+    .writeStream
+    .format("console")
+    .queryName(queryName)
+    .option("checkpointLocation", checkpointLocation)
+    .outputMode(queryOutputMode)
+    .start
 
+  val expectedStatus = "Waiting for data to arrive"
+  var currentStatus = streamingQuery.status.message
+  do {
+  currentStatus = streamingQuery.status.message
+  } while (currentStatus == expectedStatus)
 
+  var batchNo: Int = 0
+
+  {
+    batchNo = batchNo + 1
+    println(
+      s"""
+         |Batch $batchNo
+      """.stripMargin)
+    val batch = Seq(
+      Event(1,  1, batch = batchNo),
+      Event(15, 2, batch = batchNo))
+    val leftOffset = leftEventStream.addData(batch)
+    val rightOffset = rightEventStream.addData(batch)
+    streamingQuery.processAllAvailable()
+
+    import org.apache.spark.sql.execution.streaming.LongOffset
+    leftEventStream.commit(leftOffset.asInstanceOf[LongOffset])
+    rightEventStream.commit(rightOffset.asInstanceOf[LongOffset])
+
+    println(streamingQuery.lastProgress.prettyJson)
+  }
+
+  pause()
+
+  streamingQuery.explain()
 }
