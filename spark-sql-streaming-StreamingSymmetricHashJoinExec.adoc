@@ -1,6 +1,6 @@
 == [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator for a <<spark-sql-streaming-join.adoc#, stream-stream join>> (a `Join` logical operator of two streaming queries at execution time).
+`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.adoc#, stream-stream join>> at execution.
 
 [NOTE]
 ====
@@ -12,7 +12,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 [[supported-join-types]]
 `StreamingSymmetricHashJoinExec` requires that the <<joinType, join type>> be `Inner`, `LeftOuter`, or `RightOuter` with the same data types of the <<leftKeys, left>> and the <<rightKeys, right>> keys.
 
-`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`)
+`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
 
 `StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
 
@@ -26,8 +26,8 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 
 `StreamingSymmetricHashJoinExec` takes the following to be created:
 
-* [[leftKeys]] Catalyst expressions of the keys on the left side
-* [[rightKeys]] Catalyst expressions of the keys on the right side
+* [[leftKeys]] *Left Keys* (Catalyst expressions of the keys on the left side)
+* [[rightKeys]] *Right Keys* (Catalyst expressions of the keys on the right side)
 * [[joinType]] `JoinType`
 * [[condition]] Join condition (`JoinConditionSplitPredicates`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
@@ -37,6 +37,36 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 * [[right]] Physical operator on the right side (`SparkPlan`)
 
 `StreamingSymmetricHashJoinExec` initializes the <<internal-properties, internal properties>>.
+
+=== [[requiredChildDistribution]] Required Partition Requirements -- `requiredChildDistribution` Method
+
+[source, scala]
+----
+requiredChildDistribution: Seq[Distribution]
+----
+
+[NOTE]
+====
+`requiredChildDistribution` is part of the `SparkPlan` Contract for the required partition requirements (aka _required child distribution_) of the input data, i.e. how the output of the children physical operators is split across partitions before this operator can be executed.
+
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[SparkPlan Contract] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
+====
+
+`requiredChildDistribution` returns two `HashClusteredDistributions` for the <<leftKeys, left>> and <<rightKeys, right>> keys with the required <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#numPartitions, number of partitions>> based on the <<stateInfo, StatefulOperatorStateInfo>>.
+
+[NOTE]
+====
+`requiredChildDistribution` is used exclusively when `EnsureRequirements` physical query plan optimization is executed (and enforces partition requirements).
+
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-EnsureRequirements.html[EnsureRequirements Physical Query Optimization] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
+====
+
+[NOTE]
+====
+`HashClusteredDistribution` becomes `HashPartitioning` at execution that distributes rows across partitions (generates partition IDs of rows) based on `Murmur3Hash` of the join expressions (separately for the <<leftKeys, left>> and <<rightKeys, right>> keys) modulo the required number of partitions.
+
+Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Distribution-HashClusteredDistribution.html[HashClusteredDistribution] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
+====
 
 === [[metrics]] Performance Metrics
 

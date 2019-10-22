@@ -12,15 +12,19 @@ In Spark Structured Streaming, a *streaming join* is a streaming query that was 
 
 Streaming joins can be *stateless* or <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful>>:
 
-* Joins of a streaming query and a batch query (aka _stream-static joins_) are stateless and no state management is necessary
+* Joins of a streaming query and a batch query (aka _stream-static joins_) are stateless and no state management is required
 
 * Joins of two streaming queries (aka <<stream-stream-joins, stream-stream joins>>) are stateful and require streaming state (with a <<spark-sql-streaming-watermark.adoc#, streaming watermark>>).
 
 === [[stream-stream-joins]] Stream-Stream Joins
 
-* Require equality predicate
+A stream-stream join is planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
 
-* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#supported-join-types, Supports>> `Inner`, `LeftOuter`, and `RightOuter` join types
+Spark Structured Streaming supports stream-stream joins with the following:
+
+* <<spark-sql-streaming-StreamingJoinStrategy.adoc#, Equality predicate>> (https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join[equi-joins] that use only equality comparisons in the join-predicate)
+
+* `Inner`, `LeftOuter`, and `RightOuter` <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#supported-join-types, join types only>>
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
@@ -31,53 +35,6 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 In Spark Structured Streaming <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is responsible for planning streaming queries for execution.
 
 At <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, query planning>>, `IncrementalExecution` uses the <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy for planning <<stream-stream-joins, stream-stream joins>> as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators.
-
-[source, scala]
-----
-val inOne = spark
-  .readStream
-  .format("rate")
-  .load
-val inTwo = spark
-  .readStream
-  .format("rate")
-  .load
-
-// Stream-stream INNER JOIN
-val joined = inOne.join(inTwo, "value")
-
-joined.explain(extended = true)
-/**
-scala> joined.explain(extended = true)
-== Parsed Logical Plan ==
-'Join UsingJoin(Inner,List(value))
-:- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@7f7cd001, rate, [timestamp#95, value#96L]
-+- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@56fbefae, rate, [timestamp#99, value#100L]
-
-== Analyzed Logical Plan ==
-value: bigint, timestamp: timestamp, timestamp: timestamp
-Project [value#96L, timestamp#95, timestamp#99]
-+- Join Inner, (value#96L = value#100L)
-   :- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@7f7cd001, rate, [timestamp#95, value#96L]
-   +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@56fbefae, rate, [timestamp#99, value#100L]
-
-== Optimized Logical Plan ==
-Project [value#96L, timestamp#95, timestamp#99]
-+- Join Inner, (value#96L = value#100L)
-   :- Filter isnotnull(value#96L)
-   :  +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@7f7cd001, rate, [timestamp#95, value#96L]
-   +- Filter isnotnull(value#100L)
-      +- StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RateStreamProvider@56fbefae, rate, [timestamp#99, value#100L]
-
-== Physical Plan ==
-*(3) Project [value#96L, timestamp#95, timestamp#99]
-+- StreamingSymmetricHashJoin [value#96L], [value#100L], Inner, condition = [ leftOnly = null, rightOnly = null, both = null, full = null ], state info [ checkpoint = <unknown>, runId = 52fcd017-b8e8-486a-8bf7-da1ed0e18c18, opId = 0, ver = 0, numPartitions = 200], 0, state cleanup [ left = null, right = null ]
-   :- Exchange hashpartitioning(value#96L, 200)
-   :  +- *(1) Filter isnotnull(value#96L)
-   :     +- StreamingRelation rate, [timestamp#95, value#96L]
-   +- ReusedExchange [timestamp#99, value#100L], Exchange hashpartitioning(value#96L, 200)
-*/
-----
 
 === [[demos]] Demos
 
