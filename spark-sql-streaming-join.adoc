@@ -16,9 +16,9 @@ Streaming joins can be *stateless* or <<spark-sql-streaming-stateful-stream-proc
 
 * Joins of two streaming queries (aka <<stream-stream-joins, stream-stream joins>>) are stateful and require streaming state (with a <<spark-sql-streaming-watermark.adoc#, streaming watermark>>).
 
-=== [[stream-stream-joins]] Stream-Stream Joins
+=== [[stream-stream-joins]] Stream-Stream Equi-Joins
 
-A stream-stream join is planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
+A stream-stream equi-join is planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
 
 Spark Structured Streaming supports stream-stream joins with the following:
 

@@ -1,6 +1,6 @@
 == [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.adoc#, stream-stream join>> at execution.
+`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.adoc#, stream-stream equi-join>> at execution.
 
 [NOTE]
 ====
@@ -10,9 +10,11 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 ====
 
 [[supported-join-types]]
-`StreamingSymmetricHashJoinExec` requires that the <<joinType, join type>> be `Inner`, `LeftOuter`, or `RightOuter` with the same data types of the <<leftKeys, left>> and the <<rightKeys, right>> keys.
+`StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, or `RightOuter` <<joinType, join types>> with the same data types of the <<leftKeys, left>> and the <<rightKeys, right>> keys.
 
 `StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
+
+When planned for execution, `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to specify the execution-specific configuration, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>.
 
 `StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
 
@@ -30,9 +32,9 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 * [[rightKeys]] *Right Keys* (Catalyst expressions of the keys on the right side)
 * [[joinType]] `JoinType`
 * [[condition]] Join condition (`JoinConditionSplitPredicates`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
-* [[eventTimeWatermark]] Event-time watermark
-* [[stateWatermarkPredicates]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicates>>
+* [[stateInfo]] Optional <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[eventTimeWatermark]] Optional event-time watermark
+* [[stateWatermarkPredicates]] <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>> for the left- and right-hand side of the join
 * [[left]] Physical operator on the left side (`SparkPlan`)
 * [[right]] Physical operator on the right side (`SparkPlan`)
 

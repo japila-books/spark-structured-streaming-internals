@@ -229,14 +229,14 @@ stopConsumer(): Unit
 
 NOTE: `stopConsumer` is used when...FIXME
 
-=== [[toString]] `toString` Method
+=== [[toString]] Textual Representation -- `toString` Method
 
 [source, scala]
 ----
-toString(): String
+toString: String
 ----
 
-NOTE: `toString` is part of the link:++https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()++[java.lang.Object] Contract for a string representation of the object.
+NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
 
 `toString`...FIXME
 

@@ -104,7 +104,7 @@ Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlanner.html[SparkPlanner] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-=== [[state]] State Preparation Rule For Batch-Specific Configuration -- `state` Property
+=== [[state]] State Preparation Rule For Execution-Specific Configuration -- `state` Property
 
 [source, scala]
 ----
@@ -132,6 +132,8 @@ state: Rule[SparkPlan]
 * <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, batchWatermarkMs>> (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the event-time watermark
 
 * <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchTimestampMs, batchTimestampMs>> (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the current timestamp
+
+* <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, getStateWatermarkPredicates>> for the state watermark predicates (for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>)
 
 `state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to <<executedPlan, optimize (prepare) the physical plan of the streaming query>> (once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
 

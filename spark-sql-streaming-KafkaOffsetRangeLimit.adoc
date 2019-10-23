@@ -23,7 +23,7 @@ a| [[SpecificOffsetRangeLimit]] Intent to bind to *specific offsets* with the fo
 
 |===
 
-NOTE: `KafkaOffsetRangeLimit` is a *sealed trait* in Scala which means that <<implementations, implementations>> are all in the same compilation unit (a single file).
+NOTE: `KafkaOffsetRangeLimit` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
 
 `KafkaOffsetRangeLimit` is often used in a text-based representation and is converted to from *latest*, *earliest* or a *JSON-formatted text* using <<spark-sql-streaming-KafkaSourceProvider.adoc#getKafkaOffsetRangeLimit, KafkaSourceProvider.getKafkaOffsetRangeLimit>> object method.
 

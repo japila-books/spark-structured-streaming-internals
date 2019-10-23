@@ -1,3 +1,66 @@
-== [[JoinStateWatermarkPredicate]] JoinStateWatermarkPredicate
+== [[JoinStateWatermarkPredicate]] JoinStateWatermarkPredicate Contract (Sealed Trait)
 
-`JoinStateWatermarkPredicate` is...FIXME
+`JoinStateWatermarkPredicate` is the <<contract, abstraction>> of <<implementations, join state watermark predicates>> that can <<FIXME, FIXME>>.
+
+`JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>>
+
+[[contract]]
+.JoinStateWatermarkPredicate Contract
+[cols="30m,70",options="header",width="100%"]
+|===
+| Method
+| Description
+
+| desc
+a| [[desc]]
+
+[source, scala]
+----
+desc: String
+----
+
+Used when...FIXME
+
+| expr
+a| [[expr]]
+
+[source, scala]
+----
+expr: Expression
+----
+
+Used when...FIXME
+
+|===
+
+[[implementations]]
+.JoinStateWatermarkPredicates
+[cols="30,70",options="header",width="100%"]
+|===
+| JoinStateWatermarkPredicate
+| Description
+
+| JoinStateKeyWatermarkPredicate
+| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys
+
+| JoinStateValueWatermarkPredicate
+| [[JoinStateValueWatermarkPredicate]] Watermark predicate on state values
+
+|===
+
+NOTE: `JoinStateWatermarkPredicate` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
+
+=== [[toString]] Textual Representation -- `toString` Method
+
+[source, scala]
+----
+toString: String
+----
+
+NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
+
+`toString` uses the <<desc, desc>> and <<expr, expr>> for the string representation:
+
+```
+[desc]: [expr]
+```

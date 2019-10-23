@@ -1,0 +1,29 @@
+== [[JoinStateWatermarkPredicates]] JoinStateWatermarkPredicates -- Watermark Predicates for State Removal
+
+[[creating-instance]]
+`JoinStateWatermarkPredicates` takes the following to be created:
+
+* [[left]] Optional <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the left-hand side of a join (default: `None`)
+
+* [[right]] Optional <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the right-hand side of a join (default: `None`)
+
+`JoinStateWatermarkPredicates` is <<creating-instance, created>> for the following:
+
+* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator is created (with the optional properties undefined, including <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
+
+* `StreamingSymmetricHashJoinHelper` utility is requested for <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, one>> (for `IncrementalExecution` for the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to optimize and specify the execution-specific configuration for a query plan with <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators)
+
+=== [[toString]] Textual Representation -- `toString` Method
+
+[source, scala]
+----
+toString: String
+----
+
+NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
+
+`toString` uses the <<left, left>> and <<right, right>> predicates for the string representation:
+
+```
+state cleanup [ left [left], right [right] ]
+```

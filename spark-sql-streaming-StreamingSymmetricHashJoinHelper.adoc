@@ -1,0 +1,20 @@
+== [[StreamingSymmetricHashJoinHelper]] StreamingSymmetricHashJoinHelper Utility
+
+`StreamingSymmetricHashJoinHelper` is...FIXME
+
+=== [[getStateWatermarkPredicates]] Creating JoinStateWatermarkPredicates -- `getStateWatermarkPredicates` Object Method
+
+[source, scala]
+----
+getStateWatermarkPredicates(
+  leftAttributes: Seq[Attribute],
+  rightAttributes: Seq[Attribute],
+  leftKeys: Seq[Expression],
+  rightKeys: Seq[Expression],
+  condition: Option[Expression],
+  eventTimeWatermark: Option[Long]): JoinStateWatermarkPredicates
+----
+
+`getStateWatermarkPredicates`...FIXME
+
+NOTE: `getStateWatermarkPredicates` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#state, apply the state preparation rule for batch-specific configuration>> (while optimizing query plans with <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators).
