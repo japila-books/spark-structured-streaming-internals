@@ -1,5 +1,6 @@
 == Streaming Join
 
+[[operators]]
 In Spark Structured Streaming, a *streaming join* is a streaming query that was described (_build_) using the <<spark-sql-streaming-Dataset-operators.adoc#, high-level streaming operators>>:
 
 * <<spark-sql-streaming-Dataset-operators.adoc#crossJoin, Dataset.crossJoin>>
@@ -16,9 +17,7 @@ Streaming joins can be *stateless* or <<spark-sql-streaming-stateful-stream-proc
 
 * Joins of two streaming queries (aka <<stream-stream-joins, stream-stream joins>>) are stateful and require streaming state (with a <<spark-sql-streaming-watermark.adoc#, streaming watermark>>).
 
-=== [[stream-stream-joins]] Stream-Stream Equi-Joins
-
-A stream-stream equi-join is planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
+=== [[stream-stream-joins]] Stream-Stream Joins
 
 Spark Structured Streaming supports stream-stream joins with the following:
 
@@ -26,11 +25,13 @@ Spark Structured Streaming supports stream-stream joins with the following:
 
 * `Inner`, `LeftOuter`, and `RightOuter` <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#supported-join-types, join types only>>
 
+A stream-stream equi-join is planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
+
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
-Under the covers, the high-level operators create a logical query plan with one or more `Join` logical operators.
+Under the covers, the <<operators, high-level operators>> create a logical query plan with one or more `Join` logical operators.
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
 In Spark Structured Streaming <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is responsible for planning streaming queries for execution.
 
@@ -41,3 +42,11 @@ At <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, query planning>
 Use the following demos to learn more:
 
 * <<spark-sql-streaming-demo-join-stream-stream-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join of Streaming Queries and StreamingSymmetricHashJoinExec Physical Operator>>
+
+=== [[i-want-more]] Further Reading Or Watching
+
+* https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#stream-stream-joins[Stream-stream Joins] in the official documentation of Apache Spark for Structured Streaming
+
+* https://databricks.com/blog/2018/03/13/introducing-stream-stream-joins-in-apache-spark-2-3.html[Introducing Stream-Stream Joins in Apache Spark 2.3] by Databricks
+
+* (video) https://databricks.com/session/deep-dive-into-stateful-stream-processing-in-structured-streaming[Deep Dive into Stateful Stream Processing in Structured Streaming] by Tathagata Das
