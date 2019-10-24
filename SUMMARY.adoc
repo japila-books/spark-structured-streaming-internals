@@ -25,6 +25,7 @@
 
 . link:spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc[StateStoreAwareZipPartitionsHelper]
 . link:spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc[StreamingSymmetricHashJoinHelper]
+. link:spark-sql-streaming-StreamingJoinHelper.adoc[StreamingJoinHelper]
 
 == Extending Structured Streaming with New Data Sources
 

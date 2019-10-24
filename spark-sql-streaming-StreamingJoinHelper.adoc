@@ -1,0 +1,20 @@
+== [[StreamingJoinHelper]] StreamingJoinHelper Utility
+
+`StreamingJoinHelper` is a Scala object with the following utility methods:
+
+* <<getStateValueWatermark, getStateValueWatermark>>
+
+=== [[getStateValueWatermark]] State Value Watermark -- `getStateValueWatermark` Object Method
+
+[source, scala]
+----
+getStateValueWatermark(
+  attributesToFindStateWatermarkFor: AttributeSet,
+  attributesWithEventWatermark: AttributeSet,
+  joinCondition: Option[Expression],
+  eventWatermark: Option[Long]): Option[Long]
+----
+
+`getStateValueWatermark`...FIXME
+
+NOTE: `getStateValueWatermark` is used when...FIXME
