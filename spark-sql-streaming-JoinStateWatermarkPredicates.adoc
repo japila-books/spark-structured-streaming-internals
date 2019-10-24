@@ -1,11 +1,11 @@
 == [[JoinStateWatermarkPredicates]] JoinStateWatermarkPredicates -- Watermark Predicates for State Removal
 
 [[creating-instance]]
-`JoinStateWatermarkPredicates` takes the following to be created:
+`JoinStateWatermarkPredicates` contains watermark predicates for state removal of the children of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator:
 
-* [[left]] Optional <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the left-hand side of a join (default: `None`)
+* [[left]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the left-hand side of a join (default: `None`)
 
-* [[right]] Optional <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the right-hand side of a join (default: `None`)
+* [[right]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the right-hand side of a join (default: `None`)
 
 `JoinStateWatermarkPredicates` is <<creating-instance, created>> for the following:
 

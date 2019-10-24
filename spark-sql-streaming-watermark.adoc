@@ -4,6 +4,8 @@
 
 Streaming watermark is used to mark events that are older than the threshold as "too late", and not "interesting" to update partial non-final aggregates.
 
+The *event-time watermark delay* is used to calculate the difference between the event time of an event (modeled as a row in the streaming Dataset) and the time in the past.
+
 With streaming watermark, memory usage of a streaming state can be controlled as late events can easily be dropped, and old aggregates that are never going to be updated removed. That avoids unbounded streaming state that would inevitably use up all the available memory of long-running streaming queries and end up in out of memory errors.
 
 In Spark Structured Streaming, you use <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> high-level operator to define a streaming watermark.

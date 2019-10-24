@@ -1,6 +1,10 @@
 == [[StreamingSymmetricHashJoinHelper]] StreamingSymmetricHashJoinHelper Utility
 
-`StreamingSymmetricHashJoinHelper` is...FIXME
+`StreamingSymmetricHashJoinHelper` is a Scala object with the following utility methods:
+
+* <<getStateWatermarkPredicates, getStateWatermarkPredicates>>
+
+* FIXME
 
 === [[getStateWatermarkPredicates]] Creating JoinStateWatermarkPredicates -- `getStateWatermarkPredicates` Object Method
 
@@ -14,6 +18,10 @@ getStateWatermarkPredicates(
   condition: Option[Expression],
   eventTimeWatermark: Option[Long]): JoinStateWatermarkPredicates
 ----
+
+`getStateWatermarkPredicates` tries to find the index of the <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> among the left keys first, and if not found, the right keys.
+
+NOTE: The <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> is defined using <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator.
 
 `getStateWatermarkPredicates`...FIXME
 

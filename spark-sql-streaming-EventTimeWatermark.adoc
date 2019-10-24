@@ -9,7 +9,9 @@ A unary logical operator (`UnaryNode`) is a logical operator with a single <<chi
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan.html[UnaryNode] (and logical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`EventTimeWatermark` is resolved (aka _planned_) to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator in <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy.
+When requested for the <<output, output attributes>>, `EventTimeWatermark` logical operator goes over the output attributes of the <<child, child>> logical operator to find the matching attribute based on the <<eventTime, eventTime>> attribute and updates it to include `spark.watermarkDelayMs` metadata key with the <<delay, watermark delay>> interval (<<getDelayMs, converted to milliseconds>>).
+
+`EventTimeWatermark` is resolved (_planned_) to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator in <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy.
 
 [NOTE]
 ====
@@ -36,8 +38,8 @@ scala> println(q.queryExecution.logical.numberedTreeString) // <-- no EventTimeW
 
 `EventTimeWatermark` takes the following to be created:
 
-* [[eventTime]] Name of the column for <<spark-sql-streaming-watermark.adoc#, event-time watermark>>
-* [[delay]] Delay (`CalendarInterval`)
+* [[eventTime]] Watermark column (`Attribute`)
+* [[delay]] Watermark delay (`CalendarInterval`)
 * [[child]] Child logical operator (`LogicalPlan`)
 
 === [[output]] Output Schema -- `output` Property
@@ -64,8 +66,18 @@ root
  |-- value: long (nullable = true)
 ----
 
-=== [[watermarkDelayMs]][[delayKey]] Metadata Key of Watermark Attribute -- `spark.watermarkDelayMs` Metadata Key
+=== [[watermarkDelayMs]][[delayKey]] Watermark Metadata (Marker) -- `spark.watermarkDelayMs` Metadata Key
 
-*spark.watermarkDelayMs* metadata key (in the `Metadata` of the <<output, output attributes>>) is used to hold the event-time watermark delay (as a so-called _watermark attribute_ or _eventTime watermark_).
+`spark.watermarkDelayMs` metadata key is used to mark one of the <<output, output attributes>> as the *watermark attribute* (_eventTime watermark_).
 
-The *event-time watermark delay* is used to calculate the difference between the event time of an event (modeled as a row in the streaming Dataset) and the time in the past.
+=== [[getDelayMs]] Converting Human-Friendly CalendarInterval to Milliseconds -- `getDelayMs` Object Method
+
+[source, scala]
+----
+getDelayMs(
+  delay: CalendarInterval): Long
+----
+
+`getDelayMs`...FIXME
+
+NOTE: `getDelayMs` is used when...FIXME
