@@ -84,7 +84,7 @@ removeByValueCondition(
 
 NOTE: `removeByValueCondition` is used when...FIXME
 
-=== [[append]] `append` Method
+=== [[append]] Appending Row -- `append` Method
 
 [source, scala]
 ----

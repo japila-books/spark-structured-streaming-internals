@@ -14,9 +14,20 @@ NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-strea
 * [[inputIter]] Input rows (`Iterator[InternalRow]`)
 * [[preJoinFilterExpr]] Optional pre-join filter Catalyst expression
 * [[postJoinFilter]] Post-join filter (`(InternalRow) => Boolean`)
-* [[stateWatermarkPredicate]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>>
+* <<stateWatermarkPredicate, JoinStateWatermarkPredicate>>
 
 `OneSideHashJoiner` initializes the <<internal-registries, internal registries and counters>>.
+
+=== [[stateWatermarkPredicate]] Optional Join State Watermark Predicate -- `stateWatermarkPredicate` Internal Property
+
+[source, scala]
+----
+stateWatermarkPredicate: Option[JoinStateWatermarkPredicate]
+----
+
+When <<creating-instance, created>>, `OneSideHashJoiner` is given a <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>>.
+
+`stateWatermarkPredicate` is used for the <<stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> (when a <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateKeyWatermarkPredicate, JoinStateKeyWatermarkPredicate>>) and the <<stateValueWatermarkPredicateFunc, stateValueWatermarkPredicateFunc>> (when a <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>>) that are both used when `OneSideHashJoiner` is requested to <<removeOldState, removeOldState>>.
 
 === [[storeAndJoinWithOtherSide]] `storeAndJoinWithOtherSide` Method
 
@@ -47,9 +58,9 @@ removeOldState(): Iterator[UnsafeRowPair]
 
 `removeOldState` branches off per the <<stateWatermarkPredicate, JoinStateWatermarkPredicate>>:
 
-* For `JoinStateKeyWatermarkPredicate`, `removeOldState` requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByKeyCondition, removeByKeyCondition>> (with the <<stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>>)
+* For <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateKeyWatermarkPredicate, JoinStateKeyWatermarkPredicate>>, `removeOldState` requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByKeyCondition, removeByKeyCondition>> (with the <<stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>>)
 
-* For `JoinStateValueWatermarkPredicate`, `removeOldState` requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByValueCondition, removeByValueCondition>> (with the <<stateValueWatermarkPredicateFunc, stateValueWatermarkPredicateFunc>>)
+* For <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>>, `removeOldState` requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByValueCondition, removeByValueCondition>> (with the <<stateValueWatermarkPredicateFunc, stateValueWatermarkPredicateFunc>>)
 
 * For any other predicates, `removeOldState` returns an empty iterator (no rows to process)
 
@@ -100,14 +111,36 @@ Used when...FIXME
 Used when...FIXME
 
 | stateKeyWatermarkPredicateFunc
-| [[stateKeyWatermarkPredicateFunc]] Predicate for late rows based on the <<stateWatermarkPredicate, stateWatermarkPredicate>> (`InternalRow => Boolean`)
+a| [[stateKeyWatermarkPredicateFunc]]
 
-Used when...FIXME
+[source, scala]
+----
+stateKeyWatermarkPredicateFunc: InternalRow => Boolean
+----
+
+Predicate for late rows based on the <<stateWatermarkPredicate, stateWatermarkPredicate>>
+
+Used for the following:
+
+* <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> (and check out whether to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, append a row>> to the <<joinStateManager, SymmetricHashJoinStateManager>>)
+
+* <<removeOldState, removeOldState>>
 
 | stateValueWatermarkPredicateFunc
-| [[stateValueWatermarkPredicateFunc]] `InternalRow => Boolean`
+a| [[stateValueWatermarkPredicateFunc]]
 
-Used when...FIXME
+[source, scala]
+----
+stateValueWatermarkPredicateFunc: InternalRow => Boolean
+----
+
+Predicate for late rows based on the <<stateWatermarkPredicate, stateWatermarkPredicate>>
+
+Used for the following:
+
+* <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> (and check out whether to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, append a row>> to the <<joinStateManager, SymmetricHashJoinStateManager>>)
+
+* <<removeOldState, removeOldState>>
 
 | updatedStateRowsCount
 a| [[updatedStateRowsCount]][[numUpdatedStateRows]] Counter

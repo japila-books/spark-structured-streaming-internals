@@ -27,9 +27,11 @@ Spark Structured Streaming supports stream-stream joins with the following:
 
 A stream-stream equi-join is planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
 
-=== [[join-state-watermark]] Join State Watermark
+=== [[join-state-watermark]] Join State Watermark for State Removal
 
-Stream-stream joins can define *Join State Watermark*.
+Stream-stream joins can define *Join State Watermark* for state removal.
+
+* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#stateWatermarkPredicates, StreamingSymmetricHashJoinExec>>
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
