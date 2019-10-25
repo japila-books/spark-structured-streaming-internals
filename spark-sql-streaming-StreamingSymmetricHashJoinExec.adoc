@@ -9,7 +9,7 @@ A binary physical operator (`BinaryExecNode`) is a physical operator with <<left
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[BinaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-[[supported-join-types]]
+[[supported-join-types]][[joinType]]
 `StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, or `RightOuter` <<joinType, join types>> with the same data types of the <<leftKeys, left>> and the <<rightKeys, right>> keys.
 
 `StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
@@ -28,13 +28,13 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 
 `StreamingSymmetricHashJoinExec` takes the following to be created:
 
-* [[leftKeys]] *Left Keys* (Catalyst expressions of the keys on the left side)
-* [[rightKeys]] *Right Keys* (Catalyst expressions of the keys on the right side)
-* [[joinType]] `JoinType`
+* [[leftKeys]] Left keys (Catalyst expressions of the keys on the left side)
+* [[rightKeys]] Right keys (Catalyst expressions of the keys on the right side)
+* <<joinType, Join type>>
 * [[condition]] Join condition (`JoinConditionSplitPredicates`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
 * <<eventTimeWatermark, Event-Time Watermark>>
-* [[stateWatermarkPredicates]] <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides
+* <<stateWatermarkPredicates, Watermark Predicates for State Removal>>
 * [[left]] Physical operator on the left side (`SparkPlan`)
 * [[right]] Physical operator on the right side (`SparkPlan`)
 
@@ -55,9 +55,29 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 ====
 `eventTimeWatermark` is used when:
 
-* `StreamingSymmetricHashJoinExec` is requested to <<shouldRunAnotherBatch, shouldRunAnotherBatch>>
+* `StreamingSymmetricHashJoinExec` is requested to <<shouldRunAnotherBatch, check out whether the last batch execution requires another non-data batch or not>>
 
 * `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
+====
+
+=== [[stateWatermarkPredicates]] Watermark Predicates for State Removal -- `stateWatermarkPredicates` Internal Property
+
+[source, scala]
+----
+stateWatermarkPredicates: JoinStateWatermarkPredicates
+----
+
+When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, StreamingSymmetricHashJoinHelper>> utility).
+
+`stateWatermarkPredicates` contains the left and right predicates only when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
+
+[NOTE]
+====
+`stateWatermarkPredicates` is used when `StreamingSymmetricHashJoinExec` is requested for the following:
+
+* <<processPartitions, Process partitions of the left and right sides of the stream-stream join>> (and creating <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiners>>)
+
+* <<shouldRunAnotherBatch, Checking out whether the last batch execution requires another non-data batch or not>>
 ====
 
 === [[requiredChildDistribution]] Required Partition Requirements -- `requiredChildDistribution` Method
@@ -130,7 +150,8 @@ a| [[stateMemory]]
 
 [source, scala]
 ----
-shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
+shouldRunAnotherBatch(
+  newMetadata: OffsetSeqMetadata): Boolean
 ----
 
 NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
@@ -152,7 +173,7 @@ NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime repres
 
 In the end, `doExecute` requests the <<left, left>> and <<right, right>> child physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
 
-=== [[processPartitions]] Processing Partitions (of Left and Right Side of Stream-Stream Join) -- `processPartitions` Internal Method
+=== [[processPartitions]] Processing Partitions of Left and Right Sides of Stream-Stream Join -- `processPartitions` Internal Method
 
 [source, scala]
 ----
