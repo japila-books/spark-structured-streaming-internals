@@ -32,13 +32,33 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 * [[rightKeys]] *Right Keys* (Catalyst expressions of the keys on the right side)
 * [[joinType]] `JoinType`
 * [[condition]] Join condition (`JoinConditionSplitPredicates`)
-* [[stateInfo]] Optional <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
-* [[eventTimeWatermark]] Optional event-time watermark
-* [[stateWatermarkPredicates]] <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>> for the left- and right-hand side of the join
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* <<eventTimeWatermark, Event-Time Watermark>>
+* [[stateWatermarkPredicates]] <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides
 * [[left]] Physical operator on the left side (`SparkPlan`)
 * [[right]] Physical operator on the right side (`SparkPlan`)
 
 `StreamingSymmetricHashJoinExec` initializes the <<internal-properties, internal properties>>.
+
+=== [[eventTimeWatermark]] Event-Time Watermark -- `eventTimeWatermark` Internal Property
+
+[source, scala]
+----
+eventTimeWatermark: Option[Long]
+----
+
+When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> of the current streaming micro-batch.
+
+`eventTimeWatermark` is an optional property that is specified only when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
+
+[NOTE]
+====
+`eventTimeWatermark` is used when:
+
+* `StreamingSymmetricHashJoinExec` is requested to <<shouldRunAnotherBatch, shouldRunAnotherBatch>>
+
+* `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
+====
 
 === [[requiredChildDistribution]] Required Partition Requirements -- `requiredChildDistribution` Method
 

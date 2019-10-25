@@ -29,7 +29,7 @@ storeAndJoinWithOtherSide(
 
 `storeAndJoinWithOtherSide` tries to find the <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> among the <<inputAttributes, input attributes>>.
 
-`storeAndJoinWithOtherSide` uses the `WatermarkSupport` utility for a <<spark-sql-streaming-WatermarkSupport.adoc#watermarkExpression, watermark expression>> (based on the watermark attribute and the current <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#eventTimeWatermark, event-time watermark>>).
+`storeAndJoinWithOtherSide` creates a <<spark-sql-streaming-WatermarkSupport.adoc#watermarkExpression, watermark expression>> (for the watermark attribute and the current <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#eventTimeWatermark, event-time watermark>>).
 
 [[storeAndJoinWithOtherSide-nonLateRows]]
 With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new predicate for the watermark expression and the <<inputAttributes, input attributes>> that is then used to filter out (_exclude_) late rows from the <<inputIter, input>>. Otherwise, the input rows are left unchanged (i.e. no rows are considered late and excluded).
