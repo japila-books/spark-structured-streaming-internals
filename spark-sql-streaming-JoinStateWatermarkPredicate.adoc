@@ -1,8 +1,10 @@
 == [[JoinStateWatermarkPredicate]] JoinStateWatermarkPredicate Contract (Sealed Trait)
 
-`JoinStateWatermarkPredicate` is the <<contract, abstraction>> of <<implementations, join state watermark predicates>> that can <<FIXME, FIXME>>.
+`JoinStateWatermarkPredicate` is the <<contract, abstraction>> of <<implementations, join state watermark predicates>> that are described by a <<expr, Catalyst expression>> and <<desc, desc>>.
 
-`JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>>
+`JoinStateWatermarkPredicate` is created using <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getOneSideStateWatermarkPredicate, StreamingSymmetricHashJoinHelper>> utility (for <<spark-sql-streaming-IncrementalExecution.adoc#state, planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration>>)
+
+`JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (and <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>>).
 
 [[contract]]
 .JoinStateWatermarkPredicate Contract
@@ -19,7 +21,7 @@ a| [[desc]]
 desc: String
 ----
 
-Used when...FIXME
+Used exclusively for the <<toString, textual representation>>
 
 | expr
 a| [[expr]]
@@ -29,7 +31,9 @@ a| [[expr]]
 expr: Expression
 ----
 
-Used when...FIXME
+A Catalyst `Expression`
+
+Used for the <<toString, textual representation>> and a <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, JoinStateWatermarkPredicates>> (for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator)
 
 |===
 

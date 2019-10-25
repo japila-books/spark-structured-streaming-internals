@@ -30,7 +30,7 @@ In the end, `getStateWatermarkPredicates` creates a <<spark-sql-streaming-JoinSt
 
 NOTE: `getStateWatermarkPredicates` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#state, apply the state preparation rule for batch-specific configuration>> (while optimizing query plans with <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators).
 
-==== [[getOneSideStateWatermarkPredicate]] State Watermark Predicate for One Side of Join -- `getOneSideStateWatermarkPredicate` Internal Method
+==== [[getOneSideStateWatermarkPredicate]] Join State Watermark Predicate (for One Side of Join) -- `getOneSideStateWatermarkPredicate` Internal Method
 
 [source, scala]
 ----
@@ -46,4 +46,6 @@ getOneSideStateWatermarkPredicate(
 
 * <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> if the watermark was defined among the `oneSideInputAttributes` (with the <<spark-sql-streaming-StreamingJoinHelper.adoc#getStateValueWatermark, state value watermark>> based on the given `oneSideInputAttributes` and `otherSideInputAttributes`)
 
-NOTE: `getOneSideStateWatermarkPredicate` creates no <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for no watermark found.
+NOTE: `getOneSideStateWatermarkPredicate` creates no <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> (`None`) for no watermark found.
+
+NOTE: `getStateWatermarkPredicates` is used exclusively to <<getStateWatermarkPredicates, create a JoinStateWatermarkPredicates>>.
