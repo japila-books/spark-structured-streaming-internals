@@ -13,9 +13,9 @@ In Spark Structured Streaming, a *streaming join* is a streaming query that was 
 
 Streaming joins can be *stateless* or <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful>>:
 
-* Joins of a streaming query and a batch query (aka _stream-static joins_) are stateless and no state management is required
+* Joins of a streaming query and a batch query (_stream-static joins_) are stateless and no state management is required
 
-* Joins of two streaming queries (aka <<stream-stream-joins, stream-stream joins>>) are stateful and require streaming state (with a <<spark-sql-streaming-watermark.adoc#, streaming watermark>>).
+* Joins of two streaming queries (<<stream-stream-joins, stream-stream joins>>) are stateful and require streaming state (with an optional <<join-state-watermark, join state watermark for state removal>>).
 
 === [[stream-stream-joins]] Stream-Stream Joins
 
@@ -29,9 +29,17 @@ A stream-stream equi-join is planned as <<spark-sql-streaming-StreamingSymmetric
 
 === [[join-state-watermark]] Join State Watermark for State Removal
 
-Stream-stream joins can define *Join State Watermark* for state removal.
+Stream-stream joins may optionally define *Join State Watermark* for state removal.
 
 * <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#stateWatermarkPredicates, StreamingSymmetricHashJoinExec>>
+
+A join state watermark can be specified on the following:
+
+. Join keys (_key state_)
+
+. Columns of the left and right sides (_value state_)
+
+A join state watermark can be specified on key state, value state or both.
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 
