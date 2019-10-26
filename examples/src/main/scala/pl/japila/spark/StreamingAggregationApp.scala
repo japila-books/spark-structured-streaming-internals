@@ -32,17 +32,6 @@ object StreamingAggregationApp extends SparkStreamsApp {
   // FIXME Make it configurable from the command line
   spark.sparkContext.setLogLevel("OFF")
 
-  // Define event "format"
-  // Event time must be defined on a window or a timestamp
-  import java.sql.Timestamp
-  case class Event(time: Timestamp, value: Long, batch: Long)
-  import scala.concurrent.duration._
-  object Event {
-    def apply(secs: Long, value: Long, batch: Long): Event = {
-      Event(new Timestamp(secs.seconds.toMillis), value, batch)
-    }
-  }
-
   // Using memory data source for full control of the input
   import org.apache.spark.sql.SQLContext
   implicit val sqlCtx: SQLContext = spark.sqlContext
