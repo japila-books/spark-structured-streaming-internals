@@ -53,9 +53,9 @@ At <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, query planning>
 
 === [[demos]] Demos
 
-Use the following demos to learn more:
+Use the following demo application to learn more:
 
-* <<spark-sql-streaming-demo-join-stream-stream-StreamingSymmetricHashJoinExec.adoc#, Demo: Streaming Join of Streaming Queries and StreamingSymmetricHashJoinExec Physical Operator>>
+* https://github.com/jaceklaskowski/spark-structured-streaming-book/tree/v{{book.version}}/examples/src/main/scala/pl/japila/spark/StreamStreamJoinApp.scala[StreamStreamJoinApp]
 
 === [[i-want-more]] Further Reading Or Watching
 

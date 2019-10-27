@@ -44,7 +44,19 @@ object StreamStreamJoinApp extends SparkStreamsApp {
   deleteCheckpointLocation()
 
   println("Case 1: Stream-Stream INNER JOIN")
-  val joinedEvents = leftEvents.join(rightEvents, Seq("value"), "inner")
+
+  // FIXME Configurable from the command line
+  import scala.concurrent.duration._
+  val watermark = 10.seconds.toString
+
+  import org.apache.spark.sql.functions.expr
+  val timeBound =
+    leftEvents("time") >= rightEvents("time") &&
+    leftEvents("time") <= rightEvents("time") + expr("INTERVAL 1 HOUR")
+  val joinedEvents = leftEvents
+    .withWatermark("time", watermark)
+    .join(rightEvents, Seq("value"), "inner")
+    .where(timeBound)
 
   joinedEvents.explain(extended = true)
 
@@ -69,33 +81,48 @@ object StreamStreamJoinApp extends SparkStreamsApp {
     println(
       s"""
          |Batch $batchNo
-         |- 1 row in the output
-         |- 3 keys in the state store (for the left and right side)
+         |- 0 row in the output
+         |- 2 keys in the state store (for the left and right side) / stateOperators.numRowsTotal
       """.stripMargin)
 
     val leftBatch = Seq(
-      Event(0,  value = 11, batch = batchNo),
-      Event(15, value = 12, batch = batchNo)
+      Event(value = 11, batch = batchNo),
+      Event(value = 12, batch = batchNo)
     )
     val leftOffset = leftEventStream.addData(leftBatch)
+    streamingQuery.processAllAvailable()
+
+    import org.apache.spark.sql.execution.streaming.LongOffset
+    leftEventStream.commit(leftOffset.asInstanceOf[LongOffset])
+
+    println(streamingQuery.lastProgress.prettyJson)
+  }
+
+  // This should show execution-specific properties, e.g. checkpointLocation, event-time watermark
+  streamingQuery.explain()
+
+  {
+    batchNo = batchNo + 1
+    println(
+      s"""
+         |Batch $batchNo
+         |- ??? row in the output
+         |- 3 keys in the state store (for the left and right side) / stateOperators.numRowsTotal
+      """.stripMargin)
 
     val rightBatch = Seq(
-      Event(0, value = 12, batch = batchNo)
+      Event(value = 12, batch = batchNo)
     )
     val rightOffset = rightEventStream.addData(rightBatch)
     streamingQuery.processAllAvailable()
 
     import org.apache.spark.sql.execution.streaming.LongOffset
-    leftEventStream.commit(leftOffset.asInstanceOf[LongOffset])
     rightEventStream.commit(rightOffset.asInstanceOf[LongOffset])
 
     println(streamingQuery.lastProgress.prettyJson)
   }
 
   pause()
-
-  // This should show execution-specific properties, e.g. checkpointLocation, event-time watermark
-  streamingQuery.explain()
 
   {
     batchNo = batchNo + 1
@@ -107,8 +134,8 @@ object StreamStreamJoinApp extends SparkStreamsApp {
       """.stripMargin)
 
     val rightBatch = Seq(
-      Event(batchNo * 10, value = 11, batch = batchNo),
-      Event(batchNo * 10, value = 12, batch = batchNo)
+      Event(value = 11, batch = batchNo),
+      Event(value = 12, batch = batchNo)
     )
     val rightOffset = rightEventStream.addData(rightBatch)
     streamingQuery.processAllAvailable()
@@ -131,8 +158,8 @@ object StreamStreamJoinApp extends SparkStreamsApp {
       """.stripMargin)
 
     val rightBatch = Seq(
-      Event(batchNo * 10, value = 12, batch = batchNo),
-      Event(batchNo * 10, value = 13, batch = batchNo)
+      Event(value = 12, batch = batchNo),
+      Event(value = 13, batch = batchNo)
     )
     val rightOffset = rightEventStream.addData(rightBatch)
     streamingQuery.processAllAvailable()

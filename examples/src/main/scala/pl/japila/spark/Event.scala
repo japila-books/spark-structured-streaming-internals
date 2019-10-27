@@ -11,4 +11,8 @@ object Event {
   def apply(secs: Long, value: Long, batch: Long): Event = {
     Event(new Timestamp(secs.seconds.toMillis), value, batch)
   }
+
+  def apply(value: Long, batch: Long): Event = {
+    Event(batch * 10, value, batch)
+  }
 }
