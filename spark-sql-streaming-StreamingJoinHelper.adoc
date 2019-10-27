@@ -4,6 +4,20 @@
 
 * <<getStateValueWatermark, getStateValueWatermark>>
 
+[[logging]]
+[TIP]
+====
+Enable `ALL` logging level for `org.apache.spark.sql.catalyst.analysis.StreamingJoinHelper` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.catalyst.analysis.StreamingJoinHelper=ALL
+```
+
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+====
+
 === [[getStateValueWatermark]] State Value Watermark -- `getStateValueWatermark` Object Method
 
 [source, scala]
@@ -17,4 +31,11 @@ getStateValueWatermark(
 
 `getStateValueWatermark`...FIXME
 
-NOTE: `getStateValueWatermark` is used when...FIXME
+[NOTE]
+====
+`getStateValueWatermark` is used when:
+
+* `UnsupportedOperationChecker` utility is used to <<spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming, checkForStreaming>>
+
+* `StreamingSymmetricHashJoinHelper` utility is used to <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, create a JoinStateWatermarkPredicates>>
+====

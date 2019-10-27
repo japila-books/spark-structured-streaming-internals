@@ -15,7 +15,9 @@ The Spark Structured Streaming gitbook is solely focused on <<checkForStreaming,
 
 [source, scala]
 ----
-checkForStreaming(plan: LogicalPlan, outputMode: OutputMode): Unit
+checkForStreaming(
+  plan: LogicalPlan,
+  outputMode: OutputMode): Unit
 ----
 
 `checkForStreaming` asserts that the following requirements hold:
