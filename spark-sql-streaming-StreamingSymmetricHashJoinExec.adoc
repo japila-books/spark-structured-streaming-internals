@@ -49,7 +49,7 @@ eventTimeWatermark: Option[Long]
 
 When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> of the current streaming micro-batch.
 
-`eventTimeWatermark` is an optional property that is specified only when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
+`eventTimeWatermark` is an optional property that is specified only after <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> was requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
 
 [NOTE]
 ====
@@ -156,7 +156,13 @@ shouldRunAnotherBatch(
 
 NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
-`shouldRunAnotherBatch`...FIXME
+`shouldRunAnotherBatch` is positive (`true`) when all of the following are positive:
+
+* Either the <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#left, left>> or <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#right, right>> join state watermark predicates are defined (in the <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
+
+* <<eventTimeWatermark, Event-time watermark>> threshold (of the `StreamingSymmetricHashJoinExec` operator) is defined and the current <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
+
+`shouldRunAnotherBatch` is negative (`false`) otherwise.
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 
