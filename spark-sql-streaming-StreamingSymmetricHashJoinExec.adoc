@@ -192,11 +192,37 @@ processPartitions(
 
 `processPartitions` creates a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, RightSide>> and all other properties for the right-hand join side (`rightSideJoiner`).
 
-`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one.
+`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
 
-`processPartitions`...FIXME
+[[processPartitions-innerOutputIter]]
+`processPartitions` creates a `CompletionIterator` with the left and right output iterators (with the rows of the `leftOutputIter` first followed by `rightOutputIter`). When no rows are left to process, the `CompletionIterator` records the completion time.
+
+[[processPartitions-outputIter]]
+`processPartitions` creates a join-specific output `Iterator[InternalRow]` of the output rows based on the <<joinType, join type>> (of the `StreamingSymmetricHashJoinExec`):
+
+* For `Inner` joins, `processPartitions` simply uses the <<processPartitions-innerOutputIter, output iterator of the left and right rows>>
+
+* For `LeftOuter` joins, `processPartitions`...
+
+* For `RightOuter` joins, `processPartitions`...
+
+* For other joins, `processPartitions` simply throws an `IllegalArgumentException`.
+
+[[processPartitions-outputIterWithMetrics]]
+`processPartitions` creates an `UnsafeProjection` for the <<output, output>> (and the output of the <<left, left>> and <<right, right>> child operators) that counts all the rows of the <<processPartitions-outputIter, join-specific output iterator>> (as the <<numOutputRows, numOutputRows>> metric) and generate an output projection.
+
+In the end, `processPartitions` returns a `CompletionIterator` with with the <<processPartitions-outputIterWithMetrics, output iterator with the rows counted (as numOutputRows metric)>> and <<processPartitions-onOutputCompletion, onOutputCompletion>> completion function.
 
 NOTE: `processPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<doExecute, execute>>.
+
+==== [[processPartitions-onOutputCompletion]] Output Completion Callback -- `onOutputCompletion` Internal Method
+
+[source, scala]
+----
+onOutputCompletion: Unit
+----
+
+`processPartitions`...FIXME
 
 === [[internal-properties]] Internal Properties
 
