@@ -70,7 +70,7 @@ removeByKeyCondition(
 
 `removeByKeyCondition`...FIXME
 
-NOTE: `removeByKeyCondition` is used when...FIXME
+NOTE: `removeByKeyCondition` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#removeOldState, remove an old state>> (when <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateKeyWatermarkPredicate, JoinStateKeyWatermarkPredicate>> is used).
 
 === [[removeByValueCondition]] `removeByValueCondition` Method
 

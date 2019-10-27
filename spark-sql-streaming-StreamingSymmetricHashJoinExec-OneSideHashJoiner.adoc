@@ -49,7 +49,7 @@ With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new 
 
 NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
 
-=== [[removeOldState]] `removeOldState` Method
+=== [[removeOldState]] Removing Old State -- `removeOldState` Method
 
 [source, scala]
 ----
