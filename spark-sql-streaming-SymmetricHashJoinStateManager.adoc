@@ -82,9 +82,9 @@ removeByValueCondition(
 
 `removeByValueCondition`...FIXME
 
-NOTE: `removeByValueCondition` is used when...FIXME
+NOTE: `removeByValueCondition` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, remove an old state>> (when <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> is used).
 
-=== [[append]] Appending Row -- `append` Method
+=== [[append]] Appending New Value to Key -- `append` Method
 
 [source, scala]
 ----
@@ -102,6 +102,28 @@ In the end, `append` requests the stores for the following:
 * <<keyToNumValues, KeyToNumValuesStore>> to <<spark-sql-streaming-KeyToNumValuesStore.adoc#put, store the given key with the number of values for the key incremented>>.
 
 NOTE: `append` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>.
+
+=== [[get]] Retrieving Values For Given Key -- `get` Method
+
+[source, scala]
+----
+get(key: UnsafeRow): Iterator[UnsafeRow]
+----
+
+`get`...FIXME
+
+NOTE: `get` is used when...FIXME
+
+=== [[updateNumValueForCurrentKey]] `updateNumValueForCurrentKey` Internal Method
+
+[source, scala]
+----
+updateNumValueForCurrentKey(): Unit
+----
+
+`updateNumValueForCurrentKey`...FIXME
+
+NOTE: `updateNumValueForCurrentKey` is used exclusively when `SymmetricHashJoinStateManager` is requested to <<removeByValueCondition, removeByValueCondition>>.
 
 === [[internal-properties]] Internal Properties
 

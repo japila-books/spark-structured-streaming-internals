@@ -37,7 +37,7 @@ stateStore: StateStore
 | Description
 
 | <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>>
-| [[KeyToNumValuesStore]]
+| [[KeyToNumValuesStore]] `StateStoreHandler` of <<KeyToNumValuesType, KeyToNumValuesType>>
 
 | <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>>
 | [[KeyWithIndexToValueStore]]

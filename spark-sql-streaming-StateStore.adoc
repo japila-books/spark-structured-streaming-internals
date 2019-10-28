@@ -169,7 +169,9 @@ a| [[put]]
 
 [source, scala]
 ----
-put(key: UnsafeRow, value: UnsafeRow): Unit
+put(
+  key: UnsafeRow,
+  value: UnsafeRow): Unit
 ----
 
 Stores (_puts_) the value for the (non-null) key
