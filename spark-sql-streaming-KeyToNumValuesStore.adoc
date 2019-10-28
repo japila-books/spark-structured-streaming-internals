@@ -1,4 +1,4 @@
-== [[KeyToNumValuesStore]] KeyToNumValuesStore -- StateStore (Handler) Of Join Keys And Counts
+== [[KeyToNumValuesStore]] KeyToNumValuesStore -- State Store (Handler) Of Join Keys And Counts
 
 `KeyToNumValuesStore` is a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.adoc#KeyToNumValuesType, KeyToNumValuesType>>) for <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyToNumValues, SymmetricHashJoinStateManager>> to manage a join state as <<longValueSchema, join keys and their count>>.
 
@@ -7,6 +7,20 @@
 
 [[stateStore]]
 `KeyToNumValuesStore` manages a <<spark-sql-streaming-StateStore.adoc#, StateStore>> internally.
+
+[[logging]]
+[TIP]
+====
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinStateManager$KeyToNumValuesStore` to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```
+log4j.logger.org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinStateManager$KeyToNumValuesStore=ALL
+```
+
+Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+====
 
 === [[get]] Looking Up Key Count For Given Key -- `get` Method
 

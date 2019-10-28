@@ -15,6 +15,31 @@
 
 `SymmetricHashJoinStateManager` initializes the <<internal-properties, internal properties>>.
 
+=== [[keyToNumValues]] KeyToNumValuesStore -- `keyToNumValues` Internal Property
+
+[source, scala]
+----
+keyToNumValues: KeyToNumValuesStore
+----
+
+`keyToNumValues` is a <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>> that is created immediately when `SymmetricHashJoinStateManager` is.
+
+`keyToNumValues` is used when `SymmetricHashJoinStateManager` is requested for the following:
+
+* <<get, Retrieve the values for a given key>>
+
+* <<append, Append a new value to a given key>>
+
+* <<removeByKeyCondition, removeByKeyCondition>>
+
+* <<removeByValueCondition, removeByValueCondition>>
+
+* <<commit, Commit state changes>>
+
+* <<abortIfNeeded, Abort state changes>>
+
+* <<metrics, Performance metrics>>
+
 === [[joinSide-internals]] Join Side Marker -- `JoinSide` Internal Enum
 
 `JoinSide` can be one of the two possible values:
@@ -114,6 +139,28 @@ get(key: UnsafeRow): Iterator[UnsafeRow]
 
 NOTE: `get` is used when...FIXME
 
+=== [[commit]] Committing State (Changes) -- `commit` Method
+
+[source, scala]
+----
+commit(): Unit
+----
+
+`commit` simply requests the <<keyToNumValues, keyToNumValues>> and <<keyWithIndexToValue, keyWithIndexToValue>> state store handlers to <<spark-sql-streaming-StateStoreHandler.adoc#commit, commit state changes>>.
+
+NOTE: `commit` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#commitStateAndGetMetrics, commit state changes and get performance metrics>>.
+
+=== [[abortIfNeeded]] Aborting State (Changes) -- `abortIfNeeded` Method
+
+[source, scala]
+----
+abortIfNeeded(): Unit
+----
+
+`abortIfNeeded`...FIXME
+
+NOTE: `abortIfNeeded` is used when...FIXME
+
 === [[updateNumValueForCurrentKey]] `updateNumValueForCurrentKey` Internal Method
 
 [source, scala]
@@ -139,11 +186,6 @@ Used when...FIXME
 
 | keySchema
 | [[keySchema]] Key schema
-
-Used when...FIXME
-
-| keyToNumValues
-| [[keyToNumValues]] <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>>
 
 Used when...FIXME
 

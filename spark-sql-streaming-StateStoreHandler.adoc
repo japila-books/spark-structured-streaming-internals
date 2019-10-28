@@ -69,7 +69,7 @@ metrics: StateStoreMetrics
 
 NOTE: `metrics` is used exclusively when `SymmetricHashJoinStateManager` is requested for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
 
-=== [[commit]] Committing (Changes to) State Store -- `commit` Method
+=== [[commit]] Committing State (Changes to State Store) -- `commit` Method
 
 [source, scala]
 ----
