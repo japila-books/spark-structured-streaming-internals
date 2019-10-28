@@ -18,6 +18,25 @@ NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-strea
 
 `OneSideHashJoiner` initializes the <<internal-registries, internal registries and counters>>.
 
+=== [[joinStateManager]] SymmetricHashJoinStateManager -- `joinStateManager` Internal Property
+
+[source, scala]
+----
+joinStateManager: SymmetricHashJoinStateManager
+----
+
+`joinStateManager` is a <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>> that is created for a `OneSideHashJoiner` (with the <<joinSide, join side>>, the <<inputAttributes, input attributes>>, the <<joinKeys, join keys>>, and the <<stateInfo, StatefulOperatorStateInfo>> of the owning <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>).
+
+`joinStateManager` is used when `OneSideHashJoiner` is requested for the following:
+
+* <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
+
+* <<get, Get the values for a given key>>
+
+* <<removeOldState, Remove an old state>>
+
+* <<commitStateAndGetMetrics, commitStateAndGetMetrics>>
+
 === [[stateWatermarkPredicate]] Optional Join State Watermark Predicate -- `stateWatermarkPredicate` Internal Property
 
 [source, scala]
@@ -86,7 +105,7 @@ commitStateAndGetMetrics(): StateStoreMetrics
 
 `commitStateAndGetMetrics` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#commit, commit>> and then for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
 
-NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
+NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>.
 
 === [[internal-properties]] Internal Properties
 
@@ -94,11 +113,6 @@ NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHas
 |===
 | Name
 | Description
-
-| joinStateManager
-| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>
-
-Used when...FIXME
 
 | keyGenerator
 | [[keyGenerator]] `UnsafeProjection` to generate join keys
