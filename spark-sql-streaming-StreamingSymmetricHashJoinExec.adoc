@@ -57,7 +57,7 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 
 * `StreamingSymmetricHashJoinExec` is requested to <<shouldRunAnotherBatch, check out whether the last batch execution requires another non-data batch or not>>
 
-* `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
+* `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
 ====
 
 === [[stateWatermarkPredicates]] Watermark Predicates for State Removal -- `stateWatermarkPredicates` Internal Property
@@ -75,7 +75,7 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a
 ====
 `stateWatermarkPredicates` is used when `StreamingSymmetricHashJoinExec` is requested for the following:
 
-* <<processPartitions, Process partitions of the left and right sides of the stream-stream join>> (and creating <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiners>>)
+* <<processPartitions, Process partitions of the left and right sides of the stream-stream join>> (and creating <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiners>>)
 
 * <<shouldRunAnotherBatch, Checking out whether the last batch execution requires another non-data batch or not>>
 ====
@@ -188,11 +188,11 @@ processPartitions(
   rightInputIter: Iterator[InternalRow]): Iterator[InternalRow]
 ----
 
-`processPartitions` creates a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, LeftSide>> and all other properties for the left-hand join side (`leftSideJoiner`).
+`processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, LeftSide>> and all other properties for the left-hand join side (`leftSideJoiner`).
 
-`processPartitions` creates a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, RightSide>> and all other properties for the right-hand join side (`rightSideJoiner`).
+`processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, RightSide>> and all other properties for the right-hand join side (`rightSideJoiner`).
 
-`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
+`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
 
 [[processPartitions-innerOutputIter]]
 `processPartitions` creates a `CompletionIterator` with the left and right output iterators (with the rows of the `leftOutputIter` first followed by `rightOutputIter`). When no rows are left to process, the `CompletionIterator` records the completion time.
@@ -239,7 +239,7 @@ Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
 | joinStateManager
 a| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>
 
-Used when `OneSideHashJoiner` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#removeOldState, removeOldState>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#commitStateAndGetMetrics, commitStateAndGetMetrics>>, and for the <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#get, values for a given key>>
+Used when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>, <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, removeOldState>>, <<spark-sql-streaming-OneSideHashJoiner.adoc#commitStateAndGetMetrics, commitStateAndGetMetrics>>, and for the <<spark-sql-streaming-OneSideHashJoiner.adoc#get, values for a given key>>
 
 | nullLeft
 a| [[nullLeft]] `GenericInternalRow` of the size of the output schema of the <<left, left physical operator>>

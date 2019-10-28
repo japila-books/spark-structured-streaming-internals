@@ -4,7 +4,7 @@
 
 `JoinStateWatermarkPredicate` is created using <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getOneSideStateWatermarkPredicate, StreamingSymmetricHashJoinHelper>> utility (for <<spark-sql-streaming-IncrementalExecution.adoc#state, planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration>>)
 
-`JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (and <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>>).
+`JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (and <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>>).
 
 [[contract]]
 .JoinStateWatermarkPredicate Contract
@@ -49,7 +49,7 @@ a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. on
 
 Created when `StreamingSymmetricHashJoinHelper` utility is requested for a <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, JoinStateWatermarkPredicates>> for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator)
 
-Used when `OneSideHashJoiner` is requested for the <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> and then to <<spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc#removeOldState, remove an old state>>
+Used when `OneSideHashJoiner` is requested for the <<spark-sql-streaming-OneSideHashJoiner.adoc#stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> and then to <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, remove an old state>>
 
 | JoinStateValueWatermarkPredicate
 | [[JoinStateValueWatermarkPredicate]] Watermark predicate on state values

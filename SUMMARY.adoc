@@ -18,7 +18,7 @@
 .. link:spark-sql-streaming-KeyToNumValuesStore.adoc[KeyToNumValuesStore]
 .. link:spark-sql-streaming-KeyWithIndexToValueStore.adoc[KeyWithIndexToValueStore]
 
-. link:spark-sql-streaming-StreamingSymmetricHashJoinExec-OneSideHashJoiner.adoc[OneSideHashJoiner]
+. link:spark-sql-streaming-OneSideHashJoiner.adoc[OneSideHashJoiner]
 
 . link:spark-sql-streaming-JoinStateWatermarkPredicates.adoc[JoinStateWatermarkPredicates]
 .. link:spark-sql-streaming-JoinStateWatermarkPredicate.adoc[JoinStateWatermarkPredicate]
