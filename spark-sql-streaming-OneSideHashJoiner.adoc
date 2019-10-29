@@ -1,9 +1,13 @@
 == [[OneSideHashJoiner]] OneSideHashJoiner
 
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> for the left and right sides of the stream-stream join).
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator is requested to execute (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> for the left and right sides of the stream-stream join).
 
 .OneSideHashJoiner and StreamingSymmetricHashJoinExec
 image::images/OneSideHashJoiner.png[align="center"]
+
+`OneSideHashJoiner` uses <<joinStateManager, SymmetricHashJoinStateManager>> to manage join state.
+
+`OneSideHashJoiner` uses an <<stateWatermarkPredicate, optional join state watermark predicate>> to <<removeOldState, remove an  old state>>.
 
 NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
 
@@ -40,6 +44,22 @@ joinStateManager: SymmetricHashJoinStateManager
 
 * <<commitStateAndGetMetrics, commitStateAndGetMetrics>>
 
+=== [[updatedStateRowsCount]] Number of Updated State Rows -- `updatedStateRowsCount` Internal Property
+
+`updatedStateRowsCount` is the number the join keys and associated rows that were persisted as a join state, i.e. how many times <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> requested the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#append, append>> the join key and the input row (to a join state).
+
+`updatedStateRowsCount` is then used (via <<numUpdatedStateRows, numUpdatedStateRows>> method) for the <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#numUpdatedStateRows, numUpdatedStateRows>> performance metric.
+
+`updatedStateRowsCount` is available via `numUpdatedStateRows` method.
+
+[[numUpdatedStateRows]]
+[source, scala]
+----
+numUpdatedStateRows: Long
+----
+
+NOTE: `numUpdatedStateRows` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of the stream-stream join>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, completed>>).
+
 === [[stateWatermarkPredicate]] Optional Join State Watermark Predicate -- `stateWatermarkPredicate` Internal Property
 
 [source, scala]
@@ -67,9 +87,21 @@ storeAndJoinWithOtherSide(
 [[storeAndJoinWithOtherSide-nonLateRows]]
 With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new predicate for the watermark expression and the <<inputAttributes, input attributes>> that is then used to filter out (_exclude_) late rows from the <<inputIter, input>>. Otherwise, the input rows are left unchanged (i.e. no rows are considered late and excluded).
 
-`storeAndJoinWithOtherSide`...FIXME
+For every non-late input row (of type `UnsafeRow`), `storeAndJoinWithOtherSide` applies the <<preJoinFilter, preJoinFilter>> predicate and branches off per result (<<preJoinFilter-true, true>> or <<preJoinFilter-false, false>>).
 
 NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
+
+==== [[preJoinFilter-true]] `preJoinFilter` Predicate Positive (`true`)
+
+When the <<preJoinFilter, preJoinFilter>> predicate succeeds on an input row, `storeAndJoinWithOtherSide` extracts the join key (using the <<keyGenerator, keyGenerator>>) and requests the given `OneSideHashJoiner` (`otherSideJoiner`) for the <<joinStateManager, SymmetricHashJoinStateManager>> that is in turn requested for the state values for the extracted join key. The values are then processed (_mapped over_) using the given `generateJoinedRow` function and then the <<postJoinFilter, post-join filter>>.
+
+`storeAndJoinWithOtherSide` uses the <<stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> (on the extracted join key) and the <<stateValueWatermarkPredicateFunc, stateValueWatermarkPredicateFunc>> (on the current input row) to determine whether to request the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#append, append>> the key and the input row (to a join state).
+
+`storeAndJoinWithOtherSide` increments the <<updatedStateRowsCount, updatedStateRowsCount>> metric if the extracted join key and the current input row were appended.
+
+==== [[preJoinFilter-false]] `preJoinFilter` Predicate Negative (`false`)
+
+When the <<preJoinFilter, preJoinFilter>> predicate fails on an input row, `storeAndJoinWithOtherSide`...FIXME
 
 === [[removeOldState]] Removing Old State -- `removeOldState` Method
 
@@ -118,12 +150,24 @@ NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHas
 | Description
 
 | keyGenerator
-| [[keyGenerator]] `UnsafeProjection` to generate join keys
+a| [[keyGenerator]]
+
+[source, scala]
+----
+keyGenerator: UnsafeProjection
+----
+
+Function to project (_extract_) join keys from an input row
 
 Used when...FIXME
 
 | preJoinFilter
-| [[preJoinFilter]] `InternalRow => Boolean`
+a| [[preJoinFilter]]
+
+[source, scala]
+----
+preJoinFilter: InternalRow => Boolean
+----
 
 Used when...FIXME
 
@@ -159,8 +203,4 @@ Used for the following:
 
 * <<removeOldState, removeOldState>>
 
-| updatedStateRowsCount
-a| [[updatedStateRowsCount]][[numUpdatedStateRows]] Counter
-
-Used exclusively when requested to <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
 |===

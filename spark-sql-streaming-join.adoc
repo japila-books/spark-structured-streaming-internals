@@ -19,13 +19,13 @@ Streaming joins can be *stateless* or <<spark-sql-streaming-stateful-stream-proc
 
 === [[stream-stream-joins]] Stream-Stream Joins
 
-Spark Structured Streaming supports stream-stream joins with the following:
+Spark Structured Streaming supports *stream-stream joins* with the following:
 
-* <<spark-sql-streaming-StreamingJoinStrategy.adoc#, Equality predicate>> (https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join[equi-joins] that use only equality comparisons in the join-predicate)
+* <<spark-sql-streaming-StreamingJoinStrategy.adoc#, Equality predicate>> (i.e. https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join[equi-joins] that use only equality comparisons in the join predicate)
 
 * `Inner`, `LeftOuter`, and `RightOuter` <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#supported-join-types, join types only>>
 
-A stream-stream equi-join is planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
+Stream-stream equi-joins are planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#requiredChildDistribution, Required Partition Requirements>>).
 
 === [[join-state-watermark]] Join State Watermark for State Removal
 

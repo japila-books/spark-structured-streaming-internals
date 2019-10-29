@@ -215,7 +215,7 @@ In the end, `processPartitions` returns a `CompletionIterator` with with the <<p
 
 NOTE: `processPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<doExecute, execute>>.
 
-==== [[processPartitions-onOutputCompletion]] Output Completion Callback -- `onOutputCompletion` Internal Method
+==== [[processPartitions-onOutputCompletion]] Calculating Performance Metrics (Output Completion Callback) -- `onOutputCompletion` Internal Method
 
 [source, scala]
 ----
