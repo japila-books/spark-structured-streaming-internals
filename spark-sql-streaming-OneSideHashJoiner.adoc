@@ -1,15 +1,19 @@
 == [[OneSideHashJoiner]] OneSideHashJoiner
 
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator is requested to execute (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> for the left and right sides of the stream-stream join).
+`OneSideHashJoiner` manages join state of one side of a <<spark-sql-streaming-join.adoc#stream-stream-joins, stream-stream join>>.
+
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
 
 .OneSideHashJoiner and StreamingSymmetricHashJoinExec
 image::images/OneSideHashJoiner.png[align="center"]
+
+`StreamingSymmetricHashJoinExec` physical operator uses two `OneSideHashJoiners` per side of the stream-stream join (<<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions-leftSideJoiner, left>> and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions-rightSideJoiner, right>> sides).
 
 `OneSideHashJoiner` uses <<joinStateManager, SymmetricHashJoinStateManager>> to manage join state.
 
 `OneSideHashJoiner` uses an <<stateWatermarkPredicate, optional join state watermark predicate>> to <<removeOldState, remove an  old state>>.
 
-NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>.
+NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> and so has full access to `StreamingSymmetricHashJoinExec` properties.
 
 === [[creating-instance]] Creating OneSideHashJoiner Instance
 
@@ -44,7 +48,7 @@ joinStateManager: SymmetricHashJoinStateManager
 
 * <<commitStateAndGetMetrics, commitStateAndGetMetrics>>
 
-=== [[updatedStateRowsCount]] Number of Updated State Rows -- `updatedStateRowsCount` Internal Property
+=== [[updatedStateRowsCount]] Number of Updated State Rows -- `updatedStateRowsCount` Internal Counter
 
 `updatedStateRowsCount` is the number the join keys and associated rows that were persisted as a join state, i.e. how many times <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> requested the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#append, append>> the join key and the input row (to a join state).
 
@@ -58,7 +62,7 @@ joinStateManager: SymmetricHashJoinStateManager
 numUpdatedStateRows: Long
 ----
 
-NOTE: `numUpdatedStateRows` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of the stream-stream join>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, completed>>).
+NOTE: `numUpdatedStateRows` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of the stream-stream join>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, completes>>).
 
 === [[stateWatermarkPredicate]] Optional Join State Watermark Predicate -- `stateWatermarkPredicate` Internal Property
 
@@ -89,15 +93,13 @@ With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new 
 
 For every non-late input row (of type `UnsafeRow`), `storeAndJoinWithOtherSide` applies the <<preJoinFilter, preJoinFilter>> predicate and branches off per result (<<preJoinFilter-true, true>> or <<preJoinFilter-false, false>>).
 
-NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>).
+NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
 
 ==== [[preJoinFilter-true]] `preJoinFilter` Predicate Positive (`true`)
 
-When the <<preJoinFilter, preJoinFilter>> predicate succeeds on an input row, `storeAndJoinWithOtherSide` extracts the join key (using the <<keyGenerator, keyGenerator>>) and requests the given `OneSideHashJoiner` (`otherSideJoiner`) for the <<joinStateManager, SymmetricHashJoinStateManager>> that is in turn requested for the state values for the extracted join key. The values are then processed (_mapped over_) using the given `generateJoinedRow` function and then the <<postJoinFilter, post-join filter>>.
+When the <<preJoinFilter, preJoinFilter>> predicate succeeds on an input row, `storeAndJoinWithOtherSide` extracts the join key (using the <<keyGenerator, keyGenerator>>) and requests the given `OneSideHashJoiner` (`otherSideJoiner`) for the <<joinStateManager, SymmetricHashJoinStateManager>> that is in turn requested for the state values for the extracted join key. The values are then processed (_mapped over_) using the given `generateJoinedRow` function and then filtered by the <<postJoinFilter, post-join filter>>.
 
-`storeAndJoinWithOtherSide` uses the <<stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> (on the extracted join key) and the <<stateValueWatermarkPredicateFunc, stateValueWatermarkPredicateFunc>> (on the current input row) to determine whether to request the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#append, append>> the key and the input row (to a join state).
-
-`storeAndJoinWithOtherSide` increments the <<updatedStateRowsCount, updatedStateRowsCount>> metric if the extracted join key and the current input row were appended.
+`storeAndJoinWithOtherSide` uses the <<stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> (on the extracted join key) and the <<stateValueWatermarkPredicateFunc, stateValueWatermarkPredicateFunc>> (on the current input row) to determine whether to request the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#append, append>> the key and the input row (to a join state). If so, `storeAndJoinWithOtherSide` increments the <<updatedStateRowsCount, updatedStateRowsCount>> counter.
 
 ==== [[preJoinFilter-false]] `preJoinFilter` Predicate Negative (`false`)
 

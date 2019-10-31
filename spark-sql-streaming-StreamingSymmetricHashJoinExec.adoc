@@ -16,6 +16,8 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 When planned for execution, `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to specify the execution-specific configuration, i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>.
 
+While <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>, `StreamingSymmetricHashJoinExec` uses two <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiners>> (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state.
+
 `StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
 
 [[output]]
@@ -140,7 +142,7 @@ a| [[numOutputRows]] Total number of output rows
 a| [[numTotalStateRows]]
 
 | number of updated state rows
-a| [[numUpdatedStateRows]]
+a| [[numUpdatedStateRows]] <<spark-sql-streaming-OneSideHashJoiner.adoc#updatedStateRowsCount, Number of updated state rows>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> `OneSideHashJoiners`
 
 | memory used by state
 a| [[stateMemory]]
@@ -188,8 +190,10 @@ processPartitions(
   rightInputIter: Iterator[InternalRow]): Iterator[InternalRow]
 ----
 
+[[processPartitions-leftSideJoiner]]
 `processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, LeftSide>> and all other properties for the left-hand join side (`leftSideJoiner`).
 
+[[processPartitions-rightSideJoiner]]
 `processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, RightSide>> and all other properties for the right-hand join side (`rightSideJoiner`).
 
 `processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
