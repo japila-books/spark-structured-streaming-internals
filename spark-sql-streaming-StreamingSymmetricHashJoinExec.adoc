@@ -10,7 +10,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 ====
 
 [[supported-join-types]][[joinType]]
-`StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, or `RightOuter` <<joinType, join types>> with the same data types of the <<leftKeys, left>> and the <<rightKeys, right>> keys.
+`StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, or `RightOuter` join types with the <<leftKeys, left>> and the <<rightKeys, right>> keys using the exact same data types.
 
 `StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
 
@@ -19,9 +19,6 @@ When planned for execution, `IncrementalExecution` uses the <<spark-sql-streamin
 While <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>, `StreamingSymmetricHashJoinExec` uses two <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiners>> (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state.
 
 `StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
-
-[[output]]
-The output schema of `StreamingSymmetricHashJoinExec` is...FIXME
 
 [[outputPartitioning]]
 The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
@@ -41,6 +38,29 @@ The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
 * [[right]] Physical operator on the right side (`SparkPlan`)
 
 `StreamingSymmetricHashJoinExec` initializes the <<internal-properties, internal properties>>.
+
+=== [[output]] Output Schema -- `output` Method
+
+[source, scala]
+----
+output: Seq[Attribute]
+----
+
+NOTE: `output` is part of the `QueryPlan` Contract to describe the attributes of (the schema of) the output.
+
+`output` schema depends on the <<joinType, join type>>:
+
+* For `Cross` and `Inner` (`InnerLike`) joins, it is the output schema of the <<left, left>> and <<right, right>> operators
+
+* For `LeftOuter` joins, it is the output schema of the <<left, left>> operator with the attributes of the <<right, right>> operator with `nullability` flag enabled (`true`)
+
+* For `RightOuter` joins, it is the output schema of the <<right, right>> operator with the attributes of the <<left, left>> operator with `nullability` flag enabled (`true`)
+
+`output` throws an `IllegalArgumentException` for other join types:
+
+```
+[className] should not take [joinType] as the JoinType
+```
 
 === [[eventTimeWatermark]] Event-Time Watermark -- `eventTimeWatermark` Internal Property
 

@@ -62,7 +62,7 @@ NOTE: The event time value is in seconds (not millis as the value is divided by 
 output: Seq[Attribute]
 ----
 
-NOTE: `output` is part of the `QueryPlan` Contract to describe the attributes of the output (aka _schema_).
+NOTE: `output` is part of the `QueryPlan` Contract to describe the attributes of (the schema of) the output.
 
 `output` requests the <<child, child>> physical operator for the output attributes to find the <<eventTime, event time column>> and any other column with metadata that contains <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, spark.watermarkDelayMs>> key.
 
