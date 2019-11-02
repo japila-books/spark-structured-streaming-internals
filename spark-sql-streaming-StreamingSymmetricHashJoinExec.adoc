@@ -20,9 +20,6 @@ While <<processPartitions, processing partitions of the left and right sides of 
 
 `StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
 
-[[outputPartitioning]]
-The output partitioning of `StreamingSymmetricHashJoinExec` is...FIXME
-
 === [[creating-instance]] Creating StreamingSymmetricHashJoinExec Instance
 
 `StreamingSymmetricHashJoinExec` takes the following to be created:
@@ -57,6 +54,29 @@ NOTE: `output` is part of the `QueryPlan` Contract to describe the attributes of
 * For `RightOuter` joins, it is the output schema of the <<right, right>> operator with the attributes of the <<left, left>> operator with `nullability` flag enabled (`true`)
 
 `output` throws an `IllegalArgumentException` for other join types:
+
+```
+[className] should not take [joinType] as the JoinType
+```
+
+=== [[outputPartitioning]] Output Partitioning -- `outputPartitioning` Method
+
+[source, scala]
+----
+outputPartitioning: Partitioning
+----
+
+NOTE: `outputPartitioning` is part of the `SparkPlan` Contract to specify how data should be partitioned across different nodes in the cluster.
+
+`outputPartitioning` depends on the <<joinType, join type>>:
+
+* For `Cross` and `Inner` (`InnerLike`) joins, it is a `PartitioningCollection` of the output partitioning of the <<left, left>> and <<right, right>> operators
+
+* For `LeftOuter` joins, it is a `PartitioningCollection` of the output partitioning of the <<left, left>> operator
+
+* For `RightOuter` joins, it is a `PartitioningCollection` of the output partitioning of the <<right, right>> operator
+
+`outputPartitioning` throws an `IllegalArgumentException` for other join types:
 
 ```
 [className] should not take [joinType] as the JoinType
