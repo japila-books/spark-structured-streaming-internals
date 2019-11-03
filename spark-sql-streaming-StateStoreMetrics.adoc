@@ -3,14 +3,14 @@
 [[creating-instance]]
 `StateStoreMetrics` holds the performance metrics of a <<spark-sql-streaming-StateStore.adoc#, state store>>:
 
-* [[numKeys]] Total number of keys
+* [[numKeys]] Number of keys
 * [[memoryUsedBytes]] Memory used (in bytes)
 * [[customMetrics]] <<spark-sql-streaming-StateStoreCustomMetric.adoc#, StateStoreCustomMetrics>> with their current values (`Map[StateStoreCustomMetric, Long]`)
 
-`StateStoreMetrics` is used (and <<creating-instance, created>>) when:
+`StateStoreMetrics` is used (and <<creating-instance, created>>) when the following are requested for the performance metrics:
 
-* `StateStore` is requested for the <<spark-sql-streaming-StateStore.adoc#metrics, metrics>>
+* <<spark-sql-streaming-StateStore.adoc#metrics, StateStore>>
 
-* `StateStoreHandler` is requested for the <<spark-sql-streaming-StateStoreHandler.adoc#metrics, metrics>>
+* <<spark-sql-streaming-StateStoreHandler.adoc#metrics, StateStoreHandler>>
 
-* `SymmetricHashJoinStateManager` is requested for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>
+* <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, SymmetricHashJoinStateManager>>
