@@ -183,14 +183,20 @@ NOTE: `updateNumValueForCurrentKey` is used exclusively when `SymmetricHashJoinS
 | Description
 
 | keyAttributes
-| [[keyAttributes]] Key attributes
+a| [[keyAttributes]] Key attributes, i.e. `AttributeReferences` of the <<keySchema, key schema>>
 
-Used when...FIXME
+Used exclusively in `KeyWithIndexToValueStore` when requested for the <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#keyWithIndexExprs, keyWithIndexExprs>>, <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#indexOrdinalInKeyWithIndexRow, indexOrdinalInKeyWithIndexRow>>, <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#keyWithIndexRowGenerator, keyWithIndexRowGenerator>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#keyRowGenerator, keyRowGenerator>>
 
 | keySchema
-| [[keySchema]] Key schema
+a| [[keySchema]] Key schema (`StructType`) based on the <<joinKeys, join keys>> with the names in the format of *field* and their ordinals (index)
 
-Used when...FIXME
+Used when:
+
+* `SymmetricHashJoinStateManager` is requested for the <<keyAttributes, key attributes>> (for <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>>)
+
+* `KeyToNumValuesStore` is requested for the <<spark-sql-streaming-KeyToNumValuesStore.adoc#stateStore, state store>>
+
+* `KeyWithIndexToValueStore` is requested for the <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#keyWithIndexSchema, keyWithIndexSchema>>
 
 | keyWithIndexToValue
 | [[keyWithIndexToValue]] <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>>

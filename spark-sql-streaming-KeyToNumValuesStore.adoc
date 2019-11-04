@@ -1,15 +1,15 @@
 == [[KeyToNumValuesStore]] KeyToNumValuesStore -- State Store (Handler) Of Join Keys And Counts
 
-`KeyToNumValuesStore` is a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.adoc#KeyToNumValuesType, KeyToNumValuesType>>) for <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyToNumValues, SymmetricHashJoinStateManager>> to manage a join state as <<longValueSchema, join keys and their count>>.
+`KeyToNumValuesStore` is a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.adoc#KeyToNumValuesType, KeyToNumValuesType>>) for <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyToNumValues, SymmetricHashJoinStateManager>> to manage a <<stateStore, join state>>.
 
 .KeyToNumValuesStore and StreamingSymmetricHashJoinExec
-image::images/KeyToNumValuesStore.png[align="center"]
-
-[[longValueSchema]]
-`KeyToNumValuesStore` uses a schema with one field `value` of type `long`.
+image::images/KeyToNumValuesStore-KeyWithIndexToValueStore.png[align="center"]
 
 [[stateStore]]
-`KeyToNumValuesStore` manages a <<spark-sql-streaming-StateStore.adoc#, StateStore>> internally.
+As a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>>, `KeyToNumValuesStore` manages a <<spark-sql-streaming-StateStore.adoc#, state store>> (that is <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, loaded>>) with the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keySchema, keySchema>> and <<longValueSchema, longValueSchema>>.
+
+[[longValueSchema]]
+`KeyToNumValuesStore` uses the schema with one field `value` (of type `long`) for...FIXME
 
 [[logging]]
 [TIP]

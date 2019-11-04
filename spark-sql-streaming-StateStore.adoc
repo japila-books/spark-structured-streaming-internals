@@ -58,7 +58,7 @@ a| [[get]]
 get(key: UnsafeRow): UnsafeRow
 ----
 
-Gets the value of the (non-null) key
+Looks up (_gets_) the value of the given non-`null` key
 
 Used when:
 
