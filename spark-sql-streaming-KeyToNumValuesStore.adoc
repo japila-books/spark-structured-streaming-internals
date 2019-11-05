@@ -50,3 +50,25 @@ put(
 `put` requires that the `numValues` count is greater than `0` (or throws an `IllegalArgumentException`).
 
 NOTE: `put` is used when `SymmetricHashJoinStateManager` is requested for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#append, append a new value to a given key>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#updateNumValueForCurrentKey, updateNumValueForCurrentKey>>.
+
+=== [[iterator]] All State Keys and Values -- `iterator` Method
+
+[source, scala]
+----
+iterator: Iterator[KeyAndNumValues]
+----
+
+`iterator` simply requests the <<stateStore, StateStore>> for <<spark-sql-streaming-StateStore.adoc#getRange, all state keys and values>>.
+
+NOTE: `iterator` is used when `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByKeyCondition, removeByKeyCondition>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByValueCondition, removeByValueCondition>>.
+
+=== [[remove]] Removing State Key -- `remove` Method
+
+[source, scala]
+----
+remove(key: UnsafeRow): Unit
+----
+
+`remove` simply requests the <<stateStore, StateStore>> to <<spark-sql-streaming-StateStore.adoc#remove, remove the given key>>.
+
+NOTE: `remove` is used when...FIXME

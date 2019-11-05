@@ -45,7 +45,7 @@ Used for the <<toString, textual representation>> and a <<spark-sql-streaming-St
 | Description
 
 | JoinStateKeyWatermarkPredicate
-a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. only when the <<spark-sql-streaming-watermark.adoc#, streaming watermark>> is defined either on the <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#leftKeys, left>> or <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#rightKeys, right>> join keys)
+a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. when the <<spark-sql-streaming-watermark.adoc#, streaming watermark>> is defined either on the <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#leftKeys, left>> or <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#rightKeys, right>> join keys)
 
 Created when `StreamingSymmetricHashJoinHelper` utility is requested for a <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, JoinStateWatermarkPredicates>> for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator)
 

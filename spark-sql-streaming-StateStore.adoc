@@ -82,7 +82,7 @@ getRange(
   end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
 ----
 
-Gets the key-value pairs for the specified range (with optional approximate `start` and `end` extents)
+Gets the key-value pairs of `UnsafeRows` for the specified range (with optional approximate `start` and `end` extents)
 
 Used when:
 
