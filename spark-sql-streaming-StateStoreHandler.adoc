@@ -5,9 +5,9 @@
 [[stateStoreType]]
 `StateStoreHandler` takes a single `StateStoreType` to be created:
 
-* [[KeyToNumValuesType]] `KeyToNumValuesType` for <<KeyToNumValuesStore, KeyToNumValuesStore>>
+* [[KeyToNumValuesType]] `KeyToNumValuesType` for <<KeyToNumValuesStore, KeyToNumValuesStore>> (alias: `keyToNumValues`)
 
-* [[KeyWithIndexToValueType]] `KeyWithIndexToValueType` for <<KeyWithIndexToValueStore, KeyWithIndexToValueStore>>
+* [[KeyWithIndexToValueType]] `KeyWithIndexToValueType` for <<KeyWithIndexToValueStore, KeyWithIndexToValueStore>> (alias: `keyWithIndexToValue`)
 
 NOTE: `StateStoreHandler` is a Scala private abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly for the <<extensions, concrete StateStoreHandlers>>.
 
@@ -91,7 +91,7 @@ abortIfNeeded(): Unit
 
 NOTE: `abortIfNeeded` is used when...FIXME
 
-=== [[getStateStore]] Looking Up StateStore (By Key and Value Schemas) -- `getStateStore` Method
+=== [[getStateStore]] Loading State Store (By Key and Value Schemas) -- `getStateStore` Method
 
 [source, scala]
 ----

@@ -9,7 +9,7 @@ image::images/KeyToNumValuesStore-KeyWithIndexToValueStore.png[align="center"]
 As a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>>, `KeyWithIndexToValueStore` manages a <<spark-sql-streaming-StateStore.adoc#, state store>> (that is <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, loaded>>) for keys and values per the <<keyWithIndexSchema, keys with index>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#inputValueAttributes, input values>> schemas, respectively.
 
 [[keyWithIndexSchema]]
-`KeyWithIndexToValueStore` uses a schema of the <<stateStore, state store>> which is the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keySchema, key schema>> (of the parent `SymmetricHashJoinStateManager`) with an extra field `index` of type `long`.
+`KeyWithIndexToValueStore` uses a schema (for the <<stateStore, state store>>) that is the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keySchema, key schema>> (of the parent `SymmetricHashJoinStateManager`) with an extra field `index` of type `long`.
 
 [[logging]]
 [TIP]
