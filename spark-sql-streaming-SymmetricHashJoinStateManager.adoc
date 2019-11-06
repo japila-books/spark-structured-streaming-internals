@@ -1,9 +1,11 @@
 == [[SymmetricHashJoinStateManager]] SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> exclusively for the left and right <<spark-sql-streaming-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiners>> of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>).
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right <<spark-sql-streaming-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiners>> of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>).
 
-.StreamingSymmetricHashJoinExec and OneSideHashJoiner
-image::images/OneSideHashJoiner.png[align="center"]
+.SymmetricHashJoinStateManager and Stream-Stream Join
+image::images/SymmetricHashJoinStateManager.png[align="center"]
+
+`SymmetricHashJoinStateManager` manages join state using the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>> state store handlers (and simply acts like a facade)
 
 === [[creating-instance]] Creating SymmetricHashJoinStateManager Instance
 
@@ -25,9 +27,34 @@ image::images/OneSideHashJoiner.png[align="center"]
 keyToNumValues: KeyToNumValuesStore
 ----
 
-`keyToNumValues` is a <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>> that is created immediately when `SymmetricHashJoinStateManager` is.
+`keyToNumValues` is a <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>> that is created immediately for `SymmetricHashJoinStateManager` (for a <<spark-sql-streaming-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiner>>).
 
 `keyToNumValues` is used when `SymmetricHashJoinStateManager` is requested for the following:
+
+* <<get, Retrieve the values for a given key>>
+
+* <<append, Append a new value to a given key>>
+
+* <<removeByKeyCondition, removeByKeyCondition>>
+
+* <<removeByValueCondition, removeByValueCondition>>
+
+* <<commit, Commit state changes>>
+
+* <<abortIfNeeded, Abort state changes>>
+
+* <<metrics, Performance metrics>>
+
+=== [[keyWithIndexToValue]] KeyWithIndexToValueStore -- `keyWithIndexToValue` Internal Property
+
+[source, scala]
+----
+keyWithIndexToValue: KeyWithIndexToValueStore
+----
+
+`keyWithIndexToValue` is a <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>> that is created immediately for `SymmetricHashJoinStateManager` (for a <<spark-sql-streaming-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiner>>).
+
+`keyWithIndexToValue` is used when `SymmetricHashJoinStateManager` is requested for the following:
 
 * <<get, Retrieve the values for a given key>>
 
@@ -210,8 +237,4 @@ Used when:
 
 * `KeyWithIndexToValueStore` is requested for the <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#keyWithIndexSchema, keyWithIndexSchema>>
 
-| keyWithIndexToValue
-| [[keyWithIndexToValue]] <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>>
-
-Used when...FIXME
 |===

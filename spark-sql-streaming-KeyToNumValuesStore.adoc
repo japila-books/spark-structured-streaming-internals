@@ -2,7 +2,7 @@
 
 `KeyToNumValuesStore` is a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.adoc#KeyToNumValuesType, KeyToNumValuesType>>) for <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyToNumValues, SymmetricHashJoinStateManager>> to manage a <<stateStore, join state>>.
 
-.KeyToNumValuesStore and StreamingSymmetricHashJoinExec
+.KeyToNumValuesStore, KeyWithIndexToValueStore and Stream-Stream Join
 image::images/KeyToNumValuesStore-KeyWithIndexToValueStore.png[align="center"]
 
 [[stateStore]]

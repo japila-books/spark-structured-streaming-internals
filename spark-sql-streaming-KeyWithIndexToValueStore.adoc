@@ -2,7 +2,7 @@
 
 `KeyWithIndexToValueStore` is a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.adoc#KeyWithIndexToValueType, KeyWithIndexToValueType>>) for <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyWithIndexToValue, SymmetricHashJoinStateManager>> to manage a <<stateStore, join state>>.
 
-.KeyWithIndexToValueStore and StreamingSymmetricHashJoinExec
+.KeyToNumValuesStore, KeyWithIndexToValueStore and Stream-Stream Join
 image::images/KeyToNumValuesStore-KeyWithIndexToValueStore.png[align="center"]
 
 [[stateStore]]
