@@ -140,7 +140,7 @@ NOTE: `get` is used when...FIXME
 commitStateAndGetMetrics(): StateStoreMetrics
 ----
 
-`commitStateAndGetMetrics` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#commit, commit>> and then for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
+`commitStateAndGetMetrics` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#commit, commit>> followed by requesting for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, performance metrics>>.
 
 NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>.
 

@@ -52,8 +52,10 @@ object StreamStreamJoinApp extends SparkStreamsApp {
   import org.apache.spark.sql.functions.expr
   val joinCondition =
     leftEvents("value") === rightEvents("value") &&
-    leftEvents("time") >= rightEvents("time") &&
-    leftEvents("time") <= rightEvents("time") + expr("INTERVAL 1 HOUR")
+    (
+      leftEvents("time") >= rightEvents("time") &&
+      leftEvents("time") < rightEvents("time") + expr("INTERVAL 1 HOUR")
+    )
   val joinedEvents = leftEvents
     .withWatermark("time", watermark)
     .join(rightEvents, Seq.empty, "INNER")
@@ -75,22 +77,23 @@ object StreamStreamJoinApp extends SparkStreamsApp {
     currentStatus = streamingQuery.status.message
   } while (currentStatus == expectedStatus)
 
-  var batchNo: Int = 0
+  var batchNo: Int = -1
 
   {
     batchNo = batchNo + 1
     println(
       s"""
          |Batch $batchNo
-         |- 0 row in the output
-         |- 2 keys in the state store (for the left and right side) / stateOperators.numRowsTotal
+         |- number of total state rows: 2 (stateOperators.numRowsTotal)
+         |- number of output rows: 0
+         |- number of updated state rows: 2 (stateOperators.numRowsUpdated?)
       """.stripMargin)
 
     val leftBatch = Seq(
       Event(value = 1, batch = batchNo),
       Event(value = 2, batch = batchNo, secs = 5),
       Event(value = 11, batch = batchNo),
-      Event(value = 12, batch = batchNo)
+      Event(value = 12, batch = batchNo, secs = 10)
     )
     val leftOffset = leftEventStream.addData(leftBatch)
     streamingQuery.processAllAvailable()
@@ -109,8 +112,9 @@ object StreamStreamJoinApp extends SparkStreamsApp {
     println(
       s"""
          |Batch $batchNo
-         |- ??? row in the output
-         |- 3 keys in the state store (for the left and right side) / stateOperators.numRowsTotal
+         |- number of total state rows: 4 (stateOperators.numRowsTotal)
+         |- number of output rows: 1
+         |- number of updated state rows: 2 (stateOperators.numRowsUpdated?)
       """.stripMargin)
 
     val leftBatch = Seq(
@@ -119,7 +123,40 @@ object StreamStreamJoinApp extends SparkStreamsApp {
     val leftOffset = leftEventStream.addData(leftBatch)
 
     val rightBatch = Seq(
-      Event(value = 12, batch = batchNo)
+      Event(value = 12, batch = batchNo, secs = 0),
+    )
+    val rightOffset = rightEventStream.addData(rightBatch)
+    streamingQuery.processAllAvailable()
+
+    import org.apache.spark.sql.execution.streaming.LongOffset
+    leftEventStream.commit(leftOffset.asInstanceOf[LongOffset])
+    rightEventStream.commit(rightOffset.asInstanceOf[LongOffset])
+
+    println(streamingQuery.lastProgress.prettyJson)
+  }
+
+  pause()
+
+  {
+    batchNo = batchNo + 1
+    println(
+      s"""
+         |- number of total state rows: 5 (stateOperators.numRowsTotal)
+         |- number of output rows: 1
+         |- number of updated state rows: 1 (stateOperators.numRowsUpdated?)
+      """.stripMargin)
+
+    val leftBatch = Seq(
+      // this secs is important
+      // the match is on time column with the watermark less
+      // (time#127-T5000ms >= time#124)) && (time#127-T5000ms < time#124 + interval 1 hours))
+      // See the logs
+      Event(value = 30, batch = batchNo, secs = 5)
+    )
+    val leftOffset = leftEventStream.addData(leftBatch)
+
+    val rightBatch = Seq(
+      Event(value = 30, batch = batchNo, secs = 5)
     )
     val rightOffset = rightEventStream.addData(rightBatch)
     streamingQuery.processAllAvailable()
@@ -138,37 +175,9 @@ object StreamStreamJoinApp extends SparkStreamsApp {
     println(
       s"""
          |Batch $batchNo
-         |- 2 rows in the output
-         |- 5 keys in the state store (old state + the left and right side)
-      """.stripMargin)
-
-    val leftBatch = Seq(
-      Event(secs = 5, value = 30, batch = batchNo)
-    )
-    val leftOffset = leftEventStream.addData(leftBatch)
-
-    val rightBatch = Seq(
-      Event(value = 30, batch = batchNo)
-    )
-    val rightOffset = rightEventStream.addData(rightBatch)
-    streamingQuery.processAllAvailable()
-
-    import org.apache.spark.sql.execution.streaming.LongOffset
-    leftEventStream.commit(leftOffset.asInstanceOf[LongOffset])
-    rightEventStream.commit(rightOffset.asInstanceOf[LongOffset])
-
-    println(streamingQuery.lastProgress.prettyJson)
-  }
-
-  pause()
-
-  {
-    batchNo = batchNo + 1
-    println(
-      s"""
-         |Batch $batchNo
-         |- ??? rows in the output
-         |- ??? keys in the state store (old state + the left and right side)
+         |- number of total state rows: 7 (stateOperators.numRowsTotal)
+         |- number of output rows: 0
+         |- number of updated state rows: 2 (stateOperators.numRowsUpdated?)
       """.stripMargin)
 
     val rightBatch = Seq(
