@@ -1,6 +1,6 @@
 == [[SymmetricHashJoinStateManager]] SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right <<spark-sql-streaming-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiners>> of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>>).
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right <<spark-sql-streaming-OneSideHashJoiner.adoc#joinStateManager, OneSideHashJoiners>> of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
 
 .SymmetricHashJoinStateManager and Stream-Stream Join
 image::images/SymmetricHashJoinStateManager.png[align="center"]
@@ -48,7 +48,7 @@ image::images/SymmetricHashJoinStateManager.png[align="center"]
 
 * [[RightSide]][[right]] `RightSide` (alias: `right`)
 
-They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions>> with an <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>>).
+They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of a stream-stream join>> with an <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>>).
 
 === [[metrics]] Performance Metrics -- `metrics` Method
 
