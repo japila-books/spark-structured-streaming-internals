@@ -6,10 +6,10 @@
 image::images/KeyToNumValuesStore-KeyWithIndexToValueStore.png[align="center"]
 
 [[stateStore]]
-As a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>>, `KeyToNumValuesStore` manages a <<spark-sql-streaming-StateStore.adoc#, state store>> (that is <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, loaded>>) with the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keySchema, keySchema>> and <<longValueSchema, longValueSchema>>.
+As a <<spark-sql-streaming-StateStoreHandler.adoc#, StateStoreHandler>>, `KeyToNumValuesStore` manages a <<spark-sql-streaming-StateStore.adoc#, state store>> (that is <<spark-sql-streaming-StateStoreHandler.adoc#getStateStore, loaded>>) with the join keys (per <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keySchema, key schema>>) and their count (per <<longValueSchema, value schema>>).
 
 [[longValueSchema]]
-`KeyToNumValuesStore` uses the schema with one field `value` (of type `long`) for...FIXME
+`KeyToNumValuesStore` uses the schema for values in the <<stateStore, state store>> with one field `value` (of type `long`) that is the number of value rows (count).
 
 [[logging]]
 [TIP]
@@ -25,7 +25,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinSta
 Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 ====
 
-=== [[get]] Looking Up Key Count For Given Key -- `get` Method
+=== [[get]] Looking Up Number Of Values For Given Key (Value Count) -- `get` Method
 
 [source, scala]
 ----

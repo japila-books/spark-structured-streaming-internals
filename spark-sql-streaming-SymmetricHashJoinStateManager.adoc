@@ -26,7 +26,7 @@ image::images/SymmetricHashJoinStateManager.png[align="center"]
 
 `keyToNumValues` and `keyWithIndexToValue` are used when `SymmetricHashJoinStateManager` is requested for the following:
 
-* <<get, Retrieve the values for a given key>>
+* <<get, Retrieving the value rows for a given key>>
 
 * <<append, Append a new value to a given key>>
 
@@ -116,16 +116,18 @@ In the end, `append` requests the stores for the following:
 
 NOTE: `append` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>.
 
-=== [[get]] Retrieving Values For Given Key -- `get` Method
+=== [[get]] Retrieving Value Rows For Given Key -- `get` Method
 
 [source, scala]
 ----
 get(key: UnsafeRow): Iterator[UnsafeRow]
 ----
 
-`get`...FIXME
+`get` requests the <<keyToNumValues, KeyToNumValuesStore>> for the <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, number of values for the given key>>.
 
-NOTE: `get` is used when...FIXME
+In the end, `get` requests the <<keyWithIndexToValue, KeyWithIndexToValueStore>> to <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#getAll, retrieve that number of value rows for the given key>> and leaves value rows only.
+
+NOTE: `get` is used when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> and <<spark-sql-streaming-OneSideHashJoiner.adoc#get, retrieving value rows for a key>>.
 
 === [[commit]] Committing State (Changes) -- `commit` Method
 

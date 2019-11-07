@@ -122,7 +122,7 @@ removeOldState(): Iterator[UnsafeRowPair]
 
 NOTE: `removeOldState` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions (of the left and right side of a stream-stream join)>>.
 
-=== [[get]] Getting Values For Key -- `get` Method
+=== [[get]] Retrieving Value Rows For Key -- `get` Method
 
 [source, scala]
 ----

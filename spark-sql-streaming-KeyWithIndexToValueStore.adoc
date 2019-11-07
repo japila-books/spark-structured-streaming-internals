@@ -38,7 +38,7 @@ get(
 
 NOTE: `get` is used exclusively when `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#removeByValueCondition, removeByValueCondition>>
 
-=== [[getAll]] `getAll` Method
+=== [[getAll]] Retrieving (Given Number of) Values for Key -- `getAll` Method
 
 [source, scala]
 ----
