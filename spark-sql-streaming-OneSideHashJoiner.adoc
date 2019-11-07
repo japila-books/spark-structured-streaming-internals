@@ -91,7 +91,8 @@ storeAndJoinWithOtherSide(
 [[storeAndJoinWithOtherSide-nonLateRows]]
 With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new predicate for the watermark expression and the <<inputAttributes, input attributes>> that is then used to filter out (_exclude_) late rows from the <<inputIter, input>>. Otherwise, the input rows are left unchanged (i.e. no rows are considered late and excluded).
 
-For every non-late input row (of type `UnsafeRow`), `storeAndJoinWithOtherSide` applies the <<preJoinFilter, preJoinFilter>> predicate and branches off per result (<<preJoinFilter-true, true>> or <<preJoinFilter-false, false>>).
+[[storeAndJoinWithOtherSide-nonLateRows-flatMap]]
+For every <<inputIter, input row>> (possibly <<storeAndJoinWithOtherSide-nonLateRows, watermarked>>), `storeAndJoinWithOtherSide` applies the <<preJoinFilter, preJoinFilter>> predicate and branches off per result (<<preJoinFilter-true, true>> or <<preJoinFilter-false, false>>).
 
 NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
 
@@ -103,7 +104,13 @@ When the <<preJoinFilter, preJoinFilter>> predicate succeeds on an input row, `s
 
 ==== [[preJoinFilter-false]] `preJoinFilter` Predicate Negative (`false`)
 
-When the <<preJoinFilter, preJoinFilter>> predicate fails on an input row, `storeAndJoinWithOtherSide`...FIXME
+When the <<preJoinFilter, preJoinFilter>> predicate fails on an input row, `storeAndJoinWithOtherSide` creates a new `Iterator[InternalRow]` of joined rows per <<joinSide, join side>> and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#joinType, type>>:
+
+* For <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, LeftSide>> and `LeftOuter`, the join row is the current row with the values of the right side all `null` (`nullRight`)
+
+* For <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, RightSide>> and `RightOuter`, the join row is the current row with the values of the left side all `null` (`nullLeft`)
+
+* For all other combinations, the iterator is simply empty (that will be removed from the output by the outer <<storeAndJoinWithOtherSide-nonLateRows-flatMap, nonLateRows.flatMap>>).
 
 === [[removeOldState]] Removing Old State -- `removeOldState` Method
 

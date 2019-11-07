@@ -26,9 +26,9 @@ image::images/SymmetricHashJoinStateManager.png[align="center"]
 
 `keyToNumValues` and `keyWithIndexToValue` are used when `SymmetricHashJoinStateManager` is requested for the following:
 
-* <<get, Retrieving the value rows for a given key>>
+* <<get, Retrieving the value rows by key>>
 
-* <<append, Append a new value to a given key>>
+* <<append, Append a new value row to a given key>>
 
 * <<removeByKeyCondition, removeByKeyCondition>>
 
@@ -97,7 +97,7 @@ removeByValueCondition(
 
 NOTE: `removeByValueCondition` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, remove an old state>> (when <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> is used).
 
-=== [[append]] Appending New Value to Key -- `append` Method
+=== [[append]] Appending New Value Row to Key -- `append` Method
 
 [source, scala]
 ----
@@ -106,24 +106,24 @@ append(
   value: UnsafeRow): Unit
 ----
 
-`append` requests the <<keyToNumValues, KeyToNumValuesStore>> for the <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, get the number of values>> for the specified key.
+`append` requests the <<keyToNumValues, KeyToNumValuesStore>> for the <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, number of value rows for the given key>>.
 
 In the end, `append` requests the stores for the following:
 
-* <<keyWithIndexToValue, KeyWithIndexToValueStore>> to <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#put, store the given key with the number of values for the key and the given value>>
+* <<keyWithIndexToValue, KeyWithIndexToValueStore>> to <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#put, store the given value row>>
 
-* <<keyToNumValues, KeyToNumValuesStore>> to <<spark-sql-streaming-KeyToNumValuesStore.adoc#put, store the given key with the number of values for the key incremented>>.
+* <<keyToNumValues, KeyToNumValuesStore>> to <<spark-sql-streaming-KeyToNumValuesStore.adoc#put, store the given key with the number of value rows incremented>>.
 
 NOTE: `append` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>.
 
-=== [[get]] Retrieving Value Rows For Given Key -- `get` Method
+=== [[get]] Retrieving Value Rows By Key -- `get` Method
 
 [source, scala]
 ----
 get(key: UnsafeRow): Iterator[UnsafeRow]
 ----
 
-`get` requests the <<keyToNumValues, KeyToNumValuesStore>> for the <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, number of values for the given key>>.
+`get` requests the <<keyToNumValues, KeyToNumValuesStore>> for the <<spark-sql-streaming-KeyToNumValuesStore.adoc#get, number of value rows for the given key>>.
 
 In the end, `get` requests the <<keyWithIndexToValue, KeyWithIndexToValueStore>> to <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#getAll, retrieve that number of value rows for the given key>> and leaves value rows only.
 
