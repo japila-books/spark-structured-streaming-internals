@@ -112,7 +112,7 @@ withWatermark(
   delayThreshold: String): Dataset[T]
 ----
 
-Defines a streaming (event-time) watermark for late events (on the given `eventTime` column with a delay threshold)
+Defines a <<spark-sql-streaming-watermark.adoc#, streaming watermark>> (on the given `eventTime` column with a delay threshold)
 
 | `writeStream`
 a| [[writeStream]]

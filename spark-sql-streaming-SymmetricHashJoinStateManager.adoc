@@ -69,7 +69,7 @@ removeByKeyCondition(
   removalCondition: UnsafeRow => Boolean): Iterator[UnsafeRowPair]
 ----
 
-`removeByKeyCondition` creates an `Iterator` of `UnsafeRowPairs` that <<removeByKeyCondition-getNext, removes keys and values>> for which the given `removalCondition` predicate holds.
+`removeByKeyCondition` creates an `Iterator` of `UnsafeRowPairs` that <<removeByKeyCondition-getNext, removes keys (and associated values)>> for which the given `removalCondition` predicate holds.
 
 [[removeByKeyCondition-allKeyToNumValues]]
 `removeByKeyCondition` uses the <<keyToNumValues, KeyToNumValuesStore>> for <<spark-sql-streaming-KeyToNumValuesStore.adoc#iterator, all state keys and values (in the underlying state store)>>.
@@ -93,9 +93,18 @@ removeByValueCondition(
   removalCondition: UnsafeRow => Boolean): Iterator[UnsafeRowPair]
 ----
 
-`removeByValueCondition`...FIXME
+`removeByValueCondition` creates an `Iterator` of `UnsafeRowPairs` that <<removeByValueCondition-getNext, removes values (and associated keys if needed)>> for which the given `removalCondition` predicate holds.
 
 NOTE: `removeByValueCondition` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, remove an old state>> (when <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> is used).
+
+==== [[removeByValueCondition-getNext]] `getNext` Internal Method (of `removeByValueCondition` Method)
+
+[source, scala]
+----
+getNext(): UnsafeRowPair
+----
+
+`getNext`...FIXME
 
 === [[append]] Appending New Value Row to Key -- `append` Method
 
