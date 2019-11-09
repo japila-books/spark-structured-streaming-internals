@@ -2,6 +2,20 @@
 
 `DataStreamWriter` is the <<methods, interface>> to describe when and what rows of a streaming query are sent out to the <<format, streaming sink>>.
 
+`DataStreamWriter` is available using <<spark-sql-streaming-Dataset-operators.adoc#writeStream, Dataset.writeStream>> method (on a streaming query).
+
+[source, scala]
+----
+import org.apache.spark.sql.streaming.DataStreamWriter
+import org.apache.spark.sql.Row
+
+val streamingQuery: Dataset[Long] = ...
+
+assert(streamingQuery.isStreaming)
+
+val writer: DataStreamWriter[Row] = streamingQuery.writeStream
+----
+
 [[methods]]
 .DataStreamWriter's Methods
 [cols="1m,3",options="header",width="100%"]
@@ -24,7 +38,8 @@ a| [[foreachBatch]]
 
 [source, scala]
 ----
-foreachBatch(function: (Dataset[T], Long) => Unit): DataStreamWriter[T]
+foreachBatch(
+  function: (Dataset[T], Long) => Unit): DataStreamWriter[T]
 ----
 
 (*New in 2.4.0*) Sets the <<source, source>> to `foreachBatch` and the <<foreachBatchWriter, foreachBatchWriter>> to the given function.
@@ -145,21 +160,6 @@ res2: Boolean = true
 ----
 ====
 
-`DataStreamWriter` is available using `writeStream` method of a streaming `Dataset`.
-
-[source, scala]
-----
-import org.apache.spark.sql.streaming.DataStreamWriter
-import org.apache.spark.sql.Row
-
-val streamingQuery: Dataset[Long] = ...
-
-scala> streamingQuery.isStreaming
-res0: Boolean = true
-
-val writer: DataStreamWriter[Row] = streamingQuery.writeStream
-----
-
 Like the batch `DataFrameWriter`, `DataStreamWriter` has a direct support for many <<writing-dataframes-to-files, file formats>> and <<format, an extension point to plug in new formats>>.
 
 [source, scala]
@@ -182,52 +182,6 @@ Beside the above operators, there are the following to work with a `Dataset` as 
 NOTE: `hive` <<start, is not supported>> for streaming writing (and leads to a `AnalysisException`).
 
 NOTE: `DataFrameWriter` is responsible for writing in a batch fashion.
-
-[[internal-properties]]
-.DataStreamWriter's Internal Properties (e.g. Registries, Counters and Flags)
-[cols="1m,1,2",options="header",width="100%"]
-|===
-| Name
-| Initial Value
-| Description
-
-| extraOptions
-|
-| [[extraOptions]]
-
-| foreachBatchWriter
-| `null`
-a| [[foreachBatchWriter]]
-
-[source, scala]
-----
-foreachBatchWriter: (Dataset[T], Long) => Unit
-----
-
-The function that is used as the batch writer in the <<spark-sql-streaming-ForeachBatchSink.adoc#, ForeachBatchSink>> for <<foreachBatch, foreachBatch>>
-
-| foreachWriter
-|
-| [[foreachWriter]]
-
-| partitioningColumns
-|
-| [[partitioningColumns]]
-
-| source
-|
-| [[source]]
-
-| outputMode
-| <<spark-sql-streaming-OutputMode.adoc#Append, OutputMode.Append>>
-| [[outputMode-property]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] of the streaming sink
-
-Set using <<outputMode, outputMode>> method.
-
-| trigger
-|
-| [[trigger-property]]
-|===
 
 === [[option]] Specifying Write Option -- `option` Method
 
@@ -356,3 +310,49 @@ NOTE: `foreach` uses `SparkSession` to access `SparkContext` to clean the `Forea
 foreach writer cannot be null
 ```
 ====
+
+=== [[internal-properties]] Internal Properties
+
+[cols="20m,20,60",options="header",width="100%"]
+|===
+| Name
+| Initial Value
+| Description
+
+| extraOptions
+|
+| [[extraOptions]]
+
+| foreachBatchWriter
+| `null`
+a| [[foreachBatchWriter]]
+
+[source, scala]
+----
+foreachBatchWriter: (Dataset[T], Long) => Unit
+----
+
+The function that is used as the batch writer in the <<spark-sql-streaming-ForeachBatchSink.adoc#, ForeachBatchSink>> for <<foreachBatch, foreachBatch>>
+
+| foreachWriter
+|
+| [[foreachWriter]]
+
+| partitioningColumns
+|
+| [[partitioningColumns]]
+
+| source
+|
+| [[source]]
+
+| outputMode
+| <<spark-sql-streaming-OutputMode.adoc#Append, Append>>
+| [[outputMode-property]] link:spark-sql-streaming-OutputMode.adoc[OutputMode] of the streaming sink
+
+Set using <<outputMode, outputMode>> method.
+
+| trigger
+|
+| [[trigger-property]]
+|===

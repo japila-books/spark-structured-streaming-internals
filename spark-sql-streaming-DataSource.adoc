@@ -84,7 +84,8 @@ Data source [className] does not support streamed reading
 
 [source, scala]
 ----
-createSink(outputMode: OutputMode): Sink
+createSink(
+  outputMode: OutputMode): Sink
 ----
 
 `createSink` creates a <<spark-sql-streaming-Sink.adoc#, streaming sink>> for <<spark-sql-streaming-StreamSinkProvider.adoc#, StreamSinkProvider>> or `FileFormat` data sources.
@@ -115,7 +116,7 @@ Data source [className] does not support [outputMode] output mode
 Data source [className] does not support streamed writing
 ```
 
-NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, create and start a streaming query>>.
+NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start a streaming query>>.
 
 === [[internal-properties]] Internal Properties
 
