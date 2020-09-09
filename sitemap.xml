@@ -208,11 +208,11 @@
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-GroupState/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/GroupState/</loc>
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-GroupStateImpl/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/GroupStateImpl/</loc>
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -240,7 +240,7 @@
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-InputProcessor/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/InputProcessor/</loc>
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -412,7 +412,7 @@
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FlatMapGroupsWithStateExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/FlatMapGroupsWithStateExec/</loc>
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -820,7 +820,7 @@
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-demo-FlatMapGroupsWithStateExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec/</loc>
      <lastmod>2020-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
