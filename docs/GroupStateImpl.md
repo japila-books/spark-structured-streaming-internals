@@ -1,6 +1,6 @@
 == [[GroupStateImpl]] GroupStateImpl
 
-`GroupStateImpl` is the default and only known <<spark-sql-streaming-GroupState.adoc#, GroupState>> in Spark Structured Streaming.
+`GroupStateImpl` is the default and only known [GroupState](GroupState.md) in Spark Structured Streaming.
 
 `GroupStateImpl` holds per-group <<optionalValue, state value>> of type `S` per group key.
 
@@ -38,7 +38,7 @@ createForStreaming[S](
 
 `createForStreaming` simply creates a <<creating-instance, new GroupStateImpl>> with the given input arguments.
 
-NOTE: `createForStreaming` is used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> (when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processNewData, processNewData>> and <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processTimedOutState>>).
+NOTE: `createForStreaming` is used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState) (when `InputProcessor` is requested to [processNewData](InputProcessor.md#processNewData) and [processTimedOutState](InputProcessor.md#processTimedOutState)).
 
 === [[createForBatch]] Creating GroupStateImpl for Batch Query -- `createForBatch` Factory Method
 
@@ -71,9 +71,9 @@ NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api
 setTimeoutDuration(durationMs: Long): Unit
 ----
 
-NOTE: `setTimeoutDuration` is part of the <<spark-sql-streaming-GroupState.adoc#setTimeoutDuration, GroupState Contract>> to specify timeout duration for the state key (in millis or as a string).
-
 `setTimeoutDuration`...FIXME
+
+`setTimeoutDuration` is part of the [GroupState](GroupState.md#setTimeoutDuration) abstraction.
 
 === [[setTimeoutTimestamp]] Specifying Timeout Timestamp for EventTimeTimeout -- `setTimeoutTimestamp` Method
 
@@ -82,9 +82,9 @@ NOTE: `setTimeoutDuration` is part of the <<spark-sql-streaming-GroupState.adoc#
 setTimeoutTimestamp(durationMs: Long): Unit
 ----
 
-NOTE: `setTimeoutTimestamp` is part of the <<spark-sql-streaming-GroupState.adoc#setTimeoutTimestamp, GroupState Contract>> to specify timeout timestamp for the state key.
-
 `setTimeoutTimestamp`...FIXME
+
+`setTimeoutTimestamp` is part of the [GroupState](GroupState.md#setTimeoutTimestamp) abstraction.
 
 === [[getCurrentProcessingTimeMs]] Getting Processing Time -- `getCurrentProcessingTimeMs` Method
 
@@ -93,9 +93,9 @@ NOTE: `setTimeoutTimestamp` is part of the <<spark-sql-streaming-GroupState.adoc
 getCurrentProcessingTimeMs(): Long
 ----
 
-NOTE: `getCurrentProcessingTimeMs` is part of the <<spark-sql-streaming-GroupState.adoc#getCurrentProcessingTimeMs, GroupState Contract>> to get the current processing time (as milliseconds in epoch time).
-
 `getCurrentProcessingTimeMs` simply returns the <<batchProcessingTimeMs, batchProcessingTimeMs>>.
+
+`getCurrentProcessingTimeMs` is part of the [GroupState](GroupState.md#getCurrentProcessingTimeMs) abstraction.
 
 === [[update]] Updating State -- `update` Method
 
@@ -104,9 +104,9 @@ NOTE: `getCurrentProcessingTimeMs` is part of the <<spark-sql-streaming-GroupSta
 update(newValue: S): Unit
 ----
 
-NOTE: `update` is part of the <<spark-sql-streaming-GroupState.adoc#update, GroupState Contract>> to update the state.
-
 `update`...FIXME
+
+`update` is part of the [GroupState](GroupState.md#update) abstraction.
 
 === [[remove]] Removing State -- `remove` Method
 
@@ -115,9 +115,9 @@ NOTE: `update` is part of the <<spark-sql-streaming-GroupState.adoc#update, Grou
 remove(): Unit
 ----
 
-NOTE: `remove` is part of the <<spark-sql-streaming-GroupState.adoc#remove, GroupState Contract>> to remove the state.
-
 `remove`...FIXME
+
+`remove` is part of the [GroupState](GroupState.md#remove) abstraction.
 
 === [[internal-properties]] Internal Properties
 

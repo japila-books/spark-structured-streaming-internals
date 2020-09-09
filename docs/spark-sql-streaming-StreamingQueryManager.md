@@ -364,7 +364,7 @@ Used when:
 
 * `StreamingQueryManager` <<notifyQueryTermination, is notified that a streaming query has terminated>>
 
-* Stateful operators are executed, i.e. link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute[FlatMapGroupsWithStateExec], link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec], link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] and link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute[StreamingSymmetricHashJoinExec]
+* Stateful operators are executed, i.e. [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), link:spark-sql-streaming-StateStoreRestoreExec.adoc#doExecute[StateStoreRestoreExec], link:spark-sql-streaming-StateStoreSaveExec.adoc#doExecute[StateStoreSaveExec], link:spark-sql-streaming-StreamingDeduplicateExec.adoc#doExecute[StreamingDeduplicateExec] and link:spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute[StreamingSymmetricHashJoinExec]
 
 * link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)]
 

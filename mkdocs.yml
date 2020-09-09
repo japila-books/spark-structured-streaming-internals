@@ -137,8 +137,8 @@ nav:
     - Arbitrary Stateful Streaming Aggregation:
       - Arbitrary Stateful Streaming Aggregation: spark-sql-arbitrary-stateful-streaming-aggregation.md
       - GroupState:
-        - GroupState: spark-sql-streaming-GroupState.md
-        - GroupStateImpl: spark-sql-streaming-GroupStateImpl.md
+        - GroupState: GroupState.md
+        - GroupStateImpl: GroupStateImpl.md
       - GroupStateTimeout: spark-sql-streaming-GroupStateTimeout.md
       - StateManager:
         - StateManager: spark-sql-streaming-StateManager.md
@@ -146,7 +146,7 @@ nav:
         - StateManagerImplBase: spark-sql-streaming-StateManagerImplBase.md
         - StateManagerImplV1: spark-sql-streaming-StateManagerImplV1.md
       - FlatMapGroupsWithStateExecHelper Helper Class: spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md
-      - InputProcessor Helper Class of FlatMapGroupsWithStateExec Physical Operator: spark-sql-streaming-InputProcessor.md
+      - InputProcessor: InputProcessor.md
     - Developing Streaming Applications:
       - DataStreamReader: spark-sql-streaming-DataStreamReader.md
       - DataStreamWriter:
@@ -199,7 +199,7 @@ nav:
         - StreamingExecutionRelation Leaf Logical Operator for Streaming Source At Execution: spark-sql-streaming-StreamingExecutionRelation.md
       - Physical Operators:
         - EventTimeWatermarkExec: spark-sql-streaming-EventTimeWatermarkExec.md
-        - FlatMapGroupsWithStateExec: spark-sql-streaming-FlatMapGroupsWithStateExec.md
+        - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
         - StateStoreRestoreExec: spark-sql-streaming-StateStoreRestoreExec.md
         - StateStoreSaveExec: spark-sql-streaming-StateStoreSaveExec.md
         - StreamingDeduplicateExec: spark-sql-streaming-StreamingDeduplicateExec.md
@@ -330,7 +330,7 @@ nav:
         - MemorySinkBase: spark-sql-streaming-MemorySinkBase.md
   - Demos:
     - Demos: spark-sql-streaming-demos.md
-    - Internals of FlatMapGroupsWithStateExec Physical Operator: spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
+    - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
     - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: spark-sql-streaming-demo-arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md
     - Exploring Checkpointed State: spark-sql-streaming-demo-exploring-checkpointed-state.md
     - Streaming Watermark with Aggregation in Append Output Mode: spark-sql-streaming-demo-watermark-aggregation-append.md

@@ -3,7 +3,7 @@
 [[dataRDD]]
 `StateStoreOps` is a *Scala implicit class* of a data RDD (of type `RDD[T]`) to <<mapPartitionsWithStateStore, create a StateStoreRDD>> for the following physical operators:
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 
 * <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
 
@@ -52,7 +52,7 @@ In the end, `mapPartitionsWithStateStore` creates a link:spark-sql-streaming-Sta
 ====
 `mapPartitionsWithStateStore` is used when the following physical operators are executed:
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 * <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
 * <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
 * <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>

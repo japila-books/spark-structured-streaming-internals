@@ -8,9 +8,9 @@
 
 `KeyValueGroupedDataset` represents a grouped dataset as a result of <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> operator.
 
-`mapGroupsWithState` and `flatMapGroupsWithState` operators use <<spark-sql-streaming-GroupState.adoc#, GroupState>> as *group streaming aggregation state* that is created separately for every *aggregation key* with an *aggregation state value* (of a user-defined type).
+`mapGroupsWithState` and `flatMapGroupsWithState` operators use [GroupState](GroupState.md) as **group streaming aggregation state** that is created separately for every *aggregation key* with an *aggregation state value* (of a user-defined type).
 
-`mapGroupsWithState` and `flatMapGroupsWithState` operators use <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>> as an *aggregation state timeout* that defines when a <<spark-sql-streaming-GroupState.adoc#, GroupState>> can be considered *timed-out* (_expired_).
+`mapGroupsWithState` and `flatMapGroupsWithState` operators use <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>> as an *aggregation state timeout* that defines when a [GroupState](GroupState.md) can be considered *timed-out* (_expired_).
 
 === [[demos]] Demos
 
@@ -26,17 +26,17 @@ Use the following demos and complete applications to learn more:
 
 === [[metrics]] Performance Metrics
 
-Arbitrary Stateful Streaming Aggregation uses *performance metrics* (of the <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>> through <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator).
+Arbitrary Stateful Streaming Aggregation uses *performance metrics* (of the <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>> through [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator).
 
 === [[internals]] Internals
 
-One of the most important internal execution components of Arbitrary Stateful Streaming Aggregation is <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
+One of the most important internal execution components of Arbitrary Stateful Streaming Aggregation is [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator.
 
-When requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>, `FlatMapGroupsWithStateExec` first validates a selected <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>:
+When executed, `FlatMapGroupsWithStateExec` first validates a selected <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>:
 
-* For <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, ProcessingTimeTimeout>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#batchTimestampMs, batch timeout threshold>> has to be defined
+* For <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, ProcessingTimeTimeout>>, [batch timeout threshold](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) has to be defined
 
-* For <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, EventTimeTimeout>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#eventTimeWatermark, event-time watermark>> has to be defined and the <<spark-sql-streaming-WatermarkSupport.adoc#watermarkExpression, input schema has the watermark attribute>>
+* For <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, EventTimeTimeout>>, [event-time watermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) has to be defined and the <<spark-sql-streaming-WatermarkSupport.adoc#watermarkExpression, input schema has the watermark attribute>>
 
 NOTE: FIXME When are the above requirements met?
 
@@ -57,4 +57,4 @@ In the end, `FlatMapGroupsWithStateExec` creates a new <<spark-sql-streaming-Sta
 
 `FlatMapGroupsWithStateExec` physical operator uses <<spark-sql-streaming-StateManager.adoc#, state managers>> that are different than <<spark-sql-streaming-StreamingAggregationStateManager.adoc#, state managers>> for <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>. <<spark-sql-streaming-StateStore.adoc#, StateStore>> abstraction is the same as in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>.
 
-One of the important execution steps is when `InputProcessor` (of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator) is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>>. That executes the *user-defined state function* on a per-group state key object, value objects, and a <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>>.
+One of the important execution steps is when `InputProcessor` (of [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator) is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState). That executes the **user-defined state function** on a per-group state key object, value objects, and a [GroupStateImpl](GroupStateImpl.md).

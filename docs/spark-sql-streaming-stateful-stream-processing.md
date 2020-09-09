@@ -46,7 +46,7 @@ In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.a
 
 While <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, planning a streaming query for execution>> (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>>. The rule fills out the following physical operators with the execution-specific configuration (with <<spark-sql-streaming-IncrementalExecution.adoc#nextStatefulOperationStateInfo, StatefulOperatorStateInfo>> being the most important for stateful stream processing):
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 
 * <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
 
@@ -71,8 +71,8 @@ The <<StateStoreWriters-shouldRunAnotherBatch, following table>> shows the `Stat
 | StateStoreWriter
 | shouldRunAnotherBatch Flag
 
-| <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
-a| [[shouldRunAnotherBatch-FlatMapGroupsWithStateExec]] Based on <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#shouldRunAnotherBatch, GroupStateTimeout>>
+| [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
+a| [[shouldRunAnotherBatch-FlatMapGroupsWithStateExec]] Based on [GroupStateTimeout](physical-operators/FlatMapGroupsWithStateExec.md#shouldRunAnotherBatch)
 
 | <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
 a| [[shouldRunAnotherBatch-StateStoreSaveExec]] Based on <<spark-sql-streaming-StateStoreSaveExec.adoc#shouldRunAnotherBatch, OutputMode and event-time watermark>>

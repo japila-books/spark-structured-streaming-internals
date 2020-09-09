@@ -4,7 +4,7 @@
 
 `StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 * <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
 * <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
 * <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>

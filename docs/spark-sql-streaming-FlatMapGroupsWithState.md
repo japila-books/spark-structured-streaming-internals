@@ -15,7 +15,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Logi
 
 `FlatMapGroupsWithState` is resolved (_planned_) to:
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> unary physical operator for streaming datasets (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy)
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy)
 
 * `MapGroupsExec` physical operator for batch datasets (in `BasicOperators` execution planning strategy)
 

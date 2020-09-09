@@ -12,7 +12,7 @@ NOTE: `CurrentTimestamp` or `CurrentDate` expressions are not supported in <<spa
 
 === [[internals]] Internals
 
-<<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>> is given the batch processing time when <<spark-sql-streaming-GroupStateImpl.adoc#createForStreaming, created for a streaming query>> (that is actually the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#batchTimestampMs, batch processing time>> of the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator).
+[GroupStateImpl](GroupStateImpl.md) is given the batch processing time when created for a [streaming query](GroupStateImpl.md#createForStreaming) (that is actually the [batch processing time](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) of the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator).
 
 When created, `FlatMapGroupsWithStateExec` physical operator has the processing time undefined and set to the current timestamp in the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> every streaming batch.
 

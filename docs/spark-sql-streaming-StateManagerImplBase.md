@@ -1,6 +1,6 @@
 == [[StateManagerImplBase]] StateManagerImplBase
 
-`StateManagerImplBase` is the <<contract, extension>> of the <<spark-sql-streaming-StateManager.adoc#, StateManager contract>> for <<implementations, state managers>> of <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator with the following features:
+`StateManagerImplBase` is the <<contract, extension>> of the <<spark-sql-streaming-StateManager.adoc#, StateManager contract>> for <<implementations, state managers>> of [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator with the following features:
 
 * Use Catalyst expressions for <<stateSerializerExprs, state serialization>> and <<stateDeserializerExpr, deserialization>>
 

@@ -73,7 +73,7 @@ Used when:
 
 * `InputProcessor` is requested to `callFunctionAndUpdateState` (when the row iterator is consumed and a state value has been updated, removed or timeout changed)
 
-* `GroupStateImpl` is requested for the <<spark-sql-streaming-GroupStateImpl.adoc#toString, textual representation>>
+* `GroupStateImpl` is requested for the [textual representation](GroupStateImpl.md#toString)
 
 | hasTimedOut
 a| [[hasTimedOut]]
@@ -138,4 +138,4 @@ Updates the state (sets the state to a new value)
 |===
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-GroupStateImpl.adoc#, GroupStateImpl>> is the default and only known implementation of the <<contract, GroupState Contract>> in Spark Structured Streaming.
+[GroupStateImpl](GroupStateImpl.md) is the default and only known implementation of the <<contract, GroupState Contract>> in Spark Structured Streaming.

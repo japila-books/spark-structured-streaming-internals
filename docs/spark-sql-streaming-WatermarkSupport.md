@@ -31,11 +31,11 @@ The watermark attribute may be of type `StructType`. If it is, `watermarkExpress
 
 `watermarkExpression` prints out the following INFO message to the logs when link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute is found.
 
-```
+```text
 INFO [physicalOperator]Exec: Filtering state store on: [evictionExpression]
 ```
 
-NOTE: `physicalOperator` can be link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc[FlatMapGroupsWithStateExec], link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec] or link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec].
+NOTE: `physicalOperator` can be [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), link:spark-sql-streaming-StateStoreSaveExec.adoc[StateStoreSaveExec] or link:spark-sql-streaming-StreamingDeduplicateExec.adoc[StreamingDeduplicateExec].
 
 TIP: Enable INFO logging level for one of the stateful physical operators to see the INFO message in the logs.
 
@@ -69,7 +69,7 @@ trait WatermarkSupport extends UnaryExecNode {
 | Used mainly in <<watermarkExpression, watermarkExpression>> to create a `LessThanOrEqual` Catalyst binary expression that matches rows older than the watermark.
 
 | [[keyExpressions]] `keyExpressions`
-| Grouping keys (in link:spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#keyExpressions[FlatMapGroupsWithStateExec]), duplicate keys (in link:spark-sql-streaming-StreamingDeduplicateExec.adoc#keyExpressions[StreamingDeduplicateExec]) or key attributes (in link:spark-sql-streaming-StateStoreSaveExec.adoc#keyExpressions[StateStoreSaveExec]) with at most one that may have link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in metadata
+| Grouping keys (in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#keyExpressions)), duplicate keys (in link:spark-sql-streaming-StreamingDeduplicateExec.adoc#keyExpressions[StreamingDeduplicateExec]) or key attributes (in link:spark-sql-streaming-StateStoreSaveExec.adoc#keyExpressions[StateStoreSaveExec]) with at most one that may have link:spark-sql-streaming-EventTimeWatermark.adoc#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in metadata
 
 Used in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Predicate` to match rows older than the event time watermark.
 

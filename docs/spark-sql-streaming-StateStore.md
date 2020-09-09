@@ -44,7 +44,7 @@ Commits the changes to the state store (and returns the current version)
 
 Used when:
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed)
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed)
 
 * `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#commit, commit (changes to) a state store>> (exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed)
 

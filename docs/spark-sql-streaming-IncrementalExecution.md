@@ -72,7 +72,7 @@ val stateDir = s"$checkpointLocation/state"
 assert(stateCheckpointDir equals stateDir)
 ----
 
-State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
+State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
 
 === [[numStateStores]] Number of State Stores (spark.sql.shuffle.partitions) -- `numStateStores` Internal Property
 
@@ -89,7 +89,7 @@ Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata
 
 `numStateStores` is initialized right when `IncrementalExecution` is <<creating-instance, created>>.
 
-`numStateStores` is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
+`numStateStores` is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
 
 === [[planner]][[extraPlanningStrategies]] Extra Planning Strategies for Streaming Queries -- `planner` Property
 
@@ -117,7 +117,7 @@ state: Rule[SparkPlan]
 
 * <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 
 * <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
 
@@ -157,7 +157,7 @@ All the other properties (the <<state-checkpoint-location, state checkpoint loca
 The only two properties that may ever change are the <<runId, run ID>> (after a streaming query is restarted from the checkpoint) and the <<currentBatchId, current batch ID>> (every micro-batch in <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> execution engine).
 ====
 
-NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to optimize a streaming physical plan using the <<state, state preparation rule>> (and creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>, <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
+NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to optimize a streaming physical plan using the <<state, state preparation rule>> (and creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>).
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Execution Requires Another Non-Data Micro-Batch -- `shouldRunAnotherBatch` Method
 

@@ -114,13 +114,13 @@ The `StateManager` is used exclusively when `FlatMapGroupsWithStateExec` physica
 
 * <<spark-sql-streaming-StateManager.adoc#stateSchema, State schema>> (for the <<spark-sql-streaming-StateStoreRDD.adoc#valueSchema, value schema>> of a <<spark-sql-streaming-StateStoreRDD.adoc#, StateStoreRDD>>)
 
-* <<spark-sql-streaming-StateManager.adoc#getState, State data for a key in a StateStore>> while <<spark-sql-streaming-InputProcessor.adoc#processNewData, processing new data>>
+* <<spark-sql-streaming-StateManager.adoc#getState, State data for a key in a StateStore>> while [processing new data](InputProcessor.md#processNewData)
 
-* <<spark-sql-streaming-StateManager.adoc#getAllState, All state data (for all keys) in a StateStore>> while <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processing timed-out state data>>
+* <<spark-sql-streaming-StateManager.adoc#getAllState, All state data (for all keys) in a StateStore>> while [processing timed-out state data](InputProcessor.md#processTimedOutState)
 
-* <<spark-sql-streaming-StateManager.adoc#removeState, Removing the state for a key from a StateStore>> when <<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, all rows have been processed>>
+* <<spark-sql-streaming-StateManager.adoc#removeState, Removing the state for a key from a StateStore>> when [all rows have been processed](InputProcessor.md#onIteratorCompletion)
 
-* <<spark-sql-streaming-StateManager.adoc#putState, Persisting the state for a key in a StateStore>> when <<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, all rows have been processed>>
+* <<spark-sql-streaming-StateManager.adoc#putState, Persisting the state for a key in a StateStore>> when [all rows have been processed](InputProcessor.md#onIteratorCompletion)
 
 === [[keyExpressions]] `keyExpressions` Method
 
@@ -148,13 +148,13 @@ NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime repres
 
 `doExecute` uses <<spark-sql-streaming-StateStoreOps.adoc#, StateStoreOps>> to <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, create a StateStoreRDD>> with a `storeUpdateFunction` that does the following (for a partition):
 
-. Creates an <<spark-sql-streaming-InputProcessor.adoc#, InputProcessor>> for a given <<spark-sql-streaming-StateStore.adoc#, StateStore>>
+. Creates an [InputProcessor](InputProcessor.md) for a given [StateStore](spark-sql-streaming-StateStore.adoc)
 
 . (only when the <<timeoutConf, GroupStateTimeout>> is <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, EventTimeTimeout>>) Filters out late data based on the <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, event-time watermark>>, i.e. rows from a given `Iterator[InternalRow]` that are older than the <<spark-sql-streaming-WatermarkSupport.adoc#watermarkPredicateForData, event-time watermark>> are excluded from the steps that follow
 
-. Requests the `InputProcessor` to <<spark-sql-streaming-InputProcessor.adoc#processNewData, create an iterator of a new data processed>> from the (possibly filtered) iterator
+. Requests the `InputProcessor` to [create an iterator of a new data processed](InputProcessor.md#processNewData) from the (possibly filtered) iterator
 
-. Requests the `InputProcessor` to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, create an iterator of a timed-out state data>>
+. Requests the `InputProcessor` to [create an iterator of a timed-out state data](InputProcessor.md#processTimedOutState)
 
 . Creates an iterator by concatenating the above iterators (with the new data processed first)
 
@@ -191,7 +191,7 @@ Used when:
 
 * `FlatMapGroupsWithStateExec` is created (and creates the internal <<stateManager, StateManager>>)
 
-* `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processTimedOutState>>
+* `InputProcessor` is requested to [processTimedOutState](InputProcessor.md#processTimedOutState)
 
 | stateAttributes
 a| [[stateAttributes]]
@@ -208,5 +208,5 @@ a| [[timestampTimeoutAttribute]]
 | watermarkPresent
 a| [[watermarkPresent]] Flag that says whether the <<child, child>> physical operator has a <<spark-sql-streaming-EventTimeWatermark.adoc#delayKey, watermark attribute>> (among the output attributes).
 
-Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>>
+Used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState)
 |===

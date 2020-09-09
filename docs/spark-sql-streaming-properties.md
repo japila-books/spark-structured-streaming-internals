@@ -88,7 +88,7 @@ Default: `true`
 Use <<spark-sql-streaming-SQLConf.adoc#fileSourceLogDeletion, SQLConf.fileSourceLogDeletion>> to get the current value.
 
 | spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
-a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.adoc#, StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, FlatMapGroupsWithStateExec>> physical operator
+a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.adoc#, StateManager>> for [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) physical operator
 
 Default: `2`
 

@@ -9,7 +9,7 @@
 | StateStoreWriter
 | Description
 
-| <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+| [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 | [[FlatMapGroupsWithStateExec]]
 
 | <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
@@ -75,7 +75,7 @@ setStoreMetrics(store: StateStore): Unit
 ====
 `setStoreMetrics` is used when the following physical operators are executed:
 
-* <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>>
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 * <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
 * <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
 * <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>

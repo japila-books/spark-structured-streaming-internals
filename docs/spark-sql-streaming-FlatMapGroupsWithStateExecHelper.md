@@ -1,6 +1,6 @@
 == [[FlatMapGroupsWithStateExecHelper]] FlatMapGroupsWithStateExecHelper
 
-`FlatMapGroupsWithStateExecHelper` is a utility with the main purpose of <<createStateManager, creating a StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
+`FlatMapGroupsWithStateExecHelper` is a utility with the main purpose of <<createStateManager, creating a StateManager>> for [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator.
 
 === [[createStateManager]] Creating StateManager -- `createStateManager` Method
 
@@ -24,4 +24,4 @@ createStateManager(
 Version [stateFormatVersion] is invalid
 ```
 
-NOTE: `createStateManager` is used exclusively for the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, StateManager>> for <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator.
+`createStateManager` is used for the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) for [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator.

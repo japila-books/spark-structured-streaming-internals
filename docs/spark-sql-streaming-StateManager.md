@@ -1,6 +1,6 @@
 == [[StateManager]] StateManager Contract -- State Managers for Arbitrary Stateful Streaming Aggregation
 
-`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.adoc#, state stores>> and the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator used in <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>.
+`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.adoc#, state stores>> and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>.
 
 [[contract]]
 .StateManager Contract
@@ -19,7 +19,7 @@ getAllState(store: StateStore): Iterator[StateData]
 
 Retrieves all state data (for all keys) from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
-Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processTimedOutState, processTimedOutState>>
+Used when `InputProcessor` is requested to [processTimedOutState](InputProcessor.md#processTimedOutState)
 
 | getState
 a| [[getState]]
@@ -33,7 +33,7 @@ getState(
 
 Gets the state data for the key from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
-Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#processNewData, processNewData>>
+Used exclusively when `InputProcessor` is requested to [processNewData](InputProcessor.md#processNewData)
 
 | putState
 a| [[putState]]
@@ -49,7 +49,7 @@ putState(
 
 Persists (_puts_) the state value for the key in the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
-Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> (<<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, right after all rows have been processed>>)
+Used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState) ([right after all rows have been processed](InputProcessor.md#onIteratorCompletion))
 
 | removeState
 a| [[removeState]]
@@ -63,7 +63,7 @@ removeState(
 
 Removes the state for the key from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>
 
-Used exclusively when `InputProcessor` is requested to <<spark-sql-streaming-InputProcessor.adoc#callFunctionAndUpdateState, callFunctionAndUpdateState>> (<<spark-sql-streaming-InputProcessor.adoc#onIteratorCompletion, right after all rows have been processed>>)
+Used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState) ([right after all rows have been processed](InputProcessor.md#onIteratorCompletion))
 
 | stateSchema
 a| [[stateSchema]]
@@ -75,11 +75,11 @@ stateSchema: StructType
 
 *State schema*
 
-NOTE: <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, It looks like>> (in <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#stateManager, StateManager>> of the <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#, FlatMapGroupsWithStateExec>> physical operator) `stateSchema` is used for the schema of state value objects (not state keys as they are described by the grouping attributes instead).
+NOTE: <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, It looks like>> (in <<FlatMapGroupsWithStateExec.md#stateManager, StateManager>> of the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator) `stateSchema` is used for the schema of state value objects (not state keys as they are described by the grouping attributes instead).
 
 Used when:
 
-* `FlatMapGroupsWithStateExec` physical operator is requested to <<spark-sql-streaming-FlatMapGroupsWithStateExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator is executed
 
 * `StateManagerImplBase` is requested for the <<spark-sql-streaming-StateManagerImplBase.adoc#stateDeserializerFunc, stateDeserializerFunc>>
 
