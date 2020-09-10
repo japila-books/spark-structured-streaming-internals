@@ -1,212 +1,181 @@
 # FlatMapGroupsWithStateExec Unary Physical Operator
 
-`FlatMapGroupsWithStateExec` is a unary physical operator that represents <<spark-sql-streaming-FlatMapGroupsWithState.md#, FlatMapGroupsWithState>> logical operator at execution time.
+`FlatMapGroupsWithStateExec` is a unary physical operator that represents [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator at execution time.
 
-[NOTE]
-====
-A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
+!!! note
+    A unary physical operator (`UnaryExecNode`) is a physical operator with a single [child](#child) physical operator.
 
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
+    Read up on [UnaryExecNode](https://jaceklaskowski.github.io/mastering-spark-sql-book/physical-operators/UnaryExecNode/) (and physical operators in general) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book) online book.
 
-NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.md#, FlatMapGroupsWithState>> unary logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators in a logical query plan.
+`FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator and so produces a [single output object](#outputObjAttr).
 
-`FlatMapGroupsWithStateExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.md#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a <<spark-sql-streaming-FlatMapGroupsWithState.md#, FlatMapGroupsWithState>> logical operator for execution.
+!!! tip
+    Read up on [ObjectProducerExec](https://jaceklaskowski.github.io/mastering-spark-sql-book/physical-operators/ObjectProducerExec/) physical operator in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book) online book.
 
-`FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator and so produces a <<outputObjAttr, single output object>>.
+!!! tip
+    Check out [Demo: Internals of FlatMapGroupsWithStateExec Physical Operator](../demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md).
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan-ObjectProducerExec.html[ObjectProducerExec — Physical Operators With Single Object Output] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+!!! note
+    `FlatMapGroupsWithStateExec` is given an [OutputMode](#outputMode) when created, but it does not seem to be used at all. Check out the question [What's the purpose of OutputMode in flatMapGroupsWithState? How/where is it used?](https://stackoverflow.com/q/56921772/1305344) on StackOverflow.
 
-TIP: Check out <<spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md#, Demo: Internals of FlatMapGroupsWithStateExec Physical Operator>>.
-
-NOTE: `FlatMapGroupsWithStateExec` is given an <<outputMode, OutputMode>> when created, but it does not seem to be used at all. Check out the question https://stackoverflow.com/q/56921772/1305344[What's the purpose of OutputMode in flatMapGroupsWithState? How/where is it used?] on StackOverflow.
-
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec=ALL
-```
-
-Refer to <<spark-sql-streaming-logging.md#, Logging>>.
-====
-
-=== [[creating-instance]] Creating FlatMapGroupsWithStateExec Instance
+## Creating Instance
 
 `FlatMapGroupsWithStateExec` takes the following to be created:
 
-* [[func]] *User-defined state function* that is applied to every group (of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
-* [[keyDeserializer]] Key deserializer expression
-* [[valueDeserializer]] Value deserializer expression
-* [[groupingAttributes]] Grouping attributes (as used for grouping in link:spark-sql-streaming-KeyValueGroupedDataset.md#groupingAttributes[KeyValueGroupedDataset] for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
-* [[dataAttributes]] Data attributes
-* [[outputObjAttr]] Output object attribute (that is the reference to the single object field this operator outputs)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
-* [[stateEncoder]] State encoder (`ExpressionEncoder[Any]`)
-* [[stateFormatVersion]] State format version
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, OutputMode>>
-* [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.md#, GroupStateTimeout>>
-* [[batchTimestampMs]] <<spark-structured-streaming-batch-processing-time.md#, Batch Processing Time>>
-* [[eventTimeWatermark]] <<spark-sql-streaming-watermark.md#, Event-time watermark>>
-* [[child]] Child physical operator
+* <span id="func"> **User-defined state function** that is applied to every group (of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
+* <span id="keyDeserializer"> Deserializer expression for keys
+* <span id="valueDeserializer"> Deserializer expression for values
+* <span id="groupingAttributes"> Grouping attributes (as used for grouping in [KeyValueGroupedDataset](../spark-sql-streaming-KeyValueGroupedDataset.md#groupingAttributes) for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
+* <span id="dataAttributes"> Data attributes
+* <span id="outputObjAttr"> Output object attribute (that is the reference to the single object field this operator outputs)
+* <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../spark-sql-streaming-StatefulOperatorStateInfo.md)
+* <span id="stateEncoder"> State encoder (`ExpressionEncoder[Any]`)
+* <span id="stateFormatVersion"> State format version
+* <span id="outputMode"> [OutputMode](../spark-sql-streaming-OutputMode.md)
+* <span id="timeoutConf"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
+* <span id="batchTimestampMs"> Optional [Batch Processing Time](../spark-structured-streaming-batch-processing-time.md)
+* <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../spark-sql-streaming-watermark.md)
+* <span id="child"> Child physical operator
 
-`FlatMapGroupsWithStateExec` initializes the <<internal-properties, internal properties>>.
+`FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../spark-sql-streaming-FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).
 
-=== [[metrics]] Performance Metrics (SQLMetrics)
+## <span id="doExecute"> Executing Physical Operator
 
-`FlatMapGroupsWithStateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.md#metrics, StateStoreWriter>>.
-
-.FlatMapGroupsWithStateExec in web UI (Details for Query)
-image::images/FlatMapGroupsWithStateExec-webui-query-details.png[align="center"]
-
-=== [[StateStoreWriter]] FlatMapGroupsWithStateExec as StateStoreWriter
-
-`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-StateStoreWriter.md#, stateful physical operator that can write to a state store>>(and `MicroBatchExecution` requests <<shouldRunAnotherBatch, whether to run another batch or not>> based on the <<timeoutConf, GroupStateTimeout>>).
-
-`FlatMapGroupsWithStateExec` uses the <<timeoutConf, GroupStateTimeout>> (and possibly the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, metadata>>) when asked <<shouldRunAnotherBatch, whether to run another batch or not>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> when requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
-
-=== [[WatermarkSupport]] FlatMapGroupsWithStateExec with Streaming Event-Time Watermark Support (WatermarkSupport)
-
-`FlatMapGroupsWithStateExec` is a <<spark-sql-streaming-WatermarkSupport.md#, physical operator that supports streaming event-time watermark>>.
-
-`FlatMapGroupsWithStateExec` is given the <<eventTimeWatermark, optional event time watermark>> when created.
-
-The <<eventTimeWatermark, event-time watermark>> is initially undefined (`None`) when planned to for execution (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.md#, FlatMapGroupsWithStateStrategy>> execution planning strategy).
-
-[NOTE]
-====
-`FlatMapGroupsWithStateStrategy` converts link:spark-sql-streaming-FlatMapGroupsWithState.md[FlatMapGroupsWithState] unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined <<stateInfo, StatefulOperatorStateInfo>>, <<batchTimestampMs, batchTimestampMs>>, and <<eventTimeWatermark, eventTimeWatermark>>.
-====
-
-The <<eventTimeWatermark, event-time watermark>> (with the <<stateInfo, StatefulOperatorStateInfo>> and the <<batchTimestampMs, batchTimestampMs>>) is only defined to the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, current event-time watermark>> of the given <<spark-sql-streaming-IncrementalExecution.md#offsetSeqMetadata, OffsetSeqMetadata>> when `IncrementalExecution` query execution pipeline is requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state>> preparation rule (as part of the <<spark-sql-streaming-IncrementalExecution.md#preparations, preparations>> rules).
-
-[NOTE]
-====
-The <<spark-sql-streaming-IncrementalExecution.md#preparations, preparations>> rules are executed (applied to a physical query plan) at the `executedPlan` phase of Structured Query Execution Pipeline to generate an optimized physical query plan ready for execution).
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[Structured Query Execution Pipeline] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
-
-`IncrementalExecution` is used as the <<spark-sql-streaming-StreamExecution.md#lastExecution, lastExecution>> of the available <<spark-sql-streaming-StreamExecution.md#extensions, streaming query execution engines>>. It is created in the *queryPlanning* phase (of the <<spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.md#runContinuous-queryPlanning, ContinuousExecution>> execution engines) based on the current <<spark-sql-streaming-StreamExecution.md#offsetSeqMetadata, OffsetSeqMetadata>>.
-
-NOTE: The <<eventTimeWatermark, optional event-time watermark>> can only be defined when the <<spark-sql-streaming-IncrementalExecution.md#state, state>> preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the *queryPlanning* phase.
-
-=== [[stateManager]] FlatMapGroupsWithStateExec and StateManager -- `stateManager` Property
-
-[source, scala]
-----
-stateManager: StateManager
-----
-
-While being created, `FlatMapGroupsWithStateExec` creates a <<spark-sql-streaming-StateManager.md#, StateManager>> (with the <<stateEncoder, state encoder>> and the <<isTimeoutEnabled, isTimeoutEnabled>> flag).
-
-A `StateManager` is <<spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md#createStateManager, created>> per <<stateFormatVersion, state format version>> that is given while creating a `FlatMapGroupsWithStateExec` (to choose between the <<spark-sql-streaming-StateManagerImplBase.md#implementations, available implementations>>).
-
-The <<stateFormatVersion, state format version>> is controlled by <<spark-sql-streaming-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>> internal configuration property (default: `2`).
-
-NOTE: <<spark-sql-streaming-StateManagerImplV2.md#, StateManagerImplV2>> is the default `StateManager`.
-
-The `StateManager` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is <<doExecute, executed>> (to generate a recipe for a distributed computation as an `RDD[InternalRow]`) for the following:
-
-* <<spark-sql-streaming-StateManager.md#stateSchema, State schema>> (for the <<spark-sql-streaming-StateStoreRDD.md#valueSchema, value schema>> of a <<spark-sql-streaming-StateStoreRDD.md#, StateStoreRDD>>)
-
-* <<spark-sql-streaming-StateManager.md#getState, State data for a key in a StateStore>> while [processing new data](../InputProcessor.md#processNewData)
-
-* <<spark-sql-streaming-StateManager.md#getAllState, All state data (for all keys) in a StateStore>> while [processing timed-out state data](../InputProcessor.md#processTimedOutState)
-
-* <<spark-sql-streaming-StateManager.md#removeState, Removing the state for a key from a StateStore>> when [all rows have been processed](../InputProcessor.md#onIteratorCompletion)
-
-* <<spark-sql-streaming-StateManager.md#putState, Persisting the state for a key in a StateStore>> when [all rows have been processed](../InputProcessor.md#onIteratorCompletion)
-
-=== [[keyExpressions]] `keyExpressions` Method
-
-[source, scala]
-----
-keyExpressions: Seq[Attribute]
-----
-
-NOTE: `keyExpressions` is part of the <<spark-sql-streaming-WatermarkSupport.md#keyExpressions, WatermarkSupport Contract>> to...FIXME.
-
-`keyExpressions` simply returns the <<groupingAttributes, grouping attributes>>.
-
-=== [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
-
-[source, scala]
-----
+```scala
 doExecute(): RDD[InternalRow]
-----
+```
 
-NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
+`doExecute` first initializes the [metrics](../spark-sql-streaming-StateStoreWriter.md#metrics) (which happens on the driver).
 
-`doExecute` first initializes the <<spark-sql-streaming-StateStoreWriter.md#metrics, metrics>> (which happens on the driver).
+`doExecute` then requests the [child](#child) physical operator to execute (and generate an `RDD[InternalRow]`).
 
-`doExecute` then requests the <<child, child>> physical operator to execute and generate an `RDD[InternalRow]`.
+`doExecute` uses [StateStoreOps](../spark-sql-streaming-StateStoreOps.md) to [create a StateStoreRDD](../spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore) with a `storeUpdateFunction` that does the following (for a partition):
 
-`doExecute` uses <<spark-sql-streaming-StateStoreOps.md#, StateStoreOps>> to <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, create a StateStoreRDD>> with a `storeUpdateFunction` that does the following (for a partition):
+1. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](../spark-sql-streaming-StateStore.md)
 
-. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](spark-sql-streaming-StateStore.md)
+1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](../spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](../spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
 
-. (only when the <<timeoutConf, GroupStateTimeout>> is <<spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout, EventTimeTimeout>>) Filters out late data based on the <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData, event-time watermark>>, i.e. rows from a given `Iterator[InternalRow]` that are older than the <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData, event-time watermark>> are excluded from the steps that follow
+1. Requests the `InputProcessor` to [create an iterator of a new data processed](../InputProcessor.md#processNewData) from the (possibly filtered) iterator
 
-. Requests the `InputProcessor` to [create an iterator of a new data processed](../InputProcessor.md#processNewData) from the (possibly filtered) iterator
+1. Requests the `InputProcessor` to [create an iterator of a timed-out state data](../InputProcessor.md#processTimedOutState)
 
-. Requests the `InputProcessor` to [create an iterator of a timed-out state data](../InputProcessor.md#processTimedOutState)
+1. Creates an iterator by concatenating the above iterators (with the new data processed first)
 
-. Creates an iterator by concatenating the above iterators (with the new data processed first)
+1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../spark-sql-streaming-StateStore.md#commit) followed by [setting the store-specific metrics](../spark-sql-streaming-StateStoreWriter.md#setStoreMetrics)
 
-. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to <<spark-sql-streaming-StateStore.md#commit, commit changes>> followed by <<spark-sql-streaming-StateStoreWriter.md#setStoreMetrics, setting the store-specific metrics>>.
+`doExecute` is part of Spark SQL's `SparkPlan` abstraction.
 
-=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
+## <span id="metrics"> Performance Metrics
 
-[source, scala]
-----
-shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
-----
+`FlatMapGroupsWithStateExec` uses the performance metrics of [StateStoreWriter](../spark-sql-streaming-StateStoreWriter.md#metrics).
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+![FlatMapGroupsWithStateExec in web UI (Details for Query)](../images/FlatMapGroupsWithStateExec-webui-query-details.png)
 
-`shouldRunAnotherBatch` uses the <<timeoutConf, GroupStateTimeout>> as follows:
+## <span id="StateStoreWriter"> StateStoreWriter
 
-* With <<spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout, EventTimeTimeout>>, `shouldRunAnotherBatch` is positive (`true`) only when the <<eventTimeWatermark, event-time watermark>> is defined and is older (below) the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the given `OffsetSeqMetadata`
+`FlatMapGroupsWithStateExec` is a [stateful physical operator that can write to a state store](../spark-sql-streaming-StateStoreWriter.md) (and `MicroBatchExecution` requests [whether to run another batch or not](#shouldRunAnotherBatch) based on the [GroupStateTimeout](#timeoutConf)).
 
-* With <<spark-sql-streaming-GroupStateTimeout.md#NoTimeout, NoTimeout>> (and other <<spark-sql-streaming-GroupStateTimeout.md#extensions, GroupStateTimeouts>> if there were any), `shouldRunAnotherBatch` is always negative (`false`)
+`FlatMapGroupsWithStateExec` uses the [GroupStateTimeout](#timeoutConf) (and possibly the updated [metadata](../spark-sql-streaming-OffsetSeqMetadata.md)) when asked [whether to run another batch or not](#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](../spark-sql-streaming-MicroBatchExecution.md#constructNextBatch) when requested to [run the activated streaming query](../spark-sql-streaming-MicroBatchExecution.md#runActivatedStream)).
 
-* With <<spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout, ProcessingTimeTimeout>>, `shouldRunAnotherBatch` is always positive (`true`)
+## <span id="WatermarkSupport"> Streaming Event-Time Watermark Support
 
-=== [[internal-properties]] Internal Properties
+`FlatMapGroupsWithStateExec` is a [physical operator that supports streaming event-time watermark](../spark-sql-streaming-WatermarkSupport.md).
 
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
+`FlatMapGroupsWithStateExec` is given the [optional event time watermark](#eventTimeWatermark) when created.
 
-| isTimeoutEnabled
-a| [[isTimeoutEnabled]] Flag that says whether the <<timeoutConf, GroupStateTimeout>> is not <<spark-sql-streaming-GroupStateTimeout.md#NoTimeout, NoTimeout>>
+The [event-time watermark](#eventTimeWatermark) is initially undefined (`None`) when planned for execution (in [FlatMapGroupsWithStateStrategy](../spark-sql-streaming-FlatMapGroupsWithStateStrategy.md) execution planning strategy).
+
+!!! note
+    `FlatMapGroupsWithStateStrategy` converts [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined [StatefulOperatorStateInfo](#stateInfo), [batchTimestampMs](#batchTimestampMs), and [eventTimeWatermark](#eventTimeWatermark).
+
+The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorStateInfo](#stateInfo) and the [batchTimestampMs](#batchTimestampMs)) is only defined to the [current event-time watermark](../spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs) of the given [OffsetSeqMetadata](../spark-sql-streaming-IncrementalExecution.md#offsetSeqMetadata) when `IncrementalExecution` query execution pipeline is requested to apply the [state](../spark-sql-streaming-IncrementalExecution.md#state) preparation rule (as part of the [preparations](../spark-sql-streaming-IncrementalExecution.md#preparations) rules).
+
+!!! note
+    The [preparations](../spark-sql-streaming-IncrementalExecution.md#preparations) rules are executed (applied to a physical query plan) at the `executedPlan` phase of Structured Query Execution Pipeline to generate an optimized physical query plan ready for execution).
+
+    Read up on [Structured Query Execution Pipeline](https://jaceklaskowski.github.io/mastering-spark-sql-book/QueryExecution/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
+
+`IncrementalExecution` is used as the [lastExecution](../spark-sql-streaming-StreamExecution.md#lastExecution) of the available [streaming query execution engines](../spark-sql-streaming-StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../spark-sql-streaming-ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../spark-sql-streaming-StreamExecution.md#offsetSeqMetadata).
+
+!!! note
+    The [optional event-time watermark](#eventTimeWatermark) can only be defined when the [state](../spark-sql-streaming-IncrementalExecution.md#state) preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the **queryPlanning** phase.
+
+## <span id="stateManager"> StateManager
+
+```scala
+stateManager: StateManager
+```
+
+While being created, `FlatMapGroupsWithStateExec` creates a [StateManager](../spark-sql-streaming-StateManager.md) (with the [state encoder](#stateEncoder) and the [isTimeoutEnabled](#isTimeoutEnabled) flag).
+
+A `StateManager` is [created](../spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md#createStateManager) per [state format version](#stateFormatVersion) that is given while creating a `FlatMapGroupsWithStateExec` (to choose between the [available implementations](../spark-sql-streaming-StateManagerImplBase.md#implementations)).
+
+The [state format version](#stateFormatVersion) is controlled by [spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](../spark-sql-streaming-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion) internal configuration property.
+
+The `StateManager` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is [executed](#doExecute) for the following:
+
+* [State schema](../spark-sql-streaming-StateManager.md#stateSchema) (for the [value schema](../spark-sql-streaming-StateStoreRDD.md#valueSchema) of a [StateStoreRDD](../spark-sql-streaming-StateStoreRDD.md))
+
+* [State data for a key in a StateStore](../spark-sql-streaming-StateManager.md#getState) while [processing new data](../InputProcessor.md#processNewData)
+
+* [All state data (for all keys) in a StateStore](../spark-sql-streaming-StateManager.md#getAllState) while [processing timed-out state data](../InputProcessor.md#processTimedOutState)
+
+* [Removing the state for a key from a StateStore](../spark-sql-streaming-StateManager.md#removeState) when [all rows have been processed](../InputProcessor.md#onIteratorCompletion)
+
+* [Persisting the state for a key in a StateStore](../spark-sql-streaming-StateManager.md#putState) when [all rows have been processed](../InputProcessor.md#onIteratorCompletion)
+
+## <span id="keyExpressions"> keyExpressions Method
+
+```scala
+keyExpressions: Seq[Attribute]
+```
+
+`keyExpressions` simply returns the [grouping attributes](#groupingAttributes).
+
+`keyExpressions` is part of the [WatermarkSupport](../spark-sql-streaming-WatermarkSupport.md#keyExpressions) abstraction.
+
+## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
+
+```scala
+shouldRunAnotherBatch(
+  newMetadata: OffsetSeqMetadata): Boolean
+```
+
+`shouldRunAnotherBatch` uses the [GroupStateTimeout](#timeoutConf) as follows:
+
+* With [EventTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout), `shouldRunAnotherBatch` is `true` only when the [event-time watermark](#eventTimeWatermark) is defined and is older (below) the [event-time watermark](../spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs) of the given `OffsetSeqMetadata`
+
+* With [NoTimeout](../spark-sql-streaming-GroupStateTimeout.md#NoTimeout) (and other [GroupStateTimeouts](../spark-sql-streaming-GroupStateTimeout.md#extensions) if there were any), `shouldRunAnotherBatch` is always `false`
+
+* With [ProcessingTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout), `shouldRunAnotherBatch` is always `true`
+
+`shouldRunAnotherBatch` is part of the [StateStoreWriter](../spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
+
+## Internal Properties
+
+### <span id="isTimeoutEnabled"> isTimeoutEnabled Flag
+
+Flag that says whether the [GroupStateTimeout](#timeoutConf) is not [NoTimeout](../spark-sql-streaming-GroupStateTimeout.md#NoTimeout)
 
 Used when:
 
-* `FlatMapGroupsWithStateExec` is created (and creates the internal <<stateManager, StateManager>>)
-
+* `FlatMapGroupsWithStateExec` is created (and creates the internal [StateManager](#stateManager))
 * `InputProcessor` is requested to [processTimedOutState](../InputProcessor.md#processTimedOutState)
 
-| stateAttributes
-a| [[stateAttributes]]
+### <span id="watermarkPresent"> watermarkPresent Flag
 
-| stateDeserializer
-a| [[stateDeserializer]]
+Flag that says whether the [child](#child) physical operator has a [watermark attribute](../spark-sql-streaming-EventTimeWatermark.md#delayKey) (among the output attributes).
 
-| stateSerializer
-a| [[stateSerializer]]
+Used when `InputProcessor` is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState)
 
-| timestampTimeoutAttribute
-a| [[timestampTimeoutAttribute]]
+## Logging
 
-| watermarkPresent
-a| [[watermarkPresent]] Flag that says whether the <<child, child>> physical operator has a <<spark-sql-streaming-EventTimeWatermark.md#delayKey, watermark attribute>> (among the output attributes).
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec` logger to see what happens inside.
 
-Used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState)
-|===
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec=ALL
+```
+
+Refer to [Logging](../spark-sql-streaming-logging.md).

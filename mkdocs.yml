@@ -191,7 +191,7 @@ nav:
       - StreamMetadata: spark-sql-streaming-StreamMetadata.md
       - Logical Operators:
         - EventTimeWatermark Unary Logical Operator: spark-sql-streaming-EventTimeWatermark.md
-        - FlatMapGroupsWithState Unary Logical Operator: spark-sql-streaming-FlatMapGroupsWithState.md
+        - FlatMapGroupsWithState Unary Logical Operator: logical-operators/FlatMapGroupsWithState.md
         - Deduplicate Unary Logical Operator: spark-sql-streaming-Deduplicate.md
         - MemoryPlan Logical Query Plan: spark-sql-streaming-MemoryPlan.md
         - StreamingRelation Leaf Logical Operator for Streaming Source: spark-sql-streaming-StreamingRelation.md

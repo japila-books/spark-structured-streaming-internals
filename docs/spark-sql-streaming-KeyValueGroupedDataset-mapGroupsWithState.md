@@ -12,19 +12,16 @@ mapGroupsWithState[S: Encoder, U: Encoder](
 
 `mapGroupsWithState` operator...FIXME
 
-[NOTE]
-====
-`mapGroupsWithState` is a special case of link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md[flatMapGroupsWithState] operator with the following:
+!!! note
+    `mapGroupsWithState` is a special case of [flatMapGroupsWithState](spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md) operator with the following:
 
-* `func` being transformed to return a single-element `Iterator`
+    * `func` being transformed to return a single-element `Iterator`
 
-* link:spark-sql-streaming-OutputMode.md#Update[Update] output mode
+    * spark-sql-streaming-OutputMode.md#Update[Update] output mode
 
-`mapGroupsWithState` also creates a `FlatMapGroupsWithState` with link:spark-sql-streaming-FlatMapGroupsWithState.md#isMapGroupsWithState[isMapGroupsWithState] internal flag enabled.
-====
+    `mapGroupsWithState` also creates a `FlatMapGroupsWithState` with [isMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md#isMapGroupsWithState) internal flag enabled.
 
-[source, scala]
-----
+```text
 // numGroups defined at the beginning
 scala> :type numGroups
 org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
@@ -91,4 +88,4 @@ Batch: 3
 
 // in the end
 spark.streams.active.foreach(_.stop)
-----
+```

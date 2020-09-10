@@ -27,4 +27,4 @@ Every time the state function `func` is executed for a key, the state (as `Group
 * `U` is the type of rows in the result `Dataset`
 ====
 
-Internally, `flatMapGroupsWithState` creates a new `Dataset` with <<spark-sql-streaming-FlatMapGroupsWithState.md#, FlatMapGroupsWithState>> unary logical operator.
+`flatMapGroupsWithState` creates a new `Dataset` with [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) unary logical operator.

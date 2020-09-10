@@ -146,16 +146,15 @@ a| [[flatMapGroups]]
 flatMapGroups[U : Encoder](f: (K, Iterator[V]) => TraversableOnce[U]): Dataset[U]
 ----
 
-| <<spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md#, flatMapGroupsWithState>>
+| [flatMapGroupsWithState](spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md)
 a| [[flatMapGroupsWithState]]
 
-[source, scala]
-----
+```scala
 flatMapGroupsWithState[S: Encoder, U: Encoder](
   outputMode: OutputMode,
   timeoutConf: GroupStateTimeout)(
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
-----
+```
 
 <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>> - streaming aggregation with explicit state and state timeout
 
@@ -178,21 +177,21 @@ a| [[mapGroups]]
 mapGroups[U : Encoder](f: (K, Iterator[V]) => U): Dataset[U]
 ----
 
-| link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md[mapGroupsWithState]
+| spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md[mapGroupsWithState]
 a| [[mapGroupsWithState]]
 
-[source, scala]
-----
+```scala
 mapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => U): Dataset[U]
 mapGroupsWithState[S: Encoder, U: Encoder](
   timeoutConf: GroupStateTimeout)(
   func: (K, Iterator[V], GroupState[S]) => U): Dataset[U]
-----
+```
 
-Creates a new `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.md#apply[FlatMapGroupsWithState] logical operator
+Creates a new `Dataset` with [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md#apply) logical operator
 
-NOTE: The difference between `mapGroupsWithState` and <<flatMapGroupsWithState, flatMapGroupsWithState>> is the state function that generates exactly one element (that is in turn the row in the result `Dataset`).
+!!! note
+    The difference between `mapGroupsWithState` and [flatMapGroupsWithState](#flatMapGroupsWithState) is the state function that generates exactly one element (that is in turn the row in the result `Dataset`).
 
 | mapValues
 a| [[mapValues]]

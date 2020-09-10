@@ -17,7 +17,7 @@ Spark Structured Streaming uses watermark for the following:
 
 * To know when a given time window aggregation (using link:spark-sql-streaming-Dataset-groupBy.md[groupBy] operator with link:spark-sql-streaming-window.md[window] function) can be finalized and thus emitted when using output modes that do not allow updates, like link:spark-sql-streaming-OutputMode.md#Append[Append] output mode.
 
-* To minimize the amount of state that we need to keep for ongoing aggregations, e.g. link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md[mapGroupsWithState] (for implicit state management), link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md[flatMapGroupsWithState] (for user-defined state management) and link:spark-sql-streaming-Dataset-dropDuplicates.md[dropDuplicates] operators.
+* To minimize the amount of state that we need to keep for ongoing aggregations, e.g. [mapGroupsWithState](spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md) (for implicit state management), [flatMapGroupsWithState](spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md) (for user-defined state management) and [dropDuplicates](spark-sql-streaming-Dataset-dropDuplicates.md) operators.
 ====
 
 The *current watermark* is computed by looking at the maximum `eventTime` seen across all of the partitions in a query minus a user-specified `delayThreshold`. Due to the cost of coordinating this value across partitions, the actual watermark used is only guaranteed to be at least `delayThreshold` behind the actual event time.

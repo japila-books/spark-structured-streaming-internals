@@ -2,7 +2,7 @@
 
 `UnsupportedOperationChecker` checks whether the <<checkForStreaming, logical plan of a streaming query uses supported operations only>>.
 
-NOTE: `UnsupportedOperationChecker` is used exclusively when the internal link:spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
+NOTE: `UnsupportedOperationChecker` is used exclusively when the internal spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
 
 [NOTE]
 ====
@@ -45,7 +45,7 @@ Multiple streaming aggregations are not supported with streaming DataFrames/Data
 ----
 
 [[streaming-aggregation-append-mode-requires-watermark]]
-`checkForStreaming` asserts that link:spark-sql-streaming-Dataset-withWatermark.md[watermark] was defined for a streaming aggregation with link:spark-sql-streaming-OutputMode.md#Append[Append] output mode (on at least one of the grouping expressions).
+`checkForStreaming` asserts that spark-sql-streaming-Dataset-withWatermark.md[watermark] was defined for a streaming aggregation with spark-sql-streaming-OutputMode.md#Append[Append] output mode (on at least one of the grouping expressions).
 
 Otherwise, `checkForStreaming` reports a `AnalysisException`:
 
@@ -56,28 +56,26 @@ Append output mode not supported when there are streaming aggregations on stream
 
 CAUTION: FIXME
 
-`checkForStreaming` counts all link:spark-sql-streaming-FlatMapGroupsWithState.md[FlatMapGroupsWithState] logical operators (on streaming Datasets with `isMapGroupsWithState` flag disabled).
+`checkForStreaming` counts all [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operators (on streaming Datasets with `isMapGroupsWithState` flag disabled).
 
-NOTE: <<spark-sql-streaming-FlatMapGroupsWithState.md#, FlatMapGroupsWithState>> logical operator represents <<spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>> and <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operators in a logical query plan.
-
-NOTE: link:spark-sql-streaming-FlatMapGroupsWithState.md#isMapGroupsWithState[FlatMapGroupsWithState.isMapGroupsWithState] flag is disabled when...FIXME
+!!! note
+    [FlatMapGroupsWithState.isMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md#isMapGroupsWithState) flag is disabled when...FIXME
 
 [[multiple-flatMapGroupsWithState]]
-`checkForStreaming` asserts that multiple link:spark-sql-streaming-FlatMapGroupsWithState.md[FlatMapGroupsWithState] logical operators are only used when:
+`checkForStreaming` asserts that multiple [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operators are only used when:
 
-* `outputMode` is link:spark-sql-streaming-OutputMode.md#Append[Append] output mode
+* `outputMode` is [Append](spark-sql-streaming-OutputMode.md#Append) output mode
 
-* link:spark-sql-streaming-FlatMapGroupsWithState.md#outputMode[outputMode] of the `FlatMapGroupsWithState` logical operators is also link:spark-sql-streaming-OutputMode.md#Append[Append] output mode
+* [outputMode](logical-operators/FlatMapGroupsWithState.md#outputMode) of the `FlatMapGroupsWithState` logical operators is also [Append](spark-sql-streaming-OutputMode.md#Append) output mode
 
 CAUTION: FIXME Reference to an example in `flatMapGroupsWithState`
 
 Otherwise, `checkForStreaming` reports a `AnalysisException`:
 
-[options="wrap"]
-----
+```text
 Multiple flatMapGroupsWithStates are not supported when they are not all in append mode or the output mode is not append on a streaming DataFrames/Datasets
-----
+```
 
 CAUTION: FIXME
 
-NOTE: `checkForStreaming` is used exclusively when `StreamingQueryManager` is requested to link:spark-sql-streaming-StreamingQueryManager.md#createQuery[create a StreamingQueryWrapper] (for starting a streaming query), but only when the internal link:spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is enabled (which is by default).
+`checkForStreaming` is used when `StreamingQueryManager` is requested to [create a StreamingQueryWrapper](spark-sql-streaming-StreamingQueryManager.md#createQuery) (for starting a streaming query), but only when the internal [spark.sql.streaming.unsupportedOperationCheck](spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled.

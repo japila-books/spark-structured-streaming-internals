@@ -18,7 +18,7 @@ Use the following demos and complete applications to learn more:
 
 * <<spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md#, Demo: Internals of FlatMapGroupsWithStateExec Physical Operator>>
 
-* <<spark-sql-streaming-demo-arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md#, Demo: Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator>>
+* [Demo: Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator](demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md)
 
 * <<spark-sql-streaming-demo-groupByKey-count-Update.md#, groupByKey Streaming Aggregation in Update Mode>>
 
