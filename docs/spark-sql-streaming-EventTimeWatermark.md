@@ -1,6 +1,6 @@
 == [[EventTimeWatermark]] EventTimeWatermark Unary Logical Operator -- Streaming Watermark
 
-`EventTimeWatermark` is a unary logical operator that is <<creating-instance, created>> to represent <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator in a logical query plan of a streaming query.
+`EventTimeWatermark` is a unary logical operator that is <<creating-instance, created>> to represent <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator in a logical query plan of a streaming query.
 
 [NOTE]
 ====
@@ -11,11 +11,11 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Logi
 
 When requested for the <<output, output attributes>>, `EventTimeWatermark` logical operator goes over the output attributes of the <<child, child>> logical operator to find the matching attribute based on the <<eventTime, eventTime>> attribute and updates it to include `spark.watermarkDelayMs` metadata key with the <<delay, watermark delay>> interval (<<getDelayMs, converted to milliseconds>>).
 
-`EventTimeWatermark` is resolved (_planned_) to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator in <<spark-sql-streaming-StatefulAggregationStrategy.adoc#, StatefulAggregationStrategy>> execution planning strategy.
+`EventTimeWatermark` is resolved (_planned_) to <<spark-sql-streaming-EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator in <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy.
 
 [NOTE]
 ====
-`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when <<spark-sql-streaming-Dataset-operators.adoc#withWatermark, Dataset.withWatermark>> operator is used on a batch query.
+`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator is used on a batch query.
 
 [source, scala]
 ----

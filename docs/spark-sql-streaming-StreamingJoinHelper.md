@@ -15,7 +15,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.catalyst.analysis.StreamingJoinHelper=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[getStateValueWatermark]] State Value Watermark -- `getStateValueWatermark` Object Method
@@ -35,7 +35,7 @@ getStateValueWatermark(
 ====
 `getStateValueWatermark` is used when:
 
-* `UnsupportedOperationChecker` utility is used to <<spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming, checkForStreaming>>
+* `UnsupportedOperationChecker` utility is used to <<spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming, checkForStreaming>>
 
-* `StreamingSymmetricHashJoinHelper` utility is used to <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, create a JoinStateWatermarkPredicates>>
+* `StreamingSymmetricHashJoinHelper` utility is used to <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, create a JoinStateWatermarkPredicates>>
 ====

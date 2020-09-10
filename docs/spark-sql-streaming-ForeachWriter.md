@@ -1,8 +1,8 @@
 == [[ForeachWriter]] ForeachWriter
 
-`ForeachWriter` is the <<contract, contract>> for a *foreach writer* that is a link:spark-sql-streaming-DataStreamWriter.adoc#foreach[streaming format] that controls streaming writes.
+`ForeachWriter` is the <<contract, contract>> for a *foreach writer* that is a link:spark-sql-streaming-DataStreamWriter.md#foreach[streaming format] that controls streaming writes.
 
-NOTE: `ForeachWriter` is set using link:spark-sql-streaming-DataStreamWriter.adoc#foreach[foreach] operator.
+NOTE: `ForeachWriter` is set using link:spark-sql-streaming-DataStreamWriter.md#foreach[foreach] operator.
 
 [source, scala]
 ----

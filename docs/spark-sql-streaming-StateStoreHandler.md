@@ -26,7 +26,7 @@ a| [[stateStore]]
 stateStore: StateStore
 ----
 
-<<spark-sql-streaming-StateStore.adoc#, StateStore>>
+<<spark-sql-streaming-StateStore.md#, StateStore>>
 |===
 
 [[extensions]]
@@ -36,10 +36,10 @@ stateStore: StateStore
 | StateStoreHandler
 | Description
 
-| <<spark-sql-streaming-KeyToNumValuesStore.adoc#, KeyToNumValuesStore>>
+| <<spark-sql-streaming-KeyToNumValuesStore.md#, KeyToNumValuesStore>>
 | [[KeyToNumValuesStore]] `StateStoreHandler` of <<KeyToNumValuesType, KeyToNumValuesType>>
 
-| <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#, KeyWithIndexToValueStore>>
+| <<spark-sql-streaming-KeyWithIndexToValueStore.md#, KeyWithIndexToValueStore>>
 | [[KeyWithIndexToValueStore]]
 
 |===
@@ -55,7 +55,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinStateManager.StateStoreHandler=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[metrics]] Performance Metrics -- `metrics` Method
@@ -65,9 +65,9 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 metrics: StateStoreMetrics
 ----
 
-`metrics` simply requests the <<stateStore, StateStore>> for the <<spark-sql-streaming-StateStore.adoc#metrics, StateStoreMetrics>>.
+`metrics` simply requests the <<stateStore, StateStore>> for the <<spark-sql-streaming-StateStore.md#metrics, StateStoreMetrics>>.
 
-NOTE: `metrics` is used exclusively when `SymmetricHashJoinStateManager` is requested for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#metrics, metrics>>.
+NOTE: `metrics` is used exclusively when `SymmetricHashJoinStateManager` is requested for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#metrics, metrics>>.
 
 === [[commit]] Committing State (Changes to State Store) -- `commit` Method
 
@@ -100,9 +100,9 @@ getStateStore(
   valueSchema: StructType): StateStore
 ----
 
-`getStateStore` creates a new <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> (for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#stateInfo, StatefulOperatorStateInfo>> of the owning `SymmetricHashJoinStateManager`, the partition ID from the execution context, and the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#getStateStoreName, name of the state store>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#joinSide, JoinSide>> and <<stateStoreType, StateStoreType>>).
+`getStateStore` creates a new <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> (for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#stateInfo, StatefulOperatorStateInfo>> of the owning `SymmetricHashJoinStateManager`, the partition ID from the execution context, and the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#getStateStoreName, name of the state store>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#joinSide, JoinSide>> and <<stateStoreType, StateStoreType>>).
 
-`getStateStore` uses the `StateStore` utility to <<spark-sql-streaming-StateStore.adoc#get-StateStore, look up a StateStore for the StateStoreProviderId>>.
+`getStateStore` uses the `StateStore` utility to <<spark-sql-streaming-StateStore.md#get-StateStore, look up a StateStore for the StateStoreProviderId>>.
 
 In the end, `getStateStore` prints out the following INFO message to the logs:
 
@@ -110,7 +110,7 @@ In the end, `getStateStore` prints out the following INFO message to the logs:
 Loaded store [storeId]
 ```
 
-NOTE: `getStateStore` is used when <<spark-sql-streaming-KeyToNumValuesStore.adoc#stateStore, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.adoc#stateStore, KeyWithIndexToValueStore>> state store handlers are created (for <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>).
+NOTE: `getStateStore` is used when <<spark-sql-streaming-KeyToNumValuesStore.md#stateStore, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.md#stateStore, KeyWithIndexToValueStore>> state store handlers are created (for <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>).
 
 === [[StateStoreType]] `StateStoreType` Contract (Sealed Trait)
 

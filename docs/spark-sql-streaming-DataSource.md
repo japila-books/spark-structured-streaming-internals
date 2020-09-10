@@ -30,7 +30,7 @@ NOTE: `sourceSchema` is used exclusively when `DataSource` is requested for the 
 
 ==== [[sourceSchema-StreamSourceProvider]] StreamSourceProvider
 
-For a <<spark-sql-streaming-StreamSourceProvider.adoc#, StreamSourceProvider>>, `sourceSchema` requests the `StreamSourceProvider` for the <<spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema, name and schema>> (of the <<spark-sql-streaming-Source.adoc#, streaming source>>).
+For a <<spark-sql-streaming-StreamSourceProvider.md#, StreamSourceProvider>>, `sourceSchema` requests the `StreamSourceProvider` for the <<spark-sql-streaming-StreamSourceProvider.md#sourceSchema, name and schema>> (of the <<spark-sql-streaming-Source.md#, streaming source>>).
 
 In the end, `sourceSchema` returns the name and the schema as part of `SourceInfo` (with partition columns unspecified).
 
@@ -56,15 +56,15 @@ createSource(
 
 `createSource` creates a new instance of the <<providingClass, data source class>> and branches off per the type, e.g. <<createSource-StreamSourceProvider, StreamSourceProvider>>, <<createSource-FileFormat, FileFormat>> and <<createSource-other, other types>>.
 
-NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>.
+NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>.
 
 ==== [[createSource-StreamSourceProvider]] StreamSourceProvider
 
-For a <<spark-sql-streaming-StreamSourceProvider.adoc#, StreamSourceProvider>>, `createSource` requests the `StreamSourceProvider` to <<spark-sql-streaming-StreamSourceProvider.adoc#createSource, create a source>>.
+For a <<spark-sql-streaming-StreamSourceProvider.md#, StreamSourceProvider>>, `createSource` requests the `StreamSourceProvider` to <<spark-sql-streaming-StreamSourceProvider.md#createSource, create a source>>.
 
 ==== [[createSource-FileFormat]] FileFormat
 
-For a `FileFormat`, `createSource` creates a new <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>.
+For a `FileFormat`, `createSource` creates a new <<spark-sql-streaming-FileStreamSource.md#, FileStreamSource>>.
 
 `createSource` throws an `IllegalArgumentException` when `path` option was not specified for a `FileFormat` data source:
 
@@ -88,15 +88,15 @@ createSink(
   outputMode: OutputMode): Sink
 ----
 
-`createSink` creates a <<spark-sql-streaming-Sink.adoc#, streaming sink>> for <<spark-sql-streaming-StreamSinkProvider.adoc#, StreamSinkProvider>> or `FileFormat` data sources.
+`createSink` creates a <<spark-sql-streaming-Sink.md#, streaming sink>> for <<spark-sql-streaming-StreamSinkProvider.md#, StreamSinkProvider>> or `FileFormat` data sources.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat Data Source] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 Internally, `createSink` creates a new instance of the <<providingClass, providingClass>> and branches off per type:
 
-* For a <<spark-sql-streaming-StreamSinkProvider.adoc#, StreamSinkProvider>>, `createSink` simply delegates the call and requests it to <<spark-sql-streaming-StreamSinkProvider.adoc#createSink, create a streaming sink>>
+* For a <<spark-sql-streaming-StreamSinkProvider.md#, StreamSinkProvider>>, `createSink` simply delegates the call and requests it to <<spark-sql-streaming-StreamSinkProvider.md#createSink, create a streaming sink>>
 
-* For a `FileFormat`, `createSink` creates a <<spark-sql-streaming-FileStreamSink.adoc#, FileStreamSink>> when `path` option is specified and the output mode is <<spark-sql-streaming-OutputMode.adoc#Append, Append>>
+* For a `FileFormat`, `createSink` creates a <<spark-sql-streaming-FileStreamSink.md#, FileStreamSink>> when `path` option is specified and the output mode is <<spark-sql-streaming-OutputMode.md#Append, Append>>
 
 `createSink` throws a `IllegalArgumentException` when `path` option is not specified for a `FileFormat` data source:
 
@@ -104,7 +104,7 @@ Internally, `createSink` creates a new instance of the <<providingClass, providi
 'path' is not specified
 ```
 
-`createSink` throws an `AnalysisException` when the given <<spark-sql-streaming-OutputMode.adoc#, OutputMode>> is different from <<spark-sql-streaming-OutputMode.adoc#Append, Append>> for a `FileFormat` data source:
+`createSink` throws an `AnalysisException` when the given <<spark-sql-streaming-OutputMode.md#, OutputMode>> is different from <<spark-sql-streaming-OutputMode.md#Append, Append>> for a `FileFormat` data source:
 
 ```
 Data source [className] does not support [outputMode] output mode
@@ -116,7 +116,7 @@ Data source [className] does not support [outputMode] output mode
 Data source [className] does not support streamed writing
 ```
 
-NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start a streaming query>>.
+NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start a streaming query>>.
 
 === [[internal-properties]] Internal Properties
 
@@ -136,14 +136,14 @@ a| [[sourceInfo]]
 sourceInfo: SourceInfo
 ----
 
-Metadata of a <<spark-sql-streaming-Source.adoc#, Source>> with the alias (short name), the schema, and optional partitioning columns
+Metadata of a <<spark-sql-streaming-Source.md#, Source>> with the alias (short name), the schema, and optional partitioning columns
 
 `sourceInfo` is a lazy value and so initialized once (the very first time) when accessed.
 
 Used when:
 
-* `DataSource` is requested to <<createSource, create a source (for a FileFormat data source)>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, initialize the analyzed logical plan>>)
+* `DataSource` is requested to <<createSource, create a source (for a FileFormat data source)>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
 
-* `StreamingRelation` utility is requested for a <<spark-sql-streaming-StreamingRelation.adoc#apply, StreamingRelation>> (when `DataStreamReader` is requested for a <<spark-sql-streaming-DataStreamReader.adoc#load, streaming DataFrame>>)
+* `StreamingRelation` utility is requested for a <<spark-sql-streaming-StreamingRelation.md#apply, StreamingRelation>> (when `DataStreamReader` is requested for a <<spark-sql-streaming-DataStreamReader.md#load, streaming DataFrame>>)
 
 |===

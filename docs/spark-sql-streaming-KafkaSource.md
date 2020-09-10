@@ -1,27 +1,27 @@
 == [[KafkaSource]] KafkaSource
 
-`KafkaSource` is a <<spark-sql-streaming-Source.adoc#, streaming source>> that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
+`KafkaSource` is a <<spark-sql-streaming-Source.md#, streaming source>> that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
 
-NOTE: Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.adoc[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
+NOTE: Kafka topics are checked for new records every link:spark-sql-streaming-Trigger.md[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
-`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the <<spark-sql-streaming-StreamExecution.adoc#checkpointRoot, checkpointRoot>> (of the <<spark-sql-streaming-StreamExecution.adoc, StreamExecution>>).
+`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the <<spark-sql-streaming-StreamExecution.md#checkpointRoot, checkpointRoot>> (of the <<spark-sql-streaming-StreamExecution.md, StreamExecution>>).
 
 [NOTE]
 ====
-The <<spark-sql-streaming-StreamExecution.adoc#checkpointRoot, checkpointRoot>> directory is one of the following:
+The <<spark-sql-streaming-StreamExecution.md#checkpointRoot, checkpointRoot>> directory is one of the following:
 
 * `checkpointLocation` option
 
-* <<spark-sql-streaming-properties.adoc#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property
+* <<spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property
 ====
 
-`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.adoc#shortName[KafkaSourceProvider]).
+`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by link:spark-sql-streaming-KafkaSourceProvider.md#shortName[KafkaSourceProvider]).
 
 .KafkaSource Is Created for kafka Format by KafkaSourceProvider
 image::images/KafkaSource-creating-instance.png[align="center"]
 
 [[schema]]
-`KafkaSource` uses a <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined (fixed) schema>> (that <<spark-sql-streaming-KafkaSourceProvider.adoc#sourceSchema, cannot be changed>>).
+`KafkaSource` uses a <<spark-sql-streaming-kafka-data-source.md#schema, predefined (fixed) schema>> (that <<spark-sql-streaming-KafkaSourceProvider.md#sourceSchema, cannot be changed>>).
 
 `KafkaSource` also supports batch Datasets.
 
@@ -36,20 +36,20 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating KafkaSource Instance
 
 `KafkaSource` takes the following to be created:
 
-* [[sqlContext]] link:spark-sql-sqlcontext.adoc[SQLContext]
-* [[kafkaReader]] link:spark-sql-streaming-KafkaOffsetReader.adoc[KafkaOffsetReader]
+* [[sqlContext]] link:spark-sql-sqlcontext.md[SQLContext]
+* [[kafkaReader]] link:spark-sql-streaming-KafkaOffsetReader.md[KafkaOffsetReader]
 * [[executorKafkaParams]] Parameters of executors (reading from Kafka)
 * [[sourceOptions]] Collection of key-value options
-* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] offsets in JSON format)
-* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Starting offsets>> (as defined using <<spark-sql-streaming-kafka-data-source.adoc#startingOffsets, startingOffsets>> option)
-* [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
+* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists link:spark-sql-streaming-KafkaSourceOffset.md[KafkaSourceOffset] offsets in JSON format)
+* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Starting offsets>> (as defined using <<spark-sql-streaming-kafka-data-source.md#startingOffsets, startingOffsets>> option)
+* [[failOnDataLoss]] Flag used to link:spark-sql-streaming-KafkaSourceRDD.md#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
 
 `KafkaSource` initializes the <<internal-properties, internal properties>>.
 
@@ -62,9 +62,9 @@ getBatch(
   end: Offset): DataFrame
 ----
 
-NOTE: `getBatch` is part of the <<spark-sql-streaming-Source.adoc#getBatch, Source Contract>> to generate a streaming `DataFrame` with data between the start and end <<spark-sql-streaming-Offset.adoc#, offsets>>.
+NOTE: `getBatch` is part of the <<spark-sql-streaming-Source.md#getBatch, Source Contract>> to generate a streaming `DataFrame` with data between the start and end <<spark-sql-streaming-Offset.md#, offsets>>.
 
-`getBatch` creates a streaming `DataFrame` with a query plan with `LogicalRDD` logical operator to scan data from a <<spark-sql-streaming-KafkaSourceRDD.adoc#, KafkaSourceRDD>>.
+`getBatch` creates a streaming `DataFrame` with a query plan with `LogicalRDD` logical operator to scan data from a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>>.
 
 Internally, `getBatch` initializes <<initialPartitionOffsets, initial partition offsets>> (unless initialized already).
 
@@ -74,11 +74,11 @@ You should see the following INFO message in the logs:
 GetBatch called with start = [start], end = [end]
 ```
 
-`getBatch` requests `KafkaSourceOffset` for link:spark-sql-streaming-KafkaSourceOffset.adoc#getPartitionOffsets[end partition offsets] for the input `end` offset (known as `untilPartitionOffsets`).
+`getBatch` requests `KafkaSourceOffset` for link:spark-sql-streaming-KafkaSourceOffset.md#getPartitionOffsets[end partition offsets] for the input `end` offset (known as `untilPartitionOffsets`).
 
-`getBatch` requests `KafkaSourceOffset` for link:spark-sql-streaming-KafkaSourceOffset.adoc#getPartitionOffsets[start partition offsets] for the input `start` offset (if defined) or uses <<initialPartitionOffsets, initial partition offsets>> (known as `fromPartitionOffsets`).
+`getBatch` requests `KafkaSourceOffset` for link:spark-sql-streaming-KafkaSourceOffset.md#getPartitionOffsets[start partition offsets] for the input `start` offset (if defined) or uses <<initialPartitionOffsets, initial partition offsets>> (known as `fromPartitionOffsets`).
 
-`getBatch` finds the new partitions (as the difference between the topic partitions in `untilPartitionOffsets` and `fromPartitionOffsets`) and requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[fetch their earliest offsets].
+`getBatch` finds the new partitions (as the difference between the topic partitions in `untilPartitionOffsets` and `fromPartitionOffsets`) and requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.md#fetchEarliestOffsets[fetch their earliest offsets].
 
 `getBatch` <<reportDataLoss, reports a data loss>> if the new partitions don't match to what <<kafkaReader, KafkaOffsetReader>> fetched.
 
@@ -128,7 +128,7 @@ Sorted executors: [sortedExecutors]
 Partition [topicPartition]'s offset was changed from [fromOffset] to [untilOffset], some data may have been missed
 ```
 
-`getBatch` link:spark-sql-streaming-KafkaSourceRDD.adoc#creating-instance[creates a KafkaSourceRDD] (with <<executorKafkaParams, executorKafkaParams>>, <<pollTimeoutMs, pollTimeoutMs>> and `reuseKafkaConsumer` flag enabled) and maps it to an RDD of `InternalRow`.
+`getBatch` link:spark-sql-streaming-KafkaSourceRDD.md#creating-instance[creates a KafkaSourceRDD] (with <<executorKafkaParams, executorKafkaParams>>, <<pollTimeoutMs, pollTimeoutMs>> and `reuseKafkaConsumer` flag enabled) and maps it to an RDD of `InternalRow`.
 
 IMPORTANT: `getBatch` creates a `KafkaSourceRDD` with `reuseKafkaConsumer` flag enabled.
 
@@ -149,14 +149,14 @@ In the end, `getBatch` creates a streaming `DataFrame` for the `KafkaSourceRDD` 
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
+NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.md#getOffset[Source Contract].
 
 Internally, `getOffset` fetches the <<initialPartitionOffsets, initial partition offsets>> (from the metadata log or Kafka directly).
 
 .KafkaSource Initializing initialPartitionOffsets While Fetching Initial Offsets
 image::images/KafkaSource-initialPartitionOffsets.png[align="center"]
 
-NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-hasNewData[constructs a streaming micro-batch]).
+NOTE: <<initialPartitionOffsets, initialPartitionOffsets>> is a lazy value and is initialized the very first time `getOffset` is called (which is when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-hasNewData[constructs a streaming micro-batch]).
 
 [source, scala]
 ----
@@ -299,7 +299,7 @@ val q = records.
 17/08/07 12:09:03 DEBUG StreamExecution: Stream running from {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}} to {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}}
 ----
 
-`getOffset` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[fetchLatestOffsets] (known later as `latest`).
+`getOffset` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.md#fetchLatestOffsets[fetchLatestOffsets] (known later as `latest`).
 
 NOTE: (Possible performance degradation?) It is possible that `getOffset` will request the latest offsets from Kafka twice, i.e. while initializing <<initialPartitionOffsets, initialPartitionOffsets>> (when no metadata log is available and KafkaSource's <<startingOffsets, KafkaOffsetRangeLimit>> is `LatestOffsetRangeLimit`) and always as part of `getOffset` itself.
 
@@ -327,7 +327,7 @@ You should see the following DEBUG message in the logs:
 DEBUG KafkaSource: GetOffset: [offsets]
 ```
 
-In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc#creating-instance[KafkaSourceOffset] with `offsets` (as `Map[TopicPartition, Long]`).
+In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.md#creating-instance[KafkaSourceOffset] with `offsets` (as `Map[TopicPartition, Long]`).
 
 === [[fetchAndVerify]] Fetching and Verifying Specific Offsets -- `fetchAndVerify` Internal Method
 
@@ -336,7 +336,7 @@ In the end, `getOffset` creates a link:spark-sql-streaming-KafkaSourceOffset.ado
 fetchAndVerify(specificOffsets: Map[TopicPartition, Long]): KafkaSourceOffset
 ----
 
-`fetchAndVerify` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchSpecificOffsets[fetchSpecificOffsets] for the given `specificOffsets`.
+`fetchAndVerify` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.md#fetchSpecificOffsets[fetchSpecificOffsets] for the given `specificOffsets`.
 
 `fetchAndVerify` makes sure that the starting offsets in `specificOffsets` are the same as in Kafka and <<reportDataLoss, reports a data loss>> otherwise.
 
@@ -344,7 +344,7 @@ fetchAndVerify(specificOffsets: Map[TopicPartition, Long]): KafkaSourceOffset
 startingOffsets for [tp] was [off] but consumer reset to [result(tp)]
 ```
 
-In the end, `fetchAndVerify` creates a link:spark-sql-streaming-KafkaSourceOffset.adoc[KafkaSourceOffset] (with the result of <<kafkaReader, KafkaOffsetReader>>).
+In the end, `fetchAndVerify` creates a link:spark-sql-streaming-KafkaSourceOffset.md[KafkaSourceOffset] (with the result of <<kafkaReader, KafkaOffsetReader>>).
 
 NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` initializes <<initialPartitionOffsets, initial partition offsets>>.
 
@@ -357,21 +357,21 @@ initialPartitionOffsets: Map[TopicPartition, Long]
 
 `initialPartitionOffsets` is the *initial partition offsets* for the batch `0` that were already persisted in the <<metadataPath, streaming metadata log directory>> or persisted on demand.
 
-As the very first step, `initialPartitionOffsets` creates a custom <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog>> (of <<spark-sql-streaming-KafkaSourceOffset.adoc#, KafkaSourceOffsets>> metadata) in the <<metadataPath, streaming metadata log directory>>.
+As the very first step, `initialPartitionOffsets` creates a custom <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog>> (of <<spark-sql-streaming-KafkaSourceOffset.md#, KafkaSourceOffsets>> metadata) in the <<metadataPath, streaming metadata log directory>>.
 
-`initialPartitionOffsets` requests the `HDFSMetadataLog` for the <<spark-sql-streaming-HDFSMetadataLog.adoc#get, metadata>> of the ``0``th batch (as `KafkaSourceOffset`).
+`initialPartitionOffsets` requests the `HDFSMetadataLog` for the <<spark-sql-streaming-HDFSMetadataLog.md#get, metadata>> of the ``0``th batch (as `KafkaSourceOffset`).
 
-If the metadata is available, `initialPartitionOffsets` requests the metadata for the <<spark-sql-streaming-KafkaSourceOffset.adoc#partitionToOffsets, collection of TopicPartitions and their offsets>>.
+If the metadata is available, `initialPartitionOffsets` requests the metadata for the <<spark-sql-streaming-KafkaSourceOffset.md#partitionToOffsets, collection of TopicPartitions and their offsets>>.
 
 If the metadata could not be found, `initialPartitionOffsets` creates a new `KafkaSourceOffset` per <<startingOffsets, KafkaOffsetRangeLimit>>:
 
-* For `EarliestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets, fetchEarliestOffsets>>
+* For `EarliestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.md#fetchEarliestOffsets, fetchEarliestOffsets>>
 
-* For `LatestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets, fetchLatestOffsets>>
+* For `LatestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.md#fetchLatestOffsets, fetchLatestOffsets>>
 
-* For `SpecificOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchSpecificOffsets, fetchSpecificOffsets>> (and report a data loss per the <<failOnDataLoss, failOnDataLoss>> flag)
+* For `SpecificOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.md#fetchSpecificOffsets, fetchSpecificOffsets>> (and report a data loss per the <<failOnDataLoss, failOnDataLoss>> flag)
 
-`initialPartitionOffsets` requests the custom `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, add the offsets to the metadata log>> (as the metadata of the ``0``th batch).
+`initialPartitionOffsets` requests the custom `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.md#add, add the offsets to the metadata log>> (as the metadata of the ``0``th batch).
 
 `initialPartitionOffsets` prints out the following INFO message to the logs:
 
@@ -385,7 +385,7 @@ Initial offsets: [offsets]
 
 * <<getOffset, Fetch offsets (from metadata log or Kafka directly)>>
 
-* <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.adoc#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet)
+* <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` link:spark-sql-streaming-StreamExecution.md#runStream[commits the first streaming batch] and so nothing is in link:spark-sql-streaming-StreamExecution.md#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet)
 ====
 
 ==== [[initialPartitionOffsets-HDFSMetadataLog-serialize]] `HDFSMetadataLog.serialize`
@@ -397,7 +397,7 @@ serialize(
   out: OutputStream): Unit
 ----
 
-NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to...FIXME.
+NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#serialize, HDFSMetadataLog Contract>> to...FIXME.
 
 `serialize` requests the `OutputStream` to write a zero byte (to support Spark 2.1.0 as per SPARK-19517).
 
@@ -419,7 +419,7 @@ rateLimit(
   until: Map[TopicPartition, Long]): Map[TopicPartition, Long]
 ----
 
-`rateLimit` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchEarliestOffsets[fetchEarliestOffsets].
+`rateLimit` requests <<kafkaReader, KafkaOffsetReader>> to link:spark-sql-streaming-KafkaOffsetReader.md#fetchEarliestOffsets[fetchEarliestOffsets].
 
 CAUTION: FIXME
 
@@ -461,7 +461,7 @@ a| [[sc]] Spark Core's `SparkContext` (of the <<sqlContext, SQLContext>>)
 
 Used when:
 
-* <<getBatch, Generating a DataFrame with records from Kafka for a streaming micro-batch>> (and creating a <<spark-sql-streaming-KafkaSourceRDD.adoc#, KafkaSourceRDD>>)
+* <<getBatch, Generating a DataFrame with records from Kafka for a streaming micro-batch>> (and creating a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>>)
 
 * Initializing the <<pollTimeoutMs, pollTimeoutMs>> internal property
 

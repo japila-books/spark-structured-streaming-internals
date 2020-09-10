@@ -2,22 +2,22 @@
 
 `OffsetSeqMetadata` holds the metadata for the current streaming batch:
 
-* [[batchWatermarkMs]] <<spark-sql-streaming-watermark.adoc#, Event-time watermark>> threshold
+* [[batchWatermarkMs]] <<spark-sql-streaming-watermark.md#, Event-time watermark>> threshold
 
-* [[batchTimestampMs]] <<spark-structured-streaming-batch-processing-time.adoc#, Batch timestamp>> (in millis)
+* [[batchTimestampMs]] <<spark-structured-streaming-batch-processing-time.md#, Batch timestamp>> (in millis)
 
-* [[conf]] *Streaming configuration* with `spark.sql.shuffle.partitions` and link:spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass[spark.sql.streaming.stateStore.providerClass] Spark properties
+* [[conf]] *Streaming configuration* with `spark.sql.shuffle.partitions` and link:spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass[spark.sql.streaming.stateStore.providerClass] Spark properties
 
-NOTE: `OffsetSeqMetadata` is used mainly when `IncrementalExecution` is link:spark-sql-streaming-IncrementalExecution.adoc#creating-instance[created].
+NOTE: `OffsetSeqMetadata` is used mainly when `IncrementalExecution` is link:spark-sql-streaming-IncrementalExecution.md#creating-instance[created].
 
 [[relevantSQLConfs]]
 `OffsetSeqMetadata` considers some configuration properties as *relevantSQLConfs*:
 
-* <<spark-sql-streaming-SQLConf.adoc#SHUFFLE_PARTITIONS, SHUFFLE_PARTITIONS>>
-* <<spark-sql-streaming-SQLConf.adoc#STATE_STORE_PROVIDER_CLASS, STATE_STORE_PROVIDER_CLASS>>
-* <<spark-sql-streaming-SQLConf.adoc#STREAMING_MULTIPLE_WATERMARK_POLICY, STREAMING_MULTIPLE_WATERMARK_POLICY>>
-* <<spark-sql-streaming-SQLConf.adoc#FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION, FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION>>
-* <<spark-sql-streaming-SQLConf.adoc#STREAMING_AGGREGATION_STATE_FORMAT_VERSION, STREAMING_AGGREGATION_STATE_FORMAT_VERSION>>
+* <<spark-sql-streaming-SQLConf.md#SHUFFLE_PARTITIONS, SHUFFLE_PARTITIONS>>
+* <<spark-sql-streaming-SQLConf.md#STATE_STORE_PROVIDER_CLASS, STATE_STORE_PROVIDER_CLASS>>
+* <<spark-sql-streaming-SQLConf.md#STREAMING_MULTIPLE_WATERMARK_POLICY, STREAMING_MULTIPLE_WATERMARK_POLICY>>
+* <<spark-sql-streaming-SQLConf.md#FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION, FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION>>
+* <<spark-sql-streaming-SQLConf.md#STREAMING_AGGREGATION_STATE_FORMAT_VERSION, STREAMING_AGGREGATION_STATE_FORMAT_VERSION>>
 
 `relevantSQLConfs` are used when `OffsetSeqMetadata` is <<apply, created>> and is requested to <<setSessionConf, setSessionConf>>.
 

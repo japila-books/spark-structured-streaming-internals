@@ -11,7 +11,7 @@
 groupByKey[K: Encoder](func: T => K): KeyValueGroupedDataset[K, T]
 ----
 
-`groupByKey` operator creates a <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> (with keys of type `K` and rows of type `T`) to apply aggregation functions over groups of rows (of type `T`) by key (of type `K`) per the given `func` key-generating function.
+`groupByKey` operator creates a <<spark-sql-streaming-KeyValueGroupedDataset.md#, KeyValueGroupedDataset>> (with keys of type `K` and rows of type `T`) to apply aggregation functions over groups of rows (of type `T`) by key (of type `K`) per the given `func` key-generating function.
 
 NOTE: The type of the input argument of `func` is the type of rows in the Dataset (i.e. `Dataset[T]`).
 
@@ -24,7 +24,7 @@ func: T => K
 
 Internally, `groupByKey` creates a structured query with the `AppendColumns` unary logical operator (with the given `func` and the analyzed logical plan of the target `Dataset` that `groupByKey` was executed on) and creates a new `QueryExecution`.
 
-In the end, `groupByKey` creates a <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> with the following:
+In the end, `groupByKey` creates a <<spark-sql-streaming-KeyValueGroupedDataset.md#, KeyValueGroupedDataset>> with the following:
 
 * Encoders for `K` keys and `T` rows
 
@@ -55,7 +55,7 @@ List(value#7)
 
 === [[example-aggregating-orders-per-zip-code]] Example: Aggregating Orders Per Zip Code
 
-Go to <<spark-sql-streaming-demo-groupByKey-count-Update.adoc#, Demo: groupByKey Streaming Aggregation in Update Mode>>.
+Go to <<spark-sql-streaming-demo-groupByKey-count-Update.md#, Demo: groupByKey Streaming Aggregation in Update Mode>>.
 
 === [[example-aggregating-metrics-per-device]] Example: Aggregating Metrics Per Device
 

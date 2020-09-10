@@ -12,11 +12,11 @@ createStateManager(
   stateFormatVersion: Int): StateManager
 ----
 
-`createStateManager` simply creates a <<spark-sql-streaming-StateManager.adoc#, StateManager>> (with the `stateEncoder` and `shouldStoreTimestamp` flag) based on `stateFormatVersion`:
+`createStateManager` simply creates a <<spark-sql-streaming-StateManager.md#, StateManager>> (with the `stateEncoder` and `shouldStoreTimestamp` flag) based on `stateFormatVersion`:
 
-* <<spark-sql-streaming-StateManagerImplV1.adoc#, StateManagerImplV1>> for `1`
+* <<spark-sql-streaming-StateManagerImplV1.md#, StateManagerImplV1>> for `1`
 
-* <<spark-sql-streaming-StateManagerImplV2.adoc#, StateManagerImplV2>> for `2`
+* <<spark-sql-streaming-StateManagerImplV2.md#, StateManagerImplV2>> for `2`
 
 `createStateManager` throws an `IllegalArgumentException` for `stateFormatVersion` not `1` or `2`:
 

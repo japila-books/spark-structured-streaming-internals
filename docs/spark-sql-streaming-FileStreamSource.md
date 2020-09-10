@@ -1,8 +1,8 @@
 == [[FileStreamSource]] FileStreamSource
 
-`FileStreamSource` is a link:spark-sql-streaming-Source.adoc[Source] that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
+`FileStreamSource` is a link:spark-sql-streaming-Source.md[Source] that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
 
-NOTE: It is used by link:spark-sql-datasource.adoc#createSource[DataSource.createSource] for `FileFormat`.
+NOTE: It is used by link:spark-sql-datasource.md#createSource[DataSource.createSource] for `FileFormat`.
 
 You can provide the <<schema, schema>> of the data and `dataFrameBuilder` - the function to build a `DataFrame` in <<getBatch, getBatch>> at instantiation time.
 
@@ -60,7 +60,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSource=TRACE
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to link:spark-sql-streaming-logging.md[Logging].
 ====
 
 === [[creating-instance]] Creating FileStreamSource Instance
@@ -92,7 +92,7 @@ NOTE: *text* as the value of `providerName` constructor parameter denotes *text 
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is part of the <<spark-sql-streaming-Source.adoc#getOffset, Source Contract>> to find the latest <<spark-sql-streaming-Offset.adoc#, offset>>.
+NOTE: `getOffset` is part of the <<spark-sql-streaming-Source.md#getOffset, Source Contract>> to find the latest <<spark-sql-streaming-Offset.md#, offset>>.
 
 `getOffset`...FIXME
 
@@ -164,6 +164,6 @@ NOTE: `fetchAllFiles` is used exclusively when `FileStreamSource` is requested t
 allFilesUsingMetadataLogFileIndex(): Seq[FileStatus]
 ----
 
-`allFilesUsingMetadataLogFileIndex` simply creates a new <<spark-sql-streaming-MetadataLogFileIndex.adoc#, MetadataLogFileIndex>> and requests it to `allFiles`.
+`allFilesUsingMetadataLogFileIndex` simply creates a new <<spark-sql-streaming-MetadataLogFileIndex.md#, MetadataLogFileIndex>> and requests it to `allFiles`.
 
 NOTE: `allFilesUsingMetadataLogFileIndex` is used exclusively when `FileStreamSource` is requested to <<fetchAllFiles, fetchAllFiles>> (when requested for <<fetchMaxOffset, fetchMaxOffset>> when `FileStreamSource` is requested to <<getOffset, getOffset>>).

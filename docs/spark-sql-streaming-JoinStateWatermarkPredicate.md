@@ -2,9 +2,9 @@
 
 `JoinStateWatermarkPredicate` is the <<contract, abstraction>> of <<implementations, join state watermark predicates>> that are described by a <<expr, Catalyst expression>> and <<desc, desc>>.
 
-`JoinStateWatermarkPredicate` is created using <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getOneSideStateWatermarkPredicate, StreamingSymmetricHashJoinHelper>> utility (for <<spark-sql-streaming-IncrementalExecution.adoc#state, planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration>>)
+`JoinStateWatermarkPredicate` is created using <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getOneSideStateWatermarkPredicate, StreamingSymmetricHashJoinHelper>> utility (for <<spark-sql-streaming-IncrementalExecution.md#state, planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration>>)
 
-`JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> (and <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>>).
+`JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiner>> (and <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>>).
 
 [[contract]]
 .JoinStateWatermarkPredicate Contract
@@ -33,7 +33,7 @@ expr: Expression
 
 A Catalyst `Expression`
 
-Used for the <<toString, textual representation>> and a <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, JoinStateWatermarkPredicates>> (for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator)
+Used for the <<toString, textual representation>> and a <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, JoinStateWatermarkPredicates>> (for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator)
 
 |===
 
@@ -45,11 +45,11 @@ Used for the <<toString, textual representation>> and a <<spark-sql-streaming-St
 | Description
 
 | JoinStateKeyWatermarkPredicate
-a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. when the <<spark-sql-streaming-watermark.adoc#, streaming watermark>> is defined either on the <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#leftKeys, left>> or <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#rightKeys, right>> join keys)
+a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. when the <<spark-sql-streaming-watermark.md#, streaming watermark>> is defined either on the <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#leftKeys, left>> or <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#rightKeys, right>> join keys)
 
-Created when `StreamingSymmetricHashJoinHelper` utility is requested for a <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, JoinStateWatermarkPredicates>> for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator)
+Created when `StreamingSymmetricHashJoinHelper` utility is requested for a <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, JoinStateWatermarkPredicates>> for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator)
 
-Used when `OneSideHashJoiner` is requested for the <<spark-sql-streaming-OneSideHashJoiner.adoc#stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> and then to <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, remove an old state>>
+Used when `OneSideHashJoiner` is requested for the <<spark-sql-streaming-OneSideHashJoiner.md#stateKeyWatermarkPredicateFunc, stateKeyWatermarkPredicateFunc>> and then to <<spark-sql-streaming-OneSideHashJoiner.md#removeOldState, remove an old state>>
 
 | JoinStateValueWatermarkPredicate
 | [[JoinStateValueWatermarkPredicate]] Watermark predicate on state values

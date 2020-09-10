@@ -1,6 +1,6 @@
 == [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.adoc#, stream-stream equi-join>> at execution time.
+`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.md#, stream-stream equi-join>> at execution time.
 
 [NOTE]
 ====
@@ -12,13 +12,13 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 [[supported-join-types]][[joinType]]
 `StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, and `RightOuter` join types (with the <<leftKeys, left>> and the <<rightKeys, right>> keys using the exact same data types).
 
-`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.adoc#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
+`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.md#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
 
-`StreamingSymmetricHashJoinExec` is given execution-specific configuration (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>) when `IncrementalExecution` is requested to plan a streaming query for execution (and uses the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>>).
+`StreamingSymmetricHashJoinExec` is given execution-specific configuration (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>) when `IncrementalExecution` is requested to plan a streaming query for execution (and uses the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>>).
 
-`StreamingSymmetricHashJoinExec` uses two <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiners>> (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state when <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>.
+`StreamingSymmetricHashJoinExec` uses two <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiners>> (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state when <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>.
 
-`StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that writes to a state store>>.
+`StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.md#, stateful physical operator that writes to a state store>>.
 
 === [[creating-instance]] Creating StreamingSymmetricHashJoinExec Instance
 
@@ -28,7 +28,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 * [[rightKeys]] Right keys (Catalyst expressions of the keys on the right side)
 * <<joinType, Join type>>
 * [[condition]] Join condition (`JoinConditionSplitPredicates`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
 * <<eventTimeWatermark, Event-Time Watermark>>
 * <<stateWatermarkPredicates, Watermark Predicates for State Removal>>
 * [[left]] Physical operator on the left side (`SparkPlan`)
@@ -89,9 +89,9 @@ NOTE: `outputPartitioning` is part of the `SparkPlan` Contract to specify how da
 eventTimeWatermark: Option[Long]
 ----
 
-When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> of the current streaming micro-batch.
+When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the current streaming micro-batch.
 
-`eventTimeWatermark` is an optional property that is specified only after <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> was requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
+`eventTimeWatermark` is an optional property that is specified only after <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> was requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
 
 [NOTE]
 ====
@@ -99,7 +99,7 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 
 * `StreamingSymmetricHashJoinExec` is requested to <<shouldRunAnotherBatch, check out whether the last batch execution requires another non-data batch or not>>
 
-* `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
+* `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
 ====
 
 === [[stateWatermarkPredicates]] Watermark Predicates for State Removal -- `stateWatermarkPredicates` Internal Property
@@ -109,15 +109,15 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 stateWatermarkPredicates: JoinStateWatermarkPredicates
 ----
 
-When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, StreamingSymmetricHashJoinHelper>> utility).
+When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, StreamingSymmetricHashJoinHelper>> utility).
 
-`stateWatermarkPredicates` contains the left and right predicates only when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.adoc#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> in their *queryPlanning* phases).
+`stateWatermarkPredicates` contains the left and right predicates only when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
 
 [NOTE]
 ====
 `stateWatermarkPredicates` is used when `StreamingSymmetricHashJoinExec` is requested for the following:
 
-* <<processPartitions, Process partitions of the left and right sides of the stream-stream join>> (and creating <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiners>>)
+* <<processPartitions, Process partitions of the left and right sides of the stream-stream join>> (and creating <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiners>>)
 
 * <<shouldRunAnotherBatch, Checking out whether the last batch execution requires another non-data batch or not>>
 ====
@@ -136,7 +136,7 @@ requiredChildDistribution: Seq[Distribution]
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[SparkPlan Contract] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 ====
 
-`requiredChildDistribution` returns two `HashClusteredDistributions` for the <<leftKeys, left>> and <<rightKeys, right>> keys with the required <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#numPartitions, number of partitions>> based on the <<stateInfo, StatefulOperatorStateInfo>>.
+`requiredChildDistribution` returns two `HashClusteredDistributions` for the <<leftKeys, left>> and <<rightKeys, right>> keys with the required <<spark-sql-streaming-StatefulOperatorStateInfo.md#numPartitions, number of partitions>> based on the <<stateInfo, StatefulOperatorStateInfo>>.
 
 [NOTE]
 ====
@@ -154,7 +154,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Dist
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 
-`StreamingSymmetricHashJoinExec` uses the performance metrics as <<spark-sql-streaming-StateStoreWriter.adoc#metrics, other stateful physical operators that write to a state store>>.
+`StreamingSymmetricHashJoinExec` uses the performance metrics as <<spark-sql-streaming-StateStoreWriter.md#metrics, other stateful physical operators that write to a state store>>.
 
 .StreamingSymmetricHashJoinExec in web UI (Details for Query)
 image::images/StreamingSymmetricHashJoinExec-webui-query-details.png[align="center"]
@@ -182,7 +182,7 @@ a| [[numOutputRows]] Total number of output rows
 a| [[numTotalStateRows]]
 
 | number of updated state rows
-a| [[numUpdatedStateRows]] <<spark-sql-streaming-OneSideHashJoiner.adoc#updatedStateRowsCount, Number of updated state rows>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> `OneSideHashJoiners`
+a| [[numUpdatedStateRows]] <<spark-sql-streaming-OneSideHashJoiner.md#updatedStateRowsCount, Number of updated state rows>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> `OneSideHashJoiners`
 
 | memory used by state
 a| [[stateMemory]]
@@ -196,13 +196,13 @@ shouldRunAnotherBatch(
   newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
 `shouldRunAnotherBatch` is positive (`true`) when all of the following are positive:
 
-* Either the <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#left, left>> or <<spark-sql-streaming-JoinStateWatermarkPredicates.adoc#right, right>> join state watermark predicates are defined (in the <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
+* Either the <<spark-sql-streaming-JoinStateWatermarkPredicates.md#left, left>> or <<spark-sql-streaming-JoinStateWatermarkPredicates.md#right, right>> join state watermark predicates are defined (in the <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
 
-* <<eventTimeWatermark, Event-time watermark>> threshold (of the `StreamingSymmetricHashJoinExec` operator) is defined and the current <<spark-sql-streaming-OffsetSeqMetadata.adoc#batchWatermarkMs, event-time watermark>> threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
+* <<eventTimeWatermark, Event-time watermark>> threshold (of the `StreamingSymmetricHashJoinExec` operator) is defined and the current <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
 
 `shouldRunAnotherBatch` is negative (`false`) otherwise.
 
@@ -215,11 +215,11 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of a physical operator as a recipe for distributed computation over internal binary rows on Apache Spark (`RDD[InternalRow]`).
 
-`doExecute` first requests the `StreamingQueryManager` for the <<spark-sql-streaming-StreamingQueryManager.adoc#stateStoreCoordinator, StateStoreCoordinatorRef>> to the `StateStoreCoordinator` RPC endpoint (for the driver).
+`doExecute` first requests the `StreamingQueryManager` for the <<spark-sql-streaming-StreamingQueryManager.md#stateStoreCoordinator, StateStoreCoordinatorRef>> to the `StateStoreCoordinator` RPC endpoint (for the driver).
 
-`doExecute` then uses `SymmetricHashJoinStateManager` utility to <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#allStateStoreNames, get the names of the state stores>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, left>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, right>> sides of the streaming join.
+`doExecute` then uses `SymmetricHashJoinStateManager` utility to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#allStateStoreNames, get the names of the state stores>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#LeftSide, left>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.md#RightSide, right>> sides of the streaming join.
 
-In the end, `doExecute` requests the <<left, left>> and <<right, right>> child physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.adoc#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
+In the end, `doExecute` requests the <<left, left>> and <<right, right>> child physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
 
 === [[processPartitions]] Processing Partitions of Left and Right Sides of Stream-Stream Join -- `processPartitions` Internal Method
 
@@ -237,13 +237,13 @@ processPartitions(
 `processPartitions` creates a new predicate (_postJoinFilter_) based on the `bothSides` of the <<condition, JoinConditionSplitPredicates>> if defined or `true` literal.
 
 [[processPartitions-leftSideJoiner]]
-`processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#LeftSide, LeftSide>> and all other properties for the left-hand join side (`leftSideJoiner`).
+`processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#LeftSide, LeftSide>> and all other properties for the left-hand join side (`leftSideJoiner`).
 
 [[processPartitions-rightSideJoiner]]
-`processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.adoc#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#RightSide, RightSide>> and all other properties for the right-hand join side (`rightSideJoiner`).
+`processPartitions` creates a <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiner>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#RightSide, RightSide>> and all other properties for the right-hand join side (`rightSideJoiner`).
 
 [[processPartitions-leftOutputIter]][[processPartitions-rightOutputIter]]
-`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
+`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to <<spark-sql-streaming-OneSideHashJoiner.md#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
 
 [[processPartitions-innerOutputCompletionTimeNs]]
 `processPartitions` records the current time (as _innerOutputCompletionTimeNs_ for the <<allRemovalsTimeMs, total time to remove rows>> performance metric in <<onOutputCompletion, onOutputCompletion>>).
@@ -280,19 +280,19 @@ onOutputCompletion: Unit
 
 `onOutputCompletion` adds the time for the inner join to complete (since <<processPartitions-innerOutputCompletionTimeNs, innerOutputCompletionTimeNs>> time marker) to the <<allRemovalsTimeMs, total time to remove rows>> performance metric.
 
-`onOutputCompletion` records the time to <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, remove old state>> (per the <<spark-sql-streaming-OneSideHashJoiner.adoc#stateWatermarkPredicate, join state watermark predicate>> for the <<left, left>> and the <<right, right>> streaming queries) and adds it to the <<allRemovalsTimeMs, total time to remove rows>> performance metric.
+`onOutputCompletion` records the time to <<spark-sql-streaming-OneSideHashJoiner.md#removeOldState, remove old state>> (per the <<spark-sql-streaming-OneSideHashJoiner.md#stateWatermarkPredicate, join state watermark predicate>> for the <<left, left>> and the <<right, right>> streaming queries) and adds it to the <<allRemovalsTimeMs, total time to remove rows>> performance metric.
 
-NOTE: `onOutputCompletion` triggers the <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, old state removal>> eagerly by iterating over the state rows to be deleted.
+NOTE: `onOutputCompletion` triggers the <<spark-sql-streaming-OneSideHashJoiner.md#removeOldState, old state removal>> eagerly by iterating over the state rows to be deleted.
 
-`onOutputCompletion` records the time for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> `OneSideHashJoiners` to <<spark-sql-streaming-OneSideHashJoiner.adoc#commitStateAndGetMetrics, commit any state changes>> that becomes the <<commitTimeMs, time to commit changes>> performance metric.
+`onOutputCompletion` records the time for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> `OneSideHashJoiners` to <<spark-sql-streaming-OneSideHashJoiner.md#commitStateAndGetMetrics, commit any state changes>> that becomes the <<commitTimeMs, time to commit changes>> performance metric.
 
-`onOutputCompletion` calculates the <<numUpdatedStateRows, number of updated state rows>> performance metric (as the <<spark-sql-streaming-OneSideHashJoiner.adoc#numUpdatedStateRows, number of updated state rows>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
+`onOutputCompletion` calculates the <<numUpdatedStateRows, number of updated state rows>> performance metric (as the <<spark-sql-streaming-OneSideHashJoiner.md#numUpdatedStateRows, number of updated state rows>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
 
-`onOutputCompletion` calculates the <<numTotalStateRows, number of total state rows>> performance metric (as the sum of the <<spark-sql-streaming-StateStoreMetrics.adoc#numKeys, number of keys>> in the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyWithIndexToValue, KeyWithIndexToValueStore>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
+`onOutputCompletion` calculates the <<numTotalStateRows, number of total state rows>> performance metric (as the sum of the <<spark-sql-streaming-StateStoreMetrics.md#numKeys, number of keys>> in the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keyWithIndexToValue, KeyWithIndexToValueStore>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
 
-`onOutputCompletion` calculates the <<stateMemory, memory used by state>> performance metric (as the sum of the <<spark-sql-streaming-StateStoreMetrics.adoc#memoryUsedBytes, memory used>> by the <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyToNumValues, KeyToNumValuesStore>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#keyWithIndexToValue, KeyWithIndexToValueStore>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streams).
+`onOutputCompletion` calculates the <<stateMemory, memory used by state>> performance metric (as the sum of the <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, memory used>> by the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keyToNumValues, KeyToNumValuesStore>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keyWithIndexToValue, KeyWithIndexToValueStore>> of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streams).
 
-In the end, `onOutputCompletion` calculates the <<spark-sql-streaming-StateStoreMetrics.adoc#customMetrics, custom metrics>>.
+In the end, `onOutputCompletion` calculates the <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, custom metrics>>.
 
 === [[internal-properties]] Internal Properties
 
@@ -307,9 +307,9 @@ a| [[hadoopConfBcast]] Hadoop Configuration broadcast (to the Spark cluster)
 Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
 
 | joinStateManager
-a| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.adoc#, SymmetricHashJoinStateManager>>
+a| [[joinStateManager]] <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>
 
-Used when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.adoc#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>, <<spark-sql-streaming-OneSideHashJoiner.adoc#removeOldState, removeOldState>>, <<spark-sql-streaming-OneSideHashJoiner.adoc#commitStateAndGetMetrics, commitStateAndGetMetrics>>, and for the <<spark-sql-streaming-OneSideHashJoiner.adoc#get, values for a given key>>
+Used when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>, <<spark-sql-streaming-OneSideHashJoiner.md#removeOldState, removeOldState>>, <<spark-sql-streaming-OneSideHashJoiner.md#commitStateAndGetMetrics, commitStateAndGetMetrics>>, and for the <<spark-sql-streaming-OneSideHashJoiner.md#get, values for a given key>>
 
 | nullLeft
 a| [[nullLeft]] `GenericInternalRow` of the size of the output schema of the <<left, left physical operator>>
@@ -318,7 +318,7 @@ a| [[nullLeft]] `GenericInternalRow` of the size of the output schema of the <<l
 a| [[nullRight]] `GenericInternalRow` of the size of the output schema of the <<right, right physical operator>>
 
 | storeConf
-a| [[storeConf]] <<spark-sql-streaming-StateStoreConf.adoc#, StateStoreConf>>
+a| [[storeConf]] <<spark-sql-streaming-StateStoreConf.md#, StateStoreConf>>
 
 Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
 

@@ -1,3 +1,3 @@
 == [[RateStreamContinuousReader]] RateStreamContinuousReader
 
-`RateStreamContinuousReader` is a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> that...FIXME
+`RateStreamContinuousReader` is a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> that...FIXME

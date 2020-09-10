@@ -1,17 +1,17 @@
 == [[JoinStateWatermarkPredicates]] JoinStateWatermarkPredicates -- Watermark Predicates for State Removal
 
 [[creating-instance]]
-`JoinStateWatermarkPredicates` contains watermark predicates for state removal of the children of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator:
+`JoinStateWatermarkPredicates` contains watermark predicates for state removal of the children of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator:
 
-* [[left]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the left-hand side of a join (default: `None`)
+* [[left]] <<spark-sql-streaming-JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> for the left-hand side of a join (default: `None`)
 
-* [[right]] <<spark-sql-streaming-JoinStateWatermarkPredicate.adoc#, JoinStateWatermarkPredicate>> for the right-hand side of a join (default: `None`)
+* [[right]] <<spark-sql-streaming-JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> for the right-hand side of a join (default: `None`)
 
 `JoinStateWatermarkPredicates` is <<creating-instance, created>> for the following:
 
-* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator is created (with the optional properties undefined, including <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
+* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator is created (with the optional properties undefined, including <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
 
-* `StreamingSymmetricHashJoinHelper` utility is requested for <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.adoc#getStateWatermarkPredicates, one>> (for `IncrementalExecution` for the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> to optimize and specify the execution-specific configuration for a query plan with <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operators)
+* `StreamingSymmetricHashJoinHelper` utility is requested for <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, one>> (for `IncrementalExecution` for the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to optimize and specify the execution-specific configuration for a query plan with <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators)
 
 === [[toString]] Textual Representation -- `toString` Method
 

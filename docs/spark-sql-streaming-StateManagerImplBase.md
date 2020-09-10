@@ -1,6 +1,6 @@
 == [[StateManagerImplBase]] StateManagerImplBase
 
-`StateManagerImplBase` is the <<contract, extension>> of the <<spark-sql-streaming-StateManager.adoc#, StateManager contract>> for <<implementations, state managers>> of [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator with the following features:
+`StateManagerImplBase` is the <<contract, extension>> of the <<spark-sql-streaming-StateManager.md#, StateManager contract>> for <<implementations, state managers>> of [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator with the following features:
 
 * Use Catalyst expressions for <<stateSerializerExprs, state serialization>> and <<stateDeserializerExpr, deserialization>>
 
@@ -58,11 +58,11 @@ Used when `StateManagerImplBase` is requested to <<getTimestamp, get>> and <<set
 | StateManagerImplBase
 | Description
 
-| <<spark-sql-streaming-StateManagerImplV1.adoc#, StateManagerImplV1>>
-| [[StateManagerImplV1]] Legacy <<spark-sql-streaming-StateManager.adoc#, StateManager>>
+| <<spark-sql-streaming-StateManagerImplV1.md#, StateManagerImplV1>>
+| [[StateManagerImplV1]] Legacy <<spark-sql-streaming-StateManager.md#, StateManager>>
 
-| <<spark-sql-streaming-StateManagerImplV2.adoc#, StateManagerImplV2>>
-| [[StateManagerImplV2]] Default <<spark-sql-streaming-StateManager.adoc#, StateManager>>
+| <<spark-sql-streaming-StateManagerImplV2.md#, StateManagerImplV2>>
+| [[StateManagerImplV2]] Default <<spark-sql-streaming-StateManager.md#, StateManager>>
 
 |===
 
@@ -83,7 +83,7 @@ getState(
   keyRow: UnsafeRow): StateData
 ----
 
-NOTE: `getState` is part of the <<spark-sql-streaming-StateManager.adoc#getState, StateManager Contract>> to get the state data for the key from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>.
+NOTE: `getState` is part of the <<spark-sql-streaming-StateManager.md#getState, StateManager Contract>> to get the state data for the key from the <<spark-sql-streaming-StateStore.md#, StateStore>>.
 
 `getState`...FIXME
 
@@ -98,7 +98,7 @@ putState(
   timestamp: Long): Unit
 ----
 
-NOTE: `putState` is part of the <<spark-sql-streaming-StateManager.adoc#putState, StateManager Contract>> to persist (_put_) the state value for the key in the <<spark-sql-streaming-StateStore.adoc#, StateStore>>.
+NOTE: `putState` is part of the <<spark-sql-streaming-StateManager.md#putState, StateManager Contract>> to persist (_put_) the state value for the key in the <<spark-sql-streaming-StateStore.md#, StateStore>>.
 
 `putState`...FIXME
 
@@ -111,7 +111,7 @@ removeState(
   keyRow: UnsafeRow): Unit
 ----
 
-NOTE: `removeState` is part of the <<spark-sql-streaming-StateManager.adoc#removeState, StateManager Contract>> to remove the state for the key from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>.
+NOTE: `removeState` is part of the <<spark-sql-streaming-StateManager.md#removeState, StateManager Contract>> to remove the state for the key from the <<spark-sql-streaming-StateStore.md#, StateStore>>.
 
 `removeState`...FIXME
 
@@ -122,7 +122,7 @@ NOTE: `removeState` is part of the <<spark-sql-streaming-StateManager.adoc#remov
 getAllState(store: StateStore): Iterator[StateData]
 ----
 
-NOTE: `getAllState` is part of the <<spark-sql-streaming-StateManager.adoc#getAllState, StateManager Contract>> to retrieve all state data (for all keys) from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>.
+NOTE: `getAllState` is part of the <<spark-sql-streaming-StateManager.md#getAllState, StateManager Contract>> to retrieve all state data (for all keys) from the <<spark-sql-streaming-StateStore.md#, StateStore>>.
 
 `getAllState`...FIXME
 

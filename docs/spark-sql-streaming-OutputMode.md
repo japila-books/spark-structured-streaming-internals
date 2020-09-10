@@ -1,6 +1,6 @@
 == [[OutputMode]] OutputMode
 
-*Output mode* (`OutputMode`) of a streaming query describes what data is written to a <<spark-sql-streaming-Sink.adoc#, streaming sink>>.
+*Output mode* (`OutputMode`) of a streaming query describes what data is written to a <<spark-sql-streaming-Sink.md#, streaming sink>>.
 
 [[available-output-modes]]
 There are three available output modes:
@@ -11,7 +11,7 @@ There are three available output modes:
 
 * <<Update, Update>>
 
-The output mode is specified on the _writing side_ of a streaming query using <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, DataStreamWriter.outputMode>> method (by alias or a value of `org.apache.spark.sql.streaming.OutputMode` object).
+The output mode is specified on the _writing side_ of a streaming query using <<spark-sql-streaming-DataStreamWriter.md#outputMode, DataStreamWriter.outputMode>> method (by alias or a value of `org.apache.spark.sql.streaming.OutputMode` object).
 
 [source, scala]
 ----
@@ -28,15 +28,15 @@ val inputStream = spark
 
 === [[Append]] Append Output Mode
 
-*Append* (alias: *append*) is the <<spark-sql-streaming-DataStreamWriter.adoc#outputMode, default output mode>> that writes "new" rows only.
+*Append* (alias: *append*) is the <<spark-sql-streaming-DataStreamWriter.md#outputMode, default output mode>> that writes "new" rows only.
 
-In <<spark-sql-streaming-aggregation.adoc#, streaming aggregations>>, a "new" row is when the intermediate state becomes final, i.e. when new events for the grouping key can only be considered late which is when watermark moves past the event time of the key.
+In <<spark-sql-streaming-aggregation.md#, streaming aggregations>>, a "new" row is when the intermediate state becomes final, i.e. when new events for the grouping key can only be considered late which is when watermark moves past the event time of the key.
 
-`Append` output mode requires that a streaming query defines event-time watermark (using link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.adoc[window] function).
+`Append` output mode requires that a streaming query defines event-time watermark (using link:spark-sql-streaming-Dataset-withWatermark.md[withWatermark] operator) on the event time column that is used in aggregation (directly or using link:spark-sql-streaming-window.md[window] function).
 
-Required for datasets with `FileFormat` format (to create link:spark-sql-streaming-FileStreamSink.adoc[FileStreamSink])
+Required for datasets with `FileFormat` format (to create link:spark-sql-streaming-FileStreamSink.md[FileStreamSink])
 
-`Append` is link:spark-sql-streaming-UnsupportedOperationChecker.adoc#multiple-flatMapGroupsWithState[mandatory] when multiple `flatMapGroupsWithState` operators are used in a structured query.
+`Append` is link:spark-sql-streaming-UnsupportedOperationChecker.md#multiple-flatMapGroupsWithState[mandatory] when multiple `flatMapGroupsWithState` operators are used in a structured query.
 
 === [[Complete]] Complete Output Mode
 
@@ -44,10 +44,10 @@ Required for datasets with `FileFormat` format (to create link:spark-sql-streami
 
 Complete mode does not drop old aggregation state and preserves all data in the Result Table.
 
-Supported only for <<spark-sql-streaming-aggregation.adoc#, streaming aggregations>> (as asserted by link:spark-sql-streaming-UnsupportedOperationChecker.adoc#checkForStreaming[UnsupportedOperationChecker]).
+Supported only for <<spark-sql-streaming-aggregation.md#, streaming aggregations>> (as asserted by link:spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[UnsupportedOperationChecker]).
 
 === [[Update]] Update Output Mode
 
 *Update* (alias: *update*) writes only the rows that were updated (every time there are updates).
 
-For queries that are not <<spark-sql-streaming-aggregation.adoc#, streaming aggregations>>, `Update` is equivalent to the <<Append, Append>> output mode.
+For queries that are not <<spark-sql-streaming-aggregation.md#, streaming aggregations>>, `Update` is equivalent to the <<Append, Append>> output mode.

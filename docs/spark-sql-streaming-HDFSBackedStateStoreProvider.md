@@ -1,12 +1,12 @@
 == [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider -- Hadoop DFS-based StateStoreProvider
 
-`HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> that uses a Hadoop DFS-compatible file system for <<baseDir, versioned state checkpointing>>.
+`HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> that uses a Hadoop DFS-compatible file system for <<baseDir, versioned state checkpointing>>.
 
-`HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property.
+`HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property.
 
-`HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the <<spark-sql-streaming-StateStore.adoc#, state store>> to use for a stateful operator and a partition.
+`HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the <<spark-sql-streaming-StateStore.md#, state store>> to use for a stateful operator and a partition.
 
-`HDFSStateStoreProvider` uses <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStores>> to manage state (<<getStore, one per version>>).
+`HDFSStateStoreProvider` uses <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStores>> to manage state (<<getStore, one per version>>).
 
 `HDFSBackedStateStoreProvider` manages versioned state in delta and snapshot files (and uses a <<loadedMaps, cache>> internally for faster access to state versions).
 
@@ -24,7 +24,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[metrics]] Performance Metrics
@@ -44,7 +44,7 @@ a| [[metricLoadedMapCacheHit]][[loadedMapCacheHitCount]] The number of times <<l
 a| [[metricLoadedMapCacheMiss]][[loadedMapCacheMissCount]] The number of times <<loadMap, loading the specified version of state>> could not find (_missed_) the requested state version in the <<loadedMaps, loadedMaps>> internal cache
 
 | estimated size of state only on current version
-a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Estimated size of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#mapToUpdate, current state>> (of the <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>>)
+a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Estimated size of the <<spark-sql-streaming-HDFSBackedStateStore.md#mapToUpdate, current state>> (of the <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>>)
 
 |===
 
@@ -55,21 +55,21 @@ a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Es
 baseDir: Path
 ----
 
-`baseDir` is the base directory (as Hadoop DFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path]) for <<spark-sql-streaming-offsets-and-metadata-checkpointing.adoc#, state checkpointing>> (for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files).
+`baseDir` is the base directory (as Hadoop DFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path]) for <<spark-sql-streaming-offsets-and-metadata-checkpointing.md#, state checkpointing>> (for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files).
 
 `baseDir` is initialized lazily since it is not yet known when `HDFSBackedStateStoreProvider` is <<creating-instance, created>>.
 
-`baseDir` is initialized and created based on the <<spark-sql-streaming-StateStoreId.adoc#storeCheckpointLocation, state checkpoint base directory>> of the <<stateStoreId, StateStoreId>> when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
+`baseDir` is initialized and created based on the <<spark-sql-streaming-StateStoreId.md#storeCheckpointLocation, state checkpoint base directory>> of the <<stateStoreId, StateStoreId>> when `HDFSBackedStateStoreProvider` is requested to <<init, initialize>>.
 
 === [[stateStoreId]][[stateStoreId_]] StateStoreId -- Unique Identifier of State Store
 
-As a <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.adoc#stateStoreId, StateStoreId>> (which is a unique identifier of the <<spark-sql-streaming-StateStore.adoc#, state store>> for a stateful operator and a partition).
+As a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.md#stateStoreId, StateStoreId>> (which is a unique identifier of the <<spark-sql-streaming-StateStore.md#, state store>> for a stateful operator and a partition).
 
-`HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> at <<init, initialization>> (as requested by the <<spark-sql-streaming-StateStoreProvider.adoc#, StateStoreProvider>> contract).
+`HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> at <<init, initialization>> (as requested by the <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> contract).
 
 The <<stateStoreId, StateStoreId>> is then used for the following:
 
-* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.adoc#id, id>>
+* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.md#id, id>>
 
 * `HDFSBackedStateStoreProvider` is requested for the <<toString, textual representation>> and the <<baseDir, state checkpoint base directory>>
 
@@ -96,11 +96,11 @@ getStore(
   version: Long): StateStore
 ----
 
-NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#getStore, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStore.adoc#, StateStore>> for a specified version.
+NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.md#getStore, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStore.md#, StateStore>> for a specified version.
 
 `getStore` creates a new empty state (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`) and <<loadMap, loads the specified version of state (from internal cache or snapshot and delta files)>> for versions greater than `0`.
 
-In the end, `getStore` creates a new <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> for the specified version with the new state and prints out the following INFO message to the logs:
+In the end, `getStore` creates a new <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> for the specified version with the new state and prints out the following INFO message to the logs:
 
 ```
 Retrieved version [version] of [this] for update
@@ -125,7 +125,7 @@ deltaFile(version: Long): Path
 ====
 `deltaFile` is used when:
 
-* <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> is created (and creates the <<finalDeltaFile, final delta file>>)
+* <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> is created (and creates the <<finalDeltaFile, final delta file>>)
 
 * `HDFSBackedStateStoreProvider` is requested to <<updateFromDeltaFile, updateFromDeltaFile>>
 ====
@@ -148,7 +148,7 @@ NOTE: `snapshotFile` is used when `HDFSBackedStateStoreProvider` is requested to
 fetchFiles(): Seq[StoreFile]
 ----
 
-`fetchFiles` requests the <<fm, CheckpointFileManager>> for <<spark-sql-streaming-CheckpointFileManager.adoc#list, all the files>> in the <<baseDir, state checkpoint directory>>.
+`fetchFiles` requests the <<fm, CheckpointFileManager>> for <<spark-sql-streaming-CheckpointFileManager.md#list, all the files>> in the <<baseDir, state checkpoint directory>>.
 
 For every file, `fetchFiles` splits the name into two parts with `.` (dot) as a separator (files with more or less than two parts are simply ignored) and registers a new `StoreFile` for `snapshot` and `delta` files:
 
@@ -185,13 +185,13 @@ init(
   hadoopConf: Configuration): Unit
 ----
 
-NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#init, StateStoreProvider Contract>> to initialize itself.
+NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.md#init, StateStoreProvider Contract>> to initialize itself.
 
 `init` records the values of the input arguments as the <<stateStoreId, stateStoreId>>, <<keySchema, keySchema>>, <<valueSchema, valueSchema>>, <<storeConf, storeConf>>, and <<hadoopConf, hadoopConf>> internal properties.
 
-`init` requests the given `StateStoreConf` for the <<spark-sql-streaming-StateStoreConf.adoc#maxVersionsToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then recorded in the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> internal property).
+`init` requests the given `StateStoreConf` for the <<spark-sql-streaming-StateStoreConf.md#maxVersionsToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then recorded in the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> internal property).
 
-In the end, `init` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#mkdirs, create>> the <<baseDir, baseDir>> directory (with parent directories).
+In the end, `init` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#mkdirs, create>> the <<baseDir, baseDir>> directory (with parent directories).
 
 === [[filesForVersion]] Finding Snapshot File and Delta Files For Version -- `filesForVersion` Internal Method
 
@@ -221,7 +221,7 @@ NOTE: `filesForVersion` is used when `HDFSBackedStateStoreProvider` is requested
 doMaintenance(): Unit
 ----
 
-NOTE: `doMaintenance` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#doMaintenance, StateStoreProvider Contract>> for optional state maintenance.
+NOTE: `doMaintenance` is part of the <<spark-sql-streaming-StateStoreProvider.md#doMaintenance, StateStoreProvider Contract>> for optional state maintenance.
 
 `doMaintenance` simply does <<doSnapshot, state snapshoting>> followed by <<cleanup, cleaning up (removing old state files)>>.
 
@@ -252,7 +252,7 @@ fetchFiles() took [time] ms.
 
 `doSnapshot` looks up the last version in the <<loadedMaps, internal state cache>>.
 
-When the last version was found in the cache and the number of delta files is above <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>> internal threshold, `doSnapshot` <<writeSnapshotFile, writes a compressed snapshot file for the last version>>.
+When the last version was found in the cache and the number of delta files is above <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>> internal threshold, `doSnapshot` <<writeSnapshotFile, writes a compressed snapshot file for the last version>>.
 
 In the end, `doSnapshot` prints out the following DEBUG message to the logs:
 
@@ -283,9 +283,9 @@ fetchFiles() took [time] ms.
 
 `cleanup` returns immediately (and does nothing) when there are no delta and snapshot files.
 
-`cleanup` takes the version of the latest state file (`lastVersion`) and decrements it by <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) that gives the earliest version to retain (and all older state files to be removed).
+`cleanup` takes the version of the latest state file (`lastVersion`) and decrements it by <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) that gives the earliest version to retain (and all older state files to be removed).
 
-`cleanup` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#delete, delete the path>> of every old state file.
+`cleanup` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#delete, delete the path>> of every old state file.
 
 `cleanup` prints out the following DEBUG message to the logs:
 
@@ -314,7 +314,7 @@ NOTE: `cleanup` is used exclusively when `HDFSBackedStateStoreProvider` is reque
 close(): Unit
 ----
 
-NOTE: `close` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#close, StateStoreProvider Contract>> to close the state store provider.
+NOTE: `close` is part of the <<spark-sql-streaming-StateStoreProvider.md#close, StateStoreProvider Contract>> to close the state store provider.
 
 `close`...FIXME
 
@@ -333,7 +333,7 @@ getMetricsForProvider(): Map[String, Long]
 
 * <<metricLoadedMapCacheMiss, metricLoadedMapCacheMiss>>
 
-NOTE: `getMetricsForProvider` is used exclusively when `HDFSBackedStateStore` is requested for <<spark-sql-streaming-HDFSBackedStateStore.adoc#metrics, performance metrics>>.
+NOTE: `getMetricsForProvider` is used exclusively when `HDFSBackedStateStore` is requested for <<spark-sql-streaming-HDFSBackedStateStore.md#metrics, performance metrics>>.
 
 === [[supportedCustomMetrics]] Supported StateStoreCustomMetrics -- `supportedCustomMetrics` Method
 
@@ -342,9 +342,9 @@ NOTE: `getMetricsForProvider` is used exclusively when `HDFSBackedStateStore` is
 supportedCustomMetrics: Seq[StateStoreCustomMetric]
 ----
 
-NOTE: `supportedCustomMetrics` is part of the <<spark-sql-streaming-StateStoreProvider.adoc#supportedCustomMetrics, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStoreCustomMetric.adoc#, StateStoreCustomMetrics>> of a state store provider.
+NOTE: `supportedCustomMetrics` is part of the <<spark-sql-streaming-StateStoreProvider.md#supportedCustomMetrics, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStoreCustomMetric.md#, StateStoreCustomMetrics>> of a state store provider.
 
-`supportedCustomMetrics` includes the following <<spark-sql-streaming-StateStoreCustomMetric.adoc#, StateStoreCustomMetrics>>:
+`supportedCustomMetrics` includes the following <<spark-sql-streaming-StateStoreCustomMetric.md#, StateStoreCustomMetrics>>:
 
 * <<metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>>
 
@@ -364,7 +364,7 @@ commitUpdates(
 
 `commitUpdates` <<finalizeDeltaFile, finalizeDeltaFile>> (with the given `DataOutputStream`) followed by <<putStateIntoStateCacheMap, caching the new version of state>> (with the given `newVersion` and the `map` state).
 
-NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.adoc#commit, commit state changes>>.
+NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.md#commit, commit state changes>>.
 
 === [[loadMap]] Loading Specified Version of State (from Internal Cache or Snapshot and Delta Files) -- `loadMap` Internal Method
 
@@ -409,7 +409,7 @@ readSnapshotFile(
 
 `readSnapshotFile` <<snapshotFile, creates the path of the snapshot file>> for the given `version`.
 
-`readSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#open, open the snapshot file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
+`readSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#open, open the snapshot file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
 
 `readSnapshotFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in a state map (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`):
 
@@ -455,7 +455,7 @@ The following description is almost an exact copy of <<readSnapshotFile, readSna
 
 `updateFromDeltaFile` <<deltaFile, creates the path of the delta file>> for the requested `version`.
 
-`updateFromDeltaFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#open, open the delta file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
+`updateFromDeltaFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#open, open the delta file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
 
 `updateFromDeltaFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in the given state map:
 
@@ -513,7 +513,7 @@ writeSnapshotFile(
 
 `writeSnapshotFile` <<snapshotFile, snapshotFile>> for the given version.
 
-`writeSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#createAtomic, create the snapshot file>> (with overwriting enabled) and <<compressStream, compress the stream>>.
+`writeSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#createAtomic, create the snapshot file>> (with overwriting enabled) and <<compressStream, compress the stream>>.
 
 For every key-value `UnsafeRow` pair in the given map, `writeSnapshotFile` writes the size of the key followed by the key itself (as bytes). `writeSnapshotFile` then writes the size of the value followed by the value itself (as bytes).
 
@@ -577,7 +577,7 @@ loadedMaps: TreeMap[
 
 `loadedMaps` is a https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[java.util.TreeMap] of state versions sorted according to the reversed ordering of the versions (i.e. long numbers).
 
-A new entry (a version and the state updates) can only be added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> (and only when the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is above `0`).
+A new entry (a version and the state updates) can only be added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> (and only when the <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is above `0`).
 
 `loadedMaps` is mainly used when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>. Positive hits (when a version could be found in the cache) is available as the <<loadedMapCacheHitCount, count of cache hit on states cache in provider>> performance metric while misses are counted in the <<loadedMapCacheMissCount, count of cache miss on states cache in provider>> performance metric.
 
@@ -585,7 +585,7 @@ NOTE: With no or missing versions in cache <<loadedMapCacheMissCount, count of c
 
 The estimated size of `loadedMaps` is available as the <<memoryUsedBytes, memoryUsedBytes>> performance metric.
 
-The <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is used as the threshold of the number of elements in `loadedMaps`. When `0` or negative, every <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> removes all elements in (_clears_) `loadedMaps`.
+The <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is used as the threshold of the number of elements in `loadedMaps`. When `0` or negative, every <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> removes all elements in (_clears_) `loadedMaps`.
 
 NOTE: It is possible to change the configuration at restart of a structured query.
 
@@ -605,11 +605,11 @@ Used when `HDFSBackedStateStoreProvider` is requested for the following:
 | Description
 
 | fm
-a| [[fm]] <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>> for the <<baseDir, state checkpoint base directory>> (and the <<hadoopConf, Hadoop Configuration>>)
+a| [[fm]] <<spark-sql-streaming-CheckpointFileManager.md#, CheckpointFileManager>> for the <<baseDir, state checkpoint base directory>> (and the <<hadoopConf, Hadoop Configuration>>)
 
 Used when:
 
-* Creating a new <<spark-sql-streaming-HDFSBackedStateStore.adoc#, HDFSBackedStateStore>> (to create the <<spark-sql-streaming-HDFSBackedStateStore.adoc#deltaFileStream, CancellableFSDataOutputStream>> for the <<spark-sql-streaming-HDFSBackedStateStore.adoc#finalDeltaFile, finalDeltaFile>>)
+* Creating a new <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> (to create the <<spark-sql-streaming-HDFSBackedStateStore.md#deltaFileStream, CancellableFSDataOutputStream>> for the <<spark-sql-streaming-HDFSBackedStateStore.md#finalDeltaFile, finalDeltaFile>>)
 
 * `HDFSBackedStateStoreProvider` is requested to <<init, initialize>> (to create the <<baseDir, state checkpoint base directory>>), <<updateFromDeltaFile, updateFromDeltaFile>>, <<writeSnapshotFile, write the compressed snapshot file for a specified state version>>, <<readSnapshotFile, readSnapshotFile>>, <<cleanup, clean up>>, and <<fetchFiles, list all delta and snapshot files in the state checkpoint directory>>
 
@@ -646,7 +646,7 @@ a| [[numberOfVersionsToRetainInMemory]]
 numberOfVersionsToRetainInMemory: Int
 ----
 
-`numberOfVersionsToRetainInMemory` is the maximum number of entries in the <<loadedMaps, loadedMaps>> internal registry and is configured by the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration.
+`numberOfVersionsToRetainInMemory` is the maximum number of entries in the <<loadedMaps, loadedMaps>> internal registry and is configured by the <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration.
 
 `numberOfVersionsToRetainInMemory` is a threshold when `HDFSBackedStateStoreProvider` removes the last key from the <<loadedMaps, loadedMaps>> internal registry (per reverse ordering of state versions) when requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
 

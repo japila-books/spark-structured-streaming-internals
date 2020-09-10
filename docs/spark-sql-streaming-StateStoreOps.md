@@ -5,11 +5,11 @@
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 
-* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
+* <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
 
-* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
 
-* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 
 NOTE: http://docs.scala-lang.org/overviews/core/implicit-classes.html[Implicit Classes] are a language feature in Scala for *implicit conversions* with *extension methods* for existing types.
 
@@ -42,19 +42,19 @@ NOTE: `mapPartitionsWithStateStore` uses the <<dataRDD, enclosing RDD>> to acces
 
 NOTE: *Function Cleaning* is to clean a closure from unreferenced variables before it is serialized and sent to tasks. `SparkContext` reports a `SparkException` when the closure is not serializable.
 
-`mapPartitionsWithStateStore` then creates a (wrapper) function to link:spark-sql-streaming-StateStore.adoc#abort[abort] the `StateStore` if link:spark-sql-streaming-StateStore.adoc#hasCommitted[state updates had not been committed] before a task finished (which is to make sure that the `StateStore` has been link:spark-sql-streaming-StateStore.adoc#commit[committed] or link:spark-sql-streaming-StateStore.adoc##abort[aborted] in the end to follow the contract of `StateStore`).
+`mapPartitionsWithStateStore` then creates a (wrapper) function to link:spark-sql-streaming-StateStore.md#abort[abort] the `StateStore` if link:spark-sql-streaming-StateStore.md#hasCommitted[state updates had not been committed] before a task finished (which is to make sure that the `StateStore` has been link:spark-sql-streaming-StateStore.md#commit[committed] or link:spark-sql-streaming-StateStore.md##abort[aborted] in the end to follow the contract of `StateStore`).
 
 NOTE: `mapPartitionsWithStateStore` uses `TaskCompletionListener` to be notified when a task has finished.
 
-In the end, `mapPartitionsWithStateStore` creates a link:spark-sql-streaming-StateStoreRDD.adoc[StateStoreRDD] (with the wrapper function, `SessionState` and link:spark-sql-streaming-StateStoreCoordinatorRef.adoc[StateStoreCoordinatorRef]).
+In the end, `mapPartitionsWithStateStore` creates a link:spark-sql-streaming-StateStoreRDD.md[StateStoreRDD] (with the wrapper function, `SessionState` and link:spark-sql-streaming-StateStoreCoordinatorRef.md[StateStoreCoordinatorRef]).
 
 [NOTE]
 ====
 `mapPartitionsWithStateStore` is used when the following physical operators are executed:
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
-* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
-* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
-* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
-* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
+* <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 ====

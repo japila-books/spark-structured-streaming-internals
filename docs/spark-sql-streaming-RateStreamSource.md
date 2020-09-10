@@ -1,8 +1,8 @@
 == [[RateStreamSource]] RateStreamSource
 
-`RateStreamSource` is a link:spark-sql-streaming-Source.adoc[streaming source] that generates <<schema, consecutive numbers with timestamp>> that can be useful for testing and PoCs.
+`RateStreamSource` is a link:spark-sql-streaming-Source.md[streaming source] that generates <<schema, consecutive numbers with timestamp>> that can be useful for testing and PoCs.
 
-`RateStreamSource` <<creating-instance, is created>> for *rate* format (that is registered by link:spark-sql-streaming-RateSourceProvider.adoc[RateSourceProvider]).
+`RateStreamSource` <<creating-instance, is created>> for *rate* format (that is registered by link:spark-sql-streaming-RateSourceProvider.md[RateSourceProvider]).
 
 [source, scala]
 ----
@@ -93,7 +93,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.RateStreamSource=DEBUG
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to link:spark-sql-streaming-logging.md[Logging].
 ====
 
 === [[getOffset]] Getting Maximum Available Offsets -- `getOffset` Method
@@ -103,7 +103,7 @@ Refer to link:spark-sql-streaming-logging.adoc[Logging].
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.adoc#getOffset[Source Contract].
+NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.md#getOffset[Source Contract].
 
 CAUTION: FIXME
 
@@ -114,7 +114,7 @@ CAUTION: FIXME
 getBatch(start: Option[Offset], end: Offset): DataFrame
 ----
 
-NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#getBatch[Source Contract].
+NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.md#getBatch[Source Contract].
 
 Internally, `getBatch` calculates the seconds to start from and end at (from the input `start` and `end` offsets) or assumes `0`.
 

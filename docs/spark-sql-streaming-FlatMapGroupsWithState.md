@@ -2,9 +2,9 @@
 
 `FlatMapGroupsWithState` is a unary logical operator that is <<creating-instance, created>> to represent the following operators in a logical query plan of a streaming query:
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>>
+* <<spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>>
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>>
+* <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>>
 
 [NOTE]
 ====
@@ -15,7 +15,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Logi
 
 `FlatMapGroupsWithState` is resolved (_planned_) to:
 
-* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.adoc#, FlatMapGroupsWithStateStrategy>> execution planning strategy)
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.md#, FlatMapGroupsWithStateStrategy>> execution planning strategy)
 
 * `MapGroupsExec` physical operator for batch datasets (in `BasicOperators` execution planning strategy)
 
@@ -41,7 +41,7 @@ Internally, `apply` finds `ExpressionEncoder` for the type `S` and creates a `Fl
 
 In the end, `apply` creates a `SerializeFromObject` object consumer with the `FlatMapGroupsWithState`.
 
-NOTE: `apply` is used in <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operator.
+NOTE: `apply` is used in <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operator.
 
 === [[creating-instance]] Creating FlatMapGroupsWithState Instance
 
@@ -54,7 +54,7 @@ NOTE: `apply` is used in <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatM
 * [[dataAttributes]] Data attributes
 * [[outputObjAttr]] Output object attribute
 * [[stateEncoder]] State `ExpressionEncoder`
-* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, Output mode>>
+* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
 * [[isMapGroupsWithState]] `isMapGroupsWithState` flag (default: `false`)
-* [[timeout]] <<spark-sql-streaming-GroupStateTimeout.adoc#, GroupStateTimeout>>
+* [[timeout]] <<spark-sql-streaming-GroupStateTimeout.md#, GroupStateTimeout>>
 * [[child]] Child logical operator (`LogicalPlan`)

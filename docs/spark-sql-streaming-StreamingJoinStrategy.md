@@ -1,7 +1,7 @@
 == [[StreamingJoinStrategy]] StreamingJoinStrategy Execution Planning Strategy -- Stream-Stream Equi-Joins
 
 [[apply]]
-`StreamingJoinStrategy` is an execution planning strategy that can plan streaming queries with `Join` logical operators of two streaming queries to a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>> physical operator.
+`StreamingJoinStrategy` is an execution planning strategy that can plan streaming queries with `Join` logical operators of two streaming queries to a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
@@ -11,7 +11,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 Stream-stream join without equality predicate is not supported
 ```
 
-`StreamingJoinStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to plan a streaming query.
+`StreamingJoinStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to plan a streaming query.
 
 [[logging]]
 [TIP]
@@ -28,5 +28,5 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.catalyst.planning.ExtractEquiJoinKeys=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====

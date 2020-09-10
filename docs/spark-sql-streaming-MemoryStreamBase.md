@@ -1,6 +1,6 @@
 == [[MemoryStreamBase]] MemoryStreamBase Contract -- Base Contract for Memory Sources
 
-`MemoryStreamBase` is the <<contract, base>> of the <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource contract>> for <<implementations, memory sources>> that can <<addData, add data>>.
+`MemoryStreamBase` is the <<contract, base>> of the <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource contract>> for <<implementations, memory sources>> that can <<addData, add data>>.
 
 [[contract]]
 .MemoryStreamBase Contract
@@ -35,11 +35,11 @@ logicalPlan: LogicalPlan
 | MemoryStreamBase
 | Description
 
-| <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>>
+| <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
 | [[ContinuousMemoryStream]]
 
-| <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>>
-| [[MemoryStream]] <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>
+| <<spark-sql-streaming-MemoryStream.md#, MemoryStream>>
+| [[MemoryStream]] <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
 
 |===
 

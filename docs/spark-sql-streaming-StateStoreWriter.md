@@ -1,6 +1,6 @@
 == [[StateStoreWriter]] StateStoreWriter Contract -- Stateful Physical Operators That Write to State Store
 
-`StateStoreWriter` is the extension of the <<spark-sql-streaming-StatefulOperator.adoc#, StatefulOperator Contract>> for <<implementations, physical operators>> that write to a state store and collect the <<metrics, write metrics>> for <<getProgress, execution progress reporting>>.
+`StateStoreWriter` is the extension of the <<spark-sql-streaming-StatefulOperator.md#, StatefulOperator Contract>> for <<implementations, physical operators>> that write to a state store and collect the <<metrics, write metrics>> for <<getProgress, execution progress reporting>>.
 
 [[implementations]]
 .StateStoreWriters
@@ -12,16 +12,16 @@
 | [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 | [[FlatMapGroupsWithStateExec]]
 
-| <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
+| <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
 | [[StateStoreSaveExec]]
 
-| <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
+| <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 | [[StreamingDeduplicateExec]]
 
-| <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
+| <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 | [[StreamingGlobalLimitExec]]
 
-| <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#, StreamingSymmetricHashJoinExec>>
+| <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
 | [[StreamingSymmetricHashJoinExec]]
 
 |===
@@ -63,22 +63,22 @@
 setStoreMetrics(store: StateStore): Unit
 ----
 
-`setStoreMetrics` requests the specified <<spark-sql-streaming-StateStore.adoc#, StateStore>> for the <<spark-sql-streaming-StateStore.adoc#metrics, metrics>> and records the following metrics of a physical operator:
+`setStoreMetrics` requests the specified <<spark-sql-streaming-StateStore.md#, StateStore>> for the <<spark-sql-streaming-StateStore.md#metrics, metrics>> and records the following metrics of a physical operator:
 
-* <<numTotalStateRows, numTotalStateRows>> as the <<spark-sql-streaming-StateStoreMetrics.adoc#numKeys, number of keys>>
+* <<numTotalStateRows, numTotalStateRows>> as the <<spark-sql-streaming-StateStoreMetrics.md#numKeys, number of keys>>
 
-* <<stateMemory, stateMemory>> as the <<spark-sql-streaming-StateStoreMetrics.adoc#memoryUsedBytes, memory used (in bytes)>>
+* <<stateMemory, stateMemory>> as the <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, memory used (in bytes)>>
 
-`setStoreMetrics` records the <<spark-sql-streaming-StateStoreMetrics.adoc#customMetrics, custom metrics>>.
+`setStoreMetrics` records the <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, custom metrics>>.
 
 [NOTE]
 ====
 `setStoreMetrics` is used when the following physical operators are executed:
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
-* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
-* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
-* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 ====
 
 === [[getProgress]] `getProgress` Method
@@ -90,7 +90,7 @@ getProgress(): StateOperatorProgress
 
 `getProgress`...FIXME
 
-NOTE: `getProgress` is used exclusively when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#extractStateOperatorMetrics, extractStateOperatorMetrics>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
+NOTE: `getProgress` is used exclusively when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#extractStateOperatorMetrics, extractStateOperatorMetrics>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 
@@ -99,9 +99,9 @@ NOTE: `getProgress` is used exclusively when `ProgressReporter` is requested to 
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-`shouldRunAnotherBatch` is negative (`false`) by default (to indicate that another non-data batch is not required given the <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
+`shouldRunAnotherBatch` is negative (`false`) by default (to indicate that another non-data batch is not required given the <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
 
-NOTE: `shouldRunAnotherBatch` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#shouldRunAnotherBatch, check out whether the last batch execution requires another batch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run the activated streaming query>>).
+NOTE: `shouldRunAnotherBatch` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, check out whether the last batch execution requires another batch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
 
 === [[stateStoreCustomMetrics]] `stateStoreCustomMetrics` Internal Method
 

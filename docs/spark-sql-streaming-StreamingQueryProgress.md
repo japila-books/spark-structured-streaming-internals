@@ -2,11 +2,11 @@
 
 `StreamingQueryProgress` holds information about the progress of a streaming query.
 
-`StreamingQueryProgress` is created exclusively when `StreamExecution` link:spark-sql-streaming-ProgressReporter.adoc#finishTrigger[finishes a trigger].
+`StreamingQueryProgress` is created exclusively when `StreamExecution` link:spark-sql-streaming-ProgressReporter.md#finishTrigger[finishes a trigger].
 
 [NOTE]
 ====
-Use link:spark-sql-streaming-StreamingQuery.adoc#lastProgress[lastProgress] property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` update.
+Use link:spark-sql-streaming-StreamingQuery.md#lastProgress[lastProgress] property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` update.
 
 [source, scala]
 ----
@@ -17,7 +17,7 @@ sq.lastProgress
 
 [NOTE]
 ====
-Use link:spark-sql-streaming-StreamingQuery.adoc#recentProgress[recentProgress] property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` updates.
+Use link:spark-sql-streaming-StreamingQuery.md#recentProgress[recentProgress] property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` updates.
 
 [source, scala]
 ----
@@ -28,7 +28,7 @@ sq.recentProgress
 
 [NOTE]
 ====
-Use link:spark-sql-streaming-StreamingQueryListener.adoc#QueryProgressEvent[StreamingQueryListener] to get notified about `StreamingQueryProgress` updates while a streaming query is executed.
+Use link:spark-sql-streaming-StreamingQueryListener.md#QueryProgressEvent[StreamingQueryListener] to get notified about `StreamingQueryProgress` updates while a streaming query is executed.
 ====
 
 [[events]]
@@ -39,13 +39,13 @@ Use link:spark-sql-streaming-StreamingQueryListener.adoc#QueryProgressEvent[Stre
 | Description
 
 | id
-| link:spark-sql-streaming-StreamingQuery.adoc#id[Unique identifier of a streaming query]
+| link:spark-sql-streaming-StreamingQuery.md#id[Unique identifier of a streaming query]
 
 | runId
-| link:spark-sql-streaming-StreamingQuery.adoc#runId[Unique identifier of the current execution of a streaming query]
+| link:spark-sql-streaming-StreamingQuery.md#runId[Unique identifier of the current execution of a streaming query]
 
 | name
-| link:spark-sql-streaming-StreamingQuery.adoc#name[Optional query name]
+| link:spark-sql-streaming-StreamingQuery.md#name[Optional query name]
 
 | timestamp
 | Time when the trigger has started (in ISO8601 format).

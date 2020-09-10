@@ -1,6 +1,6 @@
 == [[TriggerExecutor]] TriggerExecutor
 
-`TriggerExecutor` is the <<contract, interface>> for *trigger executors* that `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#runStream[uses to execute a batch runner].
+`TriggerExecutor` is the <<contract, interface>> for *trigger executors* that `StreamExecution` link:spark-sql-streaming-StreamExecution.md#runStream[uses to execute a batch runner].
 
 [[batchRunner]]
 NOTE: *Batch runner* is an executable code that is executed at regular intervals. It is also called a *trigger handler*.
@@ -16,7 +16,7 @@ trait TriggerExecutor {
 }
 ----
 
-NOTE: `StreamExecution` reports a `IllegalStateException` when link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[TriggerExecutor] is different from the <<available-implementations, two built-in implementations>>: `OneTimeExecutor`
+NOTE: `StreamExecution` reports a `IllegalStateException` when link:spark-sql-streaming-StreamExecution.md#triggerExecutor[TriggerExecutor] is different from the <<available-implementations, two built-in implementations>>: `OneTimeExecutor`
 or `ProcessingTimeExecutor`.
 
 [[available-implementations]]
@@ -30,7 +30,7 @@ or `ProcessingTimeExecutor`.
 | Executes `batchRunner` exactly once.
 
 | [[ProcessingTimeExecutor]] `ProcessingTimeExecutor`
-a| Executes `batchRunner` at regular intervals (as defined using link:spark-sql-streaming-Trigger.adoc#ProcessingTime[ProcessingTime] and link:spark-sql-streaming-DataStreamWriter.adoc#trigger[DataStreamWriter.trigger] method).
+a| Executes `batchRunner` at regular intervals (as defined using link:spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime] and link:spark-sql-streaming-DataStreamWriter.md#trigger[DataStreamWriter.trigger] method).
 
 [source, scala]
 ----

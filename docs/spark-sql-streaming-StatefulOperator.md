@@ -17,7 +17,7 @@ a| [[stateInfo]]
 stateInfo: Option[StatefulOperatorStateInfo]
 ----
 
-The <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> of the physical operator
+The <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> of the physical operator
 |===
 
 [[extensions]]
@@ -27,9 +27,9 @@ The <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorState
 | StatefulOperator
 | Description
 
-| <<spark-sql-streaming-StateStoreReader.adoc#, StateStoreReader>>
+| <<spark-sql-streaming-StateStoreReader.md#, StateStoreReader>>
 | [[StateStoreReader]]
 
-| <<spark-sql-streaming-StateStoreWriter.adoc#, StateStoreWriter>>
+| <<spark-sql-streaming-StateStoreWriter.md#, StateStoreWriter>>
 | [[StateStoreWriter]] Physical operator that writes to a state store and collects the write metrics for execution progress reporting
 |===

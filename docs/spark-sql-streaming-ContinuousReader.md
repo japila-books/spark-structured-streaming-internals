@@ -1,6 +1,6 @@
 == [[ContinuousReader]] ContinuousReader Contract -- Data Source Readers in Continuous Stream Processing
 
-`ContinuousReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
+`ContinuousReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
 
 `ContinuousReader` is part of the novel Data Source API V2 in Spark SQL.
 
@@ -21,9 +21,9 @@ a| [[commit]]
 void commit(Offset end)
 ----
 
-Commits the specified <<spark-sql-streaming-Offset.adoc#, offset>>
+Commits the specified <<spark-sql-streaming-Offset.md#, offset>>
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
 
 | deserializeOffset
 a| [[deserializeOffset]]
@@ -33,9 +33,9 @@ a| [[deserializeOffset]]
 Offset deserializeOffset(String json)
 ----
 
-Deserializes an <<spark-sql-streaming-Offset.adoc#, offset>> from JSON representation
+Deserializes an <<spark-sql-streaming-Offset.md#, offset>> from JSON representation
 
-Used when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query>> and <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
+Used when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query>> and <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
 
 | getStartOffset
 a| [[getStartOffset]]
@@ -55,7 +55,7 @@ a| [[mergeOffsets]]
 Offset mergeOffsets(PartitionOffset[] offsets)
 ----
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#addOffset, addOffset>>
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#addOffset, addOffset>>
 
 | needsReconfiguration
 a| [[needsReconfiguration]]
@@ -67,7 +67,7 @@ boolean needsReconfiguration()
 
 Indicates that the reader needs reconfiguration (e.g. to generate new input partitions)
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>>
 
 | setStartOffset
 a| [[setStartOffset]]
@@ -77,7 +77,7 @@ a| [[setStartOffset]]
 void setStartOffset(Optional<Offset> start)
 ----
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run the streaming query in continuous mode>>.
+Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run the streaming query in continuous mode>>.
 
 |===
 
@@ -88,13 +88,13 @@ Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streamin
 | ContinuousReader
 | Description
 
-| <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>>
+| <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
 | [[ContinuousMemoryStream]]
 
-| <<spark-sql-streaming-KafkaContinuousReader.adoc#, KafkaContinuousReader>>
+| <<spark-sql-streaming-KafkaContinuousReader.md#, KafkaContinuousReader>>
 | [[KafkaContinuousReader]]
 
-| <<spark-sql-streaming-RateStreamContinuousReader.adoc#, RateStreamContinuousReader>>
+| <<spark-sql-streaming-RateStreamContinuousReader.md#, RateStreamContinuousReader>>
 | [[RateStreamContinuousReader]]
 
 | TextSocketContinuousReader

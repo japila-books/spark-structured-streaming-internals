@@ -1,14 +1,14 @@
 == [[StateStoreRDD]] StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)
 
-`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.adoc[StateStore] (and data from partitions of the <<dataRDD, data RDD>>).
+`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.md[StateStore] (and data from partitions of the <<dataRDD, data RDD>>).
 
-`StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using <<spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
+`StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
-* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>
-* <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>>
-* <<spark-sql-streaming-StreamingDeduplicateExec.adoc#, StreamingDeduplicateExec>>
-* <<spark-sql-streaming-StreamingGlobalLimitExec.adoc#, StreamingGlobalLimitExec>>
+* <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
+* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
+* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 
 .StateStoreRDD, Physical and Logical Plans, and operators
 image::images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png[align="center"]
@@ -32,11 +32,11 @@ compute(
 
 NOTE: `compute` is part of the RDD Contract to compute a given partition.
 
-`compute` computes <<dataRDD, dataRDD>> passing the result on to <<storeUpdateFunction, storeUpdateFunction>> (with a configured link:spark-sql-streaming-StateStore.adoc[StateStore]).
+`compute` computes <<dataRDD, dataRDD>> passing the result on to <<storeUpdateFunction, storeUpdateFunction>> (with a configured link:spark-sql-streaming-StateStore.md[StateStore]).
 
-Internally, (and similarly to <<getPreferredLocations, getPreferredLocations>>) `compute` creates a <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> with `StateStoreId` (using <<checkpointLocation, checkpointLocation>>, <<operatorId, operatorId>> and the index of the input `partition`) and <<queryRunId, queryRunId>>.
+Internally, (and similarly to <<getPreferredLocations, getPreferredLocations>>) `compute` creates a <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> with `StateStoreId` (using <<checkpointLocation, checkpointLocation>>, <<operatorId, operatorId>> and the index of the input `partition`) and <<queryRunId, queryRunId>>.
 
-`compute` then requests `StateStore` for link:spark-sql-streaming-StateStore.adoc#get[the store for the StateStoreProviderId].
+`compute` then requests `StateStore` for link:spark-sql-streaming-StateStore.md#get[the store for the StateStoreProviderId].
 
 In the end, `compute` computes <<dataRDD, dataRDD>> (using the input `partition` and `ctxt`) followed by executing <<storeUpdateFunction, storeUpdateFunction>> (with the store and the result).
 
@@ -49,13 +49,13 @@ getPreferredLocations(partition: Partition): Seq[String]
 
 NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement preferences (aka _preferred task locations_), i.e. where tasks should be executed to be as close to the data as possible.
 
-`getPreferredLocations` creates a <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> with `StateStoreId` (using <<checkpointLocation, checkpointLocation>>, <<operatorId, operatorId>> and the index of the input `partition`) and <<queryRunId, queryRunId>>.
+`getPreferredLocations` creates a <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> with `StateStoreId` (using <<checkpointLocation, checkpointLocation>>, <<operatorId, operatorId>> and the index of the input `partition`) and <<queryRunId, queryRunId>>.
 
-NOTE: <<checkpointLocation, checkpointLocation>> and <<operatorId, operatorId>> are shared across different partitions and so the only difference in <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderIds>> is the partition index.
+NOTE: <<checkpointLocation, checkpointLocation>> and <<operatorId, operatorId>> are shared across different partitions and so the only difference in <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderIds>> is the partition index.
 
-In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the link:spark-sql-streaming-StateStoreCoordinatorRef.adoc#getLocation[location of the state store] for the <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>.
+In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the link:spark-sql-streaming-StateStoreCoordinatorRef.md#getLocation[location of the state store] for the <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>>.
 
-NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator] coordinates instances of `StateStores` across Spark executors in the cluster, and tracks their locations for job scheduling.
+NOTE: link:spark-sql-streaming-StateStoreCoordinator.md[StateStoreCoordinator] coordinates instances of `StateStores` across Spark executors in the cluster, and tracks their locations for job scheduling.
 
 === [[creating-instance]] Creating StateStoreRDD Instance
 
@@ -71,7 +71,7 @@ NOTE: link:spark-sql-streaming-StateStoreCoordinator.adoc[StateStoreCoordinator]
 * [[valueSchema]] *Value schema* - schema of the values
 * [[indexOrdinal]] Index
 * [[sessionState]] `SessionState`
-* [[storeCoordinator]] Optional <<spark-sql-streaming-StateStoreCoordinatorRef.adoc#, StateStoreCoordinatorRef>>
+* [[storeCoordinator]] Optional <<spark-sql-streaming-StateStoreCoordinatorRef.md#, StateStoreCoordinatorRef>>
 
 `StateStoreRDD` initializes the <<internal-properties, internal properties>>.
 

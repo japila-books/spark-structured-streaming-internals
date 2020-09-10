@@ -10,19 +10,19 @@
 | Configuration Property
 
 | minDeltasForSnapshot
-| [[minDeltasForSnapshot]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>>
+| [[minDeltasForSnapshot]] <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>>
 
 | maxVersionsToRetainInMemory
-| [[maxVersionsToRetainInMemory]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
+| [[maxVersionsToRetainInMemory]] <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
 
 | minVersionsToRetain
-| [[minVersionsToRetain]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
+| [[minVersionsToRetain]] <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
 
-Used exclusively when `HDFSBackedStateStoreProvider` is requested for <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#cleanup, cleanup>>.
+Used exclusively when `HDFSBackedStateStoreProvider` is requested for <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#cleanup, cleanup>>.
 
 | providerClass
-a| [[providerClass]] <<spark-sql-streaming-properties.adoc#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
+a| [[providerClass]] <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
 
-Used exclusively when `StateStoreProvider` helper object is requested to <<spark-sql-streaming-StateStoreProvider.adoc#createAndInit, create and initialize the StateStoreProvider>>.
+Used exclusively when `StateStoreProvider` helper object is requested to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize the StateStoreProvider>>.
 
 |===

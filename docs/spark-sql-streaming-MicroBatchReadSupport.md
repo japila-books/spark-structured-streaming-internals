@@ -1,9 +1,9 @@
 == [[MicroBatchReadSupport]] MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders
 
-`MicroBatchReadSupport` is the <<contract, extension>> of the `DataSourceV2` for <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
+`MicroBatchReadSupport` is the <<contract, extension>> of the `DataSourceV2` for <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 [[contract]][[createMicroBatchReader]]
-`MicroBatchReadSupport` defines a single `createMicroBatchReader` method to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>.
+`MicroBatchReadSupport` defines a single `createMicroBatchReader` method to create a <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>>.
 
 [source, java]
 ----
@@ -15,9 +15,9 @@ MicroBatchReader createMicroBatchReader(
 
 `createMicroBatchReader` is used when:
 
-* `MicroBatchExecution` is requested for the <<spark-sql-streaming-MicroBatchExecution.adoc#logicalPlan, analyzed logical plan>> (and creates a <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> for a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> with a `MicroBatchReadSupport` data source)
+* `MicroBatchExecution` is requested for the <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, analyzed logical plan>> (and creates a <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> for a <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with a `MicroBatchReadSupport` data source)
 
-* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, create a streaming query for a MicroBatchReadSupport data source>>
+* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, create a streaming query for a MicroBatchReadSupport data source>>
 
 [[implementations]]
 .MicroBatchReadSupports
@@ -26,13 +26,13 @@ MicroBatchReader createMicroBatchReader(
 | MicroBatchReadSupport
 | Description
 
-| <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>>
+| <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>>
 | [[KafkaSourceProvider]] Data source provider for `kafka` format
 
-| <<spark-sql-streaming-RateStreamProvider.adoc#, RateStreamProvider>>
+| <<spark-sql-streaming-RateStreamProvider.md#, RateStreamProvider>>
 | [[RateStreamProvider]] Data source provider for `rate` format
 
-| <<spark-sql-streaming-TextSocketSourceProvider.adoc#, TextSocketSourceProvider>>
+| <<spark-sql-streaming-TextSocketSourceProvider.md#, TextSocketSourceProvider>>
 | [[TextSocketSourceProvider]] Data source provider for `socket` format
 
 |===

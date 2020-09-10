@@ -1,6 +1,6 @@
 == [[DataStreamReader]] DataStreamReader -- Loading Data from Streaming Source
 
-`DataStreamReader` is the <<methods, interface>> to describe how data is <<load, loaded>> to a streaming `Dataset` from a <<spark-sql-streaming-Source.adoc#, streaming source>>.
+`DataStreamReader` is the <<methods, interface>> to describe how data is <<load, loaded>> to a streaming `Dataset` from a <<spark-sql-streaming-Source.md#, streaming source>>.
 
 [[methods]]
 .DataStreamReader's Methods
@@ -29,7 +29,7 @@ format(source: String): DataStreamReader
 
 Specifies the format of the <<source, data source>>
 
-The format is used internally as the name (_alias_) of the <<spark-sql-streaming-Source.adoc#, streaming source>> to use to load the data
+The format is used internally as the name (_alias_) of the <<spark-sql-streaming-Source.md#, streaming source>> to use to load the data
 
 | <<json, json>>
 a|
@@ -51,7 +51,7 @@ load(path: String): DataFrame // <1>
 ----
 <1> Explicit `path` (that could also be specified as an <<option, option>>)
 
-Creates a streaming `DataFrame` that represents "loading" streaming data (and is internally a logical plan with a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> or <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>> leaf logical operators)
+Creates a streaming `DataFrame` that represents "loading" streaming data (and is internally a logical plan with a <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> or <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>> leaf logical operators)
 
 | <<option, option>>
 a|
@@ -135,7 +135,7 @@ image::images/DataStreamReader-SparkSession-StreamingRelation.png[align="center"
 
 `DataStreamReader` is used for a Spark developer to describe how Spark Structured Streaming loads datasets from a streaming source (that <<load, in the end>> creates a logical plan for a streaming query).
 
-NOTE: `DataStreamReader` is the Spark developer-friendly API to create a link:spark-sql-streaming-StreamingRelation.adoc[StreamingRelation] logical operator (that represents a link:spark-sql-streaming-Source.adoc[streaming source] in a logical plan).
+NOTE: `DataStreamReader` is the Spark developer-friendly API to create a link:spark-sql-streaming-StreamingRelation.md[StreamingRelation] logical operator (that represents a link:spark-sql-streaming-Source.md[streaming source] in a logical plan).
 
 You can access `DataStreamReader` using `SparkSession.readStream` method.
 

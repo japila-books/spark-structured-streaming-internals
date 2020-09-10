@@ -23,9 +23,9 @@ Stops the streaming source or reader (and frees up any resources it may have all
 
 Used when:
 
-* `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.adoc#stopSources, stop streaming sources and readers>>
+* `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#stopSources, stop streaming sources and readers>>
 
-* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.adoc#load, load data from a MicroBatchReadSupport data source>> (for read schema)
+* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, load data from a MicroBatchReadSupport data source>> (for read schema)
 
 |===
 
@@ -36,16 +36,16 @@ Used when:
 | BaseStreamingSource
 | Description
 
-| <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>
-| [[ContinuousReader]] Data source readers in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> (based on Data Source API V2)
+| <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>
+| [[ContinuousReader]] Data source readers in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> (based on Data Source API V2)
 
-| <<spark-sql-streaming-MemoryStreamBase.adoc#, MemoryStreamBase>>
-| [[MemoryStreamBase]] Base implementation of <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>> (for <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>) and <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>> (for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>)
+| <<spark-sql-streaming-MemoryStreamBase.md#, MemoryStreamBase>>
+| [[MemoryStreamBase]] Base implementation of <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>> (for <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) and <<spark-sql-streaming-MemoryStream.md#, MemoryStream>> (for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>)
 
-| <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>>
-| [[MicroBatchReader]] Data source readers in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (based on Data Source API V2)
+| <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>>
+| [[MicroBatchReader]] Data source readers in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V2)
 
-| <<spark-sql-streaming-Source.adoc#, Source>>
-| [[Source]] Streaming sources for <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (based on Data Source API V1)
+| <<spark-sql-streaming-Source.md#, Source>>
+| [[Source]] Streaming sources for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
 
 |===

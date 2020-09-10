@@ -14,13 +14,13 @@ mapGroupsWithState[S: Encoder, U: Encoder](
 
 [NOTE]
 ====
-`mapGroupsWithState` is a special case of link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc[flatMapGroupsWithState] operator with the following:
+`mapGroupsWithState` is a special case of link:spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md[flatMapGroupsWithState] operator with the following:
 
 * `func` being transformed to return a single-element `Iterator`
 
-* link:spark-sql-streaming-OutputMode.adoc#Update[Update] output mode
+* link:spark-sql-streaming-OutputMode.md#Update[Update] output mode
 
-`mapGroupsWithState` also creates a `FlatMapGroupsWithState` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#isMapGroupsWithState[isMapGroupsWithState] internal flag enabled.
+`mapGroupsWithState` also creates a `FlatMapGroupsWithState` with link:spark-sql-streaming-FlatMapGroupsWithState.md#isMapGroupsWithState[isMapGroupsWithState] internal flag enabled.
 ====
 
 [source, scala]

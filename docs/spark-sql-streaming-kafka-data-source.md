@@ -38,7 +38,7 @@ val records = spark
 
 Kafka data source supports many options for reading.
 
-Internally, the *kafka* data source format for reading is available through <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> that is a <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.adoc#, ContinuousReadSupport>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
+Internally, the *kafka* data source format for reading is available through <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>> that is a <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
 
 === [[schema]] Predefined (Fixed) Schema
 
@@ -86,7 +86,7 @@ root
  |-- timestampType: integer (nullable = true)
 ----
 
-Internally, the fixed schema is defined as part of the `DataSourceReader` contract through <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> and <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> extension contracts for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
+Internally, the fixed schema is defined as part of the `DataSourceReader` contract through <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> and <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> extension contracts for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceReader.html[DataSourceReader] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
@@ -122,11 +122,11 @@ val sq = records
   .start
 ----
 
-Internally, the *kafka* data source format for writing is available through <<spark-sql-streaming-KafkaSourceProvider.adoc#, KafkaSourceProvider>> that is a <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>>.
+Internally, the *kafka* data source format for writing is available through <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>> that is a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>.
 
 === [[micro-batch-stream-processing]] Micro-Batch Stream Processing
 
-Kafka Data Source supports <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>> triggers) via <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>.
+Kafka Data Source supports <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.md#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.md#ProcessingTime, Trigger.ProcessingTime>> triggers) via <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>>.
 
 [source, scala]
 ----
@@ -151,13 +151,13 @@ val sq = spark
 sq.stop
 ----
 
-Kafka Data Source can assign a single task per Kafka partition (using <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#, KafkaOffsetRangeCalculator>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>).
+Kafka Data Source can assign a single task per Kafka partition (using <<spark-sql-streaming-KafkaOffsetRangeCalculator.md#, KafkaOffsetRangeCalculator>> in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
 
-Kafka Data Source can reuse a Kafka consumer (using <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>).
+Kafka Data Source can reuse a Kafka consumer (using <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>> in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
 
 === [[continuous-stream-processing]] Continuous Stream Processing
 
-Kafka Data Source supports <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.adoc#Continuous, Trigger.Continuous>> trigger) via <<spark-sql-streaming-KafkaContinuousReader.adoc#, KafkaContinuousReader>>.
+Kafka Data Source supports <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.md#Continuous, Trigger.Continuous>> trigger) via <<spark-sql-streaming-KafkaContinuousReader.md#, KafkaContinuousReader>>.
 
 [source, scala]
 ----
@@ -184,7 +184,7 @@ sq.stop
 
 === [[options]] Configuration Options
 
-NOTE: Options with *kafka.* prefix (e.g. <<kafka.bootstrap.servers, kafka.bootstrap.servers>>) are considered configuration properties for the Kafka consumers used on the <<spark-sql-streaming-KafkaSourceProvider.adoc#kafkaParamsForDriver, driver>> and <<spark-sql-streaming-KafkaSourceProvider.adoc#kafkaParamsForExecutors, executors>>.
+NOTE: Options with *kafka.* prefix (e.g. <<kafka.bootstrap.servers, kafka.bootstrap.servers>>) are considered configuration properties for the Kafka consumers used on the <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForDriver, driver>> and <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForExecutors, executors>>.
 
 .Kafka Data Source's Options (Case-Insensitive)
 [cols="1m,3",options="header",width="100%"]
@@ -193,20 +193,20 @@ NOTE: Options with *kafka.* prefix (e.g. <<kafka.bootstrap.servers, kafka.bootst
 | Description
 
 | assign
-a| [[assign]] link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
+a| [[assign]] link:spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
 
 ```
 {"topicA":[0,1],"topicB":[0,1]}
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
 
 | failOnDataLoss
 a| [[failOnDataLoss]] Flag to control whether...FIXME
 
 Default: `true`
 
-Used when `KafkaSourceProvider` is requested for <<spark-sql-streaming-KafkaSourceProvider.adoc#failOnDataLoss, failOnDataLoss configuration property>>
+Used when `KafkaSourceProvider` is requested for <<spark-sql-streaming-KafkaSourceProvider.md#failOnDataLoss, failOnDataLoss configuration property>>
 
 | kafka.bootstrap.servers
 a| [[kafka.bootstrap.servers]] *(required)* `bootstrap.servers` configuration property of the Kafka consumers used on the driver and executors
@@ -225,7 +225,7 @@ a| [[maxOffsetsPerTrigger]] Number of records to fetch per trigger (to limit the
 
 Default: `(undefined)`
 
-Unless defined, `KafkaSource` requests <<spark-sql-streaming-KafkaSource.adoc#kafkaReader, KafkaOffsetReader>> for the link:spark-sql-streaming-KafkaOffsetReader.adoc#fetchLatestOffsets[latest offsets].
+Unless defined, `KafkaSource` requests <<spark-sql-streaming-KafkaSource.md#kafkaReader, KafkaOffsetReader>> for the link:spark-sql-streaming-KafkaOffsetReader.md#fetchLatestOffsets[latest offsets].
 
 | minPartitions
 a| [[minPartitions]] Minimum number of partitions per executor (given Kafka partitions)
@@ -234,7 +234,7 @@ Default: `(undefined)`
 
 Must be undefined (default) or greater than `0`
 
-When undefined (default) or smaller than the number of `TopicPartitions` with records to consume from, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>> uses <<spark-sql-streaming-KafkaMicroBatchReader.adoc#rangeCalculator, KafkaOffsetRangeCalculator>> to <<spark-sql-streaming-KafkaOffsetRangeCalculator.adoc#getLocation, find the preferred executor>> for every `TopicPartition` (and the <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getSortedExecutorList, available executors>>).
+When undefined (default) or smaller than the number of `TopicPartitions` with records to consume from, <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>> uses <<spark-sql-streaming-KafkaMicroBatchReader.md#rangeCalculator, KafkaOffsetRangeCalculator>> to <<spark-sql-streaming-KafkaOffsetRangeCalculator.md#getLocation, find the preferred executor>> for every `TopicPartition` (and the <<spark-sql-streaming-KafkaMicroBatchReader.md#getSortedExecutorList, available executors>>).
 
 | startingOffsets
 a| [[startingOffsets]] Starting offsets
@@ -266,16 +266,16 @@ option(
 ====
 
 | subscribe
-a| [[subscribe]] link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
+a| [[subscribe]] link:spark-sql-streaming-ConsumerStrategy.md#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
 
 ```
 topic1,topic2,topic3
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
 
 | subscribepattern
-a| [[subscribepattern]] link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
+a| [[subscribepattern]] link:spark-sql-streaming-ConsumerStrategy.md#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
 
 ```
 topic\d
@@ -291,7 +291,7 @@ option("subscribepattern", """topic\d""")
 ----
 ====
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.adoc#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
 
 | topic
 a| [[topic]] Optional topic name to use for writing a streaming query
@@ -303,7 +303,7 @@ Unless defined, Kafka data source uses the topic names as defined in the `topic`
 
 === [[logical-query-plan-for-reading]] Logical Query Plan for Reading
 
-When `DataStreamReader` is requested to load a dataset with *kafka* data source format, it creates a DataFrame with a <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> leaf logical operator.
+When `DataStreamReader` is requested to load a dataset with *kafka* data source format, it creates a DataFrame with a <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> leaf logical operator.
 
 [source, scala]
 ----
@@ -315,7 +315,7 @@ StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1a366d0, k
 
 === [[logical-query-plan-for-writing]] Logical Query Plan for Writing
 
-When `DataStreamWriter` is requested to start a streaming query with *kafka* data source format for writing, it requests the `StreamingQueryManager` to <<spark-sql-streaming-StreamingQueryManager.adoc#createQuery, create a streaming query>> that in turn creates (a <<spark-sql-streaming-StreamingQueryWrapper.adoc#, StreamingQueryWrapper>> with) a <<spark-sql-streaming-ContinuousExecution.adoc#, ContinuousExecution>> or a <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> for <<continuous-stream-processing, continuous>> and <<micro-batch-stream-processing, micro-batch>> stream processing, respectively.
+When `DataStreamWriter` is requested to start a streaming query with *kafka* data source format for writing, it requests the `StreamingQueryManager` to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> that in turn creates (a <<spark-sql-streaming-StreamingQueryWrapper.md#, StreamingQueryWrapper>> with) a <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>> or a <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> for <<continuous-stream-processing, continuous>> and <<micro-batch-stream-processing, micro-batch>> stream processing, respectively.
 
 [source, scala]
 ----
@@ -328,7 +328,7 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 
 === [[demo]] Demo: Streaming Aggregation with Kafka Data Source
 
-Check out <<spark-sql-streaming-demo-kafka-data-source.adoc#, Demo: Streaming Aggregation with Kafka Data Source>>.
+Check out <<spark-sql-streaming-demo-kafka-data-source.md#, Demo: Streaming Aggregation with Kafka Data Source>>.
 
 [TIP]
 ====

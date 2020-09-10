@@ -1,6 +1,6 @@
 == [[Trigger]] Trigger -- How Frequently to Check Sources For New Data
 
-`Trigger` defines how often a link:spark-sql-streaming-StreamingQuery.adoc[streaming query] should be executed (_triggered_) and emit a new data (which `StreamExecution` uses to link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[resolve a TriggerExecutor]).
+`Trigger` defines how often a link:spark-sql-streaming-StreamingQuery.md[streaming query] should be executed (_triggered_) and emit a new data (which `StreamExecution` uses to link:spark-sql-streaming-StreamExecution.md#triggerExecutor[resolve a TriggerExecutor]).
 
 [[available-implementations]]
 [[available-triggers]]
@@ -45,7 +45,7 @@ Trigger ProcessingTime(String interval)
 
 |===
 
-NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.adoc#trigger[trigger] method.
+NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.md#trigger[trigger] method.
 
 [source, scala]
 ----
@@ -93,7 +93,7 @@ scala> println(query.lastProgress)
 }
 ----
 
-NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` link:spark-sql-streaming-StreamExecution.adoc#triggerExecutor[refuses such attempts] and reports an `IllegalStateException`.
+NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` link:spark-sql-streaming-StreamExecution.md#triggerExecutor[refuses such attempts] and reports an `IllegalStateException`.
 
 [source, scala]
 ----

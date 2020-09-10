@@ -7,7 +7,7 @@ explain(extended: Boolean): Unit
 ----
 <1> Calls `explain` with `extended` flag disabled
 
-`Dataset.explain` is a high-level operator that prints the link:spark-sql-LogicalPlan.adoc[logical] and (with `extended` flag enabled) link:spark-sql-SparkPlan.adoc[physical] plans to the console.
+`Dataset.explain` is a high-level operator that prints the link:spark-sql-LogicalPlan.md[logical] and (with `extended` flag enabled) link:spark-sql-SparkPlan.md[physical] plans to the console.
 
 [source, scala]
 ----
@@ -50,6 +50,6 @@ spark.sessionState.executePlan(explain)
 ----
 ====
 
-For streaming Datasets, `ExplainCommand` command simply creates a link:spark-sql-streaming-IncrementalExecution.adoc[IncrementalExecution] for the `SparkSession` and the logical plan.
+For streaming Datasets, `ExplainCommand` command simply creates a link:spark-sql-streaming-IncrementalExecution.md[IncrementalExecution] for the `SparkSession` and the logical plan.
 
 NOTE: For the purpose of `explain`, `IncrementalExecution` is created with the output mode `Append`, checkpoint location `<unknown>`, run id a random number, current batch id `0` and offset metadata empty. They do not really matter when explaining the load-part of a streaming query.

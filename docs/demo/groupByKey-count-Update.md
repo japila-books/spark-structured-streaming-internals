@@ -1,6 +1,6 @@
 == Demo: groupByKey Streaming Aggregation in Update Mode
 
-The example shows <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> streaming operator to count rows in <<spark-sql-streaming-OutputMode.adoc#Update, Update>> output mode.
+The example shows <<spark-sql-streaming-Dataset-operators.md#groupByKey, Dataset.groupByKey>> streaming operator to count rows in <<spark-sql-streaming-OutputMode.md#Update, Update>> output mode.
 
 In other words, it is an example of using `Dataset.groupByKey` with `count` aggregation function to count customer orders (`T`) per zip code (`K`).
 

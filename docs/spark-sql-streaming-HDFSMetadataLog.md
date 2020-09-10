@@ -1,6 +1,6 @@
 == [[HDFSMetadataLog]] HDFSMetadataLog -- Hadoop DFS-based Metadata Storage
 
-`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.adoc#, metadata storage>> (of type `T`) that uses Hadoop DFS for fault-tolerance and reliability.
+`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.md#, metadata storage>> (of type `T`) that uses Hadoop DFS for fault-tolerance and reliability.
 
 [[metadataPath]]
 `HDFSMetadataLog` uses the given <<path, path>> as the *metadata directory* with metadata logs. The path is immediately converted to a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for file management.
@@ -18,22 +18,22 @@
 | Description
 
 | _Anonymous_
-| [[KafkaSource]] `HDFSMetadataLog` of <<spark-sql-streaming-KafkaSourceOffset.adoc#, KafkaSourceOffsets>> for <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>
+| [[KafkaSource]] `HDFSMetadataLog` of <<spark-sql-streaming-KafkaSourceOffset.md#, KafkaSourceOffsets>> for <<spark-sql-streaming-KafkaSource.md#, KafkaSource>>
 
 | _Anonymous_
-| [[RateStreamMicroBatchReader]] `HDFSMetadataLog` of <<spark-sql-streaming-Offset.adoc#LongOffset, LongOffsets>> for <<spark-sql-streaming-RateStreamMicroBatchReader.adoc#, RateStreamMicroBatchReader>>
+| [[RateStreamMicroBatchReader]] `HDFSMetadataLog` of <<spark-sql-streaming-Offset.md#LongOffset, LongOffsets>> for <<spark-sql-streaming-RateStreamMicroBatchReader.md#, RateStreamMicroBatchReader>>
 
-| <<spark-sql-streaming-CommitLog.adoc#, CommitLog>>
-| [[CommitLog]] <<spark-sql-streaming-StreamExecution.adoc#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.adoc#, streaming query execution engines>>
+| <<spark-sql-streaming-CommitLog.md#, CommitLog>>
+| [[CommitLog]] <<spark-sql-streaming-StreamExecution.md#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.md#, streaming query execution engines>>
 
-| <<spark-sql-streaming-CompactibleFileStreamLog.adoc#, CompactibleFileStreamLog>>
+| <<spark-sql-streaming-CompactibleFileStreamLog.md#, CompactibleFileStreamLog>>
 | [[CompactibleFileStreamLog]] Compactible metadata logs (that compact logs at regular interval)
 
-| <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#, KafkaSourceInitialOffsetWriter>>
-| [[KafkaSourceInitialOffsetWriter]] `HDFSMetadataLog` of <<spark-sql-streaming-KafkaSourceOffset.adoc#, KafkaSourceOffsets>> for <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>
+| <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.md#, KafkaSourceInitialOffsetWriter>>
+| [[KafkaSourceInitialOffsetWriter]] `HDFSMetadataLog` of <<spark-sql-streaming-KafkaSourceOffset.md#, KafkaSourceOffsets>> for <<spark-sql-streaming-KafkaSource.md#, KafkaSource>>
 
-| <<spark-sql-streaming-OffsetSeqLog.adoc#, OffsetSeqLog>>
-| [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.adoc#offsetLog, Write-Ahead Log (WAL)>> of <<spark-sql-streaming-StreamExecution.adoc#, stream execution engines>>
+| <<spark-sql-streaming-OffsetSeqLog.md#, OffsetSeqLog>>
+| [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.md#offsetLog, Write-Ahead Log (WAL)>> of <<spark-sql-streaming-StreamExecution.md#, stream execution engines>>
 
 |===
 
@@ -77,7 +77,7 @@ NOTE: `deserialize` is used exclusively when `HDFSMetadataLog` is requested to <
 get(batchId: Long): Option[T]
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to get metadata of a batch.
+NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.md#get, MetadataLog Contract>> to get metadata of a batch.
 
 `get`...FIXME
 
@@ -90,7 +90,7 @@ get(
   endId: Option[Long]): Array[(Long, T)]
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.adoc#get, MetadataLog Contract>> to get metadata of range of batches.
+NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.md#get, MetadataLog Contract>> to get metadata of range of batches.
 
 `get`...FIXME
 
@@ -103,7 +103,7 @@ add(
   metadata: T): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.adoc#add, MetadataLog Contract>> to persist metadata of a streaming batch.
+NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.md#add, MetadataLog Contract>> to persist metadata of a streaming batch.
 
 `add` return `true` when the metadata of the streaming batch was not available and persisted successfully. Otherwise, `add` returns `false`.
 
@@ -118,7 +118,7 @@ Otherwise, when not found, `add` <<batchIdToPath, creates a metadata log file>> 
 getLatest(): Option[(Long, T)]
 ----
 
-NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.adoc#getLatest[MetadataLog Contract] to retrieve the recently-committed batch id and the corresponding metadata if available in the metadata storage.
+NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.md#getLatest[MetadataLog Contract] to retrieve the recently-committed batch id and the corresponding metadata if available in the metadata storage.
 
 `getLatest` requests the internal <<fileManager, FileManager>> for the files in <<metadataPath, metadata directory>> that match <<batchFilesFilter, batch file filter>>.
 
@@ -135,7 +135,7 @@ NOTE: It is possible that the batch id could be in the metadata storage, but not
 purge(thresholdBatchId: Long): Unit
 ----
 
-NOTE: `purge` is part of the <<spark-sql-streaming-MetadataLog.adoc#purge, MetadataLog Contract>> to...FIXME.
+NOTE: `purge` is part of the <<spark-sql-streaming-MetadataLog.md#purge, MetadataLog Contract>> to...FIXME.
 
 `purge`...FIXME
 
@@ -152,7 +152,7 @@ batchIdToPath(batchId: Long): Path
 ====
 `batchIdToPath` is used when:
 
-* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compact, compact>> and <<spark-sql-streaming-CompactibleFileStreamLog.adoc#allFiles, allFiles>>
+* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.md#compact, compact>> and <<spark-sql-streaming-CompactibleFileStreamLog.md#allFiles, allFiles>>
 
 * `HDFSMetadataLog` is requested to <<add, add>>, <<get, get>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 ====
@@ -181,7 +181,7 @@ pathToBatchId(path: Path): Long
 ====
 `pathToBatchId` is used when:
 
-* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compactInterval, compact interval>>
+* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.md#compactInterval, compact interval>>
 
 * `HDFSMetadataLog` is requested to <<isBatchFile, isBatchFile>>, <<get-range, get metadata of a range of batches>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 ====
@@ -202,7 +202,7 @@ verifyBatchIds(
 ====
 `verifyBatchIds` is used when:
 
-* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.adoc#get, get>>
+* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.md#get, get>>
 
 * `HDFSMetadataLog` is requested to <<get-range, get>>
 ====
@@ -222,17 +222,17 @@ parseVersion(
 ====
 `parseVersion` is used when:
 
-* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#deserialize, deserialize metadata>>
+* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.md#deserialize, deserialize metadata>>
 
-* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initial partition offsets>>
+* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.md#initialPartitionOffsets, initial partition offsets>>
 
-* `CommitLog` is requested to <<spark-sql-streaming-CommitLog.adoc#deserialize, deserialize metadata>>
+* `CommitLog` is requested to <<spark-sql-streaming-CommitLog.md#deserialize, deserialize metadata>>
 
-* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.adoc#deserialize, deserialize metadata>>
+* `CompactibleFileStreamLog` is requested to <<spark-sql-streaming-CompactibleFileStreamLog.md#deserialize, deserialize metadata>>
 
-* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.adoc#deserialize, deserialize metadata>>
+* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#deserialize, deserialize metadata>>
 
-* `RateStreamMicroBatchReader` is requested to <<spark-sql-streaming-RateStreamMicroBatchReader.adoc#deserialize, deserialize metadata>>
+* `RateStreamMicroBatchReader` is requested to <<spark-sql-streaming-RateStreamMicroBatchReader.md#deserialize, deserialize metadata>>
 ====
 
 === [[purgeAfter]] `purgeAfter` Method
@@ -255,7 +255,7 @@ writeBatchToFile(
   path: Path): Unit
 ----
 
-`writeBatchToFile` requests the <<fileManager, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.adoc#createAtomic, createAtomic>> (for the specified `path` and the `overwriteIfPossible` flag disabled).
+`writeBatchToFile` requests the <<fileManager, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#createAtomic, createAtomic>> (for the specified `path` and the `overwriteIfPossible` flag disabled).
 
 `writeBatchToFile` then <<serialize, serializes the metadata>> (to the `CancellableFSDataOutputStream` output stream) and closes the stream.
 
@@ -286,12 +286,12 @@ a| [[batchFilesFilter]] Hadoop's https://hadoop.apache.org/docs/r2.7.3/api/org/a
 
 Used when:
 
-* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.adoc#compactInterval, compactInterval>>
+* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.md#compactInterval, compactInterval>>
 
 * `HDFSMetadataLog` is requested to <<get, get batch metadata>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 
 | fileManager
-a| [[fileManager]] <<spark-sql-streaming-CheckpointFileManager.adoc#, CheckpointFileManager>>
+a| [[fileManager]] <<spark-sql-streaming-CheckpointFileManager.md#, CheckpointFileManager>>
 
 Used when...FIXME
 

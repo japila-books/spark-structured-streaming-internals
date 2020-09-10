@@ -1,8 +1,8 @@
 == [[TextSocketSourceProvider]] TextSocketSourceProvider
 
-`TextSocketSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.adoc[StreamSourceProvider] for link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource] that read records from `host` and `port`.
+`TextSocketSourceProvider` is a link:spark-sql-streaming-StreamSourceProvider.md[StreamSourceProvider] for link:spark-sql-streaming-TextSocketSource.md[TextSocketSource] that read records from `host` and `port`.
 
-`TextSocketSourceProvider` is a link:spark-sql-DataSourceRegister.adoc[DataSourceRegister], too.
+`TextSocketSourceProvider` is a link:spark-sql-DataSourceRegister.md[DataSourceRegister], too.
 
 The short name of the data source is `socket`.
 
@@ -19,7 +19,7 @@ CAUTION: FIXME
 
 === [[createSource]] createSource
 
-`createSource` grabs the two mandatory options -- `host` and `port` -- and returns an link:spark-sql-streaming-TextSocketSource.adoc[TextSocketSource].
+`createSource` grabs the two mandatory options -- `host` and `port` -- and returns an link:spark-sql-streaming-TextSocketSource.md[TextSocketSource].
 
 === [[sourceSchema]] sourceSchema
 
@@ -27,9 +27,9 @@ CAUTION: FIXME
 
 1. `SCHEMA_REGULAR` (default) which is a schema with a single `value` field of String type.
 
-2. `SCHEMA_TIMESTAMP` when `<<includeTimestamp, includeTimestamp>>` flag option is set. It is not, i.e. `false`, by default. The schema are `value` field of `StringType` type and `timestamp` field of link:spark-sql-DataType.adoc#TimestampType[TimestampType] type of format `yyyy-MM-dd HH:mm:ss`.
+2. `SCHEMA_TIMESTAMP` when `<<includeTimestamp, includeTimestamp>>` flag option is set. It is not, i.e. `false`, by default. The schema are `value` field of `StringType` type and `timestamp` field of link:spark-sql-DataType.md#TimestampType[TimestampType] type of format `yyyy-MM-dd HH:mm:ss`.
 
-TIP: Read about link:spark-sql-schema.adoc[schema].
+TIP: Read about link:spark-sql-schema.md[schema].
 
 Internally, it starts by printing out the following WARN message to the logs:
 

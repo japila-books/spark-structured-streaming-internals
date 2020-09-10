@@ -9,7 +9,7 @@ Dataset API comes with a set of <<operators, operators>> that are of particular 
 | Operator
 | Description
 
-| <<spark-sql-streaming-Dataset-crossJoin.adoc#, crossJoin>>
+| <<spark-sql-streaming-Dataset-crossJoin.md#, crossJoin>>
 a| [[crossJoin]]
 
 [source, scala]
@@ -18,7 +18,7 @@ crossJoin(
   right: Dataset[_]): DataFrame
 ----
 
-| <<spark-sql-streaming-Dataset-dropDuplicates.adoc#, dropDuplicates>>
+| <<spark-sql-streaming-Dataset-dropDuplicates.md#, dropDuplicates>>
 a| [[dropDuplicates]]
 
 [source, scala]
@@ -30,7 +30,7 @@ dropDuplicates(col1: String, cols: String*): Dataset[T]
 
 Drops duplicate records (given a subset of columns)
 
-| <<spark-sql-streaming-Dataset-explain.adoc#, explain>>
+| <<spark-sql-streaming-Dataset-explain.md#, explain>>
 a| [[explain]]
 
 [source, scala]
@@ -41,7 +41,7 @@ explain(extended: Boolean): Unit
 
 Explains query plans
 
-| <<spark-sql-streaming-Dataset-groupBy.adoc#, groupBy>>
+| <<spark-sql-streaming-Dataset-groupBy.md#, groupBy>>
 a| [[groupBy]]
 
 [source, scala]
@@ -52,7 +52,7 @@ groupBy(col1: String, cols: String*): RelationalGroupedDataset
 
 Aggregates rows by zero, one or more columns
 
-| <<spark-sql-streaming-Dataset-groupByKey.adoc#, groupByKey>>
+| <<spark-sql-streaming-Dataset-groupByKey.md#, groupByKey>>
 a| [[groupByKey]]
 
 [source, scala]
@@ -60,9 +60,9 @@ a| [[groupByKey]]
 groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
 ----
 
-Aggregates rows by a typed grouping function (and gives a <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>>)
+Aggregates rows by a typed grouping function (and gives a <<spark-sql-streaming-KeyValueGroupedDataset.md#, KeyValueGroupedDataset>>)
 
-| <<spark-sql-streaming-Dataset-join.adoc#, join>>
+| <<spark-sql-streaming-Dataset-join.md#, join>>
 a| [[join]]
 
 [source, scala]
@@ -88,7 +88,7 @@ join(
   usingColumn: String): DataFrame
 ----
 
-| <<spark-sql-streaming-Dataset-joinWith.adoc#, joinWith>>
+| <<spark-sql-streaming-Dataset-joinWith.md#, joinWith>>
 a| [[joinWith]]
 
 [source, scala]
@@ -102,7 +102,7 @@ joinWith[U](
   joinType: String): Dataset[(T, U)]
 ----
 
-| <<spark-sql-streaming-Dataset-withWatermark.adoc#, withWatermark>>
+| <<spark-sql-streaming-Dataset-withWatermark.md#, withWatermark>>
 a| [[withWatermark]]
 
 [source, scala]
@@ -112,7 +112,7 @@ withWatermark(
   delayThreshold: String): Dataset[T]
 ----
 
-Defines a <<spark-sql-streaming-watermark.adoc#, streaming watermark>> (on the given `eventTime` column with a delay threshold)
+Defines a <<spark-sql-streaming-watermark.md#, streaming watermark>> (on the given `eventTime` column with a delay threshold)
 
 | `writeStream`
 a| [[writeStream]]
@@ -122,7 +122,7 @@ a| [[writeStream]]
 writeStream: DataStreamWriter[T]
 ----
 
-Creates a <<spark-sql-streaming-DataStreamWriter.adoc#, DataStreamWriter>> for persisting the result of a streaming query to an external data system
+Creates a <<spark-sql-streaming-DataStreamWriter.md#, DataStreamWriter>> for persisting the result of a streaming query to an external data system
 
 |===
 

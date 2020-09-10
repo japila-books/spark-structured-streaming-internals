@@ -5,7 +5,7 @@
 `InputProcessor` is <<creating-instance, created>> when [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator is executed (and uses `InputProcessor` in the `storeUpdateFunction` while processing rows per partition with a corresponding per-partition state store).
 
 [[creating-instance]][[store]]
-`InputProcessor` takes a single <<spark-sql-streaming-StateStore.adoc#, StateStore>> to be created. The `StateStore` manages the per-group state (and is used when processing <<processNewData, new data>> and <<processTimedOutState, timed-out state data>>, and in the ["all rows processed" callback](#onIteratorCompletion)).
+`InputProcessor` takes a single <<spark-sql-streaming-StateStore.md#, StateStore>> to be created. The `StateStore` manages the per-group state (and is used when processing <<processNewData, new data>> and <<processTimedOutState, timed-out state data>>, and in the ["all rows processed" callback](#onIteratorCompletion)).
 
 === [[processNewData]] Processing New Data (Creating Iterator of New Data Processed) -- `processNewData` Method
 
@@ -16,7 +16,7 @@ processNewData(dataIter: Iterator[InternalRow]): Iterator[InternalRow]
 
 `processNewData` creates a grouped iterator of (of pairs of) per-group state keys and the row values from the given data iterator (`dataIter`) with the [grouping attributes](physical-operators/FlatMapGroupsWithStateExec.md#groupingAttributes) and the output schema of the [child operator](physical-operators/FlatMapGroupsWithStateExec.md#child) (of the parent `FlatMapGroupsWithStateExec` physical operator).
 
-For every per-group state key (in the grouped iterator), `processNewData` requests the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) (of the parent `FlatMapGroupsWithStateExec` physical operator) to <<spark-sql-streaming-StateManager.adoc#getState, get the state>> (from the <<spark-sql-streaming-StateStore.adoc#, StateStore>>) and <<callFunctionAndUpdateState, callFunctionAndUpdateState>> (with the `hasTimedOut` flag off, i.e. `false`).
+For every per-group state key (in the grouped iterator), `processNewData` requests the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) (of the parent `FlatMapGroupsWithStateExec` physical operator) to <<spark-sql-streaming-StateManager.md#getState, get the state>> (from the <<spark-sql-streaming-StateStore.md#, StateStore>>) and <<callFunctionAndUpdateState, callFunctionAndUpdateState>> (with the `hasTimedOut` flag off, i.e. `false`).
 
 `processNewData` is used when [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator is executed.
 
@@ -31,11 +31,11 @@ processTimedOutState(): Iterator[InternalRow]
 
 With [timeout enabled](physical-operators/FlatMapGroupsWithStateExec.md#isTimeoutEnabled), `processTimedOutState` gets the current timeout threshold per [GroupStateTimeout](physical-operators/FlatMapGroupsWithStateExec.md#timeoutConf):
 
-* [batchTimestampMs](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) for <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, ProcessingTimeTimeout>>
+* [batchTimestampMs](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) for <<spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout, ProcessingTimeTimeout>>
 
-* [eventTimeWatermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) for <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, EventTimeTimeout>>
+* [eventTimeWatermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) for <<spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout, EventTimeTimeout>>
 
-`processTimedOutState` creates an iterator of timed-out state data by requesting the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) for <<spark-sql-streaming-StateManager.adoc#getAllState, all the available state data>> (in the <<store, StateStore>>) and takes only the state data with timeout defined and below the current timeout threshold.
+`processTimedOutState` creates an iterator of timed-out state data by requesting the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) for <<spark-sql-streaming-StateManager.md#getAllState, all the available state data>> (in the <<store, StateStore>>) and takes only the state data with timeout defined and below the current timeout threshold.
 
 In the end, for every timed-out state data, `processTimedOutState` <<callFunctionAndUpdateState, callFunctionAndUpdateState>> (with the `hasTimedOut` flag enabled).
 
@@ -95,7 +95,7 @@ onIteratorCompletion: Unit
 
 When the `GroupStateImpl` has been marked [removed](GroupStateImpl.md#hasRemoved) and no [timeout timestamp](GroupStateImpl.md#getTimeoutTimestamp) is specified, `onIteratorCompletion` does the following:
 
-. Requests the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) (of the parent `FlatMapGroupsWithStateExec` operator) to <<spark-sql-streaming-StateManager.adoc#removeState, remove the state>> (from the <<store, StateStore>> for the key row of the given `StateData`)
+. Requests the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) (of the parent `FlatMapGroupsWithStateExec` operator) to <<spark-sql-streaming-StateManager.md#removeState, remove the state>> (from the <<store, StateStore>> for the key row of the given `StateData`)
 
 . Increments the <<numUpdatedStateRows, numUpdatedStateRows>> performance metric
 
@@ -103,7 +103,7 @@ Otherwise, when the `GroupStateImpl` has not been marked [removed](GroupStateImp
 
 (only when the `GroupStateImpl` has been [updated](GroupStateImpl.md#hasUpdated), [removed](GroupStateImpl.md#hasRemoved) or the timeout timestamp changed) `onIteratorCompletion` does the following:
 
-. Requests the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) (of the parent `FlatMapGroupsWithStateExec` operator) to <<spark-sql-streaming-StateManager.adoc#putState, persist the state>> (in the <<store, StateStore>> with the key row, updated state object, and the timeout timestamp of the given `StateData`)
+. Requests the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) (of the parent `FlatMapGroupsWithStateExec` operator) to <<spark-sql-streaming-StateManager.md#putState, persist the state>> (in the <<store, StateStore>> with the key row, updated state object, and the timeout timestamp of the given `StateData`)
 
 . Increments the <<numUpdatedStateRows, numUpdatedStateRows>> performance metrics
 

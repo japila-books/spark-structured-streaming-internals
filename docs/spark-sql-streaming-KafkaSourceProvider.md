@@ -5,15 +5,15 @@
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceRegister.html[DataSourceRegister] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`KafkaSourceProvider` supports <<spark-sql-streaming-micro-batch-stream-processing.adoc#, micro-batch stream processing>> (through <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> contract) and <<createMicroBatchReader, creates a specialized KafkaMicroBatchReader>>.
+`KafkaSourceProvider` supports <<spark-sql-streaming-micro-batch-stream-processing.md#, micro-batch stream processing>> (through <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> contract) and <<createMicroBatchReader, creates a specialized KafkaMicroBatchReader>>.
 
-`KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.adoc#, DataStreamReader>> or <<spark-sql-streaming-DataStreamWriter.adoc#, DataStreamWriter>>):
+`KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.md#, DataStreamReader>> or <<spark-sql-streaming-DataStreamWriter.md#, DataStreamWriter>>):
 
-* Exactly one of the following options: <<spark-sql-streaming-kafka-data-source.adoc#subscribe, subscribe>>, <<spark-sql-streaming-kafka-data-source.adoc#subscribePattern, subscribePattern>> or <<spark-sql-streaming-kafka-data-source.adoc#assign, assign>>
+* Exactly one of the following options: <<spark-sql-streaming-kafka-data-source.md#subscribe, subscribe>>, <<spark-sql-streaming-kafka-data-source.md#subscribePattern, subscribePattern>> or <<spark-sql-streaming-kafka-data-source.md#assign, assign>>
 
-* <<spark-sql-streaming-kafka-data-source.adoc#kafka.bootstrap.servers, kafka.bootstrap.servers>>
+* <<spark-sql-streaming-kafka-data-source.md#kafka.bootstrap.servers, kafka.bootstrap.servers>>
 
-TIP: Refer to <<spark-sql-streaming-kafka-data-source.adoc#options, Kafka Data Source's Options>> for the supported configuration options.
+TIP: Refer to <<spark-sql-streaming-kafka-data-source.md#options, Kafka Data Source's Options>> for the supported configuration options.
 
 Internally, `KafkaSourceProvider` sets the <<kafkaParamsForExecutors-properties, properties for Kafka Consumers on executors>> (that are passed on to `InternalKafkaConsumer` when requested to create a Kafka consumer with a single `TopicPartition` manually assigned).
 
@@ -62,7 +62,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaSourceProvider=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[createSource]] Creating Streaming Source -- `createSource` Method
@@ -77,7 +77,7 @@ createSource(
   parameters: Map[String, String]): Source
 ----
 
-NOTE: `createSource` is part of the <<spark-sql-streaming-StreamSourceProvider.adoc#createSource, StreamSourceProvider Contract>> to create a <<spark-sql-streaming-Source.adoc#, streaming source>> for a format or system (to continually read data).
+NOTE: `createSource` is part of the <<spark-sql-streaming-StreamSourceProvider.md#createSource, StreamSourceProvider Contract>> to create a <<spark-sql-streaming-Source.md#, streaming source>> for a format or system (to continually read data).
 
 `createSource` first <<validateStreamOptions, validates stream options>>.
 
@@ -143,7 +143,7 @@ NOTE: `validateGeneralOptions` is used when `KafkaSourceProvider` validates opti
 strategy(caseInsensitiveParams: Map[String, String])
 ----
 
-Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that are one of the following and creates a corresponding link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy].
+Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that are one of the following and creates a corresponding link:spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy].
 
 .KafkaSourceProvider.strategy's Key to ConsumerStrategy Conversion
 [cols="1m,2",options="header",width="100%"]
@@ -152,7 +152,7 @@ Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that 
 | ConsumerStrategy
 
 | assign
-a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[AssignStrategy] with Kafka's http://kafka.apache.org/0110/javadoc/org/apache/kafka/common/TopicPartition.html[TopicPartitions].
+a| link:spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[AssignStrategy] with Kafka's http://kafka.apache.org/0110/javadoc/org/apache/kafka/common/TopicPartition.html[TopicPartitions].
 
 ---
 
@@ -165,7 +165,7 @@ a| link:spark-sql-streaming-ConsumerStrategy.adoc#AssignStrategy[AssignStrategy]
 The topic names and partitions are mapped directly to Kafka's `TopicPartition` objects.
 
 | subscribe
-a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribeStrategy[SubscribeStrategy] with topic names
+a| link:spark-sql-streaming-ConsumerStrategy.md#SubscribeStrategy[SubscribeStrategy] with topic names
 
 ---
 
@@ -176,7 +176,7 @@ topic1,topic2,topic3
 ```
 
 | subscribepattern
-a| link:spark-sql-streaming-ConsumerStrategy.adoc#SubscribePatternStrategy[SubscribePatternStrategy] with topic subscription regex pattern (that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the pattern), e.g.
+a| link:spark-sql-streaming-ConsumerStrategy.md#SubscribePatternStrategy[SubscribePatternStrategy] with topic subscription regex pattern (that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the pattern), e.g.
 
 ```
 topic\d
@@ -204,9 +204,9 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ----
 
-NOTE: `sourceSchema` is part of the <<spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema, StreamSourceProvider Contract>> to describe a <<spark-sql-streaming-Source.adoc#, streaming source>> with a name and the schema.
+NOTE: `sourceSchema` is part of the <<spark-sql-streaming-StreamSourceProvider.md#sourceSchema, StreamSourceProvider Contract>> to describe a <<spark-sql-streaming-Source.md#, streaming source>> with a name and the schema.
 
-`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the link:spark-sql-streaming-KafkaOffsetReader.adoc#kafkaSchema[fixed schema].
+`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the link:spark-sql-streaming-KafkaOffsetReader.md#kafkaSchema[fixed schema].
 
 Internally, `sourceSchema` <<validateStreamOptions, validates Kafka options>> and makes sure that the optional input `schema` is indeed undefined.
 
@@ -243,7 +243,7 @@ createContinuousReader(
   options: DataSourceOptions): KafkaContinuousReader
 ----
 
-NOTE: `createContinuousReader` is part of the <<spark-sql-streaming-ContinuousReadSupport.adoc#createContinuousReader, ContinuousReadSupport Contract>> to create a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>.
+NOTE: `createContinuousReader` is part of the <<spark-sql-streaming-ContinuousReadSupport.md#createContinuousReader, ContinuousReadSupport Contract>> to create a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>.
 
 `createContinuousReader`...FIXME
 
@@ -259,11 +259,11 @@ getKafkaOffsetRangeLimit(
 
 `getKafkaOffsetRangeLimit` finds the given `offsetOptionKey` in the `params` and does the following conversion:
 
-* *latest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#LatestOffsetRangeLimit, LatestOffsetRangeLimit>>
+* *latest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.md#LatestOffsetRangeLimit, LatestOffsetRangeLimit>>
 
-* *earliest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#EarliestOffsetRangeLimit, EarliestOffsetRangeLimit>>
+* *earliest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.md#EarliestOffsetRangeLimit, EarliestOffsetRangeLimit>>
 
-* A JSON-formatted text becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#SpecificOffsetRangeLimit, SpecificOffsetRangeLimit>>
+* A JSON-formatted text becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.md#SpecificOffsetRangeLimit, SpecificOffsetRangeLimit>>
 
 * When the given `offsetOptionKey` is not found, `getKafkaOffsetRangeLimit` returns the given `defaultOffsets`
 
@@ -279,7 +279,7 @@ createMicroBatchReader(
   options: DataSourceOptions): KafkaMicroBatchReader
 ----
 
-NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.adoc#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
+NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.md#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 `createMicroBatchReader` <<validateStreamOptions, validateStreamOptions>> (in the given `DataSourceOptions`).
 
@@ -287,7 +287,7 @@ NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchRe
 
 `createMicroBatchReader` finds all the parameters (in the given `DataSourceOptions`) that start with *kafka.* prefix, removes the prefix, and creates the current Kafka parameters.
 
-`createMicroBatchReader` creates a <<spark-sql-streaming-KafkaOffsetReader.adoc#, KafkaOffsetReader>> with the following:
+`createMicroBatchReader` creates a <<spark-sql-streaming-KafkaOffsetReader.md#, KafkaOffsetReader>> with the following:
 
 * <<strategy, strategy>> (in the given `DataSourceOptions`)
 
@@ -297,7 +297,7 @@ NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchRe
 
 * *spark-kafka-source-[randomUUID]-[metadataPath_hashCode]-driver* for the `driverGroupIdPrefix`
 
-In the end, `createMicroBatchReader` creates a <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>> with the following:
+In the end, `createMicroBatchReader` creates a <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>> with the following:
 
 * the `KafkaOffsetReader`
 
@@ -305,7 +305,7 @@ In the end, `createMicroBatchReader` creates a <<spark-sql-streaming-KafkaMicroB
 
 * The given `DataSourceOptions` and the `metadataPath`
 
-* <<getKafkaOffsetRangeLimit, Starting stream offsets>> (<<spark-sql-streaming-kafka-data-source.adoc#startingOffsets, startingOffsets>> option with the default of `LatestOffsetRangeLimit` offsets)
+* <<getKafkaOffsetRangeLimit, Starting stream offsets>> (<<spark-sql-streaming-kafka-data-source.md#startingOffsets, startingOffsets>> option with the default of `LatestOffsetRangeLimit` offsets)
 
 * <<failOnDataLoss, failOnDataLoss configuration property>>
 
@@ -365,9 +365,9 @@ executor: Set [key] to [value], earlier value: [value]
 ====
 `kafkaParamsForExecutors` is used when:
 
-* `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>), <<createMicroBatchReader, createMicroBatchReader>> (for a <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>), and <<createContinuousReader, createContinuousReader>> (for a <<spark-sql-streaming-KafkaContinuousReader.adoc#, KafkaContinuousReader>>)
+* `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a <<spark-sql-streaming-KafkaSource.md#, KafkaSource>>), <<createMicroBatchReader, createMicroBatchReader>> (for a <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>>), and <<createContinuousReader, createContinuousReader>> (for a <<spark-sql-streaming-KafkaContinuousReader.md#, KafkaContinuousReader>>)
 
-* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, buildScan>> (for a `KafkaSourceRDD`)
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.md#buildScan, buildScan>> (for a `KafkaSourceRDD`)
 ====
 
 === [[failOnDataLoss]] Looking Up failOnDataLoss Configuration Property -- `failOnDataLoss` Internal Method
@@ -379,4 +379,4 @@ failOnDataLoss(caseInsensitiveParams: Map[String, String]): Boolean
 
 `failOnDataLoss` simply looks up the `failOnDataLoss` configuration property in the given `caseInsensitiveParams` (in case-insensitive manner) or defaults to `true`.
 
-NOTE: `failOnDataLoss` is used when `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>), <<createMicroBatchReader, createMicroBatchReader>> (for a <<spark-sql-streaming-KafkaMicroBatchReader.adoc#, KafkaMicroBatchReader>>), <<createContinuousReader, createContinuousReader>> (for a <<spark-sql-streaming-KafkaContinuousReader.adoc#, KafkaContinuousReader>>), and <<createRelation, createRelation>> (for a <<spark-sql-streaming-KafkaRelation.adoc#, KafkaRelation>>).
+NOTE: `failOnDataLoss` is used when `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a <<spark-sql-streaming-KafkaSource.md#, KafkaSource>>), <<createMicroBatchReader, createMicroBatchReader>> (for a <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>>), <<createContinuousReader, createContinuousReader>> (for a <<spark-sql-streaming-KafkaContinuousReader.md#, KafkaContinuousReader>>), and <<createRelation, createRelation>> (for a <<spark-sql-streaming-KafkaRelation.md#, KafkaRelation>>).

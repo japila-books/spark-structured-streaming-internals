@@ -1,12 +1,12 @@
 == [[KafkaOffsetRangeCalculator]] KafkaOffsetRangeCalculator
 
-`KafkaOffsetRangeCalculator` is <<apply, created>> for <<spark-sql-streaming-KafkaMicroBatchReader.adoc#rangeCalculator, KafkaMicroBatchReader>> to <<getRanges, calculate offset ranges>> (when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>).
+`KafkaOffsetRangeCalculator` is <<apply, created>> for <<spark-sql-streaming-KafkaMicroBatchReader.md#rangeCalculator, KafkaMicroBatchReader>> to <<getRanges, calculate offset ranges>> (when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.md#planInputPartitions, planInputPartitions>>).
 
 [[minPartitions]][[creating-instance]]
 `KafkaOffsetRangeCalculator` takes an optional *minimum number of partitions per executor* (`minPartitions`) to be created (that can either be undefined or greater than `0`).
 
 [[apply]]
-When created with a `DataSourceOptions`, `KafkaOffsetRangeCalculator` uses <<spark-sql-streaming-kafka-data-source.adoc#minPartitions, minPartitions>> option for the <<minPartitions, minimum number of partitions per executor>>.
+When created with a `DataSourceOptions`, `KafkaOffsetRangeCalculator` uses <<spark-sql-streaming-kafka-data-source.md#minPartitions, minPartitions>> option for the <<minPartitions, minimum number of partitions per executor>>.
 
 === [[getRanges]] Offset Ranges -- `getRanges` Method
 
@@ -30,7 +30,7 @@ For the <<minPartitions, minimum number of partitions per executor>> undefined o
 
 Otherwise (with the <<minPartitions, minimum number of partitions per executor>> defined and greater than the number of `KafkaOffsetRanges`), `getRanges` splits `KafkaOffsetRanges` into smaller ones.
 
-NOTE: `getRanges` is used exclusively when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#planInputPartitions, planInputPartitions>>.
+NOTE: `getRanges` is used exclusively when `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.md#planInputPartitions, planInputPartitions>>.
 
 === [[KafkaOffsetRange]] KafkaOffsetRange -- TopicPartition with From and Until Offsets and Optional Preferred Location
 

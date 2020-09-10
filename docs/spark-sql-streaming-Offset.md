@@ -21,15 +21,15 @@ Converts the offset to JSON format (JSON-encoded offset)
 
 Used when:
 
-* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch, construct the next streaming micro-batch>> and <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch, run a streaming micro-batch>> (with <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReader>> sources)
+* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> and <<spark-sql-streaming-MicroBatchExecution.md#runBatch, run a streaming micro-batch>> (with <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> sources)
 
-* `OffsetSeq` is requested for the <<spark-sql-streaming-OffsetSeq.adoc#toString, textual representation>>
+* `OffsetSeq` is requested for the <<spark-sql-streaming-OffsetSeq.md#toString, textual representation>>
 
-* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.adoc#serialize, serialize metadata (write metadata in serialized format)>>
+* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#serialize, serialize metadata (write metadata in serialized format)>>
 
-* `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#recordTriggerOffsets, record trigger offsets>>
+* `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#recordTriggerOffsets, record trigger offsets>>
 
-* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>> and <<spark-sql-streaming-ContinuousExecution.adoc#commit, commit an epoch>>
+* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> and <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
 
 |===
 
@@ -46,7 +46,7 @@ Used when:
 | FileStreamSourceOffset
 | [[FileStreamSourceOffset]]
 
-| <<spark-sql-streaming-KafkaSourceOffset.adoc#, KafkaSourceOffset>>
+| <<spark-sql-streaming-KafkaSourceOffset.md#, KafkaSourceOffset>>
 | [[KafkaSourceOffset]]
 
 | LongOffset
@@ -56,7 +56,7 @@ Used when:
 | [[RateStreamOffset]]
 
 | SerializedOffset
-| [[SerializedOffset]] JSON-encoded offset that is used when loading an offset from an external storage, e.g. from <<spark-sql-streaming-offsets-and-metadata-checkpointing.adoc#, checkpoint>> after restart
+| [[SerializedOffset]] JSON-encoded offset that is used when loading an offset from an external storage, e.g. from <<spark-sql-streaming-offsets-and-metadata-checkpointing.md#, checkpoint>> after restart
 
 | TextSocketOffset
 | [[TextSocketOffset]]

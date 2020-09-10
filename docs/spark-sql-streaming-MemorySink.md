@@ -1,6 +1,6 @@
 == [[MemorySink]] MemorySink
 
-`MemorySink` is a <<spark-sql-streaming-Sink.adoc#, streaming sink>> that <<addBatch, stores batches (records) in memory>>.
+`MemorySink` is a <<spark-sql-streaming-Sink.md#, streaming sink>> that <<addBatch, stores batches (records) in memory>>.
 
 `MemorySink` is intended only for testing or demos.
 
@@ -12,7 +12,7 @@ Use `toDebugString` to see the batches.
 
 Its aim is to allow users to test streaming applications in the Spark shell or other local tests.
 
-You can set `checkpointLocation` using `option` method or it will be set to link:spark-sql-streaming-properties.adoc#spark-sql-streaming-properties.adoc[spark.sql.streaming.checkpointLocation] property.
+You can set `checkpointLocation` using `option` method or it will be set to link:spark-sql-streaming-properties.md#spark-sql-streaming-properties.md[spark.sql.streaming.checkpointLocation] property.
 
 If `spark.sql.streaming.checkpointLocation` is set, the code uses `$location/$queryName` directory.
 
@@ -22,11 +22,11 @@ NOTE: The directory is cleaned up at shutdown using `ShutdownHookManager.registe
 
 It creates `MemorySink` instance based on the schema of the DataFrame it operates on.
 
-It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created earlier and registers it as a temporary table (using link:spark-sql-dataframe.adoc#registerTempTable[DataFrame.registerTempTable] method).
+It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created earlier and registers it as a temporary table (using link:spark-sql-dataframe.md#registerTempTable[DataFrame.registerTempTable] method).
 
-NOTE: At this point you can query the table as if it were a regular non-streaming table using link:spark-sql-sqlcontext.adoc#sql[sql] method.
+NOTE: At this point you can query the table as if it were a regular non-streaming table using link:spark-sql-sqlcontext.md#sql[sql] method.
 
-A new link:spark-sql-streaming-StreamingQuery.adoc[StreamingQuery] is started (using link:spark-sql-streaming-StreamingQueryManager.adoc#startQuery[StreamingQueryManager.startQuery]) and returned.
+A new link:spark-sql-streaming-StreamingQuery.md[StreamingQuery] is started (using link:spark-sql-streaming-StreamingQueryManager.md#startQuery[StreamingQueryManager.startQuery]) and returned.
 
 [[logging]]
 [TIP]
@@ -39,7 +39,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.MemorySink=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating MemorySink Instance
@@ -47,7 +47,7 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 `MemorySink` takes the following to be created:
 
 * [[schema]] Output schema
-* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>>
+* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, OutputMode>>
 
 `MemorySink` initializes the <<batches, batches>> internal property.
 
@@ -60,9 +60,9 @@ batches: ArrayBuffer[AddedData]
 
 `batches` holds data from streaming batches that have been <<addBatch, added>> (_written_) to this sink.
 
-For <<spark-sql-streaming-OutputMode.adoc#Append, Append>> and <<spark-sql-streaming-OutputMode.adoc#Update, Update>> output modes, `batches` holds rows from all batches.
+For <<spark-sql-streaming-OutputMode.md#Append, Append>> and <<spark-sql-streaming-OutputMode.md#Update, Update>> output modes, `batches` holds rows from all batches.
 
-For <<spark-sql-streaming-OutputMode.adoc#Complete, Complete>> output mode, `batches` holds rows from the last batch only.
+For <<spark-sql-streaming-OutputMode.md#Complete, Complete>> output mode, `batches` holds rows from the last batch only.
 
 `batches` can be cleared (_emptied_) using <<clear, clear>>.
 
@@ -75,7 +75,7 @@ addBatch(
   data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is part of the <<spark-sql-streaming-Sink.adoc#addBatch, Sink Contract>> to "add" a batch of data to the sink.
+NOTE: `addBatch` is part of the <<spark-sql-streaming-Sink.md#addBatch, Sink Contract>> to "add" a batch of data to the sink.
 
 `addBatch` branches off based on whether the given `batchId` has already been <<addBatch-committed, committed>> or <<addBatch-not-committed, not>>.
 

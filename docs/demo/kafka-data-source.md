@@ -1,6 +1,6 @@
 == Demo: Streaming Aggregation with Kafka Data Source
 
-The following example code shows a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> (with <<spark-sql-streaming-Dataset-operators.adoc#groupBy, Dataset.groupBy>> operator) that reads records from Kafka (with <<spark-sql-streaming-kafka-data-source.adoc#, Kafka Data Source>>).
+The following example code shows a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> (with <<spark-sql-streaming-Dataset-operators.md#groupBy, Dataset.groupBy>> operator) that reads records from Kafka (with <<spark-sql-streaming-kafka-data-source.md#, Kafka Data Source>>).
 
 IMPORTANT: Start up Kafka cluster and spark-shell with `spark-sql-kafka-0-10` package before running the demo.
 

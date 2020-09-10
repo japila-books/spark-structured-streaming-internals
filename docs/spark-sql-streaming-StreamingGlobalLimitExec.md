@@ -9,7 +9,7 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StreamingGlobalLimitExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingGlobalLimitStrategy.adoc#, StreamingGlobalLimitStrategy>> execution planning strategy is requested to plan a `Limit` logical operator (in the logical plan of a streaming query) for execution.
+`StreamingGlobalLimitExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingGlobalLimitStrategy.md#, StreamingGlobalLimitStrategy>> execution planning strategy is requested to plan a `Limit` logical operator (in the logical plan of a streaming query) for execution.
 
 [NOTE]
 ====
@@ -22,7 +22,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Logi
 
 `StreamingGlobalLimitExec` supports <<outputMode, Append>> output mode only.
 
-The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and the <<outputMode, output mode>>, are initially undefined when `StreamingGlobalLimitExec` is <<creating-instance, created>>. `StreamingGlobalLimitExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.adoc#preparing-for-execution, prepare the logical plan (of a streaming query) for execution>> (when the <<spark-sql-streaming-IncrementalExecution.adoc#state, state preparation rule>> is executed).
+The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and the <<outputMode, output mode>>, are initially undefined when `StreamingGlobalLimitExec` is <<creating-instance, created>>. `StreamingGlobalLimitExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#preparing-for-execution, prepare the logical plan (of a streaming query) for execution>> (when the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> is executed).
 
 === [[creating-instance]] Creating StreamingGlobalLimitExec Instance
 
@@ -30,18 +30,18 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and t
 
 * [[streamLimit]] *Streaming Limit*
 * [[child]] Child physical operator (`SparkPlan`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>> (default: `None`)
-* [[outputMode]] <<spark-sql-streaming-OutputMode.adoc#, OutputMode>> (default: `None`)
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> (default: `None`)
+* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, OutputMode>> (default: `None`)
 
 `StreamingGlobalLimitExec` initializes the <<internal-properties, internal properties>>.
 
 === [[StateStoreWriter]] StreamingGlobalLimitExec as StateStoreWriter
 
-`StreamingGlobalLimitExec` is a <<spark-sql-streaming-StateStoreWriter.adoc#, stateful physical operator that can write to a state store>>.
+`StreamingGlobalLimitExec` is a <<spark-sql-streaming-StateStoreWriter.md#, stateful physical operator that can write to a state store>>.
 
 === [[metrics]] Performance Metrics
 
-`StreamingGlobalLimitExec` uses the performance metrics of the parent <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
+`StreamingGlobalLimitExec` uses the performance metrics of the parent <<spark-sql-streaming-StateStoreWriter.md#metrics, StateStoreWriter>>.
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 

@@ -213,7 +213,7 @@ nav:
         - StreamingGlobalLimitStrategy: spark-sql-streaming-StreamingGlobalLimitStrategy.md
         - StreamingJoinStrategy: spark-sql-streaming-StreamingJoinStrategy.md
         - StreamingRelationStrategy: spark-sql-streaming-StreamingRelationStrategy.md
-    - Offsets and Metadata Checkpointing (Fault-Tolerance and Reliability):
+    - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: spark-sql-streaming-offsets-and-metadata-checkpointing.md
       - MetadataLog: spark-sql-streaming-MetadataLog.md
       - HDFSMetadataLog: spark-sql-streaming-HDFSMetadataLog.md
@@ -233,7 +233,7 @@ nav:
         - FileSystemBasedCheckpointFileManager: spark-sql-streaming-FileSystemBasedCheckpointFileManager.md
         - Offset: spark-sql-streaming-Offset.md
         - StreamProgress: spark-sql-streaming-StreamProgress.md
-    - Micro-Batch Stream Processing (Structured Streaming V1):
+    - Micro-Batch Stream Processing:
       - Micro-Batch Stream Processing: spark-sql-streaming-micro-batch-stream-processing.md
       - MicroBatchExecution:
         - MicroBatchExecution: spark-sql-streaming-MicroBatchExecution.md
@@ -248,7 +248,7 @@ nav:
       - Sink:
         - Sink: spark-sql-streaming-Sink.md
         - StreamSinkProvider: spark-sql-streaming-StreamSinkProvider.md
-    - Continuous Stream Processing (Structured Streaming V2):
+    - Continuous Stream Processing:
       - Continuous Stream Processing: spark-sql-streaming-continuous-stream-processing.md
       - ContinuousExecution: spark-sql-streaming-ContinuousExecution.md
       - ContinuousReadSupport Contract: spark-sql-streaming-ContinuousReadSupport.md
@@ -263,7 +263,6 @@ nav:
         - DataReaderThread: spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.md
         - EpochMarkerGenerator: spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.md
       - PartitionOffset: spark-sql-streaming-PartitionOffset.md
-
       - ContinuousExecutionRelation Leaf Logical Operator: spark-sql-streaming-ContinuousExecutionRelation.md
       - WriteToContinuousDataSource Unary Logical Operator: spark-sql-streaming-WriteToContinuousDataSource.md
       - WriteToContinuousDataSourceExec:
@@ -301,44 +300,43 @@ nav:
       - KafkaContinuousReader:
         - KafkaContinuousReader: spark-sql-streaming-KafkaContinuousReader.md
         - KafkaContinuousInputPartition: spark-sql-streaming-KafkaContinuousInputPartition.md
-      - Text Socket Data Source:
-        - TextSocketSourceProvider: spark-sql-streaming-TextSocketSourceProvider.md
-        - TextSocketSource: spark-sql-streaming-TextSocketSource.md
-      - Rate Data Source:
-        - RateSourceProvider: spark-sql-streaming-RateSourceProvider.md
-        - RateStreamProvider: spark-sql-streaming-RateStreamProvider.md
-        - RateStreamSource: spark-sql-streaming-RateStreamSource.md
-        - RateStreamMicroBatchReader: spark-sql-streaming-RateStreamMicroBatchReader.md
-      - Console Data Sink:
-        - ConsoleSinkProvider: spark-sql-streaming-ConsoleSinkProvider.md
-        - ConsoleWriter: spark-sql-streaming-ConsoleWriter.md
-      - Foreach Data Sink:
-        - ForeachWriterProvider: spark-sql-streaming-ForeachWriterProvider.md
-        - ForeachWriter: spark-sql-streaming-ForeachWriter.md
-        - ForeachSink: spark-sql-streaming-ForeachSink.md
-      - ForeachBatch Data Sink:
-        - ForeachBatchSink: spark-sql-streaming-ForeachBatchSink.md
-      - Memory Data Source:
-        - Memory Data Source: spark-sql-streaming-memory-data-source.md
-        - MemoryStream: spark-sql-streaming-MemoryStream.md
-        - ContinuousMemoryStream: spark-sql-streaming-ContinuousMemoryStream.md
-        - MemorySink: spark-sql-streaming-MemorySink.md
-        - MemorySinkV2:
-          - MemorySinkV2: spark-sql-streaming-MemorySinkV2.md
-          - MemoryStreamWriter: spark-sql-streaming-MemoryStreamWriter.md
-        - MemoryStreamBase: spark-sql-streaming-MemoryStreamBase.md
-        - MemorySinkBase: spark-sql-streaming-MemorySinkBase.md
+    - Text Socket Data Source:
+      - TextSocketSourceProvider: spark-sql-streaming-TextSocketSourceProvider.md
+      - TextSocketSource: spark-sql-streaming-TextSocketSource.md
+    - Rate Data Source:
+      - RateSourceProvider: spark-sql-streaming-RateSourceProvider.md
+      - RateStreamProvider: spark-sql-streaming-RateStreamProvider.md
+      - RateStreamSource: spark-sql-streaming-RateStreamSource.md
+      - RateStreamMicroBatchReader: spark-sql-streaming-RateStreamMicroBatchReader.md
+    - Console Data Sink:
+      - ConsoleSinkProvider: spark-sql-streaming-ConsoleSinkProvider.md
+      - ConsoleWriter: spark-sql-streaming-ConsoleWriter.md
+    - Foreach Data Sink:
+      - ForeachWriterProvider: spark-sql-streaming-ForeachWriterProvider.md
+      - ForeachWriter: spark-sql-streaming-ForeachWriter.md
+      - ForeachSink: spark-sql-streaming-ForeachSink.md
+    - ForeachBatch Data Sink:
+      - ForeachBatchSink: spark-sql-streaming-ForeachBatchSink.md
+    - Memory Data Source:
+      - Memory Data Source: spark-sql-streaming-memory-data-source.md
+      - MemoryStream: spark-sql-streaming-MemoryStream.md
+      - ContinuousMemoryStream: spark-sql-streaming-ContinuousMemoryStream.md
+      - MemorySink: spark-sql-streaming-MemorySink.md
+      - MemorySinkV2:
+        - MemorySinkV2: spark-sql-streaming-MemorySinkV2.md
+        - MemoryStreamWriter: spark-sql-streaming-MemoryStreamWriter.md
+      - MemoryStreamBase: spark-sql-streaming-MemoryStreamBase.md
+      - MemorySinkBase: spark-sql-streaming-MemorySinkBase.md
   - Demos:
-    - Demos: spark-sql-streaming-demos.md
     - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
-    - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: spark-sql-streaming-demo-arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md
-    - Exploring Checkpointed State: spark-sql-streaming-demo-exploring-checkpointed-state.md
-    - Streaming Watermark with Aggregation in Append Output Mode: spark-sql-streaming-demo-watermark-aggregation-append.md
-    - Streaming Query for Running Counts (Socket Source and Complete Output Mode): spark-sql-streaming-demo-groupBy-running-count-complete.md
-    - Streaming Aggregation with Kafka Data Source: spark-sql-streaming-demo-kafka-data-source.md
-    - groupByKey Streaming Aggregation in Update Mode: spark-sql-streaming-demo-groupByKey-count-Update.md
-    - StateStoreSaveExec with Complete Output Mode: spark-sql-streaming-StateStoreSaveExec-Complete.md
-    - StateStoreSaveExec with Update Output Mode: spark-sql-streaming-StateStoreSaveExec-Update.md
-    - Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI): spark-sql-streaming-demo-custom-sink-webui.md
-    - current_timestamp Function For Processing Time in Streaming Queries: spark-sql-streaming-demo-current_timestamp.md
-    - Using StreamingQueryManager for Query Termination Management: spark-sql-streaming-demo-StreamingQueryManager-awaitAnyTermination-resetTerminated.md
+    - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md
+    - Exploring Checkpointed State: demo/exploring-checkpointed-state.md
+    - Streaming Watermark with Aggregation in Append Output Mode: demo/watermark-aggregation-append.md
+    - Streaming Query for Running Counts (Socket Source and Complete Output Mode): demo/groupBy-running-count-complete.md
+    - Streaming Aggregation with Kafka Data Source: demo/kafka-data-source.md
+    - groupByKey Streaming Aggregation in Update Mode: demo/groupByKey-count-Update.md
+    - StateStoreSaveExec with Complete Output Mode: demo/StateStoreSaveExec-Complete.md
+    - StateStoreSaveExec with Update Output Mode: demo/StateStoreSaveExec-Update.md
+    - Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI): demo/custom-sink-webui.md
+    - current_timestamp Function For Processing Time in Streaming Queries: demo/current_timestamp.md
+    - Using StreamingQueryManager for Query Termination Management: demo/StreamingQueryManager-awaitAnyTermination-resetTerminated.md

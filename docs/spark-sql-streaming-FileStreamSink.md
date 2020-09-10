@@ -1,6 +1,6 @@
 == [[FileStreamSink]] FileStreamSink -- Streaming Sink for File-Based Data Sources
 
-`FileStreamSink` is a concrete <<spark-sql-streaming-Sink.adoc#, streaming sink>> that writes out the results of a streaming query to files (of the specified <<fileFormat, FileFormat>>) in the <<path, root path>>.
+`FileStreamSink` is a concrete <<spark-sql-streaming-Sink.md#, streaming sink>> that writes out the results of a streaming query to files (of the specified <<fileFormat, FileFormat>>) in the <<path, root path>>.
 
 [source, scala]
 ----
@@ -16,13 +16,13 @@ val sq = in.
   start
 ----
 
-`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.adoc#createSink, create a streaming sink>> for a file-based data source (i.e. `FileFormat`).
+`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.md#createSink, create a streaming sink>> for a file-based data source (i.e. `FileFormat`).
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`FileStreamSink` supports link:spark-sql-streaming-OutputMode.adoc#Append[Append output mode] only.
+`FileStreamSink` supports link:spark-sql-streaming-OutputMode.md#Append[Append output mode] only.
 
-`FileStreamSink` uses link:spark-sql-SQLConf.adoc#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
+`FileStreamSink` uses link:spark-sql-SQLConf.md#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
 
 [[toString]]
 The textual representation of `FileStreamSink` is *FileSink[path]*
@@ -41,7 +41,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSink=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating FileStreamSink Instance
@@ -65,7 +65,7 @@ addBatch(
   data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.md#addBatch[Sink Contract] to "add" a batch of data to the sink.
 
 `addBatch`...FIXME
 
@@ -104,7 +104,7 @@ hasMetadata(
 
 * `DataSource` (Spark SQL) is requested to resolve a `FileFormat` relation (`resolveRelation`) and creates a `HadoopFsRelation`
 
-* `FileStreamSource` is requested to <<spark-sql-streaming-FileStreamSource.adoc#fetchAllFiles, fetchAllFiles>>
+* `FileStreamSource` is requested to <<spark-sql-streaming-FileStreamSource.md#fetchAllFiles, fetchAllFiles>>
 ====
 
 === [[internal-properties]] Internal Properties
@@ -125,7 +125,7 @@ a| [[logPath]] *Metadata log path* (Hadoop's https://hadoop.apache.org/docs/r2.8
 Used exclusively to create the <<fileLog, FileStreamSinkLog>>
 
 | fileLog
-a| [[fileLog]] <<spark-sql-streaming-FileStreamSinkLog.adoc#, FileStreamSinkLog>> (for the <<spark-sql-streaming-FileStreamSinkLog.adoc#VERSION, version 1>> and the <<logPath, metadata log path>>)
+a| [[fileLog]] <<spark-sql-streaming-FileStreamSinkLog.md#, FileStreamSinkLog>> (for the <<spark-sql-streaming-FileStreamSinkLog.md#VERSION, version 1>> and the <<logPath, metadata log path>>)
 
 Used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>
 

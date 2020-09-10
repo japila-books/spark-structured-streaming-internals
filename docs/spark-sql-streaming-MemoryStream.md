@@ -1,6 +1,6 @@
 == [[MemoryStream]] MemoryStream -- Streaming Reader for Micro-Batch Stream Processing
 
-`MemoryStream` is a concrete <<spark-sql-streaming-MemoryStreamBase.adoc#, streaming source>> of <<spark-sql-streaming-memory-data-source.adoc#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.adoc#, reading>> in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>.
+`MemoryStream` is a concrete <<spark-sql-streaming-MemoryStreamBase.md#, streaming source>> of <<spark-sql-streaming-memory-data-source.md#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.md#, reading>> in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 [[logging]]
 [TIP]
@@ -13,7 +13,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.MemoryStream=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating MemoryStream Instance
@@ -55,7 +55,7 @@ In the end, `addData` increments the <<currentOffset, current offset>> and adds 
 
 === [[getBatch]] Generating Next Streaming Batch -- `getBatch` Method
 
-NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.adoc#contract[Streaming Source contract].
+NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.md#contract[Streaming Source contract].
 
 When executed, `getBatch` uses the internal <<batches, batches>> collection to return requested offsets.
 
@@ -72,11 +72,11 @@ DEBUG MemoryStream: MemoryBatch [[startOrdinal], [endOrdinal]]: [newBlocks]
 logicalPlan: LogicalPlan
 ----
 
-NOTE: `logicalPlan` is part of the <<spark-sql-streaming-MemoryStreamBase.adoc#logicalPlan, MemoryStreamBase Contract>> for the logical query plan of the memory stream.
+NOTE: `logicalPlan` is part of the <<spark-sql-streaming-MemoryStreamBase.md#logicalPlan, MemoryStreamBase Contract>> for the logical query plan of the memory stream.
 
-`logicalPlan` is simply a <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>> (for this memory source and the <<spark-sql-streaming-MemoryStreamBase.adoc#attributes, attributes>>).
+`logicalPlan` is simply a <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> (for this memory source and the <<spark-sql-streaming-MemoryStreamBase.md#attributes, attributes>>).
 
-`MemoryStream` uses link:spark-sql-streaming-StreamingExecutionRelation.adoc[StreamingExecutionRelation] logical plan to build link:spark-sql-dataset.adoc[Datasets] or link:spark-sql-dataset.adoc#ofRows[DataFrames] when requested.
+`MemoryStream` uses link:spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] logical plan to build link:spark-sql-dataset.md[Datasets] or link:spark-sql-dataset.md#ofRows[DataFrames] when requested.
 
 [source, scala]
 ----
@@ -92,7 +92,7 @@ res15: org.apache.spark.sql.catalyst.plans.logical.LogicalPlan = MemoryStream[va
 
 === [[schema]] Schema (schema method)
 
-`MemoryStream` works with the data of the link:spark-sql-schema.adoc[schema] as described by the link:spark-sql-Encoder.adoc[Encoder] (of the `Dataset`).
+`MemoryStream` works with the data of the link:spark-sql-schema.md[schema] as described by the link:spark-sql-Encoder.md[Encoder] (of the `Dataset`).
 
 === [[toString]] Textual Representation -- `toString` Method
 
@@ -134,7 +134,7 @@ generateDebugString(
   endOrdinal: Int): String
 ----
 
-`generateDebugString` resolves and binds the <<spark-sql-streaming-MemoryStreamBase.adoc#encoder, encoder>> for the data.
+`generateDebugString` resolves and binds the <<spark-sql-streaming-MemoryStreamBase.md#encoder, encoder>> for the data.
 
 In the end, `generateDebugString` returns the following string:
 
@@ -155,10 +155,10 @@ NOTE: `generateDebugString` is used exclusively when `MemoryStream` is requested
 a| [[batches]] Batch data (`ListBuffer[Array[UnsafeRow]]`)
 
 | currentOffset
-a| [[currentOffset]] Current <<spark-sql-streaming-Offset.adoc#, offset>> (as <<spark-sql-streaming-Offset.adoc#, LongOffset>>)
+a| [[currentOffset]] Current <<spark-sql-streaming-Offset.md#, offset>> (as <<spark-sql-streaming-Offset.md#, LongOffset>>)
 
 | lastOffsetCommitted
-a| [[lastOffsetCommitted]] Last committed <<spark-sql-streaming-Offset.adoc#, offset>> (as <<spark-sql-streaming-Offset.adoc#, LongOffset>>)
+a| [[lastOffsetCommitted]] Last committed <<spark-sql-streaming-Offset.md#, offset>> (as <<spark-sql-streaming-Offset.md#, LongOffset>>)
 
 | output
 a| [[output]] Output schema (`Seq[Attribute]`) of the <<logicalPlan, logical query plan>>

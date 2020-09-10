@@ -1,10 +1,10 @@
 == Micro-Batch Stream Processing (Structured Streaming V1)
 
-*Micro-Batch Stream Processing* is a stream processing model in Spark Structured Streaming that is used for streaming queries with <<spark-sql-streaming-Trigger.adoc#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.adoc#ProcessingTime, Trigger.ProcessingTime>> triggers.
+*Micro-Batch Stream Processing* is a stream processing model in Spark Structured Streaming that is used for streaming queries with <<spark-sql-streaming-Trigger.md#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.md#ProcessingTime, Trigger.ProcessingTime>> triggers.
 
-Micro-batch stream processing uses <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine.
+Micro-batch stream processing uses <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine.
 
-Micro-batch stream processing supports <<spark-sql-streaming-MicroBatchReadSupport.adoc#, MicroBatchReadSupport>> data sources.
+Micro-batch stream processing supports <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> data sources.
 
 Micro-batch stream processing is often referred to as *Structured Streaming V1*.
 
@@ -36,17 +36,17 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 
 === [[execution-phases]] Execution Phases (Processing Cycle)
 
-Once <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>>, the query execution goes through the following *execution phases* every trigger:
+Once <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>, the query execution goes through the following *execution phases* every trigger:
 
-. [[triggerExecution]] <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-triggerExecution, triggerExecution>>
-. <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-getOffset, getOffset>> for <<spark-sql-streaming-Source.adoc#, Sources>> or <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-setOffsetRange, setOffsetRange>> for <<spark-sql-streaming-MicroBatchReader.adoc#, MicroBatchReaders>>
-. <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-getEndOffset, getEndOffset>>
-. <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, walCommit>>
-. <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-getBatch, getBatch>>
-. <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-queryPlanning, queryPlanning>>
-. <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-addBatch, addBatch>>
+. [[triggerExecution]] <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution>>
+. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getOffset, getOffset>> for <<spark-sql-streaming-Source.md#, Sources>> or <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-setOffsetRange, setOffsetRange>> for <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReaders>>
+. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getEndOffset, getEndOffset>>
+. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit, walCommit>>
+. <<spark-sql-streaming-MicroBatchExecution.md#runBatch-getBatch, getBatch>>
+. <<spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning, queryPlanning>>
+. <<spark-sql-streaming-MicroBatchExecution.md#runBatch-addBatch, addBatch>>
 
-Execution phases with execution times are available using <<spark-sql-streaming-StreamingQuery.adoc#lastProgress, StreamingQueryProgress>> under `durationMs`.
+Execution phases with execution times are available using <<spark-sql-streaming-StreamingQuery.md#lastProgress, StreamingQueryProgress>> under `durationMs`.
 
 [source, scala]
 ----
@@ -55,7 +55,7 @@ org.apache.spark.sql.streaming.StreamingQuery
 sq.lastProgress.durationMs.get("walCommit")
 ----
 
-TIP: Enable INFO logging level for <<spark-sql-streaming-StreamExecution.adoc#logging, StreamExecution>> logger to be notified about durations.
+TIP: Enable INFO logging level for <<spark-sql-streaming-StreamExecution.md#logging, StreamExecution>> logger to be notified about durations.
 
 ```
 17/08/11 09:04:17 INFO StreamExecution: Streaming query made progress: {
@@ -78,9 +78,9 @@ TIP: Enable INFO logging level for <<spark-sql-streaming-StreamExecution.adoc#lo
 
 === [[monitoring]] Monitoring (using StreamingQueryListener and Logs)
 
-`MicroBatchExecution` <<spark-sql-streaming-ProgressReporter.adoc#postEvent, posts events>> to announce when a streaming query is started and stopped as well as after every micro-batch. <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>> interface can be used to intercept the events and act accordingly.
+`MicroBatchExecution` <<spark-sql-streaming-ProgressReporter.md#postEvent, posts events>> to announce when a streaming query is started and stopped as well as after every micro-batch. <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>> interface can be used to intercept the events and act accordingly.
 
-After <<triggerExecution, triggerExecution phase>> `MicroBatchExecution` is requested to <<spark-sql-streaming-ProgressReporter.adoc#finishTrigger, finish up a streaming batch (trigger) and generate a StreamingQueryProgress>> (with execution statistics).
+After <<triggerExecution, triggerExecution phase>> `MicroBatchExecution` is requested to <<spark-sql-streaming-ProgressReporter.md#finishTrigger, finish up a streaming batch (trigger) and generate a StreamingQueryProgress>> (with execution statistics).
 
 `MicroBatchExecution` prints out the following DEBUG message to the logs:
 
@@ -88,7 +88,7 @@ After <<triggerExecution, triggerExecution phase>> `MicroBatchExecution` is requ
 Execution stats: [executionStats]
 ```
 
-`MicroBatchExecution` <<spark-sql-streaming-ProgressReporter.adoc#updateProgress, posts a QueryProgressEvent with the StreamingQueryProgress>> and prints out the following INFO message to the logs:
+`MicroBatchExecution` <<spark-sql-streaming-ProgressReporter.md#updateProgress, posts a QueryProgressEvent with the StreamingQueryProgress>> and prints out the following INFO message to the logs:
 
 ```
 Streaming query made progress: [newProgress]

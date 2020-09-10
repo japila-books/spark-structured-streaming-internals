@@ -2,11 +2,11 @@
 
 *Memory Data Source* is made up of the following two base implementations to support the older DataSource API V1 and the modern DataSource API V2:
 
-* <<spark-sql-streaming-MemoryStreamBase.adoc#, MemoryStreamBase>>
+* <<spark-sql-streaming-MemoryStreamBase.md#, MemoryStreamBase>>
 
-* <<spark-sql-streaming-MemorySinkBase.adoc#, MemorySinkBase>>
+* <<spark-sql-streaming-MemorySinkBase.md#, MemorySinkBase>>
 
-Memory data source supports <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>> stream processing modes.
+Memory data source supports <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.md#, Continuous>> stream processing modes.
 
 [cols="30,35,35",options="header",width="100%"]
 |===
@@ -14,13 +14,13 @@ Memory data source supports <<spark-sql-streaming-micro-batch-stream-processing.
 | Source
 | Sink
 
-| <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch>>
-| <<spark-sql-streaming-MemoryStream.adoc#, MemoryStream>>
-| <<spark-sql-streaming-MemorySink.adoc#, MemorySink>>
+| <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch>>
+| <<spark-sql-streaming-MemoryStream.md#, MemoryStream>>
+| <<spark-sql-streaming-MemorySink.md#, MemorySink>>
 
-| <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous>>
-| <<spark-sql-streaming-ContinuousMemoryStream.adoc#, ContinuousMemoryStream>>
-| <<spark-sql-streaming-MemorySinkV2.adoc#, MemorySinkV2>>
+| <<spark-sql-streaming-continuous-stream-processing.md#, Continuous>>
+| <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
+| <<spark-sql-streaming-MemorySinkV2.md#, MemorySinkV2>>
 
 |===
 
@@ -33,13 +33,13 @@ Memory Data Source is *not* for production use due to design contraints, e.g. in
 
 === [[memory-sink]] Memory Sink
 
-Memory sink requires that a streaming query has a name (defined using <<spark-sql-streaming-DataStreamWriter.adoc#queryName, DataStreamWriter.queryName>> or `queryName` option).
+Memory sink requires that a streaming query has a name (defined using <<spark-sql-streaming-DataStreamWriter.md#queryName, DataStreamWriter.queryName>> or `queryName` option).
 
-Memory sink may optionally define checkpoint location using `checkpointLocation` option that is used to recover from for <<spark-sql-streaming-OutputMode.adoc#Complete, Complete>> output mode only.
+Memory sink may optionally define checkpoint location using `checkpointLocation` option that is used to recover from for <<spark-sql-streaming-OutputMode.md#Complete, Complete>> output mode only.
 
 === Memory Sink and CreateViewCommand
 
-When a streaming query with `memory` sink is <<spark-sql-streaming-DataStreamWriter.adoc#start, started>>, <<spark-sql-streaming-DataStreamWriter.adoc#, DataStreamWriter>> uses `Dataset.createOrReplaceTempView` operator to create or replace a local temporary view with the name of the query (which is required).
+When a streaming query with `memory` sink is <<spark-sql-streaming-DataStreamWriter.md#start, started>>, <<spark-sql-streaming-DataStreamWriter.md#, DataStreamWriter>> uses `Dataset.createOrReplaceTempView` operator to create or replace a local temporary view with the name of the query (which is required).
 
 .Memory Sink and CreateViewCommand
 image::images/memory-sink-webui-createviewcommand.png[align="center"]

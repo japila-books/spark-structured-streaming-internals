@@ -1,11 +1,11 @@
 == [[HDFSBackedStateStore]] HDFSBackedStateStore -- State Store on HDFS-Compatible File System
 
-`HDFSBackedStateStore` is a concrete <<spark-sql-streaming-StateStore.adoc#, StateStore>> that uses a Hadoop DFS-compatible file system for versioned state persistence.
+`HDFSBackedStateStore` is a concrete <<spark-sql-streaming-StateStore.md#, StateStore>> that uses a Hadoop DFS-compatible file system for versioned state persistence.
 
-`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#getStore, specified version of state (store) for update>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, look up a StateStore by provider id>>).
+`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#getStore, specified version of state (store) for update>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.md#get-StateStore, look up a StateStore by provider id>>).
 
 [[id]]
-`HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.adoc#, StateStoreId>> of the owning <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#stateStoreId, HDFSBackedStateStoreProvider>>.
+`HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.md#, StateStoreId>> of the owning <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#stateStoreId, HDFSBackedStateStoreProvider>>.
 
 [[toString]]
 When requested for the textual representation, `HDFSBackedStateStore` gives *HDFSStateStore[id=(op=[operatorId],part=[partitionId]),dir=[baseDir]]*.
@@ -13,7 +13,7 @@ When requested for the textual representation, `HDFSBackedStateStore` gives *HDF
 [[logging]]
 [TIP]
 ====
-`HDFSBackedStateStore` is an internal class of <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#, HDFSBackedStateStoreProvider>> and uses its <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#logging, logger>>.
+`HDFSBackedStateStore` is an internal class of <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedStateStoreProvider>> and uses its <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#logging, logger>>.
 ====
 
 === [[creating-instance]] Creating HDFSBackedStateStore Instance
@@ -81,7 +81,7 @@ put(
   value: UnsafeRow): Unit
 ----
 
-NOTE: `put` is a part of link:spark-sql-streaming-StateStore.adoc#put[StateStore Contract] to...FIXME
+NOTE: `put` is a part of link:spark-sql-streaming-StateStore.md#put[StateStore Contract] to...FIXME
 
 `put` stores the copies of the key and value in <<mapToUpdate, mapToUpdate>> internal registry followed by <<writeUpdateToDeltaFile, writing them to a delta file>> (using <<tempDeltaFileStream, tempDeltaFileStream>>).
 
@@ -98,9 +98,9 @@ Cannot put after already committed or aborted
 commit(): Long
 ----
 
-NOTE: `commit` is part of the <<spark-sql-streaming-StateStore.adoc#commit, StateStore Contract>> to commit state changes.
+NOTE: `commit` is part of the <<spark-sql-streaming-StateStore.md#commit, StateStore Contract>> to commit state changes.
 
-`commit` requests the parent `HDFSBackedStateStoreProvider` to <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#commitUpdates, commit state changes (as a new version of state)>> (with the <<newVersion, newVersion>>, the <<mapToUpdate, mapToUpdate>> and the <<compressedStream, compressed stream>>).
+`commit` requests the parent `HDFSBackedStateStoreProvider` to <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#commitUpdates, commit state changes (as a new version of state)>> (with the <<newVersion, newVersion>>, the <<mapToUpdate, mapToUpdate>> and the <<compressedStream, compressed stream>>).
 
 `commit` transitions `HDFSBackedStateStore` to <<COMMITTED, COMMITTED>> state.
 
@@ -131,7 +131,7 @@ Error committing version [newVersion] into [this]
 abort(): Unit
 ----
 
-NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.adoc#abort, StateStore Contract>> to abort the state changes.
+NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.md#abort, StateStore Contract>> to abort the state changes.
 
 `abort`...FIXME
 
@@ -142,19 +142,19 @@ NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.adoc#abort, StateS
 metrics: StateStoreMetrics
 ----
 
-NOTE: `metrics` is part of the <<spark-sql-streaming-StateStore.adoc#metrics, StateStore Contract>> to get the <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>>.
+NOTE: `metrics` is part of the <<spark-sql-streaming-StateStore.md#metrics, StateStore Contract>> to get the <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>>.
 
-`metrics` requests the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#getMetricsForProvider, performance metrics>> of the parent `HDFSBackedStateStoreProvider`.
+`metrics` requests the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#getMetricsForProvider, performance metrics>> of the parent `HDFSBackedStateStoreProvider`.
 
-The performance metrics of the provider used are only the ones listed in <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#supportedCustomMetrics, supportedCustomMetrics>>.
+The performance metrics of the provider used are only the ones listed in <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#supportedCustomMetrics, supportedCustomMetrics>>.
 
-In the end, `metrics` returns a new <<spark-sql-streaming-StateStoreMetrics.adoc#, StateStoreMetrics>> with the following:
+In the end, `metrics` returns a new <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>> with the following:
 
-* <<spark-sql-streaming-StateStoreMetrics.adoc#numKeys, Total number of keys>> as the size of <<mapToUpdate, mapToUpdate>>
+* <<spark-sql-streaming-StateStoreMetrics.md#numKeys, Total number of keys>> as the size of <<mapToUpdate, mapToUpdate>>
 
-* <<spark-sql-streaming-StateStoreMetrics.adoc#memoryUsedBytes, Memory used (in bytes)>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#memoryUsedBytes, memoryUsedBytes>> metric (of the parent provider)
+* <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, Memory used (in bytes)>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#memoryUsedBytes, memoryUsedBytes>> metric (of the parent provider)
 
-* <<spark-sql-streaming-StateStoreMetrics.adoc#customMetrics, StateStoreCustomMetrics>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#supportedCustomMetrics, supportedCustomMetrics>> and the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>> metric of the parent provider
+* <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, StateStoreCustomMetrics>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#supportedCustomMetrics, supportedCustomMetrics>> and the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>> metric of the parent provider
 
 === [[hasCommitted]] Are State Changes Committed? -- `hasCommitted` Method
 
@@ -163,7 +163,7 @@ In the end, `metrics` returns a new <<spark-sql-streaming-StateStoreMetrics.adoc
 hasCommitted: Boolean
 ----
 
-NOTE: `hasCommitted` is part of the <<spark-sql-streaming-StateStore.adoc#hasCommitted, StateStore Contract>> to indicate whether state changes have been committed or not.
+NOTE: `hasCommitted` is part of the <<spark-sql-streaming-StateStore.md#hasCommitted, StateStore Contract>> to indicate whether state changes have been committed or not.
 
 `hasCommitted` returns `true` when `HDFSBackedStateStore` is in <<COMMITTED, COMMITTED>> state and `false` otherwise.
 
@@ -200,7 +200,7 @@ a| [[finalDeltaFile]]
 finalDeltaFile: Path
 ----
 
-The Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the <<spark-sql-streaming-HDFSBackedStateStoreProvider.adoc#deltaFile, deltaFile>> for the <<newVersion, version>>
+The Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#deltaFile, deltaFile>> for the <<newVersion, version>>
 
 | newVersion
 a| [[newVersion]]

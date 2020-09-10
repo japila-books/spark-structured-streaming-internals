@@ -1,10 +1,10 @@
 == [[StreamingQuery]] StreamingQuery Contract
 
-`StreamingQuery` is the <<contract, contract>> of streaming queries that are executed continuously and concurrently (i.e. on a <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, separate thread>>).
+`StreamingQuery` is the <<contract, contract>> of streaming queries that are executed continuously and concurrently (i.e. on a <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, separate thread>>).
 
 NOTE: `StreamingQuery` is called *continuous query* or *streaming query*.
 
-NOTE: `StreamingQuery` is a Scala trait with the only implementation being <<spark-sql-streaming-StreamExecution.adoc#, StreamExecution>> (and less importanly <<spark-sql-streaming-StreamingQueryWrapper.adoc#, StreamingQueryWrapper>> for serializing a non-serializable `StreamExecution`).
+NOTE: `StreamingQuery` is a Scala trait with the only implementation being <<spark-sql-streaming-StreamExecution.md#, StreamExecution>> (and less importanly <<spark-sql-streaming-StreamingQueryWrapper.md#, StreamingQueryWrapper>> for serializing a non-serializable `StreamExecution`).
 
 [[contract]]
 .StreamingQuery Contract
@@ -79,7 +79,7 @@ a| [[lastProgress]]
 lastProgress: StreamingQueryProgress
 ----
 
-The last <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> of the streaming query
+The last <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>> of the streaming query
 
 Used when...FIXME
 
@@ -115,7 +115,7 @@ a| [[recentProgress]]
 recentProgress: Array[StreamingQueryProgress]
 ----
 
-Collection of the recent <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>> updates.
+Collection of the recent <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>> updates.
 
 Used when...FIXME
 
@@ -149,7 +149,7 @@ a| [[status]]
 status: StreamingQueryStatus
 ----
 
-<<spark-sql-streaming-StreamingQueryStatus.adoc#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` link:spark-sql-streaming-ProgressReporter.adoc#currentStatus[has accumulated] being a `ProgressReporter` while running the streaming query)
+<<spark-sql-streaming-StreamingQueryStatus.md#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` link:spark-sql-streaming-ProgressReporter.md#currentStatus[has accumulated] being a `ProgressReporter` while running the streaming query)
 
 Used when...FIXME
 
@@ -174,6 +174,6 @@ If inactive, `StreamingQuery` may have transitioned into the state due to an `St
 
 `StreamingQuery` tracks current state of all the sources, i.e. `SourceStatus`, as `sourceStatuses`.
 
-There could only be a single link:spark-sql-streaming-Sink.adoc[Sink] for a `StreamingQuery` with many link:spark-sql-streaming-Source.adoc[Sources].
+There could only be a single link:spark-sql-streaming-Sink.md[Sink] for a `StreamingQuery` with many link:spark-sql-streaming-Source.md[Sources].
 
 `StreamingQuery` can be stopped by `stop` or an exception.

@@ -1,6 +1,6 @@
 == [[StreamingDeduplicateExec]] StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication
 
-`StreamingDeduplicateExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.adoc#, writes state to StateStore>> with <<spark-sql-streaming-WatermarkSupport.adoc#, support for streaming watermark>>.
+`StreamingDeduplicateExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.md#, writes state to StateStore>> with <<spark-sql-streaming-WatermarkSupport.md#, support for streaming watermark>>.
 
 [NOTE]
 ====
@@ -9,7 +9,7 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` link:spark-sql-streaming-StreamingDeduplicationStrategy.adoc#apply[plans Deduplicate unary logical operators].
+`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` link:spark-sql-streaming-StreamingDeduplicationStrategy.md#apply[plans Deduplicate unary logical operators].
 
 .StreamingDeduplicateExec and StreamingDeduplicationStrategy
 image::images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png[align="center"]
@@ -91,7 +91,7 @@ sq.stop
 ----
 
 [[metrics]]
-`StreamingDeduplicateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.adoc#metrics, StateStoreWriter>>.
+`StreamingDeduplicateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.md#metrics, StateStoreWriter>>.
 
 .StreamingDeduplicateExec in web UI (Details for Query)
 image::images/StreamingDeduplicateExec-webui-query-details.png[align="center"]
@@ -172,7 +172,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.StreamingDeduplicateExec=INFO
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to link:spark-sql-streaming-logging.md[Logging].
 ====
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
@@ -184,9 +184,9 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
-Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.adoc#metrics[metrics].
+Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.md#metrics[metrics].
 
-`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.adoc#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 
@@ -196,7 +196,7 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.ad
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* link:spark-sql-streaming-StateStore.adoc#get[Gets the saved state] in `StateStore` for the key
+* link:spark-sql-streaming-StateStore.md#get[Gets the saved state] in `StateStore` for the key
 
 * (when there was a state for the key in the row) Filters out (aka _drops_) the row
 
@@ -208,19 +208,19 @@ The completion function does the following:
 
 * Updates <<allUpdatesTimeMs, allUpdatesTimeMs>> metric (that is the total time to execute `storeUpdateFunction`)
 
-* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to link:spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark[remove keys older than the watermark from the StateStore]
+* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to link:spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark[remove keys older than the watermark from the StateStore]
 
-* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to link:spark-sql-streaming-StateStore.adoc#commit[commit the changes to the StateStore]
+* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to link:spark-sql-streaming-StateStore.md#commit[commit the changes to the StateStore]
 
-* link:spark-sql-streaming-StateStoreWriter.adoc#setStoreMetrics[Sets StateStore-specific metrics]
+* link:spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Sets StateStore-specific metrics]
 
 === [[creating-instance]] Creating StreamingDeduplicateExec Instance
 
 `StreamingDeduplicateExec` takes the following when created:
 
-* [[keyExpressions]] Duplicate keys (as used in link:spark-sql-streaming-Dataset-operators.adoc#dropDuplicates[dropDuplicates] operator)
+* [[keyExpressions]] Duplicate keys (as used in link:spark-sql-streaming-Dataset-operators.md#dropDuplicates[dropDuplicates] operator)
 * [[child]] Child physical operator (`SparkPlan`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.adoc#, StatefulOperatorStateInfo>>
+* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
 * [[eventTimeWatermark]] Event-time watermark
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
@@ -230,6 +230,6 @@ The completion function does the following:
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.adoc#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.adoc#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
 `shouldRunAnotherBatch`...FIXME

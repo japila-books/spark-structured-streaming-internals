@@ -129,7 +129,7 @@ NOTE: Only one `window` expression is supported in a query.
 
 NOTE: `null` values are filtered out in `window` expression.
 
-Internally, `window` creates a link:spark-sql-Column.adoc[Column] with `TimeWindow` Catalyst expression under `window` alias.
+Internally, `window` creates a link:spark-sql-Column.md[Column] with `TimeWindow` Catalyst expression under `window` alias.
 
 [source, scala]
 ----

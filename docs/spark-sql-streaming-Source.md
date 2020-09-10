@@ -1,8 +1,8 @@
 == [[Source]] Source Contract -- Streaming Sources for Micro-Batch Stream Processing (Data Source API V1)
 
-`Source` is the <<contract, extension>> of the <<spark-sql-streaming-BaseStreamingSource.adoc#, BaseStreamingSource contract>> for <<implementations, streaming sources>> that work with "continuous" stream of data identified by <<spark-sql-streaming-Offset.adoc#, offsets>>.
+`Source` is the <<contract, extension>> of the <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource contract>> for <<implementations, streaming sources>> that work with "continuous" stream of data identified by <<spark-sql-streaming-Offset.md#, offsets>>.
 
-`Source` is part of Data Source API V1 and used in <<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>> only.
+`Source` is part of Data Source API V1 and used in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> only.
 
 For fault tolerance, `Source` must be able to replay an arbitrary sequence of past data in a stream using a range of offsets. This is the assumption so Structured Streaming can achieve end-to-end exactly-once guarantees.
 
@@ -21,9 +21,9 @@ a| [[commit]]
 commit(end: Offset): Unit
 ----
 
-Commits data up to the end <<spark-sql-streaming-Offset.adoc#, offset>>, i.e. informs the source that Spark has completed processing all data for offsets less than or equal to the end offset and will only request offsets greater than the end offset in the future.
+Commits data up to the end <<spark-sql-streaming-Offset.md#, offset>>, i.e. informs the source that Spark has completed processing all data for offsets less than or equal to the end offset and will only request offsets greater than the end offset in the future.
 
-Used exclusively when <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-walCommit, write offsets to a commit log (walCommit phase)>> while <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, running an activated streaming query>>.
+Used exclusively when <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit, write offsets to a commit log (walCommit phase)>> while <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, running an activated streaming query>>.
 
 | getBatch
 a| [[getBatch]]
@@ -35,15 +35,15 @@ getBatch(
   end: Offset): DataFrame
 ----
 
-Generating a streaming `DataFrame` with data between the start and end <<spark-sql-streaming-Offset.adoc#, offsets>>
+Generating a streaming `DataFrame` with data between the start and end <<spark-sql-streaming-Offset.md#, offsets>>
 
 Start offset can be undefined (`None`) to indicate that the batch should begin with the first record
 
-Used when <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, run an activated streaming query>>, namely:
+Used when <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>, namely:
 
-* <<spark-sql-streaming-MicroBatchExecution.adoc#populateStartOffsets, Populate start offsets from checkpoint (resuming from checkpoint)>>
+* <<spark-sql-streaming-MicroBatchExecution.md#populateStartOffsets, Populate start offsets from checkpoint (resuming from checkpoint)>>
 
-* <<spark-sql-streaming-MicroBatchExecution.adoc#runBatch-getBatch, Request unprocessed data from all sources (getBatch phase)>>
+* <<spark-sql-streaming-MicroBatchExecution.md#runBatch-getBatch, Request unprocessed data from all sources (getBatch phase)>>
 
 | getOffset
 a| [[getOffset]]
@@ -53,9 +53,9 @@ a| [[getOffset]]
 getOffset: Option[Offset]
 ----
 
-Latest (maximum) <<spark-sql-streaming-Offset.adoc#, offset>> of the source (or `None` to denote no data)
+Latest (maximum) <<spark-sql-streaming-Offset.md#, offset>> of the source (or `None` to denote no data)
 
-Used exclusively when <<spark-sql-streaming-MicroBatchExecution.adoc#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.adoc#, Micro-Batch Stream Processing>>) is requested for <<spark-sql-streaming-MicroBatchExecution.adoc#constructNextBatch-getOffset, latest offsets of all sources (getOffset phase)>> while <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream, running activated streaming query>>.
+Used exclusively when <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>) is requested for <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getOffset, latest offsets of all sources (getOffset phase)>> while <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, running activated streaming query>>.
 
 | schema
 a| [[schema]]
@@ -67,7 +67,7 @@ schema: StructType
 
 Schema of the source
 
-NOTE: `schema` _seems_ to be used for tests only and a duplication of <<spark-sql-streaming-StreamSourceProvider.adoc#sourceSchema, StreamSourceProvider.sourceSchema>>.
+NOTE: `schema` _seems_ to be used for tests only and a duplication of <<spark-sql-streaming-StreamSourceProvider.md#sourceSchema, StreamSourceProvider.sourceSchema>>.
 
 |===
 
@@ -78,10 +78,10 @@ NOTE: `schema` _seems_ to be used for tests only and a duplication of <<spark-sq
 | Source
 | Description
 
-| <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>
+| <<spark-sql-streaming-FileStreamSource.md#, FileStreamSource>>
 | [[FileStreamSource]] Part of file-based data sources (`FileFormat`)
 
-| <<spark-sql-streaming-KafkaSource.adoc#, KafkaSource>>
-| [[KafkaSource]] Part of <<spark-sql-streaming-kafka-data-source.adoc#, kafka>> data source
+| <<spark-sql-streaming-KafkaSource.md#, KafkaSource>>
+| [[KafkaSource]] Part of <<spark-sql-streaming-kafka-data-source.md#, kafka>> data source
 
 |===

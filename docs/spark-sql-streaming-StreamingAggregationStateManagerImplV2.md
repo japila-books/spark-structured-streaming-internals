@@ -1,13 +1,13 @@
 == [[StreamingAggregationStateManagerImplV2]] StreamingAggregationStateManagerImplV2 -- Default State Manager for Streaming Aggregation
 
-`StreamingAggregationStateManagerImplV2` is the default <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, state manager for streaming aggregations>>.
+`StreamingAggregationStateManagerImplV2` is the default <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#, state manager for streaming aggregations>>.
 
-NOTE: The version of a state manager is controlled using <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property.
+NOTE: The version of a state manager is controlled using <<spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property.
 
-`StreamingAggregationStateManagerImplV2` is <<creating-instance, created>> exclusively when `StreamingAggregationStateManager` is requested for a <<spark-sql-streaming-StreamingAggregationStateManager.adoc#createStateManager, new StreamingAggregationStateManager>>.
+`StreamingAggregationStateManagerImplV2` is <<creating-instance, created>> exclusively when `StreamingAggregationStateManager` is requested for a <<spark-sql-streaming-StreamingAggregationStateManager.md#createStateManager, new StreamingAggregationStateManager>>.
 
 [[creating-instance]]
-`StreamingAggregationStateManagerImplV2` (like the parent <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#creating-instance, StreamingAggregationStateManagerBaseImpl>>) takes the following to be created:
+`StreamingAggregationStateManagerImplV2` (like the parent <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#creating-instance, StreamingAggregationStateManagerBaseImpl>>) takes the following to be created:
 
 * [[keyExpressions]] Catalyst expressions for the keys (`Seq[Attribute]`)
 * [[inputRowAttributes]] Catalyst expressions for the input rows (`Seq[Attribute]`)
@@ -19,7 +19,7 @@ NOTE: The version of a state manager is controlled using <<spark-sql-streaming-p
 put(store: StateStore, row: UnsafeRow): Unit
 ----
 
-NOTE: `put` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#put, StreamingAggregationStateManager Contract>> to store a row in a state store.
+NOTE: `put` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.md#put, StreamingAggregationStateManager Contract>> to store a row in a state store.
 
 `put`...FIXME
 
@@ -30,9 +30,9 @@ NOTE: `put` is part of the <<spark-sql-streaming-StreamingAggregationStateManage
 get(store: StateStore, key: UnsafeRow): UnsafeRow
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#get, StreamingAggregationStateManager Contract>> to get the saved state for a given non-null key from a given <<spark-sql-streaming-StateStore.adoc#, state store>>.
+NOTE: `get` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.md#get, StreamingAggregationStateManager Contract>> to get the saved state for a given non-null key from a given <<spark-sql-streaming-StateStore.md#, state store>>.
 
-`get` requests the given <<spark-sql-streaming-StateStore.adoc#, StateStore>> for the current state value for the given key.
+`get` requests the given <<spark-sql-streaming-StateStore.md#, StateStore>> for the current state value for the given key.
 
 `get` returns `null` if the key could not be found in the state store. Otherwise, `get` <<restoreOriginalRow, restoreOriginalRow>> (for the key and the saved state).
 
@@ -55,7 +55,7 @@ NOTE: `restoreOriginalRow` is used when `StreamingAggregationStateManagerImplV2`
 getStateValueSchema: StructType
 ----
 
-NOTE: `getStateValueSchema` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#getStateValueSchema, StreamingAggregationStateManager Contract>> to...FIXME.
+NOTE: `getStateValueSchema` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.md#getStateValueSchema, StreamingAggregationStateManager Contract>> to...FIXME.
 
 `getStateValueSchema` simply requests the <<valueExpressions, valueExpressions>> for the schema.
 
@@ -66,9 +66,9 @@ NOTE: `getStateValueSchema` is part of the <<spark-sql-streaming-StreamingAggreg
 iterator: iterator(store: StateStore): Iterator[UnsafeRowPair]
 ----
 
-NOTE: `iterator` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#iterator, StreamingAggregationStateManager Contract>> to...FIXME.
+NOTE: `iterator` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.md#iterator, StreamingAggregationStateManager Contract>> to...FIXME.
 
-`iterator` simply requests the input <<spark-sql-streaming-StateStore.adoc#, state store>> for the <<spark-sql-streaming-StateStore.adoc#iterator, iterator>> that is mapped to an iterator of `UnsafeRowPairs` with the key (of the input `UnsafeRowPair`) and the value as a <<restoreOriginalRow, restored original row>>.
+`iterator` simply requests the input <<spark-sql-streaming-StateStore.md#, state store>> for the <<spark-sql-streaming-StateStore.md#iterator, iterator>> that is mapped to an iterator of `UnsafeRowPairs` with the key (of the input `UnsafeRowPair`) and the value as a <<restoreOriginalRow, restored original row>>.
 
 NOTE: https://www.scala-lang.org/api/current/scala/collection/Iterator.html[scala.collection.Iterator] is a data structure that allows to iterate over a sequence of elements that are usually fetched lazily (i.e. no elements are fetched from the underlying store until processed).
 
@@ -79,7 +79,7 @@ NOTE: https://www.scala-lang.org/api/current/scala/collection/Iterator.html[scal
 values(store: StateStore): Iterator[UnsafeRow]
 ----
 
-NOTE: `values` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.adoc#values, StreamingAggregationStateManager Contract>> to...FIXME.
+NOTE: `values` is part of the <<spark-sql-streaming-StreamingAggregationStateManager.md#values, StreamingAggregationStateManager Contract>> to...FIXME.
 
 `values`...FIXME
 

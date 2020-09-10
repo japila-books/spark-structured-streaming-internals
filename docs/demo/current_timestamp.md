@@ -13,7 +13,7 @@ Quoting the https://ci.apache.org/projects/flink/flink-docs-release-1.4/dev/even
 
 > *Event time* is the time that each individual event occurred on its producing device. This time is typically embedded within the records before they enter Flink and that event timestamp can be extracted from the record.
 
-That is exactly how event time is considered in link:spark-sql-streaming-Dataset-withWatermark.adoc[withWatermark] operator which you use to describe what column to use for event time. The column could be part of the input dataset or...generated.
+That is exactly how event time is considered in link:spark-sql-streaming-Dataset-withWatermark.md[withWatermark] operator which you use to describe what column to use for event time. The column could be part of the input dataset or...generated.
 
 And that is the moment where my confusion starts.
 
@@ -36,7 +36,7 @@ root
  |-- current_timestamp: timestamp (nullable = false)
 ----
 
-Both are special for Spark Structured Streaming as `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.adoc#runBatch-triggerLogicalPlan[replaces] their underlying Catalyst expressions, `CurrentTimestamp` and `CurrentDate` respectively, with `CurrentBatchTimestamp` expression and the time of the current batch.
+Both are special for Spark Structured Streaming as `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.md#runBatch-triggerLogicalPlan[replaces] their underlying Catalyst expressions, `CurrentTimestamp` and `CurrentDate` respectively, with `CurrentBatchTimestamp` expression and the time of the current batch.
 
 [source, scala]
 ----

@@ -18,7 +18,7 @@ onQueryStarted(
   event: QueryStartedEvent): Unit
 ----
 
-Informs that `DataStreamWriter` was requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start execution of the streaming query>> (on the <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, stream execution thread>>)
+Informs that `DataStreamWriter` was requested to <<spark-sql-streaming-DataStreamWriter.md#start, start execution of the streaming query>> (on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
 
 | onQueryProgress
 a| [[onQueryProgress]]
@@ -29,7 +29,7 @@ onQueryProgress(
   event: QueryProgressEvent): Unit
 ----
 
-Informs that `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-triggerExecution, triggerExecution phase>> (the end of a streaming batch)
+Informs that `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> (the end of a streaming batch)
 
 | onQueryTerminated
 a| [[onQueryTerminated]]
@@ -40,11 +40,11 @@ onQueryTerminated(
   event: QueryTerminatedEvent): Unit
 ----
 
-Informs that a streaming query was <<spark-sql-streaming-StreamingQuery.adoc#stop, stopped>> or terminated due to an error
+Informs that a streaming query was <<spark-sql-streaming-StreamingQuery.md#stop, stopped>> or terminated due to an error
 
 |===
 
-`StreamingQueryListener` is informed about the <<events, life cycle events>> when `StreamingQueryListenerBus` is requested to <<spark-sql-streaming-StreamingQueryListenerBus.adoc#doPostEvent, doPostEvent>>.
+`StreamingQueryListener` is informed about the <<events, life cycle events>> when `StreamingQueryListenerBus` is requested to <<spark-sql-streaming-StreamingQueryListenerBus.md#doPostEvent, doPostEvent>>.
 
 [[events]]
 .StreamingQueryListener's Life Cycle Events and Callbacks
@@ -56,32 +56,32 @@ Informs that a streaming query was <<spark-sql-streaming-StreamingQuery.adoc#sto
 
 a| QueryStartedEvent
 
-- <<spark-sql-streaming-StreamingQuery.adoc#id, id>>
-- <<spark-sql-streaming-StreamingQuery.adoc#runId, runId>>
-- <<spark-sql-streaming-StreamingQuery.adoc#name, name>>
+- <<spark-sql-streaming-StreamingQuery.md#id, id>>
+- <<spark-sql-streaming-StreamingQuery.md#runId, runId>>
+- <<spark-sql-streaming-StreamingQuery.md#name, name>>
 
 | <<onQueryStarted, onQueryStarted>>
-| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.adoc#runStream, run stream processing>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.adoc#start, start execution of the streaming query>> on the <<spark-sql-streaming-StreamExecution.adoc#queryExecutionThread, stream execution thread>>)
+| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start execution of the streaming query>> on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
 
 a| QueryProgressEvent
 
-- <<spark-sql-streaming-StreamingQueryProgress.adoc#, StreamingQueryProgress>>
+- <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>>
 
 | <<onQueryProgress, onQueryProgress>>
-| [[QueryProgressEvent]] Posted when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.adoc#updateProgress, update progress of a streaming query>> (after `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.adoc#runActivatedStream-triggerExecution, triggerExecution phase>> at the end of a streaming batch)
+| [[QueryProgressEvent]] Posted when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#updateProgress, update progress of a streaming query>> (after `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> at the end of a streaming batch)
 
 a| QueryTerminatedEvent
 
-- <<spark-sql-streaming-StreamingQuery.adoc#id, id>>
-- <<spark-sql-streaming-StreamingQuery.adoc#runId, runId>>
-- <<spark-sql-streaming-StreamExecution.adoc#exception, exception>> if terminated due to an error
+- <<spark-sql-streaming-StreamingQuery.md#id, id>>
+- <<spark-sql-streaming-StreamingQuery.md#runId, runId>>
+- <<spark-sql-streaming-StreamExecution.md#exception, exception>> if terminated due to an error
 
 | <<onQueryTerminated, onQueryTerminated>>
-| [[QueryTerminatedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.adoc#runStream, run stream processing>> (and the streaming query was <<spark-sql-streaming-StreamingQuery.adoc#stop, stopped>> or terminated due to an error)
+| [[QueryTerminatedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (and the streaming query was <<spark-sql-streaming-StreamingQuery.md#stop, stopped>> or terminated due to an error)
 
 |===
 
-You can register a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.adoc#addListener, StreamingQueryManager.addListener>> method.
+You can register a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.md#addListener, StreamingQueryManager.addListener>> method.
 
 [source, scala]
 ----
@@ -89,7 +89,7 @@ val queryListener: StreamingQueryListener = ...
 spark.streams.addListener(queryListener)
 ----
 
-You can remove a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.adoc#removeListener, StreamingQueryManager.removeListener>> method.
+You can remove a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.md#removeListener, StreamingQueryManager.removeListener>> method.
 
 [source, scala]
 ----
@@ -100,7 +100,7 @@ spark.streams.removeListener(queryListener)
 .StreamingQueryListener Notified about Query's Start (onQueryStarted)
 image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
 
-NOTE: `onQueryStarted` is used internally to unblock the link:spark-sql-streaming-StreamExecution.adoc#start[starting thread] of `StreamExecution`.
+NOTE: `onQueryStarted` is used internally to unblock the link:spark-sql-streaming-StreamExecution.md#start[starting thread] of `StreamExecution`.
 
 .StreamingQueryListener Notified about Query's Progress (onQueryProgress)
 image::images/StreamingQueryListener-onQueryProgress.png[align="center"]

@@ -1,6 +1,6 @@
 == [[StreamingAggregationStateManager]] StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation
 
-`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.adoc#, state stores>> and the physical operators used in <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>> (e.g. <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>>).
+`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.md#, state stores>> and the physical operators used in <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>> (e.g. <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>).
 
 [[contract]]
 .StreamingAggregationStateManager Contract
@@ -18,9 +18,9 @@ commit(
   store: StateStore): Long
 ----
 
-Commits all updates (_changes_) to the given <<spark-sql-streaming-StateStore.adoc#, state store>> and returns the new version
+Commits all updates (_changes_) to the given <<spark-sql-streaming-StateStore.md#, state store>> and returns the new version
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 | get
 a| [[get]]
@@ -30,9 +30,9 @@ a| [[get]]
 get(store: StateStore, key: UnsafeRow): UnsafeRow
 ----
 
-Looks up the value of the key from the <<spark-sql-streaming-StateStore.adoc#, state store>> (the key is non-``null``)
+Looks up the value of the key from the <<spark-sql-streaming-StateStore.md#, state store>> (the key is non-``null``)
 
-Used exclusively when <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operator is executed.
+Used exclusively when <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> physical operator is executed.
 
 | getKey
 a| [[getKey]]
@@ -46,9 +46,9 @@ Extracts the columns for the key from the input row
 
 Used when:
 
-* <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> physical operator is executed
+* <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> physical operator is executed
 
-* `StreamingAggregationStateManagerImplV1` legacy state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#put, put a row to a state store>>
+* `StreamingAggregationStateManagerImplV1` legacy state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#put, put a row to a state store>>
 
 | getStateValueSchema
 a| [[getStateValueSchema]]
@@ -58,9 +58,9 @@ a| [[getStateValueSchema]]
 getStateValueSchema: StructType
 ----
 
-Gets the schema of the values in a <<spark-sql-streaming-StateStore.adoc#, state store>>
+Gets the schema of the values in a <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used when <<spark-sql-streaming-StateStoreRestoreExec.adoc#, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operators are executed
+Used when <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operators are executed
 
 | iterator
 a| [[iterator]]
@@ -71,9 +71,9 @@ iterator(
   store: StateStore): Iterator[UnsafeRowPair]
 ----
 
-Returns all `UnsafeRow` key-value pairs in the given <<spark-sql-streaming-StateStore.adoc#, state store>>
+Returns all `UnsafeRow` key-value pairs in the given <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 | keys
 a| [[keys]]
@@ -83,9 +83,9 @@ a| [[keys]]
 keys(store: StateStore): Iterator[UnsafeRow]
 ----
 
-Returns all the keys in the <<spark-sql-streaming-StateStore.adoc#, state store>>
+Returns all the keys in the <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when physical operators with `WatermarkSupport` are requested to <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, removeKeysOlderThanWatermark>> (i.e. exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed).
+Used exclusively when physical operators with `WatermarkSupport` are requested to <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, removeKeysOlderThanWatermark>> (i.e. exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed).
 
 | put
 a| [[put]]
@@ -97,9 +97,9 @@ put(
   row: UnsafeRow): Unit
 ----
 
-Stores (_puts_) the given row in the given <<spark-sql-streaming-StateStore.adoc#, state store>>
+Stores (_puts_) the given row in the given <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 | remove
 a| [[remove]]
@@ -111,9 +111,9 @@ remove(
   key: UnsafeRow): Unit
 ----
 
-Removes the key-value pair from the given <<spark-sql-streaming-StateStore.adoc#, state store>> per key
+Removes the key-value pair from the given <<spark-sql-streaming-StateStore.md#, state store>> per key
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed (directly or indirectly as a <<spark-sql-streaming-WatermarkSupport.adoc#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, WatermarkSupport>>)
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed (directly or indirectly as a <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, WatermarkSupport>>)
 
 | values
 a| [[values]]
@@ -124,21 +124,21 @@ values(
   store: StateStore): Iterator[UnsafeRow]
 ----
 
-All values in the <<spark-sql-streaming-StateStore.adoc#, state store>>
+All values in the <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 |===
 
 [[supportedVersions]]
-`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>> (per the <<spark-sql-streaming-properties.adoc#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property):
+`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>> (per the <<spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property):
 
-* [[legacyVersion]] `1` (for the legacy <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#StreamingAggregationStateManagerImplV1, StreamingAggregationStateManagerImplV1>>)
+* [[legacyVersion]] `1` (for the legacy <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV1, StreamingAggregationStateManagerImplV1>>)
 
-* [[default]] `2` (for the default <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#StreamingAggregationStateManagerImplV2, StreamingAggregationStateManagerImplV2>>)
+* [[default]] `2` (for the default <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV2, StreamingAggregationStateManagerImplV2>>)
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.adoc#, StreamingAggregationStateManagerBaseImpl>> is the one and only known direct implementation of the <<contract, StreamingAggregationStateManager Contract>> in Spark Structured Streaming.
+NOTE: <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#, StreamingAggregationStateManagerBaseImpl>> is the one and only known direct implementation of the <<contract, StreamingAggregationStateManager Contract>> in Spark Structured Streaming.
 
 NOTE: `StreamingAggregationStateManager` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
 
@@ -154,9 +154,9 @@ createStateManager(
 
 `createStateManager` creates a new `StreamingAggregationStateManager` for a given `stateFormatVersion`:
 
-* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.adoc#, StreamingAggregationStateManagerImplV1>> for `stateFormatVersion` being `1`
+* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#, StreamingAggregationStateManagerImplV1>> for `stateFormatVersion` being `1`
 
-* <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.adoc#, StreamingAggregationStateManagerImplV2>> for `stateFormatVersion` being `2`
+* <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.md#, StreamingAggregationStateManagerImplV2>> for `stateFormatVersion` being `2`
 
 `createStateManager` throws a `IllegalArgumentException` for any other `stateFormatVersion`:
 
@@ -164,4 +164,4 @@ createStateManager(
 Version [stateFormatVersion] is invalid
 ```
 
-NOTE: `createStateManager` is used when <<spark-sql-streaming-StateStoreRestoreExec.adoc#stateManager, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.adoc#stateManager, StateStoreSaveExec>> physical operators are created.
+NOTE: `createStateManager` is used when <<spark-sql-streaming-StateStoreRestoreExec.md#stateManager, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.md#stateManager, StateStoreSaveExec>> physical operators are created.

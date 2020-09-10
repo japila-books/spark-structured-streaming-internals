@@ -1,8 +1,8 @@
 == Demo: Streaming Watermark with Aggregation in Append Output Mode
 
-The following demo shows the behaviour and the internals of <<spark-sql-streaming-watermark.adoc#, streaming watermark>> with a <<spark-sql-streaming-aggregation.adoc#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.adoc#Append, Append>> output mode.
+The following demo shows the behaviour and the internals of <<spark-sql-streaming-watermark.md#, streaming watermark>> with a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.md#Append, Append>> output mode.
 
-The demo also shows the behaviour and the internals of <<spark-sql-streaming-StateStoreSaveExec.adoc#, StateStoreSaveExec>> physical operator in <<spark-sql-streaming-StateStoreSaveExec.adoc#doExecute-Append, Append output mode>>.
+The demo also shows the behaviour and the internals of <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator in <<spark-sql-streaming-StateStoreSaveExec.md#doExecute-Append, Append output mode>>.
 
 TIP: The below code is part of https://github.com/jaceklaskowski/spark-structured-streaming-book/blob/v{{ book.version }}/examples/src/main/scala/pl/japila/spark/StreamingAggregationAppendMode.scala[StreamingAggregationAppendMode] streaming application.
 

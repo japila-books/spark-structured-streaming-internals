@@ -1,8 +1,8 @@
 == [[StreamingQueryListenerBus]] StreamingQueryListenerBus -- Event Bus for Streaming Events
 
-`StreamingQueryListenerBus` is an event bus (`ListenerBus[StreamingQueryListener, StreamingQueryListener.Event]`) for <<post, dispatching streaming life-cycle events>> of <<activeQueryRunIds, active streaming queries>> (that eventually are delivered to <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListeners>>).
+`StreamingQueryListenerBus` is an event bus (`ListenerBus[StreamingQueryListener, StreamingQueryListener.Event]`) for <<post, dispatching streaming life-cycle events>> of <<activeQueryRunIds, active streaming queries>> (that eventually are delivered to <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListeners>>).
 
-`StreamingQueryListenerBus` is created for <<spark-sql-streaming-StreamingQueryManager.adoc#listenerBus, StreamingQueryManager>> (once per `SparkSession`).
+`StreamingQueryListenerBus` is created for <<spark-sql-streaming-StreamingQueryManager.md#listenerBus, StreamingQueryManager>> (once per `SparkSession`).
 
 .StreamingQueryListenerBus is Created Once In SparkSession
 image::images/StreamingQueryListenerBus.png[align="center"]
@@ -24,7 +24,7 @@ image::images/StreamingQueryListenerBus.png[align="center"]
 activeQueryRunIds: HashSet[UUID]
 ----
 
-`activeQueryRunIds` is an internal registry of <<spark-sql-streaming-StreamingQuery.adoc#runId, run IDs>> of active streaming queries in the `SparkSession`.
+`activeQueryRunIds` is an internal registry of <<spark-sql-streaming-StreamingQuery.md#runId, run IDs>> of active streaming queries in the `SparkSession`.
 
 * A `runId` is added when `StreamingQueryListenerBus` is requested to <<post, post a QueryStartedEvent>>
 
@@ -39,11 +39,11 @@ activeQueryRunIds: HashSet[UUID]
 post(event: StreamingQueryListener.Event): Unit
 ----
 
-`post` simply posts the input `event` directly to the <<sparkListenerBus, LiveListenerBus>> unless it is a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent, QueryStartedEvent>>.
+`post` simply posts the input `event` directly to the <<sparkListenerBus, LiveListenerBus>> unless it is a <<spark-sql-streaming-StreamingQueryListener.md#QueryStartedEvent, QueryStartedEvent>>.
 
-For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent, QueryStartedEvent>>, `post` adds the `runId` (of the streaming query that has been started) to the <<activeQueryRunIds, activeQueryRunIds>> internal registry first, posts the event to the <<sparkListenerBus, LiveListenerBus>> and then <<postToAll, postToAll>>.
+For a <<spark-sql-streaming-StreamingQueryListener.md#QueryStartedEvent, QueryStartedEvent>>, `post` adds the `runId` (of the streaming query that has been started) to the <<activeQueryRunIds, activeQueryRunIds>> internal registry first, posts the event to the <<sparkListenerBus, LiveListenerBus>> and then <<postToAll, postToAll>>.
 
-NOTE: `post` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#postListenerEvent, post a streaming event>>.
+NOTE: `post` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#postListenerEvent, post a streaming event>>.
 
 === [[doPostEvent]] `doPostEvent` Method
 
@@ -56,13 +56,13 @@ doPostEvent(
 
 NOTE: `doPostEvent` is part of Spark Core's `ListenerBus` contract to post an event to the specified listener.
 
-`doPostEvent` branches per the type of <<spark-sql-streaming-StreamingQueryListener.adoc#events, StreamingQueryListener.Event>>:
+`doPostEvent` branches per the type of <<spark-sql-streaming-StreamingQueryListener.md#events, StreamingQueryListener.Event>>:
 
-* For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryStartedEvent, QueryStartedEvent>>, requests the <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>> to <<spark-sql-streaming-StreamingQueryListener.adoc#onQueryStarted, onQueryStarted>>
+* For a <<spark-sql-streaming-StreamingQueryListener.md#QueryStartedEvent, QueryStartedEvent>>, requests the <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>> to <<spark-sql-streaming-StreamingQueryListener.md#onQueryStarted, onQueryStarted>>
 
-* For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryProgressEvent, QueryProgressEvent>>, requests the <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>> to <<spark-sql-streaming-StreamingQueryListener.adoc#onQueryProgress, onQueryProgress>>
+* For a <<spark-sql-streaming-StreamingQueryListener.md#QueryProgressEvent, QueryProgressEvent>>, requests the <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>> to <<spark-sql-streaming-StreamingQueryListener.md#onQueryProgress, onQueryProgress>>
 
-* For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent, QueryTerminatedEvent>>, requests the <<spark-sql-streaming-StreamingQueryListener.adoc#, StreamingQueryListener>> to <<spark-sql-streaming-StreamingQueryListener.adoc#onQueryTerminated, onQueryTerminated>>
+* For a <<spark-sql-streaming-StreamingQueryListener.md#QueryTerminatedEvent, QueryTerminatedEvent>>, requests the <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>> to <<spark-sql-streaming-StreamingQueryListener.md#onQueryTerminated, onQueryTerminated>>
 
 For any other event, `doPostEvent` simply does nothing (_swallows it_).
 
@@ -77,4 +77,4 @@ NOTE: `postToAll` is part of Spark Core's `ListenerBus` contract to post an even
 
 `postToAll` first requests the parent `ListenerBus` to post the event to all registered listeners.
 
-For a <<spark-sql-streaming-StreamingQueryListener.adoc#QueryTerminatedEvent, QueryTerminatedEvent>>, `postToAll` simply removes the `runId` (of the streaming query that has been terminated) from the <<activeQueryRunIds, activeQueryRunIds>> internal registry.
+For a <<spark-sql-streaming-StreamingQueryListener.md#QueryTerminatedEvent, QueryTerminatedEvent>>, `postToAll` simply removes the `runId` (of the streaming query that has been terminated) from the <<activeQueryRunIds, activeQueryRunIds>> internal registry.

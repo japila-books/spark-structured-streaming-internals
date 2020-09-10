@@ -4,9 +4,9 @@
 
 `KafkaSourceRDD` is <<creating-instance, created>> when:
 
-* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, build a distributed data scan with column pruning>>
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.md#buildScan, build a distributed data scan with column pruning>>
 
-* `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.adoc#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
+* `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.md#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
 
 === [[creating-instance]] Creating KafkaSourceRDD Instance
 
@@ -17,7 +17,7 @@
 * [[offsetRanges]] Collection of `KafkaSourceRDDOffsetRange` offsets
 * [[pollTimeoutMs]] Timeout (in milliseconds) to poll data from Kafka
 +
-Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offsets) and in turn link:spark-sql-streaming-CachedKafkaConsumer.adoc#poll[requests `CachedKafkaConsumer` to poll for Kafka's `ConsumerRecords`].
+Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offsets) and in turn link:spark-sql-streaming-CachedKafkaConsumer.md#poll[requests `CachedKafkaConsumer` to poll for Kafka's `ConsumerRecords`].
 * [[failOnDataLoss]] Flag to...FIXME
 * [[reuseKafkaConsumer]] Flag to...FIXME
 
@@ -45,13 +45,13 @@ compute(
 
 NOTE: `compute` is part of the `RDD` contract to compute a given partition.
 
-`compute` uses `KafkaDataConsumer` utility to <<spark-sql-streaming-KafkaDataConsumer.adoc#acquire, acquire a cached KafkaDataConsumer>> (for a partition).
+`compute` uses `KafkaDataConsumer` utility to <<spark-sql-streaming-KafkaDataConsumer.md#acquire, acquire a cached KafkaDataConsumer>> (for a partition).
 
 `compute` <<resolveRange, resolves the range>> (based on the `offsetRange` of the given partition that is assumed a `KafkaSourceRDDPartition`).
 
-`compute` returns a `NextIterator` so that `getNext` uses the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.adoc#get, get a record>>.
+`compute` returns a `NextIterator` so that `getNext` uses the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.md#get, get a record>>.
 
-When the beginning and ending offsets (of the offset range) are equal, `compute` prints out the following INFO message to the logs, requests the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.adoc#release, release>> and returns an empty iterator.
+When the beginning and ending offsets (of the offset range) are equal, `compute` prints out the following INFO message to the logs, requests the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.md#release, release>> and returns an empty iterator.
 
 ```
 Beginning offset [fromOffset] is the same as ending offset skipping [topic] [partition]

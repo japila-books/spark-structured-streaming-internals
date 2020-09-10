@@ -1,14 +1,14 @@
 == [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
 
 [[apply]]
-`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with <<spark-sql-streaming-StreamingRelation.adoc#, StreamingRelation>>, <<spark-sql-streaming-StreamingExecutionRelation.adoc#, StreamingExecutionRelation>>, and <<spark-sql-streaming-StreamingRelationV2.adoc#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingRelationExec.adoc#, StreamingRelationExec>> physical operators.
+`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>>, <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>>, and <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingRelationExec.md#, StreamingRelationExec>> physical operators.
 
 .StreamingRelationStrategy, StreamingRelation, StreamingExecutionRelation and StreamingRelationExec Operators
 image::images/StreamingRelationStrategy-apply.png[align="center"]
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`StreamingRelationStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>> is requested to plan a streaming query.
+`StreamingRelationStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to plan a streaming query.
 
 `StreamingRelationStrategy` is available using `SessionState` (of a `SparkSession`).
 

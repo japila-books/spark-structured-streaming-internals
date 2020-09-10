@@ -1,11 +1,11 @@
 == [[KafkaRelation]] KafkaRelation
 
 [[schema]]
-`KafkaRelation` represents a *collection of rows* with a <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined schema>> (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
+`KafkaRelation` represents a *collection of rows* with a <<spark-sql-streaming-kafka-data-source.md#schema, predefined schema>> (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
-`KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createRelation, create a BaseRelation>>.
+`KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#createRelation, create a BaseRelation>>.
 
 [[options]]
 .KafkaRelation's Options
@@ -32,7 +32,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaRelation=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating KafkaRelation Instance
@@ -40,12 +40,12 @@ Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
 `KafkaRelation` takes the following when created:
 
 * [[sqlContext]] `SQLContext`
-* [[strategy]] link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
+* [[strategy]] link:spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy]
 * [[sourceOptions]] `Source` options (`Map[String, String]`)
 * [[specifiedKafkaParams]] User-defined Kafka parameters (`Map[String, String]`)
 * [[failOnDataLoss]] `failOnDataLoss` flag
-* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Starting offsets>>
-* [[endingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Ending offsets>>
+* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Starting offsets>>
+* [[endingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Ending offsets>>
 
 === [[getPartitionOffsets]] `getPartitionOffsets` Internal Method
 
@@ -71,15 +71,15 @@ NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-sp
 
 `buildScan` generates a unique group ID of the format *spark-kafka-relation-[randomUUID]* (to make sure that a streaming query creates a new consumer group).
 
-`buildScan` creates a <<spark-sql-streaming-KafkaOffsetReader.adoc#, KafkaOffsetReader>> with the following:
+`buildScan` creates a <<spark-sql-streaming-KafkaOffsetReader.md#, KafkaOffsetReader>> with the following:
 
 * The given <<strategy, ConsumerStrategy>> and the <<sourceOptions, source options>>
 
-* <<spark-sql-streaming-KafkaSourceProvider.adoc#kafkaParamsForDriver, Kafka parameters for the driver>> based on the given <<specifiedKafkaParams, specifiedKafkaParams>>
+* <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForDriver, Kafka parameters for the driver>> based on the given <<specifiedKafkaParams, specifiedKafkaParams>>
 
 * *spark-kafka-relation-[randomUUID]-driver* for the `driverGroupIdPrefix`
 
-`buildScan` uses the `KafkaOffsetReader` to <<getPartitionOffsets, getPartitionOffsets>> for the starting and ending offsets (based on the given <<startingOffsets, KafkaOffsetRangeLimit>> and the <<endingOffsets, KafkaOffsetRangeLimit>>, respectively). `buildScan` requests the `KafkaOffsetReader` to <<spark-sql-streaming-KafkaOffsetReader.adoc#close, close>> afterwards.
+`buildScan` uses the `KafkaOffsetReader` to <<getPartitionOffsets, getPartitionOffsets>> for the starting and ending offsets (based on the given <<startingOffsets, KafkaOffsetRangeLimit>> and the <<endingOffsets, KafkaOffsetRangeLimit>>, respectively). `buildScan` requests the `KafkaOffsetReader` to <<spark-sql-streaming-KafkaOffsetReader.md#close, close>> afterwards.
 
 `buildScan` creates offset ranges (that are a collection of `KafkaSourceRDDOffsetRanges` with a Kafka `TopicPartition`, beginning and ending offsets and undefined preferred location).
 
@@ -89,9 +89,9 @@ NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-sp
 Generating RDD of offset ranges: [offsetRanges]
 ```
 
-`buildScan` creates a <<spark-sql-streaming-KafkaSourceRDD.adoc#, KafkaSourceRDD>> with the following:
+`buildScan` creates a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>> with the following:
 
-* <<spark-sql-streaming-KafkaSourceProvider.adoc#kafkaParamsForExecutors, Kafka parameters for executors>> based on the given <<specifiedKafkaParams, specifiedKafkaParams>> and the unique group ID (`spark-kafka-relation-[randomUUID]`)
+* <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForExecutors, Kafka parameters for executors>> based on the given <<specifiedKafkaParams, specifiedKafkaParams>> and the unique group ID (`spark-kafka-relation-[randomUUID]`)
 
 * The offset ranges created
 

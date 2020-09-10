@@ -1,16 +1,16 @@
 == [[WriteToContinuousDataSource]] WriteToContinuousDataSource Unary Logical Operator
 
 [[children]]
-`WriteToContinuousDataSource` is a unary logical operator (`LogicalPlan`) that is <<creating-instance, created>> exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>> (to create an <<spark-sql-streaming-IncrementalExecution.adoc#, IncrementalExecution>>).
+`WriteToContinuousDataSource` is a unary logical operator (`LogicalPlan`) that is <<creating-instance, created>> exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> (to create an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>>).
 
-`WriteToContinuousDataSource` is planned (_translated_) to a <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#, WriteToContinuousDataSourceExec>> unary physical operator (when `DataSourceV2Strategy` execution planning strategy is requested to plan a logical query).
+`WriteToContinuousDataSource` is planned (_translated_) to a <<spark-sql-streaming-WriteToContinuousDataSourceExec.md#, WriteToContinuousDataSourceExec>> unary physical operator (when `DataSourceV2Strategy` execution planning strategy is requested to plan a logical query).
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-DataSourceV2Strategy.html[DataSourceV2Strategy Execution Planning Strategy] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 [[creating-instance]]
 `WriteToContinuousDataSource` takes the following to be created:
 
-* [[writer]] <<spark-sql-streaming-StreamWriter.adoc#, StreamWriter>>
+* [[writer]] <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>
 * [[query]] Child logical operator (`LogicalPlan`)
 
 [[output]]

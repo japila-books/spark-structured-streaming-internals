@@ -1,18 +1,18 @@
 == [[EventTimeStatsAccum]] EventTimeStatsAccum Accumulator -- Event-Time Column Statistics for EventTimeWatermarkExec Physical Operator
 
 [[event-time-statistics]]
-`EventTimeStatsAccum` is a Spark accumulator that is used for the <<EventTimeStats, statistics of the event-time column>> (that <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator uses for event-time watermark):
+`EventTimeStatsAccum` is a Spark accumulator that is used for the <<EventTimeStats, statistics of the event-time column>> (that <<spark-sql-streaming-EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator uses for event-time watermark):
 
 * [[max]] Maximum value
 * [[min]] Minimum value
 * [[avg]] Average value
 * [[count]] Number of updates (count)
 
-`EventTimeStatsAccum` is <<creating-instance, created>> and registered exclusively for <<spark-sql-streaming-EventTimeWatermarkExec.adoc#, EventTimeWatermarkExec>> physical operator.
+`EventTimeStatsAccum` is <<creating-instance, created>> and registered exclusively for <<spark-sql-streaming-EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator.
 
 [NOTE]
 ====
-When `EventTimeWatermarkExec` physical operator is requested to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as a RDD[InternalRow])>>, every task simply <<add, adds>> the values of the <<spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTime, event-time watermark column>> to the <<spark-sql-streaming-EventTimeWatermarkExec.adoc#eventTimeStats, EventTimeStatsAccum>> accumulator.
+When `EventTimeWatermarkExec` physical operator is requested to <<spark-sql-streaming-EventTimeWatermarkExec.md#doExecute, execute and generate a recipe for a distributed computation (as a RDD[InternalRow])>>, every task simply <<add, adds>> the values of the <<spark-sql-streaming-EventTimeWatermarkExec.md#eventTime, event-time watermark column>> to the <<spark-sql-streaming-EventTimeWatermarkExec.md#eventTimeStats, EventTimeStatsAccum>> accumulator.
 
 As per design of Spark accumulators in Apache Spark, accumulator updates are automatically sent out (_propagated_) from tasks to the driver every heartbeat and then they are accumulated together.
 ====
@@ -34,7 +34,7 @@ NOTE: `add` is part of the `AccumulatorV2` Contract to add (_accumulate_) a give
 
 `add` simply requests the <<currentStats, EventTimeStats>> to <<EventTimeStats-add, add>> the given `v` value.
 
-NOTE: `add` is used exclusively when `EventTimeWatermarkExec` physical operator is requested to <<spark-sql-streaming-EventTimeWatermarkExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as a RDD[InternalRow])>>.
+NOTE: `add` is used exclusively when `EventTimeWatermarkExec` physical operator is requested to <<spark-sql-streaming-EventTimeWatermarkExec.md#doExecute, execute and generate a recipe for a distributed computation (as a RDD[InternalRow])>>.
 
 === [[EventTimeStats]] EventTimeStats
 

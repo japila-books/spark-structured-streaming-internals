@@ -1,8 +1,8 @@
 == [[StateManagerImplV2]] StateManagerImplV2 -- Default StateManager of FlatMapGroupsWithStateExec Physical Operator
 
-`StateManagerImplV2` is a concrete <<spark-sql-streaming-StateManager.adoc#, StateManager>> (as a <<spark-sql-streaming-StateManagerImplBase.adoc#, StateManagerImplBase>>) that is used by default in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator (per <<spark-sql-streaming-properties.adoc#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>> internal configuration property).
+`StateManagerImplV2` is a concrete <<spark-sql-streaming-StateManager.md#, StateManager>> (as a <<spark-sql-streaming-StateManagerImplBase.md#, StateManagerImplBase>>) that is used by default in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator (per <<spark-sql-streaming-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>> internal configuration property).
 
-`StateManagerImplV2` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExecHelper` utility is requested for a <<spark-sql-streaming-FlatMapGroupsWithStateExecHelper.adoc#createStateManager, StateManager>> (when the `stateFormatVersion` is `2`).
+`StateManagerImplV2` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExecHelper` utility is requested for a <<spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md#createStateManager, StateManager>> (when the `stateFormatVersion` is `2`).
 
 === [[creating-instance]] Creating StateManagerImplV2 Instance
 
@@ -20,7 +20,7 @@
 stateSchema: StructType
 ----
 
-NOTE: `stateSchema` is part of the <<spark-sql-streaming-StateManager.adoc#stateSchema, StateManager Contract>> for the schema of the state.
+NOTE: `stateSchema` is part of the <<spark-sql-streaming-StateManager.md#stateSchema, StateManager Contract>> for the schema of the state.
 
 `stateSchema`...FIXME
 
@@ -31,7 +31,7 @@ NOTE: `stateSchema` is part of the <<spark-sql-streaming-StateManager.adoc#state
 stateSerializerExprs: Seq[Expression]
 ----
 
-NOTE: `stateSerializerExprs` is part of the <<spark-sql-streaming-StateManagerImplBase.adoc#stateSerializerExprs, StateManager Contract>> for the state serializer, i.e. Catalyst expressions to serialize a state object to a row (`UnsafeRow`).
+NOTE: `stateSerializerExprs` is part of the <<spark-sql-streaming-StateManagerImplBase.md#stateSerializerExprs, StateManager Contract>> for the state serializer, i.e. Catalyst expressions to serialize a state object to a row (`UnsafeRow`).
 
 `stateSerializerExprs`...FIXME
 
@@ -42,7 +42,7 @@ NOTE: `stateSerializerExprs` is part of the <<spark-sql-streaming-StateManagerIm
 stateDeserializerExpr: Expression
 ----
 
-NOTE: `stateDeserializerExpr` is part of the <<spark-sql-streaming-StateManagerImplBase.adoc#stateDeserializerExpr, StateManager Contract>> for the state deserializer, i.e. a Catalyst expression to deserialize a state object from a row (`UnsafeRow`).
+NOTE: `stateDeserializerExpr` is part of the <<spark-sql-streaming-StateManagerImplBase.md#stateDeserializerExpr, StateManager Contract>> for the state deserializer, i.e. a Catalyst expression to deserialize a state object from a row (`UnsafeRow`).
 
 `stateDeserializerExpr`...FIXME
 

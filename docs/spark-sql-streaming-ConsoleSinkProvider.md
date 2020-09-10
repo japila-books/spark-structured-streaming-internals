@@ -1,10 +1,10 @@
 == [[ConsoleSinkProvider]] ConsoleSinkProvider
 
-`ConsoleSinkProvider` is a `DataSourceV2` with <<spark-sql-streaming-StreamWriteSupport.adoc#, StreamWriteSupport>> for *console* data source format.
+`ConsoleSinkProvider` is a `DataSourceV2` with <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>> for *console* data source format.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceV2.html[DataSourceV2 Contract] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`ConsoleSinkProvider` is a <<spark-sql-DataSourceRegister.adoc#, DataSourceRegister>> and registers itself as the *console* data source format.
+`ConsoleSinkProvider` is a <<spark-sql-DataSourceRegister.md#, DataSourceRegister>> and registers itself as the *console* data source format.
 
 [source, scala]
 ----
@@ -24,7 +24,7 @@ scala> println(q.lastProgress.sink)
 ----
 
 [[createStreamWriter]]
-When requested for a <<spark-sql-streaming-StreamWriteSupport.adoc#createStreamWriter, StreamWriter>>, `ConsoleSinkProvider` simply creates a <<spark-sql-streaming-ConsoleWriter.adoc#, ConsoleWriter>> (with the given schema and options).
+When requested for a <<spark-sql-streaming-StreamWriteSupport.md#createStreamWriter, StreamWriter>>, `ConsoleSinkProvider` simply creates a <<spark-sql-streaming-ConsoleWriter.md#, ConsoleWriter>> (with the given schema and options).
 
 [[CreatableRelationProvider]]
 `ConsoleSinkProvider` is a <<createRelation, CreatableRelationProvider>>.

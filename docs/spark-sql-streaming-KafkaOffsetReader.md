@@ -6,9 +6,9 @@
 
 `KafkaOffsetReader` is <<creating-instance, created>> when:
 
-* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, build a distributed data scan with column pruning>>
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.md#buildScan, build a distributed data scan with column pruning>>
 
-* `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createSource, create a KafkaSource>>, <<spark-sql-streaming-KafkaSourceProvider.adoc#createMicroBatchReader, createMicroBatchReader>>, and <<spark-sql-streaming-KafkaSourceProvider.adoc#createContinuousReader, createContinuousReader>>
+* `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#createSource, create a KafkaSource>>, <<spark-sql-streaming-KafkaSourceProvider.md#createMicroBatchReader, createMicroBatchReader>>, and <<spark-sql-streaming-KafkaSourceProvider.md#createContinuousReader, createContinuousReader>>
 
 [[options]]
 .KafkaOffsetReader's Options
@@ -30,7 +30,7 @@ Default: `1000`
 |===
 
 [[kafkaSchema]]
-`KafkaOffsetReader` defines the <<spark-sql-streaming-kafka-data-source.adoc#schema, predefined fixed schema>>.
+`KafkaOffsetReader` defines the <<spark-sql-streaming-kafka-data-source.md#schema, predefined fixed schema>>.
 
 [[logging]]
 [TIP]
@@ -43,14 +43,14 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.adoc#, Logging>>.
+Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating KafkaOffsetReader Instance
 
 `KafkaOffsetReader` takes the following to be created:
 
-* [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.adoc[ConsumerStrategy]
+* [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy]
 * [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
 * [[readerOptions]] Options (as name-value pairs)
 * [[driverGroupIdPrefix]] Prefix of the group ID
@@ -90,7 +90,7 @@ fetchTopicPartitions(): Set[TopicPartition]
 
 CAUTION: FIXME
 
-NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streaming-KafkaRelation.adoc#getPartitionOffsets[getPartitionOffsets].
+NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streaming-KafkaRelation.md#getPartitionOffsets[getPartitionOffsets].
 
 === [[fetchEarliestOffsets]] Fetching Earliest Offsets -- `fetchEarliestOffsets` Method
 
@@ -102,7 +102,7 @@ fetchEarliestOffsets(newPartitions: Seq[TopicPartition]): Map[TopicPartition, Lo
 
 CAUTION: FIXME
 
-NOTE: `fetchEarliestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#rateLimit[rateLimit] and link:spark-sql-streaming-KafkaSource.adoc#getBatch[generates a DataFrame for a batch] (when new partitions have been assigned).
+NOTE: `fetchEarliestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.md#rateLimit[rateLimit] and link:spark-sql-streaming-KafkaSource.md#getBatch[generates a DataFrame for a batch] (when new partitions have been assigned).
 
 === [[fetchLatestOffsets]] Fetching Latest Offsets -- `fetchLatestOffsets` Method
 
@@ -113,7 +113,7 @@ fetchLatestOffsets(): Map[TopicPartition, Long]
 
 CAUTION: FIXME
 
-NOTE: `fetchLatestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#getOffset[gets offsets] or `initialPartitionOffsets` is link:spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets[initialized].
+NOTE: `fetchLatestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.md#getOffset[gets offsets] or `initialPartitionOffsets` is link:spark-sql-streaming-KafkaSource.md#initialPartitionOffsets[initialized].
 
 === [[withRetriesWithoutInterrupt]] `withRetriesWithoutInterrupt` Internal Method
 
@@ -159,7 +159,7 @@ For every partition offset in the input `partitionOffsets`, `fetchSpecificOffset
 
 In the end, `fetchSpecificOffsets` creates a collection of Kafka's `TopicPartition` and `position` (using the <<consumer, Kafka Consumer>>).
 
-NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.adoc#fetchAndVerify[fetches and verifies initial partition offsets].
+NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.md#fetchAndVerify[fetches and verifies initial partition offsets].
 
 === [[createConsumer]] Creating Kafka Consumer -- `createConsumer` Internal Method
 
@@ -168,7 +168,7 @@ NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming
 createConsumer(): Consumer[Array[Byte], Array[Byte]]
 ----
 
-`createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to link:spark-sql-streaming-ConsumerStrategy.adoc#createConsumer[create a Kafka Consumer] with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
+`createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to link:spark-sql-streaming-ConsumerStrategy.md#createConsumer[create a Kafka Consumer] with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
 
 NOTE: `createConsumer` is used when `KafkaOffsetReader` is <<creating-instance, created>> (and initializes <<consumer, consumer>>) and <<resetConsumer, resetConsumer>>
 
@@ -202,9 +202,9 @@ close(): Unit
 ====
 `close` is used when:
 
-* <<spark-sql-streaming-KafkaContinuousReader.adoc#stop, KafkaContinuousReader>>, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#stop, KafkaMicroBatchReader>>, and <<spark-sql-streaming-KafkaSource.adoc#stop, KafkaSource>> are requested to stop a streaming reader or source
+* <<spark-sql-streaming-KafkaContinuousReader.md#stop, KafkaContinuousReader>>, <<spark-sql-streaming-KafkaMicroBatchReader.md#stop, KafkaMicroBatchReader>>, and <<spark-sql-streaming-KafkaSource.md#stop, KafkaSource>> are requested to stop a streaming reader or source
 
-* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.adoc#buildScan, build a distributed data scan with column pruning>>
+* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.md#buildScan, build a distributed data scan with column pruning>>
 ====
 
 === [[runUninterruptibly]] `runUninterruptibly` Internal Method

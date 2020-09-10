@@ -1,8 +1,8 @@
 == Demo: Exploring Checkpointed State
 
-The following demo shows the internals of the checkpointed state of a <<spark-sql-streaming-stateful-stream-processing.adoc#, stateful streaming query>>.
+The following demo shows the internals of the checkpointed state of a <<spark-sql-streaming-stateful-stream-processing.md#, stateful streaming query>>.
 
-The demo uses the state checkpoint directory that was used in <<spark-sql-streaming-demo-watermark-aggregation-append.adoc#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>.
+The demo uses the state checkpoint directory that was used in <<spark-sql-streaming-demo-watermark-aggregation-append.md#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>.
 
 [source, scala]
 ----

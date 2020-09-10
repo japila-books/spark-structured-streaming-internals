@@ -23,7 +23,7 @@ void abort(
 
 Aborts the writing job for a specified `epochId` and `WriterCommitMessages`
 
-Used exclusively when `MicroBatchWriter` is requested to <<spark-sql-streaming-MicroBatchWriter.adoc#abort, abort>>
+Used exclusively when `MicroBatchWriter` is requested to <<spark-sql-streaming-MicroBatchWriter.md#abort, abort>>
 
 | commit
 a| [[commit]]
@@ -39,9 +39,9 @@ Commits the writing job for a specified `epochId` and `WriterCommitMessages`
 
 Used when:
 
-* `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.adoc#commitEpoch, commitEpoch>>
+* `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.md#commitEpoch, commitEpoch>>
 
-* `MicroBatchWriter` is requested to <<spark-sql-streaming-MicroBatchWriter.adoc#commit, commit>>
+* `MicroBatchWriter` is requested to <<spark-sql-streaming-MicroBatchWriter.md#commit, commit>>
 
 |===
 
@@ -52,10 +52,10 @@ Used when:
 | StreamWriter
 | Description
 
-| <<spark-sql-streaming-ForeachWriterProvider.adoc#, ForeachWriterProvider>>
+| <<spark-sql-streaming-ForeachWriterProvider.md#, ForeachWriterProvider>>
 | [[ForeachWriterProvider]] *foreachWriter* data source
 
-| <<spark-sql-streaming-ConsoleWriter.adoc#, ConsoleWriter>>
+| <<spark-sql-streaming-ConsoleWriter.md#, ConsoleWriter>>
 | [[ConsoleWriter]] *console* data source
 
 | KafkaStreamWriter

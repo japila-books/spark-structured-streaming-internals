@@ -1,12 +1,12 @@
 == [[GroupState]] GroupState -- Group State in Arbitrary Stateful Streaming Aggregation
 
-`GroupState` is an <<contract, abstraction>> of <<implementations, group state>> (of type `S`) in <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>>.
+`GroupState` is an <<contract, abstraction>> of <<implementations, group state>> (of type `S`) in <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>>.
 
-`GroupState` is used with the following <<spark-sql-streaming-KeyValueGroupedDataset.adoc#, KeyValueGroupedDataset>> operations:
+`GroupState` is used with the following <<spark-sql-streaming-KeyValueGroupedDataset.md#, KeyValueGroupedDataset>> operations:
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#mapGroupsWithState, mapGroupsWithState>>
+* <<spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState, mapGroupsWithState>>
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.adoc#flatMapGroupsWithState, flatMapGroupsWithState>>
+* <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, flatMapGroupsWithState>>
 
 `GroupState` is created separately for every *aggregation key* to hold a state as an *aggregation state value*.
 
@@ -106,7 +106,7 @@ setTimeoutDuration(durationMs: Long): Unit
 setTimeoutDuration(duration: String): Unit
 ----
 
-Specifies the *timeout duration* for the state key (in millis or as a string, e.g. "10 seconds", "1 hour") for <<spark-sql-streaming-GroupStateTimeout.adoc#ProcessingTimeTimeout, GroupStateTimeout.ProcessingTimeTimeout>>
+Specifies the *timeout duration* for the state key (in millis or as a string, e.g. "10 seconds", "1 hour") for <<spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout, GroupStateTimeout.ProcessingTimeTimeout>>
 
 | setTimeoutTimestamp
 a| [[setTimeoutTimestamp]]
@@ -123,7 +123,7 @@ setTimeoutTimestamp(
   additionalDuration: String): Unit
 ----
 
-Specifies the *timeout timestamp* for the state key for <<spark-sql-streaming-GroupStateTimeout.adoc#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>>
+Specifies the *timeout timestamp* for the state key for <<spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>>
 
 | update
 a| [[update]]

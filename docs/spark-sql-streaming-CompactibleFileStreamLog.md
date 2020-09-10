@@ -1,9 +1,9 @@
 == [[CompactibleFileStreamLog]] CompactibleFileStreamLog Contract -- Compactible Metadata Logs
 
-`CompactibleFileStreamLog` is the <<contract, extension>> of the <<spark-sql-streaming-HDFSMetadataLog.adoc#, HDFSMetadataLog contract>> for <<implementations, compactible metadata logs>> that <<compactLogs, compactLogs>> every <<compactInterval, compact interval>>.
+`CompactibleFileStreamLog` is the <<contract, extension>> of the <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog contract>> for <<implementations, compactible metadata logs>> that <<compactLogs, compactLogs>> every <<compactInterval, compact interval>>.
 
 [[minBatchesToRetain]][[spark.sql.streaming.minBatchesToRetain]]
-`CompactibleFileStreamLog` uses <<spark-sql-streaming-properties.adoc#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) for <<deleteExpiredLog, deleteExpiredLog>>.
+`CompactibleFileStreamLog` uses <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) for <<deleteExpiredLog, deleteExpiredLog>>.
 
 [[COMPACT_FILE_SUFFIX]]
 `CompactibleFileStreamLog` uses *.compact* suffix for <<batchIdToPath, batchIdToPath>>, <<getBatchIdFromFileName, getBatchIdFromFileName>>, and the <<compactInterval, compactInterval>>.
@@ -66,11 +66,11 @@ Used exclusively when `CompactibleFileStreamLog` is requested to <<add, store (a
 | CompactibleFileStreamLog
 | Description
 
-| <<spark-sql-streaming-FileStreamSinkLog.adoc#, FileStreamSinkLog>>
+| <<spark-sql-streaming-FileStreamSinkLog.md#, FileStreamSinkLog>>
 | [[FileStreamSinkLog]]
 
-| <<spark-sql-streaming-FileStreamSourceLog.adoc#, FileStreamSourceLog>>
-| [[FileStreamSourceLog]] `CompactibleFileStreamLog` (of `FileEntry` metadata) of <<spark-sql-streaming-FileStreamSource.adoc#, FileStreamSource>>
+| <<spark-sql-streaming-FileStreamSourceLog.md#, FileStreamSourceLog>>
+| [[FileStreamSourceLog]] `CompactibleFileStreamLog` (of `FileEntry` metadata) of <<spark-sql-streaming-FileStreamSource.md#, FileStreamSource>>
 
 |===
 
@@ -91,7 +91,7 @@ NOTE: `CompactibleFileStreamLog` is a Scala abstract class and cannot be <<creat
 batchIdToPath(batchId: Long): Path
 ----
 
-NOTE: `batchIdToPath` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#batchIdToPath, HDFSMetadataLog Contract>> to...FIXME.
+NOTE: `batchIdToPath` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#batchIdToPath, HDFSMetadataLog Contract>> to...FIXME.
 
 `batchIdToPath`...FIXME
 
@@ -102,7 +102,7 @@ NOTE: `batchIdToPath` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#
 pathToBatchId(path: Path): Long
 ----
 
-NOTE: `pathToBatchId` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#pathToBatchId, HDFSMetadataLog Contract>> to...FIXME.
+NOTE: `pathToBatchId` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#pathToBatchId, HDFSMetadataLog Contract>> to...FIXME.
 
 `pathToBatchId`...FIXME
 
@@ -113,7 +113,7 @@ NOTE: `pathToBatchId` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#
 isBatchFile(path: Path): Boolean
 ----
 
-NOTE: `isBatchFile` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#isBatchFile, HDFSMetadataLog Contract>> to...FIXME.
+NOTE: `isBatchFile` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#isBatchFile, HDFSMetadataLog Contract>> to...FIXME.
 
 `isBatchFile`...FIXME
 
@@ -126,11 +126,11 @@ serialize(
   out: OutputStream): Unit
 ----
 
-NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#serialize, HDFSMetadataLog Contract>> to serialize metadata (write metadata in serialized format).
+NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#serialize, HDFSMetadataLog Contract>> to serialize metadata (write metadata in serialized format).
 
 `serialize` firstly writes the version header (`v` and the <<metadataLogVersion, metadataLogVersion>>) out to the given output stream (in `UTF_8`).
 
-`serialize` then writes the log data (serialized using <<spark-sql-streaming-HDFSMetadataLog.adoc#formats, Json4s (with Jackson binding)>> library). Entries are separated by new lines.
+`serialize` then writes the log data (serialized using <<spark-sql-streaming-HDFSMetadataLog.md#formats, Json4s (with Jackson binding)>> library). Entries are separated by new lines.
 
 === [[deserialize]] Deserializing Metadata -- `deserialize` Method
 
@@ -139,7 +139,7 @@ NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#seri
 deserialize(in: InputStream): Array[T]
 ----
 
-NOTE: `deserialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#deserialize, HDFSMetadataLog Contract>> to...FIXME.
+NOTE: `deserialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#deserialize, HDFSMetadataLog Contract>> to...FIXME.
 
 `deserialize`...FIXME
 
@@ -152,7 +152,7 @@ add(
   logs: Array[T]): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-HDFSMetadataLog.adoc#add, HDFSMetadataLog Contract>> to store metadata for a batch.
+NOTE: `add` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#add, HDFSMetadataLog Contract>> to store metadata for a batch.
 
 `add`...FIXME
 
@@ -169,9 +169,9 @@ allFiles(): Array[T]
 ====
 `allFiles` is used when:
 
-* `FileStreamSource` is <<spark-sql-streaming-FileStreamSource.adoc#, created>>
+* `FileStreamSource` is <<spark-sql-streaming-FileStreamSource.md#, created>>
 
-* `MetadataLogFileIndex` is <<spark-sql-streaming-MetadataLogFileIndex.adoc#, created>>
+* `MetadataLogFileIndex` is <<spark-sql-streaming-MetadataLogFileIndex.md#, created>>
 ====
 
 === [[compact]] `compact` Internal Method
@@ -187,7 +187,7 @@ compact(
 
 `compact`...FIXME
 
-In the end, `compact` <<compactLogs, compactLogs>> and requests the parent `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.adoc#add, persist metadata of a streaming batch (to a metadata log file)>>.
+In the end, `compact` <<compactLogs, compactLogs>> and requests the parent `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.md#add, persist metadata of a streaming batch (to a metadata log file)>>.
 
 NOTE: `compact` is used exclusively when `CompactibleFileStreamLog` is requested to <<add, persist metadata of a streaming batch>>.
 
@@ -219,7 +219,7 @@ isCompactionBatch(batchId: Long, compactInterval: Int): Boolean
 
 * `CompactibleFileStreamLog` is requested to <<batchIdToPath, batchIdToPath>>, <<add, store the metadata of a batch>>, <<deleteExpiredLog, deleteExpiredLog>>, and <<getValidBatchesBeforeCompactionBatch, getValidBatchesBeforeCompactionBatch>>
 
-* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.adoc#add, store the metadata of a batch>> and <<spark-sql-streaming-FileStreamSourceLog.adoc#get, get>>
+* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.md#add, store the metadata of a batch>> and <<spark-sql-streaming-FileStreamSourceLog.md#get, get>>
 ====
 
 === [[getBatchIdFromFileName]] `getBatchIdFromFileName` Object Method

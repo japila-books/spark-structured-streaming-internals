@@ -4,9 +4,9 @@
 
 [[creating-instance]]
 [[rpcEndpointRef]]
-`StateStoreCoordinatorRef` is given the `RpcEndpointRef` to the <<spark-sql-streaming-StateStoreCoordinator.adoc#, StateStoreCoordinator>> RPC endpoint when created.
+`StateStoreCoordinatorRef` is given the `RpcEndpointRef` to the <<spark-sql-streaming-StateStoreCoordinator.md#, StateStoreCoordinator>> RPC endpoint when created.
 
-`StateStoreCoordinatorRef` is <<creating-instance, created>> through `StateStoreCoordinatorRef` helper object when requested to create one for the <<forDriver, driver>> (when `StreamingQueryManager` is <<spark-sql-streaming-StreamingQueryManager.adoc#stateStoreCoordinator, created>>) or an <<forExecutor, executor>> (when `StateStore` helper object is requested for the <<spark-sql-streaming-StateStore.adoc#coordinatorRef, RPC endpoint reference to StateStoreCoordinator for Executors>>).
+`StateStoreCoordinatorRef` is <<creating-instance, created>> through `StateStoreCoordinatorRef` helper object when requested to create one for the <<forDriver, driver>> (when `StreamingQueryManager` is <<spark-sql-streaming-StreamingQueryManager.md#stateStoreCoordinator, created>>) or an <<forExecutor, executor>> (when `StateStore` helper object is requested for the <<spark-sql-streaming-StateStore.md#coordinatorRef, RPC endpoint reference to StateStoreCoordinator for Executors>>).
 
 [[messages]]
 .StateStoreCoordinatorRef's Methods and Underlying RPC Messages
@@ -23,9 +23,9 @@ a| [[deactivateInstances]]
 deactivateInstances(runId: UUID): Unit
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#DeactivateInstances, DeactivateInstances>> synchronous message with the given `runId` and waits for a `true` / `false` response
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.md#DeactivateInstances, DeactivateInstances>> synchronous message with the given `runId` and waits for a `true` / `false` response
 
-Used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.adoc#notifyQueryTermination, handle termination of a streaming query>> (when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.adoc#runStream, run a streaming query>> and the query <<spark-sql-streaming-StreamExecution.adoc#runStream-finally, has finished (running streaming batches)>>).
+Used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#notifyQueryTermination, handle termination of a streaming query>> (when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run a streaming query>> and the query <<spark-sql-streaming-StreamExecution.md#runStream-finally, has finished (running streaming batches)>>).
 
 | getLocation
 a| [[getLocation]]
@@ -36,13 +36,13 @@ getLocation(
   stateStoreProviderId: StateStoreProviderId): Option[String]
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#GetLocation, GetLocation>> synchronous message with the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> and waits for the location
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.md#GetLocation, GetLocation>> synchronous message with the given <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> and waits for the location
 
 Used when:
 
-* `StateStoreAwareZipPartitionsRDD` is requested for the <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.adoc#getPreferredLocations, preferred locations of a partition>> (when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>)
+* `StateStoreAwareZipPartitionsRDD` is requested for the <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md#getPreferredLocations, preferred locations of a partition>> (when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>)
 
-* `StateStoreRDD` is requested for <<spark-sql-streaming-StateStoreRDD.adoc#getPreferredLocations, preferred locations for a task for a partition>>
+* `StateStoreRDD` is requested for <<spark-sql-streaming-StateStoreRDD.md#getPreferredLocations, preferred locations for a task for a partition>>
 
 | reportActiveInstance
 a| [[reportActiveInstance]]
@@ -55,9 +55,9 @@ reportActiveInstance(
   executorId: String): Unit
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#ReportActiveInstance, ReportActiveInstance>> one-way asynchronous (fire-and-forget) message with the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>>, `host` and `executorId`
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.md#ReportActiveInstance, ReportActiveInstance>> one-way asynchronous (fire-and-forget) message with the given <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>>, `host` and `executorId`
 
-Used exclusively when `StateStore` utility is requested for <<spark-sql-streaming-StateStore.adoc#reportActiveStoreInstance, reportActiveStoreInstance>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.adoc#get-StateStore, look up the StateStore by StateStoreProviderId>>)
+Used exclusively when `StateStore` utility is requested for <<spark-sql-streaming-StateStore.md#reportActiveStoreInstance, reportActiveStoreInstance>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.md#get-StateStore, look up the StateStore by StateStoreProviderId>>)
 
 | stop
 a| [[stop]]
@@ -67,7 +67,7 @@ a| [[stop]]
 stop(): Unit
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#StopCoordinator, StopCoordinator>> synchronous message
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.md#StopCoordinator, StopCoordinator>> synchronous message
 
 Used exclusively for unit testing
 
@@ -81,9 +81,9 @@ verifyIfInstanceActive(
   executorId: String): Boolean
 ----
 
-Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.adoc#VerifyIfInstanceActive, VerifyIfInstanceActive>> synchronous message with the given <<spark-sql-streaming-StateStoreProviderId.adoc#, StateStoreProviderId>> and `executorId`, and waits for a `true` / `false` response
+Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.md#VerifyIfInstanceActive, VerifyIfInstanceActive>> synchronous message with the given <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> and `executorId`, and waits for a `true` / `false` response
 
-Used exclusively when `StateStore` helper object is requested for <<spark-sql-streaming-StateStore.adoc#verifyIfStoreInstanceActive, verifyIfStoreInstanceActive>> (when requested to <<spark-sql-streaming-StateStore.adoc#doMaintenance, doMaintenance>> from a running <<spark-sql-streaming-StateStore.adoc#MaintenanceTask, MaintenanceTask daemon thread>>)
+Used exclusively when `StateStore` helper object is requested for <<spark-sql-streaming-StateStore.md#verifyIfStoreInstanceActive, verifyIfStoreInstanceActive>> (when requested to <<spark-sql-streaming-StateStore.md#doMaintenance, doMaintenance>> from a running <<spark-sql-streaming-StateStore.md#MaintenanceTask, MaintenanceTask daemon thread>>)
 
 |===
 
@@ -96,7 +96,7 @@ forDriver(env: SparkEnv): StateStoreCoordinatorRef
 
 `forDriver`...FIXME
 
-NOTE: `forDriver` is used exclusively when `StreamingQueryManager` is <<spark-sql-streaming-StreamingQueryManager.adoc#stateStoreCoordinator, created>>.
+NOTE: `forDriver` is used exclusively when `StreamingQueryManager` is <<spark-sql-streaming-StreamingQueryManager.md#stateStoreCoordinator, created>>.
 
 === [[forExecutor]] Creating StateStoreCoordinatorRef to StateStoreCoordinator RPC Endpoint for Executor -- `forExecutor` Factory Method
 
@@ -107,4 +107,4 @@ forExecutor(env: SparkEnv): StateStoreCoordinatorRef
 
 `forExecutor`...FIXME
 
-NOTE: `forExecutor` is used exclusively when `StateStore` helper object is requested for the <<spark-sql-streaming-StateStore.adoc#coordinatorRef, RPC endpoint reference to StateStoreCoordinator for Executors>>.
+NOTE: `forExecutor` is used exclusively when `StateStore` helper object is requested for the <<spark-sql-streaming-StateStore.md#coordinatorRef, RPC endpoint reference to StateStoreCoordinator for Executors>>.

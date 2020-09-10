@@ -1,18 +1,18 @@
 == [[KafkaSourceOffset]] KafkaSourceOffset
 
-`KafkaSourceOffset` is a custom <<spark-sql-streaming-Offset.adoc#, Offset>> for <<spark-sql-streaming-kafka-data-source.adoc#, kafka data source>>.
+`KafkaSourceOffset` is a custom <<spark-sql-streaming-Offset.md#, Offset>> for <<spark-sql-streaming-kafka-data-source.md#, kafka data source>>.
 
 `KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
 
-* `KafkaContinuousReader` is requested to <<spark-sql-streaming-KafkaContinuousReader.adoc#setStartOffset, setStartOffset>>, <<spark-sql-streaming-KafkaContinuousReader.adoc#deserializeOffset, deserializeOffset>>, and <<spark-sql-streaming-KafkaContinuousReader.adoc#mergeOffsets, mergeOffsets>>
+* `KafkaContinuousReader` is requested to <<spark-sql-streaming-KafkaContinuousReader.md#setStartOffset, setStartOffset>>, <<spark-sql-streaming-KafkaContinuousReader.md#deserializeOffset, deserializeOffset>>, and <<spark-sql-streaming-KafkaContinuousReader.md#mergeOffsets, mergeOffsets>>
 
-* `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getStartOffset, getStartOffset>>, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getEndOffset, getEndOffset>>, <<spark-sql-streaming-KafkaMicroBatchReader.adoc#deserializeOffset, deserializeOffset>>, and <<spark-sql-streaming-KafkaMicroBatchReader.adoc#getOrCreateInitialPartitionOffsets, getOrCreateInitialPartitionOffsets>>
+* `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.md#getStartOffset, getStartOffset>>, <<spark-sql-streaming-KafkaMicroBatchReader.md#getEndOffset, getEndOffset>>, <<spark-sql-streaming-KafkaMicroBatchReader.md#deserializeOffset, deserializeOffset>>, and <<spark-sql-streaming-KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets, getOrCreateInitialPartitionOffsets>>
 
-* `KafkaOffsetReader` is requested to <<spark-sql-streaming-KafkaOffsetReader.adoc#fetchSpecificOffsets, fetchSpecificOffsets>>
+* `KafkaOffsetReader` is requested to <<spark-sql-streaming-KafkaOffsetReader.md#fetchSpecificOffsets, fetchSpecificOffsets>>
 
-* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initial partition offsets (of 0th batch)>> and <<spark-sql-streaming-KafkaSource.adoc#getOffset, getOffset>>
+* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.md#initialPartitionOffsets, initial partition offsets (of 0th batch)>> and <<spark-sql-streaming-KafkaSource.md#getOffset, getOffset>>
 
-* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#deserialize, deserialize a KafkaSourceOffset (from an InputStream)>>
+* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.md#deserialize, deserialize a KafkaSourceOffset (from an InputStream)>>
 
 * `KafkaSourceOffset` is requested for <<getPartitionOffsets, partition offsets>>
 
@@ -43,9 +43,9 @@ Invalid conversion from offset of [class] to KafkaSourceOffset
 ====
 `getPartitionOffsets` is used when:
 
-* `KafkaContinuousReader` is requested to <<spark-sql-streaming-KafkaContinuousReader.adoc#planInputPartitions, planInputPartitions>>
+* `KafkaContinuousReader` is requested to <<spark-sql-streaming-KafkaContinuousReader.md#planInputPartitions, planInputPartitions>>
 
-* `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.adoc#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
+* `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.md#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
 ====
 
 === [[json]] JSON-Encoded Offset -- `json` Method
@@ -55,7 +55,7 @@ Invalid conversion from offset of [class] to KafkaSourceOffset
 json: String
 ----
 
-NOTE: `json` is part of the <<spark-sql-streaming-Offset.adoc#json, Offset Contract>> for a JSON-encoded offset.
+NOTE: `json` is part of the <<spark-sql-streaming-Offset.md#json, Offset Contract>> for a JSON-encoded offset.
 
 `json`...FIXME
 
@@ -76,9 +76,9 @@ apply(
 ====
 `apply` is used when:
 
-* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.adoc#deserialize, deserialize a KafkaSourceOffset (from an InputStream)>>
+* `KafkaSourceInitialOffsetWriter` is requested to <<spark-sql-streaming-KafkaSourceInitialOffsetWriter.md#deserialize, deserialize a KafkaSourceOffset (from an InputStream)>>
 
-* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.adoc#initialPartitionOffsets, initial partition offsets (of 0th batch)>>
+* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.md#initialPartitionOffsets, initial partition offsets (of 0th batch)>>
 
 * `KafkaSourceOffset` is requested to <<getPartitionOffsets, getPartitionOffsets>>
 ====

@@ -1,6 +1,6 @@
 == [[KafkaSink]] KafkaSink
 
-`KafkaSink` is a link:spark-sql-streaming-Sink.adoc[streaming sink] that link:spark-sql-streaming-KafkaSourceProvider.adoc[KafkaSourceProvider] registers as the `kafka` format.
+`KafkaSink` is a link:spark-sql-streaming-Sink.md[streaming sink] that link:spark-sql-streaming-KafkaSourceProvider.md[KafkaSourceProvider] registers as the `kafka` format.
 
 [source, scala]
 ----
@@ -44,4 +44,4 @@ addBatch(batchId: Long, data: DataFrame): Unit
 
 Internally, `addBatch` requests `KafkaWriter` to write the input `data` to the <<topic, topic>> (if defined) or a topic in <<executorKafkaParams, executorKafkaParams>>.
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.adoc#addBatch[Sink Contract] to "add" a batch of data to the sink.
+NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.md#addBatch[Sink Contract] to "add" a batch of data to the sink.

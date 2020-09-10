@@ -1,12 +1,12 @@
 == [[KafkaContinuousReader]] KafkaContinuousReader -- ContinuousReader for Kafka Data Source in Continuous Stream Processing
 
-`KafkaContinuousReader` is a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>> for <<spark-sql-streaming-kafka-data-source.adoc#, Kafka Data Source>> in <<spark-sql-streaming-continuous-stream-processing.adoc#, Continuous Stream Processing>>.
+`KafkaContinuousReader` is a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> for <<spark-sql-streaming-kafka-data-source.md#, Kafka Data Source>> in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
 
-`KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.adoc#createContinuousReader, create a ContinuousReader>>.
+`KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#createContinuousReader, create a ContinuousReader>>.
 
 [[pollTimeoutMs]]
 [[kafkaConsumer.pollTimeoutMs]]
-`KafkaContinuousReader` uses *kafkaConsumer.pollTimeoutMs* configuration parameter (default: `512`) for <<spark-sql-streaming-KafkaContinuousInputPartition.adoc#, KafkaContinuousInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
+`KafkaContinuousReader` uses *kafkaConsumer.pollTimeoutMs* configuration parameter (default: `512`) for <<spark-sql-streaming-KafkaContinuousInputPartition.md#, KafkaContinuousInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
 
 [[logging]]
 [TIP]
@@ -19,18 +19,18 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaContinuousReader=INFO
 ```
 
-Refer to link:spark-sql-streaming-logging.adoc[Logging].
+Refer to link:spark-sql-streaming-logging.md[Logging].
 ====
 
 === [[creating-instance]] Creating KafkaContinuousReader Instance
 
 `KafkaContinuousReader` takes the following to be created:
 
-* [[offsetReader]] <<spark-sql-streaming-KafkaOffsetReader.adoc#, KafkaOffsetReader>>
+* [[offsetReader]] <<spark-sql-streaming-KafkaOffsetReader.md#, KafkaOffsetReader>>
 * [[kafkaParams]] Kafka parameters (as `java.util.Map[String, Object]`)
 * [[sourceOptions]] Source options (as `Map[String, String]`)
 * [[metadataPath]] Metadata path
-* [[initialOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.adoc#, Initial offsets>>
+* [[initialOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Initial offsets>>
 * [[failOnDataLoss]] `failOnDataLoss` flag
 
 === [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method
@@ -52,7 +52,7 @@ setStartOffset(
   start: Optional[Offset]): Unit
 ----
 
-NOTE: `setStartOffset` is part of the <<spark-sql-streaming-ContinuousReader.adoc#setStartOffset, ContinuousReader Contract>> to...FIXME.
+NOTE: `setStartOffset` is part of the <<spark-sql-streaming-ContinuousReader.md#setStartOffset, ContinuousReader Contract>> to...FIXME.
 
 `setStartOffset`...FIXME
 
@@ -64,7 +64,7 @@ deserializeOffset(
   json: String): Offset
 ----
 
-NOTE: `deserializeOffset` is part of the <<spark-sql-streaming-ContinuousReader.adoc#deserializeOffset, ContinuousReader Contract>> to...FIXME.
+NOTE: `deserializeOffset` is part of the <<spark-sql-streaming-ContinuousReader.md#deserializeOffset, ContinuousReader Contract>> to...FIXME.
 
 `deserializeOffset`...FIXME
 
@@ -76,6 +76,6 @@ mergeOffsets(
   offsets: Array[PartitionOffset]): Offset
 ----
 
-NOTE: `mergeOffsets` is part of the <<spark-sql-streaming-ContinuousReader.adoc#mergeOffsets, ContinuousReader Contract>> to...FIXME.
+NOTE: `mergeOffsets` is part of the <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, ContinuousReader Contract>> to...FIXME.
 
 `mergeOffsets`...FIXME

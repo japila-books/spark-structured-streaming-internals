@@ -1,6 +1,6 @@
 == [[KeyValueGroupedDataset]] KeyValueGroupedDataset -- Streaming Aggregation
 
-`KeyValueGroupedDataset` represents a *grouped dataset* as a result of <<spark-sql-streaming-Dataset-operators.adoc#groupByKey, Dataset.groupByKey>> operator (that aggregates records by a grouping function).
+`KeyValueGroupedDataset` represents a *grouped dataset* as a result of <<spark-sql-streaming-Dataset-operators.md#groupByKey, Dataset.groupByKey>> operator (that aggregates records by a grouping function).
 
 [source, scala]
 ----
@@ -43,7 +43,7 @@ scala> :type mapped
 org.apache.spark.sql.KeyValueGroupedDataset[Long,String]
 ----
 
-`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for <<spark-sql-streaming-aggregation.adoc#, Streaming Aggregation>>.
+`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>>.
 
 [source, scala]
 ----
@@ -91,7 +91,7 @@ Batch: 2
 spark.streams.active.foreach(_.stop)
 ----
 
-The most prestigious use case of `KeyValueGroupedDataset` however is <<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>> that allows for accumulating *streaming state* (by means of [GroupState](GroupState.md)) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
+The most prestigious use case of `KeyValueGroupedDataset` however is <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>> that allows for accumulating *streaming state* (by means of [GroupState](GroupState.md)) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
 
 [[operators]]
 .KeyValueGroupedDataset's Operators
@@ -146,7 +146,7 @@ a| [[flatMapGroups]]
 flatMapGroups[U : Encoder](f: (K, Iterator[V]) => TraversableOnce[U]): Dataset[U]
 ----
 
-| <<spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.adoc#, flatMapGroupsWithState>>
+| <<spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md#, flatMapGroupsWithState>>
 a| [[flatMapGroupsWithState]]
 
 [source, scala]
@@ -157,7 +157,7 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ----
 
-<<spark-sql-arbitrary-stateful-streaming-aggregation.adoc#, Arbitrary Stateful Streaming Aggregation>> - streaming aggregation with explicit state and state timeout
+<<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>> - streaming aggregation with explicit state and state timeout
 
 NOTE: The difference between this `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> operators is the state function that generates zero or more elements (that are in turn the rows in the result streaming `Dataset`).
 
@@ -178,7 +178,7 @@ a| [[mapGroups]]
 mapGroups[U : Encoder](f: (K, Iterator[V]) => U): Dataset[U]
 ----
 
-| link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.adoc[mapGroupsWithState]
+| link:spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md[mapGroupsWithState]
 a| [[mapGroupsWithState]]
 
 [source, scala]
@@ -190,7 +190,7 @@ mapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => U): Dataset[U]
 ----
 
-Creates a new `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.adoc#apply[FlatMapGroupsWithState] logical operator
+Creates a new `Dataset` with link:spark-sql-streaming-FlatMapGroupsWithState.md#apply[FlatMapGroupsWithState] logical operator
 
 NOTE: The difference between `mapGroupsWithState` and <<flatMapGroupsWithState, flatMapGroupsWithState>> is the state function that generates exactly one element (that is in turn the row in the result `Dataset`).
 

@@ -18,7 +18,7 @@ create(
 
 `create`...FIXME
 
-NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.adoc#runContinuous, run a streaming query in continuous mode>>.
+NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>>.
 
 === [[get]] Getting Remote Reference to EpochCoordinator RPC Endpoint -- `get` Factory Method
 
@@ -33,13 +33,13 @@ get(id: String, env: SparkEnv): RpcEndpointRef
 ====
 `get` is used when:
 
-* `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<spark-sql-streaming-ContinuousDataSourceRDD.adoc#, ContinuousDataSourceRDD>> for a <<spark-sql-streaming-ContinuousReader.adoc#, ContinuousReader>>)
+* `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<spark-sql-streaming-ContinuousDataSourceRDD.md#, ContinuousDataSourceRDD>> for a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>)
 
-* `ContinuousQueuedDataReader` is created (and initializes the <<spark-sql-streaming-ContinuousQueuedDataReader.adoc#epochCoordEndpoint, epochCoordEndpoint>>)
+* `ContinuousQueuedDataReader` is created (and initializes the <<spark-sql-streaming-ContinuousQueuedDataReader.md#epochCoordEndpoint, epochCoordEndpoint>>)
 
-* `EpochMarkerGenerator` is created (and initializes the <<spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.adoc#epochCoordEndpoint, epochCoordEndpoint>>)
+* `EpochMarkerGenerator` is created (and initializes the <<spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.md#epochCoordEndpoint, epochCoordEndpoint>>)
 
-* `ContinuousWriteRDD` is requested to <<spark-sql-streaming-ContinuousWriteRDD.adoc#compute, compute a partition>>
+* `ContinuousWriteRDD` is requested to <<spark-sql-streaming-ContinuousWriteRDD.md#compute, compute a partition>>
 
-* `WriteToContinuousDataSourceExec` is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.adoc#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>
+* `WriteToContinuousDataSourceExec` is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>
 ====
