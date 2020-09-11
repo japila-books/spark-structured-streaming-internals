@@ -1,28 +1,45 @@
-== [[FlatMapGroupsWithState]] FlatMapGroupsWithState Unary Logical Operator
+# FlatMapGroupsWithState Unary Logical Operator
 
-`FlatMapGroupsWithState` is a unary logical operator that is <<creating-instance, created>> to represent the following operators in a logical query plan of a streaming query:
+`FlatMapGroupsWithState` is a unary logical operator that represents the following operators in a logical query plan of a streaming query:
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState, KeyValueGroupedDataset.mapGroupsWithState>>
+* [KeyValueGroupedDataset.mapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState)
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>>
+* [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState)
 
-[NOTE]
-====
-A unary logical operator (`UnaryNode`) is a logical operator with a single <<child, child>> logical operator.
+!!! note
+    A unary logical operator (`UnaryNode`) is a logical operator with a single <<child, child>> logical operator.
 
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan.html[UnaryNode] (and logical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
+    Read up on [UnaryNode](https://jaceklaskowski.github.io/mastering-spark-sql-book/logical-operators/LogicalPlan#UnaryNode) (and logical operators in general) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
+
+## Execution Planning
 
 `FlatMapGroupsWithState` is resolved (_planned_) to:
 
-* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.md#, FlatMapGroupsWithStateStrategy>> execution planning strategy)
+* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in [FlatMapGroupsWithStateStrategy](../spark-sql-streaming-FlatMapGroupsWithStateStrategy.md) execution planning strategy)
 
 * `MapGroupsExec` physical operator for batch datasets (in `BasicOperators` execution planning strategy)
 
-=== [[apply]] Creating SerializeFromObject with FlatMapGroupsWithState -- `apply` Factory Method
+## Creating Instance
 
-[source, scala]
-----
+`FlatMapGroupsWithState` takes the following to be created:
+
+* <span id="func"> State function (`(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
+* <span id="keyDeserializer"> Catalyst Expression for keys
+* <span id="valueDeserializer"> Catalyst Expression for values
+* <span id="groupingAttributes"> Grouping Attributes
+* <span id="dataAttributes"> Data Attributes
+* <span id="outputObjAttr"> Output Object Attribute
+* <span id="stateEncoder"> State `ExpressionEncoder`
+* <span id="outputMode"> [OutputMode](../spark-sql-streaming-OutputMode.md)
+* <span id="isMapGroupsWithState"> `isMapGroupsWithState` flag (default: `false`)
+* <span id="timeout"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
+* <span id="child"> Child logical operator
+
+`FlatMapGroupsWithState` is created (using [apply](#apply) factory method) for [KeyValueGroupedDataset.mapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
+
+## <span id="apply"> Creating SerializeFromObject with FlatMapGroupsWithState
+
+```scala
 apply[K: Encoder, V: Encoder, S: Encoder, U: Encoder](
   func: (Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any],
   groupingAttributes: Seq[Attribute],
@@ -31,9 +48,9 @@ apply[K: Encoder, V: Encoder, S: Encoder, U: Encoder](
   isMapGroupsWithState: Boolean,
   timeout: GroupStateTimeout,
   child: LogicalPlan): LogicalPlan
-----
+```
 
-`apply` <<creating-instance, creates>> a `SerializeFromObject` logical operator with a `FlatMapGroupsWithState` as its child logical operator.
+`apply` creates a `SerializeFromObject` logical operator with a `FlatMapGroupsWithState` as its child logical operator.
 
 Internally, `apply` creates `SerializeFromObject` object consumer (aka unary logical operator) with `FlatMapGroupsWithState` logical plan.
 
@@ -41,20 +58,4 @@ Internally, `apply` finds `ExpressionEncoder` for the type `S` and creates a `Fl
 
 In the end, `apply` creates a `SerializeFromObject` object consumer with the `FlatMapGroupsWithState`.
 
-NOTE: `apply` is used in <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operator.
-
-=== [[creating-instance]] Creating FlatMapGroupsWithState Instance
-
-`FlatMapGroupsWithState` takes the following to be created:
-
-* [[func]] State function (`(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
-* [[keyDeserializer]] Key deserializer Catalyst expression
-* [[valueDeserializer]] Value deserializer Catalyst expression
-* [[groupingAttributes]] Grouping attributes
-* [[dataAttributes]] Data attributes
-* [[outputObjAttr]] Output object attribute
-* [[stateEncoder]] State `ExpressionEncoder`
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
-* [[isMapGroupsWithState]] `isMapGroupsWithState` flag (default: `false`)
-* [[timeout]] <<spark-sql-streaming-GroupStateTimeout.md#, GroupStateTimeout>>
-* [[child]] Child logical operator (`LogicalPlan`)
+`apply` is used for [KeyValueGroupedDataset.mapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
