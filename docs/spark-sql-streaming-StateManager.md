@@ -1,6 +1,6 @@
 == [[StateManager]] StateManager Contract -- State Managers for Arbitrary Stateful Streaming Aggregation
 
-`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.md#, state stores>> and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>>.
+`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.md#, state stores>> and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
 
 [[contract]]
 .StateManager Contract

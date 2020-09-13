@@ -1,9 +1,8 @@
-== Demo: Internals of FlatMapGroupsWithStateExec Physical Operator
+# Demo: Internals of FlatMapGroupsWithStateExec Physical Operator
 
-The following demo shows the internals of <<FlatMapGroupsWithStateExec.md#, FlatMapGroupsWithStateExec>> physical operator in a <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>>.
+The following demo shows the internals of [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator in a [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md).
 
-[source, scala]
-----
+```text
 // Reduce the number of partitions and hence the state stores
 // That is supposed to make debugging state checkpointing easier
 val numShufflePartitions = 1
@@ -276,4 +275,4 @@ streamingQuery.processAllAvailable()
 
 // Eventually...
 streamingQuery.stop()
-----
+```

@@ -1,4 +1,4 @@
-== Streaming Join
+# Streaming Join
 
 [[operators]]
 In Spark Structured Streaming, a *streaming join* is a streaming query that was described (_build_) using the <<spark-sql-streaming-Dataset-operators.md#, high-level streaming operators>>:

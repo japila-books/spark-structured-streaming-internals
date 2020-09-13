@@ -1,9 +1,8 @@
 # Demo: Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator
 
-The following demo shows an example of <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>> with <<spark-sql-streaming-Dataset-operators.md#flatMapGroupsWithState, KeyValueGroupedDataset.flatMapGroupsWithState>> operator.
+The following demo shows an example of [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md) with [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-Dataset-operators.md#flatMapGroupsWithState) operator.
 
-[source, scala]
-----
+```text
 import java.sql.Timestamp
 type DeviceId = Long
 case class Signal(timestamp: Timestamp, deviceId: DeviceId, value: Long)
@@ -66,4 +65,4 @@ val sq = signalCounter.
   trigger(Trigger.ProcessingTime(10.seconds)).
   outputMode(OutputMode.Append).
   start
-----
+```

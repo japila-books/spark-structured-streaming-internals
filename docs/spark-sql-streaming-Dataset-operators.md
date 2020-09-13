@@ -1,72 +1,68 @@
-== Streaming Operators -- High-Level Declarative Streaming Dataset API
+# Streaming Operators &mdash; High-Level Declarative Streaming Dataset API
 
-Dataset API comes with a set of <<operators, operators>> that are of particular use in Spark Structured Streaming that together constitute so-called *High-Level Declarative Streaming Dataset API*.
+Dataset API comes with a set of [operators](#operators) that are of particular use in Spark Structured Streaming and together constitute the **High-Level Declarative Streaming Dataset API**.
 
-[[operators]]
-.Streaming Operators
-[cols="30m,70",options="header",width="100%"]
-|===
-| Operator
-| Description
+## <span id="crossJoin"> crossJoin
 
-| <<spark-sql-streaming-Dataset-crossJoin.md#, crossJoin>>
-a| [[crossJoin]]
-
-[source, scala]
-----
+```scala
 crossJoin(
   right: Dataset[_]): DataFrame
-----
+```
 
-| <<spark-sql-streaming-Dataset-dropDuplicates.md#, dropDuplicates>>
-a| [[dropDuplicates]]
+## <span id="dropDuplicates"> dropDuplicates
 
-[source, scala]
-----
+```scala
 dropDuplicates(): Dataset[T]
-dropDuplicates(colNames: Seq[String]): Dataset[T]
-dropDuplicates(col1: String, cols: String*): Dataset[T]
-----
+dropDuplicates(
+  colNames: Seq[String]): Dataset[T]
+dropDuplicates(
+  col1: String,
+  cols: String*): Dataset[T]
+```
+
+[dropDuplicates](spark-sql-streaming-Dataset-dropDuplicates.md)
 
 Drops duplicate records (given a subset of columns)
 
-| <<spark-sql-streaming-Dataset-explain.md#, explain>>
-a| [[explain]]
+## <span id="explain"> explain
 
-[source, scala]
-----
+```scala
 explain(): Unit
 explain(extended: Boolean): Unit
-----
+```
+
+[explain](spark-sql-streaming-Dataset-explain.md)
 
 Explains query plans
 
-| <<spark-sql-streaming-Dataset-groupBy.md#, groupBy>>
-a| [[groupBy]]
+## <span id="groupBy"> groupBy
 
-[source, scala]
-----
-groupBy(cols: Column*): RelationalGroupedDataset
-groupBy(col1: String, cols: String*): RelationalGroupedDataset
-----
+```scala
+groupBy(
+  cols: Column*): RelationalGroupedDataset
+groupBy(
+  col1: String,
+  cols: String*): RelationalGroupedDataset
+```
+
+[groupBy](spark-sql-streaming-Dataset-groupBy.md)
 
 Aggregates rows by zero, one or more columns
 
-| <<spark-sql-streaming-Dataset-groupByKey.md#, groupByKey>>
-a| [[groupByKey]]
+## <span id="groupByKey"> groupByKey
 
-[source, scala]
-----
-groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
-----
+```scala
+groupByKey(
+  func: T => K): KeyValueGroupedDataset[K, T]
+```
 
-Aggregates rows by a typed grouping function (and gives a <<spark-sql-streaming-KeyValueGroupedDataset.md#, KeyValueGroupedDataset>>)
+[groupByKey](spark-sql-streaming-Dataset-groupByKey.md)
 
-| <<spark-sql-streaming-Dataset-join.md#, join>>
-a| [[join]]
+Aggregates rows by a typed grouping function (and creates a [KeyValueGroupedDataset](KeyValueGroupedDataset.md))
 
-[source, scala]
-----
+## <span id="join"> join
+
+```scala
 join(
   right: Dataset[_]): DataFrame
 join(
@@ -86,13 +82,13 @@ join(
 join(
   right: Dataset[_],
   usingColumn: String): DataFrame
-----
+```
 
-| <<spark-sql-streaming-Dataset-joinWith.md#, joinWith>>
-a| [[joinWith]]
+[Streaming Join](spark-sql-streaming-join.md)
 
-[source, scala]
-----
+## <span id="joinWith"> joinWith
+
+```scala
 joinWith[U](
   other: Dataset[U],
   condition: Column): Dataset[(T, U)]
@@ -100,34 +96,33 @@ joinWith[U](
   other: Dataset[U],
   condition: Column,
   joinType: String): Dataset[(T, U)]
-----
+```
 
-| <<spark-sql-streaming-Dataset-withWatermark.md#, withWatermark>>
-a| [[withWatermark]]
+[Streaming Join](spark-sql-streaming-join.md)
 
-[source, scala]
-----
+## <span id="withWatermark"> withWatermark
+
+```scala
 withWatermark(
   eventTime: String,
   delayThreshold: String): Dataset[T]
-----
+```
 
-Defines a <<spark-sql-streaming-watermark.md#, streaming watermark>> (on the given `eventTime` column with a delay threshold)
+[withWatermark](spark-sql-streaming-Dataset-withWatermark.md)
 
-| `writeStream`
-a| [[writeStream]]
+Defines a [streaming watermark](spark-sql-streaming-watermark.md) (on the given `eventTime` column with a delay threshold)
 
-[source, scala]
-----
+## <span id="writeStream"> writeStream
+
+```scala
 writeStream: DataStreamWriter[T]
-----
+```
 
-Creates a <<spark-sql-streaming-DataStreamWriter.md#, DataStreamWriter>> for persisting the result of a streaming query to an external data system
+Creates a [DataStreamWriter](spark-sql-streaming-DataStreamWriter.md) for persisting the result of a streaming query to an external data system
 
-|===
+## Demo
 
-[source, scala]
-----
+```text
 val rates = spark
   .readStream
   .format("rate")
@@ -152,4 +147,4 @@ val sq = rates
 
 // eventually...
 sq.stop
-----
+```

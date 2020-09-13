@@ -8,7 +8,7 @@ KeyValueGroupedDataset[K, V].flatMapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ----
 
-`flatMapGroupsWithState` operator is used for <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation (with Explicit State Logic)>>.
+`flatMapGroupsWithState` operator is used for [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md) (with Explicit State Logic).
 
 `flatMapGroupsWithState` requires that the given <<spark-sql-streaming-OutputMode.md#, OutputMode>> is either <<spark-sql-streaming-OutputMode.md#Append, Append>> or <<spark-sql-streaming-OutputMode.md#Update, Update>> (and reports an `IllegalArgumentException` at runtime).
 

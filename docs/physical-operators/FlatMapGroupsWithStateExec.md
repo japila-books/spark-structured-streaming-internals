@@ -25,7 +25,7 @@
 * <span id="func"> **User-defined state function** that is applied to every group (of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
 * <span id="keyDeserializer"> Deserializer expression for keys
 * <span id="valueDeserializer"> Deserializer expression for values
-* <span id="groupingAttributes"> Grouping attributes (as used for grouping in [KeyValueGroupedDataset](../spark-sql-streaming-KeyValueGroupedDataset.md#groupingAttributes) for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
+* <span id="groupingAttributes"> Grouping attributes (as used for grouping in [KeyValueGroupedDataset](../KeyValueGroupedDataset.md#groupingAttributes) for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
 * <span id="dataAttributes"> Data attributes
 * <span id="outputObjAttr"> Output object attribute (that is the reference to the single object field this operator outputs)
 * <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../spark-sql-streaming-StatefulOperatorStateInfo.md)

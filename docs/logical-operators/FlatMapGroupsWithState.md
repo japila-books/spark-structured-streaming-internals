@@ -2,9 +2,9 @@
 
 `FlatMapGroupsWithState` is a unary logical operator that represents the following operators in a logical query plan of a streaming query:
 
-* [KeyValueGroupedDataset.mapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState)
+* [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState)
 
-* [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState)
+* [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState)
 
 !!! note
     A unary logical operator (`UnaryNode`) is a logical operator with a single <<child, child>> logical operator.
@@ -35,7 +35,7 @@
 * <span id="timeout"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
 * <span id="child"> Child logical operator
 
-`FlatMapGroupsWithState` is created (using [apply](#apply) factory method) for [KeyValueGroupedDataset.mapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
+`FlatMapGroupsWithState` is created (using [apply](#apply) factory method) for [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
 
 ## <span id="apply"> Creating SerializeFromObject with FlatMapGroupsWithState
 
@@ -58,4 +58,4 @@ Internally, `apply` finds `ExpressionEncoder` for the type `S` and creates a `Fl
 
 In the end, `apply` creates a `SerializeFromObject` object consumer with the `FlatMapGroupsWithState`.
 
-`apply` is used for [KeyValueGroupedDataset.mapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
+`apply` is used for [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.

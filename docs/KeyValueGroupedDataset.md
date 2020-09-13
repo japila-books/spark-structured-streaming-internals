@@ -91,7 +91,7 @@ Batch: 2
 spark.streams.active.foreach(_.stop)
 ----
 
-The most prestigious use case of `KeyValueGroupedDataset` however is <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>> that allows for accumulating *streaming state* (by means of [GroupState](GroupState.md)) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
+The most prestigious use case of `KeyValueGroupedDataset` however is [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md) that allows for accumulating **streaming state** (by means of [GroupState](GroupState.md)) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
 
 [[operators]]
 .KeyValueGroupedDataset's Operators
@@ -156,9 +156,10 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ```
 
-<<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>> - streaming aggregation with explicit state and state timeout
+[Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md) - streaming aggregation with explicit state and state timeout
 
-NOTE: The difference between this `flatMapGroupsWithState` and <<mapGroupsWithState, mapGroupsWithState>> operators is the state function that generates zero or more elements (that are in turn the rows in the result streaming `Dataset`).
+!!! note
+    The difference between this `flatMapGroupsWithState` and [mapGroupsWithState](#mapGroupsWithState) operators is the state function that generates zero or more elements (that are in turn the rows in the result streaming `Dataset`).
 
 | keyAs
 a| [[keyAs]]

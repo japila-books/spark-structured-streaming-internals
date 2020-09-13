@@ -1,20 +1,20 @@
-== Stateful Stream Processing
+# Stateful Stream Processing
 
-*Stateful Stream Processing* is a stream processing with state (implicit or explicit).
+**Stateful Stream Processing** is a stream processing with state (implicit or explicit).
 
-In Spark Structured Streaming, a streaming query is stateful when is one of the following (that makes use of <<spark-sql-streaming-StateStore.md#, StateStores>>):
+In Spark Structured Streaming, a streaming query is stateful when is one of the following (that makes use of [StateStores](spark-sql-streaming-StateStore.md)):
 
-* <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>>
+* [Streaming Aggregation](spark-sql-streaming-aggregation.md)
 
-* <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>>
+* [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md)
 
-* <<spark-sql-streaming-join.md#, Stream-Stream Join>>
+* [Stream-Stream Join](spark-sql-streaming-join.md)
 
-* <<spark-sql-streaming-deduplication.md#, Streaming Deduplication>>
+* [Streaming Deduplication](spark-sql-streaming-deduplication.md)
 
-* <<spark-sql-streaming-limit.md#, Streaming Limit>>
+* [Streaming Limit](spark-sql-streaming-limit.md)
 
-=== [[versioned-state-statestores-and-statestoreproviders]] Versioned State, StateStores and StateStoreProviders
+## <span id="versioned-state-statestores-and-statestoreproviders"> Versioned State, StateStores and StateStoreProviders
 
 Spark Structured Streaming uses <<spark-sql-streaming-StateStore.md#, StateStores>> for versioned and fault-tolerant key-value state stores.
 

@@ -135,7 +135,11 @@ nav:
       - EventTimeStatsAccum: spark-sql-streaming-EventTimeStatsAccum.md
       - StateStoreConf: spark-sql-streaming-StateStoreConf.md
     - Arbitrary Stateful Streaming Aggregation:
-      - Arbitrary Stateful Streaming Aggregation: spark-sql-arbitrary-stateful-streaming-aggregation.md
+      - Arbitrary Stateful Streaming Aggregation: arbitrary-stateful-streaming-aggregation.md
+      - KeyValueGroupedDataset:
+        - KeyValueGroupedDataset: KeyValueGroupedDataset.md
+        - mapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
+        - flatMapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md
       - GroupState:
         - GroupState: GroupState.md
         - GroupStateImpl: GroupStateImpl.md
@@ -162,10 +166,6 @@ nav:
         - groupByKey Operator: spark-sql-streaming-Dataset-groupByKey.md
         - withWatermark Operator: spark-sql-streaming-Dataset-withWatermark.md
       - window Function: spark-sql-streaming-window.md
-      - KeyValueGroupedDataset:
-        - KeyValueGroupedDataset: spark-sql-streaming-KeyValueGroupedDataset.md
-        - mapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
-        - flatMapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md
       - StreamingQueryManager: spark-sql-streaming-StreamingQueryManager.md
       - SQLConf: spark-sql-streaming-SQLConf.md
       - Configuration Properties: spark-sql-streaming-properties.md

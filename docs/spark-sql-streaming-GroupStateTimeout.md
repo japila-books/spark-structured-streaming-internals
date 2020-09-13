@@ -1,12 +1,12 @@
-== [[GroupStateTimeout]] GroupStateTimeout -- Group State Timeout in Arbitrary Stateful Streaming Aggregation
+# GroupStateTimeout &mdash; Group State Timeout in Arbitrary Stateful Streaming Aggregation
 
-`GroupStateTimeout` represents an *aggregation state timeout* that defines when a [GroupState](GroupState.md) can be considered *timed-out* (_expired_) in <<spark-sql-arbitrary-stateful-streaming-aggregation.md#, Arbitrary Stateful Streaming Aggregation>>.
+`GroupStateTimeout` represents an *aggregation state timeout* that defines when a [GroupState](GroupState.md) can be considered *timed-out* (_expired_) in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
 
-`GroupStateTimeout` is used with the following <<spark-sql-streaming-KeyValueGroupedDataset.md#, KeyValueGroupedDataset>> operations:
+`GroupStateTimeout` is used with the following [KeyValueGroupedDataset](KeyValueGroupedDataset.md) operations:
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState, mapGroupsWithState>>
+* [mapGroupsWithState](KeyValueGroupedDataset.md#mapGroupsWithState)
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, flatMapGroupsWithState>>
+* [flatMapGroupsWithState](KeyValueGroupedDataset.md#flatMapGroupsWithState)
 
 [[extensions]]
 .GroupStateTimeouts

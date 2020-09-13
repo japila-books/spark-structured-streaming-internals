@@ -1,14 +1,14 @@
-== Arbitrary Stateful Streaming Aggregation
+# Arbitrary Stateful Streaming Aggregation
 
-*Arbitrary Stateful Streaming Aggregation* is a <<spark-sql-streaming-aggregation.md#, streaming aggregation query>> that uses the following <<spark-sql-streaming-KeyValueGroupedDataset.md#, KeyValueGroupedDataset>> operators:
+**Arbitrary Stateful Streaming Aggregation** is a [streaming aggregation query](spark-sql-streaming-aggregation.md) that uses the following [KeyValueGroupedDataset](KeyValueGroupedDataset.md) operators:
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.md#mapGroupsWithState, mapGroupsWithState>> for implicit state logic
+* [mapGroupsWithState](KeyValueGroupedDataset.md#mapGroupsWithState) for implicit state logic
 
-* <<spark-sql-streaming-KeyValueGroupedDataset.md#flatMapGroupsWithState, flatMapGroupsWithState>> for explicit state logic
+* [flatMapGroupsWithState](KeyValueGroupedDataset.md#flatMapGroupsWithState) for explicit state logic
 
-`KeyValueGroupedDataset` represents a grouped dataset as a result of <<spark-sql-streaming-Dataset-operators.md#groupByKey, Dataset.groupByKey>> operator.
+`KeyValueGroupedDataset` represents a grouped dataset as a result of [Dataset.groupByKey](spark-sql-streaming-Dataset-operators.md#groupByKey) operator.
 
-`mapGroupsWithState` and `flatMapGroupsWithState` operators use [GroupState](GroupState.md) as **group streaming aggregation state** that is created separately for every *aggregation key* with an *aggregation state value* (of a user-defined type).
+`mapGroupsWithState` and `flatMapGroupsWithState` operators use [GroupState](GroupState.md) as **group streaming aggregation state** that is created separately for every **aggregation key** with an **aggregation state value** (of a user-defined type).
 
 `mapGroupsWithState` and `flatMapGroupsWithState` operators use <<spark-sql-streaming-GroupStateTimeout.md#, GroupStateTimeout>> as an *aggregation state timeout* that defines when a [GroupState](GroupState.md) can be considered *timed-out* (_expired_).
 
