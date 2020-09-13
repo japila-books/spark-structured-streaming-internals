@@ -204,7 +204,19 @@
      <lastmod>2020-09-13</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-arbitrary-stateful-streaming-aggregation/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/arbitrary-stateful-streaming-aggregation/</loc>
+     <lastmod>2020-09-13</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/KeyValueGroupedDataset/</loc>
+     <lastmod>2020-09-13</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState/</loc>
+     <lastmod>2020-09-13</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState/</loc>
      <lastmod>2020-09-13</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -289,18 +301,6 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-window/</loc>
-     <lastmod>2020-09-13</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KeyValueGroupedDataset/</loc>
-     <lastmod>2020-09-13</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState/</loc>
-     <lastmod>2020-09-13</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState/</loc>
      <lastmod>2020-09-13</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
