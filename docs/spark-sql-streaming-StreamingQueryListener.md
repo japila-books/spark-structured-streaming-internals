@@ -18,7 +18,7 @@ onQueryStarted(
   event: QueryStartedEvent): Unit
 ----
 
-Informs that `DataStreamWriter` was requested to <<DataStreamWriter.md#start, start execution of the streaming query>> (on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
+Informs that `DataStreamWriter` was requested to [start execution of the streaming query](DataStreamWriter.md#start) (on the [stream execution thread](spark-sql-streaming-StreamExecution.md#queryExecutionThread))
 
 | onQueryProgress
 a| [[onQueryProgress]]
@@ -61,7 +61,7 @@ a| QueryStartedEvent
 - <<spark-sql-streaming-StreamingQuery.md#name, name>>
 
 | <<onQueryStarted, onQueryStarted>>
-| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (when `DataStreamWriter` is requested to <<DataStreamWriter.md#start, start execution of the streaming query>> on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
+| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (when `DataStreamWriter` is requested to [start execution of the streaming query](DataStreamWriter.md#start) on the [stream execution thread](spark-sql-streaming-StreamExecution.md#queryExecutionThread))
 
 a| QueryProgressEvent
 
@@ -100,7 +100,7 @@ spark.streams.removeListener(queryListener)
 .StreamingQueryListener Notified about Query's Start (onQueryStarted)
 image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
 
-NOTE: `onQueryStarted` is used internally to unblock the link:spark-sql-streaming-StreamExecution.md#start[starting thread] of `StreamExecution`.
+NOTE: `onQueryStarted` is used internally to unblock the spark-sql-streaming-StreamExecution.md#start[starting thread] of `StreamExecution`.
 
 .StreamingQueryListener Notified about Query's Progress (onQueryProgress)
 image::images/StreamingQueryListener-onQueryProgress.png[align="center"]

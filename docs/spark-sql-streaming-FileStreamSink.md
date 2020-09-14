@@ -20,9 +20,9 @@ val sq = in.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`FileStreamSink` supports link:spark-sql-streaming-OutputMode.md#Append[Append output mode] only.
+`FileStreamSink` supports spark-sql-streaming-OutputMode.md#Append[Append output mode] only.
 
-`FileStreamSink` uses link:spark-sql-SQLConf.md#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
+`FileStreamSink` uses spark-sql-SQLConf.md#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
 
 [[toString]]
 The textual representation of `FileStreamSink` is *FileSink[path]*
@@ -65,7 +65,7 @@ addBatch(
   data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is a part of link:spark-sql-streaming-Sink.md#addBatch[Sink Contract] to "add" a batch of data to the sink.
+NOTE: `addBatch` is a part of spark-sql-streaming-Sink.md#addBatch[Sink Contract] to "add" a batch of data to the sink.
 
 `addBatch`...FIXME
 

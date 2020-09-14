@@ -1,8 +1,8 @@
 == [[StreamingRelation]] StreamingRelation Leaf Logical Operator for Streaming Source
 
-`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a link:spark-sql-streaming-Source.md[streaming source] in a logical plan.
+`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a spark-sql-streaming-Source.md[streaming source] in a logical plan.
 
-`StreamingRelation` is <<creating-instance, created>> when `DataStreamReader` is requested to link:spark-sql-streaming-DataStreamReader.md#load[load data from a streaming source] and creates a streaming `Dataset`.
+`StreamingRelation` is <<creating-instance, created>> when `DataStreamReader` is requested to spark-sql-streaming-DataStreamReader.md#load[load data from a streaming source] and creates a streaming `Dataset`.
 
 .StreamingRelation Represents Streaming Source
 image::images/StreamingRelation.png[align="center"]
@@ -37,7 +37,7 @@ scala> println(relation)
 rate
 ----
 
-NOTE: `StreamingRelation` is link:spark-sql-streaming-StreamExecution.md#logicalPlan[resolved] (aka _planned_) to link:spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] (right after `StreamExecution` link:spark-sql-streaming-StreamExecution.md#runStream[starts running batches]).
+NOTE: `StreamingRelation` is spark-sql-streaming-StreamExecution.md#logicalPlan[resolved] (aka _planned_) to spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] (right after `StreamExecution` spark-sql-streaming-StreamExecution.md#runStream[starts running batches]).
 
 === [[apply]] Creating StreamingRelation for DataSource -- `apply` Object Method
 
@@ -54,6 +54,6 @@ NOTE: `apply` is used exclusively when `DataStreamReader` is requested for a <<s
 
 `StreamingRelation` takes the following when created:
 
-* [[dataSource]] link:spark-sql-streaming-DataSource.md[DataSource]
+* [[dataSource]] spark-sql-streaming-DataSource.md[DataSource]
 * [[sourceName]] Short name of the streaming source
 * [[output]] Output attributes of the schema of the streaming source

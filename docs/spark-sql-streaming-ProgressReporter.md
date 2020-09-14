@@ -245,7 +245,7 @@ status: StreamingQueryStatus
 
 `status` gives the <<currentStatus, current StreamingQueryStatus>>.
 
-NOTE: `status` is used when `StreamingQueryWrapper` is requested for the current status of a streaming query (that is part of link:spark-sql-streaming-StreamingQuery.md#status[StreamingQuery Contract]).
+NOTE: `status` is used when `StreamingQueryWrapper` is requested for the current status of a streaming query (that is part of spark-sql-streaming-StreamingQuery.md#status[StreamingQuery Contract]).
 
 === [[updateProgress]] Updating Progress of Streaming Query -- `updateProgress` Internal Method
 
@@ -254,14 +254,14 @@ NOTE: `status` is used when `StreamingQueryWrapper` is requested for the current
 updateProgress(newProgress: StreamingQueryProgress): Unit
 ----
 
-`updateProgress` records the input `newProgress` and posts a link:spark-sql-streaming-StreamingQueryListener.md#QueryProgressEvent[QueryProgressEvent] event.
+`updateProgress` records the input `newProgress` and posts a spark-sql-streaming-StreamingQueryListener.md#QueryProgressEvent[QueryProgressEvent] event.
 
 .ProgressReporter's Reporting Query Progress
 image::images/ProgressReporter-updateProgress.png[align="center"]
 
 `updateProgress` adds the input `newProgress` to <<progressBuffer, progressBuffer>>.
 
-`updateProgress` removes elements from <<progressBuffer, progressBuffer>> if their number is or exceeds the value of link:spark-sql-streaming-properties.md#spark.sql.streaming.numRecentProgressUpdates[spark.sql.streaming.numRecentProgressUpdates] property.
+`updateProgress` removes elements from <<progressBuffer, progressBuffer>> if their number is or exceeds the value of spark-sql-streaming-properties.md#spark.sql.streaming.numRecentProgressUpdates[spark.sql.streaming.numRecentProgressUpdates] property.
 
 `updateProgress` <<postEvent, posts a QueryProgressEvent>> (with the input `newProgress`).
 
@@ -322,7 +322,7 @@ Starting Trigger Calculation
 
 * `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run an activated streaming query>> (at the beginning of every trigger)
 
-`StreamExecution` starts link:spark-sql-streaming-StreamExecution.md#runStream[running batches] (as part of link:spark-sql-streaming-StreamExecution.md#triggerExecutor[TriggerExecutor] executing a batch runner).
+`StreamExecution` starts spark-sql-streaming-StreamExecution.md#runStream[running batches] (as part of spark-sql-streaming-StreamExecution.md#triggerExecutor[TriggerExecutor] executing a batch runner).
 ====
 
 === [[finishTrigger]] Finishing Up Streaming Batch (Trigger) and Generating StreamingQueryProgress -- `finishTrigger` Method
@@ -353,7 +353,7 @@ Execution stats: [executionStats]
 
 `finishTrigger` creates a <<SinkProgress, SinkProgress>> (aka sink statistics) for the <<sink, sink>>.
 
-`finishTrigger` creates a link:spark-sql-streaming-StreamingQueryProgress.md[StreamingQueryProgress].
+`finishTrigger` creates a spark-sql-streaming-StreamingQueryProgress.md[StreamingQueryProgress].
 
 If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updates query progress>>.
 

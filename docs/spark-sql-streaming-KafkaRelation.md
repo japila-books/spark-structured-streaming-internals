@@ -40,7 +40,7 @@ Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 `KafkaRelation` takes the following when created:
 
 * [[sqlContext]] `SQLContext`
-* [[strategy]] link:spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy]
+* [[strategy]] spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy]
 * [[sourceOptions]] `Source` options (`Map[String, String]`)
 * [[specifiedKafkaParams]] User-defined Kafka parameters (`Map[String, String]`)
 * [[failOnDataLoss]] `failOnDataLoss` flag

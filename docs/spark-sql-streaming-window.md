@@ -45,7 +45,7 @@ timeColumn: org.apache.spark.sql.Column = timewindow(time, 5000000, 5000000, 0) 
 
 `timeColumn` should be of `TimestampType`, i.e. with https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html[java.sql.Timestamp] values.
 
-TIP: Use link:++https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html#from-java.time.Instant-++[java.sql.Timestamp.from] or link:++https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html#valueOf-java.time.LocalDateTime-++[java.sql.Timestamp.valueOf] factory methods to create `Timestamp` instances.
+TIP: Use ++https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html#from-java.time.Instant-++[java.sql.Timestamp.from] or ++https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html#valueOf-java.time.LocalDateTime-++[java.sql.Timestamp.valueOf] factory methods to create `Timestamp` instances.
 
 [source, scala]
 ----
@@ -129,7 +129,7 @@ NOTE: Only one `window` expression is supported in a query.
 
 NOTE: `null` values are filtered out in `window` expression.
 
-Internally, `window` creates a link:spark-sql-Column.md[Column] with `TimeWindow` Catalyst expression under `window` alias.
+Internally, `window` creates a spark-sql-Column.md[Column] with `TimeWindow` Catalyst expression under `window` alias.
 
 [source, scala]
 ----

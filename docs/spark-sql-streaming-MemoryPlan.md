@@ -1,10 +1,10 @@
-== [[MemoryPlan]] `MemoryPlan` Logical Operator
+# MemoryPlan Logical Operator
 
-`MemoryPlan` is a leaf logical operator (i.e. `LogicalPlan`) that is used to query the data that has been written into a link:spark-sql-streaming-MemorySink.md[MemorySink]. `MemoryPlan` is created when link:DataStreamWriter.md#start[starting continuous writing] (to a `MemorySink`).
+`MemoryPlan` is a leaf logical operator (i.e. `LogicalPlan`) that is used to query the data that has been written into a spark-sql-streaming-MemorySink.md[MemorySink]. `MemoryPlan` is created when [starting continuous writing](DataStreamWriter.md#start) (to a `MemorySink`).
 
-TIP: See the example in link:spark-sql-streaming-MemoryStream.md[MemoryStream].
+TIP: See the example in spark-sql-streaming-MemoryStream.md[MemoryStream].
 
-```
+```text
 scala> intsOut.explain(true)
 == Parsed Logical Plan ==
 SubqueryAlias memstream

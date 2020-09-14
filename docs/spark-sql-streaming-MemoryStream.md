@@ -55,7 +55,7 @@ In the end, `addData` increments the <<currentOffset, current offset>> and adds 
 
 === [[getBatch]] Generating Next Streaming Batch -- `getBatch` Method
 
-NOTE: `getBatch` is a part of link:spark-sql-streaming-Source.md#contract[Streaming Source contract].
+NOTE: `getBatch` is a part of spark-sql-streaming-Source.md#contract[Streaming Source contract].
 
 When executed, `getBatch` uses the internal <<batches, batches>> collection to return requested offsets.
 
@@ -76,7 +76,7 @@ NOTE: `logicalPlan` is part of the <<spark-sql-streaming-MemoryStreamBase.md#log
 
 `logicalPlan` is simply a <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> (for this memory source and the <<spark-sql-streaming-MemoryStreamBase.md#attributes, attributes>>).
 
-`MemoryStream` uses link:spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] logical plan to build link:spark-sql-dataset.md[Datasets] or link:spark-sql-dataset.md#ofRows[DataFrames] when requested.
+`MemoryStream` uses spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] logical plan to build spark-sql-dataset.md[Datasets] or spark-sql-dataset.md#ofRows[DataFrames] when requested.
 
 [source, scala]
 ----
@@ -92,7 +92,7 @@ res15: org.apache.spark.sql.catalyst.plans.logical.LogicalPlan = MemoryStream[va
 
 === [[schema]] Schema (schema method)
 
-`MemoryStream` works with the data of the link:spark-sql-schema.md[schema] as described by the link:spark-sql-Encoder.md[Encoder] (of the `Dataset`).
+`MemoryStream` works with the data of the spark-sql-schema.md[schema] as described by the spark-sql-Encoder.md[Encoder] (of the `Dataset`).
 
 === [[toString]] Textual Representation -- `toString` Method
 
@@ -101,7 +101,7 @@ res15: org.apache.spark.sql.catalyst.plans.logical.LogicalPlan = MemoryStream[va
 toString: String
 ----
 
-NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
+NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
 
 `toString` uses the <<output, output schema>> to return the following textual representation:
 

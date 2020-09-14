@@ -1,4 +1,4 @@
-== [[KafkaSourceProvider]] KafkaSourceProvider -- Data Source Provider for Apache Kafka
+# KafkaSourceProvider &mdash; Data Source Provider for Apache Kafka
 
 [[shortName]]
 `KafkaSourceProvider` is a `DataSourceRegister` and registers a developer-friendly alias for *kafka* data source format in Spark Structured Streaming.
@@ -7,7 +7,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 `KafkaSourceProvider` supports <<spark-sql-streaming-micro-batch-stream-processing.md#, micro-batch stream processing>> (through <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> contract) and <<createMicroBatchReader, creates a specialized KafkaMicroBatchReader>>.
 
-`KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.md#, DataStreamReader>> or <<DataStreamWriter.md#, DataStreamWriter>>):
+`KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.md#, DataStreamReader>> or [DataStreamWriter](DataStreamWriter.md)):
 
 * Exactly one of the following options: <<spark-sql-streaming-kafka-data-source.md#subscribe, subscribe>>, <<spark-sql-streaming-kafka-data-source.md#subscribePattern, subscribePattern>> or <<spark-sql-streaming-kafka-data-source.md#assign, assign>>
 
@@ -143,7 +143,7 @@ NOTE: `validateGeneralOptions` is used when `KafkaSourceProvider` validates opti
 strategy(caseInsensitiveParams: Map[String, String])
 ----
 
-Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that are one of the following and creates a corresponding link:spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy].
+Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that are one of the following and creates a corresponding spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy].
 
 .KafkaSourceProvider.strategy's Key to ConsumerStrategy Conversion
 [cols="1m,2",options="header",width="100%"]
@@ -152,7 +152,7 @@ Internally, `strategy` finds the keys in the input `caseInsensitiveParams` that 
 | ConsumerStrategy
 
 | assign
-a| link:spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[AssignStrategy] with Kafka's http://kafka.apache.org/0110/javadoc/org/apache/kafka/common/TopicPartition.html[TopicPartitions].
+a| spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[AssignStrategy] with Kafka's http://kafka.apache.org/0110/javadoc/org/apache/kafka/common/TopicPartition.html[TopicPartitions].
 
 ---
 
@@ -165,7 +165,7 @@ a| link:spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[AssignStrategy] w
 The topic names and partitions are mapped directly to Kafka's `TopicPartition` objects.
 
 | subscribe
-a| link:spark-sql-streaming-ConsumerStrategy.md#SubscribeStrategy[SubscribeStrategy] with topic names
+a| spark-sql-streaming-ConsumerStrategy.md#SubscribeStrategy[SubscribeStrategy] with topic names
 
 ---
 
@@ -176,7 +176,7 @@ topic1,topic2,topic3
 ```
 
 | subscribepattern
-a| link:spark-sql-streaming-ConsumerStrategy.md#SubscribePatternStrategy[SubscribePatternStrategy] with topic subscription regex pattern (that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the pattern), e.g.
+a| spark-sql-streaming-ConsumerStrategy.md#SubscribePatternStrategy[SubscribePatternStrategy] with topic subscription regex pattern (that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the pattern), e.g.
 
 ```
 topic\d
@@ -206,7 +206,7 @@ sourceSchema(
 
 NOTE: `sourceSchema` is part of the <<spark-sql-streaming-StreamSourceProvider.md#sourceSchema, StreamSourceProvider Contract>> to describe a <<spark-sql-streaming-Source.md#, streaming source>> with a name and the schema.
 
-`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the link:spark-sql-streaming-KafkaOffsetReader.md#kafkaSchema[fixed schema].
+`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the spark-sql-streaming-KafkaOffsetReader.md#kafkaSchema[fixed schema].
 
 Internally, `sourceSchema` <<validateStreamOptions, validates Kafka options>> and makes sure that the optional input `schema` is indeed undefined.
 

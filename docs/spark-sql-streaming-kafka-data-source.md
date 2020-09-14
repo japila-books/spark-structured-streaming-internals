@@ -193,13 +193,13 @@ NOTE: Options with *kafka.* prefix (e.g. <<kafka.bootstrap.servers, kafka.bootst
 | Description
 
 | assign
-a| [[assign]] link:spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
+a| [[assign]] spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[Topic subscription strategy] that accepts a JSON with topic names and partitions, e.g.
 
 ```
 {"topicA":[0,1],"topicB":[0,1]}
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
 
 | failOnDataLoss
 a| [[failOnDataLoss]] Flag to control whether...FIXME
@@ -225,7 +225,7 @@ a| [[maxOffsetsPerTrigger]] Number of records to fetch per trigger (to limit the
 
 Default: `(undefined)`
 
-Unless defined, `KafkaSource` requests <<spark-sql-streaming-KafkaSource.md#kafkaReader, KafkaOffsetReader>> for the link:spark-sql-streaming-KafkaOffsetReader.md#fetchLatestOffsets[latest offsets].
+Unless defined, `KafkaSource` requests <<spark-sql-streaming-KafkaSource.md#kafkaReader, KafkaOffsetReader>> for the spark-sql-streaming-KafkaOffsetReader.md#fetchLatestOffsets[latest offsets].
 
 | minPartitions
 a| [[minPartitions]] Minimum number of partitions per executor (given Kafka partitions)
@@ -266,16 +266,16 @@ option(
 ====
 
 | subscribe
-a| [[subscribe]] link:spark-sql-streaming-ConsumerStrategy.md#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
+a| [[subscribe]] spark-sql-streaming-ConsumerStrategy.md#SubscribeStrategy[Topic subscription strategy] that accepts topic names as a comma-separated string, e.g.
 
 ```
 topic1,topic2,topic3
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
 
 | subscribepattern
-a| [[subscribepattern]] link:spark-sql-streaming-ConsumerStrategy.md#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
+a| [[subscribepattern]] spark-sql-streaming-ConsumerStrategy.md#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
 
 ```
 topic\d
@@ -291,7 +291,7 @@ option("subscribepattern", """topic\d""")
 ----
 ====
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` link:spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
 
 | topic
 a| [[topic]] Optional topic name to use for writing a streaming query

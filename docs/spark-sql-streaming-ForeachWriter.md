@@ -1,17 +1,17 @@
-== [[ForeachWriter]] ForeachWriter
+# ForeachWriter
 
-`ForeachWriter` is the <<contract, contract>> for a *foreach writer* that is a link:DataStreamWriter.md#foreach[streaming format] that controls streaming writes.
+`ForeachWriter` is the <<contract, contract>> for a *foreach writer* that is a [streaming format](DataStreamWriter.md#foreach) that controls streaming writes.
 
-NOTE: `ForeachWriter` is set using link:DataStreamWriter.md#foreach[foreach] operator.
+!!! note
+    `ForeachWriter` is set using [DataStreamWriter.foreach](DataStreamWriter.md#foreach) operator.
 
-[source, scala]
-----
+```scala
 val foreachWriter = new ForeachWriter[String] { ... }
 streamingQuery.
   writeStream.
   foreach(foreachWriter).
   start
-----
+```
 
 === [[contract]] ForeachWriter Contract
 

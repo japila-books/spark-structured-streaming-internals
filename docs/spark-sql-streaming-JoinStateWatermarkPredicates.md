@@ -20,7 +20,7 @@
 toString: String
 ----
 
-NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
+NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
 
 `toString` uses the <<left, left>> and <<right, right>> predicates for the string representation:
 

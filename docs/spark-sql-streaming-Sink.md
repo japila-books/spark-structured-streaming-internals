@@ -34,11 +34,11 @@ Used exclusively when <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchE
 | Sink
 | Description
 
-| <<spark-sql-streaming-FileStreamSink.md#, FileStreamSink>>
+| [FileStreamSink](spark-sql-streaming-FileStreamSink.md)
 | [[FileStreamSink]] Used in file-based data sources (`FileFormat`)
 
 | <<spark-sql-streaming-ForeachBatchSink.md#, ForeachBatchSink>>
-| [[ForeachBatchSink]] Used for <<DataStreamWriter.md#foreachBatch, DataStreamWriter.foreachBatch>> streaming operator
+| [[ForeachBatchSink]] Used for [DataStreamWriter.foreachBatch](DataStreamWriter.md#foreachBatch) operator
 
 | <<spark-sql-streaming-KafkaSink.md#, KafkaSink>>
 | [[KafkaSink]] Used for <<spark-sql-streaming-kafka-data-source.md#, kafka>> output format

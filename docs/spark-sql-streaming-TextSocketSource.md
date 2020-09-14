@@ -1,6 +1,6 @@
 == TextSocketSource
 
-`TextSocketSource` is a link:spark-sql-streaming-Source.md[streaming source] that reads lines from a socket at the `host` and `port` (defined by parameters).
+`TextSocketSource` is a spark-sql-streaming-Source.md[streaming source] that reads lines from a socket at the `host` and `port` (defined by parameters).
 
 It uses <<lines, lines>> internal in-memory buffer to keep all of the lines that were read from a socket forever.
 
@@ -63,18 +63,18 @@ lines: ArrayBuffer[(String, Timestamp)]
 
 === [[getOffset]] Maximum Available Offset (getOffset method)
 
-NOTE: `getOffset` is a part of the link:spark-sql-streaming-Source.md#contract[Streaming Source Contract].
+NOTE: `getOffset` is a part of the spark-sql-streaming-Source.md#contract[Streaming Source Contract].
 
 ``TextSocketSource``'s offset can either be none or `LongOffset` of the number of lines in the internal <<lines, lines>> buffer.
 
 === [[schema]] Schema (schema method)
 
-`TextSocketSource` supports two link:spark-sql-schema.md[schemas]:
+`TextSocketSource` supports two spark-sql-schema.md[schemas]:
 
 1. A single `value` field of String type.
-2. `value` field of `StringType` type and `timestamp` field of link:spark-sql-DataType.md#TimestampType[TimestampType] type of format `yyyy-MM-dd HH:mm:ss`.
+2. `value` field of `StringType` type and `timestamp` field of spark-sql-DataType.md#TimestampType[TimestampType] type of format `yyyy-MM-dd HH:mm:ss`.
 
-TIP: Refer to link:spark-sql-streaming-TextSocketSourceProvider.md#sourceSchema[sourceSchema] for `TextSocketSourceProvider`.
+TIP: Refer to spark-sql-streaming-TextSocketSourceProvider.md#sourceSchema[sourceSchema] for `TextSocketSourceProvider`.
 
 === [[creating-instance]] Creating TextSocketSource Instance
 
@@ -87,14 +87,14 @@ TextSocketSource(
   sqlContext: SQLContext)
 ----
 
-When `TextSocketSource` is created (see link:spark-sql-streaming-TextSocketSourceProvider.md#createSource[TextSocketSourceProvider]), it gets 4 parameters passed in:
+When `TextSocketSource` is created (see spark-sql-streaming-TextSocketSourceProvider.md#createSource[TextSocketSourceProvider]), it gets 4 parameters passed in:
 
 1. `host`
 2. `port`
-3. link:spark-sql-streaming-TextSocketSourceProvider.md#includeTimestamp[includeTimestamp] flag
-4. link:spark-sql-sqlcontext.md[SQLContext]
+3. spark-sql-streaming-TextSocketSourceProvider.md#includeTimestamp[includeTimestamp] flag
+4. spark-sql-sqlcontext.md[SQLContext]
 
-CAUTION: It appears that the source did not get "renewed" to use link:spark-sql-sparksession.md[SparkSession] instead.
+CAUTION: It appears that the source did not get "renewed" to use spark-sql-sparksession.md[SparkSession] instead.
 
 It opens a socket at given `host` and `port` parameters and reads a buffering character-input stream using the default charset and the default-sized input buffer (of `8192` bytes) line by line.
 

@@ -20,7 +20,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-accum
 
 `EventTimeWatermarkExec` uses <<eventTimeStats, EventTimeStatsAccum>> internal accumulator as a way to send the statistics (the maximum, minimum, average and update count) of the values in the <<eventTime, event-time watermark column>> that is later used in:
 
-* `ProgressReporter` for link:spark-sql-streaming-ProgressReporter.md#extractExecutionStats[creating execution statistics] for the most recent query execution (for monitoring the `max`, `min`, `avg`, and `watermark` event-time watermark statistics)
+* `ProgressReporter` for spark-sql-streaming-ProgressReporter.md#extractExecutionStats[creating execution statistics] for the most recent query execution (for monitoring the `max`, `min`, `avg`, and `watermark` event-time watermark statistics)
 
 * `StreamExecution` to observe and possibly update event-time watermark when <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-hasNewData-true, constructing the next streaming batch>>.
 

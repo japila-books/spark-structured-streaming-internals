@@ -1,11 +1,15 @@
-== [[StreamingQueryWrapper]] StreamingQueryWrapper -- Serializable StreamExecution
+# StreamingQueryWrapper &mdash; Serializable StreamExecution
 
-[[creating-instance]][[_streamingQuery]]
-`StreamingQueryWrapper` is a serializable interface of a <<spark-sql-streaming-StreamExecution.md#, StreamExecution>>.
+<span id="_streamingQuery">
+`StreamingQueryWrapper` is a serializable interface of a [StreamExecution](spark-sql-streaming-StreamExecution.md).
 
-.Demo: Any Streaming Query is StreamingQueryWrapper
-[source, scala]
-----
+`StreamingQueryWrapper` has the same [StreamExecution](spark-sql-streaming-StreamExecution.md) API and simply passes all the method calls along to the underlying [StreamExecution](#_streamingQuery).
+
+`StreamingQueryWrapper` is created when `StreamingQueryManager` is requested to [create a streaming query](spark-sql-streaming-StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
+
+## Demo: Any Streaming Query is StreamingQueryWrapper
+
+```scala
 import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
 val query = spark
   .readStream
@@ -16,9 +20,4 @@ val query = spark
   .queryName("rate2memory")
   .start
 assert(query.isInstanceOf[StreamingQueryWrapper])
-----
-
-[[stop]][[explainInternal]]
-`StreamingQueryWrapper` has the same <<spark-sql-streaming-StreamExecution.md#, StreamExecution>> API and simply passes all the method calls along to the underlying <<_streamingQuery, StreamExecution>>.
-
-`StreamingQueryWrapper` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
+```

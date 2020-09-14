@@ -14,7 +14,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 .StateStoreRestoreExec and StatefulAggregationStrategy
 image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="center"]
 
-The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.md#preparations[prepares a streaming physical plan for execution] (and link:spark-sql-streaming-IncrementalExecution.md#state[state] preparation rule is executed when `StreamExecution` link:spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` spark-sql-streaming-IncrementalExecution.md#preparations[prepares a streaming physical plan for execution] (and spark-sql-streaming-IncrementalExecution.md#state[state] preparation rule is executed when `StreamExecution` spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
 .StateStoreRestoreExec and IncrementalExecution
 image::images/StateStoreRestoreExec-IncrementalExecution.png[align="center"]
@@ -80,7 +80,7 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
-Internally, `doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that does the following per <<child, child>> operator's RDD partition:
+Internally, `doExecute` executes <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that does the following per <<child, child>> operator's RDD partition:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>> operator).
 
@@ -88,7 +88,7 @@ Internally, `doExecute` executes <<child, child>> physical operator and link:spa
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* link:spark-sql-streaming-StateStore.md#get[Gets the saved state] in `StateStore` for the key if available (it might not be if the key appeared in the input the first time)
+* spark-sql-streaming-StateStore.md#get[Gets the saved state] in `StateStore` for the key if available (it might not be if the key appeared in the input the first time)
 
 * Increments <<numOutputRows, numOutputRows>> metric (that in the end is the number of rows from the <<child, child>> operator)
 
@@ -96,4 +96,4 @@ Internally, `doExecute` executes <<child, child>> physical operator and link:spa
 
 NOTE: The number of rows from `StateStoreRestoreExec` is the number of rows from the <<child, child>> operator with additional rows for the saved state.
 
-NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had associated state available in a state store. You would have to use the corresponding `StateStoreSaveExec` operator's link:spark-sql-streaming-StateStoreSaveExec.md#metrics[metrics] (most likely `number of total state rows` but that could depend on the output mode).
+NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had associated state available in a state store. You would have to use the corresponding `StateStoreSaveExec` operator's spark-sql-streaming-StateStoreSaveExec.md#metrics[metrics] (most likely `number of total state rows` but that could depend on the output mode).

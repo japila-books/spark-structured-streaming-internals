@@ -17,7 +17,7 @@
 * [[offsetRanges]] Collection of `KafkaSourceRDDOffsetRange` offsets
 * [[pollTimeoutMs]] Timeout (in milliseconds) to poll data from Kafka
 +
-Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offsets) and in turn link:spark-sql-streaming-CachedKafkaConsumer.md#poll[requests `CachedKafkaConsumer` to poll for Kafka's `ConsumerRecords`].
+Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offsets) and in turn spark-sql-streaming-CachedKafkaConsumer.md#poll[requests `CachedKafkaConsumer` to poll for Kafka's `ConsumerRecords`].
 * [[failOnDataLoss]] Flag to...FIXME
 * [[reuseKafkaConsumer]] Flag to...FIXME
 

@@ -1,6 +1,6 @@
 == [[StateStoreRDD]] StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)
 
-`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with link:spark-sql-streaming-StateStore.md[StateStore] (and data from partitions of the <<dataRDD, data RDD>>).
+`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with spark-sql-streaming-StateStore.md[StateStore] (and data from partitions of the <<dataRDD, data RDD>>).
 
 `StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
 
@@ -32,11 +32,11 @@ compute(
 
 NOTE: `compute` is part of the RDD Contract to compute a given partition.
 
-`compute` computes <<dataRDD, dataRDD>> passing the result on to <<storeUpdateFunction, storeUpdateFunction>> (with a configured link:spark-sql-streaming-StateStore.md[StateStore]).
+`compute` computes <<dataRDD, dataRDD>> passing the result on to <<storeUpdateFunction, storeUpdateFunction>> (with a configured spark-sql-streaming-StateStore.md[StateStore]).
 
 Internally, (and similarly to <<getPreferredLocations, getPreferredLocations>>) `compute` creates a <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> with `StateStoreId` (using <<checkpointLocation, checkpointLocation>>, <<operatorId, operatorId>> and the index of the input `partition`) and <<queryRunId, queryRunId>>.
 
-`compute` then requests `StateStore` for link:spark-sql-streaming-StateStore.md#get[the store for the StateStoreProviderId].
+`compute` then requests `StateStore` for spark-sql-streaming-StateStore.md#get[the store for the StateStoreProviderId].
 
 In the end, `compute` computes <<dataRDD, dataRDD>> (using the input `partition` and `ctxt`) followed by executing <<storeUpdateFunction, storeUpdateFunction>> (with the store and the result).
 
@@ -53,9 +53,9 @@ NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement
 
 NOTE: <<checkpointLocation, checkpointLocation>> and <<operatorId, operatorId>> are shared across different partitions and so the only difference in <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderIds>> is the partition index.
 
-In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the link:spark-sql-streaming-StateStoreCoordinatorRef.md#getLocation[location of the state store] for the <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>>.
+In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the spark-sql-streaming-StateStoreCoordinatorRef.md#getLocation[location of the state store] for the <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>>.
 
-NOTE: link:spark-sql-streaming-StateStoreCoordinator.md[StateStoreCoordinator] coordinates instances of `StateStores` across Spark executors in the cluster, and tracks their locations for job scheduling.
+NOTE: spark-sql-streaming-StateStoreCoordinator.md[StateStoreCoordinator] coordinates instances of `StateStores` across Spark executors in the cluster, and tracks their locations for job scheduling.
 
 === [[creating-instance]] Creating StateStoreRDD Instance
 

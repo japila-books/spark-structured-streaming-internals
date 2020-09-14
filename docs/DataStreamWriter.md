@@ -31,7 +31,7 @@ a|
 foreach(writer: ForeachWriter[T]): DataStreamWriter[T]
 ----
 
-Sets link:spark-sql-streaming-ForeachWriter.md[ForeachWriter] in the full control of streaming writes
+Sets spark-sql-streaming-ForeachWriter.md[ForeachWriter] in the full control of streaming writes
 
 | foreachBatch
 a| [[foreachBatch]]
@@ -134,13 +134,13 @@ a|
 trigger(trigger: Trigger): DataStreamWriter[T]
 ----
 
-Sets the link:spark-sql-streaming-Trigger.md[Trigger] for how often a streaming query should be executed and the result saved.
+Sets the spark-sql-streaming-Trigger.md[Trigger] for how often a streaming query should be executed and the result saved.
 
 |===
 
 [NOTE]
 ====
-A streaming query is a link:spark-sql-Dataset.md[Dataset] with a link:spark-sql-LogicalPlan.md#isStreaming[streaming logical plan].
+A streaming query is a spark-sql-Dataset.md[Dataset] with a spark-sql-LogicalPlan.md#isStreaming[streaming logical plan].
 
 [source, scala]
 ----
@@ -203,7 +203,7 @@ outputMode(outputMode: String): DataStreamWriter[T]
 outputMode(outputMode: OutputMode): DataStreamWriter[T]
 ----
 
-`outputMode` specifies the link:spark-sql-streaming-OutputMode.md[output mode] of a streaming query, i.e.  what data is sent out to a link:spark-sql-streaming-Sink.md[streaming sink] when there is new data available in link:spark-sql-streaming-Source.md[streaming data sources].
+`outputMode` specifies the spark-sql-streaming-OutputMode.md[output mode] of a streaming query, i.e.  what data is sent out to a spark-sql-streaming-Sink.md[streaming sink] when there is new data available in spark-sql-streaming-Source.md[streaming data sources].
 
 NOTE: When not defined explicitly, `outputMode` defaults to <<spark-sql-streaming-OutputMode.md#Append, Append>> output mode.
 
@@ -216,7 +216,7 @@ NOTE: When not defined explicitly, `outputMode` defaults to <<spark-sql-streamin
 queryName(queryName: String): DataStreamWriter[T]
 ----
 
-`queryName` sets the name of a link:spark-sql-streaming-StreamingQuery.md[streaming query].
+`queryName` sets the name of a spark-sql-streaming-StreamingQuery.md[streaming query].
 
 Internally, it is just an additional <<option, option>> with the key `queryName`.
 
@@ -229,11 +229,11 @@ trigger(trigger: Trigger): DataStreamWriter[T]
 
 `trigger` method sets the time interval of the *trigger* (that executes a batch runner) for a streaming query.
 
-NOTE: `Trigger` specifies how often results should be produced by a link:spark-sql-streaming-StreamingQuery.md[StreamingQuery]. See link:spark-sql-streaming-Trigger.md[Trigger].
+NOTE: `Trigger` specifies how often results should be produced by a spark-sql-streaming-StreamingQuery.md[StreamingQuery]. See spark-sql-streaming-Trigger.md[Trigger].
 
-The default trigger is link:spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0L)] that runs a streaming query as often as possible.
+The default trigger is spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0L)] that runs a streaming query as often as possible.
 
-TIP: Consult link:spark-sql-streaming-Trigger.md[Trigger] to learn about `Trigger` and `ProcessingTime` types.
+TIP: Consult spark-sql-streaming-Trigger.md[Trigger] to learn about `Trigger` and `ProcessingTime` types.
 
 === [[start]] Creating and Starting Execution of Streaming Query -- `start` Method
 
@@ -246,7 +246,7 @@ start(path: String): StreamingQuery  // <1>
 
 `start` starts a streaming query.
 
-`start` gives a link:spark-sql-streaming-StreamingQuery.md[StreamingQuery] to control the execution of the continuous query.
+`start` gives a spark-sql-streaming-StreamingQuery.md[StreamingQuery] to control the execution of the continuous query.
 
 NOTE: Whether or not you have to specify `path` option depends on the streaming sink in use.
 
@@ -269,7 +269,7 @@ Internally, `start` branches off per `source`.
 | Name of active streaming query
 
 | [[checkpointLocation]] `checkpointLocation`
-| Directory for checkpointing (and to store query metadata like offsets before and after being processed, the link:spark-sql-streaming-StreamExecution.md#id[query id], etc.)
+| Directory for checkpointing (and to store query metadata like offsets before and after being processed, the spark-sql-streaming-StreamExecution.md#id[query id], etc.)
 |===
 
 `start` reports a `AnalysisException` when `source` is `hive`.
@@ -296,7 +296,7 @@ NOTE: Define options using <<option, option>> or <<options, options>> methods.
 foreach(writer: ForeachWriter[T]): DataStreamWriter[T]
 ----
 
-`foreach` sets the input link:spark-sql-streaming-ForeachWriter.md[ForeachWriter] to be in control of streaming writes.
+`foreach` sets the input spark-sql-streaming-ForeachWriter.md[ForeachWriter] to be in control of streaming writes.
 
 Internally, `foreach` sets the streaming output <<format, format>> as `foreach` and `foreachWriter` as the input `writer`.
 
@@ -348,7 +348,7 @@ The function that is used as the batch writer in the <<spark-sql-streaming-Forea
 
 | outputMode
 | <<spark-sql-streaming-OutputMode.md#Append, Append>>
-| [[outputMode-property]] link:spark-sql-streaming-OutputMode.md[OutputMode] of the streaming sink
+| [[outputMode-property]] spark-sql-streaming-OutputMode.md[OutputMode] of the streaming sink
 
 Set using <<outputMode, outputMode>> method.
 

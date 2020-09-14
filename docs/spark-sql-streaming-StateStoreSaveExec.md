@@ -19,9 +19,9 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>>, the 
 .StateStoreSaveExec and IncrementalExecution
 image::images/StateStoreSaveExec-IncrementalExecution.png[align="center"]
 
-NOTE: Unlike link:spark-sql-streaming-StateStoreRestoreExec.md[StateStoreRestoreExec] operator, `StateStoreSaveExec` takes <<outputMode, output mode>> and <<eventTimeWatermark, event time watermark>> when <<creating-instance, created>>.
+NOTE: Unlike spark-sql-streaming-StateStoreRestoreExec.md[StateStoreRestoreExec] operator, `StateStoreSaveExec` takes <<outputMode, output mode>> and <<eventTimeWatermark, event time watermark>> when <<creating-instance, created>>.
 
-When <<doExecute, executed>>, `StateStoreSaveExec` link:spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that manages the `StateStore`.
+When <<doExecute, executed>>, `StateStoreSaveExec` spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD to map over partitions] with `storeUpdateFunction` that manages the `StateStore`.
 
 .StateStoreSaveExec creates StateStoreRDD
 image::images/StateStoreSaveExec-StateStoreRDD.png[align="center"]
@@ -31,14 +31,14 @@ image::images/StateStoreSaveExec-StateStoreRDD-count.png[align="center"]
 
 [NOTE]
 ====
-The number of partitions of link:spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[StateStoreRDD] (and hence the number of Spark tasks) is what was defined for the <<child, child>> physical plan.
+The number of partitions of spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[StateStoreRDD] (and hence the number of Spark tasks) is what was defined for the <<child, child>> physical plan.
 
 There will be that many `StateStores` as there are partitions in `StateStoreRDD`.
 ====
 
 NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
 
-When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] (with `storeUpdateFunction` specific to the output mode).
+When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] (with `storeUpdateFunction` specific to the output mode).
 
 [[output]]
 The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
@@ -149,11 +149,11 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
-Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.md#metrics[metrics].
+Internally, `doExecute` initializes spark-sql-streaming-StateStoreWriter.md#metrics[metrics].
 
-NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should have happened when `IncrementalExecution` link:spark-sql-streaming-IncrementalExecution.md#preparations[had prepared a streaming aggregation for execution]).
+NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should have happened when `IncrementalExecution` spark-sql-streaming-IncrementalExecution.md#preparations[had prepared a streaming aggregation for execution]).
 
-`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+`doExecute` executes <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 
@@ -187,17 +187,17 @@ CAUTION: FIXME When is "Filtering state store on:" printed out?
 
 ---
 
-1. Uses link:spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData[watermarkPredicateForData] predicate to exclude matching rows and (like in <<doExecute-Complete, Complete>> output mode) link:spark-sql-streaming-StateStore.md#put[stores all the remaining rows] in `StateStore`.
+1. Uses spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData[watermarkPredicateForData] predicate to exclude matching rows and (like in <<doExecute-Complete, Complete>> output mode) spark-sql-streaming-StateStore.md#put[stores all the remaining rows] in `StateStore`.
 
 1. (like in <<doExecute-Complete, Complete>> output mode) While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
 
-1. link:spark-sql-streaming-StateStore.md#getRange[Takes all the rows] from `StateStore` and returns a `NextIterator` that:
+1. spark-sql-streaming-StateStore.md#getRange[Takes all the rows] from `StateStore` and returns a `NextIterator` that:
 
-* In `getNext`, finds the first row that matches <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForKeys, watermarkPredicateForKeys>> predicate, link:spark-sql-streaming-StateStore.md#remove[removes it] from `StateStore`, and returns it back.
+* In `getNext`, finds the first row that matches <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForKeys, watermarkPredicateForKeys>> predicate, spark-sql-streaming-StateStore.md#remove[removes it] from `StateStore`, and returns it back.
 +
 If no row was found, `getNext` also marks the iterator as finished.
 
-* In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, link:spark-sql-streaming-StateStore.md#commit[commits the updates] to `StateStore` followed by recording the time in <<commitTimeMs, commitTimeMs>> metric and link:spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[recording StateStore metrics].
+* In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, spark-sql-streaming-StateStore.md#commit[commits the updates] to `StateStore` followed by recording the time in <<commitTimeMs, commitTimeMs>> metric and spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[recording StateStore metrics].
 
 ==== [[doExecute-Complete]] Complete Output Mode
 
@@ -219,17 +219,17 @@ TIP: Refer to <<spark-sql-streaming-StateStoreSaveExec-Complete.md#, Demo: State
 
 ---
 
-1. link:spark-sql-streaming-StateStore.md#put[Stores all rows] (as `UnsafeRow`) in `StateStore`.
+1. spark-sql-streaming-StateStore.md#put[Stores all rows] (as `UnsafeRow`) in `StateStore`.
 
 1. While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
 
 1. Records `0` in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
 
-1. link:spark-sql-streaming-StateStore.md#commit[Commits the state updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
+1. spark-sql-streaming-StateStore.md#commit[Commits the state updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
 
-1. link:spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Records StateStore metrics].
+1. spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Records StateStore metrics].
 
-1. In the end, link:spark-sql-streaming-StateStore.md#iterator[takes all the rows stored] in `StateStore` and increments <<numOutputRows, numOutputRows>> metric.
+1. In the end, spark-sql-streaming-StateStore.md#iterator[takes all the rows stored] in `StateStore` and increments <<numOutputRows, numOutputRows>> metric.
 
 ==== [[doExecute-Update]] Update Output Mode
 
@@ -247,13 +247,13 @@ In `hasNext`, when rows are no longer available:
 
 1. Records the total time to iterate over all the rows in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
 
-1. link:spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark[removeKeysOlderThanWatermark] and records the time in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
+1. spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark[removeKeysOlderThanWatermark] and records the time in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
 
-1. link:spark-sql-streaming-StateStore.md#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
+1. spark-sql-streaming-StateStore.md#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
 
-1. link:spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Records StateStore metrics].
+1. spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Records StateStore metrics].
 
-In `next`, link:spark-sql-streaming-StateStore.md#put[stores a row] in `StateStore` and increments <<numOutputRows, numOutputRows>> and <<numUpdatedStateRows, numUpdatedStateRows>> metrics.
+In `next`, spark-sql-streaming-StateStore.md#put[stores a row] in `StateStore` and increments <<numOutputRows, numOutputRows>> and <<numUpdatedStateRows, numUpdatedStateRows>> metrics.
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 

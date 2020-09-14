@@ -356,7 +356,7 @@ In the end, `get` requests the `StateStoreProvider` to <<spark-sql-streaming-Sta
 startMaintenanceIfNeeded(): Unit
 ----
 
-`startMaintenanceIfNeeded` schedules <<MaintenanceTask, MaintenanceTask>> to start after and every link:spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.maintenanceInterval[spark.sql.streaming.stateStore.maintenanceInterval] (defaults to `60s`).
+`startMaintenanceIfNeeded` schedules <<MaintenanceTask, MaintenanceTask>> to start after and every spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.maintenanceInterval[spark.sql.streaming.stateStore.maintenanceInterval] (defaults to `60s`).
 
 NOTE: `startMaintenanceIfNeeded` does nothing when the maintenance task has already been started and is still running.
 
@@ -375,7 +375,7 @@ Internally, `doMaintenance` prints the following DEBUG message to the logs:
 Doing maintenance
 ```
 
-`doMaintenance` then requests every link:spark-sql-streaming-StateStoreProvider.md[StateStoreProvider] (registered in <<loadedProviders, loadedProviders>>) to link:spark-sql-streaming-StateStoreProvider.md#doMaintenance[do its own internal maintenance] (only when a `StateStoreProvider` <<verifyIfStoreInstanceActive, is still active>>).
+`doMaintenance` then requests every spark-sql-streaming-StateStoreProvider.md[StateStoreProvider] (registered in <<loadedProviders, loadedProviders>>) to spark-sql-streaming-StateStoreProvider.md#doMaintenance[do its own internal maintenance] (only when a `StateStoreProvider` <<verifyIfStoreInstanceActive, is still active>>).
 
 When a `StateStoreProvider` is <<verifyIfStoreInstanceActive, inactive>>, `doMaintenance` <<unload, removes it from the provider registry>> and prints the following INFO message to the logs:
 

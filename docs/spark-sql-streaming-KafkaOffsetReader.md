@@ -50,7 +50,7 @@ Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 
 `KafkaOffsetReader` takes the following to be created:
 
-* [[consumerStrategy]] link:spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy]
+* [[consumerStrategy]] spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy]
 * [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
 * [[readerOptions]] Options (as name-value pairs)
 * [[driverGroupIdPrefix]] Prefix of the group ID
@@ -90,7 +90,7 @@ fetchTopicPartitions(): Set[TopicPartition]
 
 CAUTION: FIXME
 
-NOTE: `fetchTopicPartitions` is used when `KafkaRelation` link:spark-sql-streaming-KafkaRelation.md#getPartitionOffsets[getPartitionOffsets].
+NOTE: `fetchTopicPartitions` is used when `KafkaRelation` spark-sql-streaming-KafkaRelation.md#getPartitionOffsets[getPartitionOffsets].
 
 === [[fetchEarliestOffsets]] Fetching Earliest Offsets -- `fetchEarliestOffsets` Method
 
@@ -102,7 +102,7 @@ fetchEarliestOffsets(newPartitions: Seq[TopicPartition]): Map[TopicPartition, Lo
 
 CAUTION: FIXME
 
-NOTE: `fetchEarliestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.md#rateLimit[rateLimit] and link:spark-sql-streaming-KafkaSource.md#getBatch[generates a DataFrame for a batch] (when new partitions have been assigned).
+NOTE: `fetchEarliestOffsets` is used when `KafkaSource` spark-sql-streaming-KafkaSource.md#rateLimit[rateLimit] and spark-sql-streaming-KafkaSource.md#getBatch[generates a DataFrame for a batch] (when new partitions have been assigned).
 
 === [[fetchLatestOffsets]] Fetching Latest Offsets -- `fetchLatestOffsets` Method
 
@@ -113,7 +113,7 @@ fetchLatestOffsets(): Map[TopicPartition, Long]
 
 CAUTION: FIXME
 
-NOTE: `fetchLatestOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.md#getOffset[gets offsets] or `initialPartitionOffsets` is link:spark-sql-streaming-KafkaSource.md#initialPartitionOffsets[initialized].
+NOTE: `fetchLatestOffsets` is used when `KafkaSource` spark-sql-streaming-KafkaSource.md#getOffset[gets offsets] or `initialPartitionOffsets` is spark-sql-streaming-KafkaSource.md#initialPartitionOffsets[initialized].
 
 === [[withRetriesWithoutInterrupt]] `withRetriesWithoutInterrupt` Internal Method
 
@@ -159,7 +159,7 @@ For every partition offset in the input `partitionOffsets`, `fetchSpecificOffset
 
 In the end, `fetchSpecificOffsets` creates a collection of Kafka's `TopicPartition` and `position` (using the <<consumer, Kafka Consumer>>).
 
-NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming-KafkaSource.md#fetchAndVerify[fetches and verifies initial partition offsets].
+NOTE: `fetchSpecificOffsets` is used when `KafkaSource` spark-sql-streaming-KafkaSource.md#fetchAndVerify[fetches and verifies initial partition offsets].
 
 === [[createConsumer]] Creating Kafka Consumer -- `createConsumer` Internal Method
 
@@ -168,7 +168,7 @@ NOTE: `fetchSpecificOffsets` is used when `KafkaSource` link:spark-sql-streaming
 createConsumer(): Consumer[Array[Byte], Array[Byte]]
 ----
 
-`createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to link:spark-sql-streaming-ConsumerStrategy.md#createConsumer[create a Kafka Consumer] with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
+`createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to spark-sql-streaming-ConsumerStrategy.md#createConsumer[create a Kafka Consumer] with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
 
 NOTE: `createConsumer` is used when `KafkaOffsetReader` is <<creating-instance, created>> (and initializes <<consumer, consumer>>) and <<resetConsumer, resetConsumer>>
 
@@ -236,7 +236,7 @@ NOTE: `stopConsumer` is used when...FIXME
 toString: String
 ----
 
-NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
+NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
 
 `toString`...FIXME
 

@@ -1,8 +1,8 @@
 == [[FileStreamSource]] FileStreamSource
 
-`FileStreamSource` is a link:spark-sql-streaming-Source.md[Source] that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
+`FileStreamSource` is a spark-sql-streaming-Source.md[Source] that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
 
-NOTE: It is used by link:spark-sql-datasource.md#createSource[DataSource.createSource] for `FileFormat`.
+NOTE: It is used by spark-sql-datasource.md#createSource[DataSource.createSource] for `FileFormat`.
 
 You can provide the <<schema, schema>> of the data and `dataFrameBuilder` - the function to build a `DataFrame` in <<getBatch, getBatch>> at instantiation time.
 
@@ -60,7 +60,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSource=TRACE
 ```
 
-Refer to link:spark-sql-streaming-logging.md[Logging].
+Refer to spark-sql-streaming-logging.md[Logging].
 ====
 
 === [[creating-instance]] Creating FileStreamSource Instance

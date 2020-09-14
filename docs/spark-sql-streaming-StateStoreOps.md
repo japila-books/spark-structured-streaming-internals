@@ -42,11 +42,11 @@ NOTE: `mapPartitionsWithStateStore` uses the <<dataRDD, enclosing RDD>> to acces
 
 NOTE: *Function Cleaning* is to clean a closure from unreferenced variables before it is serialized and sent to tasks. `SparkContext` reports a `SparkException` when the closure is not serializable.
 
-`mapPartitionsWithStateStore` then creates a (wrapper) function to link:spark-sql-streaming-StateStore.md#abort[abort] the `StateStore` if link:spark-sql-streaming-StateStore.md#hasCommitted[state updates had not been committed] before a task finished (which is to make sure that the `StateStore` has been link:spark-sql-streaming-StateStore.md#commit[committed] or link:spark-sql-streaming-StateStore.md##abort[aborted] in the end to follow the contract of `StateStore`).
+`mapPartitionsWithStateStore` then creates a (wrapper) function to spark-sql-streaming-StateStore.md#abort[abort] the `StateStore` if spark-sql-streaming-StateStore.md#hasCommitted[state updates had not been committed] before a task finished (which is to make sure that the `StateStore` has been spark-sql-streaming-StateStore.md#commit[committed] or spark-sql-streaming-StateStore.md##abort[aborted] in the end to follow the contract of `StateStore`).
 
 NOTE: `mapPartitionsWithStateStore` uses `TaskCompletionListener` to be notified when a task has finished.
 
-In the end, `mapPartitionsWithStateStore` creates a link:spark-sql-streaming-StateStoreRDD.md[StateStoreRDD] (with the wrapper function, `SessionState` and link:spark-sql-streaming-StateStoreCoordinatorRef.md[StateStoreCoordinatorRef]).
+In the end, `mapPartitionsWithStateStore` creates a spark-sql-streaming-StateStoreRDD.md[StateStoreRDD] (with the wrapper function, `SessionState` and spark-sql-streaming-StateStoreCoordinatorRef.md[StateStoreCoordinatorRef]).
 
 [NOTE]
 ====

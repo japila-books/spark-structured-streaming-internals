@@ -81,7 +81,7 @@ put(
   value: UnsafeRow): Unit
 ----
 
-NOTE: `put` is a part of link:spark-sql-streaming-StateStore.md#put[StateStore Contract] to...FIXME
+NOTE: `put` is a part of spark-sql-streaming-StateStore.md#put[StateStore Contract] to...FIXME
 
 `put` stores the copies of the key and value in <<mapToUpdate, mapToUpdate>> internal registry followed by <<writeUpdateToDeltaFile, writing them to a delta file>> (using <<tempDeltaFileStream, tempDeltaFileStream>>).
 

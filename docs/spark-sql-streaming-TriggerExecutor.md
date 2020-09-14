@@ -1,6 +1,6 @@
 == [[TriggerExecutor]] TriggerExecutor
 
-`TriggerExecutor` is the <<contract, interface>> for *trigger executors* that `StreamExecution` link:spark-sql-streaming-StreamExecution.md#runStream[uses to execute a batch runner].
+`TriggerExecutor` is the <<contract, interface>> for *trigger executors* that `StreamExecution` spark-sql-streaming-StreamExecution.md#runStream[uses to execute a batch runner].
 
 [[batchRunner]]
 NOTE: *Batch runner* is an executable code that is executed at regular intervals. It is also called a *trigger handler*.
@@ -16,7 +16,7 @@ trait TriggerExecutor {
 }
 ----
 
-NOTE: `StreamExecution` reports a `IllegalStateException` when link:spark-sql-streaming-StreamExecution.md#triggerExecutor[TriggerExecutor] is different from the <<available-implementations, two built-in implementations>>: `OneTimeExecutor`
+NOTE: `StreamExecution` reports a `IllegalStateException` when spark-sql-streaming-StreamExecution.md#triggerExecutor[TriggerExecutor] is different from the <<available-implementations, two built-in implementations>>: `OneTimeExecutor`
 or `ProcessingTimeExecutor`.
 
 [[available-implementations]]

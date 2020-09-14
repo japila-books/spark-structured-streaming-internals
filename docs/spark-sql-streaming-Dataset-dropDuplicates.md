@@ -9,7 +9,7 @@ dropDuplicates(col1: String, cols: String*): Dataset[T]
 
 `dropDuplicates` operator...FIXME
 
-NOTE: For a streaming Dataset, `dropDuplicates` will keep all data across triggers as intermediate state to drop duplicates rows. You can use link:spark-sql-streaming-Dataset-withWatermark.md[withWatermark] operator to limit how late the duplicate data can be and system will accordingly limit the state. In addition, too late data older than watermark will be dropped to avoid any possibility of duplicates.
+NOTE: For a streaming Dataset, `dropDuplicates` will keep all data across triggers as intermediate state to drop duplicates rows. You can use spark-sql-streaming-Dataset-withWatermark.md[withWatermark] operator to limit how late the duplicate data can be and system will accordingly limit the state. In addition, too late data older than watermark will be dropped to avoid any possibility of duplicates.
 
 [source, scala]
 ----

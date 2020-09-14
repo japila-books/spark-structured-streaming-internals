@@ -163,12 +163,12 @@ Default: `100`
 Use <<spark-sql-streaming-SQLConf.md#streamingProgressRetention, SQLConf.streamingProgressRetention>> to get the current value
 
 | spark.sql.streaming.pollingDelay
-a| [[spark.sql.streaming.pollingDelay]] *(internal)* How long (in millis) to delay `StreamExecution` before link:spark-sql-streaming-MicroBatchExecution.md#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch]
+a| [[spark.sql.streaming.pollingDelay]] *(internal)* How long (in millis) to delay `StreamExecution` before spark-sql-streaming-MicroBatchExecution.md#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch]
 
 Default: `10` (milliseconds)
 
 | spark.sql.streaming.stateStore.maintenanceInterval
-a| [[spark.sql.streaming.stateStore.maintenanceInterval]] The initial delay and how often to execute StateStore's link:spark-sql-streaming-StateStore.md#MaintenanceTask[maintenance task].
+a| [[spark.sql.streaming.stateStore.maintenanceInterval]] The initial delay and how often to execute StateStore's spark-sql-streaming-StateStore.md#MaintenanceTask[maintenance task].
 
 Default: `60s`
 
@@ -187,7 +187,7 @@ Default: <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedState
 Use <<spark-sql-streaming-SQLConf.md#stateStoreProviderClass, SQLConf.stateStoreProviderClass>> to get the current value.
 
 | spark.sql.streaming.unsupportedOperationCheck
-a| [[spark.sql.streaming.unsupportedOperationCheck]] *(internal)* When enabled (`true`), `StreamingQueryManager` link:spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[makes sure that the logical plan of a streaming query uses supported operations only].
+a| [[spark.sql.streaming.unsupportedOperationCheck]] *(internal)* When enabled (`true`), `StreamingQueryManager` spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[makes sure that the logical plan of a streaming query uses supported operations only].
 
 Default: `true`
 

@@ -9,7 +9,7 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` link:spark-sql-streaming-StreamingDeduplicationStrategy.md#apply[plans Deduplicate unary logical operators].
+`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` spark-sql-streaming-StreamingDeduplicationStrategy.md#apply[plans Deduplicate unary logical operators].
 
 .StreamingDeduplicateExec and StreamingDeduplicationStrategy
 image::images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png[align="center"]
@@ -172,7 +172,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.StreamingDeduplicateExec=INFO
 ```
 
-Refer to link:spark-sql-streaming-logging.md[Logging].
+Refer to spark-sql-streaming-logging.md[Logging].
 ====
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
@@ -184,9 +184,9 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
-Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.md#metrics[metrics].
+Internally, `doExecute` initializes spark-sql-streaming-StateStoreWriter.md#metrics[metrics].
 
-`doExecute` executes <<child, child>> physical operator and link:spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+`doExecute` executes <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 
@@ -196,7 +196,7 @@ Internally, `doExecute` initializes link:spark-sql-streaming-StateStoreWriter.md
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* link:spark-sql-streaming-StateStore.md#get[Gets the saved state] in `StateStore` for the key
+* spark-sql-streaming-StateStore.md#get[Gets the saved state] in `StateStore` for the key
 
 * (when there was a state for the key in the row) Filters out (aka _drops_) the row
 
@@ -208,17 +208,17 @@ The completion function does the following:
 
 * Updates <<allUpdatesTimeMs, allUpdatesTimeMs>> metric (that is the total time to execute `storeUpdateFunction`)
 
-* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to link:spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark[remove keys older than the watermark from the StateStore]
+* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark[remove keys older than the watermark from the StateStore]
 
-* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to link:spark-sql-streaming-StateStore.md#commit[commit the changes to the StateStore]
+* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to spark-sql-streaming-StateStore.md#commit[commit the changes to the StateStore]
 
-* link:spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Sets StateStore-specific metrics]
+* spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Sets StateStore-specific metrics]
 
 === [[creating-instance]] Creating StreamingDeduplicateExec Instance
 
 `StreamingDeduplicateExec` takes the following when created:
 
-* [[keyExpressions]] Duplicate keys (as used in link:spark-sql-streaming-Dataset-operators.md#dropDuplicates[dropDuplicates] operator)
+* [[keyExpressions]] Duplicate keys (as used in spark-sql-streaming-Dataset-operators.md#dropDuplicates[dropDuplicates] operator)
 * [[child]] Child physical operator (`SparkPlan`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
 * [[eventTimeWatermark]] Event-time watermark

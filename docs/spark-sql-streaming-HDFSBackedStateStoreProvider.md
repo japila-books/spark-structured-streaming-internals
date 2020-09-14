@@ -80,7 +80,7 @@ The <<stateStoreId, StateStoreId>> is then used for the following:
 toString: String
 ----
 
-NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
+NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
 
 `HDFSBackedStateStoreProvider` uses the <<stateStoreId, StateStoreId>> and the <<baseDir, state checkpoint base directory>> for the textual representation:
 

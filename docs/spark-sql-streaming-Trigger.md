@@ -1,6 +1,6 @@
 == [[Trigger]] Trigger -- How Frequently to Check Sources For New Data
 
-`Trigger` defines how often a link:spark-sql-streaming-StreamingQuery.md[streaming query] should be executed (_triggered_) and emit a new data (which `StreamExecution` uses to link:spark-sql-streaming-StreamExecution.md#triggerExecutor[resolve a TriggerExecutor]).
+`Trigger` defines how often a spark-sql-streaming-StreamingQuery.md[streaming query] should be executed (_triggered_) and emit a new data (which `StreamExecution` uses to spark-sql-streaming-StreamExecution.md#triggerExecutor[resolve a TriggerExecutor]).
 
 [[available-implementations]]
 [[available-triggers]]
@@ -93,7 +93,7 @@ scala> println(query.lastProgress)
 }
 ----
 
-NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` link:spark-sql-streaming-StreamExecution.md#triggerExecutor[refuses such attempts] and reports an `IllegalStateException`.
+NOTE: Although `Trigger` allows for custom implementations, `StreamExecution` spark-sql-streaming-StreamExecution.md#triggerExecutor[refuses such attempts] and reports an `IllegalStateException`.
 
 [source, scala]
 ----

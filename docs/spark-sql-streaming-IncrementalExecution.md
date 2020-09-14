@@ -31,7 +31,7 @@ Once <<creating-instance, created>>, `IncrementalExecution` is immediately execu
 
 * [[sparkSession]] `SparkSession`
 * [[logicalPlan]] Logical plan (`LogicalPlan`)
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, OutputMode>> (as specified using <<DataStreamWriter.md#outputMode, DataStreamWriter.outputMode>> method)
+* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, OutputMode>> (as specified using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode) method)
 * [[checkpointLocation]] <<state-checkpoint-location, State checkpoint location>>
 * [[runId]] Run ID of a streaming query (`UUID`)
 * [[currentBatchId]] Batch ID

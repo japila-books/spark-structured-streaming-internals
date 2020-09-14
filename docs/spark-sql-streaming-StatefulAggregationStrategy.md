@@ -25,8 +25,8 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Logical Operator
 | Physical Operator
 
-| link:spark-sql-streaming-EventTimeWatermark.md[EventTimeWatermark]
-a| [[EventTimeWatermark]] link:spark-sql-streaming-EventTimeWatermarkExec.md[EventTimeWatermarkExec]
+| spark-sql-streaming-EventTimeWatermark.md[EventTimeWatermark]
+a| [[EventTimeWatermark]] spark-sql-streaming-EventTimeWatermarkExec.md[EventTimeWatermarkExec]
 
 | `Aggregate`
 a| [[Aggregate]]
@@ -93,7 +93,7 @@ planStreamingAggregation(
 
 `planStreamingAggregation` takes the grouping attributes (from `groupingExpressions`).
 
-NOTE: `groupingExpressions` corresponds to the grouping function in link:spark-sql-streaming-Dataset-operators.md#groupBy[groupBy] operator.
+NOTE: `groupingExpressions` corresponds to the grouping function in spark-sql-streaming-Dataset-operators.md#groupBy[groupBy] operator.
 
 [[partialAggregate]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialAggregate`) with:
@@ -123,7 +123,7 @@ NOTE: `groupingExpressions` corresponds to the grouping function in link:spark-s
 * `child` operator as <<partialAggregate, partialAggregate>> aggregate physical operator created above
 
 [[restored]]
-`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreRestoreExec.md#creating-instance[StateStoreRestoreExec] with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
+`planStreamingAggregation` creates spark-sql-streaming-StateStoreRestoreExec.md#creating-instance[StateStoreRestoreExec] with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
 
 [[partialMerged2]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialMerged2`) with:
@@ -133,7 +133,7 @@ NOTE: `groupingExpressions` corresponds to the grouping function in link:spark-s
 NOTE: The only difference between <<partialMerged1, partialMerged1>> and <<partialMerged2, partialMerged2>> steps is the child physical operator.
 
 [[saved]]
-`planStreamingAggregation` creates link:spark-sql-streaming-StateStoreSaveExec.md#creating-instance[StateStoreSaveExec] with:
+`planStreamingAggregation` creates spark-sql-streaming-StateStoreSaveExec.md#creating-instance[StateStoreSaveExec] with:
 
 * the grouping attributes based on the input `groupingExpressions`
 * No `stateInfo`, `outputMode` and `eventTimeWatermark`
@@ -147,4 +147,4 @@ In the end, `planStreamingAggregation` creates the final aggregate physical oper
 * `functionsWithoutDistinct` in `Final` mode
 * `child` operator as <<saved, StateStoreSaveExec>> physical operator created above
 
-NOTE: `planStreamingAggregation` is used exclusively when `StatefulAggregationStrategy` link:spark-sql-streaming-StatefulAggregationStrategy.md#apply[plans a streaming aggregation].
+NOTE: `planStreamingAggregation` is used exclusively when `StatefulAggregationStrategy` spark-sql-streaming-StatefulAggregationStrategy.md#apply[plans a streaming aggregation].

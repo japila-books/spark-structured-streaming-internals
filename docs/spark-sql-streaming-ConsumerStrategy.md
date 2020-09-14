@@ -17,13 +17,13 @@ createConsumer(kafkaParams: java.util.Map[String, Object]): Consumer[Array[Byte]
 | createConsumer
 
 | [[AssignStrategy]] `AssignStrategy`
-| Uses link:++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#assign(java.util.Collection)++[KafkaConsumer.assign(Collection<TopicPartition> partitions)]
+| Uses ++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#assign(java.util.Collection)++[KafkaConsumer.assign(Collection<TopicPartition> partitions)]
 
 | [[SubscribeStrategy]] `SubscribeStrategy`
-| Uses link:++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe(java.util.Collection)++[KafkaConsumer.subscribe(Collection<String> topics)]
+| Uses ++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe(java.util.Collection)++[KafkaConsumer.subscribe(Collection<String> topics)]
 
 | [[SubscribePatternStrategy]] `SubscribePatternStrategy`
-a| Uses link:++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe(java.util.regex.Pattern,%20org.apache.kafka.clients.consumer.ConsumerRebalanceListener)++[KafkaConsumer.subscribe(Pattern pattern, ConsumerRebalanceListener listener)] with `NoOpConsumerRebalanceListener`.
+a| Uses ++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe(java.util.regex.Pattern,%20org.apache.kafka.clients.consumer.ConsumerRebalanceListener)++[KafkaConsumer.subscribe(Pattern pattern, ConsumerRebalanceListener listener)] with `NoOpConsumerRebalanceListener`.
 
 TIP: Refer to http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the format of supported topic subscription regex patterns.
 |===

@@ -12,7 +12,7 @@ Use `toDebugString` to see the batches.
 
 Its aim is to allow users to test streaming applications in the Spark shell or other local tests.
 
-You can set `checkpointLocation` using `option` method or it will be set to link:spark-sql-streaming-properties.md#spark-sql-streaming-properties.md[spark.sql.streaming.checkpointLocation] property.
+You can set `checkpointLocation` using `option` method or it will be set to spark-sql-streaming-properties.md#spark-sql-streaming-properties.md[spark.sql.streaming.checkpointLocation] property.
 
 If `spark.sql.streaming.checkpointLocation` is set, the code uses `$location/$queryName` directory.
 
@@ -22,11 +22,11 @@ NOTE: The directory is cleaned up at shutdown using `ShutdownHookManager.registe
 
 It creates `MemorySink` instance based on the schema of the DataFrame it operates on.
 
-It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created earlier and registers it as a temporary table (using link:spark-sql-dataframe.md#registerTempTable[DataFrame.registerTempTable] method).
+It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created earlier and registers it as a temporary table (using spark-sql-dataframe.md#registerTempTable[DataFrame.registerTempTable] method).
 
-NOTE: At this point you can query the table as if it were a regular non-streaming table using link:spark-sql-sqlcontext.md#sql[sql] method.
+NOTE: At this point you can query the table as if it were a regular non-streaming table using spark-sql-sqlcontext.md#sql[sql] method.
 
-A new link:spark-sql-streaming-StreamingQuery.md[StreamingQuery] is started (using link:spark-sql-streaming-StreamingQueryManager.md#startQuery[StreamingQueryManager.startQuery]) and returned.
+A new spark-sql-streaming-StreamingQuery.md[StreamingQuery] is started (using spark-sql-streaming-StreamingQueryManager.md#startQuery[StreamingQueryManager.startQuery]) and returned.
 
 [[logging]]
 [TIP]

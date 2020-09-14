@@ -149,7 +149,7 @@ a| [[status]]
 status: StreamingQueryStatus
 ----
 
-<<spark-sql-streaming-StreamingQueryStatus.md#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` link:spark-sql-streaming-ProgressReporter.md#currentStatus[has accumulated] being a `ProgressReporter` while running the streaming query)
+<<spark-sql-streaming-StreamingQueryStatus.md#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` spark-sql-streaming-ProgressReporter.md#currentStatus[has accumulated] being a `ProgressReporter` while running the streaming query)
 
 Used when...FIXME
 
@@ -174,6 +174,6 @@ If inactive, `StreamingQuery` may have transitioned into the state due to an `St
 
 `StreamingQuery` tracks current state of all the sources, i.e. `SourceStatus`, as `sourceStatuses`.
 
-There could only be a single link:spark-sql-streaming-Sink.md[Sink] for a `StreamingQuery` with many link:spark-sql-streaming-Source.md[Sources].
+There could only be a single spark-sql-streaming-Sink.md[Sink] for a `StreamingQuery` with many spark-sql-streaming-Source.md[Sources].
 
 `StreamingQuery` can be stopped by `stop` or an exception.

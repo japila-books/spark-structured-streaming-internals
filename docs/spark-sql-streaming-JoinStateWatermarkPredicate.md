@@ -65,7 +65,7 @@ NOTE: `JoinStateWatermarkPredicate` is a Scala *sealed trait* which means that a
 toString: String
 ----
 
-NOTE: `toString` is part of the link:++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
+NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
 
 `toString` uses the <<desc, desc>> and <<expr, expr>> for the string representation:
 

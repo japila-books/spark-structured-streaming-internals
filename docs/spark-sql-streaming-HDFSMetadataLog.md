@@ -118,7 +118,7 @@ Otherwise, when not found, `add` <<batchIdToPath, creates a metadata log file>> 
 getLatest(): Option[(Long, T)]
 ----
 
-NOTE: `getLatest` is a part of link:spark-sql-streaming-MetadataLog.md#getLatest[MetadataLog Contract] to retrieve the recently-committed batch id and the corresponding metadata if available in the metadata storage.
+NOTE: `getLatest` is a part of spark-sql-streaming-MetadataLog.md#getLatest[MetadataLog Contract] to retrieve the recently-committed batch id and the corresponding metadata if available in the metadata storage.
 
 `getLatest` requests the internal <<fileManager, FileManager>> for the files in <<metadataPath, metadata directory>> that match <<batchFilesFilter, batch file filter>>.
 

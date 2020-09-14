@@ -1,15 +1,14 @@
-== [[MicroBatchExecution]] MicroBatchExecution -- Stream Execution Engine of Micro-Batch Stream Processing
+# MicroBatchExecution &mdash; Stream Execution Engine of Micro-Batch Stream Processing
 
 `MicroBatchExecution` is the <<spark-sql-streaming-StreamExecution.md#, stream execution engine>> in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
-`MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to <<DataStreamWriter.md#start, start an execution of the streaming query>>) with the following:
+`MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)) with the following:
 
 * Any type of <<sink, sink>> but <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>
 
 * Any type of <<trigger, trigger>> but <<spark-sql-streaming-Trigger.md#ContinuousTrigger, ContinuousTrigger>>
 
-[source, scala]
-----
+```text
 import org.apache.spark.sql.streaming.Trigger
 val query = spark
   .readStream
@@ -32,7 +31,7 @@ assert(engine.isInstanceOf[StreamExecution])
 import org.apache.spark.sql.execution.streaming.MicroBatchExecution
 val microBatchEngine = engine.asInstanceOf[MicroBatchExecution]
 assert(microBatchEngine.trigger == Trigger.Once)
-----
+```
 
 Once <<creating-instance, created>>, `MicroBatchExecution` (as a <<spark-sql-streaming-StreamExecution.md#, stream execution engine>>) is requested to <<runActivatedStream, run an activated streaming query>>.
 

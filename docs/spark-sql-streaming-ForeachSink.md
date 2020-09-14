@@ -1,10 +1,11 @@
-== ForeachSink
+# ForeachSink
 
-`ForeachSink` is a typed link:spark-sql-streaming-Sink.md[streaming sink] that passes rows (of the type `T`) to link:spark-sql-streaming-ForeachWriter.md[ForeachWriter] (one record at a time per partition).
+`ForeachSink` is a typed [streaming sink](spark-sql-streaming-Sink.md) that passes rows (of the type `T`) to [ForeachWriter](spark-sql-streaming-ForeachWriter.md) (one record at a time per partition).
 
-NOTE: `ForeachSink` is assigned a `ForeachWriter` when `DataStreamWriter` is link:DataStreamWriter.md#start[started].
+!!! note
+    `ForeachSink` is assigned a `ForeachWriter` when `DataStreamWriter` is [started](DataStreamWriter.md#start).
 
-`ForeachSink` is used exclusively in link:DataStreamWriter.md#foreach[foreach] operator.
+`ForeachSink` is used exclusively in [foreach](DataStreamWriter.md#foreach) operator.
 
 [source, scala]
 ----
@@ -27,14 +28,14 @@ records.writeStream
   .start
 ----
 
-Internally, `addBatch` (the only method from the <<contract, Sink Contract>>) takes records from the input link:spark-sql-dataframe.md[DataFrame] (as `data`), transforms them to expected type `T` (of this `ForeachSink`) and (now as a link:spark-sql-dataset.md[Dataset]) link:spark-sql-dataset.md#foreachPartition[processes each partition].
+Internally, `addBatch` (the only method from the <<contract, Sink Contract>>) takes records from the input spark-sql-dataframe.md[DataFrame] (as `data`), transforms them to expected type `T` (of this `ForeachSink`) and (now as a spark-sql-dataset.md[Dataset]) spark-sql-dataset.md#foreachPartition[processes each partition].
 
 [source, scala]
 ----
 addBatch(batchId: Long, data: DataFrame): Unit
 ----
 
-`addBatch` then opens the constructor's link:spark-sql-streaming-ForeachWriter.md[ForeachWriter] (for the link:spark-taskscheduler-taskcontext.md#getPartitionId[current partition] and the input batch) and passes the records to process (one at a time per partition).
+`addBatch` then opens the constructor's spark-sql-streaming-ForeachWriter.md[ForeachWriter] (for the spark-taskscheduler-taskcontext.md#getPartitionId[current partition] and the input batch) and passes the records to process (one at a time per partition).
 
 CAUTION: FIXME Why does Spark track whether the writer failed or not? Why couldn't it `finally` and do `close`?
 
