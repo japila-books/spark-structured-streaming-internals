@@ -21,4 +21,4 @@ assert(query.isInstanceOf[StreamingQueryWrapper])
 [[stop]][[explainInternal]]
 `StreamingQueryWrapper` has the same <<spark-sql-streaming-StreamExecution.md#, StreamExecution>> API and simply passes all the method calls along to the underlying <<_streamingQuery, StreamExecution>>.
 
-`StreamingQueryWrapper` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start an execution of the streaming query>>).
+`StreamingQueryWrapper` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).

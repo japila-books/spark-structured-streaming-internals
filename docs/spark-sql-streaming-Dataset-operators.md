@@ -49,17 +49,6 @@ groupBy(
 
 Aggregates rows by zero, one or more columns
 
-## <span id="groupByKey"> groupByKey
-
-```scala
-groupByKey(
-  func: T => K): KeyValueGroupedDataset[K, T]
-```
-
-[groupByKey](spark-sql-streaming-Dataset-groupByKey.md)
-
-Aggregates rows by a typed grouping function (and creates a [KeyValueGroupedDataset](KeyValueGroupedDataset.md))
-
 ## <span id="join"> join
 
 ```scala
@@ -111,40 +100,3 @@ withWatermark(
 [withWatermark](spark-sql-streaming-Dataset-withWatermark.md)
 
 Defines a [streaming watermark](spark-sql-streaming-watermark.md) (on the given `eventTime` column with a delay threshold)
-
-## <span id="writeStream"> writeStream
-
-```scala
-writeStream: DataStreamWriter[T]
-```
-
-Creates a [DataStreamWriter](spark-sql-streaming-DataStreamWriter.md) for persisting the result of a streaming query to an external data system
-
-## Demo
-
-```text
-val rates = spark
-  .readStream
-  .format("rate")
-  .option("rowsPerSecond", 1)
-  .load
-
-// stream processing
-// replace [operator] with the operator of your choice
-rates.[operator]
-
-// output stream
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-import scala.concurrent.duration._
-val sq = rates
-  .writeStream
-  .format("console")
-  .option("truncate", false)
-  .trigger(Trigger.ProcessingTime(10.seconds))
-  .outputMode(OutputMode.Complete)
-  .queryName("rate-console")
-  .start
-
-// eventually...
-sq.stop
-```

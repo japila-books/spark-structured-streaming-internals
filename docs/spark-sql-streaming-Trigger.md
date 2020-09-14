@@ -45,7 +45,7 @@ Trigger ProcessingTime(String interval)
 
 |===
 
-NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.md#trigger[trigger] method.
+NOTE: You specify the trigger for a streaming query using ``DataStreamWriter``'s [trigger](DataStreamWriter.md#trigger) method.
 
 [source, scala]
 ----

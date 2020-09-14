@@ -2,9 +2,9 @@
 
 `ForeachSink` is a typed link:spark-sql-streaming-Sink.md[streaming sink] that passes rows (of the type `T`) to link:spark-sql-streaming-ForeachWriter.md[ForeachWriter] (one record at a time per partition).
 
-NOTE: `ForeachSink` is assigned a `ForeachWriter` when `DataStreamWriter` is link:spark-sql-streaming-DataStreamWriter.md#start[started].
+NOTE: `ForeachSink` is assigned a `ForeachWriter` when `DataStreamWriter` is link:DataStreamWriter.md#start[started].
 
-`ForeachSink` is used exclusively in link:spark-sql-streaming-DataStreamWriter.md#foreach[foreach] operator.
+`ForeachSink` is used exclusively in link:DataStreamWriter.md#foreach[foreach] operator.
 
 [source, scala]
 ----

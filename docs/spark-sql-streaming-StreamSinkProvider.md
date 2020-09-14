@@ -23,9 +23,9 @@ createSink(
   outputMode: OutputMode): Sink
 ----
 
-Creates a <<spark-sql-streaming-Sink.md#, streaming sink>>
+Creates a [streaming sink](spark-sql-streaming-Sink.md)
 
-Used exclusively when `DataSource` is requested for a <<spark-sql-streaming-DataSource.md#createSink, streaming sink>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start a streaming query>>)
+Used when `DataSource` is requested for a [streaming sink](spark-sql-streaming-DataSource.md#createSink) (when `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start))
 
 |===
 

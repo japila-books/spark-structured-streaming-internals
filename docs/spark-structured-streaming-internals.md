@@ -178,7 +178,7 @@ Please note that most of the stream processing operators you may also have used 
 
 Once you're satisfied with building a stream processing pipeline (using the APIs of [DataStreamReader](#DataStreamReader), [Dataset](spark-sql-streaming-Dataset-operators.md), `RelationalGroupedDataset` and `KeyValueGroupedDataset`), you should define how and when the result of the streaming query is persisted in (_sent out to_) an external data system using a [streaming sink](spark-sql-streaming-Sink.md).
 
-You should use [Dataset.writeStream](spark-sql-streaming-Dataset-operators.md#writeStream) method that simply creates a [DataStreamWriter](spark-sql-streaming-DataStreamWriter.md).
+You should use [Dataset.writeStream](spark-sql-streaming-Dataset-operators.md#writeStream) method that simply creates a [DataStreamWriter](DataStreamWriter.md).
 
 ```text
 // Not only is this a Dataset, but it is also streaming
@@ -190,7 +190,7 @@ import org.apache.spark.sql.streaming.DataStreamWriter
 assert(writer.isInstanceOf[DataStreamWriter[_]])
 ```
 
-The fluent API of `DataStreamWriter` allows you to describe the output data sink ([DataStreamWriter.format](spark-sql-streaming-DataStreamWriter.md#format) and [DataStreamWriter.options](spark-sql-streaming-DataStreamWriter.md#options)) using method chaining (with the goal of making the readability of the source code close to that of ordinary written prose, essentially creating a domain-specific language within the interface. See [Fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) article in Wikipedia).
+The fluent API of `DataStreamWriter` allows you to describe the output data sink ([DataStreamWriter.format](DataStreamWriter.md#format) and [DataStreamWriter.options](DataStreamWriter.md#options)) using method chaining (with the goal of making the readability of the source code close to that of ordinary written prose, essentially creating a domain-specific language within the interface. See [Fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) article in Wikipedia).
 
 ```text
 writer
@@ -198,19 +198,19 @@ writer
   .option("delimiter", "\t")
 ```
 
-Like in [DataStreamReader](#DataStreamReader) data source formats, there are a couple of built-in data sink formats. Unlike data source formats, their names do not have corresponding `DataStreamWriter` methods. The reason is that you will use [DataStreamWriter.start](spark-sql-streaming-DataStreamWriter.md#start) to create and immediately start a [StreamingQuery](spark-sql-streaming-StreamingQuery.md).
+Like in [DataStreamReader](#DataStreamReader) data source formats, there are a couple of built-in data sink formats. Unlike data source formats, their names do not have corresponding `DataStreamWriter` methods. The reason is that you will use [DataStreamWriter.start](DataStreamWriter.md#start) to create and immediately start a [StreamingQuery](spark-sql-streaming-StreamingQuery.md).
 
-There are however two special output formats that do have corresponding `DataStreamWriter` methods, i.e. [DataStreamWriter.foreach](spark-sql-streaming-DataStreamWriter.md#foreach) and [DataStreamWriter.foreachBatch](spark-sql-streaming-DataStreamWriter.md#foreachBatch), that allow for persisting query results to external data systems that do not have streaming sinks available. They give you a trade-off between developing a full-blown streaming sink and simply using the methods (that lay the basis of what a custom sink would have to do anyway).
+There are however two special output formats that do have corresponding `DataStreamWriter` methods, i.e. [DataStreamWriter.foreach](DataStreamWriter.md#foreach) and [DataStreamWriter.foreachBatch](DataStreamWriter.md#foreachBatch), that allow for persisting query results to external data systems that do not have streaming sinks available. They give you a trade-off between developing a full-blown streaming sink and simply using the methods (that lay the basis of what a custom sink would have to do anyway).
 
 `DataStreamWriter` API defines two new concepts (that are not available in the "base" Spark SQL):
 
-* [OutputMode](spark-sql-streaming-OutputMode.md) that you specify using [DataStreamWriter.outputMode](spark-sql-streaming-DataStreamWriter.md#outputMode) method
+* [OutputMode](spark-sql-streaming-OutputMode.md) that you specify using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode) method
 
-* [Trigger](spark-sql-streaming-Trigger.md) that you specify using [DataStreamWriter.trigger](spark-sql-streaming-DataStreamWriter.md#trigger) method
+* [Trigger](spark-sql-streaming-Trigger.md) that you specify using [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method
 
-You may also want to give a streaming query a name using [DataStreamWriter.queryName](spark-sql-streaming-DataStreamWriter.md#queryName) method.
+You may also want to give a streaming query a name using [DataStreamWriter.queryName](DataStreamWriter.md#queryName) method.
 
-In the end, you use [DataStreamWriter.start](spark-sql-streaming-DataStreamWriter.md#start) method to create and immediately start a [StreamingQuery](spark-sql-streaming-StreamingQuery.md).
+In the end, you use [DataStreamWriter.start](DataStreamWriter.md#start) method to create and immediately start a [StreamingQuery](spark-sql-streaming-StreamingQuery.md).
 
 ```text
 import org.apache.spark.sql.streaming.OutputMode
@@ -229,7 +229,7 @@ import org.apache.spark.sql.streaming.StreamingQuery
 assert(sq.isInstanceOf[StreamingQuery])
 ```
 
-When `DataStreamWriter` is requested to [start a streaming query](spark-sql-streaming-DataStreamWriter.md#start), it allows for the following data source formats:
+When `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start), it allows for the following data source formats:
 
 * **memory** with [MemorySinkV2](spark-sql-streaming-MemorySinkV2.md) (with [ContinuousTrigger](spark-sql-streaming-Trigger.md#ContinuousTrigger)) or [MemorySink](spark-sql-streaming-MemorySink.md)
 
@@ -251,7 +251,7 @@ With a streaming sink, `DataStreamWriter` requests the [StreamingQueryManager](#
 
 ## <span id="StreamingQuery"> StreamingQuery
 
-When a stream processing pipeline is started (using [DataStreamWriter.start](spark-sql-streaming-DataStreamWriter.md#start) method), `DataStreamWriter` creates a [StreamingQuery](spark-sql-streaming-StreamingQuery.md) and requests the [StreamingQueryManager](#StreamingQueryManager) to [start a streaming query](spark-sql-streaming-StreamingQueryManager.md#startQuery).
+When a stream processing pipeline is started (using [DataStreamWriter.start](DataStreamWriter.md#start) method), `DataStreamWriter` creates a [StreamingQuery](spark-sql-streaming-StreamingQuery.md) and requests the [StreamingQueryManager](#StreamingQueryManager) to [start a streaming query](spark-sql-streaming-StreamingQueryManager.md#startQuery).
 
 ## <span id="StreamingQueryManager"> StreamingQueryManager
 

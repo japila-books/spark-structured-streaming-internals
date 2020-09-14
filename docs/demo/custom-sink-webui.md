@@ -21,7 +21,7 @@ The steps are as follows:
 
 Findings (aka _surprises_):
 
-1. Custom sinks require that you define a checkpoint location using link:spark-sql-streaming-DataStreamWriter.md#checkpointLocation[checkpointLocation] option (or link:spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property). Remove the checkpoint directory (or use a different one every start of a streaming query) to have consistent results.
+1. Custom sinks require that you define a checkpoint location using [checkpointLocation](../DataStreamWriter.md#checkpointLocation) option (or link:spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property). Remove the checkpoint directory (or use a different one every start of a streaming query) to have consistent results.
 
 === [[DemoSink]] Creating Custom Sink -- DemoSink
 

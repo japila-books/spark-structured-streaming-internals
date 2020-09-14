@@ -7,7 +7,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 `KafkaSourceProvider` supports <<spark-sql-streaming-micro-batch-stream-processing.md#, micro-batch stream processing>> (through <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> contract) and <<createMicroBatchReader, creates a specialized KafkaMicroBatchReader>>.
 
-`KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.md#, DataStreamReader>> or <<spark-sql-streaming-DataStreamWriter.md#, DataStreamWriter>>):
+`KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.md#, DataStreamReader>> or <<DataStreamWriter.md#, DataStreamWriter>>):
 
 * Exactly one of the following options: <<spark-sql-streaming-kafka-data-source.md#subscribe, subscribe>>, <<spark-sql-streaming-kafka-data-source.md#subscribePattern, subscribePattern>> or <<spark-sql-streaming-kafka-data-source.md#assign, assign>>
 

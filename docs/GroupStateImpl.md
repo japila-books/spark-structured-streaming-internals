@@ -1,4 +1,4 @@
-== [[GroupStateImpl]] GroupStateImpl
+# GroupStateImpl
 
 `GroupStateImpl` is the default and only known [GroupState](GroupState.md) in Spark Structured Streaming.
 

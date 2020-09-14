@@ -11,7 +11,7 @@ There are three available output modes:
 
 * <<Update, Update>>
 
-The output mode is specified on the _writing side_ of a streaming query using <<spark-sql-streaming-DataStreamWriter.md#outputMode, DataStreamWriter.outputMode>> method (by alias or a value of `org.apache.spark.sql.streaming.OutputMode` object).
+The output mode is specified on the _writing side_ of a streaming query using <<DataStreamWriter.md#outputMode, DataStreamWriter.outputMode>> method (by alias or a value of `org.apache.spark.sql.streaming.OutputMode` object).
 
 [source, scala]
 ----
@@ -28,7 +28,7 @@ val inputStream = spark
 
 === [[Append]] Append Output Mode
 
-*Append* (alias: *append*) is the <<spark-sql-streaming-DataStreamWriter.md#outputMode, default output mode>> that writes "new" rows only.
+*Append* (alias: *append*) is the <<DataStreamWriter.md#outputMode, default output mode>> that writes "new" rows only.
 
 In <<spark-sql-streaming-aggregation.md#, streaming aggregations>>, a "new" row is when the intermediate state becomes final, i.e. when new events for the grouping key can only be considered late which is when watermark moves past the event time of the key.
 

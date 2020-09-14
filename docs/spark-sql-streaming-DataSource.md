@@ -116,7 +116,7 @@ Data source [className] does not support [outputMode] output mode
 Data source [className] does not support streamed writing
 ```
 
-NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start a streaming query>>.
+NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start).
 
 === [[internal-properties]] Internal Properties
 

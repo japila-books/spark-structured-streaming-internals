@@ -33,13 +33,13 @@ Memory Data Source is *not* for production use due to design contraints, e.g. in
 
 === [[memory-sink]] Memory Sink
 
-Memory sink requires that a streaming query has a name (defined using <<spark-sql-streaming-DataStreamWriter.md#queryName, DataStreamWriter.queryName>> or `queryName` option).
+Memory sink requires that a streaming query has a name (defined using <<DataStreamWriter.md#queryName, DataStreamWriter.queryName>> or `queryName` option).
 
 Memory sink may optionally define checkpoint location using `checkpointLocation` option that is used to recover from for <<spark-sql-streaming-OutputMode.md#Complete, Complete>> output mode only.
 
 === Memory Sink and CreateViewCommand
 
-When a streaming query with `memory` sink is <<spark-sql-streaming-DataStreamWriter.md#start, started>>, <<spark-sql-streaming-DataStreamWriter.md#, DataStreamWriter>> uses `Dataset.createOrReplaceTempView` operator to create or replace a local temporary view with the name of the query (which is required).
+When a streaming query with `memory` sink is <<DataStreamWriter.md#start, started>>, <<DataStreamWriter.md#, DataStreamWriter>> uses `Dataset.createOrReplaceTempView` operator to create or replace a local temporary view with the name of the query (which is required).
 
 .Memory Sink and CreateViewCommand
 image::images/memory-sink-webui-createviewcommand.png[align="center"]

@@ -151,20 +151,21 @@ nav:
         - StateManagerImplV1: spark-sql-streaming-StateManagerImplV1.md
       - FlatMapGroupsWithStateExecHelper Helper Class: spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md
       - InputProcessor: InputProcessor.md
+    - Streaming Operators:
+      - Streaming Operators: spark-sql-streaming-Dataset-operators.md
+      - dropDuplicates: spark-sql-streaming-Dataset-dropDuplicates.md
+      - explain: spark-sql-streaming-Dataset-explain.md
+      - groupBy: spark-sql-streaming-Dataset-groupBy.md
+      - groupByKey: operators/groupByKey.md
+      - withWatermark: spark-sql-streaming-Dataset-withWatermark.md
+      - writeStream: operators/writeStream.md
     - Developing Streaming Applications:
       - DataStreamReader: spark-sql-streaming-DataStreamReader.md
       - DataStreamWriter:
-        - DataStreamWriter: spark-sql-streaming-DataStreamWriter.md
+        - DataStreamWriter: DataStreamWriter.md
         - OutputMode: spark-sql-streaming-OutputMode.md
         - Trigger: spark-sql-streaming-Trigger.md
       - StreamingQuery: spark-sql-streaming-StreamingQuery.md
-      - Streaming Operators:
-        - Streaming Operators: spark-sql-streaming-Dataset-operators.md
-        - dropDuplicates Operator: spark-sql-streaming-Dataset-dropDuplicates.md
-        - explain Operator: spark-sql-streaming-Dataset-explain.md
-        - groupBy Operator: spark-sql-streaming-Dataset-groupBy.md
-        - groupByKey Operator: spark-sql-streaming-Dataset-groupByKey.md
-        - withWatermark Operator: spark-sql-streaming-Dataset-withWatermark.md
       - window Function: spark-sql-streaming-window.md
       - StreamingQueryManager: spark-sql-streaming-StreamingQueryManager.md
       - SQLConf: spark-sql-streaming-SQLConf.md

@@ -1,4 +1,4 @@
-== [[GroupState]] GroupState -- Group State in Arbitrary Stateful Streaming Aggregation
+# GroupState -- Group State in Arbitrary Stateful Streaming Aggregation
 
 `GroupState` is an <<contract, abstraction>> of <<implementations, group state>> (of type `S`) in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
 

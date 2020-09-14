@@ -18,7 +18,7 @@ onQueryStarted(
   event: QueryStartedEvent): Unit
 ----
 
-Informs that `DataStreamWriter` was requested to <<spark-sql-streaming-DataStreamWriter.md#start, start execution of the streaming query>> (on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
+Informs that `DataStreamWriter` was requested to <<DataStreamWriter.md#start, start execution of the streaming query>> (on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
 
 | onQueryProgress
 a| [[onQueryProgress]]
@@ -61,7 +61,7 @@ a| QueryStartedEvent
 - <<spark-sql-streaming-StreamingQuery.md#name, name>>
 
 | <<onQueryStarted, onQueryStarted>>
-| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start execution of the streaming query>> on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
+| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (when `DataStreamWriter` is requested to <<DataStreamWriter.md#start, start execution of the streaming query>> on the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>>)
 
 a| QueryProgressEvent
 

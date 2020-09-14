@@ -250,9 +250,9 @@ In the end, `createQuery` creates a link:spark-sql-streaming-StreamingQueryWrapp
 * all other sinks have the flag always enabled
 ====
 
-NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s link:spark-sql-streaming-DataStreamWriter.md#queryName[queryName] method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
+NOTE: `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s [queryName](DataStreamWriter.md#queryName) method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 
-NOTE: `createQuery` is used exclusively when `StreamingQueryManager` is requested to <<startQuery, start a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start an execution of a streaming query>>).
+NOTE: `createQuery` is used when `StreamingQueryManager` is requested to [start a streaming query](#startQuery) (when `DataStreamWriter` is requested to [start an execution of a streaming query](DataStreamWriter.md#start)).
 
 === [[startQuery]] Starting Streaming Query Execution -- `startQuery` Internal Method
 
@@ -292,7 +292,7 @@ Cannot start query with name [name] as a query with that name is already active
 Cannot start query with id [id] as another query with same id is already active. Perhaps you are attempting to restart a query from checkpoint that is already active.
 ----
 
-NOTE: `startQuery` is used exclusively when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start an execution of the streaming query>>.
+NOTE: `startQuery` is used exclusively when `DataStreamWriter` is requested to <<DataStreamWriter.md#start, start an execution of the streaming query>>.
 
 === [[postListenerEvent]] Posting StreamingQueryListener Event to StreamingQueryListenerBus -- `postListenerEvent` Internal Method
 

@@ -101,7 +101,7 @@ org.apache.spark.sql.execution.streaming.StreamExecution
 .Creating Instance of StreamExecution
 image::images/StreamExecution-creating-instance.png[align="center"]
 
-NOTE: link:spark-sql-streaming-DataStreamWriter.md[DataStreamWriter] describes how the results of executing batches of a streaming query are written to a streaming sink.
+NOTE: link:DataStreamWriter.md[DataStreamWriter] describes how the results of executing batches of a streaming query are written to a streaming sink.
 
 When <<start, started>>, `StreamExecution` starts a <<queryExecutionThread, stream execution thread>> that simply <<runStream, runs stream processing>> (and hence the streaming query).
 
@@ -514,7 +514,7 @@ runStream(): Unit
 
 `runStream` simply prepares the environment to <<runActivatedStream, execute the activated streaming query>>.
 
-NOTE: `runStream` is used exclusively when the <<queryExecutionThread, stream execution thread>> is requested to <<start, start>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start an execution of the streaming query>>).
+NOTE: `runStream` is used exclusively when the <<queryExecutionThread, stream execution thread>> is requested to <<start, start>> (when `DataStreamWriter` is requested to <<DataStreamWriter.md#start, start an execution of the streaming query>>).
 
 Internally, `runStream` sets the job group (to all the Spark jobs started by this thread) as follows:
 
@@ -692,7 +692,7 @@ NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
 In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` is requested to <<runStream, run the streaming query>> that in turn sends a <<spark-sql-streaming-StreamingQueryListener.md#QueryStartedEvent, QueryStartedEvent>> to all streaming listeners followed by decrementing the count of the <<startLatch, startLatch>>).
 
-NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#startQuery, start a streaming query>> (when `DataStreamWriter` is requested to <<spark-sql-streaming-DataStreamWriter.md#start, start an execution of the streaming query>>).
+NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#startQuery, start a streaming query>> (when `DataStreamWriter` is requested to <<DataStreamWriter.md#start, start an execution of the streaming query>>).
 
 === [[checkpointFile]] Path to Checkpoint Directory -- `checkpointFile` Internal Method
 
