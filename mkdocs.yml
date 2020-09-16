@@ -57,6 +57,7 @@ plugins:
       minify_html: true
   - git-revision-date-localized
   - awesome-pages
+  - macros
 
 extra:
   social:
@@ -66,6 +67,8 @@ extra:
       link: https://twitter.com/jaceklaskowski
     - icon: fontawesome/brands/linkedin
       link: https://linkedin.com/in/jaceklaskowski
+  spark:
+    version: 3.0.1
 
 google_analytics:
   - !!python/object/apply:os.getenv ["GOOGLE_ANALYTICS_KEY"]
@@ -73,7 +76,7 @@ google_analytics:
 
 nav:
   - Home:
-    - index.md
+    - Welcome: index.md
     - Spark Structured Streaming and Streaming Queries: spark-structured-streaming.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md

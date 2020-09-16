@@ -53,7 +53,7 @@ At <<spark-sql-streaming-IncrementalExecution.md#executedPlan, query planning>>,
 
 Use the following demo application to learn more:
 
-* https://github.com/jaceklaskowski/spark-structured-streaming-book/tree/v{{book.version}}/examples/src/main/scala/pl/japila/spark/StreamStreamJoinApp.scala[StreamStreamJoinApp]
+* https://github.com/jaceklaskowski/spark-structured-streaming-book/tree/v{{spark.version}}/examples/src/main/scala/pl/japila/spark/StreamStreamJoinApp.scala[StreamStreamJoinApp]
 
 === [[i-want-more]] Further Reading Or Watching
 

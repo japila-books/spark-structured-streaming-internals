@@ -4,7 +4,7 @@ The following demo shows the behaviour and the internals of <<spark-sql-streamin
 
 The demo also shows the behaviour and the internals of <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator in <<spark-sql-streaming-StateStoreSaveExec.md#doExecute-Append, Append output mode>>.
 
-TIP: The below code is part of https://github.com/jaceklaskowski/spark-structured-streaming-book/blob/v{{ book.version }}/examples/src/main/scala/pl/japila/spark/StreamingAggregationAppendMode.scala[StreamingAggregationAppendMode] streaming application.
+TIP: The below code is part of https://github.com/jaceklaskowski/spark-structured-streaming-book/blob/v{{ spark.version }}/examples/src/main/scala/pl/japila/spark/StreamingAggregationAppendMode.scala[StreamingAggregationAppendMode] streaming application.
 
 [source, scala]
 ----

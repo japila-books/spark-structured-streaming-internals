@@ -4,3 +4,4 @@ mkdocs-minify-plugin>=0.3.0
 mkdocs-git-revision-date-localized-plugin>=0.7
 mkdocs-awesome-pages-plugin>=2.2.1
 mkdocs-redirects>=1.0.1
+mkdocs-macros-plugin

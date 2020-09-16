@@ -1,4 +1,4 @@
-# The Internals of Spark Structured Streaming (Apache Spark 3.0.1)
+# The Internals of Spark Structured Streaming (Apache Spark {{ spark.version }})
 
 Welcome to **The Internals of Spark Structured Streaming** online book!
 

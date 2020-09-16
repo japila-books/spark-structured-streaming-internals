@@ -11,16 +11,16 @@ Kafka Data Source is part of the *spark-sql-kafka-0-10* external module that is 
 You should define `spark-sql-kafka-0-10` module as part of the build definition in your Spark project, e.g. as a `libraryDependency` in `build.sbt` for sbt:
 
 ```
-libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ book.version }}"
+libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ spark.version }}"
 ```
 
 For Spark environments like `spark-submit` (and "derivatives" like `spark-shell`), you should use `--packages` command-line option:
 
 ```
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ book.version }}
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ spark.version }}
 ```
 
-NOTE: Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ book.version }}` above) with one of the available versions found at https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12[The Central Repository's Search] that matches your version of Apache Spark.
+NOTE: Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ spark.version }}` above) with one of the available versions found at https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12[The Central Repository's Search] that matches your version of Apache Spark.
 
 === [[streaming-source]] Streaming Source
 
