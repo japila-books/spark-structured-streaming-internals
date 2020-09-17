@@ -1,6 +1,6 @@
-== [[StreamingRelation]] StreamingRelation Leaf Logical Operator for Streaming Source
+# StreamingRelation Leaf Logical Operator for Streaming Source
 
-`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a spark-sql-streaming-Source.md[streaming source] in a logical plan.
+`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a [streaming source](Source.md) in a logical plan.
 
 `StreamingRelation` is <<creating-instance, created>> when `DataStreamReader` is requested to spark-sql-streaming-DataStreamReader.md#load[load data from a streaming source] and creates a streaming `Dataset`.
 

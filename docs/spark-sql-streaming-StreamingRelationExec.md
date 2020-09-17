@@ -1,4 +1,4 @@
-== [[StreamingRelationExec]] StreamingRelationExec Leaf Physical Operator
+# StreamingRelationExec Leaf Physical Operator
 
 `StreamingRelationExec` is a leaf physical operator (i.e. `LeafExecNode`) that...FIXME
 
@@ -31,5 +31,5 @@ StreamingRelation rate, [timestamp#0, value#1L]
 
 `StreamingRelationExec` takes the following when created:
 
-* [[sourceName]] The name of a spark-sql-streaming-Source.md[streaming data source]
+* [[sourceName]] The name of a [streaming source](Source.md)
 * [[output]] Output attributes

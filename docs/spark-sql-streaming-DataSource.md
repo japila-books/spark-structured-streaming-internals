@@ -30,7 +30,7 @@ NOTE: `sourceSchema` is used exclusively when `DataSource` is requested for the 
 
 ==== [[sourceSchema-StreamSourceProvider]] StreamSourceProvider
 
-For a <<spark-sql-streaming-StreamSourceProvider.md#, StreamSourceProvider>>, `sourceSchema` requests the `StreamSourceProvider` for the <<spark-sql-streaming-StreamSourceProvider.md#sourceSchema, name and schema>> (of the <<spark-sql-streaming-Source.md#, streaming source>>).
+For a [StreamSourceProvider](StreamSourceProvider.md), `sourceSchema` requests the `StreamSourceProvider` for the [name and schema](StreamSourceProvider.md#sourceSchema) (of the [streaming source](Source.md)).
 
 In the end, `sourceSchema` returns the name and the schema as part of `SourceInfo` (with partition columns unspecified).
 
@@ -60,7 +60,7 @@ NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested
 
 ==== [[createSource-StreamSourceProvider]] StreamSourceProvider
 
-For a <<spark-sql-streaming-StreamSourceProvider.md#, StreamSourceProvider>>, `createSource` requests the `StreamSourceProvider` to <<spark-sql-streaming-StreamSourceProvider.md#createSource, create a source>>.
+For a [StreamSourceProvider](StreamSourceProvider.md), `createSource` requests the `StreamSourceProvider` to [create a source](StreamSourceProvider.md#createSource).
 
 ==== [[createSource-FileFormat]] FileFormat
 
@@ -136,7 +136,7 @@ a| [[sourceInfo]]
 sourceInfo: SourceInfo
 ----
 
-Metadata of a <<spark-sql-streaming-Source.md#, Source>> with the alias (short name), the schema, and optional partitioning columns
+Metadata of a [Source](Source.md) with the alias (short name), the schema, and optional partitioning columns
 
 `sourceInfo` is a lazy value and so initialized once (the very first time) when accessed.
 

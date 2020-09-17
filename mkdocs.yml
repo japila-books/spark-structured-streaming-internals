@@ -239,8 +239,8 @@ nav:
         - MicroBatchReader: spark-sql-streaming-MicroBatchReader.md
       - WatermarkTracker: spark-sql-streaming-WatermarkTracker.md
       - Source:
-        - Source: spark-sql-streaming-Source.md
-        - StreamSourceProvider: spark-sql-streaming-StreamSourceProvider.md
+        - Source: Source.md
+        - StreamSourceProvider: StreamSourceProvider.md
       - Sink:
         - Sink: spark-sql-streaming-Sink.md
         - StreamSinkProvider: spark-sql-streaming-StreamSinkProvider.md

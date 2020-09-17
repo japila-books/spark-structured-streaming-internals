@@ -39,7 +39,7 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 Once <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>, the query execution goes through the following *execution phases* every trigger:
 
 . [[triggerExecution]] <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution>>
-. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getOffset, getOffset>> for <<spark-sql-streaming-Source.md#, Sources>> or <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-setOffsetRange, setOffsetRange>> for <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReaders>>
+. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getOffset, getOffset>> for [Sources](Source.md) or <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-setOffsetRange, setOffsetRange>> for <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReaders>>
 . <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getEndOffset, getEndOffset>>
 . <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit, walCommit>>
 . <<spark-sql-streaming-MicroBatchExecution.md#runBatch-getBatch, getBatch>>

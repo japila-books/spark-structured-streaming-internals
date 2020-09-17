@@ -1,6 +1,6 @@
-== [[RateStreamSource]] RateStreamSource
+# RateStreamSource
 
-`RateStreamSource` is a spark-sql-streaming-Source.md[streaming source] that generates <<schema, consecutive numbers with timestamp>> that can be useful for testing and PoCs.
+`RateStreamSource` is a [streaming source](Source.md) that generates <<schema, consecutive numbers with timestamp>> that can be useful for testing and PoCs.
 
 `RateStreamSource` <<creating-instance, is created>> for *rate* format (that is registered by spark-sql-streaming-RateSourceProvider.md[RateSourceProvider]).
 
@@ -96,17 +96,6 @@ log4j.logger.org.apache.spark.sql.execution.streaming.RateStreamSource=DEBUG
 Refer to spark-sql-streaming-logging.md[Logging].
 ====
 
-=== [[getOffset]] Getting Maximum Available Offsets -- `getOffset` Method
-
-[source, scala]
-----
-getOffset: Option[Offset]
-----
-
-NOTE: `getOffset` is a part of the spark-sql-streaming-Source.md#getOffset[Source Contract].
-
-CAUTION: FIXME
-
 === [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method
 
 [source, scala]
@@ -114,7 +103,7 @@ CAUTION: FIXME
 getBatch(start: Option[Offset], end: Offset): DataFrame
 ----
 
-NOTE: `getBatch` is a part of spark-sql-streaming-Source.md#getBatch[Source Contract].
+`getBatch` is a part of the [Source](Source.md#getBatch) abstraction.
 
 Internally, `getBatch` calculates the seconds to start from and end at (from the input `start` and `end` offsets) or assumes `0`.
 
@@ -122,7 +111,7 @@ Internally, `getBatch` calculates the seconds to start from and end at (from the
 
 You should see the following DEBUG message in the logs:
 
-```
+```text
 DEBUG RateStreamSource: startSeconds: [startSeconds], endSeconds: [endSeconds], rangeStart: [rangeStart], rangeEnd: [rangeEnd]
 ```
 

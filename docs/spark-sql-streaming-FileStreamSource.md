@@ -1,6 +1,6 @@
-== [[FileStreamSource]] FileStreamSource
+# FileStreamSource
 
-`FileStreamSource` is a spark-sql-streaming-Source.md[Source] that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
+`FileStreamSource` is a [Source](Source.md) that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
 
 NOTE: It is used by spark-sql-datasource.md#createSource[DataSource.createSource] for `FileFormat`.
 
@@ -92,8 +92,6 @@ NOTE: *text* as the value of `providerName` constructor parameter denotes *text 
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is part of the <<spark-sql-streaming-Source.md#getOffset, Source Contract>> to find the latest <<spark-sql-streaming-Offset.md#, offset>>.
-
 `getOffset`...FIXME
 
 The maximum offset (`getOffset`) is calculated by fetching all the files in `path` excluding files that start with `_` (underscore).
@@ -113,6 +111,8 @@ new file: $file
 // or
 old file: $file
 ```
+
+`getOffset` is part of the [Source](Source.md#getOffset) abstraction.
 
 === [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method
 

@@ -49,7 +49,7 @@ With <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-shouldConst
 Committed offsets for batch [currentBatchId]. Metadata [offsetSeqMetadata]
 ----
 
-When <<spark-sql-streaming-MicroBatchExecution.md#runBatch, running a single streaming micro-batch>>, `MicroBatchExecution` requests every <<spark-sql-streaming-Source.md#, Source>> and <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> (in the <<spark-sql-streaming-StreamExecution.md#availableOffsets, availableOffsets>> registry) for unprocessed data (that has not been <<spark-sql-streaming-StreamExecution.md#committedOffsets, committed>> yet and so considered unprocessed).
+When <<spark-sql-streaming-MicroBatchExecution.md#runBatch, running a single streaming micro-batch>>, `MicroBatchExecution` requests every [Source](Source.md) and <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> (in the <<spark-sql-streaming-StreamExecution.md#availableOffsets, availableOffsets>> registry) for unprocessed data (that has not been <<spark-sql-streaming-StreamExecution.md#committedOffsets, committed>> yet and so considered unprocessed).
 
 In the end (of <<spark-sql-streaming-MicroBatchExecution.md#runBatch, running a single streaming micro-batch>>), `MicroBatchExecution` commits (<<spark-sql-streaming-HDFSMetadataLog.md#add, adds>>) the available offsets (to the <<committedOffsets, committedOffsets>> registry) so they are considered processed already.
 

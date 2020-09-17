@@ -74,7 +74,7 @@ NOTE: `StreamExecution` does not support adaptive query execution and cost-based
 
 `StreamExecution` is the *execution environment* of a spark-sql-streaming-StreamingQuery.md[single streaming query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<spark-sql-streaming-MicroBatchExecution.md#runBatch-addBatch, adds the results to a sink>>.
 
-NOTE: `StreamExecution` corresponds to a spark-sql-streaming-StreamingQuery.md[single streaming query] with one or more spark-sql-streaming-Source.md[streaming sources] and exactly one spark-sql-streaming-Sink.md[streaming sink].
+NOTE: `StreamExecution` corresponds to a spark-sql-streaming-StreamingQuery.md[single streaming query] with one or more [streaming sources](Source.md) and exactly one spark-sql-streaming-Sink.md[streaming sink].
 
 [source, scala]
 ----

@@ -77,7 +77,7 @@ createSource(
   parameters: Map[String, String]): Source
 ----
 
-NOTE: `createSource` is part of the <<spark-sql-streaming-StreamSourceProvider.md#createSource, StreamSourceProvider Contract>> to create a <<spark-sql-streaming-Source.md#, streaming source>> for a format or system (to continually read data).
+`createSource` is part of the [StreamSourceProvider](StreamSourceProvider.md#createSource) abstraction.
 
 `createSource` first <<validateStreamOptions, validates stream options>>.
 
@@ -204,17 +204,17 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ----
 
-NOTE: `sourceSchema` is part of the <<spark-sql-streaming-StreamSourceProvider.md#sourceSchema, StreamSourceProvider Contract>> to describe a <<spark-sql-streaming-Source.md#, streaming source>> with a name and the schema.
-
 `sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the spark-sql-streaming-KafkaOffsetReader.md#kafkaSchema[fixed schema].
 
 Internally, `sourceSchema` <<validateStreamOptions, validates Kafka options>> and makes sure that the optional input `schema` is indeed undefined.
 
 When the input `schema` is defined, `sourceSchema` reports a `IllegalArgumentException`.
 
-```
+```text
 Kafka source has a fixed schema and cannot be set with a custom one
 ```
+
+`sourceSchema` is part of the [StreamSourceProvider](StreamSourceProvider.md#sourceSchema) abstraction.
 
 === [[validateStreamOptions]] Validating Kafka Options for Streaming Queries -- `validateStreamOptions` Internal Method
 

@@ -45,7 +45,7 @@ Used when:
 | <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>>
 | [[MicroBatchReader]] Data source readers in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V2)
 
-| <<spark-sql-streaming-Source.md#, Source>>
+| [Source](Source.md)
 | [[Source]] Streaming sources for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
 
 |===

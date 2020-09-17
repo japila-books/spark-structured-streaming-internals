@@ -11,7 +11,7 @@ The page is to keep notes about how to guide readers through the codebase and ma
 
 ## <span id="DataStreamReader"> DataStreamReader and Streaming Data Source
 
-It all starts with `SparkSession.readStream` method which lets you define a [streaming source](spark-sql-streaming-Source.md) in a **stream processing pipeline** (_streaming processing graph_ or _dataflow graph_).
+It all starts with `SparkSession.readStream` method which lets you define a [streaming source](Source.md) in a **stream processing pipeline** (_streaming processing graph_ or _dataflow graph_).
 
 ```scala
 import org.apache.spark.sql.SparkSession

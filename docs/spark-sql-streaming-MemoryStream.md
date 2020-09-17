@@ -55,7 +55,7 @@ In the end, `addData` increments the <<currentOffset, current offset>> and adds 
 
 === [[getBatch]] Generating Next Streaming Batch -- `getBatch` Method
 
-NOTE: `getBatch` is a part of spark-sql-streaming-Source.md#contract[Streaming Source contract].
+`getBatch` is a part of the [Source](Source.md#getBatch) abstraction.
 
 When executed, `getBatch` uses the internal <<batches, batches>> collection to return requested offsets.
 

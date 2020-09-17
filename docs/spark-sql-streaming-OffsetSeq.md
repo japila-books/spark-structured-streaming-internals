@@ -25,7 +25,7 @@ toStreamProgress(
   sources: Seq[BaseStreamingSource]): StreamProgress
 ----
 
-`toStreamProgress` creates a new <<spark-sql-streaming-StreamProgress.md#, StreamProgress>> and adds the <<spark-sql-streaming-Source.md#, streaming sources>> for which there are new <<offsets, offsets>> available.
+`toStreamProgress` creates a new <<spark-sql-streaming-StreamProgress.md#, StreamProgress>> and adds the [streaming sources](Source.md) for which there are new <<offsets, offsets>> available.
 
 NOTE: <<offsets, Offsets>> is a collection with _holes_ (empty elements) for streaming sources with no new data available.
 

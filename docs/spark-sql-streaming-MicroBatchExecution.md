@@ -275,7 +275,7 @@ NOTE: `constructNextBatch` checks out the latest offset in every streaming data 
 .MicroBatchExecution's Getting Offsets From Streaming Sources
 image::images/MicroBatchExecution-constructNextBatch.png[align="center"]
 
-For every <<spark-sql-streaming-Source.md#, streaming source>> (Data Source API V1), `constructNextBatch` <<spark-sql-streaming-ProgressReporter.md#updateStatusMessage, updates the status message>> to the following:
+For every [streaming source](Source.md) (Data Source API V1), `constructNextBatch` <<spark-sql-streaming-ProgressReporter.md#updateStatusMessage, updates the status message>> to the following:
 
 ```
 Getting offsets from [source]
@@ -401,15 +401,15 @@ image::images/StreamExecution-runBatch-getBatch.png[align="center"]
 
 ==== [[runBatch-getBatch-Source]] getBatch Phase and Sources
 
-For a <<spark-sql-streaming-Source.md#, Source>> (with the available <<spark-sql-streaming-Offset.md#, offsets>> different from the <<spark-sql-streaming-StreamExecution.md#committedOffsets, committedOffsets>> registry), `runBatch` does the following:
+For a [Source](Source.md) (with the available <<spark-sql-streaming-Offset.md#, offsets>> different from the <<spark-sql-streaming-StreamExecution.md#committedOffsets, committedOffsets>> registry), `runBatch` does the following:
 
 * Requests the <<spark-sql-streaming-StreamExecution.md#committedOffsets, committedOffsets>> for the committed offsets for the `Source` (if available)
 
-* Requests the `Source` for a <<spark-sql-streaming-Source.md#getBatch, dataframe for the offset range>> (the current and available offsets)
+* Requests the `Source` for a [dataframe for the offset range](Source.md#getBatch) (the current and available offsets)
 
 `runBatch` prints out the following DEBUG message to the logs.
 
-```
+```text
 Retrieving data from [source]: [current] -> [available]
 ```
 

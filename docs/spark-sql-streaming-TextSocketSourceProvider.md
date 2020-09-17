@@ -1,8 +1,8 @@
-== [[TextSocketSourceProvider]] TextSocketSourceProvider
+# TextSocketSourceProvider
 
-`TextSocketSourceProvider` is a spark-sql-streaming-StreamSourceProvider.md[StreamSourceProvider] for spark-sql-streaming-TextSocketSource.md[TextSocketSource] that read records from `host` and `port`.
+`TextSocketSourceProvider` is a [StreamSourceProvider](StreamSourceProvider.md) for [TextSocketSource](spark-sql-streaming-TextSocketSource.md) that read records from `host` and `port`.
 
-`TextSocketSourceProvider` is a spark-sql-DataSourceRegister.md[DataSourceRegister], too.
+`TextSocketSourceProvider` is also a `DataSourceRegister`.
 
 The short name of the data source is `socket`.
 

@@ -1,6 +1,6 @@
-== [[KafkaSource]] KafkaSource
+# KafkaSource
 
-`KafkaSource` is a <<spark-sql-streaming-Source.md#, streaming source>> that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
+`KafkaSource` is a [streaming source](Source.md) that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
 
 NOTE: Kafka topics are checked for new records every spark-sql-streaming-Trigger.md[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
@@ -62,7 +62,7 @@ getBatch(
   end: Offset): DataFrame
 ----
 
-NOTE: `getBatch` is part of the <<spark-sql-streaming-Source.md#getBatch, Source Contract>> to generate a streaming `DataFrame` with data between the start and end <<spark-sql-streaming-Offset.md#, offsets>>.
+`getBatch` is part of the [Source](Source.md#getBatch) abstraction.
 
 `getBatch` creates a streaming `DataFrame` with a query plan with `LogicalRDD` logical operator to scan data from a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>>.
 
@@ -149,7 +149,7 @@ In the end, `getBatch` creates a streaming `DataFrame` for the `KafkaSourceRDD` 
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is a part of the spark-sql-streaming-Source.md#getOffset[Source Contract].
+NOTE: `getOffset` is a part of the Source.md#getOffset[Source Contract].
 
 Internally, `getOffset` fetches the <<initialPartitionOffsets, initial partition offsets>> (from the metadata log or Kafka directly).
 

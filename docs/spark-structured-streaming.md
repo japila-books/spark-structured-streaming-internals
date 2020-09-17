@@ -30,7 +30,7 @@ The goal of Spark Structured Streaming is to unify streaming, interactive, and b
 
 In Structured Streaming, Spark developers describe custom streaming computations in the same way as with Spark SQL. Internally, Structured Streaming applies the user-defined structured query to the continuously and indefinitely arriving data to analyze real-time streaming data.
 
-Structured Streaming introduces the concept of **streaming datasets** that are _infinite datasets_ with primitives like input [streaming data sources](spark-sql-streaming-Source.md) and output [streaming data sinks](spark-sql-streaming-Sink.md).
+Structured Streaming introduces the concept of **streaming datasets** that are _infinite datasets_ with primitives like input [streaming data sources](Source.md) and output [streaming data sinks](spark-sql-streaming-Sink.md).
 
 A `Dataset` is **streaming** when its logical plan is streaming.
 
@@ -76,7 +76,7 @@ With Structured Streaming, Spark 2 aims at simplifying **streaming analytics** w
 Structured streaming is defined by the following data abstractions in `org.apache.spark.sql.streaming` package:
 
 * [StreamingQuery](spark-sql-streaming-StreamingQuery.md)
-* [Streaming Source](spark-sql-streaming-Source.md)
+* [Streaming Source](Source.md)
 * [Streaming Sink](spark-sql-streaming-Sink.md)
 * [StreamingQueryManager](spark-sql-streaming-StreamingQueryManager.md)
 

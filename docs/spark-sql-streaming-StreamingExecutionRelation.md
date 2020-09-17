@@ -1,6 +1,6 @@
-== [[StreamingExecutionRelation]] StreamingExecutionRelation Leaf Logical Operator for Streaming Source At Execution
+# StreamingExecutionRelation Leaf Logical Operator
 
-`StreamingExecutionRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a spark-sql-streaming-Source.md[streaming source] in the logical query plan of a streaming `Dataset`.
+`StreamingExecutionRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a [streaming source](Source.md) in the logical query plan of a streaming `Dataset`.
 
 The main use of `StreamingExecutionRelation` logical operator is to be a "placeholder" in a logical query plan that will be replaced with the real relation (with new data that has arrived since the last batch) or an empty `LocalRelation` when `StreamExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runBatch-newBatchesPlan, transforming logical plan to include the Sources and MicroBatchReaders with new data>>.
 
@@ -20,7 +20,7 @@ NOTE: `StreamingExecutionRelation` is also resolved (aka _planned_) to a spark-s
 
 `StreamingExecutionRelation` takes the following when created:
 
-* [[source]] spark-sql-streaming-Source.md[Streaming source]
+* [[source]] [Streaming source](Source.md)
 * [[output]] Output attributes
 
 === [[apply]] Creating StreamingExecutionRelation (based on a Source) -- `apply` Object Method
@@ -30,6 +30,6 @@ NOTE: `StreamingExecutionRelation` is also resolved (aka _planned_) to a spark-s
 apply(source: Source): StreamingExecutionRelation
 ----
 
-`apply` creates a `StreamingExecutionRelation` for the input `source` and with the attributes of the spark-sql-streaming-Source.md#schema[schema] of the `source`.
+`apply` creates a `StreamingExecutionRelation` for the input `source` and with the attributes of the [schema](Source.md#schema) of the `source`.
 
 NOTE: `apply` _seems_ to be used for tests only.

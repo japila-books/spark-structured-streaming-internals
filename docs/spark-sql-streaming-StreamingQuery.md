@@ -174,6 +174,6 @@ If inactive, `StreamingQuery` may have transitioned into the state due to an `St
 
 `StreamingQuery` tracks current state of all the sources, i.e. `SourceStatus`, as `sourceStatuses`.
 
-There could only be a single spark-sql-streaming-Sink.md[Sink] for a `StreamingQuery` with many spark-sql-streaming-Source.md[Sources].
+There could only be a single [streaming sink](spark-sql-streaming-Sink.md) for a `StreamingQuery` with many [streaming sources](Source.md).
 
 `StreamingQuery` can be stopped by `stop` or an exception.

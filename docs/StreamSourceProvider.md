@@ -24,7 +24,7 @@ createSource(
   parameters: Map[String, String]): Source
 ----
 
-Creates a <<spark-sql-streaming-Source.md#, streaming source>>
+Creates a [streaming source](Source.md)
 
 NOTE: `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by spark-sql-streaming-StreamingQueryManager.md#createQuery[StreamingQueryManager].
 
@@ -42,7 +42,7 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ----
 
-The name and schema of the <<spark-sql-streaming-Source.md#, streaming source>>
+The name and schema of the [streaming source](Source.md)
 
 Used exclusively when `DataSource` is requested for <<spark-sql-streaming-DataSource.md#sourceSchema, metadata of a streaming source>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
 
