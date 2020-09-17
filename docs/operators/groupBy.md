@@ -1,26 +1,18 @@
-== [[groupBy]] groupBy Operator -- Untyped Streaming Aggregation (with Implicit State Logic)
+# groupBy Operator &mdash; Streaming Aggregation
 
-[source, scala]
-----
-groupBy(cols: Column*): RelationalGroupedDataset
-groupBy(col1: String, cols: String*): RelationalGroupedDataset
-----
+```scala
+groupBy(
+  cols: Column*): RelationalGroupedDataset
+groupBy(
+  col1: String,
+  cols: String*): RelationalGroupedDataset
+```
 
-`groupBy` operator...FIXME
+`groupBy` operator aggregates rows by zero, one or more columns.
 
-[source, scala]
-----
-scala> spark.version
-res0: String = 2.3.0-SNAPSHOT
+## Demo
 
-// Since I'm with SNAPSHOT
-// Remember to remove ~/.ivy2/cache/org.apache.spark
-// Make sure that ~/.ivy2/jars/org.apache.spark_spark-sql-kafka-0-10_2.11-2.3.0-SNAPSHOT.jar is the latest
-// Start spark-shell as follows
-/**
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
-*/
-
+```text
 val fromTopic1 = spark.
   readStream.
   format("kafka").
@@ -98,4 +90,4 @@ ObjectHashAggregate(keys=[key#27], functions=[collect_list(value#33, 0, 0), coll
                         +- EventTimeWatermark time#22: timestamp, interval 10 minutes
                            +- *Project [cast(split(cast(value#76 as string), ,)[0] as timestamp) AS time#22, cast(split(cast(value#76 as string), ,)[1] as int) AS key#27, split(cast(value#76 as string), ,)[2] AS value#33]
                               +- Scan ExistingRDD[key#75,value#76,topic#77,partition#78,offset#79L,timestamp#80,timestampType#81]
-----
+```

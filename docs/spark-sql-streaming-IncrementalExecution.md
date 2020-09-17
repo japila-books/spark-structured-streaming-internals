@@ -1,4 +1,4 @@
-== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
+# IncrementalExecution &mdash; QueryExecution of Streaming Queries
 
 `IncrementalExecution` is the `QueryExecution` of streaming queries.
 
@@ -10,7 +10,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> (in <<spark-sql-streaming-ContinuousExecution.md#runContinuous-queryPlanning, queryPlanning>> phase)
 
-* <<spark-sql-streaming-Dataset-operators.md#explain, Dataset.explain>> operator is executed (on a streaming query)
+* [Dataset.explain](operators/explain.md) operator is executed (on a streaming query)
 
 [[statefulOperatorId]]
 `IncrementalExecution` uses the `statefulOperatorId` internal counter for the IDs of the stateful operators in the <<optimizedPlan, optimized logical plan>> (while applying the <<preparations, preparations>> rules) when requested to prepare the plan for execution (in <<executedPlan, executedPlan>> phase).

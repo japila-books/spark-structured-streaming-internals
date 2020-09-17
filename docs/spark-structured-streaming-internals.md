@@ -102,11 +102,11 @@ scala> println(plan.numberedTreeString)
 
 With a streaming Dataset created, you can now use all the methods of `Dataset` API, including but not limited to the following operators:
 
-* [Dataset.dropDuplicates](spark-sql-streaming-Dataset-operators.md#dropDuplicates) for streaming deduplication
+* [Dataset.dropDuplicates](operators/dropDuplicates.md) for streaming deduplication
 
-* [Dataset.groupBy](spark-sql-streaming-Dataset-operators.md#groupBy) and [Dataset.groupByKey](spark-sql-streaming-Dataset-operators.md#groupByKey) for streaming aggregation
+* [Dataset.groupBy](operators/groupBy.md) and [Dataset.groupByKey](operators/groupByKey.md) for streaming aggregation
 
-* [Dataset.withWatermark](spark-sql-streaming-Dataset-operators.md#withWatermark) for event time watermark
+* [Dataset.withWatermark](operators/withWatermark.md) for event time watermark
 
 Please note that a streaming Dataset is a regular Dataset (_with some streaming-related limitations_).
 
@@ -126,7 +126,7 @@ assert(countByTime.isInstanceOf[Dataset[_]])
 
 The point is to understand that the Dataset API is a domain-specific language (DSL) to build a more sophisticated stream processing pipeline that you could also build using the low-level logical operators directly.
 
-Use [Dataset.explain](spark-sql-streaming-Dataset-operators.md#explain) to learn the underlying logical and physical query plans.
+Use [Dataset.explain](operators/explain.md) to learn the underlying logical and physical query plans.
 
 ```text
 assert(countByTime.isStreaming)
@@ -176,9 +176,9 @@ Please note that most of the stream processing operators you may also have used 
 
 ## <span id="DataStreamWriter"> DataStreamWriter and Streaming Data Sink
 
-Once you're satisfied with building a stream processing pipeline (using the APIs of [DataStreamReader](#DataStreamReader), [Dataset](spark-sql-streaming-Dataset-operators.md), `RelationalGroupedDataset` and `KeyValueGroupedDataset`), you should define how and when the result of the streaming query is persisted in (_sent out to_) an external data system using a [streaming sink](spark-sql-streaming-Sink.md).
+Once you're satisfied with building a stream processing pipeline (using the APIs of [DataStreamReader](#DataStreamReader), [Dataset](operators/), `RelationalGroupedDataset` and `KeyValueGroupedDataset`), you should define how and when the result of the streaming query is persisted in (_sent out to_) an external data system using a [streaming sink](spark-sql-streaming-Sink.md).
 
-You should use [Dataset.writeStream](spark-sql-streaming-Dataset-operators.md#writeStream) method that simply creates a [DataStreamWriter](DataStreamWriter.md).
+You should use [Dataset.writeStream](operators/writeStream.md) method that simply creates a [DataStreamWriter](DataStreamWriter.md).
 
 ```text
 // Not only is this a Dataset, but it is also streaming

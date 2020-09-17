@@ -154,14 +154,6 @@ nav:
         - StateManagerImplV1: spark-sql-streaming-StateManagerImplV1.md
       - FlatMapGroupsWithStateExecHelper Helper Class: spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md
       - InputProcessor: InputProcessor.md
-    - Streaming Operators:
-      - Streaming Operators: spark-sql-streaming-Dataset-operators.md
-      - dropDuplicates: spark-sql-streaming-Dataset-dropDuplicates.md
-      - explain: spark-sql-streaming-Dataset-explain.md
-      - groupBy: spark-sql-streaming-Dataset-groupBy.md
-      - groupByKey: operators/groupByKey.md
-      - withWatermark: spark-sql-streaming-Dataset-withWatermark.md
-      - writeStream: operators/writeStream.md
     - Developing Streaming Applications:
       - DataStreamReader: spark-sql-streaming-DataStreamReader.md
       - DataStreamWriter:
@@ -274,6 +266,17 @@ nav:
         - ContinuousWriteRDD: spark-sql-streaming-ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: spark-sql-streaming-ContinuousDataSourceRDD.md
     - UnsupportedOperationChecker: spark-sql-streaming-UnsupportedOperationChecker.md
+  - Streaming Operators:
+    - Streaming Operators: operators/index.md
+    - crossJoin: operators/crossJoin.md
+    - dropDuplicates: operators/dropDuplicates.md
+    - explain: operators/explain.md
+    - groupBy: operators/groupBy.md
+    - groupByKey: operators/groupByKey.md
+    - join: operators/join.md
+    - joinWith: operators/joinWith.md
+    - withWatermark: operators/withWatermark.md
+    - writeStream: operators/writeStream.md
   - Data Sources:
     - File-Based Data Source:
       - FileStreamSource: spark-sql-streaming-FileStreamSource.md

@@ -31,7 +31,7 @@ val inputStream = spark
 
 In <<spark-sql-streaming-aggregation.md#, streaming aggregations>>, a "new" row is when the intermediate state becomes final, i.e. when new events for the grouping key can only be considered late which is when watermark moves past the event time of the key.
 
-`Append` output mode requires that a streaming query defines event-time watermark (using spark-sql-streaming-Dataset-withWatermark.md[withWatermark] operator) on the event time column that is used in aggregation (directly or using spark-sql-streaming-window.md[window] function).
+`Append` output mode requires that a streaming query defines event-time watermark (using [withWatermark](operators/withWatermark.md) operator) on the event time column that is used in aggregation (directly or using [window](spark-sql-streaming-window.md) standard function).
 
 Required for datasets with `FileFormat` format (to create spark-sql-streaming-FileStreamSink.md[FileStreamSink])
 

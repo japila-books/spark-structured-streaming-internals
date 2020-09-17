@@ -14,7 +14,7 @@ Right after `StreamExecution` spark-sql-streaming-MicroBatchExecution.md#runStre
 .StreamingExecutionRelation Represents Streaming Source At Execution
 image::images/StreamingExecutionRelation.png[align="center"]
 
-NOTE: `StreamingExecutionRelation` is also resolved (aka _planned_) to a spark-sql-streaming-StreamingRelationExec.md[StreamingRelationExec] physical operator in spark-sql-streaming-StreamingRelationStrategy.md[StreamingRelationStrategy] execution planning strategy only when spark-sql-streaming-Dataset-explain.md[explaining] a streaming `Dataset`.
+NOTE: `StreamingExecutionRelation` is also resolved (aka _planned_) to a spark-sql-streaming-StreamingRelationExec.md[StreamingRelationExec] physical operator in spark-sql-streaming-StreamingRelationStrategy.md[StreamingRelationStrategy] execution planning strategy only when [explaining](operators/explain.md) a streaming `Dataset`.
 
 === [[creating-instance]] Creating StreamingExecutionRelation Instance
 

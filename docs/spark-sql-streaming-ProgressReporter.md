@@ -428,7 +428,7 @@ extractExecutionStats(hasNewData: Boolean): ExecutionStats
 
 Internally, `extractExecutionStats` generate *watermark* metric (using the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a <<spark-sql-streaming-EventTimeWatermark.md#, EventTimeWatermark>> unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
 
-NOTE: <<spark-sql-streaming-EventTimeWatermark.md#, EventTimeWatermark>> unary logical operator represents <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator in a streaming query.
+NOTE: <<spark-sql-streaming-EventTimeWatermark.md#, EventTimeWatermark>> unary logical operator represents [Dataset.withWatermark](operators/withWatermark.md) operator in a streaming query.
 
 `extractExecutionStats` <<extractStateOperatorMetrics, extractStateOperatorMetrics>>.
 

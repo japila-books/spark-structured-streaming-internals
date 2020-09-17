@@ -1,6 +1,6 @@
 # Demo: Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator
 
-The following demo shows an example of [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md) with [KeyValueGroupedDataset.flatMapGroupsWithState](../spark-sql-streaming-Dataset-operators.md#flatMapGroupsWithState) operator.
+The following demo shows an example of [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md) with [KeyValueGroupedDataset.flatMapGroupsWithState](../operators/flatMapGroupsWithState.md) operator.
 
 ```text
 import java.sql.Timestamp

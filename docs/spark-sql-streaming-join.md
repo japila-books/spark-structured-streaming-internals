@@ -1,13 +1,13 @@
 # Streaming Join
 
 [[operators]]
-In Spark Structured Streaming, a *streaming join* is a streaming query that was described (_build_) using the <<spark-sql-streaming-Dataset-operators.md#, high-level streaming operators>>:
+In Spark Structured Streaming, a *streaming join* is a streaming query that was described (_build_) using the [high-level streaming operators](operators/):
 
-* <<spark-sql-streaming-Dataset-operators.md#crossJoin, Dataset.crossJoin>>
+* [Dataset.crossJoin](operators/crossJoin.md)
 
-* <<spark-sql-streaming-Dataset-operators.md#join, Dataset.join>>
+* [Dataset.join](operators/join.md)
 
-* <<spark-sql-streaming-Dataset-operators.md#joinWith, Dataset.joinWith>>
+* [Dataset.joinWith](operators/joinWith.md)
 
 * SQL's `JOIN` clause
 

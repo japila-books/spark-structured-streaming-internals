@@ -1,10 +1,10 @@
-== [[StatefulAggregationStrategy]] StatefulAggregationStrategy Execution Planning Strategy -- EventTimeWatermark and Aggregate Logical Operators
+# StatefulAggregationStrategy Execution Planning Strategy
 
 `StatefulAggregationStrategy` is an execution planning strategy that is used to <<apply, plan streaming queries>> with the two logical operators:
 
-* <<spark-sql-streaming-EventTimeWatermark.md#, EventTimeWatermark>> logical operator (for <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator)
+* [EventTimeWatermark](spark-sql-streaming-EventTimeWatermark.md) logical operator ([Dataset.withWatermark](operators/withWatermark.md) operator)
 
-* `Aggregate` logical operator (for <<spark-sql-streaming-Dataset-operators.md#groupBy, Dataset.groupBy>> and <<spark-sql-streaming-Dataset-operators.md#groupByKey, Dataset.groupByKey>> operators, and `GROUP BY` SQL clause)
+* `Aggregate` logical operator (for [Dataset.groupBy](operators/groupBy.md) and [Dataset.groupByKey](operators/groupByKey.md) operators, and `GROUP BY` SQL clause)
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
@@ -93,7 +93,7 @@ planStreamingAggregation(
 
 `planStreamingAggregation` takes the grouping attributes (from `groupingExpressions`).
 
-NOTE: `groupingExpressions` corresponds to the grouping function in spark-sql-streaming-Dataset-operators.md#groupBy[groupBy] operator.
+NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](operators/groupBy.md) operator.
 
 [[partialAggregate]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialAggregate`) with:

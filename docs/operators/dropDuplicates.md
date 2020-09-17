@@ -1,21 +1,22 @@
-== [[dropDuplicates]] dropDuplicates Operator -- Streaming Deduplication
+# dropDuplicates Operator &mdash; Streaming Deduplication
 
-[source, scala]
-----
+```scala
 dropDuplicates(): Dataset[T]
-dropDuplicates(colNames: Seq[String]): Dataset[T]
-dropDuplicates(col1: String, cols: String*): Dataset[T]
-----
+dropDuplicates(
+  colNames: Seq[String]): Dataset[T]
+dropDuplicates(
+  col1: String,
+  cols: String*): Dataset[T]
+```
 
-`dropDuplicates` operator...FIXME
+`dropDuplicates` operator drops duplicate records (given a subset of columns)
 
-NOTE: For a streaming Dataset, `dropDuplicates` will keep all data across triggers as intermediate state to drop duplicates rows. You can use spark-sql-streaming-Dataset-withWatermark.md[withWatermark] operator to limit how late the duplicate data can be and system will accordingly limit the state. In addition, too late data older than watermark will be dropped to avoid any possibility of duplicates.
+!!! note
+    For a streaming Dataset, `dropDuplicates` will keep all data across triggers as intermediate state to drop duplicates rows. You can use [withWatermark](withWatermark.md) operator to limit how late the duplicate data can be and system will accordingly limit the state. In addition, too late data older than watermark will be dropped to avoid any possibility of duplicates.
 
-[source, scala]
-----
-scala> spark.version
-res0: String = 2.3.0-SNAPSHOT
+## Demo
 
+```text
 // Start a streaming query
 // Using old-fashioned MemoryStream (with the deprecated SQLContext)
 import org.apache.spark.sql.execution.streaming.MemoryStream
@@ -193,4 +194,4 @@ scala> spark.table("dups").show
 
 // Stop the streaming query
 // Specify event time watermark to remove old duplicates
-----
+```

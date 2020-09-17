@@ -169,7 +169,7 @@ Invalid output mode: [outputMode]
 
 NOTE: <<spark-sql-streaming-OutputMode.md#Append, Append>> is the default output mode when not specified explicitly.
 
-NOTE: `Append` output mode requires that a streaming query defines <<spark-sql-streaming-watermark.md#, event-time watermark>> (e.g. using <<spark-sql-streaming-Dataset-operators.md#withWatermark, withWatermark>> operator) on the event-time column that is used in aggregation (directly or using <<spark-sql-streaming-window.md#, window>> standard function).
+NOTE: `Append` output mode requires that a streaming query defines <<spark-sql-streaming-watermark.md#, event-time watermark>> (e.g. using [withWatermark](operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using <<spark-sql-streaming-window.md#, window>> standard function).
 
 For <<spark-sql-streaming-OutputMode.md#Append, Append>> output mode, `doExecute` does the following:
 

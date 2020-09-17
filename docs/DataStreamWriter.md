@@ -1,11 +1,10 @@
-== [[DataStreamWriter]] DataStreamWriter -- Writing Datasets To Streaming Sink
+# DataStreamWriter &mdash; Writing Datasets To Streaming Sink
 
 `DataStreamWriter` is the <<methods, interface>> to describe when and what rows of a streaming query are sent out to the <<format, streaming sink>>.
 
-`DataStreamWriter` is available using <<spark-sql-streaming-Dataset-operators.md#writeStream, Dataset.writeStream>> method (on a streaming query).
+`DataStreamWriter` is available using [Dataset.writeStream](operators/writeStream.md) method (on a streaming query).
 
-[source, scala]
-----
+```text
 import org.apache.spark.sql.streaming.DataStreamWriter
 import org.apache.spark.sql.Row
 
@@ -14,7 +13,7 @@ val streamingQuery: Dataset[Long] = ...
 assert(streamingQuery.isStreaming)
 
 val writer: DataStreamWriter[Row] = streamingQuery.writeStream
-----
+```
 
 [[methods]]
 .DataStreamWriter's Methods

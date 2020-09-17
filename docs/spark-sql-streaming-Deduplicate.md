@@ -1,11 +1,10 @@
-== [[Deduplicate]] Deduplicate Unary Logical Operator
+# Deduplicate Unary Logical Operator
 
-`Deduplicate` is a unary logical operator (i.e. `LogicalPlan`) that is <<creating-instance, created>> to represent spark-sql-streaming-Dataset-operators.md#dropDuplicates[dropDuplicates] operator (that drops duplicate records for a given subset of columns).
+`Deduplicate` is a unary logical operator that represents [dropDuplicates](operators/dropDuplicates.md) operator.
 
 `Deduplicate` has <<streaming, streaming>> flag enabled for streaming Datasets.
 
-[source, scala]
-----
+```text
 val uniqueRates = spark.
   readStream.
   format("rate").
@@ -15,18 +14,17 @@ val uniqueRates = spark.
 scala> println(uniqueRates.queryExecution.logical.numberedTreeString)
 00 Deduplicate [value#33L], true  // <-- streaming flag enabled
 01 +- StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4785f176,rate,List(),None,List(),None,Map(),None), rate, [timestamp#32, value#33L]
-----
+```
 
-CAUTION: FIXME Example with duplicates across batches to show that `Deduplicate` keeps state and spark-sql-streaming-Dataset-operators.md#withWatermark[withWatermark] operator should also be used to limit how much is stored (to not cause OOM)
+CAUTION: FIXME Example with duplicates across batches to show that `Deduplicate` keeps state and [withWatermark](operators/withWatermark.md) operator should also be used to limit how much is stored (to not cause OOM)
 
 [NOTE]
 ====
-`UnsupportedOperationChecker` spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[ensures] that spark-sql-streaming-Dataset-operators.md#dropDuplicates[dropDuplicates] operator is not used after aggregation on streaming Datasets.
+`UnsupportedOperationChecker` spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[ensures] that [dropDuplicates](operators/dropDuplicates.md) operator is not used after aggregation on streaming Datasets.
 
 The following code is not supported in Structured Streaming and results in an `AnalysisException`.
 
-[source, scala]
-----
+```text
 val counts = spark.
   readStream.
   format("rate").
@@ -44,7 +42,7 @@ val sq = counts.
   outputMode(OutputMode.Complete).
   start
 org.apache.spark.sql.AnalysisException: dropDuplicates is not supported after aggregation on a streaming DataFrame/Dataset;;
-----
+```
 ====
 
 [NOTE]

@@ -38,9 +38,9 @@ The initialized `StateStoreProvider` is cached in <<spark-sql-streaming-StateSto
 
 An instance of `StateStoreProvider` is requested to <<spark-sql-streaming-StateStoreProvider.md#doMaintenance, do its own maintenance>> or <<spark-sql-streaming-StateStoreProvider.md#close, close>> (when <<spark-sql-streaming-StateStoreProvider.md#verifyIfStoreInstanceActive, a corresponding StateStore is inactive>>) in <<spark-sql-streaming-StateStoreProvider.md#MaintenanceTask, MaintenanceTask daemon thread>> that runs periodically every <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> configuration property (default: `60s`).
 
-=== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
+## <span id="IncrementalExecution"> IncrementalExecution &mdash; QueryExecution of Streaming Queries
 
-Regardless of the query language (<<spark-sql-streaming-Dataset-operators.md#, Dataset API>> or SQL), any structured query (incl. streaming queries) becomes a logical query plan.
+Regardless of the query language (Dataset API or SQL), any structured query (incl. streaming queries) becomes a logical query plan.
 
 In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> that plans streaming queries for execution.
 

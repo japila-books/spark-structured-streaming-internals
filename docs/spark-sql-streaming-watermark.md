@@ -1,8 +1,8 @@
-== Streaming Watermark
+# Streaming Watermark
 
-*Streaming Watermark* of a <<spark-sql-streaming-stateful-stream-processing.md#, stateful streaming query>> is how long to wait for late and possibly out-of-order events until a streaming state can be considered final and not to change. Streaming watermark is used to mark events  (modeled as a row in the streaming Dataset) that are older than the threshold as "too late", and not "interesting" to update partial non-final streaming state.
+**Streaming Watermark** of a [stateful streaming query](spark-sql-streaming-stateful-stream-processing.md) is how long to wait for late and possibly out-of-order events until a streaming state can be considered final and not to change. Streaming watermark is used to mark events  (modeled as a row in the streaming Dataset) that are older than the threshold as "too late", and not "interesting" to update partial non-final streaming state.
 
-In Spark Structured Streaming, streaming watermark is defined using <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> high-level operator.
+In Spark Structured Streaming, streaming watermark is defined using [Dataset.withWatermark](operators/withWatermark.md) high-level operator.
 
 [source, scala]
 ----
@@ -11,7 +11,7 @@ withWatermark(
   delayThreshold: String): Dataset[T]
 ----
 
-In <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator, `eventTime` is the name of the column to use to monitor event time whereas `delayThreshold` is a delay threshold.
+In [Dataset.withWatermark](operators/withWatermark.md) operator, `eventTime` is the name of the column to use to monitor event time whereas `delayThreshold` is a delay threshold.
 
 *Watermark Delay* says how late and possibly out-of-order events are still acceptable and contribute to the final result of a stateful streaming query. Event-time watermark delay is used to calculate the difference between the event time of an event and the time in the past.
 
@@ -31,7 +31,8 @@ Streaming watermark is <<spark-sql-streaming-UnsupportedOperationChecker.md#stre
 
 In <<spark-sql-streaming-aggregation.md#, streaming aggregation>>, a streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using <<spark-sql-streaming-window.md#, window>> standard function).
 
-NOTE: <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator has to be used before an aggregation operator (for the watermark to have an effect).
+!!! note
+    [Dataset.withWatermark](operators/withWatermark.md) operator has to be used before an aggregation operator (for the watermark to have an effect).
 
 === [[streaming-join]] Streaming Join
 
@@ -43,9 +44,9 @@ Use the following demos to learn more:
 
 * <<spark-sql-streaming-demo-watermark-aggregation-append.md#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>
 
-=== [[internals]] Internals
+## <span id="internals"> Internals
 
-Under the covers, <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> high-level operator creates a logical query plan with <<spark-sql-streaming-EventTimeWatermark.md#, EventTimeWatermark>> logical operator.
+Under the covers, [Dataset.withWatermark](operators/withWatermark.md) high-level operator creates a logical query plan with [EventTimeWatermark](spark-sql-streaming-EventTimeWatermark.md) logical operator.
 
 `EventTimeWatermark` logical operator is planned to <<spark-sql-streaming-EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator that extracts the event times (from the data being processed) and adds them to an accumulator.
 

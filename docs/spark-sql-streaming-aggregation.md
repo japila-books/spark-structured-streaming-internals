@@ -1,14 +1,14 @@
-== Streaming Aggregation
+# Streaming Aggregation
 
-In Spark Structured Streaming, a *streaming aggregation* is a streaming query that was described (_build_) using the following <<spark-sql-streaming-Dataset-operators.md#, high-level streaming operators>>:
+In Spark Structured Streaming, a *streaming aggregation* is a streaming query that was described (_build_) using the following [high-level streaming operators](operators/index.md):
 
-* <<spark-sql-streaming-Dataset-operators.md#groupBy, Dataset.groupBy>>, `Dataset.rollup`, `Dataset.cube` (that simply create a `RelationalGroupedDataset`)
+* [Dataset.groupBy](operators/groupBy.md), `Dataset.rollup`, `Dataset.cube` (that simply create a `RelationalGroupedDataset`)
 
-* <<spark-sql-streaming-Dataset-operators.md#groupByKey, Dataset.groupByKey>> (that simply creates a `KeyValueGroupedDataset`)
+* [Dataset.groupByKey](operators/groupByKey.md) (that simply creates a `KeyValueGroupedDataset`)
 
 * SQL's `GROUP BY` clause (including `WITH CUBE` and `WITH ROLLUP`)
 
-Streaming aggregation belongs to the category of <<spark-sql-streaming-stateful-stream-processing.md#, Stateful Stream Processing>>.
+Streaming aggregation belongs to the category of [Stateful Stream Processing](spark-sql-streaming-stateful-stream-processing.md).
 
 === [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
 

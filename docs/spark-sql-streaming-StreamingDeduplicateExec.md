@@ -218,7 +218,7 @@ The completion function does the following:
 
 `StreamingDeduplicateExec` takes the following when created:
 
-* [[keyExpressions]] Duplicate keys (as used in spark-sql-streaming-Dataset-operators.md#dropDuplicates[dropDuplicates] operator)
+* [[keyExpressions]] Duplicate keys (as used in [dropDuplicates](operators/dropDuplicates.md) operator)
 * [[child]] Child physical operator (`SparkPlan`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
 * [[eventTimeWatermark]] Event-time watermark

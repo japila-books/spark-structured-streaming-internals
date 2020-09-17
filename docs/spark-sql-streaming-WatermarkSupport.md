@@ -19,7 +19,8 @@ Read the official documentation of Spark in http://spark.apache.org/docs/latest/
 | [[watermarkExpression]] `watermarkExpression`
 a| Optional Catalyst expression that matches rows older than the event time watermark.
 
-NOTE: Use spark-sql-streaming-Dataset-withWatermark.md[withWatermark] operator to specify streaming watermark.
+!!! note
+    Use [withWatermark](operators/withWatermark.md) operator to specify streaming watermark.
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Spark Structured Streaming** (_Structured Streaming_ or _Spark Streams_) is the module of Apache Spark for stream processing using **streaming queries**.
 
-Streaming queries can be expressed using a [high-level declarative streaming API](spark-sql-streaming-Dataset-operators.md) (_Dataset API_) or good ol' SQL (_SQL over stream_ / _streaming SQL_). The declarative streaming Dataset API and SQL are executed on the underlying highly-optimized Spark SQL engine.
+Streaming queries can be expressed using a [high-level declarative streaming API](operators/) (_Dataset API_) or good ol' SQL (_SQL over stream_ / _streaming SQL_). The declarative streaming Dataset API and SQL are executed on the underlying highly-optimized Spark SQL engine.
 
 The semantics of the Structured Streaming model is as follows (see the article [Structured Streaming In Apache Spark](https://databricks.com/blog/2016/07/28/structured-streaming-in-apache-spark.html)):
 

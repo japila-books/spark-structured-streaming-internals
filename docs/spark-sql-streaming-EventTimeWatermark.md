@@ -1,6 +1,6 @@
-== [[EventTimeWatermark]] EventTimeWatermark Unary Logical Operator -- Streaming Watermark
+# EventTimeWatermark Unary Logical Operator
 
-`EventTimeWatermark` is a unary logical operator that is <<creating-instance, created>> to represent <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator in a logical query plan of a streaming query.
+`EventTimeWatermark` is a unary logical operator that is <<creating-instance, created>> to represent [Dataset.withWatermark](operators/withWatermark.md) operator in a logical query plan of a streaming query.
 
 [NOTE]
 ====
@@ -15,10 +15,9 @@ When requested for the <<output, output attributes>>, `EventTimeWatermark` logic
 
 [NOTE]
 ====
-`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when <<spark-sql-streaming-Dataset-operators.md#withWatermark, Dataset.withWatermark>> operator is used on a batch query.
+`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when [Dataset.withWatermark](operators/withWatermark.md) operator is used on a batch query.
 
-[source, scala]
-----
+```text
 val logs = spark.
   read. // <-- batch non-streaming query that makes `EliminateEventTimeWatermark` rule applicable
   format("text").
@@ -31,7 +30,7 @@ val q = logs.
   withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds") // <-- creates EventTimeWatermark
 scala> println(q.queryExecution.logical.numberedTreeString) // <-- no EventTimeWatermark as it was removed immediately
 00 Relation[value#0] text
-----
+```
 ====
 
 === [[creating-instance]] Creating EventTimeWatermark Instance
