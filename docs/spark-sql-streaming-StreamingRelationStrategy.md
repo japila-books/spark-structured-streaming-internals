@@ -1,7 +1,7 @@
 == [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
 
 [[apply]]
-`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>>, <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>>, and <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operators to <<spark-sql-streaming-StreamingRelationExec.md#, StreamingRelationExec>> physical operators.
+`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>>, <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>>, and <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operators to <<physical-operators/StreamingRelationExec.md#, StreamingRelationExec>> physical operators.
 
 .StreamingRelationStrategy, StreamingRelation, StreamingExecutionRelation and StreamingRelationExec Operators
 image::images/StreamingRelationStrategy-apply.png[align="center"]

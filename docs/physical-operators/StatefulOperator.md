@@ -1,4 +1,4 @@
-== [[StatefulOperator]] StatefulOperator Contract -- Physical Operators That Read or Write to StateStore
+# StatefulOperator Physical Operators
 
 `StatefulOperator` is the <<contract, base>> of <<extensions, physical operators>> that <<StateStoreReader, read>> or <<StateStoreWriter, write>> state (described by <<stateInfo, stateInfo>>).
 
@@ -27,9 +27,9 @@ The <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateIn
 | StatefulOperator
 | Description
 
-| <<spark-sql-streaming-StateStoreReader.md#, StateStoreReader>>
+| <<StateStoreReader.md#, StateStoreReader>>
 | [[StateStoreReader]]
 
-| <<spark-sql-streaming-StateStoreWriter.md#, StateStoreWriter>>
+| [StateStoreWriter](StateStoreWriter.md)
 | [[StateStoreWriter]] Physical operator that writes to a state store and collects the write metrics for execution progress reporting
 |===

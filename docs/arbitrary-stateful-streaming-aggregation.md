@@ -26,7 +26,7 @@ Use the following demos and complete applications to learn more:
 
 ## <span id="metrics"> Performance Metrics
 
-Arbitrary Stateful Streaming Aggregation uses **performance metrics** (of the [StateStoreWriter](spark-sql-streaming-StateStoreWriter.md) through [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator).
+Arbitrary Stateful Streaming Aggregation uses **performance metrics** (of the [StateStoreWriter](physical-operators/StateStoreWriter.md) through [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator).
 
 ## <span id="internals"> Internals
 

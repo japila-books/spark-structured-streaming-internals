@@ -1,6 +1,6 @@
-== [[StreamingSymmetricHashJoinExec]] StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
+# StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator that represents a <<spark-sql-streaming-join.md#, stream-stream equi-join>> at execution time.
+`StreamingSymmetricHashJoinExec` is a binary physical operator for [stream-stream equi-join](../spark-sql-streaming-join.md) at execution time.
 
 [NOTE]
 ====
@@ -18,9 +18,9 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 `StreamingSymmetricHashJoinExec` uses two <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiners>> (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state when <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>.
 
-`StreamingSymmetricHashJoinExec` is a <<spark-sql-streaming-StateStoreWriter.md#, stateful physical operator that writes to a state store>>.
+`StreamingSymmetricHashJoinExec` is a [stateful physical operator that writes to a state store](StateStoreWriter.md).
 
-=== [[creating-instance]] Creating StreamingSymmetricHashJoinExec Instance
+## Creating Instance
 
 `StreamingSymmetricHashJoinExec` takes the following to be created:
 
@@ -154,10 +154,9 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Dist
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 
-`StreamingSymmetricHashJoinExec` uses the performance metrics as <<spark-sql-streaming-StateStoreWriter.md#metrics, other stateful physical operators that write to a state store>>.
+`StreamingSymmetricHashJoinExec` uses the performance metrics as [other stateful physical operators that write to a state store](StateStoreWriter.md#metrics).
 
-.StreamingSymmetricHashJoinExec in web UI (Details for Query)
-image::images/StreamingSymmetricHashJoinExec-webui-query-details.png[align="center"]
+![StreamingSymmetricHashJoinExec in web UI (Details for Query)](../images/StreamingSymmetricHashJoinExec-webui-query-details.png)
 
 The following table shows how the performance metrics are computed (and so their exact meaning).
 
@@ -196,8 +195,6 @@ shouldRunAnotherBatch(
   newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
-
 `shouldRunAnotherBatch` is positive (`true`) when all of the following are positive:
 
 * Either the <<spark-sql-streaming-JoinStateWatermarkPredicates.md#left, left>> or <<spark-sql-streaming-JoinStateWatermarkPredicates.md#right, right>> join state watermark predicates are defined (in the <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
@@ -205,6 +202,8 @@ NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWri
 * <<eventTimeWatermark, Event-time watermark>> threshold (of the `StreamingSymmetricHashJoinExec` operator) is defined and the current <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
 
 `shouldRunAnotherBatch` is negative (`false`) otherwise.
+
+`shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 

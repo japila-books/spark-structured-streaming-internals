@@ -1,6 +1,6 @@
 # StreamingQueryProgress
 
-`StreamingQueryProgress` holds information about a single micro-batch (_progress_) of a streaming query:
+`StreamingQueryProgress` is information about a single micro-batch (_progress_) of a [StreamingQuery](../StreamingQuery.md):
 
 * <span id="id"> [Unique identifier](../StreamingQuery.md#id)
 * <span id="runId"> [Unique identifier of a query execution](../StreamingQuery.md#runId)

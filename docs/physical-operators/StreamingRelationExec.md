@@ -31,5 +31,5 @@ StreamingRelation rate, [timestamp#0, value#1L]
 
 `StreamingRelationExec` takes the following when created:
 
-* [[sourceName]] The name of a [streaming source](Source.md)
+* [[sourceName]] The name of a [streaming source](../Source.md)
 * [[output]] Output attributes

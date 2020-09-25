@@ -49,7 +49,7 @@ org.apache.spark.sql.AnalysisException: dropDuplicates is not supported after ag
 ====
 `Deduplicate` logical operator is translated (aka _planned_) to:
 
-* spark-sql-streaming-StreamingDeduplicateExec.md[StreamingDeduplicateExec] physical operator in spark-sql-streaming-StreamingDeduplicationStrategy.md[StreamingDeduplicationStrategy] execution planning strategy for streaming Datasets (aka _streaming plans_)
+* physical-operators/StreamingDeduplicateExec.md[StreamingDeduplicateExec] physical operator in spark-sql-streaming-StreamingDeduplicationStrategy.md[StreamingDeduplicationStrategy] execution planning strategy for streaming Datasets (aka _streaming plans_)
 
 * `Aggregate` physical operator in `ReplaceDeduplicateWithAggregate` execution planning strategy for non-streaming/batch Datasets (aka _batch plans_)
 ====

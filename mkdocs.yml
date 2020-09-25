@@ -127,10 +127,6 @@ nav:
         - StateStoreCoordinator: spark-sql-streaming-StateStoreCoordinator.md
         - StateStoreCoordinatorRef: spark-sql-streaming-StateStoreCoordinatorRef.md
       - WatermarkSupport: spark-sql-streaming-WatermarkSupport.md
-      - StatefulOperator:
-        - StatefulOperator: spark-sql-streaming-StatefulOperator.md
-        - StateStoreReader: spark-sql-streaming-StateStoreReader.md
-        - StateStoreWriter: spark-sql-streaming-StateStoreWriter.md
       - StatefulOperatorStateInfo: spark-sql-streaming-StatefulOperatorStateInfo.md
       - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
       - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
@@ -181,14 +177,17 @@ nav:
         - StreamingRelationV2 Leaf Logical Operator: spark-sql-streaming-StreamingRelationV2.md
         - StreamingExecutionRelation Leaf Logical Operator for Streaming Source At Execution: spark-sql-streaming-StreamingExecutionRelation.md
       - Physical Operators:
-        - EventTimeWatermarkExec: EventTimeWatermarkExec.md
+        - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
         - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
-        - StateStoreRestoreExec: spark-sql-streaming-StateStoreRestoreExec.md
-        - StateStoreSaveExec: StateStoreSaveExec.md
-        - StreamingDeduplicateExec: spark-sql-streaming-StreamingDeduplicateExec.md
-        - StreamingGlobalLimitExec: spark-sql-streaming-StreamingGlobalLimitExec.md
-        - StreamingRelationExec: spark-sql-streaming-StreamingRelationExec.md
-        - StreamingSymmetricHashJoinExec: spark-sql-streaming-StreamingSymmetricHashJoinExec.md
+        - StatefulOperator: physical-operators/StatefulOperator.md
+        - StateStoreReader: physical-operators/StateStoreReader.md
+        - StateStoreRestoreExec: physical-operators/StateStoreRestoreExec.md
+        - StateStoreSaveExec: physical-operators/StateStoreSaveExec.md
+        - StateStoreWriter: physical-operators/StateStoreWriter.md
+        - StreamingDeduplicateExec: physical-operators/StreamingDeduplicateExec.md
+        - StreamingGlobalLimitExec: physical-operators/StreamingGlobalLimitExec.md
+        - StreamingRelationExec: physical-operators/StreamingRelationExec.md
+        - StreamingSymmetricHashJoinExec: physical-operators/StreamingSymmetricHashJoinExec.md
       - Execution Planning Strategies:
         - FlatMapGroupsWithStateStrategy: spark-sql-streaming-FlatMapGroupsWithStateStrategy.md
         - StatefulAggregationStrategy: spark-sql-streaming-StatefulAggregationStrategy.md

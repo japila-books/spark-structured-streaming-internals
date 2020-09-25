@@ -1,6 +1,6 @@
 == [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring Streaming State From State Store
 
-`StateStoreRestoreExec` is a unary physical operator that <<spark-sql-streaming-StateStoreReader.md#, restores (reads) a streaming state from a state store>> (for the keys from the <<child, child>> physical operator).
+`StateStoreRestoreExec` is a unary physical operator that <<StateStoreReader.md#, restores (reads) a streaming state from a state store>> (for the keys from the <<child, child>> physical operator).
 
 [NOTE]
 ====

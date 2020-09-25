@@ -1,6 +1,6 @@
 == [[SymmetricHashJoinStateManager]] SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right <<spark-sql-streaming-OneSideHashJoiner.md#joinStateManager, OneSideHashJoiners>> of a <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right <<spark-sql-streaming-OneSideHashJoiner.md#joinStateManager, OneSideHashJoiners>> of a <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
 
 .SymmetricHashJoinStateManager and Stream-Stream Join
 image::images/SymmetricHashJoinStateManager.png[align="center"]
@@ -48,7 +48,7 @@ image::images/SymmetricHashJoinStateManager.png[align="center"]
 
 * [[RightSide]][[right]] `RightSide` (alias: `right`)
 
-They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute, execute>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>> with an <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiner>>).
+They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute>> (and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>> with an <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiner>>).
 
 === [[metrics]] Performance Metrics -- `metrics` Method
 
@@ -169,7 +169,7 @@ allStateStoreNames(joinSides: JoinSide*): Seq[String]
 
 `allStateStoreNames` simply returns the <<getStateStoreName, names of the state stores>> for all possible combinations of the given `JoinSides` and the two possible store types (e.g. <<spark-sql-streaming-StateStoreHandler.md#KeyToNumValuesType, keyToNumValues>> and <<spark-sql-streaming-StateStoreHandler.md#KeyWithIndexToValueType, keyWithIndexToValue>>).
 
-NOTE: `allStateStoreNames` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute, execute and generate the runtime representation>> (as a `RDD[InternalRow]`).
+NOTE: `allStateStoreNames` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute and generate the runtime representation>> (as a `RDD[InternalRow]`).
 
 === [[getStateStoreName]] `getStateStoreName` Object Method
 
@@ -192,7 +192,7 @@ getStateStoreName(
 
 * `StateStoreHandler` is requested to <<spark-sql-streaming-StateStoreHandler.md#getStateStore, load a state store>>
 
-* `SymmetricHashJoinStateManager` utility is requested for <<allStateStoreNames, allStateStoreNames>> (for `StreamingSymmetricHashJoinExec` physical operator to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute, execute and generate the runtime representation>>)
+* `SymmetricHashJoinStateManager` utility is requested for <<allStateStoreNames, allStateStoreNames>> (for `StreamingSymmetricHashJoinExec` physical operator to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute and generate the runtime representation>>)
 ====
 
 === [[updateNumValueForCurrentKey]] `updateNumValueForCurrentKey` Internal Method

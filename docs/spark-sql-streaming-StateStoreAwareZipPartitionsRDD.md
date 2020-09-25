@@ -2,14 +2,14 @@
 
 `StateStoreAwareZipPartitionsRDD` is a `ZippedPartitionsRDD2` with the <<rdd1, left>> and <<rdd2, right>> parent RDDs.
 
-`StateStoreAwareZipPartitionsRDD` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and requests <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md#, StateStoreAwareZipPartitionsHelper>> for one).
+`StateStoreAwareZipPartitionsRDD` is <<creating-instance, created>> exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and requests <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md#, StateStoreAwareZipPartitionsHelper>> for one).
 
 === [[creating-instance]] Creating StateStoreAwareZipPartitionsRDD Instance
 
 `StateStoreAwareZipPartitionsRDD` takes the following to be created:
 
 * [[sc]] `SparkContext`
-* [[f]] Function (`(Iterator[A], Iterator[B]) => Iterator[V]`, e.g. <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, processPartitions>>)
+* [[f]] Function (`(Iterator[A], Iterator[B]) => Iterator[V]`, e.g. <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, processPartitions>>)
 * [[rdd1]] *Left RDD* - the RDD of the left side of a join (`RDD[A]`)
 * [[rdd2]] *Right RDD* - the RDD of the right side of a join (`RDD[B]`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>

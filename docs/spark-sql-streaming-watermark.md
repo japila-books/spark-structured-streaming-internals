@@ -48,7 +48,7 @@ Use the following demos to learn more:
 
 Under the covers, [Dataset.withWatermark](operators/withWatermark.md) high-level operator creates a logical query plan with [EventTimeWatermark](EventTimeWatermark.md) logical operator.
 
-`EventTimeWatermark` logical operator is planned to <<EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator that extracts the event times (from the data being processed) and adds them to an accumulator.
+`EventTimeWatermark` logical operator is planned to [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator that extracts the event times (from the data being processed) and adds them to an accumulator.
 
 Since the execution (data processing) happens on Spark executors, using the accumulator is the only _Spark-approved way_ for communication between the tasks (on the executors) and the driver. Using accumulator updates the driver with the current event-time watermark.
 

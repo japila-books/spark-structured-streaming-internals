@@ -7,8 +7,8 @@
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 * <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
 * <<StateStoreSaveExec.md#, StateStoreSaveExec>>
-* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
-* <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
+* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 
 .StateStoreRDD, Physical and Logical Plans, and operators
 image::images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png[align="center"]

@@ -2,16 +2,16 @@
 
 `OneSideHashJoiner` manages join state of one side of a <<spark-sql-streaming-join.md#stream-stream-joins, stream-stream join>> (using <<joinStateManager, SymmetricHashJoinStateManager>>).
 
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (when requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
+`OneSideHashJoiner` is <<creating-instance, created>> exclusively for <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (when requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
 
 .OneSideHashJoiner and StreamingSymmetricHashJoinExec
 image::images/OneSideHashJoiner.png[align="center"]
 
-`StreamingSymmetricHashJoinExec` physical operator uses two `OneSideHashJoiners` per side of the stream-stream join (<<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions-leftSideJoiner, left>> and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions-rightSideJoiner, right>> sides).
+`StreamingSymmetricHashJoinExec` physical operator uses two `OneSideHashJoiners` per side of the stream-stream join (<<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions-leftSideJoiner, left>> and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions-rightSideJoiner, right>> sides).
 
 `OneSideHashJoiner` uses an <<stateWatermarkPredicate, optional join state watermark predicate>> to <<removeOldState, remove old state>>.
 
-NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> and so has full access to `StreamingSymmetricHashJoinExec` properties.
+NOTE: `OneSideHashJoiner` is a Scala private internal class of <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> and so has full access to `StreamingSymmetricHashJoinExec` properties.
 
 === [[creating-instance]] Creating OneSideHashJoiner Instance
 
@@ -34,7 +34,7 @@ NOTE: `OneSideHashJoiner` is a Scala private internal class of <<spark-sql-strea
 joinStateManager: SymmetricHashJoinStateManager
 ----
 
-`joinStateManager` is a <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>> that is created for a `OneSideHashJoiner` (with the <<joinSide, join side>>, the <<inputAttributes, input attributes>>, the <<joinKeys, join keys>>, and the <<stateInfo, StatefulOperatorStateInfo>> of the owning <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>).
+`joinStateManager` is a <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>> that is created for a `OneSideHashJoiner` (with the <<joinSide, join side>>, the <<inputAttributes, input attributes>>, the <<joinKeys, join keys>>, and the <<stateInfo, StatefulOperatorStateInfo>> of the owning <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>).
 
 `joinStateManager` is used when `OneSideHashJoiner` is requested for the following:
 
@@ -50,7 +50,7 @@ joinStateManager: SymmetricHashJoinStateManager
 
 `updatedStateRowsCount` is the number the join keys and associated rows that were persisted as a join state, i.e. how many times <<storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> requested the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#append, append>> the join key and the input row (to a join state).
 
-`updatedStateRowsCount` is then used (via <<numUpdatedStateRows, numUpdatedStateRows>> method) for the <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#numUpdatedStateRows, numUpdatedStateRows>> performance metric.
+`updatedStateRowsCount` is then used (via <<numUpdatedStateRows, numUpdatedStateRows>> method) for the <<physical-operators/StreamingSymmetricHashJoinExec.md#numUpdatedStateRows, numUpdatedStateRows>> performance metric.
 
 `updatedStateRowsCount` is available via `numUpdatedStateRows` method.
 
@@ -60,7 +60,7 @@ joinStateManager: SymmetricHashJoinStateManager
 numUpdatedStateRows: Long
 ----
 
-NOTE: `numUpdatedStateRows` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions process partitions of the left and right sides of a stream-stream join>> (and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, completes>>).
+NOTE: `numUpdatedStateRows` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions process partitions of the left and right sides of a stream-stream join>> (and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, completes>>).
 
 === [[stateWatermarkPredicate]] Optional Join State Watermark Predicate -- `stateWatermarkPredicate` Internal Property
 
@@ -84,7 +84,7 @@ storeAndJoinWithOtherSide(
 
 `storeAndJoinWithOtherSide` tries to find the <<EventTimeWatermark.md#delayKey, watermark attribute>> among the <<inputAttributes, input attributes>>.
 
-`storeAndJoinWithOtherSide` creates a <<spark-sql-streaming-WatermarkSupport.md#watermarkExpression, watermark expression>> (for the watermark attribute and the current <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#eventTimeWatermark, event-time watermark>>).
+`storeAndJoinWithOtherSide` creates a <<spark-sql-streaming-WatermarkSupport.md#watermarkExpression, watermark expression>> (for the watermark attribute and the current <<physical-operators/StreamingSymmetricHashJoinExec.md#eventTimeWatermark, event-time watermark>>).
 
 [[storeAndJoinWithOtherSide-nonLateRows]]
 With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new predicate for the watermark expression and the <<inputAttributes, input attributes>> that is then used to filter out (_exclude_) late rows from the <<inputIter, input>>. Otherwise, the input rows are left unchanged (i.e. no rows are considered late and excluded).
@@ -92,7 +92,7 @@ With the watermark attribute found, `storeAndJoinWithOtherSide` generates a new 
 [[storeAndJoinWithOtherSide-nonLateRows-flatMap]]
 For every <<inputIter, input row>> (possibly <<storeAndJoinWithOtherSide-nonLateRows, watermarked>>), `storeAndJoinWithOtherSide` applies the <<preJoinFilter, preJoinFilter>> predicate and branches off per result (<<preJoinFilter-true, true>> or <<preJoinFilter-false, false>>).
 
-NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
+NOTE: `storeAndJoinWithOtherSide` is used when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
 
 ==== [[preJoinFilter-true]] `preJoinFilter` Predicate Positive (`true`)
 
@@ -102,7 +102,7 @@ When the <<preJoinFilter, preJoinFilter>> predicate succeeds on an input row, `s
 
 ==== [[preJoinFilter-false]] `preJoinFilter` Predicate Negative (`false`)
 
-When the <<preJoinFilter, preJoinFilter>> predicate fails on an input row, `storeAndJoinWithOtherSide` creates a new `Iterator[InternalRow]` of joined rows per <<joinSide, join side>> and <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#joinType, type>>:
+When the <<preJoinFilter, preJoinFilter>> predicate fails on an input row, `storeAndJoinWithOtherSide` creates a new `Iterator[InternalRow]` of joined rows per <<joinSide, join side>> and <<physical-operators/StreamingSymmetricHashJoinExec.md#joinType, type>>:
 
 * For <<spark-sql-streaming-SymmetricHashJoinStateManager.md#LeftSide, LeftSide>> and `LeftOuter`, the join row is the current row with the values of the right side all `null` (`nullRight`)
 
@@ -125,7 +125,7 @@ removeOldState(): Iterator[UnsafeRowPair]
 
 * For any other predicates, `removeOldState` returns an empty iterator (no rows to process)
 
-NOTE: `removeOldState` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
+NOTE: `removeOldState` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
 
 === [[get]] Retrieving Value Rows For Key -- `get` Method
 
@@ -136,7 +136,7 @@ get(key: UnsafeRow): Iterator[UnsafeRow]
 
 `get` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#get, retrieve value rows for the key>>.
 
-NOTE: `get` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
+NOTE: `get` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
 
 === [[commitStateAndGetMetrics]] Committing State (Changes) and Requesting Performance Metrics -- `commitStateAndGetMetrics` Method
 
@@ -147,7 +147,7 @@ commitStateAndGetMetrics(): StateStoreMetrics
 
 `commitStateAndGetMetrics` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#commit, commit>> followed by requesting for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#metrics, performance metrics>>.
 
-NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
+NOTE: `commitStateAndGetMetrics` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
 
 === [[internal-properties]] Internal Properties
 

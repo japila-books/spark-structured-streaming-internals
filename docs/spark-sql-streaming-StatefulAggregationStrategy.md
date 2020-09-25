@@ -26,7 +26,7 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Physical Operator
 
 | EventTimeWatermark.md[EventTimeWatermark]
-a| [[EventTimeWatermark]] EventTimeWatermarkExec.md[EventTimeWatermarkExec]
+a| [[EventTimeWatermark]] [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md)
 
 | `Aggregate`
 a| [[Aggregate]]

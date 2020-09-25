@@ -28,7 +28,7 @@ NOTE: The <<EventTimeWatermark.md#delayKey, watermark attribute>> is defined usi
 
 In the end, `getStateWatermarkPredicates` creates a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> with the left- and right-side state watermark predicates.
 
-NOTE: `getStateWatermarkPredicates` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#state, apply the state preparation rule for batch-specific configuration>> (while optimizing query plans with <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators).
+NOTE: `getStateWatermarkPredicates` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#state, apply the state preparation rule for batch-specific configuration>> (while optimizing query plans with <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators).
 
 ==== [[getOneSideStateWatermarkPredicate]] Join State Watermark Predicate (for One Side of Join) -- `getOneSideStateWatermarkPredicate` Internal Method
 

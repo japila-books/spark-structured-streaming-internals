@@ -52,15 +52,15 @@ While <<spark-sql-streaming-IncrementalExecution.md#executedPlan, planning a str
 
 * <<StateStoreSaveExec.md#, StateStoreSaveExec>> (used for <<spark-sql-streaming-aggregation.md#, streaming aggregation>>)
 
-* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 
-* <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
+* <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 
-* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
+* <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
 
 ==== [[IncrementalExecution-shouldRunAnotherBatch]] Micro-Batch Stream Processing and Extra Non-Data Batch for StateStoreWriter Stateful Operators
 
-In <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (with <<MicroBatchExecution.md#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, shouldRunAnotherBatch>> flag that allows <<spark-sql-streaming-StateStoreWriter.md#, StateStoreWriters>> stateful physical operators to <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, indicate whether the last batch execution requires another non-data batch>>.
+In <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (with <<MicroBatchExecution.md#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, shouldRunAnotherBatch>> flag that allows [StateStoreWriters](physical-operators/StateStoreWriter.md) stateful physical operators to [indicate whether the last batch execution requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch).
 
 The <<StateStoreWriters-shouldRunAnotherBatch, following table>> shows the `StateStoreWriters` that redefine `shouldRunAnotherBatch` flag.
 
@@ -77,11 +77,11 @@ a| [[shouldRunAnotherBatch-FlatMapGroupsWithStateExec]] Based on [GroupStateTime
 | <<StateStoreSaveExec.md#, StateStoreSaveExec>>
 a| [[shouldRunAnotherBatch-StateStoreSaveExec]] Based on <<StateStoreSaveExec.md#shouldRunAnotherBatch, OutputMode and event-time watermark>>
 
-| <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
-a| [[shouldRunAnotherBatch-StreamingDeduplicateExec]] Based on <<spark-sql-streaming-StreamingDeduplicateExec.md#shouldRunAnotherBatch, event-time watermark>>
+| <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+a| [[shouldRunAnotherBatch-StreamingDeduplicateExec]] Based on <<physical-operators/StreamingDeduplicateExec.md#shouldRunAnotherBatch, event-time watermark>>
 
-| <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
-a| [[shouldRunAnotherBatch-StreamingSymmetricHashJoinExec]] Based on <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#shouldRunAnotherBatch, event-time watermark>>
+| <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
+a| [[shouldRunAnotherBatch-StreamingSymmetricHashJoinExec]] Based on <<physical-operators/StreamingSymmetricHashJoinExec.md#shouldRunAnotherBatch, event-time watermark>>
 
 |===
 

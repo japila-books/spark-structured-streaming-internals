@@ -1,4 +1,4 @@
-== [[StateStoreProvider]] StateStoreProvider Contract -- State Store Providers
+# StateStoreProvider &mdash; State Store Providers
 
 `StateStoreProvider` is the <<contract, abstraction>> of <<implementations, state store providers>> that manage <<getStore, state stores>> in <<spark-sql-streaming-stateful-stream-processing.md#, Stateful Stream Processing>> (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>>) in stateful streaming queries.
 
@@ -97,7 +97,7 @@ supportedCustomMetrics: Seq[StateStoreCustomMetric]
 
 Used when:
 
-* `StateStoreWriter` stateful physical operators are requested for the <<spark-sql-streaming-StateStoreWriter.md#stateStoreCustomMetrics, stateStoreCustomMetrics>> (when requested for the <<spark-sql-streaming-StateStoreWriter.md#metrics, metrics>> and <<spark-sql-streaming-StateStoreWriter.md#getProgress, getProgress>>)
+* `StateStoreWriter` stateful physical operators are requested for the [stateStoreCustomMetrics](physical-operators/StateStoreWriter.md#stateStoreCustomMetrics) (when requested for the [metrics](physical-operators/StateStoreWriter.md#metrics) and [getProgress](physical-operators/StateStoreWriter.md#getProgress))
 
 * `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.md#metrics, metrics>>
 

@@ -9,7 +9,7 @@
 
 * <<StateStoreSaveExec.md#, StateStoreSaveExec>>
 
-* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 
 NOTE: http://docs.scala-lang.org/overviews/core/implicit-classes.html[Implicit Classes] are a language feature in Scala for *implicit conversions* with *extension methods* for existing types.
 
@@ -55,6 +55,6 @@ In the end, `mapPartitionsWithStateStore` creates a spark-sql-streaming-StateSto
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 * <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
 * <<StateStoreSaveExec.md#, StateStoreSaveExec>>
-* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
-* <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
+* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 ====

@@ -37,11 +37,11 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and t
 
 === [[StateStoreWriter]] StreamingGlobalLimitExec as StateStoreWriter
 
-`StreamingGlobalLimitExec` is a <<spark-sql-streaming-StateStoreWriter.md#, stateful physical operator that can write to a state store>>.
+`StreamingGlobalLimitExec` is a [stateful physical operator that can write to a state store](StateStoreWriter.md).
 
 === [[metrics]] Performance Metrics
 
-`StreamingGlobalLimitExec` uses the performance metrics of the parent <<spark-sql-streaming-StateStoreWriter.md#metrics, StateStoreWriter>>.
+`StreamingGlobalLimitExec` uses the performance metrics of the parent [StateStoreWriter](StateStoreWriter.md#metrics).
 
 === [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
 

@@ -95,7 +95,7 @@ a| [[stateStoreMinDeltasForSnapshot]] Used (as <<spark-sql-streaming-StateStoreC
 
 a| [[stateStoreProviderClass]] Used when:
 
-* `StateStoreWriter` is requested to <<spark-sql-streaming-StateStoreWriter.md#stateStoreCustomMetrics, stateStoreCustomMetrics>> (when `StateStoreWriter` is requested for the <<spark-sql-streaming-StateStoreWriter.md#metrics, metrics>> and <<spark-sql-streaming-StateStoreWriter.md#getProgress, getProgress>>)
+* `StateStoreWriter` is requested to [stateStoreCustomMetrics](physical-operators/StateStoreWriter.md#stateStoreCustomMetrics) (when `StateStoreWriter` is requested for the [metrics](physical-operators/StateStoreWriter.md#metrics) and [getProgress](physical-operators/StateStoreWriter.md#getProgress))
 
 * `StateStoreConf` is <<spark-sql-streaming-StateStoreConf.md#providerClass, created>>
 

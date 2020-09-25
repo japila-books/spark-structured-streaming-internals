@@ -45,7 +45,7 @@
 doExecute(): RDD[InternalRow]
 ```
 
-`doExecute` first initializes the [metrics](../spark-sql-streaming-StateStoreWriter.md#metrics) (which happens on the driver).
+`doExecute` first initializes the [metrics](StateStoreWriter.md#metrics) (which happens on the driver).
 
 `doExecute` then requests the [child](#child) physical operator to execute (and generate an `RDD[InternalRow]`).
 
@@ -61,19 +61,19 @@ doExecute(): RDD[InternalRow]
 
 1. Creates an iterator by concatenating the above iterators (with the new data processed first)
 
-1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../spark-sql-streaming-StateStore.md#commit) followed by [setting the store-specific metrics](../spark-sql-streaming-StateStoreWriter.md#setStoreMetrics)
+1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../spark-sql-streaming-StateStore.md#commit) followed by [setting the store-specific metrics](StateStoreWriter.md#setStoreMetrics)
 
 `doExecute` is part of Spark SQL's `SparkPlan` abstraction.
 
 ## <span id="metrics"> Performance Metrics
 
-`FlatMapGroupsWithStateExec` uses the performance metrics of [StateStoreWriter](../spark-sql-streaming-StateStoreWriter.md#metrics).
+`FlatMapGroupsWithStateExec` uses the performance metrics of [StateStoreWriter](StateStoreWriter.md#metrics).
 
 ![FlatMapGroupsWithStateExec in web UI (Details for Query)](../images/FlatMapGroupsWithStateExec-webui-query-details.png)
 
 ## <span id="StateStoreWriter"> StateStoreWriter
 
-`FlatMapGroupsWithStateExec` is a [stateful physical operator that can write to a state store](../spark-sql-streaming-StateStoreWriter.md) (and `MicroBatchExecution` requests [whether to run another batch or not](#shouldRunAnotherBatch) based on the [GroupStateTimeout](#timeoutConf)).
+`FlatMapGroupsWithStateExec` is a [stateful physical operator that can write to a state store](StateStoreWriter.md) (and `MicroBatchExecution` requests [whether to run another batch or not](#shouldRunAnotherBatch) based on the [GroupStateTimeout](#timeoutConf)).
 
 `FlatMapGroupsWithStateExec` uses the [GroupStateTimeout](#timeoutConf) (and possibly the updated [metadata](../spark-sql-streaming-OffsetSeqMetadata.md)) when asked [whether to run another batch or not](#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](../MicroBatchExecution.md#constructNextBatch) when requested to [run the activated streaming query](../MicroBatchExecution.md#runActivatedStream)).
 
@@ -149,7 +149,7 @@ shouldRunAnotherBatch(
 
 * With [ProcessingTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout), `shouldRunAnotherBatch` is always `true`
 
-`shouldRunAnotherBatch` is part of the [StateStoreWriter](../spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
+`shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
 
 ## Internal Properties
 

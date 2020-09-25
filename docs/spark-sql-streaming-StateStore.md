@@ -1,4 +1,4 @@
-== [[StateStore]] StateStore Contract -- Kay-Value Store for Streaming State Data
+# StateStore &mdash; Kay-Value Store for Streaming State Data
 
 `StateStore` is the <<contract, abstraction>> of <<implementations, key-value stores>> for managing state in <<spark-sql-streaming-stateful-stream-processing.md#, Stateful Stream Processing>> (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>>).
 
@@ -44,7 +44,7 @@ Commits the changes to the state store (and returns the current version)
 
 Used when:
 
-* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed)
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed)
 
 * `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#commit, commit (changes to) a state store>> (exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed)
 
@@ -62,7 +62,7 @@ Looks up (_gets_) the value of the given non-`null` key
 
 Used when:
 
-* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed
+* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed
 
 * `StateManagerImplBase` (of `FlatMapGroupsWithStateExecHelper`) is requested to `getState`
 
@@ -156,13 +156,13 @@ a| [[metrics]]
 metrics: StateStoreMetrics
 ----
 
-<<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>> of the state store
+[StateStoreMetrics](spark-sql-streaming-StateStoreMetrics.md) of the state store
 
 Used when:
 
-* `StateStoreWriter` stateful physical operator is requested to <<spark-sql-streaming-StateStoreWriter.md#setStoreMetrics, setStoreMetrics>>
+* `StateStoreWriter` stateful physical operator is requested to [setStoreMetrics](physical-operators/StateStoreWriter.md#setStoreMetrics)
 
-* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#commit, commit>> and for the <<spark-sql-streaming-StateStoreHandler.md#metrics, metrics>>
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](spark-sql-streaming-SymmetricHashJoinStateManager.md)) is requested to [commit](spark-sql-streaming-StateStoreHandler.md#commit) and for the [metrics](spark-sql-streaming-StateStoreHandler.md#metrics)
 
 | put
 a| [[put]]
@@ -178,7 +178,7 @@ Stores (_puts_) the value for the (non-null) key
 
 Used when:
 
-* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed
+* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed
 
 * `StateManagerImplBase` is requested to `putState`
 

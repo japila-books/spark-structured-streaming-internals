@@ -378,7 +378,7 @@ Internally, `extractExecutionStats` generate *watermark* metric (using the <<spa
 
 `extractExecutionStats` <<extractSourceToNumInputRows, extractSourceToNumInputRows>>.
 
-`extractExecutionStats` finds the [EventTimeWatermarkExec](../EventTimeWatermarkExec.md) unary physical operator (with non-zero [EventTimeStats](../spark-sql-streaming-EventTimeStatsAccum.md)) and generates *max*, *min*, and *avg* statistics.
+`extractExecutionStats` finds the [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) unary physical operator (with non-zero [EventTimeStats](../spark-sql-streaming-EventTimeStatsAccum.md)) and generates *max*, *min*, and *avg* statistics.
 
 In the end, `extractExecutionStats` creates a <<spark-sql-streaming-ExecutionStats.md#, ExecutionStats>> with the execution statistics.
 
@@ -388,19 +388,18 @@ NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is req
 
 === [[extractStateOperatorMetrics]] Generating StateStoreWriter Metrics (StateOperatorProgress) -- `extractStateOperatorMetrics` Internal Method
 
-[source, scala]
-----
+```scala
 extractStateOperatorMetrics(
   hasNewData: Boolean): Seq[StateOperatorProgress]
-----
+```
 
-`extractStateOperatorMetrics` requests the <<lastExecution, QueryExecution>> for the optimized execution plan (`executedPlan`) and finds all <<spark-sql-streaming-StateStoreWriter.md#, StateStoreWriter>> physical operators and requests them for <<spark-sql-streaming-StateStoreWriter.md#getProgress, StateOperatorProgress>>.
+`extractStateOperatorMetrics` requests the <<lastExecution, QueryExecution>> for the optimized execution plan (`executedPlan`) and finds all [StateStoreWriter](../physical-operators/StateStoreWriter.md) physical operators and requests them for [StateOperatorProgress](../physical-operators/StateStoreWriter.md#getProgress).
 
 `extractStateOperatorMetrics` clears (_zeros_) the *numRowsUpdated* metric for the given `hasNewData` turned off (`false`).
 
 `extractStateOperatorMetrics` returns an empty collection for the <<lastExecution, QueryExecution>> uninitialized (`null`).
 
-NOTE: `extractStateOperatorMetrics` is used exclusively when `ProgressReporter` is requested to <<extractExecutionStats, generate execution statistics>>.
+`extractStateOperatorMetrics` is used when `ProgressReporter` is requested to [generate execution statistics](#extractExecutionStats).
 
 === [[recordTriggerOffsets]] Recording Trigger Offsets (StreamProgress) -- `recordTriggerOffsets` Method
 

@@ -59,7 +59,7 @@ NOTE: `setWatermark` is used exclusively when `MicroBatchExecution` is requested
 updateWatermark(executedPlan: SparkPlan): Unit
 ----
 
-`updateWatermark` requests the given physical operator (`SparkPlan`) to collect all <<EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> unary physical operators.
+`updateWatermark` requests the given physical operator (`SparkPlan`) to collect all [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) unary physical operators.
 
 `updateWatermark` simply exits when no `EventTimeWatermarkExec` was found.
 
@@ -82,7 +82,7 @@ Default: `0`
 Used when...FIXME
 
 | operatorToWatermarkMap
-a| [[operatorToWatermarkMap]] Event-time watermark per <<EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator (`mutable.HashMap[Int, Long]`)
+a| [[operatorToWatermarkMap]] Event-time watermark per [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator (`mutable.HashMap[Int, Long]`)
 
 Used when...FIXME
 

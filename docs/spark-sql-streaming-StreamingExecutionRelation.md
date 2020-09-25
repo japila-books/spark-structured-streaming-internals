@@ -11,7 +11,7 @@ The main use of `StreamingExecutionRelation` logical operator is to be a "placeh
 
 ![StreamingExecutionRelation Represents Streaming Source At Execution](images/StreamingExecutionRelation.png)
 
-NOTE: `StreamingExecutionRelation` is also resolved (aka _planned_) to a spark-sql-streaming-StreamingRelationExec.md[StreamingRelationExec] physical operator in spark-sql-streaming-StreamingRelationStrategy.md[StreamingRelationStrategy] execution planning strategy only when [explaining](operators/explain.md) a streaming `Dataset`.
+NOTE: `StreamingExecutionRelation` is also resolved (aka _planned_) to a physical-operators/StreamingRelationExec.md[StreamingRelationExec] physical operator in spark-sql-streaming-StreamingRelationStrategy.md[StreamingRelationStrategy] execution planning strategy only when [explaining](operators/explain.md) a streaming `Dataset`.
 
 === [[creating-instance]] Creating StreamingExecutionRelation Instance
 

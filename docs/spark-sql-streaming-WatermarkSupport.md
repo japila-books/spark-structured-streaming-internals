@@ -36,7 +36,7 @@ The watermark attribute may be of type `StructType`. If it is, `watermarkExpress
 INFO [physicalOperator]Exec: Filtering state store on: [evictionExpression]
 ```
 
-NOTE: `physicalOperator` can be [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), StateStoreSaveExec.md[StateStoreSaveExec] or spark-sql-streaming-StreamingDeduplicateExec.md[StreamingDeduplicateExec].
+NOTE: `physicalOperator` can be [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), StateStoreSaveExec.md[StateStoreSaveExec] or physical-operators/StreamingDeduplicateExec.md[StreamingDeduplicateExec].
 
 TIP: Enable INFO logging level for one of the stateful physical operators to see the INFO message in the logs.
 
@@ -70,11 +70,11 @@ trait WatermarkSupport extends UnaryExecNode {
 | Used mainly in <<watermarkExpression, watermarkExpression>> to create a `LessThanOrEqual` Catalyst binary expression that matches rows older than the watermark.
 
 | [[keyExpressions]] `keyExpressions`
-| Grouping keys (in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#keyExpressions)), duplicate keys (in spark-sql-streaming-StreamingDeduplicateExec.md#keyExpressions[StreamingDeduplicateExec]) or key attributes (in StateStoreSaveExec.md#keyExpressions[StateStoreSaveExec]) with at most one that may have EventTimeWatermark.md#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in metadata
+| Grouping keys (in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#keyExpressions)), duplicate keys (in physical-operators/StreamingDeduplicateExec.md#keyExpressions[StreamingDeduplicateExec]) or key attributes (in StateStoreSaveExec.md#keyExpressions[StateStoreSaveExec]) with at most one that may have EventTimeWatermark.md#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in metadata
 
 Used in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Predicate` to match rows older than the event time watermark.
 
-Used also when StateStoreSaveExec.md#doExecute[StateStoreSaveExec] and spark-sql-streaming-StreamingDeduplicateExec.md#doExecute[StreamingDeduplicateExec] physical operators are executed.
+Used also when StateStoreSaveExec.md#doExecute[StateStoreSaveExec] and physical-operators/StreamingDeduplicateExec.md#doExecute[StreamingDeduplicateExec] physical operators are executed.
 |===
 
 === [[removeKeysOlderThanWatermark]][[removeKeysOlderThanWatermark-StateStore]] Removing Keys From StateStore Older Than Watermark -- `removeKeysOlderThanWatermark` Method
@@ -88,7 +88,7 @@ removeKeysOlderThanWatermark(store: StateStore): Unit
 
 `removeKeysOlderThanWatermark` then uses <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to spark-sql-streaming-StateStore.md#remove[remove matching rows from the store].
 
-NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StreamingDeduplicateExec` physical operator is requested to <<spark-sql-streaming-StreamingDeduplicateExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
+NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StreamingDeduplicateExec` physical operator is requested to <<physical-operators/StreamingDeduplicateExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
 
 === [[removeKeysOlderThanWatermark-StreamingAggregationStateManager-store]] `removeKeysOlderThanWatermark` Method
 

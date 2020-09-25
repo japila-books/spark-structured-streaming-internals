@@ -23,13 +23,13 @@ Spark Structured Streaming supports *stream-stream joins* with the following:
 
 * <<spark-sql-streaming-StreamingJoinStrategy.md#, Equality predicate>> (i.e. https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join[equi-joins] that use only equality comparisons in the join predicate)
 
-* `Inner`, `LeftOuter`, and `RightOuter` <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#supported-join-types, join types only>>
+* `Inner`, `LeftOuter`, and `RightOuter` <<physical-operators/StreamingSymmetricHashJoinExec.md#supported-join-types, join types only>>
 
-Stream-stream equi-joins are planned as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators of two `ShuffleExchangeExec` physical operators (per <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#requiredChildDistribution, Required Partition Requirements>>).
+Stream-stream equi-joins are planned as <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators of two `ShuffleExchangeExec` physical operators (per <<physical-operators/StreamingSymmetricHashJoinExec.md#requiredChildDistribution, Required Partition Requirements>>).
 
 === [[join-state-watermark]] Join State Watermark for State Removal
 
-Stream-stream joins may optionally define *Join State Watermark* for state removal (cf. <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates, Watermark Predicates for State Removal>>).
+Stream-stream joins may optionally define *Join State Watermark* for state removal (cf. <<physical-operators/StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates, Watermark Predicates for State Removal>>).
 
 A join state watermark can be specified on the following:
 
@@ -47,7 +47,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 In Spark Structured Streaming <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is responsible for planning streaming queries for execution.
 
-At <<spark-sql-streaming-IncrementalExecution.md#executedPlan, query planning>>, `IncrementalExecution` uses the <<spark-sql-streaming-StreamingJoinStrategy.md#, StreamingJoinStrategy>> execution planning strategy for planning <<stream-stream-joins, stream-stream joins>> as <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators.
+At <<spark-sql-streaming-IncrementalExecution.md#executedPlan, query planning>>, `IncrementalExecution` uses the <<spark-sql-streaming-StreamingJoinStrategy.md#, StreamingJoinStrategy>> execution planning strategy for planning <<stream-stream-joins, stream-stream joins>> as <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators.
 
 === [[demos]] Demos
 

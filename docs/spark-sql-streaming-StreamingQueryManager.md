@@ -362,7 +362,7 @@ Used when:
 
 * `StreamingQueryManager` <<notifyQueryTermination, is notified that a streaming query has terminated>>
 
-* Stateful operators are executed, i.e. [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), spark-sql-streaming-StateStoreRestoreExec.md#doExecute[StateStoreRestoreExec], StateStoreSaveExec.md#doExecute[StateStoreSaveExec], spark-sql-streaming-StreamingDeduplicateExec.md#doExecute[StreamingDeduplicateExec] and spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute[StreamingSymmetricHashJoinExec]
+* Stateful operators are executed, i.e. [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), spark-sql-streaming-StateStoreRestoreExec.md#doExecute[StateStoreRestoreExec], StateStoreSaveExec.md#doExecute[StateStoreSaveExec], physical-operators/StreamingDeduplicateExec.md#doExecute[StreamingDeduplicateExec] and physical-operators/StreamingSymmetricHashJoinExec.md#doExecute[StreamingSymmetricHashJoinExec]
 
 * spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)]
 

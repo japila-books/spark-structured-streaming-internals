@@ -1,6 +1,6 @@
-== [[StreamingDeduplicateExec]] StreamingDeduplicateExec Unary Physical Operator for Streaming Deduplication
+# StreamingDeduplicateExec Unary Physical Operator
 
-`StreamingDeduplicateExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.md#, writes state to StateStore>> with <<spark-sql-streaming-WatermarkSupport.md#, support for streaming watermark>>.
+`StreamingDeduplicateExec` is a unary physical operator that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](../spark-sql-streaming-WatermarkSupport.md).
 
 [NOTE]
 ====
@@ -11,11 +11,9 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 `StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` spark-sql-streaming-StreamingDeduplicationStrategy.md#apply[plans Deduplicate unary logical operators].
 
-.StreamingDeduplicateExec and StreamingDeduplicationStrategy
-image::images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png[align="center"]
+![StreamingDeduplicateExec and StreamingDeduplicationStrategy](../images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png)
 
-[source, scala]
-----
+```text
 val uniqueValues = spark.
   readStream.
   format("rate").
@@ -88,10 +86,10 @@ Batch: 2
 
 // Eventually...
 sq.stop
-----
+```
 
 [[metrics]]
-`StreamingDeduplicateExec` uses the performance metrics of <<spark-sql-streaming-StateStoreWriter.md#metrics, StateStoreWriter>>.
+`StreamingDeduplicateExec` uses the performance metrics of [StateStoreWriter](StateStoreWriter.md#metrics).
 
 .StreamingDeduplicateExec in web UI (Details for Query)
 image::images/StreamingDeduplicateExec-webui-query-details.png[align="center"]
@@ -184,7 +182,7 @@ doExecute(): RDD[InternalRow]
 
 NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
 
-Internally, `doExecute` initializes spark-sql-streaming-StateStoreWriter.md#metrics[metrics].
+Internally, `doExecute` initializes [metrics](StateStoreWriter.md#metrics).
 
 `doExecute` executes <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 
@@ -212,24 +210,24 @@ The completion function does the following:
 
 * Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to spark-sql-streaming-StateStore.md#commit[commit the changes to the StateStore]
 
-* spark-sql-streaming-StateStoreWriter.md#setStoreMetrics[Sets StateStore-specific metrics]
+* [Sets StateStore-specific metrics](StateStoreWriter.md#setStoreMetrics)
 
 === [[creating-instance]] Creating StreamingDeduplicateExec Instance
 
 `StreamingDeduplicateExec` takes the following when created:
 
-* [[keyExpressions]] Duplicate keys (as used in [dropDuplicates](operators/dropDuplicates.md) operator)
+* [[keyExpressions]] Duplicate keys (as used in [dropDuplicates](../operators/dropDuplicates.md) operator)
 * [[child]] Child physical operator (`SparkPlan`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
 * [[eventTimeWatermark]] Event-time watermark
 
-=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
+## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
 
-[source, scala]
-----
-shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
-----
-
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+```scala
+shouldRunAnotherBatch(
+  newMetadata: OffsetSeqMetadata): Boolean
+```
 
 `shouldRunAnotherBatch`...FIXME
+
+`shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.

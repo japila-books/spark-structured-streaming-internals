@@ -1,7 +1,7 @@
 == [[StateStoreAwareZipPartitionsHelper]] StateStoreAwareZipPartitionsHelper -- Extension Methods for Creating StateStoreAwareZipPartitionsRDD
 
 [[dataRDD]]
-`StateStoreAwareZipPartitionsHelper` is a *Scala implicit class* of a data RDD (of type `RDD[T]`) to <<stateStoreAwareZipPartitions, create a StateStoreAwareZipPartitionsRDD>> for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator.
+`StateStoreAwareZipPartitionsHelper` is a *Scala implicit class* of a data RDD (of type `RDD[T]`) to <<stateStoreAwareZipPartitions, create a StateStoreAwareZipPartitionsRDD>> for <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator.
 
 NOTE: http://docs.scala-lang.org/overviews/core/implicit-classes.html[Implicit Classes] are a language feature in Scala for *implicit conversions* with *extension methods* for existing types.
 
@@ -19,4 +19,4 @@ stateStoreAwareZipPartitions[U: ClassTag, V: ClassTag](
 
 `stateStoreAwareZipPartitions` simply creates a new <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md#, StateStoreAwareZipPartitionsRDD>>.
 
-NOTE: `stateStoreAwareZipPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
+NOTE: `stateStoreAwareZipPartitions` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.

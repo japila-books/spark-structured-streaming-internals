@@ -71,7 +71,7 @@ val stateDir = s"$checkpointLocation/state"
 assert(stateCheckpointDir equals stateDir)
 ```
 
-State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<StateStoreSaveExec.md#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>).
+State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<StateStoreSaveExec.md#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>, <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>, and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>).
 
 === [[numStateStores]] Number of State Stores (spark.sql.shuffle.partitions) -- `numStateStores` Internal Property
 
@@ -88,7 +88,7 @@ Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata
 
 `numStateStores` is initialized right when `IncrementalExecution` is <<creating-instance, created>>.
 
-`numStateStores` is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<StateStoreSaveExec.md#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>).
+`numStateStores` is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<StateStoreSaveExec.md#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>, <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>, and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>).
 
 === [[planner]][[extraPlanningStrategies]] Extra Planning Strategies for Streaming Queries -- `planner` Property
 
@@ -114,13 +114,13 @@ state: Rule[SparkPlan]
 
 * <<StateStoreSaveExec.md#, StateStoreSaveExec>> with any unary physical operator (`UnaryExecNode`) with a <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
 
-* <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 
-* <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
+* <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
 
-* <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
+* <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 
 `state` simply transforms the physical plan with the above physical operators and fills out the execution-specific configuration:
 
@@ -132,7 +132,7 @@ state: Rule[SparkPlan]
 
 * <<spark-sql-streaming-OffsetSeqMetadata.md#batchTimestampMs, batchTimestampMs>> (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the current timestamp
 
-* <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, getStateWatermarkPredicates>> for the state watermark predicates (for <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>)
+* <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, getStateWatermarkPredicates>> for the state watermark predicates (for <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>)
 
 `state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to <<executedPlan, optimize (prepare) the physical plan of the streaming query>> (once for <<ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
 
@@ -156,7 +156,7 @@ All the other properties (the <<state-checkpoint-location, state checkpoint loca
 The only two properties that may ever change are the <<runId, run ID>> (after a streaming query is restarted from the checkpoint) and the <<currentBatchId, current batch ID>> (every micro-batch in <<MicroBatchExecution.md#, MicroBatchExecution>> execution engine).
 ====
 
-NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to optimize a streaming physical plan using the <<state, state preparation rule>> (and creates the stateful physical operators: <<StateStoreSaveExec.md#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>).
+NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExecution` is requested to optimize a streaming physical plan using the <<state, state preparation rule>> (and creates the stateful physical operators: <<StateStoreSaveExec.md#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>, <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>, and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>).
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Execution Requires Another Non-Data Micro-Batch -- `shouldRunAnotherBatch` Method
 
@@ -165,7 +165,7 @@ NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExec
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-`shouldRunAnotherBatch` is positive (`true`) if there is at least one <<spark-sql-streaming-StateStoreWriter.md#, StateStoreWriter>> operator (in the <<executedPlan, executedPlan physical query plan>>) that <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, requires another non-data batch>> (per the given <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
+`shouldRunAnotherBatch` is positive (`true`) if there is at least one [StateStoreWriter](physical-operators/StateStoreWriter.md) operator (in the <<executedPlan, executedPlan physical query plan>>) that [requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch) (per the given <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
 
 Otherwise, `shouldRunAnotherBatch` is negative (`false`).
 
