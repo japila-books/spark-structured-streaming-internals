@@ -172,8 +172,8 @@ nav:
         - StreamingQueryProgress: StreamingQueryProgress.md
         - StateOperatorProgress: StateOperatorProgress.md
         - ExecutionStats: spark-sql-streaming-ExecutionStats.md
-        - SourceProgress: spark-sql-streaming-SourceProgress.md
-        - SinkProgress: spark-sql-streaming-SinkProgress.md
+        - SourceProgress: SourceProgress.md
+        - SinkProgress: SinkProgress.md
       - StreamingQueryStatus: spark-sql-streaming-StreamingQueryStatus.md
       - MetricsReporter: MetricsReporter.md
       - Web UI: spark-sql-streaming-webui.md
