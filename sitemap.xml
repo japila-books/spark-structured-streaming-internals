@@ -168,18 +168,6 @@
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StatefulOperator/</loc>
-     <lastmod>2020-09-25</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStoreReader/</loc>
-     <lastmod>2020-09-25</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStoreWriter/</loc>
-     <lastmod>2020-09-25</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StatefulOperatorStateInfo/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
@@ -344,7 +332,7 @@
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/EventTimeWatermarkExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/EventTimeWatermarkExec/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -352,27 +340,39 @@
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStoreRestoreExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StatefulOperator/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StateStoreSaveExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StateStoreReader/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingDeduplicateExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StateStoreRestoreExec/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingGlobalLimitExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StateStoreSaveExec/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingRelationExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StateStoreWriter/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingSymmetricHashJoinExec/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StreamingDeduplicateExec/</loc>
+     <lastmod>2020-09-25</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StreamingGlobalLimitExec/</loc>
+     <lastmod>2020-09-25</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StreamingRelationExec/</loc>
+     <lastmod>2020-09-25</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StreamingSymmetricHashJoinExec/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
