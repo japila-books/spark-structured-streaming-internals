@@ -11,7 +11,7 @@ Enables streaming metrics
 
 Default: `false`
 
-Use [SQLConf.streamingMetricsEnabled](spark-sql-streaming-SQLConf.md#streamingMetricsEnabled) to access the current value.
+Use [SQLConf.streamingMetricsEnabled](SQLConf.md#streamingMetricsEnabled) to access the current value.
 
 [[properties]]
 .Structured Streaming's Properties
@@ -60,14 +60,14 @@ a| [[spark.sql.streaming.disabledV2MicroBatchReaders]] *(internal)* A comma-sepa
 
 Default: `(empty)`
 
-Use <<spark-sql-streaming-SQLConf.md#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
+Use <<SQLConf.md#disabledV2StreamingMicroBatchReaders, SQLConf.disabledV2StreamingMicroBatchReaders>> to get the current value.
 
 | spark.sql.streaming.fileSource.log.cleanupDelay
 a| [[spark.sql.streaming.fileSource.log.cleanupDelay]] *(internal)* How long (in millis) a file is guaranteed to be visible for all readers.
 
 Default: `10` (minutes)
 
-Use <<spark-sql-streaming-SQLConf.md#fileSourceLogCleanupDelay, SQLConf.fileSourceLogCleanupDelay>> to get the current value.
+Use <<SQLConf.md#fileSourceLogCleanupDelay, SQLConf.fileSourceLogCleanupDelay>> to get the current value.
 
 | spark.sql.streaming.fileSource.log.compactInterval
 a| [[spark.sql.streaming.fileSource.log.compactInterval]] *(internal)* Number of log files after which all the previous files are compacted into the next log file.
@@ -76,14 +76,14 @@ Default: `10`
 
 Must be a positive value (greater than `0`)
 
-Use <<spark-sql-streaming-SQLConf.md#fileSourceLogCompactInterval, SQLConf.fileSourceLogCompactInterval>> to get the current value.
+Use <<SQLConf.md#fileSourceLogCompactInterval, SQLConf.fileSourceLogCompactInterval>> to get the current value.
 
 | spark.sql.streaming.fileSource.log.deletion
 a| [[spark.sql.streaming.fileSource.log.deletion]] *(internal)* Whether to delete the expired log files in file stream source
 
 Default: `true`
 
-Use <<spark-sql-streaming-SQLConf.md#fileSourceLogDeletion, SQLConf.fileSourceLogDeletion>> to get the current value.
+Use <<SQLConf.md#fileSourceLogDeletion, SQLConf.fileSourceLogDeletion>> to get the current value.
 
 | spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
 a| [[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion]] *(internal)* State format version used to create a <<spark-sql-streaming-StateManager.md#, StateManager>> for [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) physical operator
@@ -117,7 +117,7 @@ a| [[spark.sql.streaming.minBatchesToRetain]] *(internal)* The minimum number of
 
 Default: `100`
 
-Use <<spark-sql-streaming-SQLConf.md#minBatchesToRetain, SQLConf.minBatchesToRetain>> to get the current value
+Use <<SQLConf.md#minBatchesToRetain, SQLConf.minBatchesToRetain>> to get the current value
 
 | spark.sql.streaming.multipleWatermarkPolicy
 a| [[spark.sql.streaming.multipleWatermarkPolicy]] *Global watermark policy* that is the policy to calculate the global watermark value when there are multiple watermark operators in a streaming query
@@ -133,28 +133,28 @@ Supported values:
 Cannot be changed between query restarts from the same checkpoint location.
 
 | spark.sql.streaming.noDataMicroBatches.enabled
-a| [[spark.sql.streaming.noDataMicroBatches.enabled]] Flag to control whether the <<spark-sql-streaming-MicroBatchExecution.md#, streaming micro-batch engine>> should execute batches with no data to process for eager state management for stateful streaming queries (`true`) or not (`false`).
+a| [[spark.sql.streaming.noDataMicroBatches.enabled]] Flag to control whether the <<MicroBatchExecution.md#, streaming micro-batch engine>> should execute batches with no data to process for eager state management for stateful streaming queries (`true`) or not (`false`).
 
 Default: `true`
 
-Use <<spark-sql-streaming-SQLConf.md#streamingNoDataMicroBatchesEnabled, SQLConf.streamingNoDataMicroBatchesEnabled>> to get the current value
+Use <<SQLConf.md#streamingNoDataMicroBatchesEnabled, SQLConf.streamingNoDataMicroBatchesEnabled>> to get the current value
 
 | spark.sql.streaming.noDataProgressEventInterval
-a| [[spark.sql.streaming.noDataProgressEventInterval]] *(internal)* How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to [finish a trigger](ProgressReporter.md#finishTrigger)
+a| [[spark.sql.streaming.noDataProgressEventInterval]] *(internal)* How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to [finish a trigger](monitoring/ProgressReporter.md#finishTrigger)
 
 Default: `10000L`
 
-Use <<spark-sql-streaming-SQLConf.md#streamingNoDataProgressEventInterval, SQLConf.streamingNoDataProgressEventInterval>> to get the current value
+Use <<SQLConf.md#streamingNoDataProgressEventInterval, SQLConf.streamingNoDataProgressEventInterval>> to get the current value
 
 | spark.sql.streaming.numRecentProgressUpdates
-a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of [StreamingQueryProgresses](StreamingQueryProgress.md) to retain in [progressBuffer](ProgressReporter.md#progressBuffer) internal registry when `ProgressReporter` is requested to [update progress of streaming query](ProgressReporter.md#updateProgress)
+a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of [StreamingQueryProgresses](monitoring/StreamingQueryProgress.md) to retain in [progressBuffer](monitoring/ProgressReporter.md#progressBuffer) internal registry when `ProgressReporter` is requested to [update progress of streaming query](monitoring/ProgressReporter.md#updateProgress)
 
 Default: `100`
 
-Use <<spark-sql-streaming-SQLConf.md#streamingProgressRetention, SQLConf.streamingProgressRetention>> to get the current value
+Use <<SQLConf.md#streamingProgressRetention, SQLConf.streamingProgressRetention>> to get the current value
 
 | spark.sql.streaming.pollingDelay
-a| [[spark.sql.streaming.pollingDelay]] *(internal)* How long (in millis) to delay `StreamExecution` before spark-sql-streaming-MicroBatchExecution.md#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch]
+a| [[spark.sql.streaming.pollingDelay]] *(internal)* How long (in millis) to delay `StreamExecution` before MicroBatchExecution.md#runBatches-batchRunner-no-data[polls for new data when no data was available in a batch]
 
 Default: `10` (milliseconds)
 
@@ -168,14 +168,14 @@ a| [[spark.sql.streaming.stateStore.minDeltasForSnapshot]] *(internal)* Minimum 
 
 Default: `10`
 
-Use <<spark-sql-streaming-SQLConf.md#stateStoreMinDeltasForSnapshot, SQLConf.stateStoreMinDeltasForSnapshot>> to get the current value.
+Use <<SQLConf.md#stateStoreMinDeltasForSnapshot, SQLConf.stateStoreMinDeltasForSnapshot>> to get the current value.
 
 | spark.sql.streaming.stateStore.providerClass
 a| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name of the <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
 
 Default: <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedStateStoreProvider>>
 
-Use <<spark-sql-streaming-SQLConf.md#stateStoreProviderClass, SQLConf.stateStoreProviderClass>> to get the current value.
+Use <<SQLConf.md#stateStoreProviderClass, SQLConf.stateStoreProviderClass>> to get the current value.
 
 | spark.sql.streaming.unsupportedOperationCheck
 a| [[spark.sql.streaming.unsupportedOperationCheck]] *(internal)* When enabled (`true`), `StreamingQueryManager` spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[makes sure that the logical plan of a streaming query uses supported operations only].

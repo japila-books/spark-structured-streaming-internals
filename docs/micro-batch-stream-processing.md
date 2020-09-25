@@ -2,7 +2,7 @@
 
 *Micro-Batch Stream Processing* is a stream processing model in Spark Structured Streaming that is used for streaming queries with <<spark-sql-streaming-Trigger.md#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.md#ProcessingTime, Trigger.ProcessingTime>> triggers.
 
-Micro-batch stream processing uses <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine.
+Micro-batch stream processing uses <<MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine.
 
 Micro-batch stream processing supports <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> data sources.
 
@@ -36,17 +36,17 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 
 === [[execution-phases]] Execution Phases (Processing Cycle)
 
-Once <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream processing engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>, the query execution goes through the following *execution phases* every trigger:
+Once <<MicroBatchExecution.md#, MicroBatchExecution>> stream processing engine is requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>, the query execution goes through the following *execution phases* every trigger:
 
-. [[triggerExecution]] <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution>>
-. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getOffset, getOffset>> for [Sources](Source.md) or <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-setOffsetRange, setOffsetRange>> for <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReaders>>
-. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-getEndOffset, getEndOffset>>
-. <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit, walCommit>>
-. <<spark-sql-streaming-MicroBatchExecution.md#runBatch-getBatch, getBatch>>
-. <<spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning, queryPlanning>>
-. <<spark-sql-streaming-MicroBatchExecution.md#runBatch-addBatch, addBatch>>
+. [[triggerExecution]] <<MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution>>
+. <<MicroBatchExecution.md#constructNextBatch-getOffset, getOffset>> for [Sources](Source.md) or <<MicroBatchExecution.md#constructNextBatch-setOffsetRange, setOffsetRange>> for <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReaders>>
+. <<MicroBatchExecution.md#constructNextBatch-getEndOffset, getEndOffset>>
+. <<MicroBatchExecution.md#constructNextBatch-walCommit, walCommit>>
+. <<MicroBatchExecution.md#runBatch-getBatch, getBatch>>
+. <<MicroBatchExecution.md#runBatch-queryPlanning, queryPlanning>>
+. <<MicroBatchExecution.md#runBatch-addBatch, addBatch>>
 
-Execution phases with execution times are available using <<spark-sql-streaming-StreamingQuery.md#lastProgress, StreamingQueryProgress>> under `durationMs`.
+Execution phases with execution times are available using <<StreamingQuery.md#lastProgress, StreamingQueryProgress>> under `durationMs`.
 
 ```text
 scala> :type sq
@@ -78,9 +78,9 @@ sq.lastProgress.durationMs.get("walCommit")
 
 ## Monitoring
 
-`MicroBatchExecution` [posts events](ProgressReporter.md#postEvent) to announce when a streaming query is started and stopped as well as after every micro-batch. <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>> interface can be used to intercept the events and act accordingly.
+`MicroBatchExecution` [posts events](monitoring/ProgressReporter.md#postEvent) to announce when a streaming query is started and stopped as well as after every micro-batch. <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>> interface can be used to intercept the events and act accordingly.
 
-After <<triggerExecution, triggerExecution phase>> `MicroBatchExecution` is requested to [finish up a streaming batch (trigger) and generate a StreamingQueryProgress](ProgressReporter.md#finishTrigger) (with execution statistics).
+After <<triggerExecution, triggerExecution phase>> `MicroBatchExecution` is requested to [finish up a streaming batch (trigger) and generate a StreamingQueryProgress](monitoring/ProgressReporter.md#finishTrigger) (with execution statistics).
 
 `MicroBatchExecution` prints out the following DEBUG message to the logs:
 
@@ -88,7 +88,7 @@ After <<triggerExecution, triggerExecution phase>> `MicroBatchExecution` is requ
 Execution stats: [executionStats]
 ```
 
-`MicroBatchExecution` [posts a QueryProgressEvent with the StreamingQueryProgress](ProgressReporter.md#updateProgress) and prints out the following INFO message to the logs:
+`MicroBatchExecution` [posts a QueryProgressEvent with the StreamingQueryProgress](monitoring/ProgressReporter.md#updateProgress) and prints out the following INFO message to the logs:
 
 ```text
 Streaming query made progress: [newProgress]

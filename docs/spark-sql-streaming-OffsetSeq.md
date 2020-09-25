@@ -6,9 +6,9 @@
 
 * `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#deserialize, deserialize metadata>> (retrieve metadata from a persistent storage)
 
-* `StreamProgress` is requested to <<spark-sql-streaming-StreamProgress.md#toOffsetSeq, convert itself to OffsetSeq>> (most importantly when `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit, commit available offsets for a batch to the write-ahead log>>)
+* `StreamProgress` is requested to <<spark-sql-streaming-StreamProgress.md#toOffsetSeq, convert itself to OffsetSeq>> (most importantly when `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> to <<MicroBatchExecution.md#constructNextBatch-walCommit, commit available offsets for a batch to the write-ahead log>>)
 
-* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.md#getStartOffsets, get start offsets>> and <<spark-sql-streaming-ContinuousExecution.md#addOffset, addOffset>>
+* `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#getStartOffsets, get start offsets>> and <<ContinuousExecution.md#addOffset, addOffset>>
 
 === [[creating-instance]] Creating OffsetSeq Instance
 
@@ -39,9 +39,9 @@ There are [[offsets.size]] sources in the checkpoint offsets and now there are [
 ====
 `toStreamProgress` is used when:
 
-* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#populateStartOffsets, populate start offsets from offsets and commits checkpoints>> and <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch, construct (or skip) the next streaming micro-batch>>
+* `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets from offsets and commits checkpoints>> and <<MicroBatchExecution.md#constructNextBatch, construct (or skip) the next streaming micro-batch>>
 
-* `ContinuousExecution` is requested for <<spark-sql-streaming-ContinuousExecution.md#getStartOffsets, start offsets>>
+* `ContinuousExecution` is requested for <<ContinuousExecution.md#getStartOffsets, start offsets>>
 ====
 
 === [[toString]] Textual Representation -- `toString` Method
@@ -75,5 +75,5 @@ fill(
 
 * `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#deserialize, deserialize metadata>>
 
-* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.md#getStartOffsets, get start offsets>> and <<spark-sql-streaming-ContinuousExecution.md#addOffset, addOffset>>
+* `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#getStartOffsets, get start offsets>> and <<ContinuousExecution.md#addOffset, addOffset>>
 ====

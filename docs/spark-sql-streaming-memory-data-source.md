@@ -6,7 +6,7 @@
 
 * <<spark-sql-streaming-MemorySinkBase.md#, MemorySinkBase>>
 
-Memory data source supports <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.md#, Continuous>> stream processing modes.
+Memory data source supports <<micro-batch-stream-processing.md#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.md#, Continuous>> stream processing modes.
 
 [cols="30,35,35",options="header",width="100%"]
 |===
@@ -14,7 +14,7 @@ Memory data source supports <<spark-sql-streaming-micro-batch-stream-processing.
 | Source
 | Sink
 
-| <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch>>
+| <<micro-batch-stream-processing.md#, Micro-Batch>>
 | <<spark-sql-streaming-MemoryStream.md#, MemoryStream>>
 | <<spark-sql-streaming-MemorySink.md#, MemorySink>>
 

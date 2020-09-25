@@ -1,6 +1,6 @@
-== [[StateStoreSaveExec]] StateStoreSaveExec Unary Physical Operator -- Saving Streaming State To State Store
+# StateStoreSaveExec Unary Physical Operator
 
-`StateStoreSaveExec` is a unary physical operator that <<spark-sql-streaming-StateStoreWriter.md#, saves a streaming state to a state store>> with <<spark-sql-streaming-WatermarkSupport.md#, support for streaming watermark>>.
+`StateStoreSaveExec` is a unary physical operator that [saves a streaming state to a state store](spark-sql-streaming-StateStoreWriter.md) with [support for streaming watermark](spark-sql-streaming-WatermarkSupport.md).
 
 [NOTE]
 ====
@@ -112,7 +112,7 @@ a| [[numOutputRows]]
 | number of total state rows
 a| [[numTotalStateRows]] Number of entries in a <<spark-sql-streaming-StateStore.md#, state store>> at the very end of <<doExecute, executing the StateStoreSaveExec operator>> (aka _numTotalStateRows_)
 
-Corresponds to `numRowsTotal` attribute in `stateOperators` in [StreamingQueryProgress](StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
+Corresponds to `numRowsTotal` attribute in `stateOperators` in [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | number of updated state rows
 a| [[numUpdatedStateRows]] Number of the entries that <<spark-sql-streaming-StateStore.md#put, were stored as updates in a state store>> in a trigger and for the keys in the result rows of the upstream physical operator (aka _numUpdatedStateRows_)
@@ -123,7 +123,7 @@ a| [[numUpdatedStateRows]] Number of the entries that <<spark-sql-streaming-Stat
 
 * For <<outputMode, Update>> output mode, the number of rows that the <<stateManager, StreamingAggregationStateManager>> was requested to <<spark-sql-streaming-StreamingAggregationStateManager.md#put, store in a state store>> (that did not expire per the optional <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData, watermarkPredicateForData>> predicate) that is equivalent to the <<numOutputRows, number of output rows>> metric)
 
-Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQueryProgress](StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
+Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | memory used by state
 a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.md#, StateStore>> (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, StateStoreMetrics>> of the <<spark-sql-streaming-StateStore.md#metrics, StateStore>>)
@@ -263,7 +263,7 @@ shouldRunAnotherBatch(
   newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
 `shouldRunAnotherBatch` is positive (`true`) when all of the following are met:
 

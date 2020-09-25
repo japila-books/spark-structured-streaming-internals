@@ -23,7 +23,7 @@ void commit(Offset end)
 
 Commits the specified <<spark-sql-streaming-Offset.md#, offset>>
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
+Used exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#commit, commit an epoch>>
 
 | deserializeOffset
 a| [[deserializeOffset]]
@@ -35,7 +35,7 @@ Offset deserializeOffset(String json)
 
 Deserializes an <<spark-sql-streaming-Offset.md#, offset>> from JSON representation
 
-Used when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query>> and <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
+Used when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query>> and <<ContinuousExecution.md#commit, commit an epoch>>
 
 | getStartOffset
 a| [[getStartOffset]]
@@ -55,7 +55,7 @@ a| [[mergeOffsets]]
 Offset mergeOffsets(PartitionOffset[] offsets)
 ----
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#addOffset, addOffset>>
+Used exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#addOffset, addOffset>>
 
 | needsReconfiguration
 a| [[needsReconfiguration]]
@@ -67,7 +67,7 @@ boolean needsReconfiguration()
 
 Indicates that the reader needs reconfiguration (e.g. to generate new input partitions)
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>>
+Used exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>>
 
 | setStartOffset
 a| [[setStartOffset]]
@@ -77,7 +77,7 @@ a| [[setStartOffset]]
 void setStartOffset(Optional<Offset> start)
 ----
 
-Used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run the streaming query in continuous mode>>.
+Used exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run the streaming query in continuous mode>>.
 
 |===
 

@@ -5,13 +5,13 @@
 `FileStreamSourceLog` uses a fixed-size <<fileEntryCache, cache>> of metadata of compaction batches.
 
 [[defaultCompactInterval]]
-`FileStreamSourceLog` uses <<spark-sql-streaming-SQLConf.md#fileSourceLogCompactInterval, spark.sql.streaming.fileSource.log.compactInterval>> configuration property (default: `10`) for the <<spark-sql-streaming-CompactibleFileStreamLog.md#defaultCompactInterval, default compaction interval>>.
+`FileStreamSourceLog` uses <<SQLConf.md#fileSourceLogCompactInterval, spark.sql.streaming.fileSource.log.compactInterval>> configuration property (default: `10`) for the <<spark-sql-streaming-CompactibleFileStreamLog.md#defaultCompactInterval, default compaction interval>>.
 
 [[fileCleanupDelayMs]]
-`FileStreamSourceLog` uses <<spark-sql-streaming-SQLConf.md#fileSourceLogCleanupDelay, spark.sql.streaming.fileSource.log.cleanupDelay>> configuration property (default: `10` minutes) for the <<spark-sql-streaming-CompactibleFileStreamLog.md#fileCleanupDelayMs, fileCleanupDelayMs>>.
+`FileStreamSourceLog` uses <<SQLConf.md#fileSourceLogCleanupDelay, spark.sql.streaming.fileSource.log.cleanupDelay>> configuration property (default: `10` minutes) for the <<spark-sql-streaming-CompactibleFileStreamLog.md#fileCleanupDelayMs, fileCleanupDelayMs>>.
 
 [[isDeletingExpiredLog]]
-`FileStreamSourceLog` uses <<spark-sql-streaming-SQLConf.md#fileSourceLogDeletion, spark.sql.streaming.fileSource.log.deletion>> configuration property (default: `true`) for the <<spark-sql-streaming-CompactibleFileStreamLog.md#isDeletingExpiredLog, isDeletingExpiredLog>>.
+`FileStreamSourceLog` uses <<SQLConf.md#fileSourceLogDeletion, spark.sql.streaming.fileSource.log.deletion>> configuration property (default: `true`) for the <<spark-sql-streaming-CompactibleFileStreamLog.md#isDeletingExpiredLog, isDeletingExpiredLog>>.
 
 === [[creating-instance]] Creating FileStreamSourceLog Instance
 

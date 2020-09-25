@@ -91,7 +91,7 @@ eventTimeWatermark: Option[Long]
 
 When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the current streaming micro-batch.
 
-`eventTimeWatermark` is an optional property that is specified only after <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> was requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
+`eventTimeWatermark` is an optional property that is specified only after <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> was requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
 
 [NOTE]
 ====
@@ -111,7 +111,7 @@ stateWatermarkPredicates: JoinStateWatermarkPredicates
 
 When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, StreamingSymmetricHashJoinHelper>> utility).
 
-`stateWatermarkPredicates` contains the left and right predicates only when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
+`stateWatermarkPredicates` contains the left and right predicates only when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
 
 [NOTE]
 ====
@@ -196,7 +196,7 @@ shouldRunAnotherBatch(
   newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
+NOTE: `shouldRunAnotherBatch` is part of the <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, StateStoreWriter Contract>> to indicate whether <<MicroBatchExecution.md#, MicroBatchExecution>> should run another non-data batch (based on the updated <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark and the batch timestamp).
 
 `shouldRunAnotherBatch` is positive (`true`) when all of the following are positive:
 

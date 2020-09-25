@@ -2,7 +2,7 @@
 
 `Sink` is the <<contract, extension>> of the <<spark-sql-streaming-BaseStreamingSink.md#, BaseStreamingSink contract>> for <<implementations, streaming sinks>> that can <<addBatch, add batches to an output>>.
 
-`Sink` is part of Data Source API V1 and used in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> only.
+`Sink` is part of Data Source API V1 and used in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> only.
 
 [[contract]]
 .Sink Contract
@@ -23,7 +23,7 @@ addBatch(
 
 Adds a batch of data to the sink
 
-Used exclusively when <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine (<<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>) is requested to <<spark-sql-streaming-MicroBatchExecution.md#runBatch-addBatch, add a streaming batch to a sink (addBatch phase)>> while <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, running an activated streaming query>>.
+Used exclusively when <<MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine (<<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>) is requested to <<MicroBatchExecution.md#runBatch-addBatch, add a streaming batch to a sink (addBatch phase)>> while <<MicroBatchExecution.md#runActivatedStream, running an activated streaming query>>.
 
 |===
 

@@ -4,7 +4,7 @@
 `StatefulOperatorStateInfo` identifies the state store for a given stateful physical operator:
 
 * [[checkpointLocation]] Checkpoint directory (`checkpointLocation`)
-* [[queryRunId]] <<spark-sql-streaming-StreamingQuery.md#runId, Run ID>> of a streaming query (`queryRunId`)
+* [[queryRunId]] <<StreamingQuery.md#runId, Run ID>> of a streaming query (`queryRunId`)
 * [[operatorId]] Stateful operator ID (`operatorId`)
 * [[storeVersion]] <<state-version, State version>> (`storeVersion`)
 * [[numPartitions]] Number of partitions

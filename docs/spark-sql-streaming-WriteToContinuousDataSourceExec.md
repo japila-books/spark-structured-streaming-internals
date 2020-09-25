@@ -56,7 +56,7 @@ NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime repres
 Start processing data source writer: [writer]. The input RDD has [partitions] partitions.
 ```
 
-`doExecute` requests the `EpochCoordinatorRef` helper for a <<spark-sql-streaming-EpochCoordinatorRef.md#get, remote reference to the EpochCoordinator RPC endpoint>> (using the <<spark-sql-streaming-ContinuousExecution.md#EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id local property>>).
+`doExecute` requests the `EpochCoordinatorRef` helper for a <<spark-sql-streaming-EpochCoordinatorRef.md#get, remote reference to the EpochCoordinator RPC endpoint>> (using the <<ContinuousExecution.md#EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id local property>>).
 
 NOTE: The <<spark-sql-streaming-EpochCoordinator.md#, EpochCoordinator RPC endpoint>> runs on the driver as the single point to coordinate epochs across partition tasks.
 

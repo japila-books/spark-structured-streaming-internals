@@ -1,4 +1,4 @@
-== [[StreamingQueryListener]] StreamingQueryListener -- Intercepting Life Cycle Events of Streaming Queries
+# StreamingQueryListener &mdash; Intercepting Life Cycle Events of Streaming Queries
 
 `StreamingQueryListener` is the <<contract, contract>> of listeners that want to be notified about the <<events, life cycle events>> of streaming queries, i.e. <<onQueryStarted, start>>, <<onQueryProgress, progress>> and <<onQueryTerminated, termination>>.
 
@@ -18,7 +18,7 @@ onQueryStarted(
   event: QueryStartedEvent): Unit
 ----
 
-Informs that `DataStreamWriter` was requested to [start execution of the streaming query](DataStreamWriter.md#start) (on the [stream execution thread](StreamExecution.md#queryExecutionThread))
+Informs that `DataStreamWriter` was requested to [start execution of the streaming query](../DataStreamWriter.md#start) (on the [stream execution thread](../StreamExecution.md#queryExecutionThread))
 
 | onQueryProgress
 a| [[onQueryProgress]]
@@ -29,7 +29,7 @@ onQueryProgress(
   event: QueryProgressEvent): Unit
 ----
 
-Informs that `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> (the end of a streaming batch)
+Informs that `MicroBatchExecution` has finished <<MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> (the end of a streaming batch)
 
 | onQueryTerminated
 a| [[onQueryTerminated]]
@@ -40,7 +40,7 @@ onQueryTerminated(
   event: QueryTerminatedEvent): Unit
 ----
 
-Informs that a streaming query was <<spark-sql-streaming-StreamingQuery.md#stop, stopped>> or terminated due to an error
+Informs that a streaming query was <<StreamingQuery.md#stop, stopped>> or terminated due to an error
 
 |===
 
@@ -56,28 +56,28 @@ Informs that a streaming query was <<spark-sql-streaming-StreamingQuery.md#stop,
 
 a| QueryStartedEvent
 
-- <<spark-sql-streaming-StreamingQuery.md#id, id>>
-- <<spark-sql-streaming-StreamingQuery.md#runId, runId>>
-- <<spark-sql-streaming-StreamingQuery.md#name, name>>
+- <<StreamingQuery.md#id, id>>
+- <<StreamingQuery.md#runId, runId>>
+- <<StreamingQuery.md#name, name>>
 
 | <<onQueryStarted, onQueryStarted>>
-| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) (when `DataStreamWriter` is requested to [start execution of the streaming query](DataStreamWriter.md#start) on the [stream execution thread](StreamExecution.md#queryExecutionThread))
+| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start) on the [stream execution thread](../StreamExecution.md#queryExecutionThread))
 
 a| QueryProgressEvent
 
 - [StreamingQueryProgress](StreamingQueryProgress.md)
 
 | <<onQueryProgress, onQueryProgress>>
-| [[QueryProgressEvent]] Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> at the end of a streaming batch)
+| [[QueryProgressEvent]] Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished <<MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> at the end of a streaming batch)
 
 a| QueryTerminatedEvent
 
-- <<spark-sql-streaming-StreamingQuery.md#id, id>>
-- <<spark-sql-streaming-StreamingQuery.md#runId, runId>>
-- [exception](StreamExecution.md#exception) if terminated due to an error
+- <<StreamingQuery.md#id, id>>
+- <<StreamingQuery.md#runId, runId>>
+- [exception](../StreamExecution.md#exception) if terminated due to an error
 
 | <<onQueryTerminated, onQueryTerminated>>
-| [[QueryTerminatedEvent]] Posted when `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) (and the streaming query was <<spark-sql-streaming-StreamingQuery.md#stop, stopped>> or terminated due to an error)
+| [[QueryTerminatedEvent]] Posted when `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (and the streaming query was <<StreamingQuery.md#stop, stopped>> or terminated due to an error)
 
 |===
 

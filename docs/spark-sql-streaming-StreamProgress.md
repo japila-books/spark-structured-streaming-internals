@@ -52,6 +52,6 @@ toOffsetSeq(
 
 `toOffsetSeq` is used when:
 
-* `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](spark-sql-streaming-MicroBatchExecution.md#constructNextBatch) (to [commit available offsets for a batch to the write-ahead log](spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit))
+* `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](MicroBatchExecution.md#constructNextBatch) (to [commit available offsets for a batch to the write-ahead log](MicroBatchExecution.md#constructNextBatch-walCommit))
 
 * `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) (that [failed with a Throwable](StreamExecution.md#runStream-catch-Throwable))

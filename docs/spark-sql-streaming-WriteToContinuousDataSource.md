@@ -1,7 +1,7 @@
 == [[WriteToContinuousDataSource]] WriteToContinuousDataSource Unary Logical Operator
 
 [[children]]
-`WriteToContinuousDataSource` is a unary logical operator (`LogicalPlan`) that is <<creating-instance, created>> exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> (to create an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>>).
+`WriteToContinuousDataSource` is a unary logical operator (`LogicalPlan`) that is <<creating-instance, created>> exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> (to create an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>>).
 
 `WriteToContinuousDataSource` is planned (_translated_) to a <<spark-sql-streaming-WriteToContinuousDataSourceExec.md#, WriteToContinuousDataSourceExec>> unary physical operator (when `DataSourceV2Strategy` execution planning strategy is requested to plan a logical query).
 

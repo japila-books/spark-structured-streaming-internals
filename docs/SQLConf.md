@@ -38,7 +38,7 @@ a| [[continuousStreamingExecutorPollIntervalMs]] Used exclusively when `DataSour
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>
 
-a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExecution` is requested for the <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, analyzed logical plan>> (of a streaming query)
+a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExecution` is requested for the <<MicroBatchExecution.md#logicalPlan, analyzed logical plan>> (of a streaming query)
 
 | `fileSourceLogDeletion`
 
@@ -129,13 +129,13 @@ a| [[STREAMING_MULTIPLE_WATERMARK_POLICY]]
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.noDataMicroBatches.enabled, spark.sql.streaming.noDataMicroBatches.enabled>>
 
-a| [[streamingNoDataMicroBatchesEnabled]][[STREAMING_NO_DATA_MICRO_BATCHES_ENABLED]] Used exclusively when `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>
+a| [[streamingNoDataMicroBatchesEnabled]][[STREAMING_NO_DATA_MICRO_BATCHES_ENABLED]] Used exclusively when `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>
 
 | `streamingNoDataProgressEventInterval`
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.noDataProgressEventInterval, spark.sql.streaming.noDataProgressEventInterval>>
 
-a| [[streamingNoDataProgressEventInterval]] Used exclusively for [ProgressReporter](ProgressReporter.md#noDataProgressEventInterval)
+a| [[streamingNoDataProgressEventInterval]] Used exclusively for [ProgressReporter](monitoring/ProgressReporter.md#noDataProgressEventInterval)
 
 | `streamingPollingDelay`
 
@@ -147,6 +147,6 @@ a| [[streamingPollingDelay]][[STREAMING_POLLING_DELAY]] Used exclusively when [S
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.numRecentProgressUpdates, spark.sql.streaming.numRecentProgressUpdates>>
 
-a| [[streamingProgressRetention]][[STREAMING_PROGRESS_RETENTION]] Used exclusively when `ProgressReporter` is requested to [update progress of streaming query](ProgressReporter.md#updateProgress) (and possibly remove an excess)
+a| [[streamingProgressRetention]][[STREAMING_PROGRESS_RETENTION]] Used exclusively when `ProgressReporter` is requested to [update progress of streaming query](monitoring/ProgressReporter.md#updateProgress) (and possibly remove an excess)
 
 |===

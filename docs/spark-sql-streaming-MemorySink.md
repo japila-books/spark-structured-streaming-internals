@@ -26,7 +26,7 @@ It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created
 
 NOTE: At this point you can query the table as if it were a regular non-streaming table using spark-sql-sqlcontext.md#sql[sql] method.
 
-A new spark-sql-streaming-StreamingQuery.md[StreamingQuery] is started (using spark-sql-streaming-StreamingQueryManager.md#startQuery[StreamingQueryManager.startQuery]) and returned.
+A new StreamingQuery.md[StreamingQuery] is started (using spark-sql-streaming-StreamingQueryManager.md#startQuery[StreamingQueryManager.startQuery]) and returned.
 
 [[logging]]
 [TIP]

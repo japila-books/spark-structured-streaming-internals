@@ -1,6 +1,6 @@
 # StreamMetadata
 
-`StreamMetadata` is a metadata associated with a <<spark-sql-streaming-StreamingQuery.md#, StreamingQuery>> (indirectly through [StreamExecution](StreamExecution.md#streamMetadata)).
+`StreamMetadata` is a metadata associated with a <<StreamingQuery.md#, StreamingQuery>> (indirectly through [StreamExecution](StreamExecution.md#streamMetadata)).
 
 [[creating-instance]]
 [[id]]

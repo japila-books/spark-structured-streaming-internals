@@ -1,0 +1,3 @@
+# flatMapGroupsWithState
+
+`flatMapGroupsWithState` is...FIXME

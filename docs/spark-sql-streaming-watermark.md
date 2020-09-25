@@ -46,13 +46,13 @@ Use the following demos to learn more:
 
 ## <span id="internals"> Internals
 
-Under the covers, [Dataset.withWatermark](operators/withWatermark.md) high-level operator creates a logical query plan with [EventTimeWatermark](spark-sql-streaming-EventTimeWatermark.md) logical operator.
+Under the covers, [Dataset.withWatermark](operators/withWatermark.md) high-level operator creates a logical query plan with [EventTimeWatermark](EventTimeWatermark.md) logical operator.
 
-`EventTimeWatermark` logical operator is planned to <<spark-sql-streaming-EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator that extracts the event times (from the data being processed) and adds them to an accumulator.
+`EventTimeWatermark` logical operator is planned to <<EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator that extracts the event times (from the data being processed) and adds them to an accumulator.
 
 Since the execution (data processing) happens on Spark executors, using the accumulator is the only _Spark-approved way_ for communication between the tasks (on the executors) and the driver. Using accumulator updates the driver with the current event-time watermark.
 
-During the query planning phase (in <<spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.md#runContinuous-queryPlanning, ContinuousExecution>>) that also happens on the driver, `IncrementalExecution` is given the current <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark.
+During the query planning phase (in <<MicroBatchExecution.md#runBatch-queryPlanning, MicroBatchExecution>> and <<ContinuousExecution.md#runContinuous-queryPlanning, ContinuousExecution>>) that also happens on the driver, `IncrementalExecution` is given the current <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the current event-time watermark.
 
 === [[i-want-more]] Further Reading Or Watching
 

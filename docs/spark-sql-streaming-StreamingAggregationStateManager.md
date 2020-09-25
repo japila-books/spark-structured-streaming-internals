@@ -1,6 +1,6 @@
 == [[StreamingAggregationStateManager]] StreamingAggregationStateManager Contract -- State Managers for Streaming Aggregation
 
-`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.md#, state stores>> and the physical operators used in <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>> (e.g. <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>).
+`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.md#, state stores>> and the physical operators used in <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>> (e.g. <<StateStoreSaveExec.md#, StateStoreSaveExec>> and <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>).
 
 [[contract]]
 .StreamingAggregationStateManager Contract
@@ -20,7 +20,7 @@ commit(
 
 Commits all updates (_changes_) to the given <<spark-sql-streaming-StateStore.md#, state store>> and returns the new version
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 | get
 a| [[get]]
@@ -60,7 +60,7 @@ getStateValueSchema: StructType
 
 Gets the schema of the values in a <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used when <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operators are executed
+Used when <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> and <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operators are executed
 
 | iterator
 a| [[iterator]]
@@ -73,7 +73,7 @@ iterator(
 
 Returns all `UnsafeRow` key-value pairs in the given <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 | keys
 a| [[keys]]
@@ -85,7 +85,7 @@ keys(store: StateStore): Iterator[UnsafeRow]
 
 Returns all the keys in the <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when physical operators with `WatermarkSupport` are requested to <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, removeKeysOlderThanWatermark>> (i.e. exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed).
+Used exclusively when physical operators with `WatermarkSupport` are requested to <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, removeKeysOlderThanWatermark>> (i.e. exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed).
 
 | put
 a| [[put]]
@@ -99,7 +99,7 @@ put(
 
 Stores (_puts_) the given row in the given <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 | remove
 a| [[remove]]
@@ -113,7 +113,7 @@ remove(
 
 Removes the key-value pair from the given <<spark-sql-streaming-StateStore.md#, state store>> per key
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed (directly or indirectly as a <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, WatermarkSupport>>)
+Used exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed (directly or indirectly as a <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store, WatermarkSupport>>)
 
 | values
 a| [[values]]
@@ -126,7 +126,7 @@ values(
 
 All values in the <<spark-sql-streaming-StateStore.md#, state store>>
 
-Used exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
+Used exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed.
 
 |===
 
@@ -164,4 +164,4 @@ createStateManager(
 Version [stateFormatVersion] is invalid
 ```
 
-NOTE: `createStateManager` is used when <<spark-sql-streaming-StateStoreRestoreExec.md#stateManager, StateStoreRestoreExec>> and <<spark-sql-streaming-StateStoreSaveExec.md#stateManager, StateStoreSaveExec>> physical operators are created.
+NOTE: `createStateManager` is used when <<spark-sql-streaming-StateStoreRestoreExec.md#stateManager, StateStoreRestoreExec>> and <<StateStoreSaveExec.md#stateManager, StateStoreSaveExec>> physical operators are created.

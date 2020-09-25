@@ -40,12 +40,12 @@ Used when:
 | [[ContinuousReader]] Data source readers in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> (based on Data Source API V2)
 
 | <<spark-sql-streaming-MemoryStreamBase.md#, MemoryStreamBase>>
-| [[MemoryStreamBase]] Base implementation of <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>> (for <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) and <<spark-sql-streaming-MemoryStream.md#, MemoryStream>> (for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>)
+| [[MemoryStreamBase]] Base implementation of <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>> (for <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) and <<spark-sql-streaming-MemoryStream.md#, MemoryStream>> (for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>)
 
 | <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>>
-| [[MicroBatchReader]] Data source readers in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V2)
+| [[MicroBatchReader]] Data source readers in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V2)
 
 | [Source](Source.md)
-| [[Source]] Streaming sources for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
+| [[Source]] Streaming sources for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
 
 |===

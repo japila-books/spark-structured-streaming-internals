@@ -12,9 +12,9 @@ As of Spark 2.2.0, Structured Streaming has been marked stable and ready for pro
 
 Spark Structured Streaming comes with two [stream execution engines](StreamExecution.md) for executing streaming queries:
 
-* [MicroBatchExecution](spark-sql-streaming-MicroBatchExecution.md) for [Micro-Batch Stream Processing](spark-sql-streaming-micro-batch-stream-processing.md)
+* [MicroBatchExecution](MicroBatchExecution.md) for [Micro-Batch Stream Processing](micro-batch-stream-processing.md)
 
-* [ContinuousExecution](spark-sql-streaming-ContinuousExecution.md) for [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md)
+* [ContinuousExecution](ContinuousExecution.md) for [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md)
 
 The goal of Spark Structured Streaming is to unify streaming, interactive, and batch queries over structured datasets for developing end-to-end stream processing applications dubbed **continuous applications** using Spark SQL's Datasets API with additional support for the following features:
 
@@ -75,7 +75,7 @@ With Structured Streaming, Spark 2 aims at simplifying **streaming analytics** w
 
 Structured streaming is defined by the following data abstractions in `org.apache.spark.sql.streaming` package:
 
-* [StreamingQuery](spark-sql-streaming-StreamingQuery.md)
+* [StreamingQuery](StreamingQuery.md)
 * [Streaming Source](Source.md)
 * [Streaming Sink](spark-sql-streaming-Sink.md)
 * [StreamingQueryManager](spark-sql-streaming-StreamingQueryManager.md)

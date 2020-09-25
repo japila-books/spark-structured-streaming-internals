@@ -2,7 +2,7 @@
 
 `CheckpointFileManager` is the <<contract, abstraction>> of <<implementations, checkpoint managers>> that manage checkpoint files (metadata of streaming batches) on Hadoop DFS-compatible file systems.
 
-`CheckpointFileManager` is <<create, created>> per <<spark-sql-streaming-SQLConf.md#STREAMING_CHECKPOINT_FILE_MANAGER_CLASS, spark.sql.streaming.checkpointFileManagerClass>> configuration property if defined before reverting to the available <<implementations, checkpoint managers>>.
+`CheckpointFileManager` is <<create, created>> per <<SQLConf.md#STREAMING_CHECKPOINT_FILE_MANAGER_CLASS, spark.sql.streaming.checkpointFileManagerClass>> configuration property if defined before reverting to the available <<implementations, checkpoint managers>>.
 
 `CheckpointFileManager` is used exclusively by <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog>>, <<spark-sql-streaming-StreamMetadata.md#, StreamMetadata>> and <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedStateStoreProvider>>.
 
@@ -152,7 +152,7 @@ create(
   hadoopConf: Configuration): CheckpointFileManager
 ----
 
-`create` finds <<spark-sql-streaming-SQLConf.md#STREAMING_CHECKPOINT_FILE_MANAGER_CLASS, spark.sql.streaming.checkpointFileManagerClass>> configuration property in the `hadoopConf` configuration.
+`create` finds <<SQLConf.md#STREAMING_CHECKPOINT_FILE_MANAGER_CLASS, spark.sql.streaming.checkpointFileManagerClass>> configuration property in the `hadoopConf` configuration.
 
 If found, `create` simply instantiates whatever `CheckpointFileManager` implementation is defined.
 

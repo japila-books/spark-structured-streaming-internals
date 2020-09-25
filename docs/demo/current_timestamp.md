@@ -36,7 +36,7 @@ root
  |-- current_timestamp: timestamp (nullable = false)
 ----
 
-Both are special for Spark Structured Streaming as `StreamExecution` spark-sql-streaming-MicroBatchExecution.md#runBatch-triggerLogicalPlan[replaces] their underlying Catalyst expressions, `CurrentTimestamp` and `CurrentDate` respectively, with `CurrentBatchTimestamp` expression and the time of the current batch.
+Both are special for Spark Structured Streaming as `StreamExecution` MicroBatchExecution.md#runBatch-triggerLogicalPlan[replaces] their underlying Catalyst expressions, `CurrentTimestamp` and `CurrentDate` respectively, with `CurrentBatchTimestamp` expression and the time of the current batch.
 
 [source, scala]
 ----

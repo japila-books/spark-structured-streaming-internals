@@ -5,7 +5,7 @@
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceRegister.html[DataSourceRegister] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`KafkaSourceProvider` supports <<spark-sql-streaming-micro-batch-stream-processing.md#, micro-batch stream processing>> (through <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> contract) and <<createMicroBatchReader, creates a specialized KafkaMicroBatchReader>>.
+`KafkaSourceProvider` supports <<micro-batch-stream-processing.md#, micro-batch stream processing>> (through <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> contract) and <<createMicroBatchReader, creates a specialized KafkaMicroBatchReader>>.
 
 `KafkaSourceProvider` requires the following options (that you can set using `option` method of <<spark-sql-streaming-DataStreamReader.md#, DataStreamReader>> or [DataStreamWriter](DataStreamWriter.md)):
 
@@ -279,7 +279,7 @@ createMicroBatchReader(
   options: DataSourceOptions): KafkaMicroBatchReader
 ----
 
-NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.md#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+NOTE: `createMicroBatchReader` is part of the <<spark-sql-streaming-MicroBatchReadSupport.md#createMicroBatchReader, MicroBatchReadSupport Contract>> to create a <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 `createMicroBatchReader` <<validateStreamOptions, validateStreamOptions>> (in the given `DataSourceOptions`).
 

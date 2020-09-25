@@ -2,9 +2,9 @@
 
 `StreamingQueryProgress` holds information about a single micro-batch (_progress_) of a streaming query:
 
-* <span id="id"> [Unique identifier](spark-sql-streaming-StreamingQuery.md#id)
-* <span id="runId"> [Unique identifier of a query execution](spark-sql-streaming-StreamingQuery.md#runId)
-* <span id="name"> [Name](spark-sql-streaming-StreamingQuery.md#name)
+* <span id="id"> [Unique identifier](../StreamingQuery.md#id)
+* <span id="runId"> [Unique identifier of a query execution](../StreamingQuery.md#runId)
+* <span id="name"> [Name](../StreamingQuery.md#name)
 * <span id="timestamp"> Time when a trigger has started (in ISO8601 format)
 * <span id="batchId"> Unique ID of a micro-batch
 * <span id="batchDuration"> Batch Duration
@@ -19,14 +19,14 @@
 
 ## Last and Recent Progresses
 
-Use [lastProgress](spark-sql-streaming-StreamingQuery.md#lastProgress) property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` update.
+Use [lastProgress](../StreamingQuery.md#lastProgress) property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` update.
 
 ```scala
 val sq: StreamingQuery = ...
 sq.lastProgress
 ```
 
-Use [recentProgress](spark-sql-streaming-StreamingQuery.md#recentProgress) property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` updates.
+Use [recentProgress](../StreamingQuery.md#recentProgress) property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` updates.
 
 ```scala
 val sq: StreamingQuery = ...
@@ -35,4 +35,4 @@ sq.recentProgress
 
 ## StreamingQueryListener
 
-Use [StreamingQueryListener](spark-sql-streaming-StreamingQueryListener.md#QueryProgressEvent) to be notified about `StreamingQueryProgress` updates while a streaming query is executed.
+Use [StreamingQueryListener](StreamingQueryListener.md#QueryProgressEvent) to be notified about `StreamingQueryProgress` updates while a streaming query is executed.

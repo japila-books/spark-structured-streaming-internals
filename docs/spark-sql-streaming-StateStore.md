@@ -46,7 +46,7 @@ Used when:
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed)
 
-* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#commit, commit (changes to) a state store>> (exclusively when <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed)
+* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#commit, commit (changes to) a state store>> (exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed)
 
 * `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#commit, commit changes to a state store>>
 
@@ -332,7 +332,7 @@ get(
 
 `get` finds `StateStore` for the specified <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> and version.
 
-NOTE: The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) or the <<spark-sql-streaming-StatefulOperatorStateInfo.md#storeVersion, current batch ID>> (in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
+NOTE: The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) or the <<spark-sql-streaming-StatefulOperatorStateInfo.md#storeVersion, current batch ID>> (in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
 
 Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> (by `storeProviderId`) in the <<loadedProviders, loadedProviders>> internal cache. If unavailable, `get` uses the `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize one>>.
 

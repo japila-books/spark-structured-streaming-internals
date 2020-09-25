@@ -35,9 +35,9 @@ Used when:
 
 * `ManifestFileCommitProtocol` is requested to <<spark-sql-streaming-ManifestFileCommitProtocol.md#commitJob, commitJob>>
 
-* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch, construct a next streaming micro-batch>> and <<spark-sql-streaming-MicroBatchExecution.md#runBatch, run a single streaming micro-batch>>
+* `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch, construct a next streaming micro-batch>> and <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>>
 
-* `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.md#addOffset, addOffset>> and <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
+* `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#addOffset, addOffset>> and <<ContinuousExecution.md#commit, commit an epoch>>
 
 * `RateStreamMicroBatchReader` is created (`creationTimeMs`)
 

@@ -2,7 +2,7 @@
 
 `StatefulAggregationStrategy` is an execution planning strategy that is used to <<apply, plan streaming queries>> with the two logical operators:
 
-* [EventTimeWatermark](spark-sql-streaming-EventTimeWatermark.md) logical operator ([Dataset.withWatermark](operators/withWatermark.md) operator)
+* [EventTimeWatermark](EventTimeWatermark.md) logical operator ([Dataset.withWatermark](operators/withWatermark.md) operator)
 
 * `Aggregate` logical operator (for [Dataset.groupBy](operators/groupBy.md) and [Dataset.groupByKey](operators/groupByKey.md) operators, and `GROUP BY` SQL clause)
 
@@ -25,8 +25,8 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Logical Operator
 | Physical Operator
 
-| spark-sql-streaming-EventTimeWatermark.md[EventTimeWatermark]
-a| [[EventTimeWatermark]] spark-sql-streaming-EventTimeWatermarkExec.md[EventTimeWatermarkExec]
+| EventTimeWatermark.md[EventTimeWatermark]
+a| [[EventTimeWatermark]] EventTimeWatermarkExec.md[EventTimeWatermarkExec]
 
 | `Aggregate`
 a| [[Aggregate]]
@@ -133,7 +133,7 @@ NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](op
 NOTE: The only difference between <<partialMerged1, partialMerged1>> and <<partialMerged2, partialMerged2>> steps is the child physical operator.
 
 [[saved]]
-`planStreamingAggregation` creates spark-sql-streaming-StateStoreSaveExec.md#creating-instance[StateStoreSaveExec] with:
+`planStreamingAggregation` creates StateStoreSaveExec.md#creating-instance[StateStoreSaveExec] with:
 
 * the grouping attributes based on the input `groupingExpressions`
 * No `stateInfo`, `outputMode` and `eventTimeWatermark`

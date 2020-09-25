@@ -56,7 +56,7 @@ createSource(
 
 `createSource` creates a new instance of the <<providingClass, data source class>> and branches off per the type, e.g. <<createSource-StreamSourceProvider, StreamSourceProvider>>, <<createSource-FileFormat, FileFormat>> and <<createSource-other, other types>>.
 
-NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>.
+NOTE: `createSource` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>.
 
 ==== [[createSource-StreamSourceProvider]] StreamSourceProvider
 
@@ -142,7 +142,7 @@ Metadata of a [Source](Source.md) with the alias (short name), the schema, and o
 
 Used when:
 
-* `DataSource` is requested to <<createSource, create a source (for a FileFormat data source)>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
+* `DataSource` is requested to <<createSource, create a source (for a FileFormat data source)>> (when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
 
 * `StreamingRelation` utility is requested for a <<spark-sql-streaming-StreamingRelation.md#apply, StreamingRelation>> (when `DataStreamReader` is requested for a <<spark-sql-streaming-DataStreamReader.md#load, streaming DataFrame>>)
 

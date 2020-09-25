@@ -82,7 +82,7 @@ storeAndJoinWithOtherSide(
   generateJoinedRow: (InternalRow, InternalRow) => JoinedRow): Iterator[InternalRow]
 ----
 
-`storeAndJoinWithOtherSide` tries to find the <<spark-sql-streaming-EventTimeWatermark.md#delayKey, watermark attribute>> among the <<inputAttributes, input attributes>>.
+`storeAndJoinWithOtherSide` tries to find the <<EventTimeWatermark.md#delayKey, watermark attribute>> among the <<inputAttributes, input attributes>>.
 
 `storeAndJoinWithOtherSide` creates a <<spark-sql-streaming-WatermarkSupport.md#watermarkExpression, watermark expression>> (for the watermark attribute and the current <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#eventTimeWatermark, event-time watermark>>).
 

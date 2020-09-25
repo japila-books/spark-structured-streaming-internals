@@ -39,7 +39,7 @@ logicalPlan: LogicalPlan
 | [[ContinuousMemoryStream]]
 
 | <<spark-sql-streaming-MemoryStream.md#, MemoryStream>>
-| [[MemoryStream]] <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
+| [[MemoryStream]] <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
 
 |===
 

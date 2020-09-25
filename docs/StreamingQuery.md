@@ -1,4 +1,4 @@
-# StreamingQuery Contract
+# StreamingQuery
 
 `StreamingQuery` is the <<contract, contract>> of streaming queries that are executed continuously and concurrently (i.e. on a [separate thread](StreamExecution.md#queryExecutionThread)).
 
@@ -77,7 +77,7 @@ a| [[lastProgress]]
 lastProgress: StreamingQueryProgress
 ----
 
-The last [StreamingQueryProgress](StreamingQueryProgress.md) of the streaming query
+The last [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) of the streaming query
 
 Used when...FIXME
 
@@ -113,7 +113,7 @@ a| [[recentProgress]]
 recentProgress: Array[StreamingQueryProgress]
 ----
 
-Collection of the recent [StreamingQueryProgress](StreamingQueryProgress.md) updates.
+Collection of the recent [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) updates.
 
 Used when...FIXME
 
@@ -147,7 +147,7 @@ a| [[status]]
 status: StreamingQueryStatus
 ----
 
-<<spark-sql-streaming-StreamingQueryStatus.md#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` [has accumulated](ProgressReporter.md#currentStatus) being a `ProgressReporter` while running the streaming query)
+[StreamingQueryStatus](monitoring/StreamingQueryStatus.md) of the streaming query (as `StreamExecution` [has accumulated](monitoring/ProgressReporter.md#currentStatus) being a `ProgressReporter` while running the streaming query)
 
 Used when...FIXME
 

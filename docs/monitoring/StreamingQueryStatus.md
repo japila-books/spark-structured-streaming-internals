@@ -1,0 +1,3 @@
+# StreamingQueryStatus
+
+`StreamingQueryStatus` is...FIXME

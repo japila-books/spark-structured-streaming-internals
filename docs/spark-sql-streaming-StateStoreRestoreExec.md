@@ -14,7 +14,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 .StateStoreRestoreExec and StatefulAggregationStrategy
 image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="center"]
 
-The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` spark-sql-streaming-IncrementalExecution.md#preparations[prepares a streaming physical plan for execution] (and spark-sql-streaming-IncrementalExecution.md#state[state] preparation rule is executed when `StreamExecution` spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` spark-sql-streaming-IncrementalExecution.md#preparations[prepares a streaming physical plan for execution] (and spark-sql-streaming-IncrementalExecution.md#state[state] preparation rule is executed when `StreamExecution` MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
 .StateStoreRestoreExec and IncrementalExecution
 image::images/StateStoreRestoreExec-IncrementalExecution.png[align="center"]
@@ -96,4 +96,4 @@ Internally, `doExecute` executes <<child, child>> physical operator and spark-sq
 
 NOTE: The number of rows from `StateStoreRestoreExec` is the number of rows from the <<child, child>> operator with additional rows for the saved state.
 
-NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had associated state available in a state store. You would have to use the corresponding `StateStoreSaveExec` operator's spark-sql-streaming-StateStoreSaveExec.md#metrics[metrics] (most likely `number of total state rows` but that could depend on the output mode).
+NOTE: There is no way in `StateStoreRestoreExec` to find out how many rows had associated state available in a state store. You would have to use the corresponding `StateStoreSaveExec` operator's StateStoreSaveExec.md#metrics[metrics] (most likely `number of total state rows` but that could depend on the output mode).

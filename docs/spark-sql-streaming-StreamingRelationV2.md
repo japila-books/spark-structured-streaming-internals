@@ -25,9 +25,9 @@ assert(relation.isStreaming)
 
 `StreamingRelationV2` is resolved (_replaced_) to the following leaf logical operators:
 
-* <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> when `ContinuousExecution` stream execution engine is requested for the <<spark-sql-streaming-ContinuousExecution.md#logicalPlan, analyzed logical plan>>
+* <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> when `ContinuousExecution` stream execution engine is requested for the <<ContinuousExecution.md#logicalPlan, analyzed logical plan>>
 
-* <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> when `MicroBatchExecution` stream execution engine is requested for the <<spark-sql-streaming-MicroBatchExecution.md#logicalPlan, analyzed logical plan>>
+* <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> when `MicroBatchExecution` stream execution engine is requested for the <<MicroBatchExecution.md#logicalPlan, analyzed logical plan>>
 
 === [[creating-instance]] Creating StreamingRelationV2 Instance
 

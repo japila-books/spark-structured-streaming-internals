@@ -17,7 +17,7 @@ a|
 active: Array[StreamingQuery]
 ----
 
-Active <<spark-sql-streaming-StreamingQuery.md#, structured queries>>
+Active <<StreamingQuery.md#, structured queries>>
 
 | <<addListener, addListener>>
 a|
@@ -49,7 +49,7 @@ get(id: String): StreamingQuery
 get(id: UUID): StreamingQuery
 ----
 
-Gets the <<spark-sql-streaming-StreamingQuery.md#, StreamingQuery>> by <<spark-sql-streaming-StreamingQuery.md#id, id>>
+Gets the <<StreamingQuery.md#, StreamingQuery>> by <<StreamingQuery.md#id, id>>
 
 | <<removeListener, removeListener>>
 a|
@@ -133,7 +133,7 @@ active: Array[StreamingQuery]
 get(name: String): StreamingQuery
 ----
 
-`get` method returns a spark-sql-streaming-StreamingQuery.md[StreamingQuery] by `name`.
+`get` method returns a StreamingQuery.md[StreamingQuery] by `name`.
 
 It may throw an `IllegalArgumentException` when no StreamingQuery exists for the `name`.
 
@@ -175,7 +175,7 @@ awaitAnyTermination(timeoutMs: Long): Boolean
 
 `awaitAnyTermination` acquires a lock on <<awaitTerminationLock, awaitTerminationLock>> and waits until any streaming query has finished (i.e. <<lastTerminatedQuery, lastTerminatedQuery>> is available) or `timeoutMs` has expired.
 
-`awaitAnyTermination` re-throws the `StreamingQueryException` from <<lastTerminatedQuery, lastTerminatedQuery>> if spark-sql-streaming-StreamingQuery.md#exception[it reported one].
+`awaitAnyTermination` re-throws the `StreamingQueryException` from <<lastTerminatedQuery, lastTerminatedQuery>> if StreamingQuery.md#exception[it reported one].
 
 === [[resetTerminated]] `resetTerminated` Method
 
@@ -235,7 +235,7 @@ Unless spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperatio
 WARN spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
 ```
 
-In the end, `createQuery` creates a spark-sql-streaming-StreamingQueryWrapper.md#creating-instance[StreamingQueryWrapper] with a new <<spark-sql-streaming-MicroBatchExecution.md#creating-instance, MicroBatchExecution>>.
+In the end, `createQuery` creates a spark-sql-streaming-StreamingQueryWrapper.md#creating-instance[StreamingQueryWrapper] with a new <<MicroBatchExecution.md#creating-instance, MicroBatchExecution>>.
 
 [NOTE]
 ====
@@ -271,7 +271,7 @@ startQuery(
   triggerClock: Clock = new SystemClock()): StreamingQuery
 ----
 
-`startQuery` starts a spark-sql-streaming-StreamingQuery.md[streaming query] and returns a handle to it.
+`startQuery` starts a StreamingQuery.md[streaming query] and returns a handle to it.
 
 NOTE: `trigger` defaults to `0` milliseconds (as spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0)]).
 
@@ -313,7 +313,7 @@ postListenerEvent(event: StreamingQueryListener.Event): Unit
 notifyQueryTermination(terminatedQuery: StreamingQuery): Unit
 ----
 
-`notifyQueryTermination` removes the `terminatedQuery` from <<activeQueries, activeQueries>> internal registry (by the spark-sql-streaming-StreamingQuery.md#id[query id]).
+`notifyQueryTermination` removes the `terminatedQuery` from <<activeQueries, activeQueries>> internal registry (by the StreamingQuery.md#id[query id]).
 
 `notifyQueryTermination` records the `terminatedQuery` in <<lastTerminatedQuery, lastTerminatedQuery>> internal registry (when no earlier streaming query was recorded or the `terminatedQuery` terminated due to an exception).
 
@@ -334,7 +334,7 @@ image::images/StreamingQueryManager-notifyQueryTermination.png[align="center"]
 | Description
 
 | activeQueries
-| [[activeQueries]] Registry of <<spark-sql-streaming-StreamingQuery.md#, StreamingQueries>> per `UUID`
+| [[activeQueries]] Registry of <<StreamingQuery.md#, StreamingQueries>> per `UUID`
 
 Used when `StreamingQueryManager` is requested for <<active, active streaming queries>>, <<get, get a streaming query by id>>, <<startQuery, starts a streaming query>> and <<notifyQueryTermination, is notified that a streaming query has terminated>>.
 
@@ -345,7 +345,7 @@ Used when `StreamingQueryManager` is requested for <<active, active streaming qu
 | [[awaitTerminationLock]]
 
 | lastTerminatedQuery
-a| [[lastTerminatedQuery]] <<spark-sql-streaming-StreamingQuery.md#, StreamingQuery>> that has recently been terminated, i.e. spark-sql-streaming-StreamingQuery.md#stop[stopped] or spark-sql-streaming-StreamingQuery.md#exception[due to an exception].
+a| [[lastTerminatedQuery]] <<StreamingQuery.md#, StreamingQuery>> that has recently been terminated, i.e. StreamingQuery.md#stop[stopped] or StreamingQuery.md#exception[due to an exception].
 
 `null` when no streaming query has terminated yet or <<resetTerminated, resetTerminated>>.
 
@@ -362,7 +362,7 @@ Used when:
 
 * `StreamingQueryManager` <<notifyQueryTermination, is notified that a streaming query has terminated>>
 
-* Stateful operators are executed, i.e. [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), spark-sql-streaming-StateStoreRestoreExec.md#doExecute[StateStoreRestoreExec], spark-sql-streaming-StateStoreSaveExec.md#doExecute[StateStoreSaveExec], spark-sql-streaming-StreamingDeduplicateExec.md#doExecute[StreamingDeduplicateExec] and spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute[StreamingSymmetricHashJoinExec]
+* Stateful operators are executed, i.e. [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), spark-sql-streaming-StateStoreRestoreExec.md#doExecute[StateStoreRestoreExec], StateStoreSaveExec.md#doExecute[StateStoreSaveExec], spark-sql-streaming-StreamingDeduplicateExec.md#doExecute[StreamingDeduplicateExec] and spark-sql-streaming-StreamingSymmetricHashJoinExec.md#doExecute[StreamingSymmetricHashJoinExec]
 
 * spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)]
 

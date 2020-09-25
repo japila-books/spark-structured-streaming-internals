@@ -1,6 +1,6 @@
 == [[MemoryStream]] MemoryStream -- Streaming Reader for Micro-Batch Stream Processing
 
-`MemoryStream` is a concrete <<spark-sql-streaming-MemoryStreamBase.md#, streaming source>> of <<spark-sql-streaming-memory-data-source.md#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.md#, reading>> in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+`MemoryStream` is a concrete <<spark-sql-streaming-MemoryStreamBase.md#, streaming source>> of <<spark-sql-streaming-memory-data-source.md#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.md#, reading>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 [[logging]]
 [TIP]

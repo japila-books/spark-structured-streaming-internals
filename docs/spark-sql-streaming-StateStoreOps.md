@@ -7,7 +7,7 @@
 
 * <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
 
-* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
+* <<StateStoreSaveExec.md#, StateStoreSaveExec>>
 
 * <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 
@@ -54,7 +54,7 @@ In the end, `mapPartitionsWithStateStore` creates a spark-sql-streaming-StateSto
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 * <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
-* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
+* <<StateStoreSaveExec.md#, StateStoreSaveExec>>
 * <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 * <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 ====

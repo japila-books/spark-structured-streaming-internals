@@ -75,7 +75,7 @@ doExecute(): RDD[InternalRow]
 
 `FlatMapGroupsWithStateExec` is a [stateful physical operator that can write to a state store](../spark-sql-streaming-StateStoreWriter.md) (and `MicroBatchExecution` requests [whether to run another batch or not](#shouldRunAnotherBatch) based on the [GroupStateTimeout](#timeoutConf)).
 
-`FlatMapGroupsWithStateExec` uses the [GroupStateTimeout](#timeoutConf) (and possibly the updated [metadata](../spark-sql-streaming-OffsetSeqMetadata.md)) when asked [whether to run another batch or not](#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](../spark-sql-streaming-MicroBatchExecution.md#constructNextBatch) when requested to [run the activated streaming query](../spark-sql-streaming-MicroBatchExecution.md#runActivatedStream)).
+`FlatMapGroupsWithStateExec` uses the [GroupStateTimeout](#timeoutConf) (and possibly the updated [metadata](../spark-sql-streaming-OffsetSeqMetadata.md)) when asked [whether to run another batch or not](#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](../MicroBatchExecution.md#constructNextBatch) when requested to [run the activated streaming query](../MicroBatchExecution.md#runActivatedStream)).
 
 ## <span id="WatermarkSupport"> Streaming Event-Time Watermark Support
 
@@ -95,7 +95,7 @@ The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorState
 
     Read up on [Structured Query Execution Pipeline](https://jaceklaskowski.github.io/mastering-spark-sql-book/QueryExecution/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
 
-`IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../spark-sql-streaming-ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
+`IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
 
 !!! note
     The [optional event-time watermark](#eventTimeWatermark) can only be defined when the [state](../spark-sql-streaming-IncrementalExecution.md#state) preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the **queryPlanning** phase.
@@ -164,7 +164,7 @@ Used when:
 
 ### <span id="watermarkPresent"> watermarkPresent Flag
 
-Flag that says whether the [child](#child) physical operator has a [watermark attribute](../spark-sql-streaming-EventTimeWatermark.md#delayKey) (among the output attributes).
+Flag that says whether the [child](#child) physical operator has a [watermark attribute](../EventTimeWatermark.md#delayKey) (among the output attributes).
 
 Used when `InputProcessor` is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState)
 
@@ -178,4 +178,4 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.FlatMapGroupsWithStateExec=ALL
 ```
 
-Refer to [Logging](../spark-sql-streaming-logging.md).
+Refer to [Logging](../logging.md).

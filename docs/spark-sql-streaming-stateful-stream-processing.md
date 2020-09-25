@@ -28,7 +28,7 @@ The lifecycle of a `StateStoreProvider` begins when `StateStore` utility (on a S
 
 IMPORTANT: It is worth to notice that since `StateStore` and `StateStoreProvider` utilities are Scala objects that makes it possible that there can only be one instance of `StateStore` and `StateStoreProvider` on a single JVM. Scala objects are (sort of) singletons which means that there will be exactly one instance of each per JVM and that is exactly the JVM of a Spark executor. As long as the executor is up and running state versions are cached and no Hadoop DFS is used (except for the initial load).
 
-When requested for a <<spark-sql-streaming-StateStore.md#get-StateStore, StateStore>>, `StateStore` utility is given the version of a state store to look up. The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) or the <<spark-sql-streaming-StatefulOperatorStateInfo.md#storeVersion, current batch ID>> (in <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
+When requested for a <<spark-sql-streaming-StateStore.md#get-StateStore, StateStore>>, `StateStore` utility is given the version of a state store to look up. The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) or the <<spark-sql-streaming-StatefulOperatorStateInfo.md#storeVersion, current batch ID>> (in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
 
 `StateStore` utility requests `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, createAndInit>> that creates the `StateStoreProvider` implementation (based on <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property) and requests it to <<spark-sql-streaming-StateStoreProvider.md#init, initialize>>.
 
@@ -50,7 +50,7 @@ While <<spark-sql-streaming-IncrementalExecution.md#executedPlan, planning a str
 
 * <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
 
-* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>> (used for <<spark-sql-streaming-aggregation.md#, streaming aggregation>>)
+* <<StateStoreSaveExec.md#, StateStoreSaveExec>> (used for <<spark-sql-streaming-aggregation.md#, streaming aggregation>>)
 
 * <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 
@@ -60,7 +60,7 @@ While <<spark-sql-streaming-IncrementalExecution.md#executedPlan, planning a str
 
 ==== [[IncrementalExecution-shouldRunAnotherBatch]] Micro-Batch Stream Processing and Extra Non-Data Batch for StateStoreWriter Stateful Operators
 
-In <<spark-sql-streaming-micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (with <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, shouldRunAnotherBatch>> flag that allows <<spark-sql-streaming-StateStoreWriter.md#, StateStoreWriters>> stateful physical operators to <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, indicate whether the last batch execution requires another non-data batch>>.
+In <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (with <<MicroBatchExecution.md#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, shouldRunAnotherBatch>> flag that allows <<spark-sql-streaming-StateStoreWriter.md#, StateStoreWriters>> stateful physical operators to <<spark-sql-streaming-StateStoreWriter.md#shouldRunAnotherBatch, indicate whether the last batch execution requires another non-data batch>>.
 
 The <<StateStoreWriters-shouldRunAnotherBatch, following table>> shows the `StateStoreWriters` that redefine `shouldRunAnotherBatch` flag.
 
@@ -74,8 +74,8 @@ The <<StateStoreWriters-shouldRunAnotherBatch, following table>> shows the `Stat
 | [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 a| [[shouldRunAnotherBatch-FlatMapGroupsWithStateExec]] Based on [GroupStateTimeout](physical-operators/FlatMapGroupsWithStateExec.md#shouldRunAnotherBatch)
 
-| <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
-a| [[shouldRunAnotherBatch-StateStoreSaveExec]] Based on <<spark-sql-streaming-StateStoreSaveExec.md#shouldRunAnotherBatch, OutputMode and event-time watermark>>
+| <<StateStoreSaveExec.md#, StateStoreSaveExec>>
+a| [[shouldRunAnotherBatch-StateStoreSaveExec]] Based on <<StateStoreSaveExec.md#shouldRunAnotherBatch, OutputMode and event-time watermark>>
 
 | <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 a| [[shouldRunAnotherBatch-StreamingDeduplicateExec]] Based on <<spark-sql-streaming-StreamingDeduplicateExec.md#shouldRunAnotherBatch, event-time watermark>>

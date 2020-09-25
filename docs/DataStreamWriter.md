@@ -123,7 +123,7 @@ start(path: String): StreamingQuery // <1>
 ----
 <1> Explicit `path` (that could also be specified as an <<option, option>>)
 
-Creates and immediately starts a <<spark-sql-streaming-StreamingQuery.md#, StreamingQuery>>
+Creates and immediately starts a <<StreamingQuery.md#, StreamingQuery>>
 
 | <<trigger, trigger>>
 a|
@@ -215,7 +215,7 @@ NOTE: When not defined explicitly, `outputMode` defaults to <<spark-sql-streamin
 queryName(queryName: String): DataStreamWriter[T]
 ----
 
-`queryName` sets the name of a spark-sql-streaming-StreamingQuery.md[streaming query].
+`queryName` sets the name of a StreamingQuery.md[streaming query].
 
 Internally, it is just an additional <<option, option>> with the key `queryName`.
 
@@ -228,7 +228,7 @@ trigger(trigger: Trigger): DataStreamWriter[T]
 
 `trigger` method sets the time interval of the *trigger* (that executes a batch runner) for a streaming query.
 
-NOTE: `Trigger` specifies how often results should be produced by a spark-sql-streaming-StreamingQuery.md[StreamingQuery]. See spark-sql-streaming-Trigger.md[Trigger].
+NOTE: `Trigger` specifies how often results should be produced by a StreamingQuery.md[StreamingQuery]. See spark-sql-streaming-Trigger.md[Trigger].
 
 The default trigger is spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0L)] that runs a streaming query as often as possible.
 
@@ -245,7 +245,7 @@ start(path: String): StreamingQuery  // <1>
 
 `start` starts a streaming query.
 
-`start` gives a spark-sql-streaming-StreamingQuery.md[StreamingQuery] to control the execution of the continuous query.
+`start` gives a StreamingQuery.md[StreamingQuery] to control the execution of the continuous query.
 
 NOTE: Whether or not you have to specify `path` option depends on the streaming sink in use.
 

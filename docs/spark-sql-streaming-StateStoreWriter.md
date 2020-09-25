@@ -12,7 +12,7 @@
 | [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 | [[FlatMapGroupsWithStateExec]]
 
-| <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
+| <<StateStoreSaveExec.md#, StateStoreSaveExec>>
 | [[StateStoreSaveExec]]
 
 | <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
@@ -76,7 +76,7 @@ setStoreMetrics(store: StateStore): Unit
 `setStoreMetrics` is used when the following physical operators are executed:
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
-* <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>
+* <<StateStoreSaveExec.md#, StateStoreSaveExec>>
 * <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
 * <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
 ====
@@ -90,7 +90,7 @@ getProgress(): StateOperatorProgress
 
 `getProgress`...FIXME
 
-`getProgress` is used when `ProgressReporter` is requested to [extractStateOperatorMetrics](ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](spark-sql-streaming-MicroBatchExecution.md#runActivatedStream)).
+`getProgress` is used when `ProgressReporter` is requested to [extractStateOperatorMetrics](monitoring/ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](MicroBatchExecution.md#runActivatedStream)).
 
 ## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
 
@@ -101,7 +101,7 @@ shouldRunAnotherBatch(
 
 `shouldRunAnotherBatch` is negative (`false`) by default (to indicate that another non-data batch is not required given the <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
 
-`shouldRunAnotherBatch` is used when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, check out whether the last batch execution requires another batch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
+`shouldRunAnotherBatch` is used when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, check out whether the last batch execution requires another batch>> (when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
 
 === [[stateStoreCustomMetrics]] `stateStoreCustomMetrics` Internal Method
 

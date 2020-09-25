@@ -24,7 +24,7 @@ image::images/StreamingQueryListenerBus.png[align="center"]
 activeQueryRunIds: HashSet[UUID]
 ----
 
-`activeQueryRunIds` is an internal registry of <<spark-sql-streaming-StreamingQuery.md#runId, run IDs>> of active streaming queries in the `SparkSession`.
+`activeQueryRunIds` is an internal registry of <<StreamingQuery.md#runId, run IDs>> of active streaming queries in the `SparkSession`.
 
 * A `runId` is added when `StreamingQueryListenerBus` is requested to <<post, post a QueryStartedEvent>>
 

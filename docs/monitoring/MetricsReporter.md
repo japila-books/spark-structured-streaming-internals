@@ -1,6 +1,6 @@
 # MetricsReporter
 
-`MetricsReporter` is a Metrics Source for [streaming queries](StreamExecution.md#streamMetrics).
+`MetricsReporter` is a Metrics Source for [streaming queries](../StreamExecution.md#streamMetrics).
 
 `MetricsReporter` uses the [last StreamingQueryProgress](ProgressReporter.md#lastProgress) (of the [StreamExecution](#stream)) if available or simply defaults to a "zero" value.
 
@@ -8,10 +8,10 @@
 
 `MetricsReporter` takes the following to be created:
 
-* <span id="stream"> [StreamExecution](StreamExecution.md)
+* <span id="stream"> [StreamExecution](../StreamExecution.md)
 * <span id="sourceName"> Source Name
 
-`MetricsReporter` is created for [stream execution engines](StreamExecution.md#streamMetrics).
+`MetricsReporter` is created for [stream execution engines](../StreamExecution.md#streamMetrics).
 
 ## Gauges
 

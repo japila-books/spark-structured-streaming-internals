@@ -156,28 +156,16 @@ nav:
       - InputProcessor: InputProcessor.md
     - Developing Streaming Applications:
       - DataStreamReader: spark-sql-streaming-DataStreamReader.md
+      - SparkDataStream: SparkDataStream.md
       - DataStreamWriter:
         - DataStreamWriter: DataStreamWriter.md
         - OutputMode: spark-sql-streaming-OutputMode.md
         - Trigger: spark-sql-streaming-Trigger.md
-      - StreamingQuery: spark-sql-streaming-StreamingQuery.md
+      - StreamingQuery: StreamingQuery.md
       - window Function: spark-sql-streaming-window.md
       - StreamingQueryManager: spark-sql-streaming-StreamingQueryManager.md
-      - SQLConf: spark-sql-streaming-SQLConf.md
+      - SQLConf: SQLConf.md
       - Configuration Properties: spark-sql-streaming-properties.md
-    - Monitoring of Streaming Query Execution:
-      - StreamingQueryListener: spark-sql-streaming-StreamingQueryListener.md
-      - ProgressReporter: ProgressReporter.md
-      - StreamingQueryProgress:
-        - StreamingQueryProgress: StreamingQueryProgress.md
-        - StateOperatorProgress: StateOperatorProgress.md
-        - ExecutionStats: spark-sql-streaming-ExecutionStats.md
-        - SourceProgress: SourceProgress.md
-        - SinkProgress: SinkProgress.md
-      - StreamingQueryStatus: spark-sql-streaming-StreamingQueryStatus.md
-      - MetricsReporter: MetricsReporter.md
-      - Web UI: spark-sql-streaming-webui.md
-      - Logging: spark-sql-streaming-logging.md
     - Query Planning and Execution:
       - StreamExecution: StreamExecution.md
       - TriggerExecutor: spark-sql-streaming-TriggerExecutor.md
@@ -185,7 +173,7 @@ nav:
       - StreamingQueryListenerBus: spark-sql-streaming-StreamingQueryListenerBus.md
       - StreamMetadata: spark-sql-streaming-StreamMetadata.md
       - Logical Operators:
-        - EventTimeWatermark Unary Logical Operator: spark-sql-streaming-EventTimeWatermark.md
+        - EventTimeWatermark Unary Logical Operator: EventTimeWatermark.md
         - FlatMapGroupsWithState Unary Logical Operator: logical-operators/FlatMapGroupsWithState.md
         - Deduplicate Unary Logical Operator: spark-sql-streaming-Deduplicate.md
         - MemoryPlan Logical Query Plan: spark-sql-streaming-MemoryPlan.md
@@ -193,10 +181,10 @@ nav:
         - StreamingRelationV2 Leaf Logical Operator: spark-sql-streaming-StreamingRelationV2.md
         - StreamingExecutionRelation Leaf Logical Operator for Streaming Source At Execution: spark-sql-streaming-StreamingExecutionRelation.md
       - Physical Operators:
-        - EventTimeWatermarkExec: spark-sql-streaming-EventTimeWatermarkExec.md
+        - EventTimeWatermarkExec: EventTimeWatermarkExec.md
         - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
         - StateStoreRestoreExec: spark-sql-streaming-StateStoreRestoreExec.md
-        - StateStoreSaveExec: spark-sql-streaming-StateStoreSaveExec.md
+        - StateStoreSaveExec: StateStoreSaveExec.md
         - StreamingDeduplicateExec: spark-sql-streaming-StreamingDeduplicateExec.md
         - StreamingGlobalLimitExec: spark-sql-streaming-StreamingGlobalLimitExec.md
         - StreamingRelationExec: spark-sql-streaming-StreamingRelationExec.md
@@ -230,9 +218,9 @@ nav:
         - Offset: spark-sql-streaming-Offset.md
         - StreamProgress: spark-sql-streaming-StreamProgress.md
     - Micro-Batch Stream Processing:
-      - Micro-Batch Stream Processing: spark-sql-streaming-micro-batch-stream-processing.md
+      - Micro-Batch Stream Processing: micro-batch-stream-processing.md
       - MicroBatchExecution:
-        - MicroBatchExecution: spark-sql-streaming-MicroBatchExecution.md
+        - MicroBatchExecution: MicroBatchExecution.md
         - MicroBatchWriter: spark-sql-streaming-MicroBatchWriter.md
       - MicroBatchReadSupport:
         - MicroBatchReadSupport: spark-sql-streaming-MicroBatchReadSupport.md
@@ -246,7 +234,7 @@ nav:
         - StreamSinkProvider: spark-sql-streaming-StreamSinkProvider.md
     - Continuous Stream Processing:
       - Continuous Stream Processing: spark-sql-streaming-continuous-stream-processing.md
-      - ContinuousExecution: spark-sql-streaming-ContinuousExecution.md
+      - ContinuousExecution: ContinuousExecution.md
       - ContinuousReadSupport Contract: spark-sql-streaming-ContinuousReadSupport.md
       - ContinuousReader Contract: spark-sql-streaming-ContinuousReader.md
       - RateStreamContinuousReader: spark-sql-streaming-RateStreamContinuousReader.md
@@ -271,6 +259,7 @@ nav:
     - crossJoin: operators/crossJoin.md
     - dropDuplicates: operators/dropDuplicates.md
     - explain: operators/explain.md
+    - flatMapGroupsWithState: operators/flatMapGroupsWithState.md
     - groupBy: operators/groupBy.md
     - groupByKey: operators/groupByKey.md
     - join: operators/join.md
@@ -334,6 +323,20 @@ nav:
         - MemoryStreamWriter: spark-sql-streaming-MemoryStreamWriter.md
       - MemoryStreamBase: spark-sql-streaming-MemoryStreamBase.md
       - MemorySinkBase: spark-sql-streaming-MemorySinkBase.md
+  - Monitoring:
+    - StreamingQueryListener: monitoring/StreamingQueryListener.md
+    - ProgressReporter: monitoring/ProgressReporter.md
+    - StreamingQueryProgress:
+      - StreamingQueryProgress: monitoring/StreamingQueryProgress.md
+      - StateOperatorProgress: monitoring/StateOperatorProgress.md
+      - ExecutionStats: monitoring/ExecutionStats.md
+      - SourceProgress: monitoring/SourceProgress.md
+      - SinkProgress: monitoring/SinkProgress.md
+    - StreamingQueryStatus: monitoring/StreamingQueryStatus.md
+    - MetricsReporter: monitoring/MetricsReporter.md
+    - Logging: logging.md
+  - Web UI:
+    - Web UI: webui.md
   - Demos:
     - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
     - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md

@@ -2,9 +2,9 @@
 
 `WatermarkTracker` tracks the <<globalWatermarkMs, event-time watermark>> of a streaming query (across <<operatorToWatermarkMap, EventTimeWatermarkExec operators>> in a physical query plan) based on a given <<policy, MultipleWatermarkPolicy>>.
 
-`WatermarkTracker` is used exclusively in <<spark-sql-streaming-MicroBatchExecution.md#watermarkTracker, MicroBatchExecution>>.
+`WatermarkTracker` is used exclusively in <<MicroBatchExecution.md#watermarkTracker, MicroBatchExecution>>.
 
-`WatermarkTracker` is <<creating-instance, created>> (using the <<apply, factory method>>) when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+`WatermarkTracker` is <<creating-instance, created>> (using the <<apply, factory method>>) when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
 
 [[policy]]
 [[creating-instance]]
@@ -39,7 +39,7 @@ apply(conf: RuntimeConfig): WatermarkTracker
 
 `apply` uses the <<spark-sql-streaming-properties.md#spark.sql.streaming.multipleWatermarkPolicy, spark.sql.streaming.multipleWatermarkPolicy>> configuration property for the global watermark policy (default: `min`) and creates a <<creating-instance, WatermarkTracker>>.
 
-NOTE: `apply` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+NOTE: `apply` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
 
 === [[setWatermark]] `setWatermark` Method
 
@@ -50,7 +50,7 @@ setWatermark(newWatermarkMs: Long): Unit
 
 `setWatermark` simply updates the <<globalwatermarkms, global event-time watermark>> to the given `newWatermarkMs`.
 
-NOTE: `setWatermark` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+NOTE: `setWatermark` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
 
 === [[updateWatermark]] Updating Event-Time Watermark -- `updateWatermark` Method
 
@@ -59,13 +59,13 @@ NOTE: `setWatermark` is used exclusively when `MicroBatchExecution` is requested
 updateWatermark(executedPlan: SparkPlan): Unit
 ----
 
-`updateWatermark` requests the given physical operator (`SparkPlan`) to collect all <<spark-sql-streaming-EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> unary physical operators.
+`updateWatermark` requests the given physical operator (`SparkPlan`) to collect all <<EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> unary physical operators.
 
 `updateWatermark` simply exits when no `EventTimeWatermarkExec` was found.
 
 `updateWatermark`...FIXME
 
-NOTE: `updateWatermark` is used exclusively when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runBatch, run a single streaming batch>> (when requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+NOTE: `updateWatermark` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runBatch, run a single streaming batch>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
 
 === [[internal-properties]] Internal Properties
 
@@ -82,7 +82,7 @@ Default: `0`
 Used when...FIXME
 
 | operatorToWatermarkMap
-a| [[operatorToWatermarkMap]] Event-time watermark per <<spark-sql-streaming-EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator (`mutable.HashMap[Int, Long]`)
+a| [[operatorToWatermarkMap]] Event-time watermark per <<EventTimeWatermarkExec.md#, EventTimeWatermarkExec>> physical operator (`mutable.HashMap[Int, Long]`)
 
 Used when...FIXME
 

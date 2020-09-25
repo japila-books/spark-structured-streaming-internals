@@ -18,7 +18,7 @@ create(
 
 `create`...FIXME
 
-NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>>.
+NOTE: `create` is used exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>>.
 
 === [[get]] Getting Remote Reference to EpochCoordinator RPC Endpoint -- `get` Factory Method
 

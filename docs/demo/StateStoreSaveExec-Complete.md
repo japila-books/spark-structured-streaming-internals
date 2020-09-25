@@ -1,6 +1,6 @@
 == Demo: StateStoreSaveExec with Complete Output Mode
 
-The following example code shows the behaviour of spark-sql-streaming-StateStoreSaveExec.md#doExecute-Complete[StateStoreSaveExec in Complete output mode].
+The following example code shows the behaviour of StateStoreSaveExec.md#doExecute-Complete[StateStoreSaveExec in Complete output mode].
 
 [source, scala]
 ----

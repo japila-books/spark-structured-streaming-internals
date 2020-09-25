@@ -25,11 +25,11 @@ compute(
 
 NOTE: `compute` is part of the `RDD` Contract to compute a partition.
 
-`compute` requests the `EpochCoordinatorRef` helper for a <<spark-sql-streaming-EpochCoordinatorRef.md#get, remote reference to the EpochCoordinator RPC endpoint>> (using the <<spark-sql-streaming-ContinuousExecution.md#EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id local property>>).
+`compute` requests the `EpochCoordinatorRef` helper for a <<spark-sql-streaming-EpochCoordinatorRef.md#get, remote reference to the EpochCoordinator RPC endpoint>> (using the <<ContinuousExecution.md#EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id local property>>).
 
 NOTE: The <<spark-sql-streaming-EpochCoordinator.md#, EpochCoordinator RPC endpoint>> runs on the driver as the single point to coordinate epochs across partition tasks.
 
-`compute` uses the `EpochTracker` helper to <<spark-sql-streaming-EpochTracker.md#initializeCurrentEpoch, initializeCurrentEpoch>> (using the <<spark-sql-streaming-ContinuousExecution.md#START_EPOCH_KEY, __continuous_start_epoch>> local property).
+`compute` uses the `EpochTracker` helper to <<spark-sql-streaming-EpochTracker.md#initializeCurrentEpoch, initializeCurrentEpoch>> (using the <<ContinuousExecution.md#START_EPOCH_KEY, __continuous_start_epoch>> local property).
 
 [[compute-loop]]
 `compute` then executes the following steps (in a loop) until the task (as the given `TaskContext`) is killed or completed.

@@ -1,6 +1,6 @@
 == [[StreamWriteSupport]] StreamWriteSupport Contract -- Writable Streaming Data Sources
 
-`StreamWriteSupport` is the <<contract, abstraction>> of <<implementations, DataSourceV2 sinks>> that <<createStreamWriter, create StreamWriters>> for streaming write (when used in streaming queries in <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>>).
+`StreamWriteSupport` is the <<contract, abstraction>> of <<implementations, DataSourceV2 sinks>> that <<createStreamWriter, create StreamWriters>> for streaming write (when used in streaming queries in <<MicroBatchExecution.md#, MicroBatchExecution>> and <<ContinuousExecution.md#, ContinuousExecution>>).
 
 [[contract]][[createStreamWriter]]
 [source, java]
@@ -14,9 +14,9 @@ StreamWriter createStreamWriter(
 
 `createStreamWriter` creates a <<spark-sql-streaming-StreamWriter.md#, StreamWriter>> for streaming write and is used when the [stream execution thread for a streaming query](StreamExecution.md#queryExecutionThread) is [started](StreamExecution.md#start) and requests the stream execution engines to start, i.e.
 
-* `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, runContinuous>>
+* `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, runContinuous>>
 
-* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runBatch, run a single streaming batch>>
+* `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runBatch, run a single streaming batch>>
 
 [[implementations]]
 .StreamWriteSupports
