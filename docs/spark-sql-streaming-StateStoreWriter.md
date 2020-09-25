@@ -90,18 +90,18 @@ getProgress(): StateOperatorProgress
 
 `getProgress`...FIXME
 
-NOTE: `getProgress` is used exclusively when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#extractStateOperatorMetrics, extractStateOperatorMetrics>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
+`getProgress` is used when `ProgressReporter` is requested to [extractStateOperatorMetrics](ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](spark-sql-streaming-MicroBatchExecution.md#runActivatedStream)).
 
-=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
+## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
 
-[source, scala]
-----
-shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
-----
+```scala
+shouldRunAnotherBatch(
+  newMetadata: OffsetSeqMetadata): Boolean
+```
 
 `shouldRunAnotherBatch` is negative (`false`) by default (to indicate that another non-data batch is not required given the <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
 
-NOTE: `shouldRunAnotherBatch` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, check out whether the last batch execution requires another batch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
+`shouldRunAnotherBatch` is used when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, check out whether the last batch execution requires another batch>> (when `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>).
 
 === [[stateStoreCustomMetrics]] `stateStoreCustomMetrics` Internal Method
 

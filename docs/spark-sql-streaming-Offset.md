@@ -27,7 +27,7 @@ Used when:
 
 * `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#serialize, serialize metadata (write metadata in serialized format)>>
 
-* `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#recordTriggerOffsets, record trigger offsets>>
+* `ProgressReporter` is requested to [record trigger offsets](ProgressReporter.md#recordTriggerOffsets)
 
 * `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> and <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
 

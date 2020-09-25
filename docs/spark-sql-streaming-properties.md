@@ -1,19 +1,17 @@
-== Configuration Properties
+# Configuration Properties
 
-Configuration properties are used to fine-tune Spark Structured Streaming applications.
+**Configuration properties** (aka **settings**) allow you to fine-tune a Spark Structured Streaming application.
 
-You can set them for a `SparkSession` when it is created using `config` method.
+!!! tip
+    Find out more on [Configuration Properties](https://jaceklaskowski.github.io/mastering-spark-sql-book/spark-sql-properties/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book)
 
-[source, scala]
-----
-import org.apache.spark.sql.SparkSession
-val spark = SparkSession
-  .builder
-  .config("spark.sql.streaming.metricsEnabled", true)
-  .getOrCreate
-----
+## <span id="spark.sql.streaming.metricsEnabled"> spark.sql.streaming.metricsEnabled
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkSession.html[SparkSession] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+Enables streaming metrics
+
+Default: `false`
+
+Use [SQLConf.streamingMetricsEnabled](spark-sql-streaming-SQLConf.md#streamingMetricsEnabled) to access the current value.
 
 [[properties]]
 .Structured Streaming's Properties
@@ -114,13 +112,6 @@ The value adjusts a trade-off between memory usage vs cache miss:
 
 Used exclusively when `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#init, initialize>>.
 
-| spark.sql.streaming.metricsEnabled
-| [[spark.sql.streaming.metricsEnabled]] Flag whether Dropwizard CodaHale metrics are reported for active streaming queries
-
-Default: `false`
-
-Use <<spark-sql-streaming-SQLConf.md#streamingMetricsEnabled, SQLConf.streamingMetricsEnabled>> to get the current value
-
 | spark.sql.streaming.minBatchesToRetain
 a| [[spark.sql.streaming.minBatchesToRetain]] *(internal)* The minimum number of entries to retain for failure recovery
 
@@ -149,14 +140,14 @@ Default: `true`
 Use <<spark-sql-streaming-SQLConf.md#streamingNoDataMicroBatchesEnabled, SQLConf.streamingNoDataMicroBatchesEnabled>> to get the current value
 
 | spark.sql.streaming.noDataProgressEventInterval
-a| [[spark.sql.streaming.noDataProgressEventInterval]] *(internal)* How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#finishTrigger, finish a trigger>>
+a| [[spark.sql.streaming.noDataProgressEventInterval]] *(internal)* How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to [finish a trigger](ProgressReporter.md#finishTrigger)
 
 Default: `10000L`
 
 Use <<spark-sql-streaming-SQLConf.md#streamingNoDataProgressEventInterval, SQLConf.streamingNoDataProgressEventInterval>> to get the current value
 
 | spark.sql.streaming.numRecentProgressUpdates
-a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgresses>> to retain in <<spark-sql-streaming-ProgressReporter.md#progressBuffer, progressBuffer>> internal registry when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#updateProgress, update progress of streaming query>>
+a| [[spark.sql.streaming.numRecentProgressUpdates]] Number of [StreamingQueryProgresses](StreamingQueryProgress.md) to retain in [progressBuffer](ProgressReporter.md#progressBuffer) internal registry when `ProgressReporter` is requested to [update progress of streaming query](ProgressReporter.md#updateProgress)
 
 Default: `100`
 

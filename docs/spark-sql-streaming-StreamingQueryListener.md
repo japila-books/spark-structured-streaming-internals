@@ -65,10 +65,10 @@ a| QueryStartedEvent
 
 a| QueryProgressEvent
 
-- <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>>
+- [StreamingQueryProgress](StreamingQueryProgress.md)
 
 | <<onQueryProgress, onQueryProgress>>
-| [[QueryProgressEvent]] Posted when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#updateProgress, update progress of a streaming query>> (after `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> at the end of a streaming batch)
+| [[QueryProgressEvent]] Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> at the end of a streaming batch)
 
 a| QueryTerminatedEvent
 

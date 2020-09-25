@@ -112,7 +112,7 @@ a| [[numOutputRows]]
 | number of total state rows
 a| [[numTotalStateRows]] Number of entries in a <<spark-sql-streaming-StateStore.md#, state store>> at the very end of <<doExecute, executing the StateStoreSaveExec operator>> (aka _numTotalStateRows_)
 
-Corresponds to `numRowsTotal` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
+Corresponds to `numRowsTotal` attribute in `stateOperators` in [StreamingQueryProgress](StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | number of updated state rows
 a| [[numUpdatedStateRows]] Number of the entries that <<spark-sql-streaming-StateStore.md#put, were stored as updates in a state store>> in a trigger and for the keys in the result rows of the upstream physical operator (aka _numUpdatedStateRows_)
@@ -123,7 +123,7 @@ a| [[numUpdatedStateRows]] Number of the entries that <<spark-sql-streaming-Stat
 
 * For <<outputMode, Update>> output mode, the number of rows that the <<stateManager, StreamingAggregationStateManager>> was requested to <<spark-sql-streaming-StreamingAggregationStateManager.md#put, store in a state store>> (that did not expire per the optional <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData, watermarkPredicateForData>> predicate) that is equivalent to the <<numOutputRows, number of output rows>> metric)
 
-Corresponds to `numRowsUpdated` attribute in `stateOperators` in <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>> (and is available as `sq.lastProgress.stateOperators` for an operator).
+Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQueryProgress](StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | memory used by state
 a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.md#, StateStore>> (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, StateStoreMetrics>> of the <<spark-sql-streaming-StateStore.md#metrics, StateStore>>)

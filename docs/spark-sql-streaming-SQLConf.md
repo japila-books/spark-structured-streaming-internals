@@ -1,19 +1,15 @@
-== [[SQLConf]] SQLConf -- Internal Configuration Store
+# SQLConf &mdash; Internal Configuration Store
 
-`SQLConf` is an *internal key-value configuration store* for parameters and hints used to configure a Spark Structured Streaming application (and Spark SQL applications in general).
+`SQLConf` is an **internal configuration store** for parameters and hints used to configure a Spark Structured Streaming application (and Spark SQL applications in general).
 
-The parameters and hints are accessible as <<accessor-methods, property accessor methods>>.
+!!! tip
+    Find out more on [SQLConf](https://jaceklaskowski.github.io/mastering-spark-sql-book/SQLConf/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book)
 
-`SQLConf` is available as the `conf` property of the `SessionState` of a `SparkSession`.
+## <span id="streamingMetricsEnabled"><span id="STREAMING_METRICS_ENABLED"> streamingMetricsEnabled
 
-[source, scala]
-----
-scala> :type spark
-org.apache.spark.sql.SparkSession
+[spark.sql.streaming.metricsEnabled](spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled) configuration property
 
-scala> :type spark.sessionState.conf
-org.apache.spark.sql.internal.SQLConf
-----
+Used when `StreamExecution` is requested to [runStream](StreamExecution.md#runStream)
 
 [[accessor-methods]]
 .SQLConf's Property Accessor Methods
@@ -139,7 +135,7 @@ a| [[streamingNoDataMicroBatchesEnabled]][[STREAMING_NO_DATA_MICRO_BATCHES_ENABL
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.noDataProgressEventInterval, spark.sql.streaming.noDataProgressEventInterval>>
 
-a| [[streamingNoDataProgressEventInterval]] Used exclusively for <<spark-sql-streaming-ProgressReporter.md#noDataProgressEventInterval, ProgressReporter>>
+a| [[streamingNoDataProgressEventInterval]] Used exclusively for [ProgressReporter](ProgressReporter.md#noDataProgressEventInterval)
 
 | `streamingPollingDelay`
 
@@ -151,6 +147,6 @@ a| [[streamingPollingDelay]][[STREAMING_POLLING_DELAY]] Used exclusively when [S
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.numRecentProgressUpdates, spark.sql.streaming.numRecentProgressUpdates>>
 
-a| [[streamingProgressRetention]][[STREAMING_PROGRESS_RETENTION]] Used exclusively when `ProgressReporter` is requested to <<spark-sql-streaming-ProgressReporter.md#updateProgress, update progress of streaming query>> (and possibly remove an excess)
+a| [[streamingProgressRetention]][[STREAMING_PROGRESS_RETENTION]] Used exclusively when `ProgressReporter` is requested to [update progress of streaming query](ProgressReporter.md#updateProgress) (and possibly remove an excess)
 
 |===

@@ -1,8 +1,8 @@
-== [[StreamingQueryProgress]] StreamingQueryProgress
+# StreamingQueryProgress
 
 `StreamingQueryProgress` holds information about the progress of a streaming query.
 
-`StreamingQueryProgress` is created exclusively when `StreamExecution` spark-sql-streaming-ProgressReporter.md#finishTrigger[finishes a trigger].
+`StreamingQueryProgress` is created exclusively when `StreamExecution` is requested to [finish a trigger](ProgressReporter.md#finishTrigger).
 
 [NOTE]
 ====

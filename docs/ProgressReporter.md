@@ -1,4 +1,4 @@
-== [[ProgressReporter]] ProgressReporter Contract
+# ProgressReporter
 
 `ProgressReporter` is the <<contract, contract>> of <<implementations, stream execution progress reporters>> that report the statistics of execution of a streaming query.
 
@@ -228,7 +228,7 @@ Configure logging of the <<implementations, concrete stream execution progress r
 progressBuffer: Queue[StreamingQueryProgress]
 ----
 
-`progressBuffer` is a https://www.scala-lang.org/api/2.12.x/scala/collection/mutable/Queue.html[scala.collection.mutable.Queue] of <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgresses>>.
+`progressBuffer` is a https://www.scala-lang.org/api/2.12.x/scala/collection/mutable/Queue.html[scala.collection.mutable.Queue] of [StreamingQueryProgresses](StreamingQueryProgress.md).
 
 `progressBuffer` has a new `StreamingQueryProgress` added when `ProgressReporter` is requested to <<updateProgress, update progress of a streaming query>>.
 
@@ -353,7 +353,7 @@ Execution stats: [executionStats]
 
 `finishTrigger` creates a <<SinkProgress, SinkProgress>> (aka sink statistics) for the <<sink, sink>>.
 
-`finishTrigger` creates a spark-sql-streaming-StreamingQueryProgress.md[StreamingQueryProgress].
+`finishTrigger` creates a [StreamingQueryProgress](StreamingQueryProgress.md).
 
 If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updates query progress>>.
 
@@ -497,16 +497,13 @@ recordTriggerOffsets(
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#commit, commit an epoch>>
 ====
 
-=== [[lastProgress]] Last StreamingQueryProgress -- `lastProgress` Method
+## <span id="lastProgress"> Last StreamingQueryProgress
 
-[source, scala]
-----
+```scala
 lastProgress: StreamingQueryProgress
-----
+```
 
-`lastProgress`...FIXME
-
-NOTE: `lastProgress` is used when...FIXME
+The last [StreamingQueryProgress](StreamingQueryProgress.md)
 
 === [[recentProgress]] `recentProgress` Method
 

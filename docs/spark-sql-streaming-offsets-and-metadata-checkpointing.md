@@ -58,6 +58,6 @@ Completed batch [currentBatchId]
 
 ## Limitations (Assumptions)
 
-It is assumed that the order of <<spark-sql-streaming-ProgressReporter.md#sources, streaming sources>> in a [streaming query](StreamExecution.md#analyzedPlan) matches the order of the <<spark-sql-streaming-OffsetSeq.md#offsets, offsets>> of <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>> (in [offsetLog](StreamExecution.md#offsetLog)) and [availableOffsets](StreamExecution.md#availableOffsets).
+It is assumed that the order of [streaming sources](ProgressReporter.md#sources) in a [streaming query](StreamExecution.md#analyzedPlan) matches the order of the <<spark-sql-streaming-OffsetSeq.md#offsets, offsets>> of <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>> (in [offsetLog](StreamExecution.md#offsetLog)) and [availableOffsets](StreamExecution.md#availableOffsets).
 
 In other words, a streaming query can be modified and then restarted from a checkpoint (to maintain stream processing state) only when the number of streaming sources and their order are preserved across restarts.

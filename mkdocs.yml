@@ -167,9 +167,10 @@ nav:
       - Configuration Properties: spark-sql-streaming-properties.md
     - Monitoring of Streaming Query Execution:
       - StreamingQueryListener: spark-sql-streaming-StreamingQueryListener.md
-      - ProgressReporter: spark-sql-streaming-ProgressReporter.md
+      - ProgressReporter: ProgressReporter.md
       - StreamingQueryProgress:
-        - StreamingQueryProgress: spark-sql-streaming-StreamingQueryProgress.md
+        - StreamingQueryProgress: StreamingQueryProgress.md
+        - StateOperatorProgress: StateOperatorProgress.md
         - ExecutionStats: spark-sql-streaming-ExecutionStats.md
         - SourceProgress: spark-sql-streaming-SourceProgress.md
         - SinkProgress: spark-sql-streaming-SinkProgress.md

@@ -77,7 +77,7 @@ a| [[lastProgress]]
 lastProgress: StreamingQueryProgress
 ----
 
-The last <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>> of the streaming query
+The last [StreamingQueryProgress](StreamingQueryProgress.md) of the streaming query
 
 Used when...FIXME
 
@@ -113,7 +113,7 @@ a| [[recentProgress]]
 recentProgress: Array[StreamingQueryProgress]
 ----
 
-Collection of the recent <<spark-sql-streaming-StreamingQueryProgress.md#, StreamingQueryProgress>> updates.
+Collection of the recent [StreamingQueryProgress](StreamingQueryProgress.md) updates.
 
 Used when...FIXME
 
@@ -147,7 +147,7 @@ a| [[status]]
 status: StreamingQueryStatus
 ----
 
-<<spark-sql-streaming-StreamingQueryStatus.md#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` spark-sql-streaming-ProgressReporter.md#currentStatus[has accumulated] being a `ProgressReporter` while running the streaming query)
+<<spark-sql-streaming-StreamingQueryStatus.md#, StreamingQueryStatus>> of the streaming query (as `StreamExecution` [has accumulated](ProgressReporter.md#currentStatus) being a `ProgressReporter` while running the streaming query)
 
 Used when...FIXME
 
