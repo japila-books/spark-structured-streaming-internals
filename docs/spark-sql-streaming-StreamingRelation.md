@@ -37,7 +37,7 @@ scala> println(relation)
 rate
 ----
 
-NOTE: `StreamingRelation` is spark-sql-streaming-StreamExecution.md#logicalPlan[resolved] (aka _planned_) to spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] (right after `StreamExecution` spark-sql-streaming-StreamExecution.md#runStream[starts running batches]).
+NOTE: `StreamingRelation` is [resolved](StreamExecution.md#logicalPlan) (aka _planned_) to spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] (right after `StreamExecution` [starts running batches](StreamExecution.md#runStream)).
 
 === [[apply]] Creating StreamingRelation for DataSource -- `apply` Object Method
 

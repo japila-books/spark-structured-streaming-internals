@@ -25,7 +25,7 @@ deactivateInstances(runId: UUID): Unit
 
 Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.md#DeactivateInstances, DeactivateInstances>> synchronous message with the given `runId` and waits for a `true` / `false` response
 
-Used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#notifyQueryTermination, handle termination of a streaming query>> (when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run a streaming query>> and the query <<spark-sql-streaming-StreamExecution.md#runStream-finally, has finished (running streaming batches)>>).
+Used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#notifyQueryTermination, handle termination of a streaming query>> (when `StreamExecution` is requested to [run a streaming query](StreamExecution.md#runStream) and the query [has finished (running streaming batches)](StreamExecution.md#runStream-finally)).
 
 | getLocation
 a| [[getLocation]]

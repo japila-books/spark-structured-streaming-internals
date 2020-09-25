@@ -24,7 +24,7 @@
 | [[RateStreamMicroBatchReader]] `HDFSMetadataLog` of <<spark-sql-streaming-Offset.md#LongOffset, LongOffsets>> for <<spark-sql-streaming-RateStreamMicroBatchReader.md#, RateStreamMicroBatchReader>>
 
 | <<spark-sql-streaming-CommitLog.md#, CommitLog>>
-| [[CommitLog]] <<spark-sql-streaming-StreamExecution.md#commitLog, Offset commit log>> of <<spark-sql-streaming-StreamExecution.md#, streaming query execution engines>>
+| [[CommitLog]] [Offset commit log](StreamExecution.md#commitLog) of [streaming query execution engines](StreamExecution.md)
 
 | <<spark-sql-streaming-CompactibleFileStreamLog.md#, CompactibleFileStreamLog>>
 | [[CompactibleFileStreamLog]] Compactible metadata logs (that compact logs at regular interval)
@@ -33,11 +33,11 @@
 | [[KafkaSourceInitialOffsetWriter]] `HDFSMetadataLog` of <<spark-sql-streaming-KafkaSourceOffset.md#, KafkaSourceOffsets>> for <<spark-sql-streaming-KafkaSource.md#, KafkaSource>>
 
 | <<spark-sql-streaming-OffsetSeqLog.md#, OffsetSeqLog>>
-| [[OffsetSeqLog]] <<spark-sql-streaming-StreamExecution.md#offsetLog, Write-Ahead Log (WAL)>> of <<spark-sql-streaming-StreamExecution.md#, stream execution engines>>
+| [[OffsetSeqLog]] [Write-Ahead Log (WAL)](StreamExecution.md#offsetLog) of [streaming query execution engines](StreamExecution.md)
 
 |===
 
-=== [[creating-instance]] Creating HDFSMetadataLog Instance
+## Creating Instance
 
 `HDFSMetadataLog` takes the following to be created:
 

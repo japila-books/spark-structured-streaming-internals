@@ -205,7 +205,7 @@ createQuery(
   triggerClock: Clock): StreamingQueryWrapper
 ----
 
-`createQuery` creates a spark-sql-streaming-StreamingQueryWrapper.md#creating-instance[StreamingQueryWrapper] (for a spark-sql-streaming-StreamExecution.md#creating-instance[StreamExecution] per the input user-defined properties).
+`createQuery` creates a spark-sql-streaming-StreamingQueryWrapper.md#creating-instance[StreamingQueryWrapper] (for a StreamExecution.md#creating-instance[StreamExecution] per the input user-defined properties).
 
 Internally, `createQuery` first finds the name of the checkpoint directory of a query (aka *checkpoint location*) in the following order:
 
@@ -275,13 +275,13 @@ startQuery(
 
 NOTE: `trigger` defaults to `0` milliseconds (as spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0)]).
 
-Internally, `startQuery` first <<createQuery, creates a StreamingQueryWrapper>>, registers it in <<activeQueries, activeQueries>> internal registry (by the <<spark-sql-streaming-StreamExecution.md#id, id>>), requests it for the underlying <<spark-sql-streaming-StreamingQueryWrapper.md#streamingQuery, StreamExecution>> and <<spark-sql-streaming-StreamExecution.md#start, starts it>>.
+Internally, `startQuery` first <<createQuery, creates a StreamingQueryWrapper>>, registers it in <<activeQueries, activeQueries>> internal registry (by the [id](StreamExecution.md#id)), requests it for the underlying <<spark-sql-streaming-StreamingQueryWrapper.md#streamingQuery, StreamExecution>> and [starts it](StreamExecution.md#start).
 
 In the end, `startQuery` returns the <<spark-sql-streaming-StreamingQueryWrapper.md#, StreamingQueryWrapper>> (as part of the fluent API so you can chain operators) or throws the exception that was reported when attempting to start the query.
 
 `startQuery` throws an `IllegalArgumentException` when there is another query registered under `name`. `startQuery` looks it up in the <<activeQueries, activeQueries>> internal registry.
 
-```
+```text
 Cannot start query with name [name] as a query with that name is already active
 ```
 
@@ -302,10 +302,9 @@ postListenerEvent(event: StreamingQueryListener.Event): Unit
 
 `postListenerEvent` simply posts the input `event` to the internal <<listenerBus, event bus for streaming events (StreamingQueryListenerBus)>>.
 
-.StreamingQueryManager Propagates StreamingQueryListener Events
-image::images/StreamingQueryManager-postListenerEvent.png[align="center"]
+![StreamingQueryManager Propagates StreamingQueryListener Events](images/StreamingQueryManager-postListenerEvent.png)
 
-NOTE: `postListenerEvent` is used exclusively when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#postEvent, post a streaming event>>.
+`postListenerEvent` is used when `StreamExecution` is requested to [post a streaming event](StreamExecution.md#postEvent).
 
 === [[notifyQueryTermination]] Handling Termination of Streaming Query (and Deactivating Query in StateStoreCoordinator) -- `notifyQueryTermination` Internal Method
 
@@ -325,7 +324,7 @@ In the end, `notifyQueryTermination` requests <<stateStoreCoordinator, StateStor
 .StreamingQueryManager's Marking Streaming Query as Terminated
 image::images/StreamingQueryManager-notifyQueryTermination.png[align="center"]
 
-NOTE: `notifyQueryTermination` is used exclusively when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run a streaming query>> and the query <<spark-sql-streaming-StreamExecution.md#runStream-finally, has finished (running streaming batches)>> (with or without an exception).
+`notifyQueryTermination` is used when `StreamExecution` is requested to [run a streaming query](StreamExecution.md#runStream) and the query [has finished (running streaming batches)](StreamExecution.md#runStream-finally) (with or without an exception).
 
 === [[internal-properties]] Internal Properties
 

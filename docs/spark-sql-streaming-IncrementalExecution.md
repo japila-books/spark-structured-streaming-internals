@@ -4,7 +4,7 @@
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[QueryExecution] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`IncrementalExecution` is <<creating-instance, created>> (and becomes the <<spark-sql-streaming-StreamExecution.md#lastExecution, StreamExecution.lastExecution>>) when:
+`IncrementalExecution` is <<creating-instance, created>> (and becomes the [StreamExecution.lastExecution](StreamExecution.md#lastExecution)) when:
 
 * `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runBatch, run a single streaming micro-batch>> (in <<spark-sql-streaming-MicroBatchExecution.md#runBatch-queryPlanning, queryPlanning>> phase)
 
@@ -41,10 +41,9 @@ Once <<creating-instance, created>>, `IncrementalExecution` is immediately execu
 
 When <<creating-instance, created>>, `IncrementalExecution` is given the <<checkpointLocation, checkpoint location>>.
 
-For the two available execution engines (<<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>>), the checkpoint location is actually *state* directory under the <<spark-sql-streaming-StreamExecution.md#resolvedCheckpointRoot, checkpoint root directory>>.
+For the two available execution engines (<<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> and <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>>), the checkpoint location is actually *state* directory under the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot).
 
-[source, scala]
-----
+```text
 val queryName = "rate2memory"
 val checkpointLocation = s"file:/tmp/checkpoint-$queryName"
 val query = spark
@@ -70,7 +69,7 @@ val stateCheckpointDir = query
   .checkpointLocation
 val stateDir = s"$checkpointLocation/state"
 assert(stateCheckpointDir equals stateDir)
-----
+```
 
 State checkpoint location is used exclusively when `IncrementalExecution` is requested for the <<nextStatefulOperationStateInfo, state info of the next stateful operator>> (when requested to optimize a streaming physical plan using the <<state, state preparation rule>> that creates the stateful physical operators: <<spark-sql-streaming-StateStoreSaveExec.md#, StateStoreSaveExec>>, <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>, <<spark-sql-streaming-StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>, [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<spark-sql-streaming-StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>, and <<spark-sql-streaming-StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>).
 

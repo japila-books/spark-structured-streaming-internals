@@ -174,13 +174,11 @@ nav:
         - SourceProgress: spark-sql-streaming-SourceProgress.md
         - SinkProgress: spark-sql-streaming-SinkProgress.md
       - StreamingQueryStatus: spark-sql-streaming-StreamingQueryStatus.md
-      - MetricsReporter: spark-sql-streaming-MetricsReporter.md
+      - MetricsReporter: MetricsReporter.md
       - Web UI: spark-sql-streaming-webui.md
       - Logging: spark-sql-streaming-logging.md
     - Query Planning and Execution:
-      - StreamExecution:
-        - StreamExecution: spark-sql-streaming-StreamExecution.md
-        - StreamingQueryWrapper: spark-sql-streaming-StreamingQueryWrapper.md
+      - StreamExecution: StreamExecution.md
       - TriggerExecutor: spark-sql-streaming-TriggerExecutor.md
       - IncrementalExecution: spark-sql-streaming-IncrementalExecution.md
       - StreamingQueryListenerBus: spark-sql-streaming-StreamingQueryListenerBus.md
@@ -209,6 +207,7 @@ nav:
         - StreamingGlobalLimitStrategy: spark-sql-streaming-StreamingGlobalLimitStrategy.md
         - StreamingJoinStrategy: spark-sql-streaming-StreamingJoinStrategy.md
         - StreamingRelationStrategy: spark-sql-streaming-StreamingRelationStrategy.md
+      - StreamingQueryWrapper: spark-sql-streaming-StreamingQueryWrapper.md
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: spark-sql-streaming-offsets-and-metadata-checkpointing.md
       - MetadataLog: spark-sql-streaming-MetadataLog.md

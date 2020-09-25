@@ -48,16 +48,16 @@ Once <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>> stream
 
 Execution phases with execution times are available using <<spark-sql-streaming-StreamingQuery.md#lastProgress, StreamingQueryProgress>> under `durationMs`.
 
-[source, scala]
-----
+```text
 scala> :type sq
 org.apache.spark.sql.streaming.StreamingQuery
 sq.lastProgress.durationMs.get("walCommit")
-----
-
-TIP: Enable INFO logging level for <<spark-sql-streaming-StreamExecution.md#logging, StreamExecution>> logger to be notified about durations.
-
 ```
+
+!!! tip
+    Enable INFO logging level for [StreamExecution](StreamExecution.md#logging) logger to be notified about durations.
+
+```text
 17/08/11 09:04:17 INFO StreamExecution: Streaming query made progress: {
   "id" : "ec8f8228-90f6-4e1f-8ad2-80222affed63",
   "runId" : "f605c134-cfb0-4378-88c1-159d8a7c232e",

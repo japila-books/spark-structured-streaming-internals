@@ -156,7 +156,7 @@ Clock of the streaming query
 |===
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-StreamExecution.md#, StreamExecution>> is the one and only known direct extension of the <<contract, ProgressReporter Contract>> in Spark Structured Streaming.
+[StreamExecution](StreamExecution.md) is the one and only known direct extension of the <<contract, ProgressReporter Contract>> in Spark Structured Streaming.
 
 [[noDataProgressEventInterval]]
 `ProgressReporter` uses the <<spark-sql-streaming-properties.md#spark.sql.streaming.noDataProgressEventInterval, spark.sql.streaming.noDataProgressEventInterval>> configuration property to control how long to wait between two progress events when there is no data (default: `10000L`) when <<finishTrigger, finishing trigger>>.
@@ -322,7 +322,7 @@ Starting Trigger Calculation
 
 * `ContinuousExecution` stream execution engine is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, run an activated streaming query>> (at the beginning of every trigger)
 
-`StreamExecution` starts spark-sql-streaming-StreamExecution.md#runStream[running batches] (as part of spark-sql-streaming-StreamExecution.md#triggerExecutor[TriggerExecutor] executing a batch runner).
+`StreamExecution` starts StreamExecution.md#runStream[running batches] (as part of StreamExecution.md#triggerExecutor[TriggerExecutor] executing a batch runner).
 ====
 
 === [[finishTrigger]] Finishing Up Streaming Batch (Trigger) and Generating StreamingQueryProgress -- `finishTrigger` Method
@@ -382,7 +382,7 @@ In the end, `reportTimeTaken` prints out the following DEBUG message to the logs
 
 [NOTE]
 ====
-`reportTimeTaken` is used when the <<spark-sql-streaming-StreamExecution.md#extensions, stream execution engines>> are requested to execute the following phases (that appear as `triggerDetailKey` in the DEBUG message in the logs):
+`reportTimeTaken` is used when the [stream execution engines](StreamExecution.md) are requested to execute the following phases (that appear as `triggerDetailKey` in the DEBUG message in the logs):
 
 * `MicroBatchExecution`
 ** <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution>>
@@ -408,14 +408,11 @@ updateStatusMessage(message: String): Unit
 
 `updateStatusMessage` simply updates the `message` in the <<currentStatus, StreamingQueryStatus>> internal registry.
 
-[NOTE]
-====
 `updateStatusMessage` is used when:
 
-* `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>>
+* `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream)
 
-* `MicroBatchExecution` is requested to <<spark-sql-streaming-MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>, <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>>
-====
+* `MicroBatchExecution` is requested to [run an activated streaming query](spark-sql-streaming-MicroBatchExecution.md#runActivatedStream) or [construct the next streaming micro-batch](spark-sql-streaming-MicroBatchExecution.md#constructNextBatch)
 
 === [[extractExecutionStats]] Generating Execution Statistics -- `extractExecutionStats` Internal Method
 

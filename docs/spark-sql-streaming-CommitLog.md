@@ -1,8 +1,8 @@
-== [[CommitLog]] CommitLog -- HDFSMetadataLog for Offset Commit Log
+# CommitLog &mdash; HDFSMetadataLog for Offset Commit Log
 
 `CommitLog` is an <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog>> with <<CommitMetadata, CommitMetadata>> metadata.
 
-`CommitLog` is <<creating-instance, created>> exclusively for the <<spark-sql-streaming-StreamExecution.md#commitLog, offset commit log>> of <<spark-sql-streaming-StreamExecution.md#, StreamExecution>>.
+`CommitLog` is <<creating-instance, created>> exclusively for the [offset commit log](StreamExecution.md#commitLog) (of [StreamExecution](StreamExecution.md)).
 
 [[CommitMetadata]][[nextBatchWatermarkMs]]
 `CommitLog` uses `CommitMetadata` for the metadata with *nextBatchWatermarkMs* attribute (of type `Long` and the default `0`).

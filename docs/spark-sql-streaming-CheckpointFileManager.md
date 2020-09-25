@@ -160,17 +160,14 @@ If not found, `create` creates a <<spark-sql-streaming-FileContextBasedCheckpoin
 
 In case of `UnsupportedFileSystemException`, `create` prints out the following WARN message to the logs and creates (_falls back on_) a <<spark-sql-streaming-FileSystemBasedCheckpointFileManager.md#, FileSystemBasedCheckpointFileManager>>.
 
-```
+```text
 Could not use FileContext API for managing Structured Streaming checkpoint files at [path]. Using FileSystem API instead for managing log files. If the implementation of FileSystem.rename() is not atomic, then the correctness and fault-tolerance of your Structured Streaming is not guaranteed.
 ```
 
-[NOTE]
-====
 `create` is used when:
 
-* `HDFSMetadataLog` is <<spark-sql-streaming-HDFSMetadataLog.md#, created>>
+* [HDFSMetadataLog](spark-sql-streaming-HDFSMetadataLog.md) is created
 
-* `StreamMetadata` helper object is requested to <<spark-sql-streaming-StreamMetadata.md#write, write metadata to a file>> (when `StreamExecution` is <<spark-sql-streaming-StreamExecution.md#, created>>)
+* `StreamMetadata` utility is used to [write metadata to a file](spark-sql-streaming-StreamMetadata.md#write) (when [StreamExecution](StreamExecution.md) is created)
 
-* `HDFSBackedStateStoreProvider` is requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#fm, CheckpointFileManager>>
-====
+* `HDFSBackedStateStoreProvider` is requested for a [CheckpointFileManager](spark-sql-streaming-HDFSBackedStateStoreProvider.md#fm)

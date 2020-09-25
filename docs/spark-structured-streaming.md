@@ -10,7 +10,7 @@ The semantics of the Structured Streaming model is as follows (see the article [
 
 As of Spark 2.2.0, Structured Streaming has been marked stable and ready for production use. With that the other older streaming module **Spark Streaming** is considered obsolete and not for developing new streaming applications with Apache Spark.
 
-Spark Structured Streaming comes with two [stream execution engines](spark-sql-streaming-StreamExecution.md) for executing streaming queries:
+Spark Structured Streaming comes with two [stream execution engines](StreamExecution.md) for executing streaming queries:
 
 * [MicroBatchExecution](spark-sql-streaming-MicroBatchExecution.md) for [Micro-Batch Stream Processing](spark-sql-streaming-micro-batch-stream-processing.md)
 

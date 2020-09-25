@@ -78,7 +78,7 @@ a| [[minBatchesToRetain]] Used when:
 
 * `CompactibleFileStreamLog` is <<spark-sql-streaming-CompactibleFileStreamLog.md#minBatchesToRetain, created>>
 
-* `StreamExecution` is <<spark-sql-streaming-StreamExecution.md#minLogEntriesToMaintain, created>>
+* [StreamExecution](StreamExecution.md#minLogEntriesToMaintain) is created
 
 * `StateStoreConf` is <<spark-sql-streaming-StateStoreConf.md#minVersionsToRetain, created>>
 
@@ -121,7 +121,7 @@ a| [[STREAMING_CHECKPOINT_FILE_MANAGER_CLASS]] Used exclusively when `Checkpoint
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled, spark.sql.streaming.metricsEnabled>>
 
-a| [[streamingMetricsEnabled]] Used exclusively when `StreamExecution` is requested for <<spark-sql-streaming-StreamExecution.md#runStream, runStream>> (to control whether to register a <<spark-sql-streaming-StreamExecution.md#streamMetrics, metrics reporter>> for a streaming query)
+a| [[streamingMetricsEnabled]] Used exclusively when `StreamExecution` is requested for [runStream](StreamExecution.md#runStream) (to control whether to register a [metrics reporter](StreamExecution.md#streamMetrics) for a streaming query)
 
 | `STREAMING_MULTIPLE_WATERMARK_POLICY`
 
@@ -145,7 +145,7 @@ a| [[streamingNoDataProgressEventInterval]] Used exclusively for <<spark-sql-str
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.pollingDelay, spark.sql.streaming.pollingDelay>>
 
-a| [[streamingPollingDelay]][[STREAMING_POLLING_DELAY]] Used exclusively when `StreamExecution` is <<spark-sql-streaming-StreamExecution.md#, created>>
+a| [[streamingPollingDelay]][[STREAMING_POLLING_DELAY]] Used exclusively when [StreamExecution](StreamExecution.md) is created
 
 | `streamingProgressRetention`
 

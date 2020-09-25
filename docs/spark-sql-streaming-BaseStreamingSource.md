@@ -23,7 +23,7 @@ Stops the streaming source or reader (and frees up any resources it may have all
 
 Used when:
 
-* `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#stopSources, stop streaming sources and readers>>
+* `StreamExecution` is requested to [stop streaming sources and readers](StreamExecution.md#stopSources)
 
 * `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, load data from a MicroBatchReadSupport data source>> (for read schema)
 

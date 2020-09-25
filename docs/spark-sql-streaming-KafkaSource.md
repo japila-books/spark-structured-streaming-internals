@@ -4,16 +4,13 @@
 
 NOTE: Kafka topics are checked for new records every spark-sql-streaming-Trigger.md[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
-`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the <<spark-sql-streaming-StreamExecution.md#checkpointRoot, checkpointRoot>> (of the <<spark-sql-streaming-StreamExecution.md, StreamExecution>>).
+`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](StreamExecution.md#checkpointRoot) (of the [StreamExecution](StreamExecution.md)).
 
-[NOTE]
-====
-The <<spark-sql-streaming-StreamExecution.md#checkpointRoot, checkpointRoot>> directory is one of the following:
+!!! note
+    The [checkpointRoot](StreamExecution.md#checkpointRoot) directory is one of the following:
 
-* `checkpointLocation` option
-
-* <<spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property
-====
+    * `checkpointLocation` option
+    * [spark.sql.streaming.checkpointLocation](spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property
 
 `KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by spark-sql-streaming-KafkaSourceProvider.md#shortName[KafkaSourceProvider]).
 
@@ -379,14 +376,12 @@ If the metadata could not be found, `initialPartitionOffsets` creates a new `Kaf
 Initial offsets: [offsets]
 ```
 
-[NOTE]
-====
-`initialPartitionOffsets` is used when `KafkaSource` is requested for the following:
+!!! note
+    `initialPartitionOffsets` is used when `KafkaSource` is requested for the following:
 
-* <<getOffset, Fetch offsets (from metadata log or Kafka directly)>>
+    * <<getOffset, Fetch offsets (from metadata log or Kafka directly)>>
 
-* <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` spark-sql-streaming-StreamExecution.md#runStream[commits the first streaming batch] and so nothing is in spark-sql-streaming-StreamExecution.md#committedOffsets[committedOffsets] registry for a `KafkaSource` data source yet)
-====
+    * <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` [commits the first streaming batch](StreamExecution.md#runStream) and so nothing is in [committedOffsets](StreamExecution.md#committedOffsets) registry for a `KafkaSource` data source yet)
 
 ==== [[initialPartitionOffsets-HDFSMetadataLog-serialize]] `HDFSMetadataLog.serialize`
 

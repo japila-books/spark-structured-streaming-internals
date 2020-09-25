@@ -268,7 +268,7 @@ Internally, `start` branches off per `source`.
 | Name of active streaming query
 
 | [[checkpointLocation]] `checkpointLocation`
-| Directory for checkpointing (and to store query metadata like offsets before and after being processed, the spark-sql-streaming-StreamExecution.md#id[query id], etc.)
+| Directory for checkpointing (and to store query metadata like offsets before and after being processed, the [query id](StreamExecution.md#id), etc.)
 |===
 
 `start` reports a `AnalysisException` when `source` is `hive`.

@@ -1,10 +1,10 @@
-== [[StreamProgress]] StreamProgress -- Collection of Offsets per Streaming Source
+# StreamProgress &mdash; Collection of Offsets per Streaming Source
 
 `StreamProgress` is a collection of <<spark-sql-streaming-Offset.md#, Offsets>> per <<spark-sql-streaming-BaseStreamingSource.md#, streaming source>>.
 
 `StreamProgress` is <<creating-instance, created>> when:
 
-* `StreamExecution` is <<spark-sql-streaming-StreamExecution.md#, created>> (and creates <<spark-sql-streaming-StreamExecution.md#committedOffsets, committed>> and <<spark-sql-streaming-StreamExecution.md#availableOffsets, available>> offsets)
+* [StreamExecution](StreamExecution.md) is created (and creates [committed](StreamExecution.md#committedOffsets) and [available](StreamExecution.md#availableOffsets) offsets)
 
 * `OffsetSeq` is requested to <<spark-sql-streaming-OffsetSeq.md#toStreamProgress, convert to StreamProgress>>
 
@@ -50,11 +50,8 @@ toOffsetSeq(
 
 `toOffsetSeq` creates a <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>> with offsets that are <<get, looked up>> for every <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>>.
 
-[NOTE]
-====
 `toOffsetSeq` is used when:
 
-* `MicroBatchExecution` stream execution engine is requested to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> (to <<spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit, commit available offsets for a batch to the write-ahead log>>)
+* `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](spark-sql-streaming-MicroBatchExecution.md#constructNextBatch) (to [commit available offsets for a batch to the write-ahead log](spark-sql-streaming-MicroBatchExecution.md#constructNextBatch-walCommit))
 
-* `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (that <<spark-sql-streaming-StreamExecution.md#runStream-catch-Throwable, failed with a Throwable>>)
-====
+* `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) (that [failed with a Throwable](StreamExecution.md#runStream-catch-Throwable))

@@ -1,4 +1,4 @@
-== [[StreamExecution]] StreamExecution -- Base of Stream Execution Engines
+# StreamExecution -- Base of Stream Execution Engines
 
 `StreamExecution` is the <<contract, base>> of <<extensions, stream execution engines>> (aka _streaming query processing engines_) that can <<runActivatedStream, run>> a <<logicalPlan, structured query>> (on a <<queryExecutionThread, stream execution thread>>).
 
@@ -968,7 +968,7 @@ Used when `StreamExecution` is requested to <<start, start>> to pause the main t
 | [[streamDeathCause]] `StreamingQueryException`
 
 | streamMetrics
-a| [[streamMetrics]] <<spark-sql-streaming-MetricsReporter.md#, MetricsReporter>> with *spark.streaming.[name or id]* source name
+a| [[streamMetrics]] [MetricsReporter](MetricsReporter.md) with **spark.streaming.[name or id]** source name
 
 Uses <<name, name>> if defined (can be `null`) or falls back to <<id, id>>
 

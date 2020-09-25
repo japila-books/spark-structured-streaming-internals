@@ -1,10 +1,8 @@
-== [[StreamingQuery]] StreamingQuery Contract
+# StreamingQuery Contract
 
-`StreamingQuery` is the <<contract, contract>> of streaming queries that are executed continuously and concurrently (i.e. on a <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, separate thread>>).
+`StreamingQuery` is the <<contract, contract>> of streaming queries that are executed continuously and concurrently (i.e. on a [separate thread](StreamExecution.md#queryExecutionThread)).
 
-NOTE: `StreamingQuery` is called *continuous query* or *streaming query*.
-
-NOTE: `StreamingQuery` is a Scala trait with the only implementation being <<spark-sql-streaming-StreamExecution.md#, StreamExecution>> (and less importanly <<spark-sql-streaming-StreamingQueryWrapper.md#, StreamingQueryWrapper>> for serializing a non-serializable `StreamExecution`).
+`StreamingQuery` is a Scala trait with the only implementation being [StreamExecution](StreamExecution.md) (and less importanly [StreamingQueryWrapper](spark-sql-streaming-StreamingQueryWrapper.md)).
 
 [[contract]]
 .StreamingQuery Contract

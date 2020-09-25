@@ -18,7 +18,7 @@ onQueryStarted(
   event: QueryStartedEvent): Unit
 ----
 
-Informs that `DataStreamWriter` was requested to [start execution of the streaming query](DataStreamWriter.md#start) (on the [stream execution thread](spark-sql-streaming-StreamExecution.md#queryExecutionThread))
+Informs that `DataStreamWriter` was requested to [start execution of the streaming query](DataStreamWriter.md#start) (on the [stream execution thread](StreamExecution.md#queryExecutionThread))
 
 | onQueryProgress
 a| [[onQueryProgress]]
@@ -61,7 +61,7 @@ a| QueryStartedEvent
 - <<spark-sql-streaming-StreamingQuery.md#name, name>>
 
 | <<onQueryStarted, onQueryStarted>>
-| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (when `DataStreamWriter` is requested to [start execution of the streaming query](DataStreamWriter.md#start) on the [stream execution thread](spark-sql-streaming-StreamExecution.md#queryExecutionThread))
+| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) (when `DataStreamWriter` is requested to [start execution of the streaming query](DataStreamWriter.md#start) on the [stream execution thread](StreamExecution.md#queryExecutionThread))
 
 a| QueryProgressEvent
 
@@ -74,20 +74,19 @@ a| QueryTerminatedEvent
 
 - <<spark-sql-streaming-StreamingQuery.md#id, id>>
 - <<spark-sql-streaming-StreamingQuery.md#runId, runId>>
-- <<spark-sql-streaming-StreamExecution.md#exception, exception>> if terminated due to an error
+- [exception](StreamExecution.md#exception) if terminated due to an error
 
 | <<onQueryTerminated, onQueryTerminated>>
-| [[QueryTerminatedEvent]] Posted when `StreamExecution` is requested to <<spark-sql-streaming-StreamExecution.md#runStream, run stream processing>> (and the streaming query was <<spark-sql-streaming-StreamingQuery.md#stop, stopped>> or terminated due to an error)
+| [[QueryTerminatedEvent]] Posted when `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) (and the streaming query was <<spark-sql-streaming-StreamingQuery.md#stop, stopped>> or terminated due to an error)
 
 |===
 
 You can register a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.md#addListener, StreamingQueryManager.addListener>> method.
 
-[source, scala]
-----
+```text
 val queryListener: StreamingQueryListener = ...
 spark.streams.addListener(queryListener)
-----
+```
 
 You can remove a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.md#removeListener, StreamingQueryManager.removeListener>> method.
 
@@ -100,7 +99,7 @@ spark.streams.removeListener(queryListener)
 .StreamingQueryListener Notified about Query's Start (onQueryStarted)
 image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
 
-NOTE: `onQueryStarted` is used internally to unblock the spark-sql-streaming-StreamExecution.md#start[starting thread] of `StreamExecution`.
+NOTE: `onQueryStarted` is used internally to unblock the StreamExecution.md#start[starting thread] of `StreamExecution`.
 
 .StreamingQueryListener Notified about Query's Progress (onQueryProgress)
 image::images/StreamingQueryListener-onQueryProgress.png[align="center"]

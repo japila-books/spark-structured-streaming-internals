@@ -12,7 +12,7 @@ StreamWriter createStreamWriter(
   DataSourceOptions options)
 ----
 
-`createStreamWriter` creates a <<spark-sql-streaming-StreamWriter.md#, StreamWriter>> for streaming write and is used when the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread for a streaming query>> is <<spark-sql-streaming-StreamExecution.md#start, started>> and requests the stream execution engines to start, i.e.
+`createStreamWriter` creates a <<spark-sql-streaming-StreamWriter.md#, StreamWriter>> for streaming write and is used when the [stream execution thread for a streaming query](StreamExecution.md#queryExecutionThread) is [started](StreamExecution.md#start) and requests the stream execution engines to start, i.e.
 
 * `ContinuousExecution` is requested to <<spark-sql-streaming-ContinuousExecution.md#runContinuous, runContinuous>>
 

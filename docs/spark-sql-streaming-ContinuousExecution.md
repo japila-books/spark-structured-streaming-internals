@@ -1,6 +1,6 @@
-== [[ContinuousExecution]] ContinuousExecution -- Stream Execution Engine of Continuous Stream Processing
+# ContinuousExecution &mdash; Stream Execution Engine of Continuous Stream Processing
 
-`ContinuousExecution` is the <<spark-sql-streaming-StreamExecution.md#, stream execution engine>> of <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
+`ContinuousExecution` is the [stream execution engine](StreamExecution.md) of [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md).
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
 
@@ -75,9 +75,9 @@ Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 runActivatedStream(sparkSessionForStream: SparkSession): Unit
 ----
 
-NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.md#runActivatedStream, StreamExecution Contract>> to run a streaming query.
+`runActivatedStream` simply [runs the streaming query in continuous mode](#runContinuous) as long as the [state](StreamExecution.md#state) is `ACTIVE`.
 
-`runActivatedStream` simply <<runContinuous, runs the streaming query in continuous mode>> as long as the <<spark-sql-streaming-StreamExecution.md#state, state>> is <<spark-sql-streaming-StreamExecution.md#ACTIVE, ACTIVE>>.
+`runActivatedStream` is part of [StreamExecution](StreamExecution.md#runActivatedStream) abstraction.
 
 === [[runContinuous]] Running Streaming Query in Continuous Mode -- `runContinuous` Internal Method
 
@@ -86,9 +86,9 @@ NOTE: `runActivatedStream` is part of <<spark-sql-streaming-StreamExecution.md#r
 runContinuous(sparkSessionForQuery: SparkSession): Unit
 ----
 
-`runContinuous` initializes the <<continuousSources, continuousSources>> internal registry by traversing the <<logicalPlan, analyzed logical plan>> to find <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> leaf logical operators and requests their <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport data sources>> to <<spark-sql-streaming-ContinuousReadSupport.md#createContinuousReader, create a ContinuousReader>> (with the *sources* metadata directory under the <<spark-sql-streaming-StreamExecution.md#resolvedCheckpointRoot, checkpoint directory>>).
+`runContinuous` initializes the <<continuousSources, continuousSources>> internal registry by traversing the <<logicalPlan, analyzed logical plan>> to find <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> leaf logical operators and requests their <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport data sources>> to <<spark-sql-streaming-ContinuousReadSupport.md#createContinuousReader, create a ContinuousReader>> (with the *sources* metadata directory under the [checkpoint directory](StreamExecution.md#resolvedCheckpointRoot)).
 
-`runContinuous` initializes the <<spark-sql-streaming-StreamExecution.md#uniqueSources, uniqueSources>> internal registry to be the <<continuousSources, continuousSources>> distinct.
+`runContinuous` initializes the [uniqueSources](StreamExecution.md#uniqueSources) internal registry to be the <<continuousSources, continuousSources>> distinct.
 
 `runContinuous` <<getStartOffsets, gets the start offsets>> (they may or may not be available).
 
@@ -98,35 +98,35 @@ runContinuous(sparkSessionForQuery: SparkSession): Unit
 
 NOTE: `CurrentTimestamp` and `CurrentDate` expressions are not supported for continuous processing.
 
-`runContinuous` requests the <<sink, StreamWriteSupport>> to <<spark-sql-streaming-StreamWriteSupport.md#createStreamWriter, create a StreamWriter>> (with the <<spark-sql-streaming-StreamExecution.md#runId, run ID of the streaming query>>).
+`runContinuous` requests the <<sink, StreamWriteSupport>> to <<spark-sql-streaming-StreamWriteSupport.md#createStreamWriter, create a StreamWriter>> (with the [run ID of the streaming query](StreamExecution.md#runId)).
 
 `runContinuous` creates a <<spark-sql-streaming-WriteToContinuousDataSource.md#, WriteToContinuousDataSource>> (with the <<spark-sql-streaming-StreamWriter.md#, StreamWriter>> and the transformed logical query plan).
 
 `runContinuous` finds the only <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
 
 [[runContinuous-queryPlanning]]
-In *queryPlanning* <<spark-sql-streaming-ProgressReporter.md#reportTimeTaken, time-tracking section>>, `runContinuous` creates an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> (that becomes the <<spark-sql-streaming-StreamExecution.md#lastExecution, lastExecution>>) that is immediately executed (i.e. the entire query execution pipeline is executed up to and including _executedPlan_).
+In *queryPlanning* <<spark-sql-streaming-ProgressReporter.md#reportTimeTaken, time-tracking section>>, `runContinuous` creates an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> (that becomes the [lastExecution](StreamExecution.md#lastExecution)) that is immediately executed (i.e. the entire query execution pipeline is executed up to and including _executedPlan_).
 
 `runContinuous` sets the following local properties:
 
-* <<spark-sql-streaming-StreamExecution.md#IS_CONTINUOUS_PROCESSING, __is_continuous_processing>> as `true`
+* [__is_continuous_processing](StreamExecution.md#IS_CONTINUOUS_PROCESSING) as `true`
 
-* <<START_EPOCH_KEY, __continuous_start_epoch>> as the <<spark-sql-streaming-StreamExecution.md#currentBatchId, currentBatchId>>
+* <<START_EPOCH_KEY, __continuous_start_epoch>> as the [currentBatchId](StreamExecution.md#currentBatchId)
 
-* <<EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id>> as the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, i.e. <<spark-sql-streaming-StreamExecution.md#runId, runId>> followed by `--` with a random UUID
+* <<EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id>> as the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, i.e. [runId](StreamExecution.md#runId) followed by `--` with a random UUID
 
 * <<EPOCH_INTERVAL_KEY, __continuous_epoch_interval>> as the interval of the <<spark-sql-streaming-Trigger.md#ContinuousTrigger, ContinuousTrigger>>
 
-`runContinuous` uses the `EpochCoordinatorRef` helper to <<spark-sql-streaming-EpochCoordinatorRef.md#create, create a remote reference to the EpochCoordinator RPC endpoint>> (with the <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>, the <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>, the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, and the <<spark-sql-streaming-StreamExecution.md#currentBatchId, currentBatchId>>).
+`runContinuous` uses the `EpochCoordinatorRef` helper to <<spark-sql-streaming-EpochCoordinatorRef.md#create, create a remote reference to the EpochCoordinator RPC endpoint>> (with the <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>, the <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>, the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, and the [currentBatchId](StreamExecution.md#currentBatchId)).
 
 NOTE: The <<spark-sql-streaming-EpochCoordinator.md#, EpochCoordinator RPC endpoint>> runs on the driver as the single point to coordinate epochs across partition tasks.
 
 `runContinuous` creates a daemon <<runContinuous-epoch-update-thread, epoch update thread>> and starts it immediately.
 
 [[runContinuous-runContinuous]]
-In *runContinuous* <<spark-sql-streaming-ProgressReporter.md#reportTimeTaken, time-tracking section>>, `runContinuous` requests the physical query plan (of the <<spark-sql-streaming-StreamExecution.md#lastExecution, IncrementalExecution>>) to execute (that simply requests the physical operator to `doExecute` and generate an `RDD[InternalRow]`).
+In *runContinuous* <<spark-sql-streaming-ProgressReporter.md#reportTimeTaken, time-tracking section>>, `runContinuous` requests the physical query plan (of the [IncrementalExecution](StreamExecution.md#lastExecution)) to execute (that simply requests the physical operator to `doExecute` and generate an `RDD[InternalRow]`).
 
-NOTE: `runContinuous` is used exclusively when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
+`runContinuous` is used when `ContinuousExecution` is requested to <<runActivatedStream, run an activated streaming query>>.
 
 ==== [[runContinuous-epoch-update-thread]] Epoch Update Thread
 
@@ -150,29 +150,29 @@ NOTE: `getStartOffsets` is used exclusively when `ContinuousExecution` is reques
 commit(epoch: Long): Unit
 ----
 
-In essence, `commit` <<spark-sql-streaming-HDFSMetadataLog.md#add, adds>> the given epoch to <<spark-sql-streaming-StreamExecution.md#commitLog, commit log>> and the <<spark-sql-streaming-StreamExecution.md#committedOffsets, committedOffsets>>, and requests the <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#commit, commit the corresponding offset>>. In the end, `commit` <<spark-sql-streaming-HDFSMetadataLog.md#purge, removes old log entries>> from the <<spark-sql-streaming-StreamExecution.md#offsetLog, offset>> and <<spark-sql-streaming-StreamExecution.md#commitLog, commit>> logs (to keep <<spark-sql-streaming-StreamExecution.md#minLogEntriesToMaintain, spark.sql.streaming.minBatchesToRetain>> entries only).
+In essence, `commit` <<spark-sql-streaming-HDFSMetadataLog.md#add, adds>> the given epoch to [commit log](StreamExecution.md#commitLog) and the [committedOffsets](StreamExecution.md#committedOffsets), and requests the <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#commit, commit the corresponding offset>>. In the end, `commit` <<spark-sql-streaming-HDFSMetadataLog.md#purge, removes old log entries>> from the [offset](StreamExecution.md#offsetLog) and [commit](StreamExecution.md#commitLog) logs (to keep [spark.sql.streaming.minBatchesToRetain](StreamExecution.md#minLogEntriesToMaintain) entries only).
 
-Internally, `commit` <<spark-sql-streaming-ProgressReporter.md#recordTriggerOffsets, recordTriggerOffsets>> (with the from and to offsets as the <<spark-sql-streaming-StreamExecution.md#committedOffsets, committedOffsets>> and <<spark-sql-streaming-StreamExecution.md#availableOffsets, availableOffsets>>, respectively).
+Internally, `commit` <<spark-sql-streaming-ProgressReporter.md#recordTriggerOffsets, recordTriggerOffsets>> (with the from and to offsets as the [committedOffsets](StreamExecution.md#committedOffsets) and [availableOffsets](StreamExecution.md#availableOffsets), respectively).
 
-At this point, `commit` may simply return when the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, stream execution thread>> is no longer alive (died).
+At this point, `commit` may simply return when the [stream execution thread](StreamExecution.md#queryExecutionThread) is no longer alive (died).
 
-`commit` requests the <<spark-sql-streaming-StreamExecution.md#commitLog, commit log>> to <<spark-sql-streaming-HDFSMetadataLog.md#add, store a metadata>> for the epoch.
+`commit` requests the [commit log](StreamExecution.md#commitLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, store a metadata>> for the epoch.
 
-`commit` requests the single <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#deserializeOffset, deserialize the offset>> for the epoch (from the <<spark-sql-streaming-StreamExecution.md#offsetLog, offset write-ahead log>>).
+`commit` requests the single <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#deserializeOffset, deserialize the offset>> for the epoch (from the [offset write-ahead log](StreamExecution.md#offsetLog)).
 
-`commit` adds the single <<continuousSources, ContinuousReader>> and the offset (for the epoch) to the <<spark-sql-streaming-StreamExecution.md#committedOffsets, committedOffsets>> registry.
+`commit` adds the single <<continuousSources, ContinuousReader>> and the offset (for the epoch) to the [committedOffsets](StreamExecution.md#committedOffsets) registry.
 
 `commit` requests the single <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#commit, commit the offset>>.
 
-`commit` requests the <<spark-sql-streaming-StreamExecution.md#offsetLog, offset>> and <<spark-sql-streaming-StreamExecution.md#commitLog, commit>> logs to <<spark-sql-streaming-HDFSMetadataLog.md#purge, remove log entries>> to keep <<spark-sql-streaming-StreamExecution.md#minLogEntriesToMaintain, spark.sql.streaming.minBatchesToRetain>> only.
+`commit` requests the [offset](StreamExecution.md#offsetLog) and [commit](StreamExecution.md#commitLog) logs to <<spark-sql-streaming-HDFSMetadataLog.md#purge, remove log entries>> to keep [spark.sql.streaming.minBatchesToRetain](StreamExecution.md#minLogEntriesToMaintain) only.
 
-`commit` then acquires the <<spark-sql-streaming-StreamExecution.md#awaitProgressLock, awaitProgressLock>>, wakes up all threads waiting for the <<spark-sql-streaming-StreamExecution.md#awaitProgressLockCondition, awaitProgressLockCondition>> and in the end releases the <<spark-sql-streaming-StreamExecution.md#awaitProgressLock, awaitProgressLock>>.
+`commit` then acquires the [awaitProgressLock](StreamExecution.md#awaitProgressLock), wakes up all threads waiting for the [awaitProgressLockCondition](StreamExecution.md#awaitProgressLockCondition) and in the end releases the [awaitProgressLock](StreamExecution.md#awaitProgressLock).
 
 NOTE: `commit` supports only one continuous source (registered in the <<continuousSources, continuousSources>> internal registry).
 
-`commit` asserts that the given epoch is available in the <<spark-sql-streaming-StreamExecution.md#offsetLog, offsetLog>> internal registry (i.e. the offset for the given epoch has been reported before).
+`commit` asserts that the given epoch is available in the [offsetLog](StreamExecution.md#offsetLog) internal registry (i.e. the offset for the given epoch has been reported before).
 
-NOTE: `commit` is used exclusively when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.md#commitEpoch, commitEpoch>>.
+`commit` is used when `EpochCoordinator` is requested to [commitEpoch](spark-sql-streaming-EpochCoordinator.md#commitEpoch).
 
 === [[addOffset]] `addOffset` Method
 
@@ -184,24 +184,23 @@ addOffset(
   partitionOffsets: Seq[PartitionOffset]): Unit
 ----
 
-In essense, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and then requests the <<spark-sql-streaming-StreamExecution.md#offsetLog, OffsetSeqLog>> to <<spark-sql-streaming-HDFSMetadataLog.md#add, register the offset with the given epoch>>.
+In essense, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and then requests the [OffsetSeqLog](StreamExecution.md#offsetLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, register the offset with the given epoch>>.
 
-.ContinuousExecution.addOffset
-image::images/ContinuousExecution-addOffset.png[align="center"]
+![ContinuousExecution.addOffset](images/ContinuousExecution-addOffset.png)
 
 Internally, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and to get the current "global" offset back.
 
-`addOffset` then requests the <<spark-sql-streaming-StreamExecution.md#offsetLog, OffsetSeqLog>> to <<spark-sql-streaming-HDFSMetadataLog.md#add, add>> the current "global" offset for the given `epoch`.
+`addOffset` then requests the [OffsetSeqLog](StreamExecution.md#offsetLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, add>> the current "global" offset for the given `epoch`.
 
-`addOffset` requests the <<spark-sql-streaming-StreamExecution.md#offsetLog, OffsetSeqLog>> for the <<spark-sql-streaming-HDFSMetadataLog.md#get, offset at the previous epoch>>.
+`addOffset` requests the [OffsetSeqLog](StreamExecution.md#offsetLog) for the <<spark-sql-streaming-HDFSMetadataLog.md#get, offset at the previous epoch>>.
 
-If the offsets at the current and previous epochs are the same, `addOffset` turns the <<spark-sql-streaming-StreamExecution.md#noNewData, noNewData>> internal flag on.
+If the offsets at the current and previous epochs are the same, `addOffset` turns the [noNewData](StreamExecution.md#noNewData) internal flag on.
 
-`addOffset` then acquires the <<spark-sql-streaming-StreamExecution.md#awaitProgressLock, awaitProgressLock>>, wakes up all threads waiting for the <<spark-sql-streaming-StreamExecution.md#awaitProgressLockCondition, awaitProgressLockCondition>> and in the end releases the <<spark-sql-streaming-StreamExecution.md#awaitProgressLock, awaitProgressLock>>.
+`addOffset` then acquires the [awaitProgressLock](StreamExecution.md#awaitProgressLock), wakes up all threads waiting for the [awaitProgressLockCondition](StreamExecution.md#awaitProgressLockCondition) and in the end releases the [awaitProgressLock](StreamExecution.md#awaitProgressLock).
 
 NOTE: `addOffset` supports exactly one <<continuousSources, continuous source>>.
 
-NOTE: `addOffset` is used exclusively when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.md#ReportPartitionOffset, handle a ReportPartitionOffset message>>.
+`addOffset` is used when `EpochCoordinator` is requested to <<spark-sql-streaming-EpochCoordinator.md#ReportPartitionOffset, handle a ReportPartitionOffset message>>.
 
 === [[logicalPlan]] Analyzed Logical Plan of Streaming Query -- `logicalPlan` Property
 
@@ -209,8 +208,6 @@ NOTE: `addOffset` is used exclusively when `EpochCoordinator` is requested to <<
 ----
 logicalPlan: LogicalPlan
 ----
-
-NOTE: `logicalPlan` is part of <<spark-sql-streaming-StreamExecution.md#logicalPlan, StreamExecution Contract>> that is the analyzed logical plan of the streaming query.
 
 `logicalPlan` resolves <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> leaf logical operators (with a <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> source) to <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> leaf logical operators.
 
@@ -220,11 +217,13 @@ Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>>
 
 . For any other `StreamingRelationV2`, `logicalPlan` throws an `UnsupportedOperationException`:
 +
-```
+```text
 Data source [name] does not support continuous processing.
 ```
 
-=== [[creating-instance]] Creating ContinuousExecution Instance
+`logicalPlan` is part of the [StreamExecution](StreamExecution.md#logicalPlan) abstraction.
+
+## Creating Instance
 
 `ContinuousExecution` takes the following when created:
 
@@ -252,15 +251,16 @@ NOTE: `stop` is part of the <<spark-sql-streaming-StreamingQuery.md#stop, Stream
 
 `stop` transitions the streaming query to `TERMINATED` state.
 
-If the <<spark-sql-streaming-StreamExecution.md#queryExecutionThread, queryExecutionThread>> is alive (i.e. it has been started and has not yet died), `stop` interrupts it and waits for this thread to die.
+If the [queryExecutionThread](StreamExecution.md#queryExecutionThread) is alive (i.e. it has been started and has not yet died), `stop` interrupts it and waits for this thread to die.
 
 In the end, `stop` prints out the following INFO message to the logs:
 
-```
+```text
 Query [prettyIdString] was stopped
 ```
 
-NOTE: <<spark-sql-streaming-StreamExecution.md#prettyIdString, prettyIdString>> is in the format of `queryName [id = [id], runId = [runId]]`.
+!!! note
+    [prettyIdString](StreamExecution.md#prettyIdString) is in the format of `queryName [id = [id], runId = [runId]]`.
 
 === [[awaitEpoch]] `awaitEpoch` Internal Method
 

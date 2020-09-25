@@ -1,17 +1,16 @@
-== [[StreamMetadata]] StreamMetadata
+# StreamMetadata
 
-`StreamMetadata` is a metadata associated with a <<spark-sql-streaming-StreamingQuery.md#, StreamingQuery>> (indirectly through <<spark-sql-streaming-StreamExecution.md#streamMetadata, StreamExecution>>).
+`StreamMetadata` is a metadata associated with a <<spark-sql-streaming-StreamingQuery.md#, StreamingQuery>> (indirectly through [StreamExecution](StreamExecution.md#streamMetadata)).
 
 [[creating-instance]]
 [[id]]
 `StreamMetadata` takes an ID to be created.
 
-`StreamMetadata` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamExecution.md#streamMetadata, StreamExecution>> is created (with a randomly-generated 128-bit universally unique identifier (UUID)).
+`StreamMetadata` is <<creating-instance, created>> exclusively when [StreamExecution](StreamExecution.md#streamMetadata) is created (with a randomly-generated 128-bit universally unique identifier (UUID)).
 
 `StreamMetadata` can be <<write, persisted>> to and <<read, unpersisted>> from a JSON file. `StreamMetadata` uses http://json4s.org/[json4s-jackson] library for JSON persistence.
 
-[source, scala]
-----
+```text
 import org.apache.spark.sql.execution.streaming.StreamMetadata
 import org.apache.hadoop.fs.Path
 val metadataPath = new Path("metadata")
@@ -24,7 +23,7 @@ val sm = StreamMetadata.read(metadataPath, hadoopConf)
 
 scala> :type sm
 Option[org.apache.spark.sql.execution.streaming.StreamMetadata]
-----
+```
 
 === [[read]] Unpersisting StreamMetadata (from JSON File) -- `read` Object Method
 
@@ -41,7 +40,7 @@ read(
 
 NOTE: `read` uses `org.json4s.jackson.Serialization.read` for JSON deserialization.
 
-NOTE: `read` is used exclusively when `StreamExecution` is <<spark-sql-streaming-StreamExecution.md#streamMetadata, created>> (and tries to read the `metadata` checkpoint file).
+NOTE: `read` is used exclusively when [StreamExecution](StreamExecution.md#streamMetadata) is created> (and tries to read the `metadata` checkpoint file).
 
 === [[write]] Persisting Metadata -- `write` Object Method
 
@@ -57,4 +56,4 @@ write(
 
 NOTE: `write` uses `org.json4s.jackson.Serialization.write` for JSON serialization.
 
-NOTE: `write` is used exclusively when `StreamExecution` is <<spark-sql-streaming-StreamExecution.md#streamMetadata, created>> (and the `metadata` checkpoint file is not available).
+`write` is used when [StreamExecution](StreamExecution.md#streamMetadata) is created (and the `metadata` checkpoint file is not available).

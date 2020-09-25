@@ -1,18 +1,18 @@
-== [[OffsetSeqLog]] OffsetSeqLog -- Hadoop DFS-based Metadata Storage of OffsetSeqs
+# OffsetSeqLog &mdash; Hadoop DFS-based Metadata Storage of OffsetSeqs
 
 `OffsetSeqLog` is a <<spark-sql-streaming-HDFSMetadataLog.md#, Hadoop DFS-based metadata storage>> for <<OffsetSeq, OffsetSeq>> metadata.
 
 [[OffsetSeq]][[offsets]][[metadata]]
 `OffsetSeqLog` uses <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>> for metadata which holds an ordered collection of offsets and optional metadata (as <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> for <<spark-sql-streaming-watermark.md#, event-time watermark>>).
 
-`OffsetSeqLog` is <<creating-instance, created>> exclusively for the <<spark-sql-streaming-StreamExecution.md#offsetLog, write-ahead log (WAL) of offsets>> of <<spark-sql-streaming-StreamExecution.md#, stream execution engines>> (i.e. <<spark-sql-streaming-ContinuousExecution.md#, ContinuousExecution>> and <<spark-sql-streaming-MicroBatchExecution.md#, MicroBatchExecution>>).
+`OffsetSeqLog` is <<creating-instance, created>> exclusively for the [write-ahead log (WAL) of offsets](StreamExecution.md#offsetLog) of [stream execution engines](StreamExecution.md).
 
 [[VERSION]]
 `OffsetSeqLog` uses `1` for the version when <<serialize, serializing>> and <<deserialize, deserializing>> metadata.
 
-=== [[creating-instance]] Creating OffsetSeqLog Instance
+## Creating Instance
 
-`OffsetSeqLog` (like the parent <<spark-sql-streaming-HDFSMetadataLog.md#creating-instance, HDFSMetadataLog>>) takes the following to be created:
+`OffsetSeqLog` takes the following to be created:
 
 * [[sparkSession]] `SparkSession`
 * [[path]] Path of the metadata log directory
