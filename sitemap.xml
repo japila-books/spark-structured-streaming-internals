@@ -320,7 +320,7 @@
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-MetricsReporter/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/MetricsReporter/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -332,11 +332,7 @@
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamExecution/</loc>
-     <lastmod>2020-09-25</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingQueryWrapper/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamExecution/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -437,6 +433,10 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingRelationStrategy/</loc>
+     <lastmod>2020-09-25</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingQueryWrapper/</loc>
      <lastmod>2020-09-25</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
