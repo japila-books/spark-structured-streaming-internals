@@ -247,12 +247,12 @@ When `DataStreamWriter` is requested to [start a streaming query](DataStreamWrit
 
 * `DataSource` is requested to [create a streaming sink](spark-sql-streaming-DataSource.md#createSink) that accepts [StreamSinkProvider](spark-sql-streaming-StreamSinkProvider.md) or `FileFormat` data sources only
 
-With a streaming sink, `DataStreamWriter` requests the [StreamingQueryManager](#StreamingQueryManager) to [start a streaming query](spark-sql-streaming-StreamingQueryManager.md#startQuery).
+With a streaming sink, `DataStreamWriter` requests the [StreamingQueryManager](#StreamingQueryManager) to [start a streaming query](StreamingQueryManager.md#startQuery).
 
 ## <span id="StreamingQuery"> StreamingQuery
 
-When a stream processing pipeline is started (using [DataStreamWriter.start](DataStreamWriter.md#start) method), `DataStreamWriter` creates a [StreamingQuery](StreamingQuery.md) and requests the [StreamingQueryManager](#StreamingQueryManager) to [start a streaming query](spark-sql-streaming-StreamingQueryManager.md#startQuery).
+When a stream processing pipeline is started (using [DataStreamWriter.start](DataStreamWriter.md#start) method), `DataStreamWriter` creates a [StreamingQuery](StreamingQuery.md) and requests the [StreamingQueryManager](#StreamingQueryManager) to [start a streaming query](StreamingQueryManager.md#startQuery).
 
 ## <span id="StreamingQueryManager"> StreamingQueryManager
 
-[StreamingQueryManager](spark-sql-streaming-StreamingQueryManager.md) is used to manage streaming queries.
+[StreamingQueryManager](StreamingQueryManager.md) is used to manage streaming queries.

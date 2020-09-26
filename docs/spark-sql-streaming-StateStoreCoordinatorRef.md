@@ -1,4 +1,4 @@
-== [[StateStoreCoordinatorRef]] StateStoreCoordinatorRef -- RPC Endpoint Reference to StateStoreCoordinator
+# StateStoreCoordinatorRef &mdash; RPC Endpoint Reference to StateStoreCoordinator
 
 `StateStoreCoordinatorRef` is used to (let the tasks on Spark executors to) send <<messages, messages>> to the <<rpcEndpointRef, StateStoreCoordinator>> (that lives on the driver).
 
@@ -6,7 +6,7 @@
 [[rpcEndpointRef]]
 `StateStoreCoordinatorRef` is given the `RpcEndpointRef` to the <<spark-sql-streaming-StateStoreCoordinator.md#, StateStoreCoordinator>> RPC endpoint when created.
 
-`StateStoreCoordinatorRef` is <<creating-instance, created>> through `StateStoreCoordinatorRef` helper object when requested to create one for the <<forDriver, driver>> (when `StreamingQueryManager` is <<spark-sql-streaming-StreamingQueryManager.md#stateStoreCoordinator, created>>) or an <<forExecutor, executor>> (when `StateStore` helper object is requested for the <<spark-sql-streaming-StateStore.md#coordinatorRef, RPC endpoint reference to StateStoreCoordinator for Executors>>).
+`StateStoreCoordinatorRef` is <<creating-instance, created>> through `StateStoreCoordinatorRef` helper object when requested to create one for the <<forDriver, driver>> (when [StreamingQueryManager](StreamingQueryManager.md#stateStoreCoordinator) is created) or an <<forExecutor, executor>> (when `StateStore` helper object is requested for the <<spark-sql-streaming-StateStore.md#coordinatorRef, RPC endpoint reference to StateStoreCoordinator for Executors>>).
 
 [[messages]]
 .StateStoreCoordinatorRef's Methods and Underlying RPC Messages
@@ -25,7 +25,7 @@ deactivateInstances(runId: UUID): Unit
 
 Requests the <<rpcEndpointRef, RpcEndpointRef>> to send a <<spark-sql-streaming-StateStoreCoordinator.md#DeactivateInstances, DeactivateInstances>> synchronous message with the given `runId` and waits for a `true` / `false` response
 
-Used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#notifyQueryTermination, handle termination of a streaming query>> (when `StreamExecution` is requested to [run a streaming query](StreamExecution.md#runStream) and the query [has finished (running streaming batches)](StreamExecution.md#runStream-finally)).
+Used exclusively when `StreamingQueryManager` is requested to [handle termination of a streaming query](StreamingQueryManager.md#notifyQueryTermination) (when `StreamExecution` is requested to [run a streaming query](StreamExecution.md#runStream) and the query [has finished (running streaming batches)](StreamExecution.md#runStream-finally)).
 
 | getLocation
 a| [[getLocation]]
@@ -96,7 +96,7 @@ forDriver(env: SparkEnv): StateStoreCoordinatorRef
 
 `forDriver`...FIXME
 
-NOTE: `forDriver` is used exclusively when `StreamingQueryManager` is <<spark-sql-streaming-StreamingQueryManager.md#stateStoreCoordinator, created>>.
+`forDriver` is used when `StreamingQueryManager` is [created](StreamingQueryManager.md#stateStoreCoordinator).
 
 === [[forExecutor]] Creating StateStoreCoordinatorRef to StateStoreCoordinator RPC Endpoint for Executor -- `forExecutor` Factory Method
 

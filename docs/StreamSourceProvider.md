@@ -26,7 +26,7 @@ createSource(
 
 Creates a [streaming source](Source.md)
 
-NOTE: `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by spark-sql-streaming-StreamingQueryManager.md#createQuery[StreamingQueryManager].
+NOTE: `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by [StreamingQueryManager](StreamingQueryManager.md#createQuery).
 
 Used exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.md#createSource, create a streaming source>> (when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
 

@@ -5,7 +5,7 @@
 
 `StreamingQueryWrapper` has the same [StreamExecution](StreamExecution.md) API and simply passes all the method calls along to the underlying [StreamExecution](#_streamingQuery).
 
-`StreamingQueryWrapper` is created when `StreamingQueryManager` is requested to [create a streaming query](spark-sql-streaming-StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
+`StreamingQueryWrapper` is created when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
 
 ## Demo: Any Streaming Query is StreamingQueryWrapper
 

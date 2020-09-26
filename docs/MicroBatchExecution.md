@@ -2,7 +2,7 @@
 
 `MicroBatchExecution` is the [stream execution engine](StreamExecution.md) in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
-`MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)) with the following:
+`MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)) with the following:
 
 * Any type of <<sink, sink>> but <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>
 

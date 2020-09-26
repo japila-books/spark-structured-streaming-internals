@@ -1,15 +1,14 @@
-== [[StreamingQueryListenerBus]] StreamingQueryListenerBus -- Event Bus for Streaming Events
+# StreamingQueryListenerBus &mdash; Event Bus for Streaming Events
 
 `StreamingQueryListenerBus` is an event bus (`ListenerBus[StreamingQueryListener, StreamingQueryListener.Event]`) for <<post, dispatching streaming life-cycle events>> of <<activeQueryRunIds, active streaming queries>> (that eventually are delivered to <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListeners>>).
 
-`StreamingQueryListenerBus` is created for <<spark-sql-streaming-StreamingQueryManager.md#listenerBus, StreamingQueryManager>> (once per `SparkSession`).
+`StreamingQueryListenerBus` is created for [StreamingQueryManager](StreamingQueryManager.md#listenerBus) (once per `SparkSession`).
 
-.StreamingQueryListenerBus is Created Once In SparkSession
-image::images/StreamingQueryListenerBus.png[align="center"]
+![StreamingQueryListenerBus is Created Once In SparkSession](images/StreamingQueryListenerBus.png)
 
 `StreamingQueryListenerBus` is also a `SparkListener` and registers itself with the <<sparkListenerBus, LiveListenerBus>> (of the `SparkSession`) to <<post, intercept QueryStartedEvents>>.
 
-=== [[creating-instance]] Creating StreamingQueryListenerBus Instance
+## Creating Instance
 
 `StreamingQueryListenerBus` takes the following when created:
 
@@ -43,18 +42,17 @@ post(event: StreamingQueryListener.Event): Unit
 
 For a <<spark-sql-streaming-StreamingQueryListener.md#QueryStartedEvent, QueryStartedEvent>>, `post` adds the `runId` (of the streaming query that has been started) to the <<activeQueryRunIds, activeQueryRunIds>> internal registry first, posts the event to the <<sparkListenerBus, LiveListenerBus>> and then <<postToAll, postToAll>>.
 
-NOTE: `post` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#postListenerEvent, post a streaming event>>.
+`post` is used when `StreamingQueryManager` is requested to [post a streaming event](StreamingQueryManager.md#postListenerEvent).
 
-=== [[doPostEvent]] `doPostEvent` Method
+## <span id="doPostEvent"> Posting Streaming Event to StreamingQueryListeners
 
-[source, scala]
-----
+```scala
 doPostEvent(
   listener: StreamingQueryListener,
   event: StreamingQueryListener.Event): Unit
-----
+```
 
-NOTE: `doPostEvent` is part of Spark Core's `ListenerBus` contract to post an event to the specified listener.
+`doPostEvent` is part of the `ListenerBus` abstraction ([Spark Core](https://books.japila.pl/apache-spark-internals/apache-spark-internals/spark-SparkListenerBus.html#ListenerBus)).
 
 `doPostEvent` branches per the type of <<spark-sql-streaming-StreamingQueryListener.md#events, StreamingQueryListener.Event>>:
 

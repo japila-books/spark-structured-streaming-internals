@@ -78,7 +78,7 @@ Structured streaming is defined by the following data abstractions in `org.apach
 * [StreamingQuery](StreamingQuery.md)
 * [Streaming Source](Source.md)
 * [Streaming Sink](spark-sql-streaming-Sink.md)
-* [StreamingQueryManager](spark-sql-streaming-StreamingQueryManager.md)
+* [StreamingQueryManager](StreamingQueryManager.md)
 
 Structured Streaming follows micro-batch model and periodically fetches data from the data source (and uses the `DataFrame` data abstraction to represent the fetched data for a certain batch).
 

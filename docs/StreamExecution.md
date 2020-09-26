@@ -222,7 +222,7 @@ NOTE: `runId` does not "survive" query restarts and will always be different yet
 
 [NOTE]
 ====
-The <<name, name>>, <<id, id>> and <<runId, runId>> are all unique across all active queries (in a <<spark-sql-streaming-StreamingQueryManager.md#, StreamingQueryManager>>). The difference is that:
+The <<name, name>>, <<id, id>> and <<runId, runId>> are all unique across all active queries (in a [StreamingQueryManager](StreamingQueryManager.md)). The difference is that:
 
 * <<name, name>> is optional and user-defined
 
@@ -380,7 +380,7 @@ resolvedCheckpointRoot: String
 
 The given <<checkpointRoot, checkpoint root directory>> is defined using *checkpointLocation* option or the <<spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation, spark.sql.streaming.checkpointLocation>> configuration property with `queryName` option.
 
-`checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#createQuery, create a streaming query>>.
+`checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery).
 
 `resolvedCheckpointRoot` is used when <<checkpointFile, creating the path to the checkpoint directory>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
 
@@ -575,7 +575,7 @@ CAUTION: FIXME Describe `catch` block for exception handling
 
 `runStream` removes the <<streamMetrics, stream metrics reporter>> from the application's `MetricsSystem`.
 
-`runStream` requests the <<spark-sql-streaming-StreamingQueryManager.md#, StreamingQueryManager>> to <<spark-sql-streaming-StreamingQueryManager.md#notifyQueryTermination, handle termination of a streaming query>>.
+`runStream` requests the `StreamingQueryManager` to [handle termination of a streaming query](StreamingQueryManager.md#notifyQueryTermination).
 
 `runStream` creates a new <<spark-sql-streaming-StreamingQueryListener.md#QueryTerminatedEvent, QueryTerminatedEvent>> (with the <<id, id>> and <<runId, run id>> of the streaming query) and <<postEvent, posts it>>.
 
@@ -680,7 +680,7 @@ NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
 In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` is requested to <<runStream, run the streaming query>> that in turn sends a <<spark-sql-streaming-StreamingQueryListener.md#QueryStartedEvent, QueryStartedEvent>> to all streaming listeners followed by decrementing the count of the <<startLatch, startLatch>>).
 
-NOTE: `start` is used exclusively when `StreamingQueryManager` is requested to <<spark-sql-streaming-StreamingQueryManager.md#startQuery, start a streaming query>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
+`start` is used when `StreamingQueryManager` is requested to [start a streaming query](StreamingQueryManager.md#startQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
 
 === [[checkpointFile]] Path to Checkpoint Directory -- `checkpointFile` Internal Method
 
@@ -704,9 +704,10 @@ postEvent(
 
 `postEvent` is a part of [ProgressReporter](monitoring/ProgressReporter.md#postEvent) abstraction.
 
-`postEvent` simply requests the `StreamingQueryManager` to spark-sql-streaming-StreamingQueryManager.md#postListenerEvent[post] the input event (to the spark-sql-streaming-StreamingQueryListenerBus.md[StreamingQueryListenerBus] in the current `SparkSession`).
+`postEvent` simply requests the `StreamingQueryManager` to [post](StreamingQueryManager.md#postListenerEvent) the input event (to the [StreamingQueryListenerBus](StreamingQueryListenerBus.md) in the current `SparkSession`).
 
-NOTE: `postEvent` uses `SparkSession` to access the current `StreamingQueryManager`.
+!!! note
+    `postEvent` uses `SparkSession` to access the current `StreamingQueryManager`.
 
 `postEvent` is used when:
 

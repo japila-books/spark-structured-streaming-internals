@@ -1,4 +1,4 @@
-# StreamingSymmetricHashJoinExec Binary Physical Operator -- Stream-Stream Joins
+# StreamingSymmetricHashJoinExec Binary Physical Operator &mdash; Stream-Stream Joins
 
 `StreamingSymmetricHashJoinExec` is a binary physical operator for [stream-stream equi-join](../spark-sql-streaming-join.md) at execution time.
 
@@ -205,16 +205,15 @@ shouldRunAnotherBatch(
 
 `shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
 
-=== [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
+## <span id="doExecute"> Executing Physical Operator
 
-[source, scala]
-----
+```scala
 doExecute(): RDD[InternalRow]
-----
+```
 
-NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of a physical operator as a recipe for distributed computation over internal binary rows on Apache Spark (`RDD[InternalRow]`).
+`doExecute` is part of the `SparkPlan` abstraction ([Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/physical-operators/SparkPlan/)).
 
-`doExecute` first requests the `StreamingQueryManager` for the <<spark-sql-streaming-StreamingQueryManager.md#stateStoreCoordinator, StateStoreCoordinatorRef>> to the `StateStoreCoordinator` RPC endpoint (for the driver).
+`doExecute` first requests the `StreamingQueryManager` for the [StateStoreCoordinatorRef](../StreamingQueryManager.md#stateStoreCoordinator) to the `StateStoreCoordinator` RPC endpoint (for the driver).
 
 `doExecute` then uses `SymmetricHashJoinStateManager` utility to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#allStateStoreNames, get the names of the state stores>> for the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#LeftSide, left>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.md#RightSide, right>> sides of the streaming join.
 

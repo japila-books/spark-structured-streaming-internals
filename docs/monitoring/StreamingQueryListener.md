@@ -1,115 +1,99 @@
 # StreamingQueryListener &mdash; Intercepting Life Cycle Events of Streaming Queries
 
-`StreamingQueryListener` is the <<contract, contract>> of listeners that want to be notified about the <<events, life cycle events>> of streaming queries, i.e. <<onQueryStarted, start>>, <<onQueryProgress, progress>> and <<onQueryTerminated, termination>>.
+`StreamingQueryListener` is an [abstraction](#contract) of listeners to be notified about the [life cycle events](#events) of all the streaming queries in a Spark Structured Streaming application:
 
-[[contract]]
-.StreamingQueryListener Contract
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
+* [Query started](#onQueryStarted)
+* [Query made progress](#onQueryProgress)
+* [Query terminated](#onQueryTerminated)
 
-| onQueryStarted
-a| [[onQueryStarted]]
+`StreamingQueryListener` is used internally by `StreamingQueryListenerBus` to [post a streaming event to all registered StreamingQueryListeners](../StreamingQueryListenerBus.md#doPostEvent).
 
-[source, scala]
-----
+`StreamingQueryListener` can be used by Spark developers to [intercept events](#contract) in Spark Structured Streaming applications.
+
+## Contract
+
+### <span id="onQueryProgress"> onQueryProgress
+
+```scala
+onQueryProgress(
+  event: QueryProgressEvent): Unit
+```
+
+Informs that `MicroBatchExecution` has finished [triggerExecution phase](../MicroBatchExecution.md#runActivatedStream-triggerExecution) (the end of a streaming batch)
+
+![StreamingQueryListener Notified about Query's Progress (onQueryProgress)](../images/StreamingQueryListener-onQueryProgress.png)
+
+### <span id="onQueryStarted"> onQueryStarted
+
+```scala
 onQueryStarted(
   event: QueryStartedEvent): Unit
-----
+```
 
 Informs that `DataStreamWriter` was requested to [start execution of the streaming query](../DataStreamWriter.md#start) (on the [stream execution thread](../StreamExecution.md#queryExecutionThread))
 
-| onQueryProgress
-a| [[onQueryProgress]]
+![StreamingQueryListener Notified about Query's Start (onQueryStarted)](../images/StreamingQueryListener-onQueryStarted.png)
 
-[source, scala]
-----
-onQueryProgress(
-  event: QueryProgressEvent): Unit
-----
+!!! note
+    `onQueryStarted` is used internally to unblock the [starting thread](../StreamExecution.md#start) of `StreamExecution`.
 
-Informs that `MicroBatchExecution` has finished <<MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> (the end of a streaming batch)
+### <span id="onQueryTerminated"> onQueryTerminated
 
-| onQueryTerminated
-a| [[onQueryTerminated]]
-
-[source, scala]
-----
+```scala
 onQueryTerminated(
   event: QueryTerminatedEvent): Unit
-----
+```
 
 Informs that a streaming query was <<StreamingQuery.md#stop, stopped>> or terminated due to an error
 
-|===
+![StreamingQueryListener Notified about Query's Termination (onQueryTerminated)](../images/StreamingQueryListener-onQueryTerminated.png)
 
-`StreamingQueryListener` is informed about the <<events, life cycle events>> when `StreamingQueryListenerBus` is requested to <<spark-sql-streaming-StreamingQueryListenerBus.md#doPostEvent, doPostEvent>>.
+## <span id="events"> Lifecycle Events
 
-[[events]]
-.StreamingQueryListener's Life Cycle Events and Callbacks
-[cols="1,1,1",options="header",width="100%"]
-|===
-| Event
-| Callback
-| Description
+`StreamingQueryListener` is informed about the life cycle events when `StreamingQueryListenerBus` is requested to [doPostEvent](../StreamingQueryListenerBus.md#doPostEvent).
 
-a| QueryStartedEvent
+### QueryStartedEvent
 
-- <<StreamingQuery.md#id, id>>
-- <<StreamingQuery.md#runId, runId>>
-- <<StreamingQuery.md#name, name>>
+* [id](../StreamingQuery.md#id)
+* [runId](../StreamingQuery.md#runId)
+* [name](../StreamingQuery.md#name)
 
-| <<onQueryStarted, onQueryStarted>>
-| [[QueryStartedEvent]] Posted when `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start) on the [stream execution thread](../StreamExecution.md#queryExecutionThread))
+Intercepted by [onQueryStarted](#onQueryStarted)
 
-a| QueryProgressEvent
+Posted when `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start) on the [stream execution thread](../StreamExecution.md#queryExecutionThread))
 
-- [StreamingQueryProgress](StreamingQueryProgress.md)
+### QueryProgressEvent
 
-| <<onQueryProgress, onQueryProgress>>
-| [[QueryProgressEvent]] Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished <<MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution phase>> at the end of a streaming batch)
+* [StreamingQueryProgress](StreamingQueryProgress.md)
 
-a| QueryTerminatedEvent
+Intercepted by [onQueryProgress](#onQueryProgress)
 
-- <<StreamingQuery.md#id, id>>
-- <<StreamingQuery.md#runId, runId>>
-- [exception](../StreamExecution.md#exception) if terminated due to an error
+Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished [triggerExecution phase](../MicroBatchExecution.md#runActivatedStream-triggerExecution) at the end of a streaming batch)
 
-| <<onQueryTerminated, onQueryTerminated>>
-| [[QueryTerminatedEvent]] Posted when `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (and the streaming query was <<StreamingQuery.md#stop, stopped>> or terminated due to an error)
+### QueryTerminatedEvent
 
-|===
+* [id](../StreamingQuery.md#id)
+* [runId](../StreamingQuery.md#runId)
+* [exception](../StreamExecution.md#exception) if terminated due to an error
 
-You can register a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.md#addListener, StreamingQueryManager.addListener>> method.
+Intercepted by [onQueryTerminated](#onQueryTerminated)
+
+Posted when `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (and the streaming query was [stopped](../StreamingQuery.md#stop) or terminated due to an error)
+
+## Registering StreamingQueryListener
+
+`StreamingQueryListener` can be registered using [StreamingQueryManager.addListener](../StreamingQueryManager.md#addListener) method.
 
 ```text
 val queryListener: StreamingQueryListener = ...
 spark.streams.addListener(queryListener)
 ```
 
-You can remove a `StreamingQueryListener` using <<spark-sql-streaming-StreamingQueryManager.md#removeListener, StreamingQueryManager.removeListener>> method.
+## Deregistering StreamingQueryListener
 
-[source, scala]
-----
+`StreamingQueryListener` can be deregistered using [StreamingQueryManager.removeListener](../StreamingQueryManager.md#removeListener) method.
+
+```scala
 val queryListener: StreamingQueryListener = ...
 spark.streams.removeListener(queryListener)
-----
-
-.StreamingQueryListener Notified about Query's Start (onQueryStarted)
-image::images/StreamingQueryListener-onQueryStarted.png[align="center"]
-
-NOTE: `onQueryStarted` is used internally to unblock the StreamExecution.md#start[starting thread] of `StreamExecution`.
-
-.StreamingQueryListener Notified about Query's Progress (onQueryProgress)
-image::images/StreamingQueryListener-onQueryProgress.png[align="center"]
-
-.StreamingQueryListener Notified about Query's Termination (onQueryTerminated)
-image::images/StreamingQueryListener-onQueryTerminated.png[align="center"]
-
-[NOTE]
-====
-You can also register a streaming event listener using the general `SparkListener` interface.
-
-Read up on http://books.japila.pl/apache-spark-internals/apache-spark-internals/2.4.3/spark-scheduler-SparkListener.html[SparkListener] in the http://books.japila.pl/apache-spark-internals[The Internals of Apache Spark] book.
-====
+```

@@ -1,4 +1,4 @@
-== [[StreamingQueryManager]] StreamingQueryManager -- Streaming Query Management
+# StreamingQueryManager &mdash; Streaming Query Management
 
 `StreamingQueryManager` is the <<methods, management interface>> for <<activeQueries, active streaming queries>> of a <<sparkSession, SparkSession>>.
 
@@ -27,7 +27,7 @@ a|
 addListener(listener: StreamingQueryListener): Unit
 ----
 
-Registers (_adds_) a <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>>
+Registers (_adds_) a [StreamingQueryListener](monitoring/StreamingQueryListener.md)
 
 | <<awaitAnyTermination, awaitAnyTermination>>
 a|
@@ -60,7 +60,7 @@ removeListener(
   listener: StreamingQueryListener): Unit
 ----
 
-De-registers (_removes_) the <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>>
+De-registers (_removes_) the [StreamingQueryListener](monitoring/StreamingQueryListener.md)
 
 | <<resetTerminated, resetTerminated>>
 a|
@@ -109,11 +109,11 @@ image::images/StreamingQueryManager-createQuery.png[align="center"]
 listenerBus: StreamingQueryListenerBus
 ----
 
-`listenerBus` is a <<spark-sql-streaming-StreamingQueryListenerBus.md#, StreamingQueryListenerBus>> (for the current <<sparkSession, SparkSession>>) that is created immediately when `StreamingQueryManager` is <<creating-instance, created>>.
+`listenerBus` is a [StreamingQueryListenerBus](StreamingQueryListenerBus.md) (for the current <<sparkSession, SparkSession>>) that is created immediately when `StreamingQueryManager` is <<creating-instance, created>>.
 
 `listenerBus` is used for the following:
 
-* <<addListener, Register>> or <<removeListener, de-register>> a given <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>>
+* <<addListener, Register>> or <<removeListener, de-register>> a given [StreamingQueryListener](monitoring/StreamingQueryListener.md)
 
 * <<postListenerEvent, Post a streaming event>> (and notify <<addListener, registered StreamingQueryListeners about the event>>)
 
@@ -147,23 +147,23 @@ java.lang.IllegalArgumentException: There is no active query with name hello
   ... 49 elided
 ```
 
-=== [[addListener]] Registering StreamingQueryListener -- `addListener` Method
+## <span id="addListener"> Registering StreamingQueryListener
 
-[source, scala]
-----
-addListener(listener: StreamingQueryListener): Unit
-----
+```scala
+addListener(
+  listener: StreamingQueryListener): Unit
+```
 
-`addListener` requests the <<listenerBus, StreamingQueryListenerBus>> to <<spark-sql-streaming-StreamingQueryListenerBus.md#addListener, add>> the input `listener`.
+`addListener` requests the [StreamingQueryListenerBus](#listenerBus) to [add](StreamingQueryListenerBus.md#addListener) the input [StreamingQueryListener](monitoring/StreamingQueryListener.md).
 
-=== [[removeListener]] De-Registering StreamingQueryListener -- `removeListener` Method
+## <span id="removeListener"> De-Registering StreamingQueryListener
 
-[source, scala]
-----
-removeListener(listener: StreamingQueryListener): Unit
-----
+```scala
+removeListener(
+  listener: StreamingQueryListener): Unit
+```
 
-`removeListener` requests <<listenerBus, StreamingQueryListenerBus>> to spark-sql-streaming-StreamingQueryListenerBus.md#removeListener[remove] the input `listener`.
+`removeListener` requests [StreamingQueryListenerBus](#listenerBus) to [remove](StreamingQueryListenerBus.md#removeListener) the input [StreamingQueryListener](monitoring/StreamingQueryListener.md).
 
 === [[awaitAnyTermination]] Waiting for Any Streaming Query Termination -- `awaitAnyTermination` Method
 

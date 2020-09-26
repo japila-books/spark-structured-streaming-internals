@@ -1,10 +1,8 @@
-== Demo: Using StreamingQueryManager for Query Termination Management
+# Demo: Using StreamingQueryManager for Query Termination Management
 
-The demo shows how to use spark-sql-streaming-StreamingQueryManager.md[StreamingQueryManager] (and specifically spark-sql-streaming-StreamingQueryManager.md#awaitAnyTermination[awaitAnyTermination] and spark-sql-streaming-StreamingQueryManager.md#resetTerminated[resetTerminated]) for query termination management.
+The demo shows how to use [StreamingQueryManager](../StreamingQueryManager.md) (and specifically [awaitAnyTermination](../StreamingQueryManager.md#awaitAnyTermination) and [resetTerminated](../StreamingQueryManager.md#resetTerminated)) for query termination management.
 
-.demo-StreamingQueryManager.scala
-[source, scala]
-----
+```text
 // Save the code as demo-StreamingQueryManager.scala
 // Start it using spark-shell
 // $ ./bin/spark-shell -i demo-StreamingQueryManager.scala
@@ -137,4 +135,4 @@ println("The demo went all fine. Exiting...")
 
 // leave spark-shell
 System.exit(0)
-----
+```

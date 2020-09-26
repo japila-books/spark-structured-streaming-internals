@@ -150,6 +150,8 @@ nav:
         - StateManagerImplV1: spark-sql-streaming-StateManagerImplV1.md
       - FlatMapGroupsWithStateExecHelper Helper Class: spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md
       - InputProcessor: InputProcessor.md
+    - StreamingQueryManager: StreamingQueryManager.md
+    - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - Developing Streaming Applications:
       - DataStreamReader: spark-sql-streaming-DataStreamReader.md
       - SparkDataStream: SparkDataStream.md
@@ -159,14 +161,12 @@ nav:
         - Trigger: spark-sql-streaming-Trigger.md
       - StreamingQuery: StreamingQuery.md
       - window Function: spark-sql-streaming-window.md
-      - StreamingQueryManager: spark-sql-streaming-StreamingQueryManager.md
       - SQLConf: SQLConf.md
       - Configuration Properties: spark-sql-streaming-properties.md
     - Query Planning and Execution:
       - StreamExecution: StreamExecution.md
       - TriggerExecutor: spark-sql-streaming-TriggerExecutor.md
       - IncrementalExecution: spark-sql-streaming-IncrementalExecution.md
-      - StreamingQueryListenerBus: spark-sql-streaming-StreamingQueryListenerBus.md
       - StreamMetadata: spark-sql-streaming-StreamMetadata.md
       - Logical Operators:
         - EventTimeWatermark Unary Logical Operator: EventTimeWatermark.md

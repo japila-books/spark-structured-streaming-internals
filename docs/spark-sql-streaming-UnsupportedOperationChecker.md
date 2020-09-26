@@ -74,4 +74,4 @@ Multiple flatMapGroupsWithStates are not supported when they are not all in appe
 
 CAUTION: FIXME
 
-`checkForStreaming` is used when `StreamingQueryManager` is requested to [create a StreamingQueryWrapper](spark-sql-streaming-StreamingQueryManager.md#createQuery) (for starting a streaming query), but only when the internal [spark.sql.streaming.unsupportedOperationCheck](spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled.
+`checkForStreaming` is used when `StreamingQueryManager` is requested to [create a StreamingQueryWrapper](StreamingQueryManager.md#createQuery) (for starting a streaming query), but only when the internal [spark.sql.streaming.unsupportedOperationCheck](spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled.
