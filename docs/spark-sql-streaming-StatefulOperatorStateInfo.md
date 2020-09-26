@@ -1,6 +1,6 @@
-== [[StatefulOperatorStateInfo]] StatefulOperatorStateInfo
+# StatefulOperatorStateInfo
 
-[[creating-instance]]
+
 `StatefulOperatorStateInfo` identifies the state store for a given stateful physical operator:
 
 * [[checkpointLocation]] Checkpoint directory (`checkpointLocation`)
@@ -9,17 +9,17 @@
 * [[storeVersion]] <<state-version, State version>> (`storeVersion`)
 * [[numPartitions]] Number of partitions
 
-`StatefulOperatorStateInfo` is <<creating-instance, created>> exclusively when `IncrementalExecution` is requested for <<spark-sql-streaming-IncrementalExecution.md#nextStatefulOperationStateInfo, nextStatefulOperationStateInfo>>.
+`StatefulOperatorStateInfo` is <<creating-instance, created>> exclusively when `IncrementalExecution` is requested for [nextStatefulOperationStateInfo](IncrementalExecution.md#nextStatefulOperationStateInfo).
 
 [[toString]]
 When requested for a textual representation (`toString`), `StatefulOperatorStateInfo` returns the following:
 
-```
+```text
 state info [ checkpoint = [checkpointLocation], runId = [queryRunId], opId = [operatorId], ver = [storeVersion], numPartitions = [numPartitions]]
 ```
 
-=== [[state-version]] State Version and Batch ID
+## <span id="state-version"> State Version and Batch ID
 
-When <<creating-instance, created>> (when `IncrementalExecution` is requested for the <<spark-sql-streaming-IncrementalExecution.md#nextStatefulOperationStateInfo, next StatefulOperatorStateInfo>>), a `StatefulOperatorStateInfo` is given a <<storeVersion, state version>>.
+When created (when `IncrementalExecution` is requested for the [next StatefulOperatorStateInfo](IncrementalExecution.md#nextStatefulOperationStateInfo)), a `StatefulOperatorStateInfo` is given a [state version](#storeVersion).
 
-The <<storeVersion, state version>> is exactly the <<spark-sql-streaming-IncrementalExecution.md#currentBatchId, batch ID>> of the <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>>.
+The state version is exactly the [batch ID](IncrementalExecution.md#currentBatchId) of the [IncrementalExecution](IncrementalExecution.md).

@@ -1,8 +1,8 @@
-== [[JoinStateWatermarkPredicate]] JoinStateWatermarkPredicate Contract (Sealed Trait)
+# JoinStateWatermarkPredicate
 
 `JoinStateWatermarkPredicate` is the <<contract, abstraction>> of <<implementations, join state watermark predicates>> that are described by a <<expr, Catalyst expression>> and <<desc, desc>>.
 
-`JoinStateWatermarkPredicate` is created using <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getOneSideStateWatermarkPredicate, StreamingSymmetricHashJoinHelper>> utility (for <<spark-sql-streaming-IncrementalExecution.md#state, planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration>>)
+`JoinStateWatermarkPredicate` is created using <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getOneSideStateWatermarkPredicate, StreamingSymmetricHashJoinHelper>> utility (for [planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration](IncrementalExecution.md#state))
 
 `JoinStateWatermarkPredicate` is used to create a <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiner>> (and <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>>).
 

@@ -74,12 +74,11 @@ logicalPlan: LogicalPlan
 
 NOTE: `logicalPlan` is part of the <<spark-sql-streaming-MemoryStreamBase.md#logicalPlan, MemoryStreamBase Contract>> for the logical query plan of the memory stream.
 
-`logicalPlan` is simply a <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> (for this memory source and the <<spark-sql-streaming-MemoryStreamBase.md#attributes, attributes>>).
+`logicalPlan` is simply a [StreamingExecutionRelation](StreamingExecutionRelation.md) (for this memory source and the <<spark-sql-streaming-MemoryStreamBase.md#attributes, attributes>>).
 
-`MemoryStream` uses spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] logical plan to build spark-sql-dataset.md[Datasets] or spark-sql-dataset.md#ofRows[DataFrames] when requested.
+`MemoryStream` uses [StreamingExecutionRelation](StreamingExecutionRelation.md) logical plan to build Datasets or DataFrames when requested.
 
-[source, scala]
-----
+```text
 scala> val ints = MemoryStream[Int]
 ints: org.apache.spark.sql.execution.streaming.MemoryStream[Int] = MemoryStream[value#13]
 
@@ -88,7 +87,7 @@ res14: Boolean = true
 
 scala> ints.toDS.queryExecution.logical
 res15: org.apache.spark.sql.catalyst.plans.logical.LogicalPlan = MemoryStream[value#13]
-----
+```
 
 === [[schema]] Schema (schema method)
 

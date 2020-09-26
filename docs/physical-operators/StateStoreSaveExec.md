@@ -13,7 +13,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 ![StateStoreSaveExec and StatefulAggregationStrategy](../images/StateStoreSaveExec-StatefulAggregationStrategy.png)
 
-The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>>, the <<outputMode, output mode>>, and the <<eventTimeWatermark, event-time watermark>>, are initially undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#preparing-for-execution, prepare the logical plan (of a streaming query) for execution>> (when the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> is executed).
+The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>>, the <<outputMode, output mode>>, and the <<eventTimeWatermark, event-time watermark>>, are initially undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to [prepare the logical plan (of a streaming query) for execution](../IncrementalExecution.md#preparing-for-execution) (when the [state preparation rule](../IncrementalExecution.md#state) is executed).
 
 ![StateStoreSaveExec and IncrementalExecution](../images/StateStoreSaveExec-IncrementalExecution.png)
 
@@ -135,18 +135,17 @@ a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.m
 * [[stateFormatVersion]] Version of the state format (based on the <<spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
-=== [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
+## <span id="doExecute"> Executing Physical Operator
 
-[source, scala]
-----
+```scala
 doExecute(): RDD[InternalRow]
-----
+```
 
-NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
+`doExecute` is part of the `SparkPlan` abstraction (Spark SQL).
 
 Internally, `doExecute` initializes [metrics](StateStoreWriter.md#metrics).
 
-NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should have happened when `IncrementalExecution` spark-sql-streaming-IncrementalExecution.md#preparations[had prepared a streaming aggregation for execution]).
+NOTE: `doExecute` requires that the optional <<outputMode, outputMode>> is at this point defined (that should have happened when `IncrementalExecution` [had prepared a streaming aggregation for execution](../IncrementalExecution.md#preparations)).
 
 `doExecute` executes <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
 

@@ -1,17 +1,15 @@
-== [[WriteToContinuousDataSource]] WriteToContinuousDataSource Unary Logical Operator
+# WriteToContinuousDataSource Unary Logical Operator
 
-[[children]]
-`WriteToContinuousDataSource` is a unary logical operator (`LogicalPlan`) that is <<creating-instance, created>> exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> (to create an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>>).
+`WriteToContinuousDataSource` is a unary logical operator (`LogicalPlan`) that is created when `ContinuousExecution` is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) (to create an [IncrementalExecution](IncrementalExecution.md)).
 
-`WriteToContinuousDataSource` is planned (_translated_) to a <<spark-sql-streaming-WriteToContinuousDataSourceExec.md#, WriteToContinuousDataSourceExec>> unary physical operator (when `DataSourceV2Strategy` execution planning strategy is requested to plan a logical query).
-
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-DataSourceV2Strategy.html[DataSourceV2Strategy Execution Planning Strategy] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-
-[[creating-instance]]
-`WriteToContinuousDataSource` takes the following to be created:
-
-* [[writer]] <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>
-* [[query]] Child logical operator (`LogicalPlan`)
+`WriteToContinuousDataSource` is planned (_translated_) to a [WriteToContinuousDataSourceExec](spark-sql-streaming-WriteToContinuousDataSourceExec.md) unary physical operator (when `DataSourceV2Strategy` execution planning strategy is requested to plan a logical query).
 
 [[output]]
 `WriteToContinuousDataSource` uses empty output schema (which is exactly to say that no output is expected whatsoever).
+
+## Creating Instance
+
+`WriteToContinuousDataSource` takes the following to be created:
+
+* [[writer]] [StreamWriter](spark-sql-streaming-StreamWriter.md)
+* [[query]] Child logical operator (`LogicalPlan`)

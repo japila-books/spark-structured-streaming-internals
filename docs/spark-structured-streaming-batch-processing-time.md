@@ -15,10 +15,10 @@ The following standard functions (and their Catalyst expressions) allow accessin
 
 [GroupStateImpl](GroupStateImpl.md) is given the batch processing time when created for a [streaming query](GroupStateImpl.md#createForStreaming) (that is actually the [batch processing time](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) of the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator).
 
-When created, `FlatMapGroupsWithStateExec` physical operator has the processing time undefined and set to the current timestamp in the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> every streaming batch.
+When created, `FlatMapGroupsWithStateExec` physical operator has the processing time undefined and set to the current timestamp in the [state preparation rule](IncrementalExecution.md#state) every streaming batch.
 
-The current timestamp (and other batch-specific configurations) is given as the <<spark-sql-streaming-IncrementalExecution.md#offsetSeqMetadata, OffsetSeqMetadata>> (as part of the query planning phase) when a [stream execution engine](StreamExecution.md) does the following:
+The current timestamp (and other batch-specific configurations) is given as the [OffsetSeqMetadata](IncrementalExecution.md#offsetSeqMetadata) (as part of the query planning phase) when a [stream execution engine](StreamExecution.md) does the following:
 
-* `MicroBatchExecution` is requested to <<MicroBatchExecution.md#constructNextBatch, construct a next streaming micro-batch>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
+* `MicroBatchExecution` is requested to [construct a next streaming micro-batch](MicroBatchExecution.md#constructNextBatch) in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
 
-* In <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> the base `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) and initializes `OffsetSeqMetadata` to ``0``s.
+* In [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md) the base `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) and initializes `OffsetSeqMetadata` to ``0``s.

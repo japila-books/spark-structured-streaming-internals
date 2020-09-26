@@ -166,16 +166,17 @@ nav:
     - Query Planning and Execution:
       - StreamExecution: StreamExecution.md
       - TriggerExecutor: spark-sql-streaming-TriggerExecutor.md
-      - IncrementalExecution: spark-sql-streaming-IncrementalExecution.md
+      - IncrementalExecution: IncrementalExecution.md
       - StreamMetadata: spark-sql-streaming-StreamMetadata.md
       - Logical Operators:
-        - EventTimeWatermark Unary Logical Operator: EventTimeWatermark.md
-        - FlatMapGroupsWithState Unary Logical Operator: logical-operators/FlatMapGroupsWithState.md
-        - Deduplicate Unary Logical Operator: spark-sql-streaming-Deduplicate.md
-        - MemoryPlan Logical Query Plan: spark-sql-streaming-MemoryPlan.md
-        - StreamingRelation Leaf Logical Operator for Streaming Source: spark-sql-streaming-StreamingRelation.md
-        - StreamingRelationV2 Leaf Logical Operator: spark-sql-streaming-StreamingRelationV2.md
-        - StreamingExecutionRelation Leaf Logical Operator for Streaming Source At Execution: spark-sql-streaming-StreamingExecutionRelation.md
+        - EventTimeWatermark: EventTimeWatermark.md
+        - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
+        - Deduplicate: spark-sql-streaming-Deduplicate.md
+        - MemoryPlan: spark-sql-streaming-MemoryPlan.md
+        - StreamingDataSourceV2Relation: StreamingDataSourceV2Relation.md
+        - StreamingRelation: spark-sql-streaming-StreamingRelation.md
+        - StreamingRelationV2: spark-sql-streaming-StreamingRelationV2.md
+        - StreamingExecutionRelation: StreamingExecutionRelation.md
       - Physical Operators:
         - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
         - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md

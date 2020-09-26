@@ -16,12 +16,11 @@ Under the covers, the high-level operators create a logical query plan with one 
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Aggregate.html[Aggregate] logical operator in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-In Spark Structured Streaming <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is responsible for planning streaming queries for execution.
+In Spark Structured Streaming [IncrementalExecution](IncrementalExecution.md) is responsible for planning streaming queries for execution.
 
-At <<spark-sql-streaming-IncrementalExecution.md#executedPlan, query planning>>, `IncrementalExecution` uses the <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy for planning streaming aggregations (`Aggregate` unary logical operators) as pairs of <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> and <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operators.
+At [query planning](IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StatefulAggregationStrategy](spark-sql-streaming-StatefulAggregationStrategy.md) execution planning strategy for planning streaming aggregations (`Aggregate` unary logical operators) as pairs of <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> and <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operators.
 
-[source, scala]
-----
+```text
 // input data from a data source
 // it's rate data source
 // but that does not really matter
@@ -63,16 +62,16 @@ Aggregate [(value#16L % 2)], [(value#16L % 2) AS (value % 2)#23L, count(1) AS co
                   +- *(1) Project [value#16L]
                      +- StreamingRelation rate, [timestamp#15, value#16L]
 */
-----
+```
 
-=== [[demos]] Demos
+## Demos
 
-Use the following demos to learn more:
+Learn more in the following demos:
 
-* <<spark-sql-streaming-demo-watermark-aggregation-append.md#, Streaming Watermark with Aggregation in Append Output Mode>>
+* [Streaming Watermark with Aggregation in Append Output Mode](demo/watermark-aggregation-append.md)
 
-* <<spark-sql-streaming-demo-groupBy-running-count-complete.md#, Streaming Query for Running Counts (Socket Source and Complete Output Mode)>>
+* [Streaming Query for Running Counts (Socket Source and Complete Output Mode)](demo/groupBy-running-count-complete.md)
 
-* <<spark-sql-streaming-demo-kafka-data-source.md#, Streaming Aggregation with Kafka Data Source>>
+* [Streaming Aggregation with Kafka Data Source](demo/kafka-data-source.md)
 
-* <<spark-sql-streaming-demo-groupByKey-count-Update.md#, groupByKey Streaming Aggregation in Update Mode>>
+* [groupByKey Streaming Aggregation in Update Mode](demo/groupByKey-count-Update.md)

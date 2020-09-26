@@ -30,6 +30,6 @@ a| [[ProcessingTimeTimeout]] Timeout based on processing time
 
 [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator requires that `batchTimestampMs` is specified when `ProcessingTimeTimeout` is used.
 
-`batchTimestampMs` is defined when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is created (with the <<spark-sql-streaming-IncrementalExecution.md#state, state>>). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` is requested to <<MicroBatchExecution.md#runBatch, run a streaming batch>>.
+`batchTimestampMs` is defined when [IncrementalExecution](IncrementalExecution.md) is created (with the [state](IncrementalExecution.md#state)). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` is requested to [run a streaming batch](MicroBatchExecution.md#runBatch).
 
 |===

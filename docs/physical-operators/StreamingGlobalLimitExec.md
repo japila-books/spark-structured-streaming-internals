@@ -1,4 +1,4 @@
-== [[StreamingGlobalLimitExec]] StreamingGlobalLimitExec Unary Physical Operator
+# StreamingGlobalLimitExec Unary Physical Operator
 
 `StreamingGlobalLimitExec` is a unary physical operator that represents a `Limit` logical operator of a streaming query at execution time.
 
@@ -22,9 +22,9 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Logi
 
 `StreamingGlobalLimitExec` supports <<outputMode, Append>> output mode only.
 
-The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and the <<outputMode, output mode>>, are initially undefined when `StreamingGlobalLimitExec` is <<creating-instance, created>>. `StreamingGlobalLimitExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#preparing-for-execution, prepare the logical plan (of a streaming query) for execution>> (when the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> is executed).
+The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and the <<outputMode, output mode>>, are initially undefined when `StreamingGlobalLimitExec` is <<creating-instance, created>>. `StreamingGlobalLimitExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to [prepare the logical plan (of a streaming query) for execution](../IncrementalExecution.md#preparing-for-execution) (when the [state preparation rule](../IncrementalExecution.md#state) is executed).
 
-=== [[creating-instance]] Creating StreamingGlobalLimitExec Instance
+## Creating Instance
 
 `StreamingGlobalLimitExec` takes the following to be created:
 

@@ -419,7 +419,7 @@ lastExecution: IncrementalExecution
 
 `lastExecution` is part of the [ProgressReporter](monitoring/ProgressReporter.md#lastExecution) abstraction.
 
-`lastExecution` is a <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> (a `QueryExecution` of a streaming query) of the most recent (_last_) execution.
+`lastExecution` is a [IncrementalExecution](IncrementalExecution.md) (a `QueryExecution` of a streaming query) of the most recent (_last_) execution.
 
 `lastExecution` is created when the <<extensions, stream execution engines>> are requested for the following:
 
@@ -433,24 +433,21 @@ lastExecution: IncrementalExecution
 
 * `ProgressReporter` is requested to [extractStateOperatorMetrics](monitoring/ProgressReporter.md#extractStateOperatorMetrics), [extractExecutionStats](monitoring/ProgressReporter.md#extractExecutionStats), and [extractSourceToNumInputRows](monitoring/ProgressReporter.md#extractSourceToNumInputRows)
 
-* `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch-shouldConstructNextBatch, construct or skip the next streaming micro-batch>> (based on <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, StateStoreWriters in a streaming query>>), <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>> (when in <<MicroBatchExecution.md#runBatch-addBatch, addBatch Phase>> and <<MicroBatchExecution.md#runBatch-updateWatermark-commitLog, updating watermark and committing offsets to offset commit log>>)
+* `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch-shouldConstructNextBatch, construct or skip the next streaming micro-batch>> (based on [StateStoreWriters in a streaming query](IncrementalExecution.md#shouldRunAnotherBatch)), <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>> (when in <<MicroBatchExecution.md#runBatch-addBatch, addBatch Phase>> and <<MicroBatchExecution.md#runBatch-updateWatermark-commitLog, updating watermark and committing offsets to offset commit log>>)
 
 * `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#runContinuous, run a streaming query>> (when in <<ContinuousExecution.md#runContinuous-runContinuous, runContinuous Phase>>)
 
 * For debugging query execution of streaming queries (using `debugCodegen`)
 
-=== [[explain]] Explaining Streaming Query -- `explain` Method
+## <span id="explain"> Explaining Streaming Query
 
-[source, scala]
-----
+```scala
 explain(): Unit // <1>
 explain(extended: Boolean): Unit
-----
+```
 <1> Turns the `extended` flag off (`false`)
 
 `explain` simply prints out <<explainInternal, explainInternal>> to the standard output.
-
-NOTE: `explain` is used when...FIXME
 
 === [[explainInternal]] `explainInternal` Method
 
@@ -784,18 +781,17 @@ toDebugString(includeLogicalPlan: Boolean): String
 
 `toDebugString`...FIXME
 
-NOTE: `toDebugString` is used exclusively when `StreamExecution` is requested to <<runStream, run stream processing>> (and an exception is caught).
+`toDebugString` is used when `StreamExecution` is requested to <<runStream, run stream processing>> (and an exception is caught).
 
 === [[offsetSeqMetadata]] Current Batch Metadata (Event-Time Watermark and Timestamp) -- `offsetSeqMetadata` Internal Property
 
-[source, scala]
-----
+```scala
 offsetSeqMetadata: OffsetSeqMetadata
-----
+```
 
-`offsetSeqMetadata` is a <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>>.
+`offsetSeqMetadata` is a [OffsetSeqMetadata](spark-sql-streaming-OffsetSeqMetadata.md).
 
-`offsetSeqMetadata` is used to create an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> in the *queryPlanning* phase of the <<MicroBatchExecution.md#runBatch-queryPlanning, MicroBatchExecution>> and <<ContinuousExecution.md#runContinuous-queryPlanning, ContinuousExecution>> execution engines.
+`offsetSeqMetadata` is used to create an [IncrementalExecution](IncrementalExecution.md) in the **queryPlanning** phase of the [MicroBatchExecution](MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](ContinuousExecution.md#runContinuous-queryPlanning) execution engines.
 
 `offsetSeqMetadata` is initialized (with `0` for `batchWatermarkMs` and `batchTimestampMs`) when `StreamExecution` is requested to <<runStream, run stream processing>>.
 
@@ -953,8 +949,6 @@ Used when `StreamExecution` is requested to <<start, start>> to pause the main t
 
 | uniqueSources
 a| [[uniqueSources]] Unique <<spark-sql-streaming-BaseStreamingSource.md#, streaming sources>> (after being collected as `StreamingExecutionRelation` from the <<logicalPlan, logical query plan>>).
-
-NOTE: spark-sql-streaming-StreamingExecutionRelation.md[StreamingExecutionRelation] is a leaf logical operator (i.e. `LogicalPlan`) that represents a streaming data source (and corresponds to a single spark-sql-streaming-StreamingRelation.md[StreamingRelation] in <<analyzedPlan, analyzed logical query plan>> of a streaming Dataset).
 
 Used when `StreamExecution`:
 

@@ -78,7 +78,7 @@ runActivatedStream(sparkSessionForStream: SparkSession): Unit
 
 `runActivatedStream` is part of [StreamExecution](StreamExecution.md#runActivatedStream) abstraction.
 
-=== [[runContinuous]] Running Streaming Query in Continuous Mode -- `runContinuous` Internal Method
+## <span id="runContinuous"> Running Streaming Query in Continuous Mode
 
 [source, scala]
 ----
@@ -104,7 +104,7 @@ NOTE: `CurrentTimestamp` and `CurrentDate` expressions are not supported for con
 `runContinuous` finds the only <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
 
 [[runContinuous-queryPlanning]]
-In *queryPlanning* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runContinuous` creates an <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> (that becomes the [lastExecution](StreamExecution.md#lastExecution)) that is immediately executed (i.e. the entire query execution pipeline is executed up to and including _executedPlan_).
+In *queryPlanning* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runContinuous` creates an [IncrementalExecution](IncrementalExecution.md) (that becomes the [lastExecution](StreamExecution.md#lastExecution)) that is immediately executed (i.e. the entire query execution pipeline is executed up to and including _executedPlan_).
 
 `runContinuous` sets the following local properties:
 

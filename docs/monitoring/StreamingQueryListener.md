@@ -48,11 +48,11 @@ Informs that a streaming query was <<StreamingQuery.md#stop, stopped>> or termin
 
 ![StreamingQueryListener Notified about Query's Termination (onQueryTerminated)](../images/StreamingQueryListener-onQueryTerminated.png)
 
-## <span id="events"> Lifecycle Events
+## <span id="events"><span id="Event"> Lifecycle Events
 
 `StreamingQueryListener` is informed about the life cycle events when `StreamingQueryListenerBus` is requested to [doPostEvent](../StreamingQueryListenerBus.md#doPostEvent).
 
-### QueryStartedEvent
+### <span id="QueryStartedEvent"> QueryStartedEvent
 
 * [id](../StreamingQuery.md#id)
 * [runId](../StreamingQuery.md#runId)
@@ -62,7 +62,7 @@ Intercepted by [onQueryStarted](#onQueryStarted)
 
 Posted when `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start) on the [stream execution thread](../StreamExecution.md#queryExecutionThread))
 
-### QueryProgressEvent
+### <span id="QueryProgressEvent"> QueryProgressEvent
 
 * [StreamingQueryProgress](StreamingQueryProgress.md)
 
@@ -70,7 +70,7 @@ Intercepted by [onQueryProgress](#onQueryProgress)
 
 Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished [triggerExecution phase](../MicroBatchExecution.md#runActivatedStream-triggerExecution) at the end of a streaming batch)
 
-### QueryTerminatedEvent
+### <span id="QueryTerminatedEvent"> QueryTerminatedEvent
 
 * [id](../StreamingQuery.md#id)
 * [runId](../StreamingQuery.md#runId)

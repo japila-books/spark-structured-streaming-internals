@@ -14,7 +14,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 `StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.md#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
 
-`StreamingSymmetricHashJoinExec` is given execution-specific configuration (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>) when `IncrementalExecution` is requested to plan a streaming query for execution (and uses the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>>).
+`StreamingSymmetricHashJoinExec` is given execution-specific configuration (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>) when `IncrementalExecution` is requested to plan a streaming query for execution (and uses the [state preparation rule](../IncrementalExecution.md#state)).
 
 `StreamingSymmetricHashJoinExec` uses two <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiners>> (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state when <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>.
 
@@ -78,7 +78,7 @@ NOTE: `outputPartitioning` is part of the `SparkPlan` Contract to specify how da
 
 `outputPartitioning` throws an `IllegalArgumentException` for other join types:
 
-```
+```text
 [className] should not take [joinType] as the JoinType
 ```
 
@@ -91,7 +91,7 @@ eventTimeWatermark: Option[Long]
 
 When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the current streaming micro-batch.
 
-`eventTimeWatermark` is an optional property that is specified only after <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> was requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
+`eventTimeWatermark` is an optional property that is specified only after [IncrementalExecution](../IncrementalExecution.md) was requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../ContinuousExecution.md) and every trigger for [MicroBatchExecution](../MicroBatchExecution.md) in the **queryPlanning** phase).
 
 [NOTE]
 ====
@@ -102,16 +102,15 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 * `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>
 ====
 
-=== [[stateWatermarkPredicates]] Watermark Predicates for State Removal -- `stateWatermarkPredicates` Internal Property
+## <span id="stateWatermarkPredicates"> Watermark Predicates for State Removal
 
-[source, scala]
-----
+```scala
 stateWatermarkPredicates: JoinStateWatermarkPredicates
-----
+```
 
 When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, StreamingSymmetricHashJoinHelper>> utility).
 
-`stateWatermarkPredicates` contains the left and right predicates only when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to apply the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to a physical query plan of a streaming query (to <<spark-sql-streaming-IncrementalExecution.md#executedPlan, optimize (prepare) the physical plan of the streaming query>> once for <<ContinuousExecution.md#, ContinuousExecution>> and every trigger for <<MicroBatchExecution.md#, MicroBatchExecution>> in their *queryPlanning* phases).
+`stateWatermarkPredicates` contains the left and right predicates only when [IncrementalExecution](../IncrementalExecution.md) is requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../ContinuousExecution.md) and every trigger for [MicroBatchExecution](../MicroBatchExecution.md) in the **queryPlanning** phase).
 
 [NOTE]
 ====

@@ -11,7 +11,7 @@
 
 * <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator is created (with the optional properties undefined, including <<physical-operators/StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
 
-* `StreamingSymmetricHashJoinHelper` utility is requested for <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, one>> (for `IncrementalExecution` for the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>> to optimize and specify the execution-specific configuration for a query plan with <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators)
+* `StreamingSymmetricHashJoinHelper` utility is requested for <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, one>> (for `IncrementalExecution` for the [state preparation rule](IncrementalExecution.md#state) to optimize and specify the execution-specific configuration for a query plan with [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operators)
 
 === [[toString]] Textual Representation -- `toString` Method
 

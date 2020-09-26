@@ -25,7 +25,7 @@ spark.sessionState.executePlan(explain)
 ----
 ====
 
-For streaming Datasets, `ExplainCommand` command simply creates a spark-sql-streaming-IncrementalExecution.md[IncrementalExecution] for the `SparkSession` and the logical plan.
+For streaming Datasets, `ExplainCommand` command simply creates a [IncrementalExecution](../IncrementalExecution.md) for the `SparkSession` and the logical plan.
 
 NOTE: For the purpose of `explain`, `IncrementalExecution` is created with the output mode `Append`, checkpoint location `<unknown>`, run id a random number, current batch id `0` and offset metadata empty. They do not really matter when explaining the load-part of a streaming query.
 

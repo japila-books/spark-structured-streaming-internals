@@ -1,6 +1,6 @@
 # ProgressReporter
 
-`ProgressReporter` is an [abstraction](#contract) of [stream execution progress reporters](#implementations) that report the statistics of execution of a streaming query.
+`ProgressReporter` is an [abstraction](#contract) of [stream execution progress reporters](#implementations) that report statistics of execution of a streaming query.
 
 ## Contract
 
@@ -10,9 +10,7 @@
 currentBatchId: Long
 ```
 
-ID of the active (_current_) streaming micro-batch
-
-Used when...FIXME
+ID of the active (_currently-running_) streaming batch
 
 ### <span id="id"> id
 
@@ -22,17 +20,15 @@ id: UUID
 
 [Universally unique identifier (UUID)](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html) of the streaming query (that remains unchanged between restarts)
 
-Used when...FIXME
-
 ### <span id="lastExecution"> lastExecution
 
 ```scala
 lastExecution: QueryExecution
 ```
 
-`QueryExecution` of the streaming query
+[IncrementalExecution](../IncrementalExecution.md) of the active (_currently-running_) streaming batch
 
-Used when...FIXME
+`IncrementalExecution` is created and executed in the **queryPlanning** phase of [MicroBatchExecution](../MicroBatchExecution.md) and [ContinuousExecution](../ContinuousExecution.md) stream execution engines.
 
 ### <span id="logicalPlan"> logicalPlan
 
@@ -42,10 +38,12 @@ logicalPlan: LogicalPlan
 
 Logical query plan of the streaming query
 
+!!! important
+    The most interesting usage of the `LogicalPlan` is when stream execution engines replace (_transform_) input [StreamingExecutionRelation](../StreamingExecutionRelation.md) and [StreamingDataSourceV2Relation](../StreamingDataSourceV2Relation.md) operators with (operators with) data or `LocalRelation` (to represent no data at a source).
+
 Used when `ProgressReporter` is requested for the following:
 
 * [extract statistics from the most recent query execution](#extractExecutionStats) (to add `watermark` metric for [streaming watermark](../EventTimeWatermark.md))
-
 * [extractSourceToNumInputRows](#extractSourceToNumInputRows)
 
 ### <span id="name"> name
@@ -62,7 +60,11 @@ Name of the streaming query
 newData: Map[SparkDataStream, LogicalPlan]
 ```
 
-[SparkDataStream](../SparkDataStream.md)s with the new data (as a `LogicalPlan`)
+[SparkDataStream](../SparkDataStream.md)s (from all data [sources](#sources)) with the more recent unprocessed input data (as `LogicalPlan`)
+
+Used exclusively for [MicroBatchExecution](../MicroBatchExecution.md) (when requested to [run a single micro-batch](../MicroBatchExecution.md#runBatch))
+
+Used when `ProgressReporter` is requested to [extractSourceToNumInputRows](#extractSourceToNumInputRows)
 
 ### <span id="offsetSeqMetadata"> offsetSeqMetadata
 
@@ -79,7 +81,12 @@ postEvent(
   event: StreamingQueryListener.Event): Unit
 ```
 
-Posts [StreamingQueryListener.Event](StreamingQueryListener.md)
+Posts [StreamingQueryListener.Event](StreamingQueryListener.md#Event)
+
+Used when:
+
+* `ProgressReporter` is requested to [update progress](#updateProgress) (and posts a [QueryProgressEvent](StreamingQueryListener.md#QueryProgressEvent))
+* `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream) (and posts a [QueryStartedEvent](StreamingQueryListener.md#QueryStartedEvent) at the beginning and a [QueryTerminatedEvent](StreamingQueryListener.md#QueryTerminatedEvent) after a query has been stopped)
 
 ### <span id="runId"> runId
 
@@ -334,19 +341,19 @@ In the end, `reportTimeTaken` prints out the following DEBUG message to the logs
 
 `reportTimeTaken` is used when [stream execution engines](../StreamExecution.md) are requested to execute the following phases (that appear as `triggerDetailKey` in the DEBUG message in the logs):
 
-* `MicroBatchExecution`
-  * [triggerExecution](../MicroBatchExecution.md#runActivatedStream-triggerExecution)
-  * [getOffset](../MicroBatchExecution.md#constructNextBatch-getOffset)
-  * [setOffsetRange](../MicroBatchExecution.md#constructNextBatch-setOffsetRange)
-  * [getEndOffset](../MicroBatchExecution.md#constructNextBatch-getEndOffset)
-  * [walCommit](../MicroBatchExecution.md#constructNextBatch-walCommit)
-  * [getBatch](../MicroBatchExecution.md#runBatch-getBatch)
-  * [queryPlanning](../MicroBatchExecution.md#runBatch-queryPlanning)
-  * [addBatch](../MicroBatchExecution.md#runBatch-addBatch)
+1. `MicroBatchExecution`
+    1. [triggerExecution](../MicroBatchExecution.md#runActivatedStream-triggerExecution)
+    1. [getOffset](../MicroBatchExecution.md#constructNextBatch-getOffset)
+    1. [setOffsetRange](../MicroBatchExecution.md#constructNextBatch-setOffsetRange)
+    1. [getEndOffset](../MicroBatchExecution.md#constructNextBatch-getEndOffset)
+    1. [walCommit](../MicroBatchExecution.md#constructNextBatch-walCommit)
+    1. [getBatch](../MicroBatchExecution.md#runBatch-getBatch)
+    1. [queryPlanning](../MicroBatchExecution.md#runBatch-queryPlanning)
+    1. [addBatch](../MicroBatchExecution.md#runBatch-addBatch)
 
-* `ContinuousExecution`
-  * [queryPlanning](../ContinuousExecution.md#runContinuous-queryPlanning)
-  * [runContinuous](../ContinuousExecution.md#runContinuous-runContinuous)
+1. `ContinuousExecution`
+    1. [queryPlanning](../ContinuousExecution.md#runContinuous-queryPlanning)
+    1. [runContinuous](../ContinuousExecution.md#runContinuous-runContinuous)
 
 ## <span id="updateStatusMessage"> Updating Status Message
 
@@ -363,30 +370,30 @@ updateStatusMessage(
 
 * `MicroBatchExecution` is requested to [run an activated streaming query](../MicroBatchExecution.md#runActivatedStream) or [construct the next streaming micro-batch](../MicroBatchExecution.md#constructNextBatch)
 
-=== [[extractExecutionStats]] Generating Execution Statistics -- `extractExecutionStats` Internal Method
+## <span id="extractExecutionStats"> Generating Execution Statistics
 
-[source, scala]
-----
-extractExecutionStats(hasNewData: Boolean): ExecutionStats
-----
+```scala
+extractExecutionStats(
+  hasNewData: Boolean): ExecutionStats
+```
 
-`extractExecutionStats` generates an <<spark-sql-streaming-ExecutionStats.md#, ExecutionStats>> of the <<lastExecution, last execution>> of the streaming query.
+`extractExecutionStats` generates an [ExecutionStats](ExecutionStats.md) of the <<lastExecution, last execution>> of the streaming query.
 
 Internally, `extractExecutionStats` generate *watermark* metric (using the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a [EventTimeWatermark](../EventTimeWatermark.md) unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
 
-`extractExecutionStats` <<extractStateOperatorMetrics, extractStateOperatorMetrics>>.
+`extractExecutionStats` [extractStateOperatorMetrics](#extractStateOperatorMetrics).
 
-`extractExecutionStats` <<extractSourceToNumInputRows, extractSourceToNumInputRows>>.
+`extractExecutionStats` [extractSourceToNumInputRows](#extractSourceToNumInputRows).
 
 `extractExecutionStats` finds the [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) unary physical operator (with non-zero [EventTimeStats](../spark-sql-streaming-EventTimeStatsAccum.md)) and generates *max*, *min*, and *avg* statistics.
 
-In the end, `extractExecutionStats` creates a <<spark-sql-streaming-ExecutionStats.md#, ExecutionStats>> with the execution statistics.
+In the end, `extractExecutionStats` creates a [ExecutionStats](ExecutionStats.md) with the execution statistics.
 
-If the input `hasNewData` flag is turned off (`false`), `extractExecutionStats` returns an <<spark-sql-streaming-ExecutionStats.md#, ExecutionStats>> with no input rows and event-time statistics (that require data to be processed to have any sense).
+If the input `hasNewData` flag is turned off (`false`), `extractExecutionStats` returns an [ExecutionStats](ExecutionStats.md) with no input rows and event-time statistics (that require data to be processed to have any sense).
 
 NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finish up a streaming batch (trigger) and generate a StreamingQueryProgress>>.
 
-=== [[extractStateOperatorMetrics]] Generating StateStoreWriter Metrics (StateOperatorProgress) -- `extractStateOperatorMetrics` Internal Method
+## <span id="extractStateOperatorMetrics"> Generating StateStoreWriter Metrics (StateOperatorProgress)
 
 ```scala
 extractStateOperatorMetrics(
@@ -401,25 +408,21 @@ extractStateOperatorMetrics(
 
 `extractStateOperatorMetrics` is used when `ProgressReporter` is requested to [generate execution statistics](#extractExecutionStats).
 
-=== [[recordTriggerOffsets]] Recording Trigger Offsets (StreamProgress) -- `recordTriggerOffsets` Method
+## <span id="recordTriggerOffsets"> Recording Trigger Offsets (StreamProgress)
 
-[source, scala]
-----
+```scala
 recordTriggerOffsets(
   from: StreamProgress,
   to: StreamProgress): Unit
-----
+```
 
 `recordTriggerOffsets` simply sets (_records_) the <<currentTriggerStartOffsets, currentTriggerStartOffsets>> and <<currentTriggerEndOffsets, currentTriggerEndOffsets>> internal registries to the <<spark-sql-streaming-Offset.md#json, json>> representations of the `from` and `to` <<spark-sql-streaming-StreamProgress.md#, StreamProgresses>>.
 
-[NOTE]
-====
 `recordTriggerOffsets` is used when:
 
 * `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>
 
 * `ContinuousExecution` is requested to <<ContinuousExecution.md#commit, commit an epoch>>
-====
 
 ## <span id="lastProgress"> Last StreamingQueryProgress
 
@@ -429,53 +432,36 @@ lastProgress: StreamingQueryProgress
 
 The last [StreamingQueryProgress](StreamingQueryProgress.md)
 
-=== [[internal-properties]] Internal Properties
+## Internal Properties
 
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
 
-| currentDurationsMs
-a| [[currentDurationsMs]] http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap[scala.collection.mutable.HashMap] of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
+### currentDurationsMs
+
+[scala.collection.mutable.HashMap](http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap) of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
 
 Starts empty when `ProgressReporter` <<startTrigger, sets the state for a new batch>> with new entries added or updated when <<reportTimeTaken, reporting execution time>> (of an action).
 
-[TIP]
-====
-You can see the current value of `currentDurationsMs` in progress reports under `durationMs`.
+!!! tip
+    You can see the current value of `currentDurationsMs` in progress reports under `durationMs`.
 
-[options="wrap"]
-----
-scala> query.lastProgress.durationMs
-res3: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBatch=5, getOffset=0, addBatch=30, walCommit=23}
-----
-====
+    ```text
+    scala> query.lastProgress.durationMs
+    res3: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBatch=5, getOffset=0, addBatch=30, walCommit=23}
+    ```
 
-| currentStatus
-a| [[currentStatus]] [StreamingQueryStatus](StreamingQueryStatus.md) with the current status of the streaming query
+### currentTriggerEndTimestamp
 
-Available using <<status, status>> method
-
-* `message` updated with <<updateStatusMessage, updateStatusMessage>>
-
-| currentTriggerEndOffsets
-a| [[currentTriggerEndOffsets]]
-
-| currentTriggerEndTimestamp
-a| [[currentTriggerEndTimestamp]] Timestamp of when the current batch/trigger has ended
+Timestamp of when the current batch/trigger has ended
 
 Default: `-1L`
 
-| currentTriggerStartOffsets
-a| [[currentTriggerStartOffsets]]
+### currentTriggerStartOffsets
 
-[source, scala]
-----
+```scala
 currentTriggerStartOffsets: Map[BaseStreamingSource, String]
-----
+```
 
-Start offsets (in <<spark-sql-streaming-Offset.md#json, JSON format>>) per <<spark-sql-streaming-BaseStreamingSource.md#, source>>
+Start offsets (in [JSON format](../spark-sql-streaming-Offset.md#json)) per <<spark-sql-streaming-BaseStreamingSource.md#, source>>
 
 Used exclusively when <<finishTrigger, finishing up a streaming batch (trigger) and generating StreamingQueryProgress>> (for a [SourceProgress](SourceProgress.md))
 
@@ -483,27 +469,17 @@ Reset (`null`) when <<startTrigger, initializing a query progress for a new trig
 
 Initialized when <<recordTriggerOffsets, recording trigger offsets (StreamProgress)>>
 
-| currentTriggerStartTimestamp
-a| [[currentTriggerStartTimestamp]] Timestamp of when the current batch/trigger has started
+### currentTriggerStartTimestamp
+
+Timestamp of when the current batch/trigger has started
 
 Default: `-1L`
 
-| lastNoDataProgressEventTime
-a| [[lastNoDataProgressEventTime]]
+### lastTriggerStartTimestamp
 
-Default: `Long.MinValue`
-
-| lastTriggerStartTimestamp
-a| [[lastTriggerStartTimestamp]] Timestamp of when the last batch/trigger started
+Timestamp of when the last batch/trigger started
 
 Default: `-1L`
-
-| metricWarningLogged
-a| [[metricWarningLogged]] Flag to...FIXME
-
-Default: `false`
-
-|===
 
 ## Logging
 

@@ -1,6 +1,6 @@
-== [[StateStoreRestoreExec]] StateStoreRestoreExec Unary Physical Operator -- Restoring Streaming State From State Store
+# StateStoreRestoreExec Unary Physical Operator
 
-`StateStoreRestoreExec` is a unary physical operator that <<StateStoreReader.md#, restores (reads) a streaming state from a state store>> (for the keys from the <<child, child>> physical operator).
+`StateStoreRestoreExec` is a unary physical operator that [restores (reads) a streaming state from a state store](StateStoreReader.md) (for the keys from the <<child, child>> physical operator).
 
 [NOTE]
 ====
@@ -14,10 +14,9 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 .StateStoreRestoreExec and StatefulAggregationStrategy
 image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="center"]
 
-The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` spark-sql-streaming-IncrementalExecution.md#preparations[prepares a streaming physical plan for execution] (and spark-sql-streaming-IncrementalExecution.md#state[state] preparation rule is executed when `StreamExecution` MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
+The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` [prepares a streaming physical plan for execution](../IncrementalExecution.md#preparations) (and [state](../IncrementalExecution.md#state) preparation rule is executed when `StreamExecution` MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
-.StateStoreRestoreExec and IncrementalExecution
-image::images/StateStoreRestoreExec-IncrementalExecution.png[align="center"]
+![StateStoreRestoreExec and IncrementalExecution](../images/StateStoreRestoreExec-IncrementalExecution.png)
 
 When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, creates a StateStoreRDD to map over partitions>> with `storeUpdateFunction` that restores the state for the keys in the input rows if available.
 

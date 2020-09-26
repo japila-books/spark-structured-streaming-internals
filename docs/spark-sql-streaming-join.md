@@ -45,20 +45,18 @@ Under the covers, the <<operators, high-level operators>> create a logical query
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Join.html[Join Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
-In Spark Structured Streaming <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is responsible for planning streaming queries for execution.
+In Spark Structured Streaming [IncrementalExecution](IncrementalExecution.md) is responsible for planning streaming queries for execution.
 
-At <<spark-sql-streaming-IncrementalExecution.md#executedPlan, query planning>>, `IncrementalExecution` uses the <<spark-sql-streaming-StreamingJoinStrategy.md#, StreamingJoinStrategy>> execution planning strategy for planning <<stream-stream-joins, stream-stream joins>> as <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators.
+At [query planning](IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StreamingJoinStrategy](spark-sql-streaming-StreamingJoinStrategy.md) execution planning strategy for planning [stream-stream joins](#stream-stream-joins) as [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operators.
 
-=== [[demos]] Demos
+## Demos
 
-Use the following demo application to learn more:
+* [StreamStreamJoinApp](https://github.com/jaceklaskowski/spark-structured-streaming-book/tree/v{{spark.version}}/examples/src/main/scala/pl/japila/spark/StreamStreamJoinApp.scala)
 
-* https://github.com/jaceklaskowski/spark-structured-streaming-book/tree/v{{spark.version}}/examples/src/main/scala/pl/japila/spark/StreamStreamJoinApp.scala[StreamStreamJoinApp]
+## Further Reading Or Watching
 
-=== [[i-want-more]] Further Reading Or Watching
+* [Stream-stream Joins](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#stream-stream-joins) in the official documentation of Apache Spark for Structured Streaming
 
-* https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#stream-stream-joins[Stream-stream Joins] in the official documentation of Apache Spark for Structured Streaming
+* [Introducing Stream-Stream Joins in Apache Spark 2.3](https://databricks.com/blog/2018/03/13/introducing-stream-stream-joins-in-apache-spark-2-3.html) by Databricks
 
-* https://databricks.com/blog/2018/03/13/introducing-stream-stream-joins-in-apache-spark-2-3.html[Introducing Stream-Stream Joins in Apache Spark 2.3] by Databricks
-
-* (video) https://databricks.com/session/deep-dive-into-stateful-stream-processing-in-structured-streaming[Deep Dive into Stateful Stream Processing in Structured Streaming] by Tathagata Das
+* (video) [Deep Dive into Stateful Stream Processing in Structured Streaming](https://databricks.com/session/deep-dive-into-stateful-stream-processing-in-structured-streaming) by Tathagata Das

@@ -8,14 +8,13 @@
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`StatefulAggregationStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to plan a streaming query.
+`StatefulAggregationStrategy` is used exclusively when [IncrementalExecution](IncrementalExecution.md) is requested to plan a streaming query.
 
 `StatefulAggregationStrategy` is available using `SessionState`.
 
-[source, scala]
-----
+```scala
 spark.sessionState.planner.StatefulAggregationStrategy
-----
+```
 
 [[apply]]
 [[selection-requirements]]

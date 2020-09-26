@@ -1,8 +1,8 @@
-== [[StreamingSymmetricHashJoinHelper]] StreamingSymmetricHashJoinHelper Utility
+# StreamingSymmetricHashJoinHelper Utility
 
 `StreamingSymmetricHashJoinHelper` is a Scala object with the following utility methods:
 
-* <<getStateWatermarkPredicates, getStateWatermarkPredicates>>
+* [getStateWatermarkPredicates](#getStateWatermarkPredicates)
 
 === [[getStateWatermarkPredicates]] Creating JoinStateWatermarkPredicates -- `getStateWatermarkPredicates` Object Method
 
@@ -26,9 +26,9 @@ NOTE: The <<EventTimeWatermark.md#delayKey, watermark attribute>> is defined usi
 
 `getStateWatermarkPredicates` <<getOneSideStateWatermarkPredicate, determines the state watermark predicate>> for the right side of a join (for the given `rightAttributes`, the `rightKeys` and the `leftAttributes`).
 
-In the end, `getStateWatermarkPredicates` creates a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> with the left- and right-side state watermark predicates.
+In the end, `getStateWatermarkPredicates` creates a [JoinStateWatermarkPredicates](spark-sql-streaming-JoinStateWatermarkPredicates.md) with the left- and right-side state watermark predicates.
 
-NOTE: `getStateWatermarkPredicates` is used exclusively when `IncrementalExecution` is requested to <<spark-sql-streaming-IncrementalExecution.md#state, apply the state preparation rule for batch-specific configuration>> (while optimizing query plans with <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators).
+NOTE: `getStateWatermarkPredicates` is used exclusively when `IncrementalExecution` is requested to [apply the state preparation rule for batch-specific configuration](IncrementalExecution.md#state) (while optimizing query plans with [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operators).
 
 ==== [[getOneSideStateWatermarkPredicate]] Join State Watermark Predicate (for One Side of Join) -- `getOneSideStateWatermarkPredicate` Internal Method
 

@@ -1,16 +1,14 @@
-== [[FlatMapGroupsWithStateStrategy]] FlatMapGroupsWithStateStrategy Execution Planning Strategy for FlatMapGroupsWithState Logical Operator
+# FlatMapGroupsWithStateStrategy Execution Planning Strategy
 
-[[apply]]
 `FlatMapGroupsWithStateStrategy` is an execution planning strategy that can plan streaming queries with [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) unary logical operators to [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator (with undefined `StatefulOperatorStateInfo`, `batchTimestampMs`, and `eventTimeWatermark`).
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-`FlatMapGroupsWithStateStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to plan a streaming query.
+`FlatMapGroupsWithStateStrategy` is used exclusively when [IncrementalExecution](IncrementalExecution.md) is requested to plan a streaming query.
 
-=== [[demo]] Demo: Using FlatMapGroupsWithStateStrategy
+## Demo
 
-[source, scala]
-----
+```text
 import org.apache.spark.sql.streaming.GroupState
 val stateFunc = (key: Long, values: Iterator[(Timestamp, Long)], state: GroupState[Long]) => {
   Iterator((key, values.size))
@@ -41,4 +39,4 @@ scala> numGroups.explain(true)
       +- Exchange hashpartitioning(value#262L, 200)
          +- AppendColumns <function1>, newInstance(class scala.Tuple2), [input[0, bigint, false] AS value#262L]
             +- StreamingRelation rate, [timestamp#253, value#254L]
-----
+```

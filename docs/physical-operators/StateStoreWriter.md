@@ -63,7 +63,7 @@ shouldRunAnotherBatch(
 
 `shouldRunAnotherBatch` is negative (`false`) by default (to indicate that another non-data batch is not required given the [OffsetSeqMetadata](../spark-sql-streaming-OffsetSeqMetadata.md) with the event-time watermark and the batch timestamp).
 
-`shouldRunAnotherBatch` is used when `IncrementalExecution` is requested to [check out whether the last batch execution requires another batch](../spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [run the activated streaming query](../MicroBatchExecution.md#runActivatedStream)).
+`shouldRunAnotherBatch` is used when `IncrementalExecution` is requested to [check out whether the last batch execution requires another batch](../IncrementalExecution.md#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [run the activated streaming query](../MicroBatchExecution.md#runActivatedStream)).
 
 ## <span id="stateStoreCustomMetrics"> stateStoreCustomMetrics Internal Method
 

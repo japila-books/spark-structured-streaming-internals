@@ -15,7 +15,7 @@ MicroBatchReader createMicroBatchReader(
 
 `createMicroBatchReader` is used when:
 
-* `MicroBatchExecution` is requested for the <<MicroBatchExecution.md#logicalPlan, analyzed logical plan>> (and creates a <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> for a <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with a `MicroBatchReadSupport` data source)
+* `MicroBatchExecution` is requested for the <<MicroBatchExecution.md#logicalPlan, analyzed logical plan>> (and creates a [StreamingExecutionRelation](StreamingExecutionRelation.md) for a [StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) with a `MicroBatchReadSupport` data source)
 
 * `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, create a streaming query for a MicroBatchReadSupport data source>>
 

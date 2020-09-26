@@ -42,27 +42,27 @@ An instance of `StateStoreProvider` is requested to <<spark-sql-streaming-StateS
 
 Regardless of the query language (Dataset API or SQL), any structured query (incl. streaming queries) becomes a logical query plan.
 
-In Spark Structured Streaming it is <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> that plans streaming queries for execution.
+In Spark Structured Streaming it is [IncrementalExecution](IncrementalExecution.md) that plans streaming queries for execution.
 
-While <<spark-sql-streaming-IncrementalExecution.md#executedPlan, planning a streaming query for execution>> (aka _query planning_), `IncrementalExecution` uses the <<spark-sql-streaming-IncrementalExecution.md#state, state preparation rule>>. The rule fills out the following physical operators with the execution-specific configuration (with <<spark-sql-streaming-IncrementalExecution.md#nextStatefulOperationStateInfo, StatefulOperatorStateInfo>> being the most important for stateful stream processing):
+While [planning a streaming query for execution](IncrementalExecution.md#executedPlan) (aka _query planning_), `IncrementalExecution` uses the [state preparation rule](IncrementalExecution.md#state). The rule fills out the following physical operators with the execution-specific configuration (with [StatefulOperatorStateInfo](IncrementalExecution.md#nextStatefulOperationStateInfo) being the most important for stateful stream processing):
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
 
-* <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
+* [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md)
 
-* <<StateStoreSaveExec.md#, StateStoreSaveExec>> (used for <<spark-sql-streaming-aggregation.md#, streaming aggregation>>)
+* [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md)
 
-* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
+* [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md)
 
-* <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
+* [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md)
 
-* <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>
+* [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md)
 
 ==== [[IncrementalExecution-shouldRunAnotherBatch]] Micro-Batch Stream Processing and Extra Non-Data Batch for StateStoreWriter Stateful Operators
 
-In <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (with <<MicroBatchExecution.md#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses <<spark-sql-streaming-IncrementalExecution.md#shouldRunAnotherBatch, shouldRunAnotherBatch>> flag that allows [StateStoreWriters](physical-operators/StateStoreWriter.md) stateful physical operators to [indicate whether the last batch execution requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch).
+In <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (with <<MicroBatchExecution.md#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses [shouldRunAnotherBatch](IncrementalExecution.md#shouldRunAnotherBatch) flag that allows [StateStoreWriters](physical-operators/StateStoreWriter.md) stateful physical operators to [indicate whether the last batch execution requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch).
 
-The <<StateStoreWriters-shouldRunAnotherBatch, following table>> shows the `StateStoreWriters` that redefine `shouldRunAnotherBatch` flag.
+The following `StateStoreWriters` redefine `shouldRunAnotherBatch` flag.
 
 [[StateStoreWriters-shouldRunAnotherBatch]]
 .StateStoreWriters and shouldRunAnotherBatch Flag

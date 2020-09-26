@@ -88,17 +88,17 @@ The [event-time watermark](#eventTimeWatermark) is initially undefined (`None`) 
 !!! note
     `FlatMapGroupsWithStateStrategy` converts [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined [StatefulOperatorStateInfo](#stateInfo), [batchTimestampMs](#batchTimestampMs), and [eventTimeWatermark](#eventTimeWatermark).
 
-The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorStateInfo](#stateInfo) and the [batchTimestampMs](#batchTimestampMs)) is only defined to the [current event-time watermark](../spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs) of the given [OffsetSeqMetadata](../spark-sql-streaming-IncrementalExecution.md#offsetSeqMetadata) when `IncrementalExecution` query execution pipeline is requested to apply the [state](../spark-sql-streaming-IncrementalExecution.md#state) preparation rule (as part of the [preparations](../spark-sql-streaming-IncrementalExecution.md#preparations) rules).
+The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorStateInfo](#stateInfo) and the [batchTimestampMs](#batchTimestampMs)) is only defined to the [current event-time watermark](../spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs) of the given [OffsetSeqMetadata](../IncrementalExecution.md#offsetSeqMetadata) when `IncrementalExecution` query execution pipeline is requested to apply the [state](../IncrementalExecution.md#state) preparation rule (as part of the [preparations](../IncrementalExecution.md#preparations) rules).
 
 !!! note
-    The [preparations](../spark-sql-streaming-IncrementalExecution.md#preparations) rules are executed (applied to a physical query plan) at the `executedPlan` phase of Structured Query Execution Pipeline to generate an optimized physical query plan ready for execution).
+    The [preparations](../IncrementalExecution.md#preparations) rules are executed (applied to a physical query plan) at the `executedPlan` phase of Structured Query Execution Pipeline to generate an optimized physical query plan ready for execution).
 
     Read up on [Structured Query Execution Pipeline](https://jaceklaskowski.github.io/mastering-spark-sql-book/QueryExecution/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
 
 `IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
 
 !!! note
-    The [optional event-time watermark](#eventTimeWatermark) can only be defined when the [state](../spark-sql-streaming-IncrementalExecution.md#state) preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the **queryPlanning** phase.
+    The [optional event-time watermark](#eventTimeWatermark) can only be defined when the [state](../IncrementalExecution.md#state) preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the **queryPlanning** phase.
 
 ## <span id="stateManager"> StateManager
 

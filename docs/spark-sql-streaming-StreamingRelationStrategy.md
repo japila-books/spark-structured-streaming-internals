@@ -1,26 +1,21 @@
-== [[StreamingRelationStrategy]] StreamingRelationStrategy Execution Planning Strategy for StreamingRelation and StreamingExecutionRelation Logical Operators
+# StreamingRelationStrategy Execution Planning Strategy
 
 [[apply]]
-`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>>, <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>>, and <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operators to <<physical-operators/StreamingRelationExec.md#, StreamingRelationExec>> physical operators.
+`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with [StreamingRelation](spark-sql-streaming-StreamingRelation.md), [StreamingExecutionRelation](StreamingExecutionRelation.md), and [StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) logical operators to [StreamingRelationExec](physical-operators/StreamingRelationExec.md) physical operators.
 
-.StreamingRelationStrategy, StreamingRelation, StreamingExecutionRelation and StreamingRelationExec Operators
-image::images/StreamingRelationStrategy-apply.png[align="center"]
+![StreamingRelationStrategy, StreamingRelation, StreamingExecutionRelation and StreamingRelationExec Operators](images/StreamingRelationStrategy-apply.png)
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-
-`StreamingRelationStrategy` is used exclusively when <<spark-sql-streaming-IncrementalExecution.md#, IncrementalExecution>> is requested to plan a streaming query.
+`StreamingRelationStrategy` is used when [IncrementalExecution](IncrementalExecution.md) is requested to plan a streaming query.
 
 `StreamingRelationStrategy` is available using `SessionState` (of a `SparkSession`).
 
-[source, scala]
-----
+```scala
 spark.sessionState.planner.StreamingRelationStrategy
-----
+```
 
-=== [[demo]] Demo: Using StreamingRelationStrategy
+## Demo
 
-[source, scala]
-----
+```text
 val rates = spark.
   readStream.
   format("rate").
@@ -40,4 +35,4 @@ import spark.sessionState.planner.StreamingRelationStrategy
 val physicalPlan = StreamingRelationStrategy.apply(rates.queryExecution.logical).head
 scala> println(physicalPlan.numberedTreeString)
 00 StreamingRelation rate, [timestamp#0, value#1L]
-----
+```

@@ -27,9 +27,9 @@ assert(relation.isStreaming)
 
 * <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> when `ContinuousExecution` stream execution engine is requested for the <<ContinuousExecution.md#logicalPlan, analyzed logical plan>>
 
-* <<spark-sql-streaming-StreamingExecutionRelation.md#, StreamingExecutionRelation>> when `MicroBatchExecution` stream execution engine is requested for the <<MicroBatchExecution.md#logicalPlan, analyzed logical plan>>
+* [StreamingExecutionRelation](StreamingExecutionRelation.md) when `MicroBatchExecution` stream execution engine is requested for the <<MicroBatchExecution.md#logicalPlan, analyzed logical plan>>
 
-=== [[creating-instance]] Creating StreamingRelationV2 Instance
+## Creating Instance
 
 `StreamingRelationV2` takes the following to be created:
 
