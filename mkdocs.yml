@@ -10,6 +10,7 @@ site_description: Demystifying inner-workings of Spark Structured Streaming
 # https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/
 repo_name: spark-structured-streaming-book
 repo_url: https://github.com/jaceklaskowski/spark-structured-streaming-book
+edit_uri: edit/mkdocs-material/docs/
 
 copyright: |
   Copyright &copy; 2020 <a href="https://twitter.com/jaceklaskowski" target="_blank" rel="noopener">Jacek Laskowski</a>
@@ -21,8 +22,8 @@ theme:
     logo: material/book-open-page-variant
     repo: fontawesome/brands/github
   features:
-    - tabs
-    - instant
+    - navigation.tabs
+    - navigation.instant
 
 markdown_extensions:
   - admonition
@@ -55,7 +56,8 @@ plugins:
   - search
   - minify:
       minify_html: true
-  - git-revision-date-localized
+  - git-revision-date:
+      enabled_if_env: CI
   - awesome-pages
   - macros
 
