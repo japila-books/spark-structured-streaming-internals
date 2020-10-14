@@ -1,4 +1,4 @@
-== [[MicroBatchReadSupport]] MicroBatchReadSupport Contract -- Data Sources with MicroBatchReaders
+# MicroBatchReadSupport &mdash; Data Sources with MicroBatchReaders
 
 `MicroBatchReadSupport` is the <<contract, extension>> of the `DataSourceV2` for <<implementations, data sources>> with a <<createMicroBatchReader, MicroBatchReader>> for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
@@ -26,7 +26,7 @@ MicroBatchReader createMicroBatchReader(
 | MicroBatchReadSupport
 | Description
 
-| <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>>
+| [KafkaSourceProvider](kafka/KafkaSourceProvider.md)
 | [[KafkaSourceProvider]] Data source provider for `kafka` format
 
 | <<spark-sql-streaming-RateStreamProvider.md#, RateStreamProvider>>

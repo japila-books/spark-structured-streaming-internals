@@ -1,4 +1,4 @@
-== [[KafkaOffsetRangeLimit]] KafkaOffsetRangeLimit -- Desired Offset Range Limits
+# KafkaOffsetRangeLimit &mdash; Desired Offset Range Limits
 
 `KafkaOffsetRangeLimit` represents the desired offset range limits for starting, ending, and specific offsets in <<spark-sql-streaming-kafka-data-source.md#, Kafka Data Source>>.
 
@@ -25,7 +25,7 @@ a| [[SpecificOffsetRangeLimit]] Intent to bind to *specific offsets* with the fo
 
 NOTE: `KafkaOffsetRangeLimit` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
 
-`KafkaOffsetRangeLimit` is often used in a text-based representation and is converted to from *latest*, *earliest* or a *JSON-formatted text* using <<spark-sql-streaming-KafkaSourceProvider.md#getKafkaOffsetRangeLimit, KafkaSourceProvider.getKafkaOffsetRangeLimit>> object method.
+`KafkaOffsetRangeLimit` is often used in a text-based representation and is converted to from *latest*, *earliest* or a *JSON-formatted text* using [KafkaSourceProvider.getKafkaOffsetRangeLimit](kafka/KafkaSourceProvider.md#getKafkaOffsetRangeLimit) utility.
 
 NOTE: A JSON-formatted text is of the following format `{"topicName":{"partition":offset},...}`, e.g. `{"topicA":{"0":23,"1":-1},"topicB":{"0":-2}}`.
 
@@ -39,4 +39,4 @@ NOTE: A JSON-formatted text is of the following format `{"topicName":{"partition
 
 * <<spark-sql-streaming-KafkaSource.md#, KafkaSource>> is created (with the <<spark-sql-streaming-KafkaRelation.md#startingOffsets, starting offsets>>)
 
-* `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#getKafkaOffsetRangeLimit, convert configuration options to KafkaOffsetRangeLimits>>
+* `KafkaSourceProvider` is requested to [convert configuration options to KafkaOffsetRangeLimits](kafka/KafkaSourceProvider.md#getKafkaOffsetRangeLimit)

@@ -1,6 +1,6 @@
-== Kafka Data Source -- Streaming Data Source for Apache Kafka
+# Kafka Data Source &mdash; Streaming Data Source for Apache Kafka
 
-*Kafka Data Source* is the streaming data source for https://kafka.apache.org/[Apache Kafka] in Spark Structured Streaming.
+**Kafka Data Source** is the streaming data source for https://kafka.apache.org/[Apache Kafka] in Spark Structured Streaming.
 
 Kafka Data Source provides a <<streaming-source, streaming source>> and a <<streaming-sink, streaming sink>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing.
 
@@ -38,7 +38,7 @@ val records = spark
 
 Kafka data source supports many options for reading.
 
-Internally, the *kafka* data source format for reading is available through <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>> that is a <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
+Internally, the *kafka* data source format for reading is available through [KafkaSourceProvider](kafka/KafkaSourceProvider.md) that is a <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
 
 === [[schema]] Predefined (Fixed) Schema
 
@@ -122,7 +122,7 @@ val sq = records
   .start
 ----
 
-Internally, the *kafka* data source format for writing is available through <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>> that is a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>.
+Internally, the *kafka* data source format for writing is available through [KafkaSourceProvider](kafka/KafkaSourceProvider.md) that is a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>.
 
 === [[micro-batch-stream-processing]] Micro-Batch Stream Processing
 
@@ -182,9 +182,9 @@ val sq = spark
 sq.stop
 ----
 
-=== [[options]] Configuration Options
+## <span id="options"> Configuration Options
 
-NOTE: Options with *kafka.* prefix (e.g. <<kafka.bootstrap.servers, kafka.bootstrap.servers>>) are considered configuration properties for the Kafka consumers used on the <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForDriver, driver>> and <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForExecutors, executors>>.
+NOTE: Options with *kafka.* prefix (e.g. <<kafka.bootstrap.servers, kafka.bootstrap.servers>>) are considered configuration properties for the Kafka consumers used on the [driver](kafka/KafkaSourceProvider.md#kafkaParamsForDriver) and [executors](kafka/KafkaSourceProvider.md#kafkaParamsForExecutors).
 
 .Kafka Data Source's Options (Case-Insensitive)
 [cols="1m,3",options="header",width="100%"]
@@ -199,14 +199,14 @@ a| [[assign]] spark-sql-streaming-ConsumerStrategy.md#AssignStrategy[Topic subsc
 {"topicA":[0,1],"topicB":[0,1]}
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](kafka/KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
 | failOnDataLoss
 a| [[failOnDataLoss]] Flag to control whether...FIXME
 
 Default: `true`
 
-Used when `KafkaSourceProvider` is requested for <<spark-sql-streaming-KafkaSourceProvider.md#failOnDataLoss, failOnDataLoss configuration property>>
+Used when `KafkaSourceProvider` is requested for [failOnDataLoss](kafka/KafkaSourceProvider.md#failOnDataLoss) configuration property
 
 | kafka.bootstrap.servers
 a| [[kafka.bootstrap.servers]] *(required)* `bootstrap.servers` configuration property of the Kafka consumers used on the driver and executors
@@ -272,7 +272,7 @@ a| [[subscribe]] spark-sql-streaming-ConsumerStrategy.md#SubscribeStrategy[Topic
 topic1,topic2,topic3
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](kafka/KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
 | subscribepattern
 a| [[subscribepattern]] spark-sql-streaming-ConsumerStrategy.md#SubscribePatternStrategy[Topic subscription strategy] that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
@@ -291,7 +291,7 @@ option("subscribepattern", """topic\d""")
 ----
 ====
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` spark-sql-streaming-KafkaSourceProvider.md#validateGeneralOptions[validates] before creating `KafkaSource`).
+NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](kafka/KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
 | topic
 a| [[topic]] Optional topic name to use for writing a streaming query

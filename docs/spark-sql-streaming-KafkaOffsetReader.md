@@ -1,4 +1,4 @@
-== [[KafkaOffsetReader]] KafkaOffsetReader
+# KafkaOffsetReader
 
 `KafkaOffsetReader` relies on the <<consumerStrategy, ConsumerStrategy>> to <<consumer, create a Kafka Consumer>>.
 
@@ -8,7 +8,7 @@
 
 * `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.md#buildScan, build a distributed data scan with column pruning>>
 
-* `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#createSource, create a KafkaSource>>, <<spark-sql-streaming-KafkaSourceProvider.md#createMicroBatchReader, createMicroBatchReader>>, and <<spark-sql-streaming-KafkaSourceProvider.md#createContinuousReader, createContinuousReader>>
+* `KafkaSourceProvider` is requested to [create a KafkaSource](kafka/KafkaSourceProvider.md#createSource), [createMicroBatchReader](kafka/KafkaSourceProvider.md#createMicroBatchReader), and [createContinuousReader](kafka/KafkaSourceProvider.md#createContinuousReader)
 
 [[options]]
 .KafkaOffsetReader's Options

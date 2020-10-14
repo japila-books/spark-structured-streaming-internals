@@ -29,7 +29,7 @@ ContinuousReader createContinuousReader(
 | <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
 | [[ContinuousMemoryStream]] Data source provider for `memory` format
 
-| <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>>
+| [KafkaSourceProvider](kafka/KafkaSourceProvider.md)
 | [[KafkaSourceProvider]] Data source provider for `kafka` format
 
 | <<spark-sql-streaming-RateStreamProvider.md#, RateStreamProvider>>

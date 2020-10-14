@@ -1,11 +1,11 @@
-== [[KafkaRelation]] KafkaRelation
+# KafkaRelation
 
 [[schema]]
 `KafkaRelation` represents a *collection of rows* with a <<spark-sql-streaming-kafka-data-source.md#schema, predefined schema>> (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
-`KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#createRelation, create a BaseRelation>>.
+`KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a BaseRelation](kafka/KafkaSourceProvider.md#createRelation).
 
 [[options]]
 .KafkaRelation's Options
@@ -75,7 +75,7 @@ NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-sp
 
 * The given <<strategy, ConsumerStrategy>> and the <<sourceOptions, source options>>
 
-* <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForDriver, Kafka parameters for the driver>> based on the given <<specifiedKafkaParams, specifiedKafkaParams>>
+* [Kafka parameters for the driver](kafka/KafkaSourceProvider.md#kafkaParamsForDriver) based on the given <<specifiedKafkaParams, specifiedKafkaParams>>
 
 * *spark-kafka-relation-[randomUUID]-driver* for the `driverGroupIdPrefix`
 
@@ -91,7 +91,7 @@ Generating RDD of offset ranges: [offsetRanges]
 
 `buildScan` creates a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>> with the following:
 
-* <<spark-sql-streaming-KafkaSourceProvider.md#kafkaParamsForExecutors, Kafka parameters for executors>> based on the given <<specifiedKafkaParams, specifiedKafkaParams>> and the unique group ID (`spark-kafka-relation-[randomUUID]`)
+* [Kafka parameters for executors](kafka/KafkaSourceProvider.md#kafkaParamsForExecutors) based on the given <<specifiedKafkaParams, specifiedKafkaParams>> and the unique group ID (`spark-kafka-relation-[randomUUID]`)
 
 * The offset ranges created
 

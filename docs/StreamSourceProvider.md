@@ -1,52 +1,42 @@
-== [[StreamSourceProvider]] StreamSourceProvider Contract -- Streaming Source Providers for Micro-Batch Stream Processing (Data Source API V1)
+# StreamSourceProvider
 
-`StreamSourceProvider` is the <<contract, contract>> of <<implementations, data source providers>> that can <<createSource, create a streaming source>> for a format (e.g. text file) or system (e.g. Apache Kafka).
+`StreamSourceProvider` is an [abstraction](#contract) of [data source providers](#implementations) that can [create a streaming source](#createSource) for a data format or system.
 
-`StreamSourceProvider` is part of Data Source API V1 and used in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> only.
+`StreamSourceProvider` is part of Data Source API V1 for [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
-[[contract]]
-.StreamSourceProvider Contract
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
+## Contract
 
-| createSource
-a| [[createSource]]
+### <span id="createSource"> Creating Streaming Source
 
-[source, scala]
-----
+```scala
 createSource(
   sqlContext: SQLContext,
   metadataPath: String,
   schema: Option[StructType],
   providerName: String,
   parameters: Map[String, String]): Source
-----
+```
 
 Creates a [streaming source](Source.md)
 
-NOTE: `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by [StreamingQueryManager](StreamingQueryManager.md#createQuery).
+`metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by [StreamingQueryManager](StreamingQueryManager.md#createQuery).
 
-Used exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.md#createSource, create a streaming source>> (when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
+Used when `DataSource` is requested to [create a streaming source](spark-sql-streaming-DataSource.md#createSource) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
 
-| sourceSchema
-a| [[sourceSchema]]
+### <span id="sourceSchema"> Source Schema
 
-[source, scala]
-----
+```scala
 sourceSchema(
   sqlContext: SQLContext,
   schema: Option[StructType],
   providerName: String,
   parameters: Map[String, String]): (String, StructType)
-----
+```
 
-The name and schema of the [streaming source](Source.md)
+Name and schema of the [streaming source](Source.md)
 
-Used exclusively when `DataSource` is requested for <<spark-sql-streaming-DataSource.md#sourceSchema, metadata of a streaming source>> (when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
+Used when `DataSource` is requested for [metadata of a streaming source](spark-sql-streaming-DataSource.md#sourceSchema) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
 
-|===
+## Implementations
 
-[[implementations]]
-NOTE: <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>> is the only known `StreamSourceProvider` in Spark Structured Streaming.
+* [KafkaSourceProvider](kafka/KafkaSourceProvider.md)

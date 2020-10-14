@@ -1,8 +1,8 @@
-== [[KafkaContinuousReader]] KafkaContinuousReader -- ContinuousReader for Kafka Data Source in Continuous Stream Processing
+# KafkaContinuousReader &mdash; ContinuousReader for Kafka Data Source in Continuous Stream Processing
 
 `KafkaContinuousReader` is a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> for <<spark-sql-streaming-kafka-data-source.md#, Kafka Data Source>> in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
 
-`KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#createContinuousReader, create a ContinuousReader>>.
+`KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a ContinuousReader](kafka/KafkaSourceProvider.md#createContinuousReader).
 
 [[pollTimeoutMs]]
 [[kafkaConsumer.pollTimeoutMs]]

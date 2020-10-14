@@ -1,9 +1,8 @@
-== [[KafkaSink]] KafkaSink
+# KafkaSink
 
-`KafkaSink` is a spark-sql-streaming-Sink.md[streaming sink] that spark-sql-streaming-KafkaSourceProvider.md[KafkaSourceProvider] registers as the `kafka` format.
+`KafkaSink` is a [streaming sink](spark-sql-streaming-Sink.md) that [KafkaSourceProvider](kafka/KafkaSourceProvider.md) registers as the `kafka` format.
 
-[source, scala]
-----
+```text
 // start spark-shell or a Spark application with spark-sql-kafka-0-10 module
 // spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0-SNAPSHOT
 import org.apache.spark.sql.SparkSession
@@ -25,9 +24,9 @@ $ echo hello > server-logs/hello.out
 
 // in the terminal with Spark
 FIXME
-----
+```
 
-=== [[creating-instance]] Creating KafkaSink Instance
+## Creating Instance
 
 `KafkaSink` takes the following when created:
 

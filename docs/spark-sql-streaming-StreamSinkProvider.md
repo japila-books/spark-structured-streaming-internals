@@ -1,4 +1,4 @@
-== [[StreamSinkProvider]] StreamSinkProvider Contract
+# StreamSinkProvider
 
 `StreamSinkProvider` is the <<contract, abstraction>> of <<implementations, providers>> that can <<createSink, create a streaming sink>> for a file format (e.g. `parquet`) or system (e.g. `kafka`).
 
@@ -30,4 +30,4 @@ Used when `DataSource` is requested for a [streaming sink](spark-sql-streaming-D
 |===
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>> is the only known `StreamSinkProvider` in Spark Structured Streaming.
+NOTE: [KafkaSourceProvider](kafka/KafkaSourceProvider.md) is the only known `StreamSinkProvider` in Spark Structured Streaming.

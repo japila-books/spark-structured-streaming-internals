@@ -1,4 +1,4 @@
-== [[StreamWriteSupport]] StreamWriteSupport Contract -- Writable Streaming Data Sources
+# StreamWriteSupport &mdash; Writable Streaming Data Sources
 
 `StreamWriteSupport` is the <<contract, abstraction>> of <<implementations, DataSourceV2 sinks>> that <<createStreamWriter, create StreamWriters>> for streaming write (when used in streaming queries in <<MicroBatchExecution.md#, MicroBatchExecution>> and <<ContinuousExecution.md#, ContinuousExecution>>).
 
@@ -31,7 +31,7 @@ StreamWriter createStreamWriter(
 | <<spark-sql-streaming-ForeachWriterProvider.md#, ForeachWriterProvider>>
 | [[ForeachWriterProvider]]
 
-| <<spark-sql-streaming-KafkaSourceProvider.md#, KafkaSourceProvider>>
+| [KafkaSourceProvider](kafka/KafkaSourceProvider.md)
 | [[KafkaSourceProvider]]
 
 | <<spark-sql-streaming-MemorySinkV2.md#, MemorySinkV2>>

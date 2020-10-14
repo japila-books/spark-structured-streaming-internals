@@ -1,8 +1,8 @@
-== [[KafkaMicroBatchReader]] KafkaMicroBatchReader
+# KafkaMicroBatchReader
 
 `KafkaMicroBatchReader` is the <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for <<spark-sql-streaming-kafka-data-source.md#, kafka data source>> for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
-`KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to <<spark-sql-streaming-KafkaSourceProvider.md#createMicroBatchReader, create a MicroBatchReader>>.
+`KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a MicroBatchReader](kafka/KafkaSourceProvider.md#createMicroBatchReader).
 
 [[pollTimeoutMs]]
 `KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the <<spark-sql-streaming-kafka-data-source.md#kafkaConsumer.pollTimeoutMs, kafkaConsumer.pollTimeoutMs>> option (default: `spark.network.timeout` or `120s`).

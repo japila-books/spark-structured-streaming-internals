@@ -12,13 +12,13 @@ NOTE: Kafka topics are checked for new records every spark-sql-streaming-Trigger
     * `checkpointLocation` option
     * [spark.sql.streaming.checkpointLocation](spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property
 
-`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by spark-sql-streaming-KafkaSourceProvider.md#shortName[KafkaSourceProvider]).
+`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by [KafkaSourceProvider](kafka/KafkaSourceProvider.md#shortName)).
 
 .KafkaSource Is Created for kafka Format by KafkaSourceProvider
 image::images/KafkaSource-creating-instance.png[align="center"]
 
 [[schema]]
-`KafkaSource` uses a <<spark-sql-streaming-kafka-data-source.md#schema, predefined (fixed) schema>> (that <<spark-sql-streaming-KafkaSourceProvider.md#sourceSchema, cannot be changed>>).
+`KafkaSource` uses a <<spark-sql-streaming-kafka-data-source.md#schema, predefined (fixed) schema>> (that [cannot be changed](kafka/KafkaSourceProvider.md#sourceSchema)).
 
 `KafkaSource` also supports batch Datasets.
 

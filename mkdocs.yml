@@ -278,7 +278,7 @@ nav:
       - MetadataLogFileIndex: spark-sql-streaming-MetadataLogFileIndex.md
     - Kafka Data Source:
       - Kafka Data Source: spark-sql-streaming-kafka-data-source.md
-      - KafkaSourceProvider: spark-sql-streaming-KafkaSourceProvider.md
+      - KafkaSourceProvider: kafka/KafkaSourceProvider.md
       - KafkaSource: spark-sql-streaming-KafkaSource.md
       - KafkaRelation: spark-sql-streaming-KafkaRelation.md
       - KafkaSourceRDD: spark-sql-streaming-KafkaSourceRDD.md
