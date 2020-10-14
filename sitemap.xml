@@ -260,7 +260,7 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-DataStreamReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/DataStreamReader/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -444,11 +444,11 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-CompactibleFileStreamLog/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/CompactibleFileStreamLog/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FileStreamSourceLog/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSourceLog/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -488,7 +488,7 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-MicroBatchReadSupport/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/MicroBatchReadSupport/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -508,7 +508,7 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-Sink/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/Sink/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -524,7 +524,7 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousReadSupport/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousReadSupport/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -632,115 +632,123 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FileStreamSource/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FileStreamSink/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FileStreamSinkLog/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSource/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-SinkFileStatus/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSink/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ManifestFileCommitProtocol/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSinkLog/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-MetadataLogFileIndex/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/SinkFileStatus/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/ManifestFileCommitProtocol/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaSourceProvider/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/MetadataLogFileIndex/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaTable/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaSource/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaSourceProvider/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaRelation/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaTable/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaSourceRDD/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaSource/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-CachedKafkaConsumer/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaRelation/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaSourceOffset/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaSourceRDD/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaOffsetReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/CachedKafkaConsumer/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/ConsumerStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaSourceOffset/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaSink/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaOffsetReader/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaBatch/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/ConsumerStrategy/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaScan/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaSink/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaOffsetRangeLimit/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaBatch/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaDataConsumer/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaScan/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaMicroBatchReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaOffsetRangeLimit/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaOffsetRangeCalculator/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaDataConsumer/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaMicroBatchInputPartition/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaMicroBatchReader/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaMicroBatchInputPartitionReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaOffsetRangeCalculator/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaSourceInitialOffsetWriter/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaMicroBatchInputPartition/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaContinuousReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaMicroBatchInputPartitionReader/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaContinuousInputPartition/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaSourceInitialOffsetWriter/</loc>
+     <lastmod>2020-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaContinuousReader/</loc>
+     <lastmod>2020-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/kafka/KafkaContinuousInputPartition/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
