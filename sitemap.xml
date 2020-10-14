@@ -16,6 +16,14 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/MicroBatchStream/</loc>
+     <lastmod>2020-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousStream/</loc>
+     <lastmod>2020-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-join/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
@@ -504,7 +512,7 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamSinkProvider/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamSinkProvider/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -648,7 +656,7 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-kafka-data-source/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -656,11 +664,15 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaTable/</loc>
+     <lastmod>2020-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaSource/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaRelation/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaRelation/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -680,11 +692,19 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ConsumerStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/ConsumerStrategy/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-KafkaSink/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaSink/</loc>
+     <lastmod>2020-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaBatch/</loc>
+     <lastmod>2020-10-14</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/kafka/KafkaScan/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -840,7 +860,7 @@
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/logging/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-logging/</loc>
      <lastmod>2020-10-14</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
