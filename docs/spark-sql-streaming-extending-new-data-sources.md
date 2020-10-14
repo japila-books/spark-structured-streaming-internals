@@ -2,7 +2,7 @@
 
 Spark Structured Streaming uses Spark SQL for planning streaming queries (_preparing for execution_).
 
-Spark SQL is migrating from the former Data Source API V1 to a new Data Source API V2, and so is Structured Streaming. That is exactly the reason for <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>> and <<spark-sql-streaming-BaseStreamingSink.md#, BaseStreamingSink>> APIs for the two different Data Source API's class hierarchies, for streaming sources and sinks, respectively.
+Spark SQL is migrating from the former Data Source API V1 to a new Data Source API V2, and so is Structured Streaming. That is exactly the reason for [BaseStreamingSource](spark-sql-streaming-BaseStreamingSource.md) and [BaseStreamingSink](spark-sql-streaming-BaseStreamingSink.md) APIs for the two different Data Source API's class hierarchies, for streaming sources and sinks, respectively.
 
 Structured Streaming supports two [stream execution engines](StreamExecution.md) (i.e. [Micro-Batch](micro-batch-stream-processing.md) and [Continuous](spark-sql-streaming-continuous-stream-processing.md)) with their own APIs.
 
@@ -16,5 +16,5 @@ The following are the questions to think of (and answer) while considering devel
 * Data Source API V2
 * <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (_Structured Streaming V1_)
 * <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> (_Structured Streaming V2_)
-* Read side (<<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>>)
-* Write side (<<spark-sql-streaming-BaseStreamingSink.md#, BaseStreamingSink>>)
+* Read side ([BaseStreamingSource](spark-sql-streaming-BaseStreamingSource.md))
+* Write side ([BaseStreamingSink](spark-sql-streaming-BaseStreamingSink.md))

@@ -5,7 +5,7 @@
 !!! tip "The Internals of Spark SQL"
     Read up on [DataSourceRegister](https://jaceklaskowski.github.io/mastering-spark-sql-book/spark-sql-DataSourceRegister) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) book.
 
-`KafkaSourceProvider` supports [micro-batch stream processing](../micro-batch-stream-processing.md) (through [MicroBatchReadSupport](../spark-sql-streaming-MicroBatchReadSupport.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
+`KafkaSourceProvider` supports [micro-batch stream processing](../../micro-batch-stream-processing.md) (through [MicroBatchReadSupport](../../MicroBatchReadSupport.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
 
 ## Properties of Kafka Consumers on Executors
 
@@ -20,7 +20,7 @@ ConsumerConfig's Key | Value
 
 ## Required Options
 
-`KafkaSourceProvider` requires the following options (that you can set using `option` method of [DataStreamReader](../spark-sql-streaming-DataStreamReader.md) or [DataStreamWriter](../DataStreamWriter.md)):
+`KafkaSourceProvider` requires the following options (that you can set using `option` method of [DataStreamReader](../../DataStreamReader.md) or [DataStreamWriter](../../DataStreamWriter.md)):
 
 * Exactly one of the following options: [subscribe](index.md#subscribe), [subscribePattern](index.md#subscribePattern) or [assign](index.md#assign)
 
@@ -52,7 +52,7 @@ createSink(
 
 `createSink` creates a [KafkaSink](KafkaSink.md) for `topic` option (if defined) and [Kafka Producer parameters](#kafkaParamsForProducer).
 
-`createSink` is part of the [StreamSinkProvider](../StreamSinkProvider.md) abstraction.
+`createSink` is part of the [StreamSinkProvider](../../StreamSinkProvider.md) abstraction.
 
 ## <span id="createSource"> Creating Streaming Source
 
@@ -69,7 +69,7 @@ createSource(
 
 `createSource`...FIXME
 
-`createSource` is part of the [StreamSourceProvider](../StreamSourceProvider.md#createSource) abstraction.
+`createSource` is part of the [StreamSourceProvider](../../StreamSourceProvider.md#createSource) abstraction.
 
 ## <span id="validateGeneralOptions"> Validating Options For Batch And Streaming Queries
 
@@ -181,7 +181,7 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ```
 
-`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the spark-sql-streaming-KafkaOffsetReader.md#kafkaSchema[fixed schema].
+`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the [fixed schema](KafkaOffsetReader.md#kafkaSchema).
 
 Internally, `sourceSchema` <<validateStreamOptions, validates Kafka options>> and makes sure that the optional input `schema` is indeed undefined.
 
@@ -191,7 +191,7 @@ When the input `schema` is defined, `sourceSchema` reports a `IllegalArgumentExc
 Kafka source has a fixed schema and cannot be set with a custom one
 ```
 
-`sourceSchema` is part of the [StreamSourceProvider](../StreamSourceProvider.md#sourceSchema) abstraction.
+`sourceSchema` is part of the [StreamSourceProvider](../../StreamSourceProvider.md#sourceSchema) abstraction.
 
 ## <span id="validateStreamOptions"> Validating Kafka Options for Streaming Queries
 
@@ -221,11 +221,11 @@ getKafkaOffsetRangeLimit(
 
 `getKafkaOffsetRangeLimit` finds the given `offsetOptionKey` in the `params` and does the following conversion:
 
-* *latest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.md#LatestOffsetRangeLimit, LatestOffsetRangeLimit>>
+* *latest* becomes [LatestOffsetRangeLimit](KafkaOffsetRangeLimit.md#LatestOffsetRangeLimit)
 
-* *earliest* becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.md#EarliestOffsetRangeLimit, EarliestOffsetRangeLimit>>
+* *earliest* becomes [EarliestOffsetRangeLimit](KafkaOffsetRangeLimit.md#EarliestOffsetRangeLimit)
 
-* A JSON-formatted text becomes <<spark-sql-streaming-KafkaOffsetRangeLimit.md#SpecificOffsetRangeLimit, SpecificOffsetRangeLimit>>
+* A JSON-formatted text becomes [SpecificOffsetRangeLimit](KafkaOffsetRangeLimit.md#SpecificOffsetRangeLimit)
 
 * When the given `offsetOptionKey` is not found, `getKafkaOffsetRangeLimit` returns the given `defaultOffsets`
 
@@ -301,7 +301,7 @@ executor: Set [key] to [value], earlier value: [value]
 
 `kafkaParamsForExecutors` is used when:
 
-* `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a <<spark-sql-streaming-KafkaSource.md#, KafkaSource>>), <<createMicroBatchReader, createMicroBatchReader>> (for a <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>>), and <<createContinuousReader, createContinuousReader>> (for a <<spark-sql-streaming-KafkaContinuousReader.md#, KafkaContinuousReader>>)
+* `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a [KafkaSource](KafkaSource.md)), <<createMicroBatchReader, createMicroBatchReader>> (for a [KafkaMicroBatchReader](KafkaMicroBatchReader.md)), and <<createContinuousReader, createContinuousReader>> (for a [KafkaContinuousReader](KafkaContinuousReader.md))
 * `KafkaRelation` is requested to [buildScan](KafkaRelation.md#buildScan) (for a `KafkaSourceRDD`)
 
 ### <span id="kafkaParamsForProducer"> Kafka Producer Parameters
@@ -328,4 +328,4 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaSourceProvider=ALL
 ```
 
-Refer to [Logging](../spark-logging.md).
+Refer to [Logging](../../spark-logging.md).

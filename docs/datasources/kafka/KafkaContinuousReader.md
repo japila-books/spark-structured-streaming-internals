@@ -1,12 +1,12 @@
-# KafkaContinuousReader &mdash; ContinuousReader for Kafka Data Source in Continuous Stream Processing
+# KafkaContinuousReader
 
-`KafkaContinuousReader` is a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> for [Kafka Data Source](kafka/index.md) in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
+`KafkaContinuousReader` is a [ContinuousReader](../../spark-sql-streaming-ContinuousReader.md) for [Kafka Data Source](index.md) in [Continuous Stream Processing](../../spark-sql-streaming-continuous-stream-processing.md).
 
-`KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a ContinuousReader](kafka/KafkaSourceProvider.md#createContinuousReader).
+`KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a ContinuousReader](KafkaSourceProvider.md#createContinuousReader).
 
 [[pollTimeoutMs]]
 [[kafkaConsumer.pollTimeoutMs]]
-`KafkaContinuousReader` uses *kafkaConsumer.pollTimeoutMs* configuration parameter (default: `512`) for <<spark-sql-streaming-KafkaContinuousInputPartition.md#, KafkaContinuousInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
+`KafkaContinuousReader` uses *kafkaConsumer.pollTimeoutMs* configuration parameter (default: `512`) for [KafkaContinuousInputPartitions](KafkaContinuousInputPartition.md) when requested to <<planInputPartitions, planInputPartitions>>.
 
 [[logging]]
 [TIP]
@@ -22,15 +22,15 @@ log4j.logger.org.apache.spark.sql.kafka010.KafkaContinuousReader=INFO
 Refer to spark-sql-streaming-spark-logging.md[Logging].
 ====
 
-=== [[creating-instance]] Creating KafkaContinuousReader Instance
+## Creating Instance
 
 `KafkaContinuousReader` takes the following to be created:
 
-* [[offsetReader]] <<spark-sql-streaming-KafkaOffsetReader.md#, KafkaOffsetReader>>
+* [[offsetReader]] [KafkaOffsetReader](KafkaOffsetReader.md)
 * [[kafkaParams]] Kafka parameters (as `java.util.Map[String, Object]`)
 * [[sourceOptions]] Source options (as `Map[String, String]`)
 * [[metadataPath]] Metadata path
-* [[initialOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Initial offsets>>
+* [[initialOffsets]] [Initial offsets](KafkaOffsetRangeLimit.md)
 * [[failOnDataLoss]] `failOnDataLoss` flag
 
 === [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method

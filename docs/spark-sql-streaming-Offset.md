@@ -46,7 +46,7 @@ Used when:
 | FileStreamSourceOffset
 | [[FileStreamSourceOffset]]
 
-| <<spark-sql-streaming-KafkaSourceOffset.md#, KafkaSourceOffset>>
+| [KafkaSourceOffset](datasources/kafka/KafkaSourceOffset.md)
 | [[KafkaSourceOffset]]
 
 | LongOffset

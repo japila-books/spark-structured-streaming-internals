@@ -14,13 +14,13 @@ Memory data source supports <<micro-batch-stream-processing.md#, Micro-Batch>> a
 | Source
 | Sink
 
-| <<micro-batch-stream-processing.md#, Micro-Batch>>
-| <<spark-sql-streaming-MemoryStream.md#, MemoryStream>>
-| <<spark-sql-streaming-MemorySink.md#, MemorySink>>
+| [Micro-Batch](micro-batch-stream-processing.md)
+| [MemoryStream](spark-sql-streaming-MemoryStream.md)
+| [MemorySink](spark-sql-streaming-MemorySink.md)
 
-| <<spark-sql-streaming-continuous-stream-processing.md#, Continuous>>
-| <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
-| <<spark-sql-streaming-MemorySinkV2.md#, MemorySinkV2>>
+| [Continuous](spark-sql-streaming-continuous-stream-processing.md)
+| [ContinuousMemoryStream](spark-sql-streaming-ContinuousMemoryStream.md)
+| [MemorySinkV2](spark-sql-streaming-MemorySinkV2.md)
 
 |===
 

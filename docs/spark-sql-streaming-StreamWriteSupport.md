@@ -31,7 +31,7 @@ StreamWriter createStreamWriter(
 | <<spark-sql-streaming-ForeachWriterProvider.md#, ForeachWriterProvider>>
 | [[ForeachWriterProvider]]
 
-| [KafkaSourceProvider](kafka/KafkaSourceProvider.md)
+| [KafkaSourceProvider](datasources/kafka/KafkaSourceProvider.md)
 | [[KafkaSourceProvider]]
 
 | <<spark-sql-streaming-MemorySinkV2.md#, MemorySinkV2>>

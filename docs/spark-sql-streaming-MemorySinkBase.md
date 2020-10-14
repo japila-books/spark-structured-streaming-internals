@@ -1,6 +1,6 @@
-== [[MemorySinkBase]] MemorySinkBase Contract -- Base Contract for Memory Sinks
+# MemorySinkBase
 
-`MemorySinkBase` is the <<contract, extension>> of the <<spark-sql-streaming-BaseStreamingSink.md#, BaseStreamingSink contract>> for <<implementations, memory sinks>> that manage <<allData, all data>> in memory.
+`MemorySinkBase` is the <<contract, extension>> of the [BaseStreamingSink](spark-sql-streaming-BaseStreamingSink.md) abstraction for <<implementations, memory sinks>> that manage <<allData, all data>> in memory.
 
 [[contract]]
 .MemorySinkBase Contract
@@ -51,8 +51,8 @@ latestBatchId: Option[Long]
 | MemorySinkBase
 | Description
 
-| <<spark-sql-streaming-MemorySink.md#, MemorySink>>
-| [[MemorySink]] <<spark-sql-streaming-Sink.md#, Streaming sink>> for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
+| [MemorySink](spark-sql-streaming-MemorySink.md)
+| [[MemorySink]] [Streaming sink](Sink.md) for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
 
 | <<spark-sql-streaming-MemorySinkV2.md#, MemorySinkV2>>
 | [[MemorySinkV2]] <<spark-sql-streaming-StreamWriteSupport.md#, Writable streaming sink>> for <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> (based on Data Source API V2)

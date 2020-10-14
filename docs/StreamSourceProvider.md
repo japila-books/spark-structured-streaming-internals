@@ -39,4 +39,4 @@ Used when `DataSource` is requested for [metadata of a streaming source](spark-s
 
 ## Implementations
 
-* [KafkaSourceProvider](kafka/KafkaSourceProvider.md)
+* [KafkaSourceProvider](datasources/kafka/KafkaSourceProvider.md)

@@ -23,9 +23,9 @@ import org.apache.spark.sql.streaming.DataStreamReader
 assert(reader.isInstanceOf[DataStreamReader])
 ```
 
-`SparkSession.readStream` method creates a [DataStreamReader](spark-sql-streaming-DataStreamReader.md).
+`SparkSession.readStream` method creates a [DataStreamReader](DataStreamReader.md).
 
-The fluent API of `DataStreamReader` allows you to describe the input data source (e.g. [DataStreamReader.format](spark-sql-streaming-DataStreamReader.md#format) and [DataStreamReader.options](spark-sql-streaming-DataStreamReader.md#options)) using method chaining (with the goal of making the readability of the source code close to that of ordinary written prose, essentially creating a domain-specific language within the interface. See [Fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) article in Wikipedia).
+The fluent API of `DataStreamReader` allows you to describe the input data source (e.g. [DataStreamReader.format](DataStreamReader.md#format) and [DataStreamReader.options](DataStreamReader.md#options)) using method chaining (with the goal of making the readability of the source code close to that of ordinary written prose, essentially creating a domain-specific language within the interface. See [Fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) article in Wikipedia).
 
 ```scala
 reader
@@ -33,15 +33,15 @@ reader
   .option("delimiter", "|")
 ```
 
-There are a couple of built-in data source formats. Their names are the names of the corresponding `DataStreamReader` methods and so act like shortcuts of `DataStreamReader.format` (where you have to specify the format by name), i.e. [csv](spark-sql-streaming-DataStreamReader.md#csv), [json](spark-sql-streaming-DataStreamReader.md#json), [orc](spark-sql-streaming-DataStreamReader.md#orc), [parquet](spark-sql-streaming-DataStreamReader.md#parquet) and [text](spark-sql-streaming-DataStreamReader.md#text), followed by [DataStreamReader.load](spark-sql-streaming-DataStreamReader.md#load).
+There are a couple of built-in data source formats. Their names are the names of the corresponding `DataStreamReader` methods and so act like shortcuts of `DataStreamReader.format` (where you have to specify the format by name), i.e. [csv](DataStreamReader.md#csv), [json](DataStreamReader.md#json), [orc](DataStreamReader.md#orc), [parquet](DataStreamReader.md#parquet) and [text](DataStreamReader.md#text), followed by [DataStreamReader.load](DataStreamReader.md#load).
 
-You may also want to use [DataStreamReader.schema](spark-sql-streaming-DataStreamReader.md#schema) method to specify the schema of the streaming data source.
+You may also want to use [DataStreamReader.schema](DataStreamReader.md#schema) method to specify the schema of the streaming data source.
 
 ```scala
 reader.schema("a INT, b STRING")
 ```
 
-In the end, you use [DataStreamReader.load](spark-sql-streaming-DataStreamReader.md#load) method that simply creates a streaming Dataset (the good ol' Dataset that you may have already used in Spark SQL).
+In the end, you use [DataStreamReader.load](DataStreamReader.md#load) method that simply creates a streaming Dataset (the good ol' Dataset that you may have already used in Spark SQL).
 
 ```scala
 val input = reader
@@ -70,13 +70,13 @@ A logical query plan is made up of logical operators.
 
 Spark Structured Streaming gives you two logical operators to represent streaming sources ([StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) and [StreamingRelation](spark-sql-streaming-StreamingRelation.md)).
 
-When [DataStreamReader.load](spark-sql-streaming-DataStreamReader.md#load) method is executed, `load` first looks up the requested data source (that you specified using [DataStreamReader.format](spark-sql-streaming-DataStreamReader.md#format)) and creates an instance of it (_instantiation_). That'd be **data source resolution** step (that I described in...FIXME).
+When [DataStreamReader.load](DataStreamReader.md#load) method is executed, `load` first looks up the requested data source (that you specified using [DataStreamReader.format](DataStreamReader.md#format)) and creates an instance of it (_instantiation_). That'd be **data source resolution** step (that I described in...FIXME).
 
 `DataStreamReader.load` is where you can find the intersection of the former [Micro-Batch Stream Processing](micro-batch-stream-processing.md) V1 API with the new [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md) V2 API.
 
 ### V2 Code Path
 
-For [MicroBatchReadSupport](spark-sql-streaming-MicroBatchReadSupport.md) or [ContinuousReadSupport](spark-sql-streaming-ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
+For [MicroBatchReadSupport](MicroBatchReadSupport.md) or [ContinuousReadSupport](ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
 
 ```text
 // rate data source is V2
@@ -176,7 +176,7 @@ Please note that most of the stream processing operators you may also have used 
 
 ## <span id="DataStreamWriter"> DataStreamWriter and Streaming Data Sink
 
-Once you're satisfied with building a stream processing pipeline (using the APIs of [DataStreamReader](#DataStreamReader), [Dataset](operators/), `RelationalGroupedDataset` and `KeyValueGroupedDataset`), you should define how and when the result of the streaming query is persisted in (_sent out to_) an external data system using a [streaming sink](spark-sql-streaming-Sink.md).
+Once you're satisfied with building a stream processing pipeline (using the APIs of [DataStreamReader](#DataStreamReader), [Dataset](operators/), `RelationalGroupedDataset` and `KeyValueGroupedDataset`), you should define how and when the result of the streaming query is persisted in (_sent out to_) an external data system using a [streaming sink](Sink.md).
 
 You should use [Dataset.writeStream](operators/writeStream.md) method that simply creates a [DataStreamWriter](DataStreamWriter.md).
 

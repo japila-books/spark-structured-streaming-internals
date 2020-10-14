@@ -1,14 +1,14 @@
 # KafkaOffsetReader
 
-`KafkaOffsetReader` relies on the <<consumerStrategy, ConsumerStrategy>> to <<consumer, create a Kafka Consumer>>.
+`KafkaOffsetReader` relies on the [ConsumerStrategy](#consumerStrategy) to <<consumer, create a Kafka Consumer>>.
 
 `KafkaOffsetReader` <<consumer, creates a Kafka Consumer>> with *group.id* (`ConsumerConfig.GROUP_ID_CONFIG`) configuration explicitly set to <<nextGroupId, nextGroupId>> (i.e. the given <<driverGroupIdPrefix, driverGroupIdPrefix>> followed by <<nextId, nextId>>).
 
 `KafkaOffsetReader` is <<creating-instance, created>> when:
 
-* `KafkaRelation` is requested to [build a distributed data scan with column pruning](kafka/KafkaRelation.md#buildScan)
+* `KafkaRelation` is requested to [build a distributed data scan with column pruning](KafkaRelation.md#buildScan)
 
-* `KafkaSourceProvider` is requested to [create a KafkaSource](kafka/KafkaSourceProvider.md#createSource), [createMicroBatchReader](kafka/KafkaSourceProvider.md#createMicroBatchReader), and [createContinuousReader](kafka/KafkaSourceProvider.md#createContinuousReader)
+* `KafkaSourceProvider` is requested to [create a KafkaSource](KafkaSourceProvider.md#createSource), [createMicroBatchReader](KafkaSourceProvider.md#createMicroBatchReader), and [createContinuousReader](KafkaSourceProvider.md#createContinuousReader)
 
 [[options]]
 .KafkaOffsetReader's Options
@@ -30,7 +30,7 @@ Default: `1000`
 |===
 
 [[kafkaSchema]]
-`KafkaOffsetReader` defines the [predefined fixed schema](kafka/index.md#schema).
+`KafkaOffsetReader` defines the [predefined fixed schema](index.md#schema).
 
 [[logging]]
 [TIP]
@@ -50,7 +50,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 
 `KafkaOffsetReader` takes the following to be created:
 
-* [[consumerStrategy]] [ConsumerStrategy](kafka/ConsumerStrategy.md)
+* [[consumerStrategy]] [ConsumerStrategy](ConsumerStrategy.md)
 * [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
 * [[readerOptions]] Options (as name-value pairs)
 * [[driverGroupIdPrefix]] Prefix of the group ID
@@ -90,7 +90,7 @@ fetchTopicPartitions(): Set[TopicPartition]
 
 CAUTION: FIXME
 
-`fetchTopicPartitions` is used when `KafkaRelation` is requested for [getPartitionOffsets](kafka/KafkaRelation.md#getPartitionOffsets).
+`fetchTopicPartitions` is used when `KafkaRelation` is requested for [getPartitionOffsets](KafkaRelation.md#getPartitionOffsets).
 
 === [[fetchEarliestOffsets]] Fetching Earliest Offsets -- `fetchEarliestOffsets` Method
 
@@ -102,7 +102,7 @@ fetchEarliestOffsets(newPartitions: Seq[TopicPartition]): Map[TopicPartition, Lo
 
 CAUTION: FIXME
 
-NOTE: `fetchEarliestOffsets` is used when `KafkaSource` spark-sql-streaming-KafkaSource.md#rateLimit[rateLimit] and spark-sql-streaming-KafkaSource.md#getBatch[generates a DataFrame for a batch] (when new partitions have been assigned).
+NOTE: `fetchEarliestOffsets` is used when `KafkaSource` [rateLimit](KafkaSource.md#rateLimit) and [generates a DataFrame for a batch](KafkaSource.md#getBatch) (when new partitions have been assigned).
 
 === [[fetchLatestOffsets]] Fetching Latest Offsets -- `fetchLatestOffsets` Method
 
@@ -113,7 +113,7 @@ fetchLatestOffsets(): Map[TopicPartition, Long]
 
 CAUTION: FIXME
 
-NOTE: `fetchLatestOffsets` is used when `KafkaSource` spark-sql-streaming-KafkaSource.md#getOffset[gets offsets] or `initialPartitionOffsets` is spark-sql-streaming-KafkaSource.md#initialPartitionOffsets[initialized].
+NOTE: `fetchLatestOffsets` is used when `KafkaSource` [gets offsets](KafkaSource.md#getOffset) or `initialPartitionOffsets` is [initialized](KafkaSource.md#initialPartitionOffsets).
 
 === [[withRetriesWithoutInterrupt]] `withRetriesWithoutInterrupt` Internal Method
 
@@ -159,7 +159,7 @@ For every partition offset in the input `partitionOffsets`, `fetchSpecificOffset
 
 In the end, `fetchSpecificOffsets` creates a collection of Kafka's `TopicPartition` and `position` (using the <<consumer, Kafka Consumer>>).
 
-NOTE: `fetchSpecificOffsets` is used when `KafkaSource` spark-sql-streaming-KafkaSource.md#fetchAndVerify[fetches and verifies initial partition offsets].
+`fetchSpecificOffsets` is used when `KafkaSource` [fetches and verifies initial partition offsets](KafkaSource.md#fetchAndVerify).
 
 === [[createConsumer]] Creating Kafka Consumer -- `createConsumer` Internal Method
 
@@ -168,7 +168,7 @@ NOTE: `fetchSpecificOffsets` is used when `KafkaSource` spark-sql-streaming-Kafk
 createConsumer(): Consumer[Array[Byte], Array[Byte]]
 ----
 
-`createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to [create a Kafka Consumer](kafka/ConsumerStrategy.md#createConsumer) with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
+`createConsumer` requests <<consumerStrategy, ConsumerStrategy>> to [create a Kafka Consumer](ConsumerStrategy.md#createConsumer) with <<driverKafkaParams, driverKafkaParams>> and <<nextGroupId, new generated group.id Kafka property>>.
 
 NOTE: `createConsumer` is used when `KafkaOffsetReader` is <<creating-instance, created>> (and initializes <<consumer, consumer>>) and <<resetConsumer, resetConsumer>>
 
@@ -200,9 +200,9 @@ close(): Unit
 
 `close` is used when:
 
-* <<spark-sql-streaming-KafkaContinuousReader.md#stop, KafkaContinuousReader>>, <<spark-sql-streaming-KafkaMicroBatchReader.md#stop, KafkaMicroBatchReader>>, and <<spark-sql-streaming-KafkaSource.md#stop, KafkaSource>> are requested to stop a streaming reader or source
+* [KafkaContinuousReader](KafkaContinuousReader.md#stop), [KafkaMicroBatchReader](KafkaMicroBatchReader.md#stop), and [KafkaSource](KafkaSource.md#stop) are requested to stop a streaming reader or source
 
-* `KafkaRelation` is requested to [build a distributed data scan with column pruning](kafka/KafkaRelation.md#buildScan)
+* `KafkaRelation` is requested to [build a distributed data scan with column pruning](KafkaRelation.md#buildScan)
 
 === [[runUninterruptibly]] `runUninterruptibly` Internal Method
 

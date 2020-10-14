@@ -1,6 +1,6 @@
-== [[MemorySink]] MemorySink
+# MemorySink
 
-`MemorySink` is a <<spark-sql-streaming-Sink.md#, streaming sink>> that <<addBatch, stores batches (records) in memory>>.
+`MemorySink` is a [streaming sink](Sink.md) that <<addBatch, stores batches (records) in memory>>.
 
 `MemorySink` is intended only for testing or demos.
 
@@ -75,11 +75,11 @@ addBatch(
   data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is part of the <<spark-sql-streaming-Sink.md#addBatch, Sink Contract>> to "add" a batch of data to the sink.
-
 `addBatch` branches off based on whether the given `batchId` has already been <<addBatch-committed, committed>> or <<addBatch-not-committed, not>>.
 
 A batch ID is considered *committed* when the given batch ID is greater than the <<latestBatchId, latest batch ID>> (if available).
+
+`addBatch` is part of the [Sink](Sink.md#addBatch) abstraction.
 
 ==== [[addBatch-not-committed]] Batch Not Committed
 

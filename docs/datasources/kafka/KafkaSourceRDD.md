@@ -1,14 +1,14 @@
 # KafkaSourceRDD
 
-`KafkaSourceRDD` is an `RDD` of Kafka's https://kafka.apache.org/0102/javadoc/org/apache/kafka/clients/consumer/ConsumerRecords.html[ConsumerRecords] (`RDD[ConsumerRecord[Array[Byte], Array[Byte]]]`) and no parent RDDs.
+`KafkaSourceRDD` is an `RDD` of Kafka's [ConsumerRecords]({{ kafka.doc }}/org/apache/kafka/clients/consumer/ConsumerRecords.html) (`RDD[ConsumerRecord[Array[Byte], Array[Byte]]]`) and no parent RDDs.
 
 `KafkaSourceRDD` is <<creating-instance, created>> when:
 
-* `KafkaRelation` is requested to [build a distributed data scan with column pruning](kafka/KafkaRelation.md#buildScan)
+* `KafkaRelation` is requested to [build a distributed data scan with column pruning](KafkaRelation.md#buildScan)
 
-* `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.md#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
+* `KafkaSource` is requested to [generate a streaming DataFrame with records from Kafka for a streaming micro-batch](KafkaSource.md#getBatch)
 
-=== [[creating-instance]] Creating KafkaSourceRDD Instance
+## Creating Instance
 
 `KafkaSourceRDD` takes the following when created:
 
@@ -17,7 +17,7 @@
 * [[offsetRanges]] Collection of `KafkaSourceRDDOffsetRange` offsets
 * [[pollTimeoutMs]] Timeout (in milliseconds) to poll data from Kafka
 +
-Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offsets) and in turn spark-sql-streaming-CachedKafkaConsumer.md#poll[requests `CachedKafkaConsumer` to poll for Kafka's `ConsumerRecords`].
+Used when `KafkaSourceRDD` <<compute, is requested for records>> (for given offsets) and in turn requests the `CachedKafkaConsumer` to [poll for records](CachedKafkaConsumer.md#poll).
 * [[failOnDataLoss]] Flag to...FIXME
 * [[reuseKafkaConsumer]] Flag to...FIXME
 
@@ -45,15 +45,15 @@ compute(
 
 NOTE: `compute` is part of the `RDD` contract to compute a given partition.
 
-`compute` uses `KafkaDataConsumer` utility to <<spark-sql-streaming-KafkaDataConsumer.md#acquire, acquire a cached KafkaDataConsumer>> (for a partition).
+`compute` uses `KafkaDataConsumer` utility to [acquire a cached KafkaDataConsumer](KafkaDataConsumer.md#acquire) (for a partition).
 
 `compute` <<resolveRange, resolves the range>> (based on the `offsetRange` of the given partition that is assumed a `KafkaSourceRDDPartition`).
 
-`compute` returns a `NextIterator` so that `getNext` uses the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.md#get, get a record>>.
+`compute` returns a `NextIterator` so that `getNext` uses the `KafkaDataConsumer` to [get a record](KafkaDataConsumer.md#get).
 
-When the beginning and ending offsets (of the offset range) are equal, `compute` prints out the following INFO message to the logs, requests the `KafkaDataConsumer` to <<spark-sql-streaming-KafkaDataConsumer.md#release, release>> and returns an empty iterator.
+When the beginning and ending offsets (of the offset range) are equal, `compute` prints out the following INFO message to the logs, requests the `KafkaDataConsumer` to [release](KafkaDataConsumer.md#release) and returns an empty iterator.
 
-```
+```text
 Beginning offset [fromOffset] is the same as ending offset skipping [topic] [partition]
 ```
 

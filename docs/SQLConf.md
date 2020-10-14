@@ -44,19 +44,19 @@ a| [[disabledV2StreamingMicroBatchReaders]] Used exclusively when `MicroBatchExe
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.fileSource.log.deletion, spark.sql.streaming.fileSource.log.deletion>>
 
-a| [[fileSourceLogDeletion]][[FILE_SOURCE_LOG_DELETION]] Used exclusively when `FileStreamSourceLog` is requested for the <<spark-sql-streaming-FileStreamSourceLog.md#isDeletingExpiredLog, isDeletingExpiredLog>>
+a| [[fileSourceLogDeletion]][[FILE_SOURCE_LOG_DELETION]] Used exclusively when `FileStreamSourceLog` is requested for the [isDeletingExpiredLog](datasources/file/FileStreamSourceLog.md#isDeletingExpiredLog)
 
 | `fileSourceLogCleanupDelay`
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.fileSource.log.cleanupDelay, spark.sql.streaming.fileSource.log.cleanupDelay>>
 
-a| [[fileSourceLogCleanupDelay]][[FILE_SOURCE_LOG_CLEANUP_DELAY]] Used exclusively when `FileStreamSourceLog` is requested for the <<spark-sql-streaming-FileStreamSourceLog.md#fileCleanupDelayMs, fileCleanupDelayMs>>
+a| [[fileSourceLogCleanupDelay]][[FILE_SOURCE_LOG_CLEANUP_DELAY]] Used exclusively when `FileStreamSourceLog` is requested for the [fileCleanupDelayMs](datasources/file/FileStreamSourceLog.md#fileCleanupDelayMs)
 
 | `fileSourceLogCompactInterval`
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.fileSource.log.compactInterval, spark.sql.streaming.fileSource.log.compactInterval>>
 
-a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exclusively when `FileStreamSourceLog` is requested for the <<spark-sql-streaming-FileStreamSourceLog.md#defaultCompactInterval, default compaction interval>>
+a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exclusively when `FileStreamSourceLog` is requested for the [default compaction interval](datasources/file/FileStreamSourceLog.md#defaultCompactInterval)
 
 | `FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION`
 
@@ -72,11 +72,11 @@ a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]] Used when:
 <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
 a| [[minBatchesToRetain]] Used when:
 
-* `CompactibleFileStreamLog` is <<spark-sql-streaming-CompactibleFileStreamLog.md#minBatchesToRetain, created>>
+* `CompactibleFileStreamLog` is [created](CompactibleFileStreamLog.md#minBatchesToRetain)
 
 * [StreamExecution](StreamExecution.md#minLogEntriesToMaintain) is created
 
-* `StateStoreConf` is <<spark-sql-streaming-StateStoreConf.md#minVersionsToRetain, created>>
+* `StateStoreConf` is [created](spark-sql-streaming-StateStoreConf.md#minVersionsToRetain)
 
 | `SHUFFLE_PARTITIONS`
 

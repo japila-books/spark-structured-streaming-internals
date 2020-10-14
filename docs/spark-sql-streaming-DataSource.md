@@ -1,8 +1,9 @@
-== [[DataSource]] DataSource — Pluggable Data Provider Framework
+# DataSource
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSource.html[DataSource &mdash; Pluggable Data Provider Framework]  in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
+!!! tip
+    Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSource.html[DataSource &mdash; Pluggable Data Provider Framework]  in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
-=== [[creating-instance]] Creating DataSource Instance
+## Creating Instance
 
 `DataSource` takes the following to be created:
 
@@ -64,7 +65,7 @@ For a [StreamSourceProvider](StreamSourceProvider.md), `createSource` requests t
 
 ==== [[createSource-FileFormat]] FileFormat
 
-For a `FileFormat`, `createSource` creates a new <<spark-sql-streaming-FileStreamSource.md#, FileStreamSource>>.
+For a `FileFormat`, `createSource` creates a new [FileStreamSource](datasources/file/FileStreamSource.md).
 
 `createSource` throws an `IllegalArgumentException` when `path` option was not specified for a `FileFormat` data source:
 
@@ -88,7 +89,7 @@ createSink(
   outputMode: OutputMode): Sink
 ----
 
-`createSink` creates a <<spark-sql-streaming-Sink.md#, streaming sink>> for [StreamSinkProvider](StreamSinkProvider.md) or `FileFormat` data sources.
+`createSink` creates a [streaming sink](Sink.md) for [StreamSinkProvider](StreamSinkProvider.md) or `FileFormat` data sources.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat Data Source] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
@@ -96,7 +97,7 @@ Internally, `createSink` creates a new instance of the <<providingClass, providi
 
 * For a [StreamSinkProvider](StreamSinkProvider.md), `createSink` simply delegates the call and requests it to [create a streaming sink](StreamSinkProvider.md#createSink)
 
-* For a `FileFormat`, `createSink` creates a <<spark-sql-streaming-FileStreamSink.md#, FileStreamSink>> when `path` option is specified and the output mode is <<spark-sql-streaming-OutputMode.md#Append, Append>>
+* For a `FileFormat`, `createSink` creates a [FileStreamSink](datasources/file/FileStreamSink.md) when `path` option is specified and the output mode is <<spark-sql-streaming-OutputMode.md#Append, Append>>
 
 `createSink` throws a `IllegalArgumentException` when `path` option is not specified for a `FileFormat` data source:
 
@@ -144,6 +145,6 @@ Used when:
 
 * `DataSource` is requested to <<createSource, create a source (for a FileFormat data source)>> (when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#logicalPlan, initialize the analyzed logical plan>>)
 
-* `StreamingRelation` utility is requested for a <<spark-sql-streaming-StreamingRelation.md#apply, StreamingRelation>> (when `DataStreamReader` is requested for a <<spark-sql-streaming-DataStreamReader.md#load, streaming DataFrame>>)
+* `StreamingRelation` utility is requested for a <<spark-sql-streaming-StreamingRelation.md#apply, StreamingRelation>> (when `DataStreamReader` is requested for a [streaming query](DataStreamReader.md#load))
 
 |===

@@ -74,7 +74,7 @@ NOTE: `StreamExecution` does not support adaptive query execution and cost-based
 
 `StreamExecution` is the *execution environment* of a StreamingQuery.md[single streaming query] (aka _streaming Dataset_) that is executed every <<trigger, trigger>> and in the end <<MicroBatchExecution.md#runBatch-addBatch, adds the results to a sink>>.
 
-NOTE: `StreamExecution` corresponds to a StreamingQuery.md[single streaming query] with one or more [streaming sources](Source.md) and exactly one spark-sql-streaming-Sink.md[streaming sink].
+NOTE: `StreamExecution` corresponds to a StreamingQuery.md[single streaming query] with one or more [streaming sources](Source.md) and exactly one [streaming sink](Sink.md).
 
 [source, scala]
 ----
@@ -251,7 +251,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=ALL
 Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
-=== [[creating-instance]] Creating StreamExecution Instance
+## Creating Instance
 
 `StreamExecution` takes the following to be created:
 
@@ -259,8 +259,8 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[name]] Name of the streaming query (can also be `null`)
 * [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Streaming query (as an analyzed logical query plan, i.e. `LogicalPlan`)
-* [[sink]] <<spark-sql-streaming-BaseStreamingSink.md#, Streaming sink>>
-* [[trigger]] <<spark-sql-streaming-Trigger.md#, Trigger>>
+* [[sink]] [Streaming sink](spark-sql-streaming-BaseStreamingSink.md)
+* [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
 * [[triggerClock]] `Clock`
 * [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag (to control whether to delete the checkpoint directory on stop)

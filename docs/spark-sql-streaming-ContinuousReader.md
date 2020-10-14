@@ -88,13 +88,13 @@ Used exclusively when `ContinuousExecution` is requested to <<ContinuousExecutio
 | ContinuousReader
 | Description
 
-| <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
+| [ContinuousMemoryStream](spark-sql-streaming-ContinuousMemoryStream.md)
 | [[ContinuousMemoryStream]]
 
-| <<spark-sql-streaming-KafkaContinuousReader.md#, KafkaContinuousReader>>
+| [KafkaContinuousReader](datasources/kafka/KafkaContinuousReader.md)
 | [[KafkaContinuousReader]]
 
-| <<spark-sql-streaming-RateStreamContinuousReader.md#, RateStreamContinuousReader>>
+| [RateStreamContinuousReader](spark-sql-streaming-RateStreamContinuousReader.md)
 | [[RateStreamContinuousReader]]
 
 | TextSocketContinuousReader

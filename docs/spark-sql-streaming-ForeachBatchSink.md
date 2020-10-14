@@ -1,6 +1,6 @@
 # ForeachBatchSink
 
-`ForeachBatchSink` is a [streaming sink](spark-sql-streaming-Sink.md) that is used for [DataStreamWriter.foreachBatch](DataStreamWriter.md#foreachBatch) streaming operator.
+`ForeachBatchSink` is a [streaming sink](Sink.md) that is used for [DataStreamWriter.foreachBatch](DataStreamWriter.md#foreachBatch) streaming operator.
 
 `ForeachBatchSink` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to [start execution of the streaming query](DataStreamWriter.md#start) (with the [foreachBatch](DataStreamWriter.md#foreachBatch) source).
 
@@ -41,6 +41,6 @@ NOTE: `ForeachBatchSink` was added in Spark 2.4.0 as part of https://issues.apac
 addBatch(batchId: Long, data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is a part of <<spark-sql-streaming-Sink.md#addBatch, Sink Contract>> to "add" a batch of data to the sink.
-
 `addBatch`...FIXME
+
+`addBatch` is a part of [Sink](Sink.md#addBatch) abstraction.

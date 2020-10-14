@@ -1,4 +1,4 @@
-== [[CompactibleFileStreamLog]] CompactibleFileStreamLog Contract -- Compactible Metadata Logs
+# CompactibleFileStreamLog
 
 `CompactibleFileStreamLog` is the <<contract, extension>> of the <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog contract>> for <<implementations, compactible metadata logs>> that <<compactLogs, compactLogs>> every <<compactInterval, compact interval>>.
 
@@ -66,11 +66,11 @@ Used exclusively when `CompactibleFileStreamLog` is requested to <<add, store (a
 | CompactibleFileStreamLog
 | Description
 
-| <<spark-sql-streaming-FileStreamSinkLog.md#, FileStreamSinkLog>>
+| [FileStreamSinkLog](datasources/file/FileStreamSinkLog.md)
 | [[FileStreamSinkLog]]
 
-| <<spark-sql-streaming-FileStreamSourceLog.md#, FileStreamSourceLog>>
-| [[FileStreamSourceLog]] `CompactibleFileStreamLog` (of `FileEntry` metadata) of <<spark-sql-streaming-FileStreamSource.md#, FileStreamSource>>
+| [FileStreamSourceLog](datasources/file/FileStreamSourceLog.md)
+| [[FileStreamSourceLog]] `CompactibleFileStreamLog` (of `FileEntry` metadata) of [FileStreamSource](datasources/file/FileStreamSource.md)
 
 |===
 
@@ -165,14 +165,10 @@ allFiles(): Array[T]
 
 `allFiles`...FIXME
 
-[NOTE]
-====
 `allFiles` is used when:
 
-* `FileStreamSource` is <<spark-sql-streaming-FileStreamSource.md#, created>>
-
-* `MetadataLogFileIndex` is <<spark-sql-streaming-MetadataLogFileIndex.md#, created>>
-====
+* `FileStreamSource` is [created](datasources/file/FileStreamSource.md)
+* `MetadataLogFileIndex` is [created](datasources/file/MetadataLogFileIndex.md)
 
 === [[compact]] `compact` Internal Method
 
@@ -213,14 +209,11 @@ isCompactionBatch(batchId: Long, compactInterval: Int): Boolean
 
 `isCompactionBatch`...FIXME
 
-[NOTE]
-====
 `isCompactionBatch` is used when:
 
 * `CompactibleFileStreamLog` is requested to <<batchIdToPath, batchIdToPath>>, <<add, store the metadata of a batch>>, <<deleteExpiredLog, deleteExpiredLog>>, and <<getValidBatchesBeforeCompactionBatch, getValidBatchesBeforeCompactionBatch>>
 
-* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.md#add, store the metadata of a batch>> and <<spark-sql-streaming-FileStreamSourceLog.md#get, get>>
-====
+* `FileStreamSourceLog` is requested to [store the metadata of a batch](datasources/file/FileStreamSourceLog.md#add) and [get](datasources/file/FileStreamSourceLog.md#get)
 
 === [[getBatchIdFromFileName]] `getBatchIdFromFileName` Object Method
 

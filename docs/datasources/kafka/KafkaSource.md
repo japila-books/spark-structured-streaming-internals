@@ -1,24 +1,24 @@
 # KafkaSource
 
-`KafkaSource` is a [streaming source](Source.md) that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
+`KafkaSource` is a [streaming source](../../Source.md) that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
 
 NOTE: Kafka topics are checked for new records every spark-sql-streaming-Trigger.md[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
-`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](StreamExecution.md#checkpointRoot) (of the [StreamExecution](StreamExecution.md)).
+`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](../../StreamExecution.md#checkpointRoot) (of the [StreamExecution](../../StreamExecution.md)).
 
 !!! note
-    The [checkpointRoot](StreamExecution.md#checkpointRoot) directory is one of the following:
+    The [checkpointRoot](../../StreamExecution.md#checkpointRoot) directory is one of the following:
 
     * `checkpointLocation` option
-    * [spark.sql.streaming.checkpointLocation](spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property
+    * [spark.sql.streaming.checkpointLocation](../../spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property
 
-`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by [KafkaSourceProvider](kafka/KafkaSourceProvider.md#shortName)).
+`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by [KafkaSourceProvider](KafkaSourceProvider.md#shortName)).
 
 .KafkaSource Is Created for kafka Format by KafkaSourceProvider
 image::images/KafkaSource-creating-instance.png[align="center"]
 
 [[schema]]
-`KafkaSource` uses a [predefined (fixed) schema](kafka/index.md#schema) (that [cannot be changed](kafka/KafkaSourceProvider.md#sourceSchema)).
+`KafkaSource` uses a [predefined (fixed) schema](index.md#schema) (that [cannot be changed](KafkaSourceProvider.md#sourceSchema)).
 
 `KafkaSource` also supports batch Datasets.
 
@@ -36,17 +36,17 @@ log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
 Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
-=== [[creating-instance]] Creating KafkaSource Instance
+## Creating Instance
 
 `KafkaSource` takes the following to be created:
 
-* [[sqlContext]] spark-sql-sqlcontext.md[SQLContext]
-* [[kafkaReader]] spark-sql-streaming-KafkaOffsetReader.md[KafkaOffsetReader]
+* [[sqlContext]] `SQLContext`
+* [[kafkaReader]] [KafkaOffsetReader](KafkaOffsetReader.md)
 * [[executorKafkaParams]] Parameters of executors (reading from Kafka)
 * [[sourceOptions]] Collection of key-value options
-* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists spark-sql-streaming-KafkaSourceOffset.md[KafkaSourceOffset] offsets in JSON format)
-* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Starting offsets>> (as defined using [startingOffsets](kafka/index.md#startingOffsets) option)
-* [[failOnDataLoss]] Flag used to spark-sql-streaming-KafkaSourceRDD.md#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
+* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists [KafkaSourceOffset](KafkaSourceOffset.md) offsets in JSON format)
+* [[startingOffsets]] [Starting offsets](KafkaOffsetRangeLimit.md) (as defined using [startingOffsets](index.md#startingOffsets) option)
+* [[failOnDataLoss]] Flag used to create [KafkaSourceRDD](KafkaSourceRDD.md)s every trigger and when checking to [report a IllegalStateException on data loss](#reportDataLoss).
 
 `KafkaSource` initializes the <<internal-properties, internal properties>>.
 
@@ -59,9 +59,9 @@ getBatch(
   end: Offset): DataFrame
 ----
 
-`getBatch` is part of the [Source](Source.md#getBatch) abstraction.
+`getBatch` is part of the [Source](../../Source.md#getBatch) abstraction.
 
-`getBatch` creates a streaming `DataFrame` with a query plan with `LogicalRDD` logical operator to scan data from a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>>.
+`getBatch` creates a streaming `DataFrame` with a query plan with `LogicalRDD` logical operator to scan data from a [KafkaSourceRDD](KafkaSourceRDD.md).
 
 Internally, `getBatch` initializes <<initialPartitionOffsets, initial partition offsets>> (unless initialized already).
 
@@ -71,11 +71,11 @@ You should see the following INFO message in the logs:
 GetBatch called with start = [start], end = [end]
 ```
 
-`getBatch` requests `KafkaSourceOffset` for spark-sql-streaming-KafkaSourceOffset.md#getPartitionOffsets[end partition offsets] for the input `end` offset (known as `untilPartitionOffsets`).
+`getBatch` requests `KafkaSourceOffset` for [end partition offsets](KafkaSourceOffset.md#getPartitionOffsets) for the input `end` offset (known as `untilPartitionOffsets`).
 
-`getBatch` requests `KafkaSourceOffset` for spark-sql-streaming-KafkaSourceOffset.md#getPartitionOffsets[start partition offsets] for the input `start` offset (if defined) or uses <<initialPartitionOffsets, initial partition offsets>> (known as `fromPartitionOffsets`).
+`getBatch` requests `KafkaSourceOffset` for [start partition offsets](KafkaSourceOffset.md#getPartitionOffsets) for the input `start` offset (if defined) or uses <<initialPartitionOffsets, initial partition offsets>> (known as `fromPartitionOffsets`).
 
-`getBatch` finds the new partitions (as the difference between the topic partitions in `untilPartitionOffsets` and `fromPartitionOffsets`) and requests <<kafkaReader, KafkaOffsetReader>> to spark-sql-streaming-KafkaOffsetReader.md#fetchEarliestOffsets[fetch their earliest offsets].
+`getBatch` finds the new partitions (as the difference between the topic partitions in `untilPartitionOffsets` and `fromPartitionOffsets`) and requests <<kafkaReader, KafkaOffsetReader>> to [fetch their earliest offsets](KafkaOffsetReader.md#fetchEarliestOffsets).
 
 `getBatch` <<reportDataLoss, reports a data loss>> if the new partitions don't match to what <<kafkaReader, KafkaOffsetReader>> fetched.
 
@@ -113,7 +113,7 @@ IMPORTANT: That is when `getBatch` goes very low-level to allow for cached `Kafk
 
 You should see the following DEBUG message in the logs:
 
-```
+```text
 Sorted executors: [sortedExecutors]
 ```
 
@@ -121,17 +121,17 @@ Sorted executors: [sortedExecutors]
 
 `getBatch` filters out `KafkaSourceRDDOffsetRanges` for which until offsets are smaller than from offsets. `getBatch` <<reportDataLoss, reports a data loss>> if they are found.
 
-```
+```text
 Partition [topicPartition]'s offset was changed from [fromOffset] to [untilOffset], some data may have been missed
 ```
 
-`getBatch` spark-sql-streaming-KafkaSourceRDD.md#creating-instance[creates a KafkaSourceRDD] (with <<executorKafkaParams, executorKafkaParams>>, <<pollTimeoutMs, pollTimeoutMs>> and `reuseKafkaConsumer` flag enabled) and maps it to an RDD of `InternalRow`.
+`getBatch` creates a [KafkaSourceRDD](KafkaSourceRDD.md) (with <<executorKafkaParams, executorKafkaParams>>, <<pollTimeoutMs, pollTimeoutMs>> and `reuseKafkaConsumer` flag enabled) and maps it to an RDD of `InternalRow`.
 
 IMPORTANT: `getBatch` creates a `KafkaSourceRDD` with `reuseKafkaConsumer` flag enabled.
 
 You should see the following INFO message in the logs:
 
-```
+```text
 GetBatch generating RDD of offset range: [offsetRanges]
 ```
 
@@ -146,7 +146,7 @@ In the end, `getBatch` creates a streaming `DataFrame` for the `KafkaSourceRDD` 
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is a part of the Source.md#getOffset[Source Contract].
+NOTE: `getOffset` is a part of the ../../Source.md#getOffset[Source Contract].
 
 Internally, `getOffset` fetches the <<initialPartitionOffsets, initial partition offsets>> (from the metadata log or Kafka directly).
 
@@ -296,7 +296,7 @@ val q = records.
 17/08/07 12:09:03 DEBUG StreamExecution: Stream running from {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}} to {KafkaSource[Subscribe[topic1]]: {"topic1":{"0":4}}}
 ----
 
-`getOffset` requests <<kafkaReader, KafkaOffsetReader>> to spark-sql-streaming-KafkaOffsetReader.md#fetchLatestOffsets[fetchLatestOffsets] (known later as `latest`).
+`getOffset` requests <<kafkaReader, KafkaOffsetReader>> to [fetchLatestOffsets](KafkaOffsetReader.md#fetchLatestOffsets) (known later as `latest`).
 
 NOTE: (Possible performance degradation?) It is possible that `getOffset` will request the latest offsets from Kafka twice, i.e. while initializing <<initialPartitionOffsets, initialPartitionOffsets>> (when no metadata log is available and KafkaSource's <<startingOffsets, KafkaOffsetRangeLimit>> is `LatestOffsetRangeLimit`) and always as part of `getOffset` itself.
 
@@ -320,11 +320,11 @@ NOTE: (Possible performance degradation?) It is possible that `getOffset` will r
 
 You should see the following DEBUG message in the logs:
 
-```
-DEBUG KafkaSource: GetOffset: [offsets]
+```text
+GetOffset: [offsets]
 ```
 
-In the end, `getOffset` creates a spark-sql-streaming-KafkaSourceOffset.md#creating-instance[KafkaSourceOffset] with `offsets` (as `Map[TopicPartition, Long]`).
+In the end, `getOffset` creates a [KafkaSourceOffset](KafkaSourceOffset.md) with `offsets` (as `Map[TopicPartition, Long]`).
 
 === [[fetchAndVerify]] Fetching and Verifying Specific Offsets -- `fetchAndVerify` Internal Method
 
@@ -333,7 +333,7 @@ In the end, `getOffset` creates a spark-sql-streaming-KafkaSourceOffset.md#creat
 fetchAndVerify(specificOffsets: Map[TopicPartition, Long]): KafkaSourceOffset
 ----
 
-`fetchAndVerify` requests <<kafkaReader, KafkaOffsetReader>> to spark-sql-streaming-KafkaOffsetReader.md#fetchSpecificOffsets[fetchSpecificOffsets] for the given `specificOffsets`.
+`fetchAndVerify` requests <<kafkaReader, KafkaOffsetReader>> to [fetchSpecificOffsets](KafkaOffsetReader.md#fetchSpecificOffsets) for the given `specificOffsets`.
 
 `fetchAndVerify` makes sure that the starting offsets in `specificOffsets` are the same as in Kafka and <<reportDataLoss, reports a data loss>> otherwise.
 
@@ -341,7 +341,7 @@ fetchAndVerify(specificOffsets: Map[TopicPartition, Long]): KafkaSourceOffset
 startingOffsets for [tp] was [off] but consumer reset to [result(tp)]
 ```
 
-In the end, `fetchAndVerify` creates a spark-sql-streaming-KafkaSourceOffset.md[KafkaSourceOffset] (with the result of <<kafkaReader, KafkaOffsetReader>>).
+In the end, `fetchAndVerify` creates a [KafkaSourceOffset](KafkaSourceOffset.md) (with the result of <<kafkaReader, KafkaOffsetReader>>).
 
 NOTE: `fetchAndVerify` is used exclusively when `KafkaSource` initializes <<initialPartitionOffsets, initial partition offsets>>.
 
@@ -354,19 +354,19 @@ initialPartitionOffsets: Map[TopicPartition, Long]
 
 `initialPartitionOffsets` is the *initial partition offsets* for the batch `0` that were already persisted in the <<metadataPath, streaming metadata log directory>> or persisted on demand.
 
-As the very first step, `initialPartitionOffsets` creates a custom <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog>> (of <<spark-sql-streaming-KafkaSourceOffset.md#, KafkaSourceOffsets>> metadata) in the <<metadataPath, streaming metadata log directory>>.
+As the very first step, `initialPartitionOffsets` creates a custom <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog>> (of [KafkaSourceOffsets](KafkaSourceOffset.md) metadata) in the <<metadataPath, streaming metadata log directory>>.
 
 `initialPartitionOffsets` requests the `HDFSMetadataLog` for the <<spark-sql-streaming-HDFSMetadataLog.md#get, metadata>> of the ``0``th batch (as `KafkaSourceOffset`).
 
-If the metadata is available, `initialPartitionOffsets` requests the metadata for the <<spark-sql-streaming-KafkaSourceOffset.md#partitionToOffsets, collection of TopicPartitions and their offsets>>.
+If the metadata is available, `initialPartitionOffsets` requests the metadata for the [collection of TopicPartitions and their offsets](KafkaSourceOffset.md#partitionToOffsets).
 
 If the metadata could not be found, `initialPartitionOffsets` creates a new `KafkaSourceOffset` per <<startingOffsets, KafkaOffsetRangeLimit>>:
 
-* For `EarliestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.md#fetchEarliestOffsets, fetchEarliestOffsets>>
+* For `EarliestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to [fetchEarliestOffsets](KafkaOffsetReader.md#fetchEarliestOffsets)
 
-* For `LatestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.md#fetchLatestOffsets, fetchLatestOffsets>>
+* For `LatestOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to [fetchLatestOffsets](KafkaOffsetReader.md#fetchLatestOffsets)
 
-* For `SpecificOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.md#fetchSpecificOffsets, fetchSpecificOffsets>> (and report a data loss per the <<failOnDataLoss, failOnDataLoss>> flag)
+* For `SpecificOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to [fetchSpecificOffsets](KafkaOffsetReader.md#fetchSpecificOffsets) (and report a data loss per the <<failOnDataLoss, failOnDataLoss>> flag)
 
 `initialPartitionOffsets` requests the custom `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.md#add, add the offsets to the metadata log>> (as the metadata of the ``0``th batch).
 
@@ -381,7 +381,7 @@ Initial offsets: [offsets]
 
     * <<getOffset, Fetch offsets (from metadata log or Kafka directly)>>
 
-    * <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` [commits the first streaming batch](StreamExecution.md#runStream) and so nothing is in [committedOffsets](StreamExecution.md#committedOffsets) registry for a `KafkaSource` data source yet)
+    * <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` [commits the first streaming batch](../../StreamExecution.md#runStream) and so nothing is in [committedOffsets](../../StreamExecution.md#committedOffsets) registry for a `KafkaSource` data source yet)
 
 ==== [[initialPartitionOffsets-HDFSMetadataLog-serialize]] `HDFSMetadataLog.serialize`
 
@@ -414,7 +414,7 @@ rateLimit(
   until: Map[TopicPartition, Long]): Map[TopicPartition, Long]
 ----
 
-`rateLimit` requests <<kafkaReader, KafkaOffsetReader>> to spark-sql-streaming-KafkaOffsetReader.md#fetchEarliestOffsets[fetchEarliestOffsets].
+`rateLimit` requests <<kafkaReader, KafkaOffsetReader>> to [fetchEarliestOffsets](KafkaOffsetReader.md#fetchEarliestOffsets).
 
 CAUTION: FIXME
 
@@ -456,8 +456,8 @@ a| [[sc]] Spark Core's `SparkContext` (of the <<sqlContext, SQLContext>>)
 
 Used when:
 
-* <<getBatch, Generating a DataFrame with records from Kafka for a streaming micro-batch>> (and creating a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>>)
+* <<getBatch, Generating a DataFrame with records from Kafka for a streaming micro-batch>> (and creating a [KafkaSourceRDD](KafkaSourceRDD.md))
 
-* Initializing the <<pollTimeoutMs, pollTimeoutMs>> internal property
+* Initializing the [pollTimeoutMs](#pollTimeoutMs) internal property
 
 |===

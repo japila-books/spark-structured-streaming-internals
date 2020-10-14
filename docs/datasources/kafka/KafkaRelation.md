@@ -44,8 +44,8 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[sourceOptions]] `Source` options (`Map[String, String]`)
 * [[specifiedKafkaParams]] User-defined Kafka parameters (`Map[String, String]`)
 * [[failOnDataLoss]] `failOnDataLoss` flag
-* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Starting offsets>>
-* [[endingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Ending offsets>>
+* [[startingOffsets]] [Starting offsets](KafkaOffsetRangeLimit.md)
+* [[endingOffsets]] [Ending offsets](KafkaOffsetRangeLimit.md)
 
 === [[getPartitionOffsets]] `getPartitionOffsets` Internal Method
 
@@ -71,7 +71,7 @@ NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-sp
 
 `buildScan` generates a unique group ID of the format *spark-kafka-relation-[randomUUID]* (to make sure that a streaming query creates a new consumer group).
 
-`buildScan` creates a <<spark-sql-streaming-KafkaOffsetReader.md#, KafkaOffsetReader>> with the following:
+`buildScan` creates a [KafkaOffsetReader](KafkaOffsetReader.md) with the following:
 
 * The given <<strategy, ConsumerStrategy>> and the <<sourceOptions, source options>>
 
@@ -79,7 +79,7 @@ NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-sp
 
 * *spark-kafka-relation-[randomUUID]-driver* for the `driverGroupIdPrefix`
 
-`buildScan` uses the `KafkaOffsetReader` to <<getPartitionOffsets, getPartitionOffsets>> for the starting and ending offsets (based on the given <<startingOffsets, KafkaOffsetRangeLimit>> and the <<endingOffsets, KafkaOffsetRangeLimit>>, respectively). `buildScan` requests the `KafkaOffsetReader` to <<spark-sql-streaming-KafkaOffsetReader.md#close, close>> afterwards.
+`buildScan` uses the `KafkaOffsetReader` to <<getPartitionOffsets, getPartitionOffsets>> for the starting and ending offsets (based on the given <<startingOffsets, KafkaOffsetRangeLimit>> and the <<endingOffsets, KafkaOffsetRangeLimit>>, respectively). `buildScan` requests the `KafkaOffsetReader` to [close](KafkaOffsetReader.md#close) afterwards.
 
 `buildScan` creates offset ranges (that are a collection of `KafkaSourceRDDOffsetRanges` with a Kafka `TopicPartition`, beginning and ending offsets and undefined preferred location).
 
@@ -89,7 +89,7 @@ NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-sp
 Generating RDD of offset ranges: [offsetRanges]
 ```
 
-`buildScan` creates a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>> with the following:
+`buildScan` creates a [KafkaSourceRDD](KafkaSourceRDD.md) with the following:
 
 * [Kafka parameters for executors](KafkaSourceProvider.md#kafkaParamsForExecutors) based on the given <<specifiedKafkaParams, specifiedKafkaParams>> and the unique group ID (`spark-kafka-relation-[randomUUID]`)
 

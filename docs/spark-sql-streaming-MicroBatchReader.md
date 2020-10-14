@@ -82,10 +82,10 @@ Used when...FIXME
 | MicroBatchReader
 | Description
 
-| <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>>
+| [KafkaMicroBatchReader](datasources/kafka/KafkaMicroBatchReader.md)
 | [[KafkaMicroBatchReader]]
 
-| <<spark-sql-streaming-MemoryStream.md#, MemoryStream>>
+| [MemoryStream](spark-sql-streaming-MemoryStream.md)
 | [[MemoryStream]]
 
 | RateStreamMicroBatchReader

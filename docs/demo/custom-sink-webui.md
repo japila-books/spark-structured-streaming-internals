@@ -1,6 +1,6 @@
-== Demo: Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)
+# Demo: Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)
 
-The demo shows the steps to develop a custom spark-sql-streaming-Sink.md[streaming sink] and use it to monitor whether and what SQL queries are executed at runtime (using web UI's SQL tab).
+The demo shows the steps to develop a custom [streaming sink](../Sink.md) and use it to monitor whether and what SQL queries are executed at runtime (using web UI's SQL tab).
 
 [NOTE]
 ====
@@ -24,8 +24,6 @@ Findings (aka _surprises_):
 1. Custom sinks require that you define a checkpoint location using [checkpointLocation](../DataStreamWriter.md#checkpointLocation) option (or spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property). Remove the checkpoint directory (or use a different one every start of a streaming query) to have consistent results.
 
 === [[DemoSink]] Creating Custom Sink -- DemoSink
-
-A streaming sink follows the spark-sql-streaming-Sink.md#contract[Sink contract] and a sample implementation could look as follows.
 
 [source, scala]
 ----

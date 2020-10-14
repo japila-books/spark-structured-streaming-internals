@@ -11,13 +11,13 @@
 | BaseStreamingSink
 | Description
 
-| <<spark-sql-streaming-MemorySinkBase.md#, MemorySinkBase>>
+| [MemorySinkBase](spark-sql-streaming-MemorySinkBase.md)
 | [[MemorySinkBase]] Base contract for data sinks in <<spark-sql-streaming-memory-data-source.md#, memory data source>>
 
-| <<spark-sql-streaming-Sink.md#, Sink>>
+| [Sink](Sink.md)
 | [[Sink]] Streaming sinks for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
 
-| <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>
+| [StreamWriteSupport](spark-sql-streaming-StreamWriteSupport.md)
 | [[StreamWriteSupport]] Data source writers (based on Data Source API V2)
 
 |===

@@ -59,8 +59,8 @@ Schema of the data from this source
 
 ## Implementations
 
-* [FileStreamSource](spark-sql-streaming-FileStreamSource.md)
-* [KafkaSource](spark-sql-streaming-KafkaSource.md)
+* [FileStreamSource](datasources/file/FileStreamSource.md)
+* [KafkaSource](datasources/kafka/KafkaSource.md)
 
 ## <span id="initialOffset"> initialOffset Method
 

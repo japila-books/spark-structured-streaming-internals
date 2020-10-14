@@ -58,4 +58,4 @@ image::images/webui-spark-job-streaming-query-started.png[align="center"]
 
 While the <<spark-sql-streaming-ContinuousWriteRDD.md#compute, tasks are computing partitions>> (of the `ContinuousWriteRDD`), they keep running <<spark-sql-streaming-ContinuousWriteRDD.md#compute-loop, until killed or completed>>. And that's the _ingenious design trick_ of how the streaming query (as a Spark job with the distributed tasks running on executors) runs continuously and indefinitely.
 
-When `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, create a streaming query for a ContinuousReadSupport data source>>, it creates...FIXME
+When `DataStreamReader` is requested to [create a streaming query for a ContinuousReadSupport data source](DataStreamReader.md#load), it creates...FIXME

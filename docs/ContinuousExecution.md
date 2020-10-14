@@ -4,7 +4,7 @@
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
 
-`ContinuousExecution` can only run streaming queries with <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> data source.
+`ContinuousExecution` can only run streaming queries with <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with [ContinuousReadSupport](ContinuousReadSupport.md) data source.
 
 [[sources]]
 `ContinuousExecution` supports one <<continuousSources, ContinuousReader>> only in a <<logicalPlan, streaming query>> (and asserts it when <<addOffset, addOffset>> and <<commit, committing an epoch>>). When requested for available [streaming sources](monitoring/ProgressReporter.md#sources), `ContinuousExecution` simply gives the <<continuousSources, single ContinuousReader>>.
@@ -38,11 +38,11 @@ val continuousEngine = engine.asInstanceOf[ContinuousExecution]
 assert(continuousEngine.trigger == Trigger.Continuous(1.minute))
 ```
 
-When <<creating-instance, created>> (for a streaming query), `ContinuousExecution` is given the <<analyzedPlan, analyzed logical plan>>. The analyzed logical plan is immediately transformed to include a <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> for every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> data source (and is the <<logicalPlan, logical plan>> internally).
+When <<creating-instance, created>> (for a streaming query), `ContinuousExecution` is given the <<analyzedPlan, analyzed logical plan>>. The analyzed logical plan is immediately transformed to include a <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> for every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with [ContinuousReadSupport](ContinuousReadSupport.md) data source (and is the <<logicalPlan, logical plan>> internally).
 
-NOTE: `ContinuousExecution` uses the same instance of `ContinuousExecutionRelation` for the same instances of <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> data source.
+NOTE: `ContinuousExecution` uses the same instance of `ContinuousExecutionRelation` for the same instances of <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> with [ContinuousReadSupport](ContinuousReadSupport.md) data source.
 
-When requested to <<runContinuous, run the streaming query>>, `ContinuousExecution` collects <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> data sources (inside <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>>) from the <<logicalPlan, analyzed logical plan>> and requests each and every `ContinuousReadSupport` to <<spark-sql-streaming-ContinuousReadSupport.md#createContinuousReader, create a ContinuousReader>> (that are stored in <<continuousSources, continuousSources>> internal registry).
+When requested to <<runContinuous, run the streaming query>>, `ContinuousExecution` collects [ContinuousReadSupport](ContinuousReadSupport.md) data sources (inside <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>>) from the <<logicalPlan, analyzed logical plan>> and requests each and every `ContinuousReadSupport` to [create a ContinuousReader](ContinuousReadSupport.md#createContinuousReader) (that are stored in <<continuousSources, continuousSources>> internal registry).
 
 [[EPOCH_COORDINATOR_ID_KEY]]
 `ContinuousExecution` uses *__epoch_coordinator_id* local property for...FIXME
@@ -85,7 +85,7 @@ runActivatedStream(sparkSessionForStream: SparkSession): Unit
 runContinuous(sparkSessionForQuery: SparkSession): Unit
 ----
 
-`runContinuous` initializes the <<continuousSources, continuousSources>> internal registry by traversing the <<logicalPlan, analyzed logical plan>> to find <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> leaf logical operators and requests their <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport data sources>> to <<spark-sql-streaming-ContinuousReadSupport.md#createContinuousReader, create a ContinuousReader>> (with the *sources* metadata directory under the [checkpoint directory](StreamExecution.md#resolvedCheckpointRoot)).
+`runContinuous` initializes the <<continuousSources, continuousSources>> internal registry by traversing the <<logicalPlan, analyzed logical plan>> to find <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> leaf logical operators and requests their [ContinuousReadSupport](ContinuousReadSupport.md) data sources to [create a ContinuousReader](ContinuousReadSupport.md#createContinuousReader) (with the *sources* metadata directory under the [checkpoint directory](StreamExecution.md#resolvedCheckpointRoot)).
 
 `runContinuous` initializes the [uniqueSources](StreamExecution.md#uniqueSources) internal registry to be the <<continuousSources, continuousSources>> distinct.
 
@@ -208,11 +208,11 @@ NOTE: `addOffset` supports exactly one <<continuousSources, continuous source>>.
 logicalPlan: LogicalPlan
 ----
 
-`logicalPlan` resolves <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> leaf logical operators (with a <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> source) to <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> leaf logical operators.
+`logicalPlan` resolves <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> leaf logical operators (with a [ContinuousReadSupport](ContinuousReadSupport.md) source) to <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> leaf logical operators.
 
 Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>> as follows:
 
-. For every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> leaf logical operator with a <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> source, `logicalPlan` looks it up for the corresponding <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> (if available in the internal lookup registry) or creates a `ContinuousExecutionRelation` (with the `ContinuousReadSupport` source, the options and the output attributes of the `StreamingRelationV2` operator)
+. For every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> leaf logical operator with a [ContinuousReadSupport](ContinuousReadSupport.md) source, `logicalPlan` looks it up for the corresponding <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelation>> (if available in the internal lookup registry) or creates a `ContinuousExecutionRelation` (with the `ContinuousReadSupport` source, the options and the output attributes of the `StreamingRelationV2` operator)
 
 . For any other `StreamingRelationV2`, `logicalPlan` throws an `UnsupportedOperationException`:
 +

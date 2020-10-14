@@ -1,18 +1,18 @@
-== [[KafkaMicroBatchInputPartitionReader]] KafkaMicroBatchInputPartitionReader
+# KafkaMicroBatchInputPartitionReader
 
-`KafkaMicroBatchInputPartitionReader` is an `InputPartitionReader` (of `InternalRows`) that is <<creating-instance, created>> exclusively when `KafkaMicroBatchInputPartition` is requested for <<spark-sql-streaming-KafkaMicroBatchInputPartition.md#createPartitionReader, one>> (as a part of the `InputPartition` contract).
+`KafkaMicroBatchInputPartitionReader` is an `InputPartitionReader` (of `InternalRows`) that is <<creating-instance, created>> exclusively when `KafkaMicroBatchInputPartition` is requested for [one](KafkaMicroBatchInputPartition.md#createPartitionReader) (as a part of the `InputPartition` contract).
 
-=== [[creating-instance]] Creating KafkaMicroBatchInputPartitionReader Instance
+## Creating Instance
 
 `KafkaMicroBatchInputPartitionReader` takes the following to be created:
 
-* [[offsetRange]] <<spark-sql-streaming-KafkaOffsetRangeCalculator.md#KafkaOffsetRange, KafkaOffsetRange>>
+* [[offsetRange]] [KafkaOffsetRange](KafkaOffsetRangeCalculator.md#KafkaOffsetRange)
 * [[executorKafkaParams]] Kafka parameters used for Kafka clients on executors (`Map[String, Object]`)
 * [[pollTimeoutMs]] Poll timeout (in ms)
 * [[failOnDataLoss]] `failOnDataLoss` flag
 * [[reuseKafkaConsumer]] `reuseKafkaConsumer` flag
 
-NOTE: All the input arguments to create a `KafkaMicroBatchInputPartitionReader` are exactly the input arguments used to create a <<spark-sql-streaming-KafkaMicroBatchInputPartition.md#, KafkaMicroBatchInputPartition>>.
+NOTE: All the input arguments to create a `KafkaMicroBatchInputPartitionReader` are exactly the input arguments used to create a [KafkaMicroBatchInputPartition](KafkaMicroBatchInputPartition.md).
 
 `KafkaMicroBatchInputPartitionReader` initializes the <<internal-properties, internal properties>>.
 
@@ -25,11 +25,11 @@ next(): Boolean
 
 NOTE: `next` is part of the `InputPartitionReader` contract to proceed to next record if available (`true`).
 
-`next` checks whether the <<consumer, KafkaDataConsumer>> should <<next-poll, poll records>> or <<next-no-poll, not>> (i.e. <<nextOffset, nextOffset>> is smaller than the <<spark-sql-streaming-KafkaOffsetRangeCalculator.md#untilOffset, untilOffset>> of the <<rangeToRead, KafkaOffsetRange>>).
+`next` checks whether the <<consumer, KafkaDataConsumer>> should <<next-poll, poll records>> or <<next-no-poll, not>> (i.e. <<nextOffset, nextOffset>> is smaller than the [untilOffset](KafkaOffsetRangeCalculator.md#untilOffset) of the <<rangeToRead, KafkaOffsetRange>>).
 
 ==== [[next-poll]] `next` Method -- KafkaDataConsumer Polls Records
 
-If so, `next` requests the <<consumer, KafkaDataConsumer>> to get (_poll_) records in the range of <<nextOffset, nextOffset>> and the <<spark-sql-streaming-KafkaOffsetRangeCalculator.md#untilOffset, untilOffset>> (of the <<rangeToRead, KafkaOffsetRange>>) with the given <<pollTimeoutMs, pollTimeoutMs>> and <<failOnDataLoss, failOnDataLoss>>.
+If so, `next` requests the <<consumer, KafkaDataConsumer>> to get (_poll_) records in the range of <<nextOffset, nextOffset>> and the [untilOffset](KafkaOffsetRangeCalculator.md#untilOffset) (of the <<rangeToRead, KafkaOffsetRange>>) with the given <<pollTimeoutMs, pollTimeoutMs>> and <<failOnDataLoss, failOnDataLoss>>.
 
 With a new record, `next` requests the <<converter, KafkaRecordToUnsafeRowConverter>> to convert (`toUnsafeRow`) the record to be the <<nextRow, next UnsafeRow>>. `next` sets the <<nextOffset, nextOffset>> as the offset of the record incremented. `next` returns `true`.
 
@@ -37,7 +37,7 @@ With no new record, `next` simply returns `false`.
 
 ==== [[next-no-poll]] `next` Method -- No Polling
 
-If the <<nextOffset, nextOffset>> is equal or larger than the <<spark-sql-streaming-KafkaOffsetRangeCalculator.md#untilOffset, untilOffset>> (of the <<rangeToRead, KafkaOffsetRange>>), `next` simply returns `false`.
+If the <<nextOffset, nextOffset>> is equal or larger than the [untilOffset](KafkaOffsetRangeCalculator.md#untilOffset) (of the <<rangeToRead, KafkaOffsetRange>>), `next` simply returns `false`.
 
 === [[close]] Closing (Releasing KafkaDataConsumer) -- `close` Method
 
@@ -70,7 +70,7 @@ NOTE: `resolveRange` is used exclusively when `KafkaMicroBatchInputPartitionRead
 | Description
 
 | consumer
-a| [[consumer]] <<spark-sql-streaming-KafkaDataConsumer.md#, KafkaDataConsumer>> for the partition (per <<offsetRange, KafkaOffsetRange>>)
+a| [[consumer]] [KafkaDataConsumer](KafkaDataConsumer.md) for the partition (per <<offsetRange, KafkaOffsetRange>>)
 
 Used in <<next, next>>, <<close, close>>, and <<resolveRange, resolveRange>>
 

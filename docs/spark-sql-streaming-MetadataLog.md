@@ -23,17 +23,17 @@ Persists (_adds_) metadata of a streaming batch
 
 Used when:
 
-* `KafkaMicroBatchReader` is requested to <<spark-sql-streaming-KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets, getOrCreateInitialPartitionOffsets>>
+* `KafkaMicroBatchReader` is requested to [getOrCreateInitialPartitionOffsets](datasources/kafka/KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets)
 
-* `KafkaSource` is requested for the <<spark-sql-streaming-KafkaSource.md#initialPartitionOffsets, initialPartitionOffsets>>
+* `KafkaSource` is requested for the [initialPartitionOffsets](datasources/kafka/KafkaSource.md#initialPartitionOffsets)
 
-* `CompactibleFileStreamLog` is requested for the <<spark-sql-streaming-CompactibleFileStreamLog.md#add, store metadata of a streaming batch>> and to <<spark-sql-streaming-CompactibleFileStreamLog.md#compact, compact>>
+* `CompactibleFileStreamLog` is requested for the [store metadata of a streaming batch](CompactibleFileStreamLog.md#add) and to [compact](CompactibleFileStreamLog.md#compact)
 
-* `FileStreamSource` is requested to <<spark-sql-streaming-FileStreamSource.md#fetchMaxOffset, fetchMaxOffset>>
+* `FileStreamSource` is requested to [fetchMaxOffset](datasources/file/FileStreamSource.md#fetchMaxOffset)
 
-* `FileStreamSourceLog` is requested to <<spark-sql-streaming-FileStreamSourceLog.md#add, store (add) metadata of a streaming batch>>
+* `FileStreamSourceLog` is requested to [store (add) metadata of a streaming batch](datasources/file/FileStreamSourceLog.md#add)
 
-* `ManifestFileCommitProtocol` is requested to <<spark-sql-streaming-ManifestFileCommitProtocol.md#commitJob, commitJob>>
+* `ManifestFileCommitProtocol` is requested to [commitJob](datasources/file/ManifestFileCommitProtocol.md#commitJob)
 
 * `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch, construct a next streaming micro-batch>> and <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>>
 

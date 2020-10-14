@@ -57,8 +57,8 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[name]] Name of the streaming query
 * [[checkpointRoot]] Path of the checkpoint directory
 * [[analyzedPlan]] Analyzed logical query plan of the streaming query (`LogicalPlan`)
-* [[sink]] <<spark-sql-streaming-BaseStreamingSink.md#, Streaming sink>>
-* [[trigger]] <<spark-sql-streaming-Trigger.md#, Trigger>>
+* [[sink]] [Streaming sink](spark-sql-streaming-BaseStreamingSink.md)
+* [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
 * [[triggerClock]] Trigger clock (`Clock`)
 * [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
 * [[extraOptions]] Extra options (`Map[String, String]`)
@@ -472,7 +472,7 @@ Invalid batch: [output] != [dataPlan.output]
 
 For a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>> (Data Source API V2), `runBatch` requests the `StreamWriteSupport` for a <<spark-sql-streaming-StreamWriteSupport.md#createStreamWriter, StreamWriter>> (for the [runId](StreamExecution.md#runId), the output schema, the <<outputMode, OutputMode>>, and the <<extraOptions, extra options>>). `runBatch` then creates a `WriteToDataSourceV2` logical operator with a new <<spark-sql-streaming-MicroBatchWriter.md#, MicroBatchWriter>> as a child operator (for the [current batch ID](StreamExecution.md#currentBatchId) and the <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>).
 
-For a <<spark-sql-streaming-Sink.md#, Sink>> (Data Source API V1), `runBatch` changes nothing.
+For a [Sink](Sink.md) (Data Source API V1), `runBatch` changes nothing.
 
 For any other <<sink, BaseStreamingSink>> type, `runBatch` simply throws an `IllegalArgumentException`:
 
@@ -537,7 +537,7 @@ image::images/StreamExecution-runBatch-addBatch.png[align="center"]
 
 In *addBatch* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runBatch` adds the `DataFrame` with new data to the <<sink, BaseStreamingSink>>.
 
-For a <<spark-sql-streaming-Sink.md#, Sink>> (Data Source API V1), `runBatch` simply requests the `Sink` to <<spark-sql-streaming-Sink.md#addBatch, add the DataFrame>> (with the [batch ID](StreamExecution.md#currentBatchId)).
+For a [Sink](Sink.md) (Data Source API V1), `runBatch` simply requests the `Sink` to [add the DataFrame](Sink.md#addBatch) (with the [batch ID](StreamExecution.md#currentBatchId)).
 
 For a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>> (Data Source API V2), `runBatch` simply requests the `DataFrame` with new data to collect (which simply forces execution of the <<spark-sql-streaming-MicroBatchWriter.md#, MicroBatchWriter>>).
 
@@ -608,7 +608,7 @@ For every <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>> logic
 Using Source [source] from DataSourceV1 named '[sourceName]' [dataSourceV1]
 ```
 
-For every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operator with a <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> data source (which is not on the list of <<spark-sql-streaming-properties.md#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>), `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `MicroBatchReadSupport` to <<spark-sql-streaming-MicroBatchReadSupport.md#createMicroBatchReader, create a MicroBatchReader>> with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
+For every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operator with a [MicroBatchReadSupport](MicroBatchReadSupport.md) data source (which is not on the list of <<spark-sql-streaming-properties.md#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>), `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `MicroBatchReadSupport` to [create a MicroBatchReader](MicroBatchReadSupport.md#createMicroBatchReader) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
 
 ```text
 Using MicroBatchReader [reader] from DataSourceV2 named '[sourceName]' [dataSourceV2]

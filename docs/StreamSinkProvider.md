@@ -23,11 +23,11 @@ createSink(
   outputMode: OutputMode): Sink
 ----
 
-Creates a [streaming sink](spark-sql-streaming-Sink.md)
+Creates a [streaming sink](Sink.md)
 
 Used when `DataSource` is requested for a [streaming sink](spark-sql-streaming-DataSource.md#createSink) (when `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start))
 
 |===
 
 [[implementations]]
-NOTE: [KafkaSourceProvider](kafka/KafkaSourceProvider.md) is the only known `StreamSinkProvider` in Spark Structured Streaming.
+NOTE: [KafkaSourceProvider](datasources/kafka/KafkaSourceProvider.md) is the only known `StreamSinkProvider` in Spark Structured Streaming.

@@ -1,4 +1,4 @@
-== [[ContinuousReadSupport]] ContinuousReadSupport Contract -- Data Sources with ContinuousReaders
+# ContinuousReadSupport
 
 `ContinuousReadSupport` is the <<contract, extension>> of the `DataSourceV2` for <<implementations, data sources>> with a <<createContinuousReader, ContinuousReader>> for <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
 
@@ -17,7 +17,7 @@ ContinuousReader createContinuousReader(
 
 * `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query>> (and finds <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelations>> in the <<ContinuousExecution.md#logicalPlan, analyzed logical plan>>)
 
-* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, create a streaming query for a ContinuousReadSupport data source>>
+* `DataStreamReader` is requested to [create a streaming query for a ContinuousReadSupport data source](DataStreamReader.md#load)
 
 [[implementations]]
 .ContinuousReadSupports
@@ -29,7 +29,7 @@ ContinuousReader createContinuousReader(
 | <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
 | [[ContinuousMemoryStream]] Data source provider for `memory` format
 
-| [KafkaSourceProvider](kafka/KafkaSourceProvider.md)
+| [KafkaSourceProvider](datasources/kafka/KafkaSourceProvider.md)
 | [[KafkaSourceProvider]] Data source provider for `kafka` format
 
 | <<spark-sql-streaming-RateStreamProvider.md#, RateStreamProvider>>

@@ -1,6 +1,6 @@
 # OutputMode
 
-*Output mode* (`OutputMode`) of a streaming query describes what data is written to a <<spark-sql-streaming-Sink.md#, streaming sink>>.
+`OutputMode` of a streaming query describes what data is written to a [streaming sink](Sink.md).
 
 [[available-output-modes]]
 There are three available output modes:
@@ -33,7 +33,7 @@ In <<spark-sql-streaming-aggregation.md#, streaming aggregations>>, a "new" row 
 
 `Append` output mode requires that a streaming query defines event-time watermark (using [withWatermark](operators/withWatermark.md) operator) on the event time column that is used in aggregation (directly or using [window](spark-sql-streaming-window.md) standard function).
 
-Required for datasets with `FileFormat` format (to create spark-sql-streaming-FileStreamSink.md[FileStreamSink])
+Required for datasets with `FileFormat` format (to create [FileStreamSink](datasources/file/FileStreamSink.md))
 
 `Append` is spark-sql-streaming-UnsupportedOperationChecker.md#multiple-flatMapGroupsWithState[mandatory] when multiple `flatMapGroupsWithState` operators are used in a structured query.
 

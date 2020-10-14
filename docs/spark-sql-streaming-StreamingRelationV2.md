@@ -1,12 +1,12 @@
-== [[StreamingRelationV2]] StreamingRelationV2 Leaf Logical Operator
+# StreamingRelationV2 Leaf Logical Operator
 
-`StreamingRelationV2` is a `MultiInstanceRelation` leaf logical operator that represents <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> or <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> streaming data sources in a logical plan of a streaming query.
+`StreamingRelationV2` is a `MultiInstanceRelation` leaf logical operator that represents [MicroBatchReadSupport](MicroBatchReadSupport.md) or [ContinuousReadSupport](ContinuousReadSupport.md) streaming data sources in a logical plan of a streaming query.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-LeafNode.html[Leaf logical operators] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 `StreamingRelationV2` is <<creating-instance, created>> when:
 
-* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, "load" data as a streaming DataFrame>> for <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> and <<spark-sql-streaming-ContinuousReadSupport.md#, ContinuousReadSupport>> streaming data sources
+* `DataStreamReader` is requested to ["load" data as a streaming DataFrame](DataStreamReader.md#load) for [MicroBatchReadSupport](MicroBatchReadSupport.md) and [ContinuousReadSupport](ContinuousReadSupport.md) streaming data sources
 
 * <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>> is created
 

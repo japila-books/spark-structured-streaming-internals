@@ -1,15 +1,14 @@
-== Micro-Batch Stream Processing (Structured Streaming V1)
+# Micro-Batch Stream Processing (Structured Streaming V1)
 
 *Micro-Batch Stream Processing* is a stream processing model in Spark Structured Streaming that is used for streaming queries with <<spark-sql-streaming-Trigger.md#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.md#ProcessingTime, Trigger.ProcessingTime>> triggers.
 
 Micro-batch stream processing uses <<MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine.
 
-Micro-batch stream processing supports <<spark-sql-streaming-MicroBatchReadSupport.md#, MicroBatchReadSupport>> data sources.
+Micro-batch stream processing supports [MicroBatchReadSupport](MicroBatchReadSupport.md) data sources.
 
 Micro-batch stream processing is often referred to as *Structured Streaming V1*.
 
-[source, scala]
-----
+```text
 import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
 val sq = spark
@@ -32,7 +31,7 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
    +- *(1) ScanV2 rate[timestamp#54, value#55L]
 
 // sq.stop
-----
+```
 
 === [[execution-phases]] Execution Phases (Processing Cycle)
 

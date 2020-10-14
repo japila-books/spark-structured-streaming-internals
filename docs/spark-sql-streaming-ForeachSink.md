@@ -1,6 +1,6 @@
 # ForeachSink
 
-`ForeachSink` is a typed [streaming sink](spark-sql-streaming-Sink.md) that passes rows (of the type `T`) to [ForeachWriter](spark-sql-streaming-ForeachWriter.md) (one record at a time per partition).
+`ForeachSink` is a typed [streaming sink](Sink.md) that passes rows (of the type `T`) to [ForeachWriter](spark-sql-streaming-ForeachWriter.md) (one record at a time per partition).
 
 !!! note
     `ForeachSink` is assigned a `ForeachWriter` when `DataStreamWriter` is [started](DataStreamWriter.md#start).

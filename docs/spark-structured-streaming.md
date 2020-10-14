@@ -30,7 +30,7 @@ The goal of Spark Structured Streaming is to unify streaming, interactive, and b
 
 In Structured Streaming, Spark developers describe custom streaming computations in the same way as with Spark SQL. Internally, Structured Streaming applies the user-defined structured query to the continuously and indefinitely arriving data to analyze real-time streaming data.
 
-Structured Streaming introduces the concept of **streaming datasets** that are _infinite datasets_ with primitives like input [streaming data sources](Source.md) and output [streaming data sinks](spark-sql-streaming-Sink.md).
+Structured Streaming introduces the concept of **streaming datasets** that are _infinite datasets_ with primitives like input [streaming data sources](Source.md) and output [streaming data sinks](Sink.md).
 
 A `Dataset` is **streaming** when its logical plan is streaming.
 
@@ -59,7 +59,7 @@ You can specify [output mode](spark-sql-streaming-OutputMode.md) of a streaming 
 Streaming Datasets use **streaming query plans** (as opposed to regular batch Datasets that are based on batch query plans).
 
 !!! note
-    From this perspective, batch queries can be considered streaming Datasets executed once only (and is why some batch queries, e.g. [KafkaSource](spark-sql-streaming-KafkaSource.md), can easily work in batch mode).
+    From this perspective, batch queries can be considered streaming Datasets executed once only (and is why some batch queries, e.g. [KafkaSource](datasources/kafka/KafkaSource.md), can easily work in batch mode).
 
     ```scala
     val batchQuery = spark.read.format("rate").load
@@ -77,7 +77,7 @@ Structured streaming is defined by the following data abstractions in `org.apach
 
 * [StreamingQuery](StreamingQuery.md)
 * [Streaming Source](Source.md)
-* [Streaming Sink](spark-sql-streaming-Sink.md)
+* [Streaming Sink](Sink.md)
 * [StreamingQueryManager](StreamingQueryManager.md)
 
 Structured Streaming follows micro-batch model and periodically fetches data from the data source (and uses the `DataFrame` data abstraction to represent the fetched data for a certain batch).

@@ -1,9 +1,8 @@
-== [[FileStreamSink]] FileStreamSink -- Streaming Sink for File-Based Data Sources
+# FileStreamSink
 
-`FileStreamSink` is a concrete <<spark-sql-streaming-Sink.md#, streaming sink>> that writes out the results of a streaming query to files (of the specified <<fileFormat, FileFormat>>) in the <<path, root path>>.
+`FileStreamSink` is a concrete [streaming sink](../../Sink.md) that writes out the results of a streaming query to files (of the specified <<fileFormat, FileFormat>>) in the <<path, root path>>.
 
-[source, scala]
-----
+```text
 import scala.concurrent.duration._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 val sq = in.
@@ -14,7 +13,7 @@ val sq = in.
   trigger(Trigger.ProcessingTime(10.seconds)).
   outputMode(OutputMode.Append).
   start
-----
+```
 
 `FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.md#createSink, create a streaming sink>> for a file-based data source (i.e. `FileFormat`).
 
@@ -65,9 +64,9 @@ addBatch(
   data: DataFrame): Unit
 ----
 
-NOTE: `addBatch` is a part of spark-sql-streaming-Sink.md#addBatch[Sink Contract] to "add" a batch of data to the sink.
-
 `addBatch`...FIXME
+
+`addBatch` is a part of [Sink Contract](../../Sink.md#addBatch) abstraction.
 
 === [[basicWriteJobStatsTracker]] Creating BasicWriteJobStatsTracker -- `basicWriteJobStatsTracker` Internal Method
 
@@ -98,14 +97,10 @@ hasMetadata(
 
 `hasMetadata`...FIXME
 
-[NOTE]
-====
 `hasMetadata` is used when:
 
 * `DataSource` (Spark SQL) is requested to resolve a `FileFormat` relation (`resolveRelation`) and creates a `HadoopFsRelation`
-
-* `FileStreamSource` is requested to <<spark-sql-streaming-FileStreamSource.md#fetchAllFiles, fetchAllFiles>>
-====
+* `FileStreamSource` is requested to [fetchAllFiles](FileStreamSource.md#fetchAllFiles)
 
 === [[internal-properties]] Internal Properties
 
@@ -125,7 +120,7 @@ a| [[logPath]] *Metadata log path* (Hadoop's https://hadoop.apache.org/docs/r2.8
 Used exclusively to create the <<fileLog, FileStreamSinkLog>>
 
 | fileLog
-a| [[fileLog]] <<spark-sql-streaming-FileStreamSinkLog.md#, FileStreamSinkLog>> (for the <<spark-sql-streaming-FileStreamSinkLog.md#VERSION, version 1>> and the <<logPath, metadata log path>>)
+a| [[fileLog]] [FileStreamSinkLog](FileStreamSinkLog.md) (for the [version 1](FileStreamSinkLog.md#VERSION) and the <<logPath, metadata log path>>)
 
 Used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>
 

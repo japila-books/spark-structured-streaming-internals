@@ -1,16 +1,16 @@
 # KafkaMicroBatchReader
 
-`KafkaMicroBatchReader` is the <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for [kafka data source](kafka/index.md) for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+`KafkaMicroBatchReader` is the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md) for [kafka data source](index.md) for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
-`KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a MicroBatchReader](kafka/KafkaSourceProvider.md#createMicroBatchReader).
+`KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a MicroBatchReader](KafkaSourceProvider.md#createMicroBatchReader).
 
 [[pollTimeoutMs]]
-`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [kafkaConsumer.pollTimeoutMs](kafka/index.md#kafkaConsumer.pollTimeoutMs) option (default: `spark.network.timeout` or `120s`).
+`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [kafkaConsumer.pollTimeoutMs](index.md#kafkaConsumer.pollTimeoutMs) option (default: `spark.network.timeout` or `120s`).
 
 [[maxOffsetsPerTrigger]]
-`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [maxOffsetsPerTrigger](kafka/index.md#maxOffsetsPerTrigger) option (default: `(undefined)`).
+`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [maxOffsetsPerTrigger](index.md#maxOffsetsPerTrigger) option (default: `(undefined)`).
 
-`KafkaMicroBatchReader` uses the <<executorKafkaParams, Kafka properties for executors>> to create <<spark-sql-streaming-KafkaMicroBatchInputPartition.md#, KafkaMicroBatchInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
+`KafkaMicroBatchReader` uses the <<executorKafkaParams, Kafka properties for executors>> to create [KafkaMicroBatchInputPartitions](KafkaMicroBatchInputPartition.md) when requested to <<planInputPartitions, planInputPartitions>>.
 
 [[logging]]
 [TIP]
@@ -26,16 +26,16 @@ log4j.logger.org.apache.spark.sql.kafka010.KafkaMicroBatchReader=ALL
 Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
-=== [[creating-instance]] Creating KafkaMicroBatchReader Instance
+## Creating Instance
 
 `KafkaMicroBatchReader` takes the following to be created:
 
-* [[kafkaOffsetReader]] <<spark-sql-streaming-KafkaOffsetReader.md#, KafkaOffsetReader>>
+* [[kafkaOffsetReader]] [KafkaOffsetReader](KafkaOffsetReader.md)
 * [[executorKafkaParams]] Kafka properties for executors (`Map[String, Object]`)
 * [[options]] `DataSourceOptions`
 * [[metadataPath]] Metadata Path
-* [[startingOffsets]] Desired starting <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, KafkaOffsetRangeLimit>>
-* [[failOnDataLoss]] [failOnDataLoss](kafka/index.md#failOnDataLoss) option
+* [[startingOffsets]] Desired starting [KafkaOffsetRangeLimit](KafkaOffsetRangeLimit.md)
+* [[failOnDataLoss]] [failOnDataLoss](index.md#failOnDataLoss) option
 
 `KafkaMicroBatchReader` initializes the <<internal-registries, internal registries and counters>>.
 
@@ -48,7 +48,7 @@ readSchema(): StructType
 
 NOTE: `readSchema` is part of the `DataSourceReader` contract to...FIXME.
 
-`readSchema` simply returns the [predefined fixed schema](kafka/index.md#schema).
+`readSchema` simply returns the [predefined fixed schema](index.md#schema).
 
 === [[stop]] Stopping Streaming Reader -- `stop` Method
 
@@ -57,9 +57,9 @@ NOTE: `readSchema` is part of the `DataSourceReader` contract to...FIXME.
 stop(): Unit
 ----
 
-NOTE: `stop` is part of the <<spark-sql-streaming-BaseStreamingSource.md#stop, BaseStreamingSource Contract>> to stop a streaming reader.
+`stop` simply requests the [KafkaOffsetReader](#kafkaOffsetReader) to [close](KafkaOffsetReader.md#close).
 
-`stop` simply requests the <<kafkaOffsetReader, KafkaOffsetReader>> to <<spark-sql-streaming-KafkaOffsetReader.md#close, close>>.
+`stop` is part of the [BaseStreamingSource](../../spark-sql-streaming-BaseStreamingSource.md#stop) abstraction.
 
 === [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method
 
@@ -71,11 +71,11 @@ planInputPartitions(): java.util.List[InputPartition[InternalRow]]
 NOTE: `planInputPartitions` is part of the `DataSourceReader` contract in Spark SQL for the number of `InputPartitions` to use as RDD partitions (when `DataSourceV2ScanExec` physical operator is requested for the partitions of the input RDD).
 
 `planInputPartitions` first finds the new partitions (`TopicPartitions` that are in the <<endPartitionOffsets, endPartitionOffsets>> but not in the <<startPartitionOffsets, startPartitionOffsets>>) and requests the <<kafkaOffsetReader, KafkaOffsetReader>> to
-<<spark-sql-streaming-KafkaOffsetReader.md#fetchEarliestOffsets, fetch their earliest offsets>>.
+[fetch their earliest offsets](KafkaOffsetReader.md#fetchEarliestOffsets).
 
 `planInputPartitions` prints out the following INFO message to the logs:
 
-```
+```text
 Partitions added: [newPartitionInitialOffsets]
 ```
 
@@ -87,9 +87,7 @@ TopicPartitions: [comma-separated list of TopicPartitions]
 
 `planInputPartitions` requests the <<rangeCalculator, KafkaOffsetRangeCalculator>> for <<getRanges, offset ranges>> (given the <<startPartitionOffsets, startPartitionOffsets>> and the newly-calculated `newPartitionInitialOffsets` as the `fromOffsets`, the <<endPartitionOffsets, endPartitionOffsets>> as the `untilOffsets`, and the <<getSortedExecutorList, available executors (sorted in descending order)>>).
 
-In the end, `planInputPartitions` creates a <<spark-sql-streaming-KafkaMicroBatchInputPartition.md#, KafkaMicroBatchInputPartition>> for every offset range (with the <<executorKafkaParams, Kafka properties for executors>>, the <<pollTimeoutMs, pollTimeoutMs>>, the <<failOnDataLoss, failOnDataLoss>> flag and whether to reuse a Kafka consumer among Spark tasks).
-
-NOTE: <<spark-sql-streaming-KafkaMicroBatchInputPartition.md#, KafkaMicroBatchInputPartition>> uses a shared Kafka consumer only when all the offset ranges have distinct `TopicPartitions`, so concurrent tasks (of a stage in a Spark job) will not interfere and read the same `TopicPartitions`.
+In the end, `planInputPartitions` creates a [KafkaMicroBatchInputPartition](KafkaMicroBatchInputPartition.md) for every offset range (with the <<executorKafkaParams, Kafka properties for executors>>, the <<pollTimeoutMs, pollTimeoutMs>>, the <<failOnDataLoss, failOnDataLoss>> flag and whether to reuse a Kafka consumer among Spark tasks).
 
 `planInputPartitions` <<reportDataLoss, reports data loss>> when...FIXME
 
@@ -169,7 +167,7 @@ initialPartitionOffsets: Map[TopicPartition, Long]
 ----
 
 | rangeCalculator
-a| [[rangeCalculator]] <<spark-sql-streaming-KafkaOffsetRangeCalculator.md#, KafkaOffsetRangeCalculator>> (for the given <<options, DataSourceOptions>>)
+a| [[rangeCalculator]] [KafkaOffsetRangeCalculator](KafkaOffsetRangeCalculator.md) (for the given <<options, DataSourceOptions>>)
 
 Used exclusively when `KafkaMicroBatchReader` is requested to <<planInputPartitions, planInputPartitions>> (to calculate offset ranges)
 

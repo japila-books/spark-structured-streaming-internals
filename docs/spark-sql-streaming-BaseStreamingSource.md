@@ -25,7 +25,7 @@ Used when:
 
 * `StreamExecution` is requested to [stop streaming sources and readers](StreamExecution.md#stopSources)
 
-* `DataStreamReader` is requested to <<spark-sql-streaming-DataStreamReader.md#load, load data from a MicroBatchReadSupport data source>> (for read schema)
+* `DataStreamReader` is requested to [load data from a MicroBatchReadSupport data source](DataStreamReader.md#load) (for read schema)
 
 |===
 

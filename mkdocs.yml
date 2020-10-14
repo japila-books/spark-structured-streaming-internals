@@ -71,6 +71,9 @@ extra:
       link: https://linkedin.com/in/jaceklaskowski
   spark:
     version: 3.0.1
+  hadoop:
+    version: 3.2.0
+    doc: https://hadoop.apache.org/docs/r{{ hadoop.version }}/api
   java:
     version: 8
     doc: http://docs.oracle.com/javase/{{ java.version }}/docs/api
@@ -163,7 +166,7 @@ nav:
     - StreamingQueryManager: StreamingQueryManager.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - Developing Streaming Applications:
-      - DataStreamReader: spark-sql-streaming-DataStreamReader.md
+      - DataStreamReader: DataStreamReader.md
       - SparkDataStream: SparkDataStream.md
       - DataStreamWriter:
         - DataStreamWriter: DataStreamWriter.md
@@ -218,8 +221,8 @@ nav:
         - OffsetSeqLog: spark-sql-streaming-OffsetSeqLog.md
         - OffsetSeq: spark-sql-streaming-OffsetSeq.md
       - CompactibleFileStreamLog:
-        - CompactibleFileStreamLog: spark-sql-streaming-CompactibleFileStreamLog.md
-        - FileStreamSourceLog: spark-sql-streaming-FileStreamSourceLog.md
+        - CompactibleFileStreamLog: CompactibleFileStreamLog.md
+        - FileStreamSourceLog: datasources/file/FileStreamSourceLog.md
       - OffsetSeqMetadata: spark-sql-streaming-OffsetSeqMetadata.md
       - CheckpointFileManager:
         - CheckpointFileManager: spark-sql-streaming-CheckpointFileManager.md
@@ -233,19 +236,19 @@ nav:
         - MicroBatchExecution: MicroBatchExecution.md
         - MicroBatchWriter: spark-sql-streaming-MicroBatchWriter.md
       - MicroBatchReadSupport:
-        - MicroBatchReadSupport: spark-sql-streaming-MicroBatchReadSupport.md
+        - MicroBatchReadSupport: MicroBatchReadSupport.md
         - MicroBatchReader: spark-sql-streaming-MicroBatchReader.md
       - WatermarkTracker: spark-sql-streaming-WatermarkTracker.md
       - Source:
         - Source: Source.md
         - StreamSourceProvider: StreamSourceProvider.md
-      - Sink: spark-sql-streaming-Sink.md
+      - Sink: Sink.md
       - StreamSinkProvider: StreamSinkProvider.md
     - Continuous Stream Processing:
       - Continuous Stream Processing: spark-sql-streaming-continuous-stream-processing.md
       - ContinuousExecution: ContinuousExecution.md
-      - ContinuousReadSupport Contract: spark-sql-streaming-ContinuousReadSupport.md
-      - ContinuousReader Contract: spark-sql-streaming-ContinuousReader.md
+      - ContinuousReadSupport: ContinuousReadSupport.md
+      - ContinuousReader: spark-sql-streaming-ContinuousReader.md
       - RateStreamContinuousReader: spark-sql-streaming-RateStreamContinuousReader.md
       - EpochCoordinator:
         - EpochCoordinator RPC Endpoint: spark-sql-streaming-EpochCoordinator.md
@@ -276,38 +279,40 @@ nav:
     - withWatermark: operators/withWatermark.md
     - writeStream: operators/writeStream.md
   - Data Sources:
-    - File-Based Data Source:
-      - FileStreamSource: spark-sql-streaming-FileStreamSource.md
-      - FileStreamSink: spark-sql-streaming-FileStreamSink.md
-      - FileStreamSinkLog: spark-sql-streaming-FileStreamSinkLog.md
-      - SinkFileStatus: spark-sql-streaming-SinkFileStatus.md
-      - ManifestFileCommitProtocol: spark-sql-streaming-ManifestFileCommitProtocol.md
-      - MetadataLogFileIndex: spark-sql-streaming-MetadataLogFileIndex.md
+    - Data Sources: datasources/index.md
+    - File Data Source:
+      - File Data Source: datasources/file/index.md
+      - FileStreamSource: datasources/file/FileStreamSource.md
+      - FileStreamSink: datasources/file/FileStreamSink.md
+      - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
+      - SinkFileStatus: datasources/file/SinkFileStatus.md
+      - ManifestFileCommitProtocol: datasources/file/ManifestFileCommitProtocol.md
+      - MetadataLogFileIndex: datasources/file/MetadataLogFileIndex.md
     - Kafka Data Source:
-      - Kafka Data Source: kafka/index.md
-      - KafkaSourceProvider: kafka/KafkaSourceProvider.md
-      - KafkaTable: kafka/KafkaTable.md
-      - KafkaSource: spark-sql-streaming-KafkaSource.md
-      - KafkaRelation: kafka/KafkaRelation.md
-      - KafkaSourceRDD: spark-sql-streaming-KafkaSourceRDD.md
-      - CachedKafkaConsumer: spark-sql-streaming-CachedKafkaConsumer.md
-      - KafkaSourceOffset: spark-sql-streaming-KafkaSourceOffset.md
-      - KafkaOffsetReader: spark-sql-streaming-KafkaOffsetReader.md
-      - ConsumerStrategy: kafka/ConsumerStrategy.md
-      - KafkaSink: kafka/KafkaSink.md
-      - KafkaBatch: kafka/KafkaBatch.md
-      - KafkaScan: kafka/KafkaScan.md
-      - KafkaOffsetRangeLimit: spark-sql-streaming-KafkaOffsetRangeLimit.md
-      - KafkaDataConsumer: spark-sql-streaming-KafkaDataConsumer.md
+      - Kafka Data Source: datasources/kafka/index.md
+      - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
+      - KafkaTable: datasources/kafka/KafkaTable.md
+      - KafkaSource: datasources/kafka/KafkaSource.md
+      - KafkaRelation: datasources/kafka/KafkaRelation.md
+      - KafkaSourceRDD: datasources/kafka/KafkaSourceRDD.md
+      - CachedKafkaConsumer: datasources/kafka/CachedKafkaConsumer.md
+      - KafkaSourceOffset: datasources/kafka/KafkaSourceOffset.md
+      - KafkaOffsetReader: datasources/kafka/KafkaOffsetReader.md
+      - ConsumerStrategy: datasources/kafka/ConsumerStrategy.md
+      - KafkaSink: datasources/kafka/KafkaSink.md
+      - KafkaBatch: datasources/kafka/KafkaBatch.md
+      - KafkaScan: datasources/kafka/KafkaScan.md
+      - KafkaOffsetRangeLimit: datasources/kafka/KafkaOffsetRangeLimit.md
+      - KafkaDataConsumer: datasources/kafka/KafkaDataConsumer.md
       - KafkaMicroBatchReader:
-        - KafkaMicroBatchReader: spark-sql-streaming-KafkaMicroBatchReader.md
-        - KafkaOffsetRangeCalculator: spark-sql-streaming-KafkaOffsetRangeCalculator.md
-        - KafkaMicroBatchInputPartition: spark-sql-streaming-KafkaMicroBatchInputPartition.md
-        - KafkaMicroBatchInputPartitionReader: spark-sql-streaming-KafkaMicroBatchInputPartitionReader.md
-        - KafkaSourceInitialOffsetWriter: spark-sql-streaming-KafkaSourceInitialOffsetWriter.md
+        - KafkaMicroBatchReader: datasources/kafka/KafkaMicroBatchReader.md
+        - KafkaOffsetRangeCalculator: datasources/kafka/KafkaOffsetRangeCalculator.md
+        - KafkaMicroBatchInputPartition: datasources/kafka/KafkaMicroBatchInputPartition.md
+        - KafkaMicroBatchInputPartitionReader: datasources/kafka/KafkaMicroBatchInputPartitionReader.md
+        - KafkaSourceInitialOffsetWriter: datasources/kafka/KafkaSourceInitialOffsetWriter.md
       - KafkaContinuousReader:
-        - KafkaContinuousReader: spark-sql-streaming-KafkaContinuousReader.md
-        - KafkaContinuousInputPartition: spark-sql-streaming-KafkaContinuousInputPartition.md
+        - KafkaContinuousReader: datasources/kafka/KafkaContinuousReader.md
+        - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
     - Text Socket Data Source:
       - TextSocketSourceProvider: spark-sql-streaming-TextSocketSourceProvider.md
       - TextSocketSource: spark-sql-streaming-TextSocketSource.md

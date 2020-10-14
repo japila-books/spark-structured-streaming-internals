@@ -59,7 +59,7 @@ format(source: String): DataStreamWriter[T]
 
 Specifies the format of the <<source, data sink>> (aka _output format_)
 
-The format is used internally as the name (_alias_) of the <<spark-sql-streaming-Sink.md#, streaming sink>> to use to write the data to
+The format is used internally as the name (_alias_) of the [streaming sink](Sink.md) to use to write the data to
 
 | <<option, option>>
 a|
@@ -202,7 +202,7 @@ outputMode(outputMode: String): DataStreamWriter[T]
 outputMode(outputMode: OutputMode): DataStreamWriter[T]
 ----
 
-`outputMode` specifies the spark-sql-streaming-OutputMode.md[output mode] of a streaming query, i.e.  what data is sent out to a spark-sql-streaming-Sink.md[streaming sink] when there is new data available in [streaming data sources](Source.md).
+`outputMode` specifies the spark-sql-streaming-OutputMode.md[output mode] of a streaming query, i.e.  what data is sent out to a [streaming sink](Sink.md) when there is new data available in [streaming data sources](Source.md).
 
 NOTE: When not defined explicitly, `outputMode` defaults to <<spark-sql-streaming-OutputMode.md#Append, Append>> output mode.
 
@@ -331,7 +331,7 @@ a| [[foreachBatchWriter]]
 foreachBatchWriter: (Dataset[T], Long) => Unit
 ----
 
-The function that is used as the batch writer in the <<spark-sql-streaming-ForeachBatchSink.md#, ForeachBatchSink>> for <<foreachBatch, foreachBatch>>
+The function that is used as the batch writer in the [ForeachBatchSink](spark-sql-streaming-ForeachBatchSink.md) for <<foreachBatch, foreachBatch>>
 
 | foreachWriter
 |

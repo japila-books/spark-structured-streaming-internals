@@ -1,13 +1,12 @@
 # FileStreamSource
 
-`FileStreamSource` is a [Source](Source.md) that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
+`FileStreamSource` is a [streaming source](../../Source.md) that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
 
-NOTE: It is used by spark-sql-datasource.md#createSource[DataSource.createSource] for `FileFormat`.
+`FileStreamSource` is used by [DataSource.createSource](../../spark-sql-streaming-DataSource.md#createSource) for `FileFormat`.
 
-You can provide the <<schema, schema>> of the data and `dataFrameBuilder` - the function to build a `DataFrame` in <<getBatch, getBatch>> at instantiation time.
+## Demo
 
-[source, scala]
-----
+```text
 // NOTE The source directory must exist
 // mkdir text-logs
 
@@ -19,53 +18,21 @@ val df = spark.readStream
 scala> df.printSchema
 root
 |-- value: string (nullable = true)
-----
-
-Batches are indexed.
-
-It lives in `org.apache.spark.sql.execution.streaming` package.
-
-[source, scala]
-----
-import org.apache.spark.sql.types._
-val schema = StructType(
-  StructField("id", LongType, nullable = false) ::
-  StructField("name", StringType, nullable = false) ::
-  StructField("score", DoubleType, nullable = false) :: Nil)
-
-// You should have input-json directory available
-val in = spark.readStream
-  .format("json")
-  .schema(schema)
-  .load("input-json")
-
-val input = in.transform { ds =>
-  println("transform executed")  // <-- it's going to be executed once only
-  ds
-}
-
-scala> input.isStreaming
-res9: Boolean = true
-----
-
-It tracks already-processed files in `seenFiles` hash map.
-
-[TIP]
-====
-Enable `DEBUG` or `TRACE` logging level for `org.apache.spark.sql.execution.streaming.FileStreamSource` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSource=TRACE
 ```
 
-Refer to spark-sql-streaming-spark-logging.md[Logging].
-====
+## Creating Instance
 
-=== [[creating-instance]] Creating FileStreamSource Instance
+`FileStreamSource` takes the following to be created:
 
-CAUTION: FIXME
+* <span id="sparkSession"> `SparkSession`
+* <span id="path"> Path
+* <span id="fileFormatClassName"> Class Name of `FileFormat`
+* <span id="schema"> Schema
+* <span id="partitionColumns"> Names of the Partition Columns (if any)
+* <span id="metadataPath"> Metadata Path
+* <span id="options"> Options (`Map[String, String]`)
+
+`FileStreamSource` is created when `DataSource` is requested to [create a streaming source](../../spark-sql-streaming-DataSource.md#createSource) for `FileFormat` data sources.
 
 === [[options]] Options
 
@@ -112,7 +79,7 @@ new file: $file
 old file: $file
 ```
 
-`getOffset` is part of the [Source](Source.md#getOffset) abstraction.
+`getOffset` is part of the [Source](../../Source.md#getOffset) abstraction.
 
 === [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method
 
@@ -164,6 +131,18 @@ NOTE: `fetchAllFiles` is used exclusively when `FileStreamSource` is requested t
 allFilesUsingMetadataLogFileIndex(): Seq[FileStatus]
 ----
 
-`allFilesUsingMetadataLogFileIndex` simply creates a new <<spark-sql-streaming-MetadataLogFileIndex.md#, MetadataLogFileIndex>> and requests it to `allFiles`.
+`allFilesUsingMetadataLogFileIndex` simply creates a new [MetadataLogFileIndex](MetadataLogFileIndex.md) and requests it to `allFiles`.
 
 NOTE: `allFilesUsingMetadataLogFileIndex` is used exclusively when `FileStreamSource` is requested to <<fetchAllFiles, fetchAllFiles>> (when requested for <<fetchMaxOffset, fetchMaxOffset>> when `FileStreamSource` is requested to <<getOffset, getOffset>>).
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.FileStreamSource` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSource=ALL
+```
+
+Refer to [Logging](../../spark-logging.md).
