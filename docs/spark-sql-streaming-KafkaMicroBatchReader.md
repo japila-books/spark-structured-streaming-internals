@@ -1,14 +1,14 @@
 # KafkaMicroBatchReader
 
-`KafkaMicroBatchReader` is the <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for <<spark-sql-streaming-kafka-data-source.md#, kafka data source>> for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+`KafkaMicroBatchReader` is the <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for [kafka data source](kafka/index.md) for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 `KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a MicroBatchReader](kafka/KafkaSourceProvider.md#createMicroBatchReader).
 
 [[pollTimeoutMs]]
-`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the <<spark-sql-streaming-kafka-data-source.md#kafkaConsumer.pollTimeoutMs, kafkaConsumer.pollTimeoutMs>> option (default: `spark.network.timeout` or `120s`).
+`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [kafkaConsumer.pollTimeoutMs](kafka/index.md#kafkaConsumer.pollTimeoutMs) option (default: `spark.network.timeout` or `120s`).
 
 [[maxOffsetsPerTrigger]]
-`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the <<spark-sql-streaming-kafka-data-source.md#maxOffsetsPerTrigger, maxOffsetsPerTrigger>> option (default: `(undefined)`).
+`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [maxOffsetsPerTrigger](kafka/index.md#maxOffsetsPerTrigger) option (default: `(undefined)`).
 
 `KafkaMicroBatchReader` uses the <<executorKafkaParams, Kafka properties for executors>> to create <<spark-sql-streaming-KafkaMicroBatchInputPartition.md#, KafkaMicroBatchInputPartitions>> when requested to <<planInputPartitions, planInputPartitions>>.
 
@@ -23,7 +23,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaMicroBatchReader=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.md#, Logging>>.
+Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating KafkaMicroBatchReader Instance
@@ -35,7 +35,7 @@ Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 * [[options]] `DataSourceOptions`
 * [[metadataPath]] Metadata Path
 * [[startingOffsets]] Desired starting <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, KafkaOffsetRangeLimit>>
-* [[failOnDataLoss]] <<spark-sql-streaming-kafka-data-source.md#failOnDataLoss, failOnDataLoss>> option
+* [[failOnDataLoss]] [failOnDataLoss](kafka/index.md#failOnDataLoss) option
 
 `KafkaMicroBatchReader` initializes the <<internal-registries, internal registries and counters>>.
 
@@ -48,7 +48,7 @@ readSchema(): StructType
 
 NOTE: `readSchema` is part of the `DataSourceReader` contract to...FIXME.
 
-`readSchema` simply returns the <<spark-sql-streaming-kafka-data-source.md#schema, predefined fixed schema>>.
+`readSchema` simply returns the [predefined fixed schema](kafka/index.md#schema).
 
 === [[stop]] Stopping Streaming Reader -- `stop` Method
 

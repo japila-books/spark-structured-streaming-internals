@@ -1,6 +1,6 @@
 # KafkaSink
 
-`KafkaSink` is a [streaming sink](spark-sql-streaming-Sink.md) that [KafkaSourceProvider](kafka/KafkaSourceProvider.md) registers as the `kafka` format.
+`KafkaSink` is a [streaming sink](../spark-sql-streaming-Sink.md) that [KafkaSourceProvider](KafkaSourceProvider.md) registers as the `kafka` format.
 
 ```text
 // start spark-shell or a Spark application with spark-sql-kafka-0-10 module

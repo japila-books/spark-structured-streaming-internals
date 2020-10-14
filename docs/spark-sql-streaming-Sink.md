@@ -1,4 +1,4 @@
-== [[Sink]] Sink Contract -- Streaming Sinks for Micro-Batch Stream Processing
+# Sink &mdash; Streaming Sinks for Micro-Batch Stream Processing
 
 `Sink` is the <<contract, extension>> of the <<spark-sql-streaming-BaseStreamingSink.md#, BaseStreamingSink contract>> for <<implementations, streaming sinks>> that can <<addBatch, add batches to an output>>.
 
@@ -40,8 +40,8 @@ Used exclusively when <<MicroBatchExecution.md#, MicroBatchExecution>> stream ex
 | <<spark-sql-streaming-ForeachBatchSink.md#, ForeachBatchSink>>
 | [[ForeachBatchSink]] Used for [DataStreamWriter.foreachBatch](DataStreamWriter.md#foreachBatch) operator
 
-| <<spark-sql-streaming-KafkaSink.md#, KafkaSink>>
-| [[KafkaSink]] Used for <<spark-sql-streaming-kafka-data-source.md#, kafka>> output format
+| [KafkaSink](kafka/KafkaSink.md)
+| [[KafkaSink]] Used for [kafka](kafka/index.md) output format
 
 | <<spark-sql-streaming-MemorySink.md#, MemorySink>>
 | [[MemorySink]] Used for `memory` output format

@@ -1,10 +1,10 @@
-== [[KafkaSourceRDD]] KafkaSourceRDD
+# KafkaSourceRDD
 
 `KafkaSourceRDD` is an `RDD` of Kafka's https://kafka.apache.org/0102/javadoc/org/apache/kafka/clients/consumer/ConsumerRecords.html[ConsumerRecords] (`RDD[ConsumerRecord[Array[Byte], Array[Byte]]]`) and no parent RDDs.
 
 `KafkaSourceRDD` is <<creating-instance, created>> when:
 
-* `KafkaRelation` is requested to <<spark-sql-streaming-KafkaRelation.md#buildScan, build a distributed data scan with column pruning>>
+* `KafkaRelation` is requested to [build a distributed data scan with column pruning](kafka/KafkaRelation.md#buildScan)
 
 * `KafkaSource` is requested to <<spark-sql-streaming-KafkaSource.md#getBatch, generate a streaming DataFrame with records from Kafka for a streaming micro-batch>>
 

@@ -22,7 +22,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinStateManager$KeyToNumValuesStore=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.md#, Logging>>.
+Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
 === [[get]] Looking Up Number Of Value Rows For Given Key (Value Count) -- `get` Method

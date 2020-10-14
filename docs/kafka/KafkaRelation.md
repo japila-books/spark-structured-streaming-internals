@@ -1,11 +1,11 @@
 # KafkaRelation
 
 [[schema]]
-`KafkaRelation` represents a *collection of rows* with a <<spark-sql-streaming-kafka-data-source.md#schema, predefined schema>> (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
+`KafkaRelation` represents a **collection of rows** with a [predefined schema](index.md#schema) (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 
-`KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a BaseRelation](kafka/KafkaSourceProvider.md#createRelation).
+`KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a BaseRelation](KafkaSourceProvider.md#createRelation).
 
 [[options]]
 .KafkaRelation's Options
@@ -32,7 +32,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaRelation=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.md#, Logging>>.
+Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating KafkaRelation Instance
@@ -40,7 +40,7 @@ Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 `KafkaRelation` takes the following when created:
 
 * [[sqlContext]] `SQLContext`
-* [[strategy]] spark-sql-streaming-ConsumerStrategy.md[ConsumerStrategy]
+* [[strategy]] [ConsumerStrategy](ConsumerStrategy.md)
 * [[sourceOptions]] `Source` options (`Map[String, String]`)
 * [[specifiedKafkaParams]] User-defined Kafka parameters (`Map[String, String]`)
 * [[failOnDataLoss]] `failOnDataLoss` flag
@@ -75,7 +75,7 @@ NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-sp
 
 * The given <<strategy, ConsumerStrategy>> and the <<sourceOptions, source options>>
 
-* [Kafka parameters for the driver](kafka/KafkaSourceProvider.md#kafkaParamsForDriver) based on the given <<specifiedKafkaParams, specifiedKafkaParams>>
+* [Kafka parameters for the driver](KafkaSourceProvider.md#kafkaParamsForDriver) based on the given <<specifiedKafkaParams, specifiedKafkaParams>>
 
 * *spark-kafka-relation-[randomUUID]-driver* for the `driverGroupIdPrefix`
 
@@ -91,7 +91,7 @@ Generating RDD of offset ranges: [offsetRanges]
 
 `buildScan` creates a <<spark-sql-streaming-KafkaSourceRDD.md#, KafkaSourceRDD>> with the following:
 
-* [Kafka parameters for executors](kafka/KafkaSourceProvider.md#kafkaParamsForExecutors) based on the given <<specifiedKafkaParams, specifiedKafkaParams>> and the unique group ID (`spark-kafka-relation-[randomUUID]`)
+* [Kafka parameters for executors](KafkaSourceProvider.md#kafkaParamsForExecutors) based on the given <<specifiedKafkaParams, specifiedKafkaParams>> and the unique group ID (`spark-kafka-relation-[randomUUID]`)
 
 * The offset ranges created
 

@@ -18,7 +18,7 @@ NOTE: Kafka topics are checked for new records every spark-sql-streaming-Trigger
 image::images/KafkaSource-creating-instance.png[align="center"]
 
 [[schema]]
-`KafkaSource` uses a <<spark-sql-streaming-kafka-data-source.md#schema, predefined (fixed) schema>> (that [cannot be changed](kafka/KafkaSourceProvider.md#sourceSchema)).
+`KafkaSource` uses a [predefined (fixed) schema](kafka/index.md#schema) (that [cannot be changed](kafka/KafkaSourceProvider.md#sourceSchema)).
 
 `KafkaSource` also supports batch Datasets.
 
@@ -33,7 +33,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.md#, Logging>>.
+Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
 === [[creating-instance]] Creating KafkaSource Instance
@@ -45,7 +45,7 @@ Refer to <<spark-sql-streaming-logging.md#, Logging>>.
 * [[executorKafkaParams]] Parameters of executors (reading from Kafka)
 * [[sourceOptions]] Collection of key-value options
 * [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists spark-sql-streaming-KafkaSourceOffset.md[KafkaSourceOffset] offsets in JSON format)
-* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Starting offsets>> (as defined using <<spark-sql-streaming-kafka-data-source.md#startingOffsets, startingOffsets>> option)
+* [[startingOffsets]] <<spark-sql-streaming-KafkaOffsetRangeLimit.md#, Starting offsets>> (as defined using [startingOffsets](kafka/index.md#startingOffsets) option)
 * [[failOnDataLoss]] Flag used to spark-sql-streaming-KafkaSourceRDD.md#creating-instance[create `KafkaSourceRDDs`] every trigger and when checking to <<reportDataLoss, report a IllegalStateException on data loss>>.
 
 `KafkaSource` initializes the <<internal-properties, internal properties>>.

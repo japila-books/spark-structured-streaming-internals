@@ -88,13 +88,13 @@ createSink(
   outputMode: OutputMode): Sink
 ----
 
-`createSink` creates a <<spark-sql-streaming-Sink.md#, streaming sink>> for <<spark-sql-streaming-StreamSinkProvider.md#, StreamSinkProvider>> or `FileFormat` data sources.
+`createSink` creates a <<spark-sql-streaming-Sink.md#, streaming sink>> for [StreamSinkProvider](StreamSinkProvider.md) or `FileFormat` data sources.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat Data Source] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 Internally, `createSink` creates a new instance of the <<providingClass, providingClass>> and branches off per type:
 
-* For a <<spark-sql-streaming-StreamSinkProvider.md#, StreamSinkProvider>>, `createSink` simply delegates the call and requests it to <<spark-sql-streaming-StreamSinkProvider.md#createSink, create a streaming sink>>
+* For a [StreamSinkProvider](StreamSinkProvider.md), `createSink` simply delegates the call and requests it to [create a streaming sink](StreamSinkProvider.md#createSink)
 
 * For a `FileFormat`, `createSink` creates a <<spark-sql-streaming-FileStreamSink.md#, FileStreamSink>> when `path` option is specified and the output mode is <<spark-sql-streaming-OutputMode.md#Append, Append>>
 

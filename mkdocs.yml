@@ -71,6 +71,12 @@ extra:
       link: https://linkedin.com/in/jaceklaskowski
   spark:
     version: 3.0.1
+  java:
+    version: 8
+    doc: http://docs.oracle.com/javase/{{ java.version }}/docs/api
+  kafka:
+    version: 2.4.1
+    doc: http://kafka.apache.org/{{ kafka.version }}/javadoc
 
 google_analytics:
   - !!python/object/apply:os.getenv ["GOOGLE_ANALYTICS_KEY"]
@@ -82,6 +88,8 @@ nav:
     - Spark Structured Streaming and Streaming Queries: spark-structured-streaming.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
+    - MicroBatchStream: MicroBatchStream.md
+    - ContinuousStream: ContinuousStream.md
     - Streaming Join:
       - Streaming Join: spark-sql-streaming-join.md
       - StateStoreAwareZipPartitionsRDD: spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md
@@ -231,9 +239,8 @@ nav:
       - Source:
         - Source: Source.md
         - StreamSourceProvider: StreamSourceProvider.md
-      - Sink:
-        - Sink: spark-sql-streaming-Sink.md
-        - StreamSinkProvider: spark-sql-streaming-StreamSinkProvider.md
+      - Sink: spark-sql-streaming-Sink.md
+      - StreamSinkProvider: StreamSinkProvider.md
     - Continuous Stream Processing:
       - Continuous Stream Processing: spark-sql-streaming-continuous-stream-processing.md
       - ContinuousExecution: ContinuousExecution.md
@@ -277,16 +284,19 @@ nav:
       - ManifestFileCommitProtocol: spark-sql-streaming-ManifestFileCommitProtocol.md
       - MetadataLogFileIndex: spark-sql-streaming-MetadataLogFileIndex.md
     - Kafka Data Source:
-      - Kafka Data Source: spark-sql-streaming-kafka-data-source.md
+      - Kafka Data Source: kafka/index.md
       - KafkaSourceProvider: kafka/KafkaSourceProvider.md
+      - KafkaTable: kafka/KafkaTable.md
       - KafkaSource: spark-sql-streaming-KafkaSource.md
-      - KafkaRelation: spark-sql-streaming-KafkaRelation.md
+      - KafkaRelation: kafka/KafkaRelation.md
       - KafkaSourceRDD: spark-sql-streaming-KafkaSourceRDD.md
       - CachedKafkaConsumer: spark-sql-streaming-CachedKafkaConsumer.md
       - KafkaSourceOffset: spark-sql-streaming-KafkaSourceOffset.md
       - KafkaOffsetReader: spark-sql-streaming-KafkaOffsetReader.md
-      - ConsumerStrategy: spark-sql-streaming-ConsumerStrategy.md
-      - KafkaSink: spark-sql-streaming-KafkaSink.md
+      - ConsumerStrategy: kafka/ConsumerStrategy.md
+      - KafkaSink: kafka/KafkaSink.md
+      - KafkaBatch: kafka/KafkaBatch.md
+      - KafkaScan: kafka/KafkaScan.md
       - KafkaOffsetRangeLimit: spark-sql-streaming-KafkaOffsetRangeLimit.md
       - KafkaDataConsumer: spark-sql-streaming-KafkaDataConsumer.md
       - KafkaMicroBatchReader:
@@ -336,7 +346,7 @@ nav:
       - SinkProgress: monitoring/SinkProgress.md
     - StreamingQueryStatus: monitoring/StreamingQueryStatus.md
     - MetricsReporter: monitoring/MetricsReporter.md
-    - Logging: logging.md
+    - Logging: spark-logging.md
   - Web UI:
     - Web UI: webui.md
   - Demos:

@@ -93,7 +93,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.RateStreamSource=DEBUG
 ```
 
-Refer to spark-sql-streaming-logging.md[Logging].
+Refer to spark-sql-streaming-spark-logging.md[Logging].
 ====
 
 === [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method

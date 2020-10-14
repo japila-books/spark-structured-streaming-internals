@@ -22,7 +22,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.execution.streaming.state.SymmetricHashJoinStateManager$KeyWithIndexToValueStore=ALL
 ```
 
-Refer to <<spark-sql-streaming-logging.md#, Logging>>.
+Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
 === [[get]] Looking Up State Row For Given Key and Index -- `get` Method

@@ -1,6 +1,6 @@
 # KafkaOffsetRangeLimit &mdash; Desired Offset Range Limits
 
-`KafkaOffsetRangeLimit` represents the desired offset range limits for starting, ending, and specific offsets in <<spark-sql-streaming-kafka-data-source.md#, Kafka Data Source>>.
+`KafkaOffsetRangeLimit` represents the desired offset range limits for starting, ending, and specific offsets in [Kafka Data Source](kafka/index.md).
 
 [[implementations]]
 .KafkaOffsetRangeLimits
@@ -35,8 +35,8 @@ NOTE: A JSON-formatted text is of the following format `{"topicName":{"partition
 
 * <<spark-sql-streaming-KafkaMicroBatchReader.md#, KafkaMicroBatchReader>> is created (with the <<spark-sql-streaming-KafkaMicroBatchReader.md#startingOffsets, starting offsets>>)
 
-* <<spark-sql-streaming-KafkaRelation.md#, KafkaRelation>> is created (with the <<spark-sql-streaming-KafkaRelation.md#startingOffsets, starting>> and <<spark-sql-streaming-KafkaRelation.md#endingOffsets, ending>> offsets)
+* [KafkaRelation](kafka/KafkaRelation.md) is created (with the [starting](kafka/KafkaRelation.md#startingOffsets) and [ending](kafka/KafkaRelation.md#endingOffsets) offsets)
 
-* <<spark-sql-streaming-KafkaSource.md#, KafkaSource>> is created (with the <<spark-sql-streaming-KafkaRelation.md#startingOffsets, starting offsets>>)
+* <<spark-sql-streaming-KafkaSource.md#, KafkaSource>> is created (with the [starting offsets](kafka/KafkaRelation.md#startingOffsets))
 
 * `KafkaSourceProvider` is requested to [convert configuration options to KafkaOffsetRangeLimits](kafka/KafkaSourceProvider.md#getKafkaOffsetRangeLimit)

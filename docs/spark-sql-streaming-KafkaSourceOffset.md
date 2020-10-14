@@ -1,6 +1,6 @@
-== [[KafkaSourceOffset]] KafkaSourceOffset
+# KafkaSourceOffset
 
-`KafkaSourceOffset` is a custom <<spark-sql-streaming-Offset.md#, Offset>> for <<spark-sql-streaming-kafka-data-source.md#, kafka data source>>.
+`KafkaSourceOffset` is a custom <<spark-sql-streaming-Offset.md#, Offset>> for [kafka data source](kafka/index.md).
 
 `KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
 

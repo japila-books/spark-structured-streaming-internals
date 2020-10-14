@@ -1,6 +1,6 @@
 # KafkaContinuousReader &mdash; ContinuousReader for Kafka Data Source in Continuous Stream Processing
 
-`KafkaContinuousReader` is a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> for <<spark-sql-streaming-kafka-data-source.md#, Kafka Data Source>> in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
+`KafkaContinuousReader` is a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> for [Kafka Data Source](kafka/index.md) in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
 
 `KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a ContinuousReader](kafka/KafkaSourceProvider.md#createContinuousReader).
 
@@ -19,7 +19,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaContinuousReader=INFO
 ```
 
-Refer to spark-sql-streaming-logging.md[Logging].
+Refer to spark-sql-streaming-spark-logging.md[Logging].
 ====
 
 === [[creating-instance]] Creating KafkaContinuousReader Instance
