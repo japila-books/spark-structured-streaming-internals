@@ -80,6 +80,8 @@ extra:
   kafka:
     version: 2.4.1
     doc: http://kafka.apache.org/{{ kafka.version }}/javadoc
+  book:
+    spark_sql: https://jaceklaskowski.github.io/mastering-spark-sql-book
 
 google_analytics:
   - !!python/object/apply:os.getenv ["GOOGLE_ANALYTICS_KEY"]
