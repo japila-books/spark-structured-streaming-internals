@@ -4,7 +4,7 @@
 
 `MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)) with the following:
 
-* Any type of <<sink, sink>> but <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>
+* Any type of <<sink, sink>>
 
 * Any type of <<trigger, trigger>> but <<spark-sql-streaming-Trigger.md#ContinuousTrigger, ContinuousTrigger>>
 
@@ -57,7 +57,6 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[name]] Name of the streaming query
 * [[checkpointRoot]] Path of the checkpoint directory
 * [[analyzedPlan]] Analyzed logical query plan of the streaming query (`LogicalPlan`)
-* [[sink]] [Streaming sink](spark-sql-streaming-BaseStreamingSink.md)
 * [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
 * [[triggerClock]] Trigger clock (`Clock`)
 * [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
@@ -447,7 +446,7 @@ image::images/StreamExecution-runBatch-newBatchesPlan.png[align="center"]
 
 `runBatch` transforms the <<logicalPlan, analyzed logical plan>> to include <<runBatch-getBatch, Sources and MicroBatchReaders with new data>> (`newBatchesPlan` with logical plans to process data that has arrived since the last batch).
 
-For every [StreamingExecutionRelation](StreamingExecutionRelation.md) (with a <<spark-sql-streaming-BaseStreamingSource.md#, Source or MicroBatchReader>>), `runBatch` tries to find the corresponding logical plan for processing new data.
+For every [StreamingExecutionRelation](StreamingExecutionRelation.md), `runBatch` tries to find the corresponding logical plan for processing new data.
 
 If the logical plan is found, `runBatch` makes the plan a child operator of `Project` (with `Aliases`) logical operator and replaces the `StreamingExecutionRelation`.
 
@@ -468,9 +467,7 @@ Invalid batch: [output] != [dataPlan.output]
 
 ==== [[runBatch-triggerLogicalPlan]] Adapting Transformed Logical Plan to Sink with StreamWriteSupport
 
-`runBatch` adapts the <<runBatch-newAttributePlan, transformed logical plan (with new data and current batch timestamp)>> for the new <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>> sinks (per the type of the <<sink, BaseStreamingSink>>).
-
-For a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>> (Data Source API V2), `runBatch` requests the `StreamWriteSupport` for a <<spark-sql-streaming-StreamWriteSupport.md#createStreamWriter, StreamWriter>> (for the [runId](StreamExecution.md#runId), the output schema, the <<outputMode, OutputMode>>, and the <<extraOptions, extra options>>). `runBatch` then creates a `WriteToDataSourceV2` logical operator with a new <<spark-sql-streaming-MicroBatchWriter.md#, MicroBatchWriter>> as a child operator (for the [current batch ID](StreamExecution.md#currentBatchId) and the <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>).
+`runBatch`...FIXME
 
 For a [Sink](Sink.md) (Data Source API V1), `runBatch` changes nothing.
 
@@ -539,8 +536,6 @@ In *addBatch* [time-tracking section](monitoring/ProgressReporter.md#reportTimeT
 
 For a [Sink](Sink.md) (Data Source API V1), `runBatch` simply requests the `Sink` to [add the DataFrame](Sink.md#addBatch) (with the [batch ID](StreamExecution.md#currentBatchId)).
 
-For a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>> (Data Source API V2), `runBatch` simply requests the `DataFrame` with new data to collect (which simply forces execution of the <<spark-sql-streaming-MicroBatchWriter.md#, MicroBatchWriter>>).
-
 NOTE: `runBatch` uses `SQLExecution.withNewExecutionId` to execute and track all the Spark jobs under one execution id (so it is reported as one single multi-job execution, e.g. in web UI).
 
 NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before execution and a `SparkListenerSQLExecutionEnd` event right afterwards.
@@ -554,7 +549,7 @@ NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart`
 
 `runBatch` requests the [Offset Commit Log](StreamExecution.md#commitLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, persisting metadata of the streaming micro-batch>> (with the current [batch ID](StreamExecution.md#currentBatchId) and <<spark-sql-streaming-WatermarkTracker.md#currentWatermark, event-time watermark>> of the <<watermarkTracker, WatermarkTracker>>).
 
-In the end, `runBatch` <<spark-sql-streaming-StreamProgress.md#plusplus, adds>> the [available offsets](StreamExecution.md#availableOffsets) to the [committed offsets](StreamExecution.md#committedOffsets) (and updates the <<spark-sql-streaming-Offset.md#, offsets>> of every <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>> with new data in the current micro-batch).
+In the end, `runBatch` <<spark-sql-streaming-StreamProgress.md#plusplus, adds>> the [available offsets](StreamExecution.md#availableOffsets) to the [committed offsets](StreamExecution.md#committedOffsets) (and updates the <<spark-sql-streaming-Offset.md#, offsets>> of every source with new data in the current micro-batch).
 
 ## <span id="stop"> Stopping Stream Processing (Execution of Streaming Query)
 
@@ -602,7 +597,7 @@ NOTE: `logicalPlan` is a Scala lazy value and so the initialization is guarantee
 
 Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>>.
 
-For every <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>> logical operator, `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelation` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `DataSource` to <<spark-sql-streaming-DataSource.md#createSource, create a streaming Source>> with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
+For every <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>> logical operator, `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelation` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `DataSource` to [create a streaming Source](DataSource.md#createSource) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
 
 ```text
 Using Source [source] from DataSourceV1 named '[sourceName]' [dataSourceV1]
@@ -614,7 +609,7 @@ For every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> l
 Using MicroBatchReader [reader] from DataSourceV2 named '[sourceName]' [dataSourceV2]
 ```
 
-For every other <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operator, `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `StreamingRelation` for the underlying <<spark-sql-streaming-StreamingRelation.md#dataSource, DataSource>> that is in turn requested to <<spark-sql-streaming-DataSource.md#createSource, create a streaming Source>> with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
+For every other <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operator, `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `StreamingRelation` for the underlying <<spark-sql-streaming-StreamingRelation.md#dataSource, DataSource>> that is in turn requested to [create a streaming Source](DataSource.md#createSource) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
 
 ```text
 Using Source [source] from DataSourceV2 named '[sourceName]' [dataSourceV2]
@@ -664,7 +659,7 @@ Default: `false`
 a| [[readerToDataSourceMap]] (`Map[MicroBatchReader, (DataSourceV2, Map[String, String])]`)
 
 | sources
-a| [[sources]] <<spark-sql-streaming-BaseStreamingSource.md#, Streaming sources and readers>> (of the [StreamingExecutionRelations](StreamingExecutionRelation.md) of the <<analyzedPlan, analyzed logical query plan>> of the streaming query)
+a| [[sources]] Streaming sources and readers (of the [StreamingExecutionRelations](StreamingExecutionRelation.md) of the <<analyzedPlan, analyzed logical query plan>> of the streaming query)
 
 Default: (empty)
 

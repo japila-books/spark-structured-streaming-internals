@@ -112,11 +112,7 @@ nav:
         - StreamingJoinHelper: spark-sql-streaming-StreamingJoinHelper.md
     - Extending Structured Streaming with New Data Sources:
       - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
-      - BaseStreamingSource: spark-sql-streaming-BaseStreamingSource.md
-      - BaseStreamingSink: spark-sql-streaming-BaseStreamingSink.md
-      - StreamWriteSupport: spark-sql-streaming-StreamWriteSupport.md
-      - StreamWriter: spark-sql-streaming-StreamWriter.md
-      - DataSource: spark-sql-streaming-DataSource.md
+      - DataSource: DataSource.md
     - Streaming Aggregation:
       - Streaming Aggregation: spark-sql-streaming-aggregation.md
       - StateStoreRDD: spark-sql-streaming-StateStoreRDD.md
@@ -261,8 +257,8 @@ nav:
         - DataReaderThread: spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.md
         - EpochMarkerGenerator: spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.md
       - PartitionOffset: spark-sql-streaming-PartitionOffset.md
-      - ContinuousExecutionRelation Leaf Logical Operator: spark-sql-streaming-ContinuousExecutionRelation.md
-      - WriteToContinuousDataSource Unary Logical Operator: spark-sql-streaming-WriteToContinuousDataSource.md
+      - ContinuousExecutionRelation: ContinuousExecutionRelation.md
+      - WriteToContinuousDataSource: WriteToContinuousDataSource.md
       - WriteToContinuousDataSourceExec:
         - WriteToContinuousDataSourceExec Unary Physical Operator: spark-sql-streaming-WriteToContinuousDataSourceExec.md
         - ContinuousWriteRDD: spark-sql-streaming-ContinuousWriteRDD.md

@@ -4,7 +4,7 @@
 
 `Source` is used in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
-`Source` is created using [StreamSourceProvider.createSource](StreamSourceProvider.md#createSource) (and [DataSource.createSource](spark-sql-streaming-DataSource.md#createSource)).
+`Source` is created using [StreamSourceProvider.createSource](StreamSourceProvider.md#createSource) (and [DataSource.createSource](DataSource.md#createSource)).
 
 For fault tolerance, `Source` must be able to replay an arbitrary sequence of past data in a stream using a range of offsets. This is the assumption so Structured Streaming can achieve end-to-end exactly-once guarantees.
 

@@ -1,6 +1,6 @@
-== [[MemoryStreamBase]] MemoryStreamBase Contract -- Base Contract for Memory Sources
+# MemoryStreamBase -- Base Contract for Memory Sources
 
-`MemoryStreamBase` is the <<contract, base>> of the <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource contract>> for <<implementations, memory sources>> that can <<addData, add data>>.
+`MemoryStreamBase` is the <<contract, base>> of...FIXME
 
 [[contract]]
 .MemoryStreamBase Contract

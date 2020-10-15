@@ -15,7 +15,7 @@ val sq = in.
   start
 ```
 
-`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to <<spark-sql-streaming-DataSource.md#createSink, create a streaming sink>> for a file-based data source (i.e. `FileFormat`).
+`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to [create a streaming sink](../../DataSource.md#createSink) for a file-based data source (i.e. `FileFormat`).
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 

@@ -1,6 +1,6 @@
-== [[ContinuousReader]] ContinuousReader Contract -- Data Source Readers in Continuous Stream Processing
+# ContinuousReader -- Data Source Readers in Continuous Stream Processing
 
-`ContinuousReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` (and <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>>) contracts for <<implementations, data source readers>> in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
+`ContinuousReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` abstraction for <<implementations, data source readers>> in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>.
 
 `ContinuousReader` is part of the novel Data Source API V2 in Spark SQL.
 

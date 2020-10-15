@@ -259,7 +259,6 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[name]] Name of the streaming query (can also be `null`)
 * [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Streaming query (as an analyzed logical query plan, i.e. `LogicalPlan`)
-* [[sink]] [Streaming sink](spark-sql-streaming-BaseStreamingSink.md)
 * [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
 * [[triggerClock]] `Clock`
 * [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
@@ -474,22 +473,19 @@ explainInternal(extended: Boolean): String
 stopSources(): Unit
 ----
 
-`stopSources` requests every <<uniqueSources, streaming source>> (in the <<analyzedPlan, streaming query>>) to <<spark-sql-streaming-BaseStreamingSource.md#stop, stop>>.
+`stopSources` requests every <<uniqueSources, streaming source>> (in the <<analyzedPlan, streaming query>>) to stop.
 
 In case of an non-fatal exception, `stopSources` prints out the following WARN message to the logs:
 
-```
+```text
 Failed to stop streaming source: [source]. Resources may have leaked.
 ```
 
-[NOTE]
-====
 `stopSources` is used when:
 
 * `StreamExecution` is requested to <<runStream, run stream processing>> (and <<runStream-finally, terminates>> successfully or not)
 
 * `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run the streaming query in continuous mode>> (and terminates)
-====
 
 ## <span id="runStream"> Running Stream Processing
 
@@ -913,7 +909,7 @@ a| [[newData]]
 newData: Map[BaseStreamingSource, LogicalPlan]
 ```
 
-Registry of the <<spark-sql-streaming-BaseStreamingSource.md#, streaming sources>> (in the <<logicalPlan, logical query plan>>) that have new data available in the current batch. The new data is a streaming `DataFrame`.
+Registry of the streaming sources (in the <<logicalPlan, logical query plan>>) that have new data available in the current batch. The new data is a streaming `DataFrame`.
 
 `newData` is part of the [ProgressReporter](monitoring/ProgressReporter.md#newData) abstraction.
 
@@ -948,7 +944,7 @@ Used when `StreamExecution` is requested to <<start, start>> to pause the main t
 | [[streamDeathCause]] `StreamingQueryException`
 
 | uniqueSources
-a| [[uniqueSources]] Unique <<spark-sql-streaming-BaseStreamingSource.md#, streaming sources>> (after being collected as `StreamingExecutionRelation` from the <<logicalPlan, logical query plan>>).
+a| [[uniqueSources]] Unique streaming sources (after being collected as `StreamingExecutionRelation` from the <<logicalPlan, logical query plan>>).
 
 Used when `StreamExecution`:
 

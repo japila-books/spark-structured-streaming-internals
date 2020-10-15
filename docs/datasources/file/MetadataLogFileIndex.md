@@ -16,7 +16,7 @@
 
 `MetadataLogFileIndex` is created when:
 
-* `DataSource` is requested to [resolveRelation](../../spark-sql-streaming-DataSource.md#resolveRelation) (for `FileFormat` streaming data sources)
+* `DataSource` is requested to [resolveRelation](../../DataSource.md#resolveRelation) (for `FileFormat` streaming data sources)
 * `FileTable` is requested for a `PartitioningAwareFileIndex` (for `FileFormat` streaming data sources)
 * `FileStreamSource` is requested to [allFilesUsingMetadataLogFileIndex](FileStreamSource.md#allFilesUsingMetadataLogFileIndex)
 

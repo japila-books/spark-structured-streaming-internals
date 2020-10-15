@@ -2,7 +2,7 @@
 
 `FileStreamSource` is a [streaming source](../../Source.md) that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
 
-`FileStreamSource` is used by [DataSource.createSource](../../spark-sql-streaming-DataSource.md#createSource) for `FileFormat`.
+`FileStreamSource` is used by [DataSource.createSource](../../DataSource.md#createSource) for `FileFormat`.
 
 ## Demo
 
@@ -32,7 +32,7 @@ root
 * <span id="metadataPath"> Metadata Path
 * <span id="options"> Options (`Map[String, String]`)
 
-`FileStreamSource` is created when `DataSource` is requested to [create a streaming source](../../spark-sql-streaming-DataSource.md#createSource) for `FileFormat` data sources.
+`FileStreamSource` is created when `DataSource` is requested to [create a streaming source](../../DataSource.md#createSource) for `FileFormat` data sources.
 
 === [[options]] Options
 

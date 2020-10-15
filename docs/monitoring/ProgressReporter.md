@@ -461,7 +461,7 @@ Default: `-1L`
 currentTriggerStartOffsets: Map[BaseStreamingSource, String]
 ```
 
-Start offsets (in [JSON format](../spark-sql-streaming-Offset.md#json)) per <<spark-sql-streaming-BaseStreamingSource.md#, source>>
+Start offsets (in [JSON format](../spark-sql-streaming-Offset.md#json)) per streaming source
 
 Used exclusively when <<finishTrigger, finishing up a streaming batch (trigger) and generating StreamingQueryProgress>> (for a [SourceProgress](SourceProgress.md))
 

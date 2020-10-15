@@ -1,4 +1,4 @@
-== [[EpochCoordinator]] EpochCoordinator RPC Endpoint -- Coordinating Epochs and Offsets Across Partition Tasks
+# EpochCoordinator RPC Endpoint
 
 `EpochCoordinator` is a `ThreadSafeRpcEndpoint` that tracks offsets and epochs (_coordinates epochs_) by handling <<messages, messages>> (in <<receive, fire-and-forget one-way>> and <<receiveAndReply, request-response two-way>> modes) from...FIXME
 
@@ -124,11 +124,10 @@ commitEpoch(
 
 NOTE: `commitEpoch` is used exclusively when `EpochCoordinator` is requested to <<resolveCommitsAtEpoch, resolveCommitsAtEpoch>>.
 
-=== [[creating-instance]] Creating EpochCoordinator Instance
+## Creating Instance
 
 `EpochCoordinator` takes the following to be created:
 
-* [[writer]] <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>
 * [[reader]] <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>
 * [[query]] <<ContinuousExecution.md#, ContinuousExecution>>
 * [[startEpoch]] Start epoch

@@ -122,7 +122,7 @@ val sq = records
   .start
 ----
 
-Internally, the *kafka* data source format for writing is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a <<spark-sql-streaming-StreamWriteSupport.md#, StreamWriteSupport>>.
+Internally, the **kafka** data source format for writing is available through [KafkaSourceProvider](KafkaSourceProvider.md).
 
 === [[micro-batch-stream-processing]] Micro-Batch Stream Processing
 

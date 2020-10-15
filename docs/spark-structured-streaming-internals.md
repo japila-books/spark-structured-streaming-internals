@@ -243,9 +243,7 @@ When `DataStreamWriter` is requested to [start a streaming query](DataStreamWrit
 
 * **avro**, **kafka** _and some others_ (see `DataSource.lookupDataSource` object method)
 
-* [StreamWriteSupport](spark-sql-streaming-StreamWriteSupport.md)
-
-* `DataSource` is requested to [create a streaming sink](spark-sql-streaming-DataSource.md#createSink) that accepts [StreamSinkProvider](StreamSinkProvider.md) or `FileFormat` data sources only
+* `DataSource` is requested to [create a streaming sink](DataSource.md#createSink) that accepts [StreamSinkProvider](StreamSinkProvider.md) or `FileFormat` data sources only
 
 With a streaming sink, `DataStreamWriter` requests the [StreamingQueryManager](#StreamingQueryManager) to [start a streaming query](StreamingQueryManager.md#startQuery).
 

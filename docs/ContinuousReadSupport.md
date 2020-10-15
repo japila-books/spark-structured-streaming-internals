@@ -15,7 +15,7 @@ ContinuousReader createContinuousReader(
 
 `createContinuousReader` is used when:
 
-* `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query>> (and finds <<spark-sql-streaming-ContinuousExecutionRelation.md#, ContinuousExecutionRelations>> in the <<ContinuousExecution.md#logicalPlan, analyzed logical plan>>)
+* `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query>> (and finds [ContinuousExecutionRelations](ContinuousExecutionRelation.md) in the [analyzed logical plan](ContinuousExecution.md#logicalPlan))
 
 * `DataStreamReader` is requested to [create a streaming query for a ContinuousReadSupport data source](DataStreamReader.md#load)
 

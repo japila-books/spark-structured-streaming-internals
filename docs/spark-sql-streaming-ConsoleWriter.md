@@ -1,3 +1,3 @@
-== [[ConsoleWriter]] ConsoleWriter
+# ConsoleWriter
 
-`ConsoleWriter` is a <<spark-sql-streaming-StreamWriter.md#, StreamWriter>> for *console* data source format.
+`ConsoleWriter` is a writer for *console* data source format.

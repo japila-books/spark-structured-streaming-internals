@@ -11,5 +11,4 @@
 
 `WriteToContinuousDataSource` takes the following to be created:
 
-* [[writer]] [StreamWriter](spark-sql-streaming-StreamWriter.md)
 * [[query]] Child logical operator (`LogicalPlan`)

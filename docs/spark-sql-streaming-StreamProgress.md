@@ -1,6 +1,6 @@
 # StreamProgress &mdash; Collection of Offsets per Streaming Source
 
-`StreamProgress` is a collection of <<spark-sql-streaming-Offset.md#, Offsets>> per <<spark-sql-streaming-BaseStreamingSource.md#, streaming source>>.
+`StreamProgress` is a collection of <<spark-sql-streaming-Offset.md#, Offsets>> per streaming source.
 
 `StreamProgress` is <<creating-instance, created>> when:
 
@@ -8,13 +8,13 @@
 
 * `OffsetSeq` is requested to <<spark-sql-streaming-OffsetSeq.md#toStreamProgress, convert to StreamProgress>>
 
-`StreamProgress` is an extension of Scala's https://www.scala-lang.org/api/2.11.11/index.html#scala.collection.immutable.Map[scala.collection.immutable.Map] with <<spark-sql-streaming-BaseStreamingSource.md#, streaming sources>> as keys and their <<spark-sql-streaming-Offset.md#, Offsets>> as values.
+`StreamProgress` is an extension of Scala's https://www.scala-lang.org/api/2.11.11/index.html#scala.collection.immutable.Map[scala.collection.immutable.Map] with streaming sources as keys and their <<spark-sql-streaming-Offset.md#, Offsets>> as values.
 
 === [[creating-instance]] Creating StreamProgress Instance
 
 `StreamProgress` takes the following to be created:
 
-* [[baseMap]] Optional collection of <<spark-sql-streaming-Offset.md#, offsets>> per <<spark-sql-streaming-BaseStreamingSource.md#, streaming source>> (`Map[BaseStreamingSource, Offset]`) (default: empty)
+* [[baseMap]] Optional collection of <<spark-sql-streaming-Offset.md#, offsets>> per streaming source (`Map[BaseStreamingSource, Offset]`) (default: empty)
 
 === [[get]] Looking Up Offset by Streaming Source -- `get` Method
 
@@ -25,7 +25,7 @@ get(key: BaseStreamingSource): Option[Offset]
 
 NOTE: `get` is part of the Scala's `scala.collection.MapLike` to...FIXME.
 
-`get` simply looks up an <<spark-sql-streaming-Offset.md#, Offsets>> for the given <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>> in the <<baseMap, baseMap>>.
+`get` simply looks up an <<spark-sql-streaming-Offset.md#, Offsets>> for the given streaming source in the <<baseMap, baseMap>>.
 
 === [[plusplus]] `++` Method
 
@@ -48,7 +48,7 @@ toOffsetSeq(
   metadata: OffsetSeqMetadata): OffsetSeq
 ----
 
-`toOffsetSeq` creates a <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>> with offsets that are <<get, looked up>> for every <<spark-sql-streaming-BaseStreamingSource.md#, BaseStreamingSource>>.
+`toOffsetSeq` creates a <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>> with offsets that are <<get, looked up>> for every streaming source.
 
 `toOffsetSeq` is used when:
 

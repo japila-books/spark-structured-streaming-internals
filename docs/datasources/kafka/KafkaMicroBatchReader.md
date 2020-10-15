@@ -50,17 +50,6 @@ NOTE: `readSchema` is part of the `DataSourceReader` contract to...FIXME.
 
 `readSchema` simply returns the [predefined fixed schema](index.md#schema).
 
-=== [[stop]] Stopping Streaming Reader -- `stop` Method
-
-[source, scala]
-----
-stop(): Unit
-----
-
-`stop` simply requests the [KafkaOffsetReader](#kafkaOffsetReader) to [close](KafkaOffsetReader.md#close).
-
-`stop` is part of the [BaseStreamingSource](../../spark-sql-streaming-BaseStreamingSource.md#stop) abstraction.
-
 === [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method
 
 [source, scala]

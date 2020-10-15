@@ -43,14 +43,14 @@ NOTE: `StreamingRelation` is [resolved](StreamExecution.md#logicalPlan) (aka _pl
 apply(dataSource: DataSource): StreamingRelation
 ----
 
-`apply` creates a `StreamingRelation` for the given <<spark-sql-streaming-DataSource.md#, DataSource>> (that represents a streaming source).
+`apply` creates a `StreamingRelation` for the given [DataSource](DataSource.md) (that represents a streaming source).
 
-NOTE: `apply` is used exclusively when `DataStreamReader` is requested for a [streaming query](DataStreamReader.md#load).
+`apply` is used when `DataStreamReader` is requested for a [streaming query](DataStreamReader.md#load).
 
 ## Creating Instance
 
 `StreamingRelation` takes the following when created:
 
-* [[dataSource]] spark-sql-streaming-DataSource.md[DataSource]
+* [[dataSource]] [DataSource](DataSource.md)
 * [[sourceName]] Short name of the streaming source
 * [[output]] Output attributes of the schema of the streaming source

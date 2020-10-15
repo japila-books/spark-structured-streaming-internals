@@ -32,7 +32,7 @@ Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and
 
 Every time `MicroBatchExecution` is requested to <<MicroBatchExecution.md#isNewDataAvailable, check whether a new data is available>> (in any of the streaming sources)...FIXME
 
-When `MicroBatchExecution` is requested to <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> (when `MicroBatchExecution` requested to <<MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>), every [streaming source](StreamExecution.md#uniqueSources) is requested for the latest offset available that are <<spark-sql-streaming-StreamProgress.md#plusplus, added>> to the [availableOffsets](StreamExecution.md#availableOffsets) registry. <<spark-sql-streaming-BaseStreamingSource.md#, Streaming sources>> report some offsets or none at all (if this source has never received any data). Streaming sources with no data are excluded (_filtered out_).
+When `MicroBatchExecution` is requested to <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> (when `MicroBatchExecution` requested to <<MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>), every [streaming source](StreamExecution.md#uniqueSources) is requested for the latest offset available that are <<spark-sql-streaming-StreamProgress.md#plusplus, added>> to the [availableOffsets](StreamExecution.md#availableOffsets) registry. Streaming sources report some offsets or none at all (if this source has never received any data). Streaming sources with no data are excluded (_filtered out_).
 
 `MicroBatchExecution` prints out the following TRACE message to the logs:
 

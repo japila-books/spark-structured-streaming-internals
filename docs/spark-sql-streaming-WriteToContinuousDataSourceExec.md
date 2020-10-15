@@ -1,4 +1,4 @@
-== [[WriteToContinuousDataSourceExec]] WriteToContinuousDataSourceExec Unary Physical Operator
+# WriteToContinuousDataSourceExec Unary Physical Operator
 
 [[children]]
 `WriteToContinuousDataSourceExec` is a unary physical operator that <<doExecute, creates a ContinuousWriteRDD for continuous write>>.
@@ -10,14 +10,13 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`WriteToContinuousDataSourceExec` is <<creating-instance, created>> exclusively when `DataSourceV2Strategy` execution planning strategy is requested to plan a <<spark-sql-streaming-WriteToContinuousDataSource.md#, WriteToContinuousDataSource>> unary logical operator.
+`WriteToContinuousDataSourceExec` is <<creating-instance, created>> exclusively when `DataSourceV2Strategy` execution planning strategy is requested to plan a [WriteToContinuousDataSource](WriteToContinuousDataSource.md) unary logical operator.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-DataSourceV2Strategy.html[DataSourceV2Strategy Execution Planning Strategy] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
 [[creating-instance]]
 `WriteToContinuousDataSourceExec` takes the following to be created:
 
-* [[writer]] <<spark-sql-streaming-StreamWriter.md#, StreamWriter>>
 * [[query]][[child]] Child physical operator (`SparkPlan`)
 
 [[output]]
