@@ -76,23 +76,7 @@
      <lastmod>2020-10-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-BaseStreamingSource/</loc>
-     <lastmod>2020-10-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-BaseStreamingSink/</loc>
-     <lastmod>2020-10-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamWriteSupport/</loc>
-     <lastmod>2020-10-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamWriter/</loc>
-     <lastmod>2020-10-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-DataSource/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/DataSource/</loc>
      <lastmod>2020-10-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -564,11 +548,11 @@
      <lastmod>2020-10-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousExecutionRelation/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousExecutionRelation/</loc>
      <lastmod>2020-10-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-WriteToContinuousDataSource/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/WriteToContinuousDataSource/</loc>
      <lastmod>2020-10-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
