@@ -1,6 +1,10 @@
 # FileStreamSink
 
-`FileStreamSink` is a concrete [streaming sink](../../Sink.md) that writes out the results of a streaming query to files (of the specified <<fileFormat, FileFormat>>) in the <<path, root path>>.
+`FileStreamSink` is a [streaming sink](../../Sink.md) that writes out to files (in a given [file format](#fileFormat)) in a [directory](#path).
+
+`FileStreamSink` is used with [Append output mode](spark-sql-streaming-OutputMode.md#Append) only.
+
+## Demo
 
 ```text
 import scala.concurrent.duration._
@@ -15,85 +19,67 @@ val sq = in.
   start
 ```
 
-`FileStreamSink` is <<creating-instance, created>> exclusively when `DataSource` is requested to [create a streaming sink](../../DataSource.md#createSink) for a file-based data source (i.e. `FileFormat`).
-
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-
-`FileStreamSink` supports spark-sql-streaming-OutputMode.md#Append[Append output mode] only.
-
-`FileStreamSink` uses spark-sql-SQLConf.md#spark.sql.streaming.fileSink.log.deletion[spark.sql.streaming.fileSink.log.deletion] (as `isDeletingExpiredLog`)
-
-[[toString]]
-The textual representation of `FileStreamSink` is *FileSink[path]*
-
-[[metadataDir]]
-`FileStreamSink` uses *_spark_metadata* directory for...FIXME
-
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.FileStreamSink` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSink=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
-
-=== [[creating-instance]] Creating FileStreamSink Instance
+## Creating Instance
 
 `FileStreamSink` takes the following to be created:
 
-* [[sparkSession]] `SparkSession`
-* [[path]] Root directory
-* [[fileFormat]] `FileFormat`
-* [[partitionColumnNames]] Names of the partition columns
-* [[options]] Configuration options
+* <span id="sparkSession"> `SparkSession`
+* <span id="path"> Path
+* <span id="fileFormat"> `FileFormat`
+* <span id="partitionColumnNames"> Names of the Partition Columns (if any)
+* <span id="options"> Options (`Map[String, String]`)
 
-`FileStreamSink` initializes the <<internal-properties, internal properties>>.
+`FileStreamSink` is created when `DataSource` is requested to [create a streaming sink](../../DataSource.md#createSink) for `FileFormat` data sources.
 
-=== [[addBatch]] "Adding" Batch of Data to Sink -- `addBatch` Method
+## <span id="metadataDir"> metadataDir
 
-[source, scala]
-----
+`FileStreamSink` uses *_spark_metadata* directory for...FIXME
+
+## <span id="toString"> Text Representation
+
+The text representation of `FileStreamSink` uses the [path](#path) and is as follows:
+
+```text
+FileSink[path]
+```
+
+## <span id="addBatch"> "Adding" Batch of Data to Sink
+
+```scala
 addBatch(
   batchId: Long,
   data: DataFrame): Unit
-----
+```
 
 `addBatch`...FIXME
 
-`addBatch` is a part of [Sink Contract](../../Sink.md#addBatch) abstraction.
+`addBatch` is a part of the [Sink](../../Sink.md#addBatch) abstraction.
 
-=== [[basicWriteJobStatsTracker]] Creating BasicWriteJobStatsTracker -- `basicWriteJobStatsTracker` Internal Method
+### <span id="basicWriteJobStatsTracker"> Creating BasicWriteJobStatsTracker
 
-[source, scala]
-----
+```scala
 basicWriteJobStatsTracker: BasicWriteJobStatsTracker
-----
+```
 
-`basicWriteJobStatsTracker` simply creates a `BasicWriteJobStatsTracker` with the basic metrics:
+`basicWriteJobStatsTracker` creates a `BasicWriteJobStatsTracker` with the basic metrics:
 
 * number of written files
 * bytes of written output
 * number of output rows
 * number of dynamic partitions
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BasicWriteJobStatsTracker.html[BasicWriteJobStatsTracker] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+!!! tip
+    Learn more about [BasicWriteJobStatsTracker]({{ book.spark_sql }}/spark-sql-BasicWriteJobStatsTracker) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
-NOTE: `basicWriteJobStatsTracker` is used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>.
+`basicWriteJobStatsTracker` is used when `FileStreamSink` is requested to [addBatch](#addBatch).
 
-=== [[hasMetadata]] `hasMetadata` Object Method
+## <span id="hasMetadata"> hasMetadata Utility
 
-[source, scala]
-----
+```scala
 hasMetadata(
   path: Seq[String],
   hadoopConf: Configuration): Boolean
-----
+```
 
 `hasMetadata`...FIXME
 
@@ -102,31 +88,34 @@ hasMetadata(
 * `DataSource` (Spark SQL) is requested to resolve a `FileFormat` relation (`resolveRelation`) and creates a `HadoopFsRelation`
 * `FileStreamSource` is requested to [fetchAllFiles](FileStreamSource.md#fetchAllFiles)
 
-=== [[internal-properties]] Internal Properties
+## <span id="logPath"> Metadata Log Path
 
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
+```scala
+logPath: Path
+```
 
-| basePath
-a| [[basePath]] *Base path* (Hadoop's https://hadoop.apache.org/docs/r2.8.3/api/org/apache/hadoop/fs/Path.html[Path] for the given <<path, path>>)
+`logPath` is the location of the **Metadata Log** (as Hadoop's [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html) for the [path](#path) and the [_spark_metadata](#metadataDir))
 
-Used when...FIXME
+Used to create the [FileStreamSinkLog](#fileLog)
 
-| logPath
-a| [[logPath]] *Metadata log path* (Hadoop's https://hadoop.apache.org/docs/r2.8.3/api/org/apache/hadoop/fs/Path.html[Path] for the <<basePath, base path>> and the <<metadataDir, _spark_metadata>>)
+## <span id="fileLog"> FileStreamSinkLog
 
-Used exclusively to create the <<fileLog, FileStreamSinkLog>>
+```scala
+fileLog: FileStreamSinkLog
+```
 
-| fileLog
-a| [[fileLog]] [FileStreamSinkLog](FileStreamSinkLog.md) (for the [version 1](FileStreamSinkLog.md#VERSION) and the <<logPath, metadata log path>>)
+`fileLog` is a [FileStreamSinkLog](FileStreamSinkLog.md) (for the [version 1](FileStreamSinkLog.md#VERSION) and the [metadata log path](#logPath))
 
-Used exclusively when `FileStreamSink` is requested to <<addBatch, addBatch>>
+Used for [addBatch](#addBatch)
 
-| hadoopConf
-a| [[hadoopConf]] Hadoop's http://hadoop.apache.org/docs/r2.8.3/api/org/apache/hadoop/conf/Configuration.html[Configuration]
+## Logging
 
-Used when...FIXME
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.FileStreamSink` logger to see what happens inside.
 
-|===
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.FileStreamSink=ALL
+```
+
+Refer to [Logging](../../spark-logging.md).

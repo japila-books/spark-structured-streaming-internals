@@ -1,6 +1,6 @@
 # FileStreamSinkLog
 
-`FileStreamSinkLog` is a concrete [CompactibleFileStreamLog](../../CompactibleFileStreamLog.md) (of [SinkFileStatus](SinkFileStatus.md)es) for [FileStreamSink](FileStreamSink.md) and [MetadataLogFileIndex](MetadataLogFileIndex.md).
+`FileStreamSinkLog` is a [CompactibleFileStreamLog](../../CompactibleFileStreamLog.md) (of [SinkFileStatus](SinkFileStatus.md)es) for [FileStreamSink](FileStreamSink.md) and [MetadataLogFileIndex](MetadataLogFileIndex.md).
 
 [[VERSION]]
 `FileStreamSinkLog` uses *1* for the version.

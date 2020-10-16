@@ -69,7 +69,7 @@ For a `FileFormat`, `createSource` creates a new [FileStreamSource](datasources/
 
 `createSource` throws an `IllegalArgumentException` when `path` option was not specified for a `FileFormat` data source:
 
-```
+```text
 'path' is not specified
 ```
 
@@ -77,21 +77,21 @@ For a `FileFormat`, `createSource` creates a new [FileStreamSource](datasources/
 
 For any other data source type, `createSource` simply throws an `UnsupportedOperationException`:
 
-```
+```text
 Data source [className] does not support streamed reading
 ```
 
-=== [[createSink]] Creating Streaming Sink -- `createSink` Method
+## <span id="createSink"> Creating Streaming Sink
 
-[source, scala]
-----
+```scala
 createSink(
   outputMode: OutputMode): Sink
-----
+```
 
 `createSink` creates a [streaming sink](Sink.md) for [StreamSinkProvider](StreamSinkProvider.md) or `FileFormat` data sources.
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-FileFormat.html[FileFormat Data Source] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+!!! tip
+    Learn more about [FileFormat Data Source]({{ book.spark_sql }}/spark-sql-FileFormat) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
 Internally, `createSink` creates a new instance of the <<providingClass, providingClass>> and branches off per type:
 
@@ -101,7 +101,7 @@ Internally, `createSink` creates a new instance of the <<providingClass, providi
 
 `createSink` throws a `IllegalArgumentException` when `path` option is not specified for a `FileFormat` data source:
 
-```
+```text
 'path' is not specified
 ```
 
@@ -117,7 +117,7 @@ Data source [className] does not support [outputMode] output mode
 Data source [className] does not support streamed writing
 ```
 
-NOTE: `createSink` is used exclusively when `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start).
+`createSink` is used when `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start).
 
 === [[internal-properties]] Internal Properties
 
