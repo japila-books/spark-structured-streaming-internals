@@ -4,21 +4,8 @@
 
 `FileStreamSource` is used by [DataSource.createSource](../../DataSource.md#createSource) for `FileFormat`.
 
-## Demo
-
-```text
-// NOTE The source directory must exist
-// mkdir text-logs
-
-val df = spark.readStream
-  .format("text")
-  .option("maxFilesPerTrigger", 1)
-  .load("text-logs")
-
-scala> df.printSchema
-root
-|-- value: string (nullable = true)
-```
+!!! tip
+    Learn more in [Demo: Using File Streaming Source](../../demo/using-file-streaming-source.md).
 
 ## Creating Instance
 

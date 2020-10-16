@@ -365,3 +365,4 @@ nav:
     - Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI): demo/custom-sink-webui.md
     - current_timestamp Function For Processing Time in Streaming Queries: demo/current_timestamp.md
     - Using StreamingQueryManager for Query Termination Management: demo/StreamingQueryManager-awaitAnyTermination-resetTerminated.md
+    - Using File Streaming Source: demo/using-file-streaming-source.md
