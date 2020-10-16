@@ -18,7 +18,7 @@ withWatermark(
 !!! note
     Spark Structured Streaming uses watermark for the following:
 
-    * To know when a given time window aggregation (using [groupBy](groupBy.md) operator with [window](../spark-sql-streaming-window.md) standard function) can be finalized and thus emitted when using output modes that do not allow updates, like [Append](../spark-sql-streaming-OutputMode.md#Append) output mode.
+    * To know when a given time window aggregation (using [groupBy](groupBy.md) operator with [window](../spark-sql-streaming-window.md) standard function) can be finalized and thus emitted when using output modes that do not allow updates, like [Append](../OutputMode.md#Append) output mode.
 
     * To minimize the amount of state that we need to keep for ongoing aggregations, e.g. [mapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md) (for implicit state management), [flatMapGroupsWithState](../spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md) (for user-defined state management) and [dropDuplicates](dropDuplicates.md) operators.
 

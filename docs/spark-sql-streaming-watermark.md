@@ -19,13 +19,13 @@ In [Dataset.withWatermark](operators/withWatermark.md) operator, `eventTime` is 
 
 With streaming watermark, memory usage of a streaming state can be controlled as late events can easily be dropped, and old state (e.g. aggregates or join) that are never going to be updated removed. That avoids unbounded streaming state that would inevitably use up all the available memory of long-running streaming queries and end up in out of memory errors.
 
-In <<spark-sql-streaming-OutputMode.md#Append, Append>> output mode the current event-time streaming watermark is used for the following:
+In [Append](OutputMode.md#Append) output mode the current event-time streaming watermark is used for the following:
 
 * Output saved state rows that became expired (*Expired events* in the demo)
 
 * Dropping late events, i.e. don't save them to a state store or include in aggregation (*Late events* in the demo)
 
-Streaming watermark is <<spark-sql-streaming-UnsupportedOperationChecker.md#streaming-aggregation-append-mode-requires-watermark, required>> for a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> in <<spark-sql-streaming-OutputMode.md#Append, append>> output mode.
+Streaming watermark is <<spark-sql-streaming-UnsupportedOperationChecker.md#streaming-aggregation-append-mode-requires-watermark, required>> for a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> in [append](OutputMode.md#Append) output mode.
 
 === [[streaming-aggregation]] Streaming Aggregation
 

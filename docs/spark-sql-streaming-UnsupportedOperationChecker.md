@@ -42,7 +42,7 @@ Multiple streaming aggregations are not supported with streaming DataFrames/Data
 ```
 
 [[streaming-aggregation-append-mode-requires-watermark]]
-`checkForStreaming` asserts that [watermark](operators/withWatermark.md) was defined for a streaming aggregation with [Append](spark-sql-streaming-OutputMode.md#Append) output mode (on at least one of the grouping expressions).
+`checkForStreaming` asserts that [watermark](operators/withWatermark.md) was defined for a streaming aggregation with [Append](OutputMode.md#Append) output mode (on at least one of the grouping expressions).
 
 Otherwise, `checkForStreaming` reports a `AnalysisException`:
 
@@ -60,9 +60,9 @@ CAUTION: FIXME
 [[multiple-flatMapGroupsWithState]]
 `checkForStreaming` asserts that multiple [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operators are only used when:
 
-* `outputMode` is [Append](spark-sql-streaming-OutputMode.md#Append) output mode
+* `outputMode` is [Append](OutputMode.md#Append) output mode
 
-* [outputMode](logical-operators/FlatMapGroupsWithState.md#outputMode) of the `FlatMapGroupsWithState` logical operators is also [Append](spark-sql-streaming-OutputMode.md#Append) output mode
+* [outputMode](logical-operators/FlatMapGroupsWithState.md#outputMode) of the `FlatMapGroupsWithState` logical operators is also [Append](OutputMode.md#Append) output mode
 
 CAUTION: FIXME Reference to an example in `flatMapGroupsWithState`
 

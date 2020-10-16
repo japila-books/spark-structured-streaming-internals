@@ -6,4 +6,4 @@
 
 ## Creating Instance
 
-`StreamingGlobalLimitStrategy` takes a single [OutputMode](spark-sql-streaming-OutputMode.md) to be created (which is the [OutputMode](IncrementalExecution.md#outputMode) of the [IncrementalExecution](IncrementalExecution.md)).
+`StreamingGlobalLimitStrategy` takes a single [OutputMode](OutputMode.md) to be created (which is the [OutputMode](IncrementalExecution.md#outputMode) of the [IncrementalExecution](IncrementalExecution.md)).

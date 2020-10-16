@@ -47,7 +47,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 `MemorySink` takes the following to be created:
 
 * [[schema]] Output schema
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, OutputMode>>
+* [[outputMode]] [OutputMode](OutputMode.md)
 
 `MemorySink` initializes the <<batches, batches>> internal property.
 
@@ -60,9 +60,9 @@ batches: ArrayBuffer[AddedData]
 
 `batches` holds data from streaming batches that have been <<addBatch, added>> (_written_) to this sink.
 
-For <<spark-sql-streaming-OutputMode.md#Append, Append>> and <<spark-sql-streaming-OutputMode.md#Update, Update>> output modes, `batches` holds rows from all batches.
+For [Append](OutputMode.md#Append) and [Update](OutputMode.md#Update) output modes, `batches` holds rows from all batches.
 
-For <<spark-sql-streaming-OutputMode.md#Complete, Complete>> output mode, `batches` holds rows from the last batch only.
+For [Complete](OutputMode.md#Complete) output mode, `batches` holds rows from the last batch only.
 
 `batches` can be cleared (_emptied_) using <<clear, clear>>.
 

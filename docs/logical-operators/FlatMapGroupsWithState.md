@@ -30,7 +30,7 @@
 * <span id="dataAttributes"> Data Attributes
 * <span id="outputObjAttr"> Output Object Attribute
 * <span id="stateEncoder"> State `ExpressionEncoder`
-* <span id="outputMode"> [OutputMode](../spark-sql-streaming-OutputMode.md)
+* <span id="outputMode"> [OutputMode](../OutputMode.md)
 * <span id="isMapGroupsWithState"> `isMapGroupsWithState` flag (default: `false`)
 * <span id="timeout"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
 * <span id="child"> Child logical operator

@@ -2,7 +2,7 @@
 
 `FileStreamSink` is a [streaming sink](../../Sink.md) that writes out to files (in a given [file format](#fileFormat)) in a [directory](#path).
 
-`FileStreamSink` is used with [Append output mode](../../spark-sql-streaming-OutputMode.md#Append) only.
+`FileStreamSink` is used with [Append output mode](../../OutputMode.md#Append) only.
 
 !!! tip
     Learn more in [Demo: Using File Streaming Sink](../../demo/using-file-streaming-sink.md).

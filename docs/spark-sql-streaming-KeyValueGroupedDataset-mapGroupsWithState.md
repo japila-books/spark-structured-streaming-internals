@@ -17,7 +17,7 @@ mapGroupsWithState[S: Encoder, U: Encoder](
 
     * `func` being transformed to return a single-element `Iterator`
 
-    * spark-sql-streaming-OutputMode.md#Update[Update] output mode
+    * [Update](OutputMode.md#Update) output mode
 
     `mapGroupsWithState` also creates a `FlatMapGroupsWithState` with [isMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md#isMapGroupsWithState) internal flag enabled.
 

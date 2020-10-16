@@ -31,7 +31,7 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and t
 * [[streamLimit]] *Streaming Limit*
 * [[child]] Child physical operator (`SparkPlan`)
 * [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> (default: `None`)
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, OutputMode>> (default: `None`)
+* [[outputMode]] [OutputMode](../OutputMode.md) (default: `None`)
 
 `StreamingGlobalLimitExec` initializes the <<internal-properties, internal properties>>.
 

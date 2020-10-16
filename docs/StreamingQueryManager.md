@@ -241,7 +241,7 @@ In the end, `createQuery` creates a spark-sql-streaming-StreamingQueryWrapper.md
 ====
 `recoverFromCheckpointLocation` flag corresponds to `recoverFromCheckpointLocation` flag that `StreamingQueryManager` uses to <<startQuery, start a streaming query>> and which is enabled by default (and is in fact the only place where `createQuery` is used).
 
-* `memory` sink has the flag enabled for spark-sql-streaming-OutputMode.md#Complete[Complete] output mode only
+* `memory` sink has the flag enabled for [Complete](OutputMode.md#Complete) output mode only
 
 * `foreach` sink has the flag always enabled
 

@@ -97,7 +97,7 @@ Internally, `createSink` creates a new instance of the <<providingClass, providi
 
 * For a [StreamSinkProvider](StreamSinkProvider.md), `createSink` simply delegates the call and requests it to [create a streaming sink](StreamSinkProvider.md#createSink)
 
-* For a `FileFormat`, `createSink` creates a [FileStreamSink](datasources/file/FileStreamSink.md) when `path` option is specified and the output mode is <<spark-sql-streaming-OutputMode.md#Append, Append>>
+* For a `FileFormat`, `createSink` creates a [FileStreamSink](datasources/file/FileStreamSink.md) when `path` option is specified and the output mode is [Append](OutputMode.md#Append).
 
 `createSink` throws a `IllegalArgumentException` when `path` option is not specified for a `FileFormat` data source:
 
@@ -105,7 +105,7 @@ Internally, `createSink` creates a new instance of the <<providingClass, providi
 'path' is not specified
 ```
 
-`createSink` throws an `AnalysisException` when the given <<spark-sql-streaming-OutputMode.md#, OutputMode>> is different from <<spark-sql-streaming-OutputMode.md#Append, Append>> for a `FileFormat` data source:
+`createSink` throws an `AnalysisException` when the given [OutputMode](OutputMode.md) is different from [Append](OutputMode.md#Append) for a `FileFormat` data source:
 
 ```
 Data source [className] does not support [outputMode] output mode

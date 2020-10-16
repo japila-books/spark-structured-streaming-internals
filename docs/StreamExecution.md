@@ -261,7 +261,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[analyzedPlan]] Streaming query (as an analyzed logical query plan, i.e. `LogicalPlan`)
 * [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
 * [[triggerClock]] `Clock`
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
+* [[outputMode]] [OutputMode](OutputMode.md)
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag (to control whether to delete the checkpoint directory on stop)
 
 `StreamExecution` initializes the <<internal-properties, internal properties>>.

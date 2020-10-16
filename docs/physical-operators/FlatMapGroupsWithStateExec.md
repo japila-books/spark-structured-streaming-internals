@@ -31,7 +31,7 @@
 * <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../spark-sql-streaming-StatefulOperatorStateInfo.md)
 * <span id="stateEncoder"> State encoder (`ExpressionEncoder[Any]`)
 * <span id="stateFormatVersion"> State format version
-* <span id="outputMode"> [OutputMode](../spark-sql-streaming-OutputMode.md)
+* <span id="outputMode"> [OutputMode](../OutputMode.md)
 * <span id="timeoutConf"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
 * <span id="batchTimestampMs"> Optional [Batch Processing Time](../spark-structured-streaming-batch-processing-time.md)
 * <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../spark-sql-streaming-watermark.md)

@@ -130,7 +130,7 @@ a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.m
 
 * [[keyExpressions]] *Key expressions*, i.e. Catalyst attributes for the grouping keys
 * [[stateInfo]] Execution-specific <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> (default: `None`)
-* [[outputMode]] Execution-specific <<spark-sql-streaming-OutputMode.md#, output mode>> (default: `None`)
+* [[outputMode]] Execution-specific [OutputMode](../OutputMode.md) (default: `None`)
 * [[eventTimeWatermark]] <<spark-sql-streaming-watermark.md#, Event-time watermark>> (default: `None`)
 * [[stateFormatVersion]] Version of the state format (based on the <<spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
@@ -161,11 +161,11 @@ Invalid output mode: [outputMode]
 
 ==== [[doExecute-Append]] Append Output Mode
 
-NOTE: <<spark-sql-streaming-OutputMode.md#Append, Append>> is the default output mode when not specified explicitly.
+NOTE: [Append](../OutputMode.md#Append) is the default output mode when not specified explicitly.
 
 NOTE: `Append` output mode requires that a streaming query defines <<spark-sql-streaming-watermark.md#, event-time watermark>> (e.g. using [withWatermark](../operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using <<spark-sql-streaming-window.md#, window>> standard function).
 
-For <<spark-sql-streaming-OutputMode.md#Append, Append>> output mode, `doExecute` does the following:
+For [Append](../OutputMode.md#Append) output mode, `doExecute` does the following:
 
 1. Finds late (aggregate) rows from <<child, child>> physical operator (that have expired per <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData, watermark>>)
 
@@ -195,7 +195,7 @@ If no row was found, `getNext` also marks the iterator as finished.
 
 ==== [[doExecute-Complete]] Complete Output Mode
 
-For <<spark-sql-streaming-OutputMode.md#Complete, Complete>> output mode, `doExecute` does the following:
+For [Complete](../OutputMode.md#Complete) output mode, `doExecute` does the following:
 
 1. Takes all `UnsafeRow` rows (from the parent iterator)
 
@@ -227,7 +227,7 @@ TIP: Refer to <<spark-sql-streaming-StateStoreSaveExec-Complete.md#, Demo: State
 
 ==== [[doExecute-Update]] Update Output Mode
 
-For <<spark-sql-streaming-OutputMode.md#Update, Update>> output mode, `doExecute` returns an iterator that filters out late aggregate rows (per <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData, watermark>> if defined) and <<spark-sql-streaming-StateStore.md#put, stores the "young" rows in the state store>> (one by one, i.e. every `next`).
+For [Update](../OutputMode.md#Update) output mode, `doExecute` returns an iterator that filters out late aggregate rows (per <<spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData, watermark>> if defined) and <<spark-sql-streaming-StateStore.md#put, stores the "young" rows in the state store>> (one by one, i.e. every `next`).
 
 With no more rows available, that <<spark-sql-streaming-StateStore.md#remove, removes the late rows from the state store>> (all at once) and <<spark-sql-streaming-StateStore.md#commit, commits the state updates>>.
 
@@ -258,7 +258,7 @@ shouldRunAnotherBatch(
 
 `shouldRunAnotherBatch` is positive (`true`) when all of the following are met:
 
-* <<outputMode, Output mode>> is either <<spark-sql-streaming-OutputMode.md#Append, Append>> or <<spark-sql-streaming-OutputMode.md#Update, Update>>
+* <<outputMode, Output mode>> is either [Append](../OutputMode.md#Append) or [Update](../OutputMode.md#Update)
 
 * <<eventTimeWatermark, Event-time watermark>> is defined and is older (below) the current <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> (of the given `OffsetSeqMetadata`)
 

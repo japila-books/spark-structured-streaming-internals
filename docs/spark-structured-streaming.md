@@ -54,7 +54,7 @@ assert(streamingQuery.isStreaming)
 
 Structured Streaming models a stream of data as an infinite (and hence continuous) table that could be changed every streaming batch.
 
-You can specify [output mode](spark-sql-streaming-OutputMode.md) of a streaming dataset which is what gets written to a streaming sink (i.e. the infinite result table) when there is a new data available.
+You can specify [output mode](OutputMode.md) of a streaming dataset which is what gets written to a streaming sink (i.e. the infinite result table) when there is a new data available.
 
 Streaming Datasets use **streaming query plans** (as opposed to regular batch Datasets that are based on batch query plans).
 

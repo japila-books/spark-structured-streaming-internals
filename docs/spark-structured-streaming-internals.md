@@ -204,7 +204,7 @@ There are however two special output formats that do have corresponding `DataStr
 
 `DataStreamWriter` API defines two new concepts (that are not available in the "base" Spark SQL):
 
-* [OutputMode](spark-sql-streaming-OutputMode.md) that you specify using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode) method
+* [OutputMode](OutputMode.md) that you specify using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode) method
 
 * [Trigger](spark-sql-streaming-Trigger.md) that you specify using [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method
 

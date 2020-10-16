@@ -59,7 +59,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[analyzedPlan]] Analyzed logical query plan of the streaming query (`LogicalPlan`)
 * [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
 * [[triggerClock]] Trigger clock (`Clock`)
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
+* [[outputMode]] [OutputMode](OutputMode.md)
 * [[extraOptions]] Extra options (`Map[String, String]`)
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 

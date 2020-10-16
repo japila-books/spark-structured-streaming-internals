@@ -169,7 +169,7 @@ nav:
       - DataStreamReader: DataStreamReader.md
       - DataStreamWriter:
         - DataStreamWriter: DataStreamWriter.md
-        - OutputMode: spark-sql-streaming-OutputMode.md
+        - OutputMode: OutputMode.md
         - Trigger: spark-sql-streaming-Trigger.md
       - StreamingQuery: StreamingQuery.md
       - window Function: spark-sql-streaming-window.md

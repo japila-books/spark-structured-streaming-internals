@@ -230,7 +230,7 @@ Data source [name] does not support continuous processing.
 * [[analyzedPlan]] Analyzed logical query plan (`LogicalPlan`)
 * [[trigger]] <<spark-sql-streaming-Trigger.md#, Trigger>>
 * [[triggerClock]] `Clock`
-* [[outputMode]] <<spark-sql-streaming-OutputMode.md#, Output mode>>
+* [[outputMode]] [OutputMode](OutputMode.md)
 * [[extraOptions]] Options (`Map[String, String]`)
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 

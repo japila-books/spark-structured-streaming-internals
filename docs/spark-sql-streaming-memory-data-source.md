@@ -35,7 +35,7 @@ Memory Data Source is *not* for production use due to design contraints, e.g. in
 
 Memory sink requires that a streaming query has a name (defined using [DataStreamWriter.queryName](DataStreamWriter.md#queryName) or `queryName` option).
 
-Memory sink may optionally define checkpoint location using `checkpointLocation` option that is used to recover from for <<spark-sql-streaming-OutputMode.md#Complete, Complete>> output mode only.
+Memory sink may optionally define checkpoint location using `checkpointLocation` option that is used to recover from for [Complete](OutputMode.md#Complete) output mode only.
 
 ### Memory Sink and CreateViewCommand
 

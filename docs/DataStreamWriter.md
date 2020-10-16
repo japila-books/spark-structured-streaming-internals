@@ -93,7 +93,7 @@ outputMode(outputMode: OutputMode): DataStreamWriter[T]
 outputMode(outputMode: String): DataStreamWriter[T]
 ----
 
-Specifies the <<spark-sql-streaming-OutputMode.md#, output mode>>
+Specifies the [OutputMode](OutputMode.md)
 
 | partitionBy
 a| [[partitionBy]]
@@ -202,11 +202,11 @@ outputMode(outputMode: String): DataStreamWriter[T]
 outputMode(outputMode: OutputMode): DataStreamWriter[T]
 ----
 
-`outputMode` specifies the spark-sql-streaming-OutputMode.md[output mode] of a streaming query, i.e.  what data is sent out to a [streaming sink](Sink.md) when there is new data available in [streaming data sources](Source.md).
+`outputMode` specifies the [OutputMode](OutputMode.md) of a streaming query, i.e.  what data is sent out to a [streaming sink](Sink.md) when there is new data available in [streaming data sources](Source.md).
 
-NOTE: When not defined explicitly, `outputMode` defaults to <<spark-sql-streaming-OutputMode.md#Append, Append>> output mode.
+NOTE: When not defined explicitly, `outputMode` defaults to [Append](OutputMode.md#Append) output mode.
 
-`outputMode` can be specified by name or one of the <<spark-sql-streaming-OutputMode.md#, OutputMode>> values.
+`outputMode` can be specified by name or one of the [OutputMode](OutputMode.md) values.
 
 === [[queryName]] Setting Query Name -- `queryName` method
 
@@ -346,8 +346,8 @@ The function that is used as the batch writer in the [ForeachBatchSink](spark-sq
 | [[source]]
 
 | outputMode
-| <<spark-sql-streaming-OutputMode.md#Append, Append>>
-| [[outputMode-property]] spark-sql-streaming-OutputMode.md[OutputMode] of the streaming sink
+| [Append](OutputMode.md#Append)
+| [[outputMode-property]] [OutputMode](OutputMode.md) of the streaming sink
 
 Set using <<outputMode, outputMode>> method.
 
