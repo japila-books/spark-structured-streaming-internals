@@ -10,6 +10,10 @@ Make sure that the source directory is available before starting the query.
 mkdir /tmp/text-logs
 ```
 
+## Configure Logging
+
+Enable [logging](../datasources/file/FileStreamSource.md#logging) for `FileStreamSource`.
+
 ## Start Streaming Query
 
 Use `spark-shell` for fast interactive prototyping.

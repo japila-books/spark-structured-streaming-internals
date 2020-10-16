@@ -113,6 +113,8 @@ nav:
     - Extending Structured Streaming with New Data Sources:
       - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
       - DataSource: DataSource.md
+      - SparkDataStream: SparkDataStream.md
+      - SupportsAdmissionControl: SupportsAdmissionControl.md
     - Streaming Aggregation:
       - Streaming Aggregation: spark-sql-streaming-aggregation.md
       - StateStoreRDD: spark-sql-streaming-StateStoreRDD.md
@@ -165,7 +167,6 @@ nav:
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - Developing Streaming Applications:
       - DataStreamReader: DataStreamReader.md
-      - SparkDataStream: SparkDataStream.md
       - DataStreamWriter:
         - DataStreamWriter: DataStreamWriter.md
         - OutputMode: spark-sql-streaming-OutputMode.md
@@ -286,6 +287,7 @@ nav:
       - SinkFileStatus: datasources/file/SinkFileStatus.md
       - ManifestFileCommitProtocol: datasources/file/ManifestFileCommitProtocol.md
       - MetadataLogFileIndex: datasources/file/MetadataLogFileIndex.md
+      - FileStreamSourceCleaner: datasources/file/FileStreamSourceCleaner.md
     - Kafka Data Source:
       - Kafka Data Source: datasources/kafka/index.md
       - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md

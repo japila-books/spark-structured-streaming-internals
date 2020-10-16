@@ -1,6 +1,8 @@
 # FileStreamSource
 
-`FileStreamSource` is a [streaming source](../../Source.md) that reads text files from `path` directory as they appear. It uses `LongOffset` offsets.
+`FileStreamSource` is a [streaming source](../../Source.md) that reads files (in a given [file format](#fileFormatClassName)) from a [directory](#path).
+
+`FileStreamSource` is a [SupportsAdmissionControl](../../SupportsAdmissionControl.md).
 
 `FileStreamSource` is used by [DataSource.createSource](../../DataSource.md#createSource) for `FileFormat`.
 
@@ -21,106 +23,209 @@
 
 `FileStreamSource` is created when `DataSource` is requested to [create a streaming source](../../DataSource.md#createSource) for `FileFormat` data sources.
 
-=== [[options]] Options
+While being created, `FileStreamSource` prints out the following INFO message to the logs (with the [maxFilesPerBatch](#maxFilesPerBatch) and [maxFileAgeMs](#maxFileAgeMs) options):
 
-==== [[maxFilesPerTrigger]] `maxFilesPerTrigger`
+```text
+maxFilesPerBatch = [maxFilesPerBatch], maxFileAgeMs = [maxFileAgeMs]
+```
 
-`maxFilesPerTrigger` option specifies the maximum number of files per trigger (batch). It limits the file stream source to read the `maxFilesPerTrigger` number of files specified at a time and hence enables rate limiting.
+`FileStreamSource` requests the [FileStreamSourceLog](#metadataLog) for [all files](../../CompactibleFileStreamLog.md#allFiles) that are added to [seenFiles](#seenFiles) internal registry. `FileStreamSource` requests the [seenFiles](#seenFiles) internal registry to `purge` (remove aged entries).
 
-It allows for a static set of files be used like a stream for testing as the file set is processed `maxFilesPerTrigger` number of files at a time.
+## <span id="sourceOptions"><span id="FileStreamOptions"> Options
 
-=== [[schema]] `schema`
+Options are case-insensitive (so `cleanSource` and `CLEANSOURCE` are equivalent).
 
-If the schema is specified at instantiation time (using optional `dataSchema` constructor parameter) it is returned.
+### <span id="cleanSource"> cleanSource
 
-Otherwise, `fetchAllFiles` internal method is called to list all the files in a directory.
+How to clean up completed files.
 
-When there is at least one file the schema is calculated using `dataFrameBuilder` constructor parameter function. Else, an `IllegalArgumentException("No schema specified")` is thrown unless it is for *text* provider (as `providerName` constructor parameter) where the default schema with a single `value` column of type `StringType` is assumed.
+Available modes:
 
-NOTE: *text* as the value of `providerName` constructor parameter denotes *text file stream provider*.
+* `archive`
+* `delete`
+* `off`
 
-=== [[getOffset]] `getOffset` Method
+### <span id="fileNameOnly"> fileNameOnly
 
-[source, scala]
-----
+Whether to check for new files on on the filename only (`true`) or the full path (`false`)
+
+Default: `false`
+
+When enabled, `FileStreamSource` prints out the following WARN message to the logs:
+
+```text
+'fileNameOnly' is enabled. Make sure your file names are unique (e.g. using UUID), otherwise, files with the same name but under different paths will be considered the same and causes data lost.
+```
+
+### <span id="latestFirst"> latestFirst
+
+Whether to scan latest files first (`true`) or not (`false`)
+
+Default: `false`
+
+When enabled, `FileStreamSource` prints out the following WARN message to the logs:
+
+```text
+'latestFirst' is true. New files will be processed first, which may affect the watermark value. In addition, 'maxFileAge' will be ignored.
+```
+
+### <span id="maxFileAgeMs"> maxFileAgeMs
+
+Maximum age of a file that can be found in this directory, before being ignored
+
+Default: `7d`
+
+Uses time suffices: `us`, `ms`, `s`, `m`, `min`, `h`, `d`. No suffix is assumed to be in ms.
+
+### <span id="maxFilesPerTrigger"><span id="maxFilesPerBatch"> maxFilesPerTrigger
+
+Maximum number of files per trigger (batch)
+
+### <span id="sourceArchiveDir"> sourceArchiveDir
+
+Archive directory to move completed files to (for [cleanSource](#cleanSource) set to `archive`)
+
+## <span id="sourceCleaner"> FileStreamSourceCleaner
+
+`FileStreamSource` may create a [FileStreamSourceCleaner](FileStreamSourceCleaner.md) based on [cleanSource](#cleanSource) option.
+
+## <span id="metadataLog"> FileStreamSourceLog
+
+`FileStreamSource` uses [FileStreamSourceLog](FileStreamSourceLog.md) (for the given [metadataPath](#metadataPath)).
+
+## <span id="metadataLogCurrentOffset"><span id="currentLogOffset"> Latest Offset
+
+`FileStreamSource` tracks the latest offset in `metadataLogCurrentOffset` internal registry.
+
+## <span id="seenFiles"> Seen Files Registry
+
+```scala
+seenFiles: SeenFilesMap
+```
+
+`seenFiles` is...FIXME
+
+`seenFiles` is used for...FIXME
+
+## <span id="commit"> Committing
+
+```scala
+commit(
+  end: Offset): Unit
+```
+
+`commit` is...FIXME
+
+`commit` is part of the [Source](../../Source.md#commit) abstraction.
+
+## <span id="getDefaultReadLimit"> getDefaultReadLimit
+
+```scala
+getDefaultReadLimit: ReadLimit
+```
+
+`getDefaultReadLimit` is...FIXME
+
+`getDefaultReadLimit` is part of the [SupportsAdmissionControl](../../SupportsAdmissionControl.md#getDefaultReadLimit) abstraction.
+
+## <span id="getOffset"> getOffset
+
+```scala
 getOffset: Option[Offset]
-----
-
-`getOffset`...FIXME
-
-The maximum offset (`getOffset`) is calculated by fetching all the files in `path` excluding files that start with `_` (underscore).
-
-When computing the maximum offset using `getOffset`, you should see the following DEBUG message in the logs:
-
-```
-Listed ${files.size} in ${(endTime.toDouble - startTime) / 1000000}ms
 ```
 
-When computing the maximum offset using `getOffset`, it also filters out the files that were already seen (tracked in `seenFiles` internal registry).
+`getOffset` simply throws an `UnsupportedOperationException`:
 
-You should see the following DEBUG message in the logs (depending on the status of a file):
-
-```
-new file: $file
-// or
-old file: $file
+```text
+latestOffset(Offset, ReadLimit) should be called instead of this method
 ```
 
 `getOffset` is part of the [Source](../../Source.md#getOffset) abstraction.
 
-=== [[getBatch]] Generating DataFrame for Streaming Batch -- `getBatch` Method
+## <span id="getBatch"> Generating DataFrame for Streaming Batch
+
+```scala
+getBatch(
+  start: Option[Offset],
+  end: Offset): DataFrame
+```
+
+`getBatch`...FIXME
 
 `FileStreamSource.getBatch` asks <<metadataLog, metadataLog>> for the batch.
 
 You should see the following INFO and DEBUG messages in the logs:
 
-```
-INFO Processing ${files.length} files from ${startId + 1}:$endId
-DEBUG Streaming ${files.mkString(", ")}
+```text
+Processing ${files.length} files from ${startId + 1}:$endId
+Streaming ${files.mkString(", ")}
 ```
 
 The method to create a result batch is given at instantiation time (as `dataFrameBuilder` constructor parameter).
 
-=== [[metadataLog]] `metadataLog`
+`getBatch` is part of the [Source](../../Source.md#getBatch) abstraction.
 
-`metadataLog` is a metadata storage using `metadataPath` path (which is a constructor parameter).
+## <span id="fetchMaxOffset"> fetchMaxOffset
 
-NOTE: It extends `HDFSMetadataLog[Seq[String]]`.
-
-CAUTION: FIXME Review `HDFSMetadataLog`
-
-=== [[fetchMaxOffset]] `fetchMaxOffset` Internal Method
-
-[source, scala]
-----
-fetchMaxOffset(): FileStreamSourceOffset
-----
+```scala
+fetchMaxOffset(limit: ReadLimit): FileStreamSourceOffset
+```
 
 `fetchMaxOffset`...FIXME
 
-NOTE: `fetchMaxOffset` is used exclusively when `FileStreamSource` is requested to <<getOffset, getOffset>>.
+`fetchMaxOffset` is used for [latestOffset](#latestOffset).
 
-=== [[fetchAllFiles]] `fetchAllFiles` Internal Method
+## <span id="fetchAllFiles"> fetchAllFiles
 
-[source, scala]
-----
+```scala
 fetchAllFiles(): Seq[(String, Long)]
-----
+```
 
 `fetchAllFiles`...FIXME
 
-NOTE: `fetchAllFiles` is used exclusively when `FileStreamSource` is requested to <<fetchMaxOffset, fetchMaxOffset>>.
+`fetchAllFiles` is used for [fetchMaxOffset](#fetchMaxOffset).
 
-=== [[allFilesUsingMetadataLogFileIndex]] `allFilesUsingMetadataLogFileIndex` Internal Method
+## <span id="latestOffset"> latestOffset
 
-[source, scala]
-----
+```scala
+latestOffset(
+  startOffset: streaming.Offset,
+  limit: ReadLimit): streaming.Offset
+```
+
+`latestOffset`...FIXME
+
+`latestOffset` is part of the [SparkDataStream](../../SparkDataStream.md#latestOffset) abstraction.
+
+## <span id="stop"> Stopping Streaming Source
+
+```scala
+stop(): Unit
+```
+
+`stop`...FIXME
+
+`stop` is part of the [SupportsAdmissionControl](../../SupportsAdmissionControl.md#stop) abstraction.
+
+## <span id="allFilesUsingInMemoryFileIndex"> allFilesUsingInMemoryFileIndex
+
+```scala
+allFilesUsingInMemoryFileIndex(): Seq[FileStatus]
+```
+
+`allFilesUsingInMemoryFileIndex` is...FIXME
+
+`allFilesUsingInMemoryFileIndex` is used for [fetchAllFiles](#fetchAllFiles).
+
+## <span id="allFilesUsingMetadataLogFileIndex"> allFilesUsingMetadataLogFileIndex
+
+```scala
 allFilesUsingMetadataLogFileIndex(): Seq[FileStatus]
-----
+```
 
-`allFilesUsingMetadataLogFileIndex` simply creates a new [MetadataLogFileIndex](MetadataLogFileIndex.md) and requests it to `allFiles`.
+`allFilesUsingMetadataLogFileIndex` is...FIXME
 
-NOTE: `allFilesUsingMetadataLogFileIndex` is used exclusively when `FileStreamSource` is requested to <<fetchAllFiles, fetchAllFiles>> (when requested for <<fetchMaxOffset, fetchMaxOffset>> when `FileStreamSource` is requested to <<getOffset, getOffset>>).
+`allFilesUsingMetadataLogFileIndex` is used for [fetchAllFiles](#fetchAllFiles)
 
 ## Logging
 
