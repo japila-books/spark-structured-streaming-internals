@@ -279,7 +279,7 @@ nav:
     - writeStream: operators/writeStream.md
   - Data Sources:
     - Data Sources: datasources/index.md
-    - File Data Source:
+    - File:
       - File Data Source: datasources/file/index.md
       - FileStreamSource: datasources/file/FileStreamSource.md
       - FileStreamSink: datasources/file/FileStreamSink.md
@@ -288,7 +288,7 @@ nav:
       - ManifestFileCommitProtocol: datasources/file/ManifestFileCommitProtocol.md
       - MetadataLogFileIndex: datasources/file/MetadataLogFileIndex.md
       - FileStreamSourceCleaner: datasources/file/FileStreamSourceCleaner.md
-    - Kafka Data Source:
+    - Kafka:
       - Kafka Data Source: datasources/kafka/index.md
       - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
       - KafkaTable: datasources/kafka/KafkaTable.md
@@ -313,24 +313,24 @@ nav:
       - KafkaContinuousReader:
         - KafkaContinuousReader: datasources/kafka/KafkaContinuousReader.md
         - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
-    - Text Socket Data Source:
+    - Socket:
       - TextSocketSourceProvider: spark-sql-streaming-TextSocketSourceProvider.md
       - TextSocketSource: spark-sql-streaming-TextSocketSource.md
-    - Rate Data Source:
+    - Rate:
       - RateSourceProvider: spark-sql-streaming-RateSourceProvider.md
       - RateStreamProvider: spark-sql-streaming-RateStreamProvider.md
       - RateStreamSource: spark-sql-streaming-RateStreamSource.md
       - RateStreamMicroBatchReader: spark-sql-streaming-RateStreamMicroBatchReader.md
-    - Console Data Sink:
+    - Console Sink:
       - ConsoleSinkProvider: spark-sql-streaming-ConsoleSinkProvider.md
       - ConsoleWriter: spark-sql-streaming-ConsoleWriter.md
-    - Foreach Data Sink:
+    - Foreach Sink:
       - ForeachWriterProvider: spark-sql-streaming-ForeachWriterProvider.md
       - ForeachWriter: spark-sql-streaming-ForeachWriter.md
       - ForeachSink: spark-sql-streaming-ForeachSink.md
-    - ForeachBatch Data Sink:
+    - ForeachBatch Sink:
       - ForeachBatchSink: spark-sql-streaming-ForeachBatchSink.md
-    - Memory Data Source:
+    - Memory:
       - Memory Data Source: spark-sql-streaming-memory-data-source.md
       - MemoryStream: spark-sql-streaming-MemoryStream.md
       - ContinuousMemoryStream: spark-sql-streaming-ContinuousMemoryStream.md
@@ -368,3 +368,4 @@ nav:
     - current_timestamp Function For Processing Time in Streaming Queries: demo/current_timestamp.md
     - Using StreamingQueryManager for Query Termination Management: demo/StreamingQueryManager-awaitAnyTermination-resetTerminated.md
     - Using File Streaming Source: demo/using-file-streaming-source.md
+    - Using File Streaming Sink: demo/using-file-streaming-sink.md

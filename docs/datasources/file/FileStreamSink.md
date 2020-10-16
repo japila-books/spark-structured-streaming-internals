@@ -2,22 +2,10 @@
 
 `FileStreamSink` is a [streaming sink](../../Sink.md) that writes out to files (in a given [file format](#fileFormat)) in a [directory](#path).
 
-`FileStreamSink` is used with [Append output mode](spark-sql-streaming-OutputMode.md#Append) only.
+`FileStreamSink` is used with [Append output mode](../../spark-sql-streaming-OutputMode.md#Append) only.
 
-## Demo
-
-```text
-import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.{OutputMode, Trigger}
-val sq = in.
-  writeStream.
-  format("parquet").
-  option("path", "parquet-output-dir").
-  option("checkpointLocation", "checkpoint-dir").
-  trigger(Trigger.ProcessingTime(10.seconds)).
-  outputMode(OutputMode.Append).
-  start
-```
+!!! tip
+    Learn more in [Demo: Using File Streaming Sink](../../demo/using-file-streaming-sink.md).
 
 ## Creating Instance
 
@@ -31,9 +19,29 @@ val sq = in.
 
 `FileStreamSink` is created when `DataSource` is requested to [create a streaming sink](../../DataSource.md#createSink) for `FileFormat` data sources.
 
-## <span id="metadataDir"> metadataDir
+## <span id="metadataDir"><span id="getMetadataLogPath"> Metadata Log Directory
 
-`FileStreamSink` uses *_spark_metadata* directory for...FIXME
+`FileStreamSink` uses **_spark_metadata** directory (under the [path](#path)) as the **Metadata Log Directory** to store metadata indicating which files are valid and can be read (and skipping already committed batch).
+
+Metadata Log Directory is managed by [FileStreamSinkLog](#fileLog).
+
+### <span id="logPath"> Hadoop Path of Metadata Log
+
+```scala
+logPath: Path
+```
+
+`logPath` is the location of the [Metadata Log](#getMetadataLogPath) (as Hadoop's [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html)).
+
+### <span id="fileLog"> FileStreamSinkLog
+
+```scala
+fileLog: FileStreamSinkLog
+```
+
+`fileLog` is a [FileStreamSinkLog](FileStreamSinkLog.md) (for the [version 1](FileStreamSinkLog.md#VERSION) and the [metadata log path](#logPath))
+
+Used for ["adding" batch](#addBatch)
 
 ## <span id="toString"> Text Representation
 
@@ -83,30 +91,11 @@ hasMetadata(
 
 `hasMetadata`...FIXME
 
-`hasMetadata` is used when:
+`hasMetadata` is used (to short-circut listing files using [MetadataLogFileIndex](MetadataLogFileIndex.md) instead of using HDFS API) when:
 
-* `DataSource` (Spark SQL) is requested to resolve a `FileFormat` relation (`resolveRelation`) and creates a `HadoopFsRelation`
+* `DataSource` (Spark SQL) is requested to resolve a `FileFormat` relation
+* `FileTable` (Spark SQL) is requested for a `PartitioningAwareFileIndex`
 * `FileStreamSource` is requested to [fetchAllFiles](FileStreamSource.md#fetchAllFiles)
-
-## <span id="logPath"> Metadata Log Path
-
-```scala
-logPath: Path
-```
-
-`logPath` is the location of the **Metadata Log** (as Hadoop's [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html) for the [path](#path) and the [_spark_metadata](#metadataDir))
-
-Used to create the [FileStreamSinkLog](#fileLog)
-
-## <span id="fileLog"> FileStreamSinkLog
-
-```scala
-fileLog: FileStreamSinkLog
-```
-
-`fileLog` is a [FileStreamSinkLog](FileStreamSinkLog.md) (for the [version 1](FileStreamSinkLog.md#VERSION) and the [metadata log path](#logPath))
-
-Used for [addBatch](#addBatch)
 
 ## Logging
 
