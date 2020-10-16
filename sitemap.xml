@@ -80,6 +80,14 @@
      <lastmod>2020-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/SparkDataStream/</loc>
+     <lastmod>2020-10-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/SupportsAdmissionControl/</loc>
+     <lastmod>2020-10-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-aggregation/</loc>
      <lastmod>2020-10-16</lastmod>
      <changefreq>daily</changefreq>
@@ -245,10 +253,6 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/DataStreamReader/</loc>
-     <lastmod>2020-10-16</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/SparkDataStream/</loc>
      <lastmod>2020-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -645,6 +649,10 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/MetadataLogFileIndex/</loc>
+     <lastmod>2020-10-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSourceCleaner/</loc>
      <lastmod>2020-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
