@@ -260,7 +260,7 @@
      <lastmod>2020-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-OutputMode/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/OutputMode/</loc>
      <lastmod>2020-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -917,6 +917,10 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/demo/using-file-streaming-source/</loc>
+     <lastmod>2020-10-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/demo/using-file-streaming-sink/</loc>
      <lastmod>2020-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
