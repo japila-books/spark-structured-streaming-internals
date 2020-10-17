@@ -6,8 +6,8 @@
 
 `StreamingQuery` is created when a streaming query is started using [DataStreamWriter.start](DataStreamWriter.md#start) operator.
 
-??? tip "Demo: Using File Streaming Sink"
-    Learn more in [Demo: Using File Streaming Sink](demo/using-file-streaming-sink.md).
+??? tip "Demo: Deep Dive into FileStreamSink"
+    Learn more in [Demo: Deep Dive into FileStreamSink](demo/deep-dive-into-filestreamsink.md).
 
 ## Managing Active StreamingQueries
 

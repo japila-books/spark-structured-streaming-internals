@@ -5,7 +5,7 @@
 `FileStreamSink` is used with [Append output mode](../../OutputMode.md#Append) only.
 
 !!! tip
-    Learn more in [Demo: Using File Streaming Sink](../../demo/using-file-streaming-sink.md).
+    Learn more in [Demo: Deep Dive into FileStreamSink](../../demo/deep-dive-into-filestreamsink.md).
 
 ## Creating Instance
 
