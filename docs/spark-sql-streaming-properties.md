@@ -13,6 +13,30 @@ Default: `false`
 
 Use [SQLConf.streamingMetricsEnabled](SQLConf.md#streamingMetricsEnabled) to access the current value.
 
+## <span id="spark.sql.streaming.fileSink.log.cleanupDelay"> spark.sql.streaming.fileSink.log.cleanupDelay
+
+**(internal)** How long (in millis) that a file is guaranteed to be visible for all readers.
+
+Default: `10 minutes`
+
+Use [SQLConf.fileSinkLogCleanupDelay](SQLConf.md#fileSinkLogCleanupDelay) to access the current value.
+
+## <span id="spark.sql.streaming.fileSink.log.deletion"> spark.sql.streaming.fileSink.log.deletion
+
+**(internal)** Whether to delete the expired log files in file stream sink
+
+Default: `true`
+
+Use [SQLConf.fileSinkLogDeletion](SQLConf.md#fileSinkLogDeletion) to access the current value.
+
+## <span id="spark.sql.streaming.fileSink.log.compactInterval"> spark.sql.streaming.fileSink.log.compactInterval
+
+**(internal)** Number of log files after which all the previous files are compacted into the next log file
+
+Default: `10`
+
+Use [SQLConf.fileSinkLogCompactInterval](SQLConf.md#fileSinkLogCompactInterval) to access the current value.
+
 [[properties]]
 .Structured Streaming's Properties
 [cols="1m,2",options="header",width="100%"]

@@ -11,6 +11,24 @@
 
 Used when `StreamExecution` is requested to [runStream](StreamExecution.md#runStream)
 
+## <span id="fileSinkLogCleanupDelay"><span id="FILE_SINK_LOG_CLEANUP_DELAY"> fileSinkLogCleanupDelay
+
+[spark.sql.streaming.fileSink.log.cleanupDelay](spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property
+
+Used when [FileStreamSinkLog](datasources/file/FileStreamSinkLog.md#fileCleanupDelayMs) is created
+
+## <span id="fileSinkLogDeletion"><span id="FILE_SINK_LOG_DELETION"> fileSinkLogDeletion
+
+[spark.sql.streaming.fileSink.log.deletion](spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.deletion) configuration property
+
+Used when [FileStreamSinkLog](datasources/file/FileStreamSinkLog.md#isDeletingExpiredLog) is created
+
+## <span id="fileSinkLogCompactInterval"><span id="FILE_SINK_LOG_COMPACT_INTERVAL"> fileSinkLogCompactInterval
+
+[spark.sql.streaming.fileSink.log.compactInterval](spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.compactInterval) configuration property
+
+Used when [FileStreamSinkLog](datasources/file/FileStreamSinkLog.md#defaultCompactInterval) is created
+
 [[accessor-methods]]
 .SQLConf's Property Accessor Methods
 [cols="1,1",options="header",width="100%"]
