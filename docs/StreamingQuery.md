@@ -1,177 +1,160 @@
 # StreamingQuery
 
-`StreamingQuery` is the <<contract, contract>> of streaming queries that are executed continuously and concurrently (i.e. on a [separate thread](StreamExecution.md#queryExecutionThread)).
+`StreamingQuery` is an [abstraction](#contract) of [handles to streaming queries](#implementations) (that are executed continuously and concurrently on a [separate thread](StreamExecution.md#queryExecutionThread)).
 
-`StreamingQuery` is a Scala trait with the only implementation being [StreamExecution](StreamExecution.md) (and less importanly [StreamingQueryWrapper](spark-sql-streaming-StreamingQueryWrapper.md)).
+## Creating StreamingQuery
 
-[[contract]]
-.StreamingQuery Contract
-[cols="1m,2",options="header",width="100%"]
-|===
-| Method
-| Description
+`StreamingQuery` is created when a streaming query is started using [DataStreamWriter.start](DataStreamWriter.md#start) operator.
 
-| awaitTermination
-a| [[awaitTermination]]
+??? tip "Demo: Using File Streaming Sink"
+    Learn more in [Demo: Using File Streaming Sink](demo/using-file-streaming-sink.md).
 
-[source, scala]
-----
+## Managing Active StreamingQueries
+
+[StreamingQueryManager](StreamingQueryManager.md) manages active `StreamingQuery` instances and allows to access one (by [id](#id)) or all active queries (using [StreamingQueryManager.get](StreamingQueryManager.md#get) or [StreamingQueryManager.active](StreamingQueryManager.md#active) operators, respectively).
+
+## States
+
+`StreamingQuery` can be in [two states](#isActive):
+
+* Active (started)
+* Inactive (stopped)
+
+If inactive, `StreamingQuery` may have stopped due to an [StreamingQueryException](#exception).
+
+## Implementations
+
+* [StreamExecution](StreamExecution.md)
+* [StreamingQueryWrapper](StreamingQueryWrapper.md)
+
+## Contract
+
+### <span id="awaitTermination"> awaitTermination
+
+```scala
 awaitTermination(): Unit
-awaitTermination(timeoutMs: Long): Boolean
-----
+awaitTermination(
+  timeoutMs: Long): Boolean
+```
 
 Used when...FIXME
 
-| exception
-a| [[exception]]
+### <span id="exception"> StreamingQueryException
 
-[source, scala]
-----
+```scala
 exception: Option[StreamingQueryException]
-----
+```
 
-`StreamingQueryException` if the query has finished due to an exception
+`StreamingQueryException` if the streaming query has finished due to an exception
 
 Used when...FIXME
 
-| explain
-a| [[explain]]
+### <span id="explain"> Explaining Streaming Query
 
-[source, scala]
-----
+```scala
 explain(): Unit
-explain(extended: Boolean): Unit
-----
+explain(
+  extended: Boolean): Unit
+```
 
 Used when...FIXME
 
-| id
-a| [[id]]
+### <span id="id"> Id
 
-[source, scala]
-----
+```scala
 id: UUID
-----
+```
 
-The unique identifier of the streaming query (that does not change across restarts unlike <<runId, runId>>)
+Unique identifier of the streaming query (that does not change across restarts unlike [runId](#runId))
 
 Used when...FIXME
 
-| isActive
-a| [[isActive]]
+### <span id="isActive"> isActive
 
-[source, scala]
-----
+```scala
 isActive: Boolean
-----
+```
 
 Indicates whether the streaming query is active (`true`) or not (`false`)
 
 Used when...FIXME
 
-| lastProgress
-a| [[lastProgress]]
+### <span id="lastProgress"> StreamingQueryProgress
 
-[source, scala]
-----
+```scala
 lastProgress: StreamingQueryProgress
-----
+```
 
-The last [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) of the streaming query
+The latest [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) of the streaming query
 
 Used when...FIXME
 
-| name
-a| [[name]]
+### <span id="name"> Query Name
 
-[source, scala]
-----
+```scala
 name: String
-----
+```
 
-The name of the query that is unique across all active queries
+Name of the streaming query (unique across all active queries in [SparkSession](#sparkSession))
 
 Used when...FIXME
 
-| processAllAvailable
-a| [[processAllAvailable]]
+### <span id="processAllAvailable"> Processing All Available Data
 
-[source, scala]
-----
+```scala
 processAllAvailable(): Unit
-----
+```
 
-Pauses (_blocks_) the current thread until the streaming query has no more data to be processed or has been <<stop, stopped>>
+Pauses (_blocks_) the current thread until the streaming query has no more data to be processed or has been [stopped](#stop).
 
 Intended for testing
 
-| recentProgress
-a| [[recentProgress]]
+Used when...FIXME
 
-[source, scala]
-----
+### <span id="recentProgress"> Recent StreamingQueryProgresses
+
+```scala
 recentProgress: Array[StreamingQueryProgress]
-----
+```
 
-Collection of the recent [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) updates.
+Recent [StreamingQueryProgress](monitoring/StreamingQueryProgress.md) updates.
 
 Used when...FIXME
 
-| runId
-a| [[runId]]
+### <span id="runId"> Run Id
 
-[source, scala]
-----
+```scala
 runId: UUID
-----
+```
 
-The unique identifier of the current execution of the streaming query (that is different every restart unlike <<id, id>>)
+Unique identifier of the current execution of the streaming query (that is different every restart unlike [id](#id))
 
 Used when...FIXME
 
-| sparkSession
-a| [[sparkSession]]
+### <span id="sparkSession"> SparkSession
 
-[source, scala]
-----
+```scala
 sparkSession: SparkSession
-----
+```
 
 Used when...FIXME
 
-| status
-a| [[status]]
+### <span id="status"> StreamingQueryStatus
 
-[source, scala]
-----
+```scala
 status: StreamingQueryStatus
-----
+```
 
 [StreamingQueryStatus](monitoring/StreamingQueryStatus.md) of the streaming query (as `StreamExecution` [has accumulated](monitoring/ProgressReporter.md#currentStatus) being a `ProgressReporter` while running the streaming query)
 
 Used when...FIXME
 
-| stop
-a| [[stop]]
+### <span id="stop"> Stopping Streaming Query
 
-[source, scala]
-----
+```scala
 stop(): Unit
-----
+```
 
 Stops the streaming query
 
-|===
-
-`StreamingQuery` can be in two states:
-
-* active (started)
-* inactive (stopped)
-
-If inactive, `StreamingQuery` may have transitioned into the state due to an `StreamingQueryException` (that is available under `exception`).
-
-`StreamingQuery` tracks current state of all the sources, i.e. `SourceStatus`, as `sourceStatuses`.
-
-There could only be a single [streaming sink](Sink.md) for a `StreamingQuery` with many [streaming sources](Source.md).
-
-`StreamingQuery` can be stopped by `stop` or an exception.
+Used when...FIXME

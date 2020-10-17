@@ -91,6 +91,7 @@ nav:
   - Home:
     - Welcome: index.md
     - Spark Structured Streaming and Streaming Queries: spark-structured-streaming.md
+    - StreamingQuery: StreamingQuery.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
     - MicroBatchStream: MicroBatchStream.md
@@ -171,7 +172,6 @@ nav:
         - DataStreamWriter: DataStreamWriter.md
         - OutputMode: OutputMode.md
         - Trigger: spark-sql-streaming-Trigger.md
-      - StreamingQuery: StreamingQuery.md
       - window Function: spark-sql-streaming-window.md
       - SQLConf: SQLConf.md
       - Configuration Properties: spark-sql-streaming-properties.md
