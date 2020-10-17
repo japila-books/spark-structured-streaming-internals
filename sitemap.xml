@@ -144,7 +144,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-HDFSBackedStateStore/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/HDFSBackedStateStore/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -156,7 +156,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-HDFSBackedStateStoreProvider/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/HDFSBackedStateStoreProvider/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -192,7 +192,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStoreConf/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StateStoreConf/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -296,7 +296,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamMetadata/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamMetadata/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -400,7 +400,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingQueryWrapper/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingQueryWrapper/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -408,11 +408,11 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-MetadataLog/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/MetadataLog/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-HDFSMetadataLog/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/HDFSMetadataLog/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -428,15 +428,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-OffsetSeq/</loc>
-     <lastmod>2020-10-17</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/CompactibleFileStreamLog/</loc>
-     <lastmod>2020-10-17</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSourceLog/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/OffsetSeq/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -444,15 +436,15 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-CheckpointFileManager/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/CheckpointFileManager/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FileContextBasedCheckpointFileManager/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/FileContextBasedCheckpointFileManager/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FileSystemBasedCheckpointFileManager/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/FileSystemBasedCheckpointFileManager/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -636,7 +628,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSinkLog/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/CompactibleFileStreamLog/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -653,6 +645,14 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSourceCleaner/</loc>
+     <lastmod>2020-10-17</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSourceLog/</loc>
+     <lastmod>2020-10-17</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/file/FileStreamSinkLog/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
