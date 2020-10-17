@@ -1,4 +1,4 @@
-== [[CheckpointFileManager]] CheckpointFileManager Contract
+# CheckpointFileManager
 
 `CheckpointFileManager` is the <<contract, abstraction>> of <<implementations, checkpoint managers>> that manage checkpoint files (metadata of streaming batches) on Hadoop DFS-compatible file systems.
 
@@ -47,7 +47,7 @@ Used when:
 
 * `RenameBasedFSDataOutputStream` is requested to `cancel`
 
-* `CompactibleFileStreamLog` is requested to [store metadata for a batch](CompactibleFileStreamLog.md#add) (that [deleteExpiredLog](CompactibleFileStreamLog.md#deleteExpiredLog))
+* `CompactibleFileStreamLog` is requested to [store metadata for a batch](datasources/file/CompactibleFileStreamLog.md#add) (that [deleteExpiredLog](datasources/file/CompactibleFileStreamLog.md#deleteExpiredLog))
 
 * `HDFSMetadataLog` is requested to <<spark-sql-streaming-HDFSMetadataLog.md#purge, remove expired metadata>> and <<spark-sql-streaming-HDFSMetadataLog.md#purgeAfter, purgeAfter>>
 
@@ -92,7 +92,7 @@ Used when:
 
 * `HDFSBackedStateStoreProvider` is requested for <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#fetchFiles, all delta and snapshot files>>
 
-* `CompactibleFileStreamLog` is requested for the [compact interval](CompactibleFileStreamLog.md#compactInterval) and to [deleteExpiredLog](CompactibleFileStreamLog.md#deleteExpiredLog)
+* `CompactibleFileStreamLog` is requested for the [compact interval](datasources/file/CompactibleFileStreamLog.md#compactInterval) and to [deleteExpiredLog](datasources/file/CompactibleFileStreamLog.md#deleteExpiredLog)
 
 * `HDFSMetadataLog` is requested for <<spark-sql-streaming-HDFSMetadataLog.md#get-range, metadata of one or more batches>>, the <<getLatest, latest committed batch>>, <<spark-sql-streaming-HDFSMetadataLog.md#getOrderedBatchFiles, ordered batch metadata files>>, to <<spark-sql-streaming-HDFSMetadataLog.md#purge, remove expired metadata>> and <<spark-sql-streaming-HDFSMetadataLog.md#purgeAfter, purgeAfter>>
 

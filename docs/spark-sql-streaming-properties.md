@@ -37,6 +37,14 @@ Default: `10`
 
 Use [SQLConf.fileSinkLogCompactInterval](SQLConf.md#fileSinkLogCompactInterval) to access the current value.
 
+## <span id="spark.sql.streaming.minBatchesToRetain"> spark.sql.streaming.minBatchesToRetain
+
+**(internal)** Minimum number of batches that must be retained and made recoverable
+
+Default: `100`
+
+Use [SQLConf.minBatchesToRetain](SQLConf.md#minBatchesToRetain) to access the current value.
+
 [[properties]]
 .Structured Streaming's Properties
 [cols="1m,2",options="header",width="100%"]
@@ -135,13 +143,6 @@ The value adjusts a trade-off between memory usage vs cache miss:
 * `0` or negative value disables cache to maximize memory size of executors
 
 Used exclusively when `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#init, initialize>>.
-
-| spark.sql.streaming.minBatchesToRetain
-a| [[spark.sql.streaming.minBatchesToRetain]] *(internal)* The minimum number of entries to retain for failure recovery
-
-Default: `100`
-
-Use <<SQLConf.md#minBatchesToRetain, SQLConf.minBatchesToRetain>> to get the current value
 
 | spark.sql.streaming.multipleWatermarkPolicy
 a| [[spark.sql.streaming.multipleWatermarkPolicy]] *Global watermark policy* that is the policy to calculate the global watermark value when there are multiple watermark operators in a streaming query

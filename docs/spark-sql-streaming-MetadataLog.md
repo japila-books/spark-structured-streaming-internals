@@ -27,7 +27,7 @@ Used when:
 
 * `KafkaSource` is requested for the [initialPartitionOffsets](datasources/kafka/KafkaSource.md#initialPartitionOffsets)
 
-* `CompactibleFileStreamLog` is requested for the [store metadata of a streaming batch](CompactibleFileStreamLog.md#add) and to [compact](CompactibleFileStreamLog.md#compact)
+* `CompactibleFileStreamLog` is requested for the [store metadata of a streaming batch](datasources/file/CompactibleFileStreamLog.md#add) and to [compact](datasources/file/CompactibleFileStreamLog.md#compact)
 
 * `FileStreamSource` is requested to [fetchMaxOffset](datasources/file/FileStreamSource.md#fetchMaxOffset)
 

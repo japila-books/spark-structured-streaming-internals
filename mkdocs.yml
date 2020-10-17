@@ -219,9 +219,6 @@ nav:
       - OffsetSeqLog:
         - OffsetSeqLog: spark-sql-streaming-OffsetSeqLog.md
         - OffsetSeq: spark-sql-streaming-OffsetSeq.md
-      - CompactibleFileStreamLog:
-        - CompactibleFileStreamLog: CompactibleFileStreamLog.md
-        - FileStreamSourceLog: datasources/file/FileStreamSourceLog.md
       - OffsetSeqMetadata: spark-sql-streaming-OffsetSeqMetadata.md
       - CheckpointFileManager:
         - CheckpointFileManager: spark-sql-streaming-CheckpointFileManager.md
@@ -283,11 +280,13 @@ nav:
       - File Data Source: datasources/file/index.md
       - FileStreamSource: datasources/file/FileStreamSource.md
       - FileStreamSink: datasources/file/FileStreamSink.md
-      - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
+      - CompactibleFileStreamLog: datasources/file/CompactibleFileStreamLog.md
       - SinkFileStatus: datasources/file/SinkFileStatus.md
       - ManifestFileCommitProtocol: datasources/file/ManifestFileCommitProtocol.md
       - MetadataLogFileIndex: datasources/file/MetadataLogFileIndex.md
       - FileStreamSourceCleaner: datasources/file/FileStreamSourceCleaner.md
+      - FileStreamSourceLog: datasources/file/FileStreamSourceLog.md
+      - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
     - Kafka:
       - Kafka Data Source: datasources/kafka/index.md
       - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md

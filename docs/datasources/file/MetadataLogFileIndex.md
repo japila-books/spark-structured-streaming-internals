@@ -54,7 +54,7 @@ metadataLog: FileStreamSinkLog
 allFilesFromLog: Array[FileStatus]
 ```
 
-`allFilesFromLog` requests the [FileStreamSinkLog](#metadataLog) for [all files](../../CompactibleFileStreamLog.md#allFiles) that are in turn requested for their [representation as a Hadoop FileStatus](SinkFileStatus.md#toFileStatus).
+`allFilesFromLog` requests the [FileStreamSinkLog](#metadataLog) for [all files](CompactibleFileStreamLog.md#allFiles) that are in turn requested for their [representation as a Hadoop FileStatus](SinkFileStatus.md#toFileStatus).
 
 `allFilesFromLog` is used for [leafFiles](#leafFiles) and [leafDirToChildrenFiles](#leafDirToChildrenFiles).
 

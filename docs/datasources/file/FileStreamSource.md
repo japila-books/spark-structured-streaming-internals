@@ -29,7 +29,7 @@ While being created, `FileStreamSource` prints out the following INFO message to
 maxFilesPerBatch = [maxFilesPerBatch], maxFileAgeMs = [maxFileAgeMs]
 ```
 
-`FileStreamSource` requests the [FileStreamSourceLog](#metadataLog) for [all files](../../CompactibleFileStreamLog.md#allFiles) that are added to [seenFiles](#seenFiles) internal registry. `FileStreamSource` requests the [seenFiles](#seenFiles) internal registry to `purge` (remove aged entries).
+`FileStreamSource` requests the [FileStreamSourceLog](#metadataLog) for [all files](CompactibleFileStreamLog.md#allFiles) that are added to [seenFiles](#seenFiles) internal registry. `FileStreamSource` requests the [seenFiles](#seenFiles) internal registry to `purge` (remove aged entries).
 
 ## <span id="sourceOptions"><span id="FileStreamOptions"> Options
 

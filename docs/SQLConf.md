@@ -29,6 +29,18 @@ Used when [FileStreamSinkLog](datasources/file/FileStreamSinkLog.md#isDeletingEx
 
 Used when [FileStreamSinkLog](datasources/file/FileStreamSinkLog.md#defaultCompactInterval) is created
 
+## <span id="minBatchesToRetain"><span id="MIN_BATCHES_TO_RETAIN"> minBatchesToRetain
+
+[spark.sql.streaming.minBatchesToRetain](spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property
+
+Used when:
+
+* `CompactibleFileStreamLog` is [created](datasources/file/CompactibleFileStreamLog.md#minBatchesToRetain)
+
+* [StreamExecution](StreamExecution.md#minLogEntriesToMaintain) is created
+
+* `StateStoreConf` is [created](spark-sql-streaming-StateStoreConf.md#minVersionsToRetain)
+
 [[accessor-methods]]
 .SQLConf's Property Accessor Methods
 [cols="1,1",options="header",width="100%"]
@@ -84,17 +96,6 @@ a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]] Used when:
 * <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.md#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a streaming query (and creates a [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator for every [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operator)
 
 * Among the <<spark-sql-streaming-OffsetSeqMetadata.md#relevantSQLConfs, checkpointed properties>>
-
-| `minBatchesToRetain`
-
-<<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
-a| [[minBatchesToRetain]] Used when:
-
-* `CompactibleFileStreamLog` is [created](CompactibleFileStreamLog.md#minBatchesToRetain)
-
-* [StreamExecution](StreamExecution.md#minLogEntriesToMaintain) is created
-
-* `StateStoreConf` is [created](spark-sql-streaming-StateStoreConf.md#minVersionsToRetain)
 
 | `SHUFFLE_PARTITIONS`
 

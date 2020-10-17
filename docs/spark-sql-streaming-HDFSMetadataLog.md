@@ -26,7 +26,7 @@
 | <<spark-sql-streaming-CommitLog.md#, CommitLog>>
 | [[CommitLog]] [Offset commit log](StreamExecution.md#commitLog) of [streaming query execution engines](StreamExecution.md)
 
-| [CompactibleFileStreamLog](CompactibleFileStreamLog.md)
+| [CompactibleFileStreamLog](datasources/file/CompactibleFileStreamLog.md)
 | [[CompactibleFileStreamLog]] Compactible metadata logs (that compact logs at regular interval)
 
 | [KafkaSourceInitialOffsetWriter](datasources/kafka/KafkaSourceInitialOffsetWriter.md)
@@ -150,7 +150,7 @@ batchIdToPath(batchId: Long): Path
 
 `batchIdToPath` is used when:
 
-* `CompactibleFileStreamLog` is requested to [compact](CompactibleFileStreamLog.md#compact) and [allFiles](CompactibleFileStreamLog.md#allFiles)
+* `CompactibleFileStreamLog` is requested to [compact](datasources/file/CompactibleFileStreamLog.md#compact) and [allFiles](datasources/file/CompactibleFileStreamLog.md#allFiles)
 
 * `HDFSMetadataLog` is requested to <<add, add>>, <<get, get>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 
@@ -176,7 +176,7 @@ pathToBatchId(path: Path): Long
 
 `pathToBatchId` is used when:
 
-* `CompactibleFileStreamLog` is requested for the [compact interval](CompactibleFileStreamLog.md#compactInterval)
+* `CompactibleFileStreamLog` is requested for the [compact interval](datasources/file/CompactibleFileStreamLog.md#compactInterval)
 
 * `HDFSMetadataLog` is requested to <<isBatchFile, isBatchFile>>, <<get-range, get metadata of a range of batches>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 
@@ -216,7 +216,7 @@ parseVersion(
 
 * `CommitLog` is requested to <<spark-sql-streaming-CommitLog.md#deserialize, deserialize metadata>>
 
-* `CompactibleFileStreamLog` is requested to [deserialize metadata](CompactibleFileStreamLog.md#deserialize)
+* `CompactibleFileStreamLog` is requested to [deserialize metadata](datasources/file/CompactibleFileStreamLog.md#deserialize)
 
 * `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#deserialize, deserialize metadata>>
 
@@ -273,7 +273,7 @@ a| [[batchFilesFilter]] Hadoop's https://hadoop.apache.org/docs/r2.7.3/api/org/a
 
 Used when:
 
-* `CompactibleFileStreamLog` is requested for the [compactInterval](CompactibleFileStreamLog.md#compactInterval)
+* `CompactibleFileStreamLog` is requested for the [compactInterval](datasources/file/CompactibleFileStreamLog.md#compactInterval)
 
 * `HDFSMetadataLog` is requested to <<get, get batch metadata>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 
