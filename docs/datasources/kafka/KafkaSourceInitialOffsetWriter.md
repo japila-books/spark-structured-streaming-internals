@@ -1,6 +1,6 @@
 # KafkaSourceInitialOffsetWriter
 
-`KafkaSourceInitialOffsetWriter` is a [Hadoop DFS-based metadata storage](../../spark-sql-streaming-HDFSMetadataLog.md) for [KafkaSourceOffsets](KafkaSourceOffset.md).
+`KafkaSourceInitialOffsetWriter` is a [Hadoop DFS-based metadata storage](../../HDFSMetadataLog.md) for [KafkaSourceOffsets](KafkaSourceOffset.md).
 
 `KafkaSourceInitialOffsetWriter` is <<creating-instance, created>> exclusively when `KafkaMicroBatchReader` is requested to [getOrCreateInitialPartitionOffsets](KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets).
 
@@ -22,6 +22,6 @@ deserialize(
   in: InputStream): KafkaSourceOffset
 ----
 
-NOTE: `deserialize` is part of the <<../../spark-sql-streaming-HDFSMetadataLog.md#deserialize, HDFSMetadataLog Contract>> to deserialize metadata (reading metadata from a serialized format)
-
 `deserialize`...FIXME
+
+`deserialize` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#deserialize) abstraction.

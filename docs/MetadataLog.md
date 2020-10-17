@@ -1,4 +1,4 @@
-== [[MetadataLog]] MetadataLog Contract -- Metadata Storage
+# MetadataLog
 
 `MetadataLog` is the <<contract, abstraction>> of <<implementations, metadata storage>> that can <<add, persist>>, <<get, retrieve>>, and <<purge, remove>> metadata (of type `T`).
 
@@ -82,4 +82,4 @@ Used when...FIXME
 |===
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog>> is the only direct implementation of the <<contract, MetadataLog Contract>> in Spark Structured Streaming.
+NOTE: [HDFSMetadataLog](HDFSMetadataLog.md) is the only direct implementation of the <<contract, MetadataLog Contract>> in Spark Structured Streaming.

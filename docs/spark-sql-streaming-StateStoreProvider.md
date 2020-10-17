@@ -5,7 +5,7 @@
 NOTE: `StateStoreProvider` utility uses <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property for the name of the class of the default <<implementations, StateStoreProvider implementation>>.
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedStateStoreProvider>> is the default and only known `StateStoreProvider` in Spark Structured Streaming.
+NOTE: [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md) is the default and only known `StateStoreProvider` in Spark Structured Streaming.
 
 [[contract]]
 .StateStoreProvider Contract
@@ -81,9 +81,9 @@ stateStoreId: StateStoreId
 
 Used when:
 
-* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.md#id, unique id>>
+* `HDFSBackedStateStore` is requested for the [unique id](HDFSBackedStateStore.md#id)
 
-* `HDFSBackedStateStoreProvider` is <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#baseDir, created>> and requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#toString, textual representation>>
+* `HDFSBackedStateStoreProvider` is [created](HDFSBackedStateStoreProvider.md#baseDir) and requested for the [textual representation](HDFSBackedStateStoreProvider.md#toString)
 
 | supportedCustomMetrics
 a| [[supportedCustomMetrics]]
@@ -99,7 +99,7 @@ Used when:
 
 * `StateStoreWriter` stateful physical operators are requested for the [stateStoreCustomMetrics](physical-operators/StateStoreWriter.md#stateStoreCustomMetrics) (when requested for the [metrics](physical-operators/StateStoreWriter.md#metrics) and [getProgress](physical-operators/StateStoreWriter.md#getProgress))
 
-* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.md#metrics, metrics>>
+* `HDFSBackedStateStore` is requested for the [performance metrics](HDFSBackedStateStore.md#metrics)
 
 |===
 

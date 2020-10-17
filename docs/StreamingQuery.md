@@ -25,7 +25,7 @@ If inactive, `StreamingQuery` may have stopped due to an [StreamingQueryExceptio
 ## Implementations
 
 * [StreamExecution](StreamExecution.md)
-* [StreamingQueryWrapper](spark-sql-streaming-StreamingQueryWrapper.md)
+* [StreamingQueryWrapper](StreamingQueryWrapper.md)
 
 ## Contract
 

@@ -18,7 +18,7 @@
 | minVersionsToRetain
 | [[minVersionsToRetain]] <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
 
-Used exclusively when `HDFSBackedStateStoreProvider` is requested for <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#cleanup, cleanup>>.
+Used exclusively when `HDFSBackedStateStoreProvider` is requested for [cleanup](HDFSBackedStateStoreProvider.md#cleanup).
 
 | providerClass
 a| [[providerClass]] <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>

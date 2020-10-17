@@ -20,7 +20,7 @@ Spark Structured Streaming uses <<spark-sql-streaming-StateStore.md#, StateStore
 
 State stores are checkpointed incrementally to avoid state loss and for increased performance.
 
-State stores are managed by <<spark-sql-streaming-StateStoreProvider.md#, State Store Providers>> with <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedStateStoreProvider>> being the default and only known implementation. `HDFSBackedStateStoreProvider` uses Hadoop DFS-compliant file system for <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#baseDir, state checkpointing and fault-tolerance>>.
+State stores are managed by <<spark-sql-streaming-StateStoreProvider.md#, State Store Providers>> with [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md) being the default and only known implementation. `HDFSBackedStateStoreProvider` uses Hadoop DFS-compliant file system for [state checkpointing and fault-tolerance](HDFSBackedStateStoreProvider.md#baseDir).
 
 State store providers manage versioned state per <<spark-sql-streaming-StateStoreId.md#, stateful operator (and partition it operates on)>>.
 
@@ -34,7 +34,7 @@ When requested for a <<spark-sql-streaming-StateStore.md#get-StateStore, StateSt
 
 The initialized `StateStoreProvider` is cached in <<spark-sql-streaming-StateStore.md#loadedProviders, loadedProviders>> internal lookup table (for a <<spark-sql-streaming-StateStoreId.md#, StateStoreId>>) for later lookups.
 
-`StateStoreProvider` utility then requests the `StateStoreProvider` for the <<spark-sql-streaming-StateStoreProvider.md#getStore, state store for a specified version>>. (e.g. a <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> in case of <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#getStore, HDFSBackedStateStoreProvider>>).
+`StateStoreProvider` utility then requests the `StateStoreProvider` for the <<spark-sql-streaming-StateStoreProvider.md#getStore, state store for a specified version>>. (e.g. a [HDFSBackedStateStore](HDFSBackedStateStore.md) in case of [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#getStore)).
 
 An instance of `StateStoreProvider` is requested to <<spark-sql-streaming-StateStoreProvider.md#doMaintenance, do its own maintenance>> or <<spark-sql-streaming-StateStoreProvider.md#close, close>> (when <<spark-sql-streaming-StateStoreProvider.md#verifyIfStoreInstanceActive, a corresponding StateStore is inactive>>) in <<spark-sql-streaming-StateStoreProvider.md#MaintenanceTask, MaintenanceTask daemon thread>> that runs periodically every <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> configuration property (default: `60s`).
 

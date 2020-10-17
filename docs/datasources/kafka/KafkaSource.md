@@ -354,9 +354,9 @@ initialPartitionOffsets: Map[TopicPartition, Long]
 
 `initialPartitionOffsets` is the *initial partition offsets* for the batch `0` that were already persisted in the <<metadataPath, streaming metadata log directory>> or persisted on demand.
 
-As the very first step, `initialPartitionOffsets` creates a custom <<spark-sql-streaming-HDFSMetadataLog.md#, HDFSMetadataLog>> (of [KafkaSourceOffsets](KafkaSourceOffset.md) metadata) in the <<metadataPath, streaming metadata log directory>>.
+As the very first step, `initialPartitionOffsets` creates a custom [HDFSMetadataLog](../../HDFSMetadataLog.md) (of [KafkaSourceOffsets](KafkaSourceOffset.md) metadata) in the <<metadataPath, streaming metadata log directory>>.
 
-`initialPartitionOffsets` requests the `HDFSMetadataLog` for the <<spark-sql-streaming-HDFSMetadataLog.md#get, metadata>> of the ``0``th batch (as `KafkaSourceOffset`).
+`initialPartitionOffsets` requests the `HDFSMetadataLog` for the [metadata](../../HDFSMetadataLog.md#get) of the ``0``th batch (as `KafkaSourceOffset`).
 
 If the metadata is available, `initialPartitionOffsets` requests the metadata for the [collection of TopicPartitions and their offsets](KafkaSourceOffset.md#partitionToOffsets).
 
@@ -368,11 +368,11 @@ If the metadata could not be found, `initialPartitionOffsets` creates a new `Kaf
 
 * For `SpecificOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to [fetchSpecificOffsets](KafkaOffsetReader.md#fetchSpecificOffsets) (and report a data loss per the <<failOnDataLoss, failOnDataLoss>> flag)
 
-`initialPartitionOffsets` requests the custom `HDFSMetadataLog` to <<spark-sql-streaming-HDFSMetadataLog.md#add, add the offsets to the metadata log>> (as the metadata of the ``0``th batch).
+`initialPartitionOffsets` requests the custom `HDFSMetadataLog` to [add the offsets to the metadata log](../../HDFSMetadataLog.md#add) (as the metadata of the ``0``th batch).
 
 `initialPartitionOffsets` prints out the following INFO message to the logs:
 
-```
+```text
 Initial offsets: [offsets]
 ```
 
@@ -392,8 +392,6 @@ serialize(
   out: OutputStream): Unit
 ----
 
-NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#serialize, HDFSMetadataLog Contract>> to...FIXME.
-
 `serialize` requests the `OutputStream` to write a zero byte (to support Spark 2.1.0 as per SPARK-19517).
 
 `serialize` creates a `BufferedWriter` over a `OutputStreamWriter` over the `OutputStream` (with `UTF_8` charset encoding).
@@ -403,6 +401,8 @@ NOTE: `serialize` is part of the <<spark-sql-streaming-HDFSMetadataLog.md#serial
 `serialize` then requests the `KafkaSourceOffset` for a JSON-serialized representation and the `BufferedWriter` to write it out.
 
 In the end, `serialize` requests the `BufferedWriter` to flush (the underlying stream).
+
+`serialize` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#serialize) abstraction.
 
 === [[rateLimit]] `rateLimit` Internal Method
 

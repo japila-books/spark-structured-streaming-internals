@@ -1,6 +1,6 @@
 # HDFSMetadataLog
 
-`HDFSMetadataLog` is a concrete <<spark-sql-streaming-MetadataLog.md#, metadata storage>> (of type `T`) that uses Hadoop DFS for fault-tolerance and reliability.
+`HDFSMetadataLog` is a [metadata storage](MetadataLog.md) (of type `T`) that uses Hadoop DFS for fault-tolerance and reliability.
 
 [[metadataPath]]
 `HDFSMetadataLog` uses the given <<path, path>> as the *metadata directory* with metadata logs. The path is immediately converted to a Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] for file management.
@@ -77,9 +77,9 @@ NOTE: `deserialize` is used exclusively when `HDFSMetadataLog` is requested to <
 get(batchId: Long): Option[T]
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.md#get, MetadataLog Contract>> to get metadata of a batch.
-
 `get`...FIXME
+
+`get` is part of the [MetadataLog](MetadataLog.md#get) abstraction.
 
 === [[get-range]] Retrieving Metadata of Range of Batches -- `get` Method
 
@@ -90,9 +90,9 @@ get(
   endId: Option[Long]): Array[(Long, T)]
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.md#get, MetadataLog Contract>> to get metadata of range of batches.
-
 `get`...FIXME
+
+`get` is part of the [MetadataLog](MetadataLog.md#get) abstraction.
 
 === [[add]] Persisting Metadata of Streaming Micro-Batch -- `add` Method
 
@@ -103,13 +103,13 @@ add(
   metadata: T): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.md#add, MetadataLog Contract>> to persist metadata of a streaming batch.
-
 `add` return `true` when the metadata of the streaming batch was not available and persisted successfully. Otherwise, `add` returns `false`.
 
 Internally, `add` <<get, looks up metadata of the given streaming batch>> (`batchId`) and returns `false` when found.
 
 Otherwise, when not found, `add` <<batchIdToPath, creates a metadata log file>> for the given `batchId` and <<writeBatchToFile, writes metadata to the file>>. `add` returns `true` if successful.
+
+`add` is part of the [MetadataLog](MetadataLog.md#add) abstraction.
 
 === [[getLatest]] Latest Committed Batch Id with Metadata (When Available) -- `getLatest` Method
 
@@ -117,8 +117,6 @@ Otherwise, when not found, `add` <<batchIdToPath, creates a metadata log file>> 
 ----
 getLatest(): Option[(Long, T)]
 ----
-
-NOTE: `getLatest` is a part of spark-sql-streaming-MetadataLog.md#getLatest[MetadataLog Contract] to retrieve the recently-committed batch id and the corresponding metadata if available in the metadata storage.
 
 `getLatest` requests the internal <<fileManager, FileManager>> for the files in <<metadataPath, metadata directory>> that match <<batchFilesFilter, batch file filter>>.
 
@@ -128,6 +126,8 @@ NOTE: `getLatest` is a part of spark-sql-streaming-MetadataLog.md#getLatest[Meta
 
 NOTE: It is possible that the batch id could be in the metadata storage, but not available for retrieval.
 
+`getLatest` is a part of [MetadataLog](MetadataLog.md#getLatest) abstraction.
+
 === [[purge]] Removing Expired Metadata (Purging) -- `purge` Method
 
 [source, scala]
@@ -135,9 +135,9 @@ NOTE: It is possible that the batch id could be in the metadata storage, but not
 purge(thresholdBatchId: Long): Unit
 ----
 
-NOTE: `purge` is part of the <<spark-sql-streaming-MetadataLog.md#purge, MetadataLog Contract>> to...FIXME.
-
 `purge`...FIXME
+
+`purge` is part of the [MetadataLog](MetadataLog.md#purge) abstraction.
 
 === [[batchIdToPath]] Creating Batch Metadata File -- `batchIdToPath` Method
 
@@ -242,7 +242,7 @@ writeBatchToFile(
   path: Path): Unit
 ----
 
-`writeBatchToFile` requests the <<fileManager, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#createAtomic, createAtomic>> (for the specified `path` and the `overwriteIfPossible` flag disabled).
+`writeBatchToFile` requests the <<fileManager, CheckpointFileManager>> to [createAtomic](CheckpointFileManager.md#createAtomic) (for the specified `path` and the `overwriteIfPossible` flag disabled).
 
 `writeBatchToFile` then <<serialize, serializes the metadata>> (to the `CancellableFSDataOutputStream` output stream) and closes the stream.
 
@@ -278,7 +278,7 @@ Used when:
 * `HDFSMetadataLog` is requested to <<get, get batch metadata>>, <<getLatest, getLatest>>, <<getOrderedBatchFiles, getOrderedBatchFiles>>, <<purge, purge>>, and <<purgeAfter, purgeAfter>>
 
 | fileManager
-a| [[fileManager]] <<spark-sql-streaming-CheckpointFileManager.md#, CheckpointFileManager>>
+a| [[fileManager]] [CheckpointFileManager](CheckpointFileManager.md)
 
 Used when...FIXME
 

@@ -68,9 +68,9 @@ Used when <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggrega
 Among the <<spark-sql-streaming-OffsetSeqMetadata.md#relevantSQLConfs, checkpointed properties>> that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 
 | spark.sql.streaming.checkpointFileManagerClass
-a| [[spark.sql.streaming.checkpointFileManagerClass]] *(internal)* <<spark-sql-streaming-CheckpointFileManager.md#, CheckpointFileManager>> to use to write checkpoint files atomically
+a| [[spark.sql.streaming.checkpointFileManagerClass]] *(internal)* [CheckpointFileManager](CheckpointFileManager.md) to use to write checkpoint files atomically
 
-Default: <<spark-sql-streaming-FileContextBasedCheckpointFileManager.md#, FileContextBasedCheckpointFileManager>> (with <<spark-sql-streaming-FileSystemBasedCheckpointFileManager.md#, FileSystemBasedCheckpointFileManager>> in case of unsupported file system used for storing metadata files)
+Default: [FileContextBasedCheckpointFileManager](FileContextBasedCheckpointFileManager.md) (with [FileSystemBasedCheckpointFileManager](FileSystemBasedCheckpointFileManager.md) in case of unsupported file system used for storing metadata files)
 
 | spark.sql.streaming.checkpointLocation
 a| [[spark.sql.streaming.checkpointLocation]] Default checkpoint directory for storing checkpoint data
@@ -142,7 +142,7 @@ The value adjusts a trade-off between memory usage vs cache miss:
 * `1` covers only success case
 * `0` or negative value disables cache to maximize memory size of executors
 
-Used exclusively when `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#init, initialize>>.
+Used when `HDFSBackedStateStoreProvider` is requested to [initialize](HDFSBackedStateStoreProvider.md#init).
 
 | spark.sql.streaming.multipleWatermarkPolicy
 a| [[spark.sql.streaming.multipleWatermarkPolicy]] *Global watermark policy* that is the policy to calculate the global watermark value when there are multiple watermark operators in a streaming query
@@ -198,7 +198,7 @@ Use <<SQLConf.md#stateStoreMinDeltasForSnapshot, SQLConf.stateStoreMinDeltasForS
 | spark.sql.streaming.stateStore.providerClass
 a| [[spark.sql.streaming.stateStore.providerClass]] *(internal)* The fully-qualified class name of the <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
 
-Default: <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedStateStoreProvider>>
+Default: [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md)
 
 Use <<SQLConf.md#stateStoreProviderClass, SQLConf.stateStoreProviderClass>> to get the current value.
 

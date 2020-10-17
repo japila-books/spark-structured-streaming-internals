@@ -39,7 +39,7 @@ Used when:
 
 * [StreamExecution](StreamExecution.md#minLogEntriesToMaintain) is created
 
-* `StateStoreConf` is [created](spark-sql-streaming-StateStoreConf.md#minVersionsToRetain)
+* `StateStoreConf` is [created](StateStoreConf.md#minVersionsToRetain)
 
 [[accessor-methods]]
 .SQLConf's Property Accessor Methods
@@ -106,7 +106,7 @@ a| [[SHUFFLE_PARTITIONS]] See https://jaceklaskowski.gitbooks.io/mastering-spark
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>>
 
-a| [[stateStoreMinDeltasForSnapshot]] Used (as <<spark-sql-streaming-StateStoreConf.md#minDeltasForSnapshot, StateStoreConf.minDeltasForSnapshot>>) exclusively when `HDFSBackedStateStoreProvider` is requested to <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#doSnapshot, doSnapshot>>
+a| [[stateStoreMinDeltasForSnapshot]] Used (as [StateStoreConf.minDeltasForSnapshot](StateStoreConf.md#minDeltasForSnapshot)) exclusively when `HDFSBackedStateStoreProvider` is requested to [doSnapshot](HDFSBackedStateStoreProvider.md#doSnapshot)
 
 | `stateStoreProviderClass`
 
@@ -116,7 +116,7 @@ a| [[stateStoreProviderClass]] Used when:
 
 * `StateStoreWriter` is requested to [stateStoreCustomMetrics](physical-operators/StateStoreWriter.md#stateStoreCustomMetrics) (when `StateStoreWriter` is requested for the [metrics](physical-operators/StateStoreWriter.md#metrics) and [getProgress](physical-operators/StateStoreWriter.md#getProgress))
 
-* `StateStoreConf` is <<spark-sql-streaming-StateStoreConf.md#providerClass, created>>
+* `StateStoreConf` is [created](StateStoreConf.md#providerClass)
 
 | `STREAMING_AGGREGATION_STATE_FORMAT_VERSION`
 
@@ -130,7 +130,7 @@ a| [[STREAMING_AGGREGATION_STATE_FORMAT_VERSION]] Used when:
 | `STREAMING_CHECKPOINT_FILE_MANAGER_CLASS`
 
 <<spark-sql-streaming-properties.md#spark.sql.streaming.checkpointFileManagerClass, spark.sql.streaming.checkpointFileManagerClass>>
-a| [[STREAMING_CHECKPOINT_FILE_MANAGER_CLASS]] Used exclusively when `CheckpointFileManager` helper object is requested to <<spark-sql-streaming-CheckpointFileManager.md#create, create a CheckpointFileManager>>
+a| [[STREAMING_CHECKPOINT_FILE_MANAGER_CLASS]] Used exclusively when `CheckpointFileManager` helper object is requested to [create a CheckpointFileManager](CheckpointFileManager.md#create)
 
 | `streamingMetricsEnabled`
 

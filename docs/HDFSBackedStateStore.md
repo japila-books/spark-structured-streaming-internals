@@ -1,11 +1,11 @@
-== [[HDFSBackedStateStore]] HDFSBackedStateStore -- State Store on HDFS-Compatible File System
+# HDFSBackedStateStore
 
 `HDFSBackedStateStore` is a concrete <<spark-sql-streaming-StateStore.md#, StateStore>> that uses a Hadoop DFS-compatible file system for versioned state persistence.
 
-`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#getStore, specified version of state (store) for update>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.md#get-StateStore, look up a StateStore by provider id>>).
+`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for the [specified version of state (store) for update](HDFSBackedStateStoreProvider.md#getStore) (when `StateStore` utility is requested to [look up a StateStore by provider id](spark-sql-streaming-StateStore.md#get-StateStore)).
 
 [[id]]
-`HDFSBackedStateStore` uses the <<spark-sql-streaming-StateStoreId.md#, StateStoreId>> of the owning <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#stateStoreId, HDFSBackedStateStoreProvider>>.
+`HDFSBackedStateStore` uses the [StateStoreId](spark-sql-streaming-StateStoreId.md) of the owning [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#stateStoreId).
 
 [[toString]]
 When requested for the textual representation, `HDFSBackedStateStore` gives *HDFSStateStore[id=(op=[operatorId],part=[partitionId]),dir=[baseDir]]*.
@@ -13,7 +13,7 @@ When requested for the textual representation, `HDFSBackedStateStore` gives *HDF
 [[logging]]
 [TIP]
 ====
-`HDFSBackedStateStore` is an internal class of <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#, HDFSBackedStateStoreProvider>> and uses its <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#logging, logger>>.
+`HDFSBackedStateStore` is an internal class of [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md) and uses its [logger](HDFSBackedStateStoreProvider.md#logging).
 ====
 
 === [[creating-instance]] Creating HDFSBackedStateStore Instance
@@ -100,13 +100,13 @@ commit(): Long
 
 NOTE: `commit` is part of the <<spark-sql-streaming-StateStore.md#commit, StateStore Contract>> to commit state changes.
 
-`commit` requests the parent `HDFSBackedStateStoreProvider` to <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#commitUpdates, commit state changes (as a new version of state)>> (with the <<newVersion, newVersion>>, the <<mapToUpdate, mapToUpdate>> and the <<compressedStream, compressed stream>>).
+`commit` requests the parent `HDFSBackedStateStoreProvider` to [commit state changes (as a new version of state)](HDFSBackedStateStoreProvider.md#commitUpdates) (with the <<newVersion, newVersion>>, the <<mapToUpdate, mapToUpdate>> and the <<compressedStream, compressed stream>>).
 
 `commit` transitions `HDFSBackedStateStore` to <<COMMITTED, COMMITTED>> state.
 
 `commit` prints out the following INFO message to the logs:
 
-```
+```text
 Committed version [newVersion] for [this] to file [finalDeltaFile]
 ```
 
@@ -144,17 +144,17 @@ metrics: StateStoreMetrics
 
 NOTE: `metrics` is part of the <<spark-sql-streaming-StateStore.md#metrics, StateStore Contract>> to get the <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>>.
 
-`metrics` requests the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#getMetricsForProvider, performance metrics>> of the parent `HDFSBackedStateStoreProvider`.
+`metrics` requests the [performance metrics](HDFSBackedStateStoreProvider.md#getMetricsForProvider) of the parent `HDFSBackedStateStoreProvider`.
 
-The performance metrics of the provider used are only the ones listed in <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#supportedCustomMetrics, supportedCustomMetrics>>.
+The performance metrics of the provider used are only the ones listed in [supportedCustomMetrics](HDFSBackedStateStoreProvider.md#supportedCustomMetrics).
 
-In the end, `metrics` returns a new <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>> with the following:
+In the end, `metrics` returns a new [StateStoreMetrics](spark-sql-streaming-StateStoreMetrics.md) with the following:
 
-* <<spark-sql-streaming-StateStoreMetrics.md#numKeys, Total number of keys>> as the size of <<mapToUpdate, mapToUpdate>>
+* [Total number of keys](spark-sql-streaming-StateStoreMetrics.md#numKeys) as the size of <<mapToUpdate, mapToUpdate>>
 
-* <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, Memory used (in bytes)>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#memoryUsedBytes, memoryUsedBytes>> metric (of the parent provider)
+* <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, Memory used (in bytes)>> as the [memoryUsedBytes](HDFSBackedStateStoreProvider.md#memoryUsedBytes) metric (of the parent provider)
 
-* <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, StateStoreCustomMetrics>> as the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#supportedCustomMetrics, supportedCustomMetrics>> and the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>> metric of the parent provider
+* <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, StateStoreCustomMetrics>> as the [supportedCustomMetrics](HDFSBackedStateStoreProvider.md#supportedCustomMetrics) and the [metricStateOnCurrentVersionSizeBytes](HDFSBackedStateStoreProvider.md#metricStateOnCurrentVersionSizeBytes) metric of the parent provider
 
 === [[hasCommitted]] Are State Changes Committed? -- `hasCommitted` Method
 
@@ -200,7 +200,7 @@ a| [[finalDeltaFile]]
 finalDeltaFile: Path
 ----
 
-The Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#deltaFile, deltaFile>> for the <<newVersion, version>>
+The Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the [deltaFile](HDFSBackedStateStoreProvider.md#deltaFile) for the [version](#newVersion)
 
 | newVersion
 a| [[newVersion]]

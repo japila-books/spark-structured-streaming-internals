@@ -232,7 +232,7 @@ The <<name, name>>, <<id, id>> and <<runId, runId>> are all unique across all ac
 ====
 
 [[streamMetadata]]
-`StreamExecution` uses a <<spark-sql-streaming-StreamMetadata.md#, StreamMetadata>> that is <<spark-sql-streaming-StreamMetadata.md#write, persisted>> in the `metadata` file in the <<checkpointFile, checkpoint directory>>. If the `metadata` file is available it is <<spark-sql-streaming-StreamMetadata.md#read, read>> and is the way to recover the <<id, ID>> of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
+`StreamExecution` uses a [StreamMetadata](StreamMetadata.md) that is [persisted](StreamMetadata.md#write) in the `metadata` file in the <<checkpointFile, checkpoint directory>>. If the `metadata` file is available it is [read](StreamMetadata.md#read) and is the way to recover the <<id, ID>> of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
 
 [[IS_CONTINUOUS_PROCESSING]]
 `StreamExecution` uses *__is_continuous_processing* local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to <<spark-sql-streaming-StateStoreRDD.md#compute, compute a partition>> (and <<spark-sql-streaming-StateStore.md#get, finds a StateStore>> for a given version).
@@ -275,9 +275,9 @@ NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-insta
 offsetLog: OffsetSeqLog
 ----
 
-`offsetLog` is a <<spark-sql-streaming-OffsetSeqLog.md#, Hadoop DFS-based metadata storage>> (of <<spark-sql-streaming-OffsetSeq.md#, OffsetSeqs>>) with `offsets` <<checkpointFile, metadata directory>>.
+`offsetLog` is a <<spark-sql-streaming-OffsetSeqLog.md#, Hadoop DFS-based metadata storage>> (of [OffsetSeq](OffsetSeq.md)s) with `offsets` <<checkpointFile, metadata directory>>.
 
-`offsetLog` is used as *Write-Ahead Log of Offsets* to <<spark-sql-streaming-HDFSMetadataLog.md#add, persist offsets>> of the data about to be processed in every trigger.
+`offsetLog` is used as *Write-Ahead Log of Offsets* to [persist offsets](HDFSMetadataLog.md#add) of the data about to be processed in every trigger.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
@@ -463,7 +463,7 @@ explainInternal(extended: Boolean): String
 
 * `StreamExecution` is requested to <<explain, explain a streaming query>>
 
-* `StreamingQueryWrapper` is requested to <<spark-sql-streaming-StreamingQueryWrapper.md#explainInternal, explainInternal>>
+* `StreamingQueryWrapper` is requested to [explainInternal](StreamingQueryWrapper.md#explainInternal)
 ====
 
 === [[stopSources]] Stopping Streaming Sources and Readers -- `stopSources` Method

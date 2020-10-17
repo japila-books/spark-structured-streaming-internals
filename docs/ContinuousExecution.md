@@ -147,13 +147,13 @@ NOTE: `getStartOffsets` is used exclusively when `ContinuousExecution` is reques
 commit(epoch: Long): Unit
 ----
 
-In essence, `commit` <<spark-sql-streaming-HDFSMetadataLog.md#add, adds>> the given epoch to [commit log](StreamExecution.md#commitLog) and the [committedOffsets](StreamExecution.md#committedOffsets), and requests the <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#commit, commit the corresponding offset>>. In the end, `commit` <<spark-sql-streaming-HDFSMetadataLog.md#purge, removes old log entries>> from the [offset](StreamExecution.md#offsetLog) and [commit](StreamExecution.md#commitLog) logs (to keep [spark.sql.streaming.minBatchesToRetain](StreamExecution.md#minLogEntriesToMaintain) entries only).
+In essence, `commit` [adds](HDFSMetadataLog.md#add) the given epoch to [commit log](StreamExecution.md#commitLog) and the [committedOffsets](StreamExecution.md#committedOffsets), and requests the <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#commit, commit the corresponding offset>>. In the end, `commit` [removes old log entries](HDFSMetadataLog.md#purge) from the [offset](StreamExecution.md#offsetLog) and [commit](StreamExecution.md#commitLog) logs (to keep [spark.sql.streaming.minBatchesToRetain](StreamExecution.md#minLogEntriesToMaintain) entries only).
 
 Internally, `commit` [recordTriggerOffsets](monitoring/ProgressReporter.md#recordTriggerOffsets) (with the from and to offsets as the [committedOffsets](StreamExecution.md#committedOffsets) and [availableOffsets](StreamExecution.md#availableOffsets), respectively).
 
 At this point, `commit` may simply return when the [stream execution thread](StreamExecution.md#queryExecutionThread) is no longer alive (died).
 
-`commit` requests the [commit log](StreamExecution.md#commitLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, store a metadata>> for the epoch.
+`commit` requests the [commit log](StreamExecution.md#commitLog) to [store a metadata](HDFSMetadataLog.md#add) for the epoch.
 
 `commit` requests the single <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#deserializeOffset, deserialize the offset>> for the epoch (from the [offset write-ahead log](StreamExecution.md#offsetLog)).
 
@@ -161,7 +161,7 @@ At this point, `commit` may simply return when the [stream execution thread](Str
 
 `commit` requests the single <<continuousSources, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#commit, commit the offset>>.
 
-`commit` requests the [offset](StreamExecution.md#offsetLog) and [commit](StreamExecution.md#commitLog) logs to <<spark-sql-streaming-HDFSMetadataLog.md#purge, remove log entries>> to keep [spark.sql.streaming.minBatchesToRetain](StreamExecution.md#minLogEntriesToMaintain) only.
+`commit` requests the [offset](StreamExecution.md#offsetLog) and [commit](StreamExecution.md#commitLog) logs to [remove log entries](HDFSMetadataLog.md#purge) to keep [spark.sql.streaming.minBatchesToRetain](StreamExecution.md#minLogEntriesToMaintain) only.
 
 `commit` then acquires the [awaitProgressLock](StreamExecution.md#awaitProgressLock), wakes up all threads waiting for the [awaitProgressLockCondition](StreamExecution.md#awaitProgressLockCondition) and in the end releases the [awaitProgressLock](StreamExecution.md#awaitProgressLock).
 
@@ -181,15 +181,15 @@ addOffset(
   partitionOffsets: Seq[PartitionOffset]): Unit
 ----
 
-In essense, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and then requests the [OffsetSeqLog](StreamExecution.md#offsetLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, register the offset with the given epoch>>.
+In essense, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and then requests the [OffsetSeqLog](StreamExecution.md#offsetLog) to [register the offset with the given epoch](HDFSMetadataLog.md#add).
 
 ![ContinuousExecution.addOffset](images/ContinuousExecution-addOffset.png)
 
 Internally, `addOffset` requests the given <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> to <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, mergeOffsets>> (with the given `PartitionOffsets`) and to get the current "global" offset back.
 
-`addOffset` then requests the [OffsetSeqLog](StreamExecution.md#offsetLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, add>> the current "global" offset for the given `epoch`.
+`addOffset` then requests the [OffsetSeqLog](StreamExecution.md#offsetLog) to [add](HDFSMetadataLog.md#add) the current "global" offset for the given `epoch`.
 
-`addOffset` requests the [OffsetSeqLog](StreamExecution.md#offsetLog) for the <<spark-sql-streaming-HDFSMetadataLog.md#get, offset at the previous epoch>>.
+`addOffset` requests the [OffsetSeqLog](StreamExecution.md#offsetLog) for the [offset at the previous epoch](HDFSMetadataLog.md#get).
 
 If the offsets at the current and previous epochs are the same, `addOffset` turns the [noNewData](StreamExecution.md#noNewData) internal flag on.
 

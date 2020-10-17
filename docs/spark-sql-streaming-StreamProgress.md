@@ -6,7 +6,7 @@
 
 * [StreamExecution](StreamExecution.md) is created (and creates [committed](StreamExecution.md#committedOffsets) and [available](StreamExecution.md#availableOffsets) offsets)
 
-* `OffsetSeq` is requested to <<spark-sql-streaming-OffsetSeq.md#toStreamProgress, convert to StreamProgress>>
+* `OffsetSeq` is requested to [convert to StreamProgress](OffsetSeq.md#toStreamProgress)
 
 `StreamProgress` is an extension of Scala's https://www.scala-lang.org/api/2.11.11/index.html#scala.collection.immutable.Map[scala.collection.immutable.Map] with streaming sources as keys and their <<spark-sql-streaming-Offset.md#, Offsets>> as values.
 
@@ -37,7 +37,7 @@ NOTE: `get` is part of the Scala's `scala.collection.MapLike` to...FIXME.
 
 `++` simply creates a new <<creating-instance, StreamProgress>> with the <<baseMap, baseMap>> and the given updates.
 
-NOTE: `++` is used exclusively when `OffsetSeq` is requested to <<spark-sql-streaming-OffsetSeq.md#toStreamProgress, convert to StreamProgress>>.
+`++` is used exclusively when `OffsetSeq` is requested to [convert to StreamProgress](OffsetSeq.md#toStreamProgress).
 
 === [[toOffsetSeq]] Converting to OffsetSeq -- `toOffsetSeq` Method
 
@@ -48,7 +48,7 @@ toOffsetSeq(
   metadata: OffsetSeqMetadata): OffsetSeq
 ----
 
-`toOffsetSeq` creates a <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>> with offsets that are <<get, looked up>> for every streaming source.
+`toOffsetSeq` creates a [OffsetSeq](OffsetSeq.md) with offsets that are <<get, looked up>> for every streaming source.
 
 `toOffsetSeq` is used when:
 

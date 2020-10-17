@@ -132,11 +132,11 @@ nav:
       - StateStore:
         - StateStore: spark-sql-streaming-StateStore.md
         - StateStoreId: spark-sql-streaming-StateStoreId.md
-        - HDFSBackedStateStore: spark-sql-streaming-HDFSBackedStateStore.md
+        - HDFSBackedStateStore: HDFSBackedStateStore.md
       - StateStoreProvider:
         - StateStoreProvider: spark-sql-streaming-StateStoreProvider.md
         - StateStoreProviderId: spark-sql-streaming-StateStoreProviderId.md
-        - HDFSBackedStateStoreProvider: spark-sql-streaming-HDFSBackedStateStoreProvider.md
+        - HDFSBackedStateStoreProvider: HDFSBackedStateStoreProvider.md
       - StateStoreCoordinator:
         - StateStoreCoordinator: spark-sql-streaming-StateStoreCoordinator.md
         - StateStoreCoordinatorRef: spark-sql-streaming-StateStoreCoordinatorRef.md
@@ -146,7 +146,7 @@ nav:
       - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
       - StateStoreUpdater: spark-sql-streaming-StateStoreUpdater.md
       - EventTimeStatsAccum: spark-sql-streaming-EventTimeStatsAccum.md
-      - StateStoreConf: spark-sql-streaming-StateStoreConf.md
+      - StateStoreConf: StateStoreConf.md
     - Arbitrary Stateful Streaming Aggregation:
       - Arbitrary Stateful Streaming Aggregation: arbitrary-stateful-streaming-aggregation.md
       - KeyValueGroupedDataset:
@@ -179,7 +179,7 @@ nav:
       - StreamExecution: StreamExecution.md
       - TriggerExecutor: spark-sql-streaming-TriggerExecutor.md
       - IncrementalExecution: IncrementalExecution.md
-      - StreamMetadata: spark-sql-streaming-StreamMetadata.md
+      - StreamMetadata: StreamMetadata.md
       - Logical Operators:
         - EventTimeWatermark: EventTimeWatermark.md
         - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
@@ -208,22 +208,22 @@ nav:
         - StreamingGlobalLimitStrategy: spark-sql-streaming-StreamingGlobalLimitStrategy.md
         - StreamingJoinStrategy: spark-sql-streaming-StreamingJoinStrategy.md
         - StreamingRelationStrategy: spark-sql-streaming-StreamingRelationStrategy.md
-      - StreamingQueryWrapper: spark-sql-streaming-StreamingQueryWrapper.md
+      - StreamingQueryWrapper: StreamingQueryWrapper.md
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: spark-sql-streaming-offsets-and-metadata-checkpointing.md
-      - MetadataLog: spark-sql-streaming-MetadataLog.md
-      - HDFSMetadataLog: spark-sql-streaming-HDFSMetadataLog.md
+      - MetadataLog: MetadataLog.md
+      - HDFSMetadataLog: HDFSMetadataLog.md
       - CommitLog:
         - CommitLog: spark-sql-streaming-CommitLog.md
         - CommitMetadata: spark-sql-streaming-CommitMetadata.md
       - OffsetSeqLog:
         - OffsetSeqLog: spark-sql-streaming-OffsetSeqLog.md
-        - OffsetSeq: spark-sql-streaming-OffsetSeq.md
+        - OffsetSeq: OffsetSeq.md
       - OffsetSeqMetadata: spark-sql-streaming-OffsetSeqMetadata.md
       - CheckpointFileManager:
-        - CheckpointFileManager: spark-sql-streaming-CheckpointFileManager.md
-        - FileContextBasedCheckpointFileManager: spark-sql-streaming-FileContextBasedCheckpointFileManager.md
-        - FileSystemBasedCheckpointFileManager: spark-sql-streaming-FileSystemBasedCheckpointFileManager.md
+        - CheckpointFileManager: CheckpointFileManager.md
+        - FileContextBasedCheckpointFileManager: FileContextBasedCheckpointFileManager.md
+        - FileSystemBasedCheckpointFileManager: FileSystemBasedCheckpointFileManager.md
         - Offset: spark-sql-streaming-Offset.md
         - StreamProgress: spark-sql-streaming-StreamProgress.md
     - Micro-Batch Stream Processing:

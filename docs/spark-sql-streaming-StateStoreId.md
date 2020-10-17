@@ -28,4 +28,4 @@ storeCheckpointLocation(): Path
 
 If the <<DEFAULT_STORE_NAME, default store name>> is used (for Spark 2.2 and earlier), the <<storeName, storeName>> is not included in the path.
 
-NOTE: `storeCheckpointLocation` is used exclusively when `HDFSBackedStateStoreProvider` is requested for the <<spark-sql-streaming-HDFSBackedStateStoreProvider.md#baseDir, state checkpoint base directory>>.
+`storeCheckpointLocation` is used when `HDFSBackedStateStoreProvider` is requested for the [state checkpoint base directory](HDFSBackedStateStoreProvider.md#baseDir).

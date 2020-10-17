@@ -7,7 +7,7 @@
 `StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for identification).
 
 [[implementations]]
-NOTE: <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> is the default and only known implementation of the <<contract, StateStore Contract>> in Spark Structured Streaming.
+NOTE: [HDFSBackedStateStore](HDFSBackedStateStore.md) is the default and only known implementation of the <<contract, StateStore Contract>> in Spark Structured Streaming.
 
 [[contract]]
 .StateStore Contract
@@ -124,7 +124,7 @@ The <<spark-sql-streaming-StateStoreId.md#, ID>> of the state store
 
 Used when:
 
-* `HDFSBackedStateStore` state store is requested for the <<spark-sql-streaming-HDFSBackedStateStore.md#toString, textual representation>>
+* `HDFSBackedStateStore` state store is requested for the [textual representation](HDFSBackedStateStore.md#toString)
 
 * `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#abortIfNeeded, abortIfNeeded>> and <<spark-sql-streaming-StateStoreHandler.md#getStateStore, getStateStore>>
 
@@ -142,7 +142,7 @@ Used when:
 
 * <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> physical operator is requested to execute
 
-* <<spark-sql-streaming-HDFSBackedStateStore.md#getRange, HDFSBackedStateStore>> state store in particular and any <<getRange, StateStore>> in general are requested to `getRange`
+* [HDFSBackedStateStore](HDFSBackedStateStore.md#getRange) state store in particular and any <<getRange, StateStore>> in general are requested to `getRange`
 
 * `StreamingAggregationStateManagerImplV1` state manager is requested for the <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#values, values>>
 
@@ -218,7 +218,7 @@ version: Long
 
 Version of the state store
 
-Used exclusively when `HDFSBackedStateStore` state store is requested for a <<spark-sql-streaming-HDFSBackedStateStore.md#newVersion, new version>> (that simply the current version incremented)
+Used exclusively when `HDFSBackedStateStore` state store is requested for a [new version](HDFSBackedStateStore.md#newVersion) (that simply the current version incremented)
 
 |===
 

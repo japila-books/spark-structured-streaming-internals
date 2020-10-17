@@ -1,4 +1,4 @@
-== [[HDFSBackedStateStoreProvider]] HDFSBackedStateStoreProvider -- Hadoop DFS-based StateStoreProvider
+# HDFSBackedStateStoreProvider
 
 `HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> that uses a Hadoop DFS-compatible file system for <<baseDir, versioned state checkpointing>>.
 
@@ -6,7 +6,7 @@
 
 `HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the <<spark-sql-streaming-StateStore.md#, state store>> to use for a stateful operator and a partition.
 
-`HDFSStateStoreProvider` uses <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStores>> to manage state (<<getStore, one per version>>).
+`HDFSStateStoreProvider` uses [HDFSBackedStateStores](HDFSBackedStateStore.md) to manage state (<<getStore, one per version>>).
 
 `HDFSBackedStateStoreProvider` manages versioned state in delta and snapshot files (and uses a <<loadedMaps, cache>> internally for faster access to state versions).
 
@@ -44,7 +44,7 @@ a| [[metricLoadedMapCacheHit]][[loadedMapCacheHitCount]] The number of times <<l
 a| [[metricLoadedMapCacheMiss]][[loadedMapCacheMissCount]] The number of times <<loadMap, loading the specified version of state>> could not find (_missed_) the requested state version in the <<loadedMaps, loadedMaps>> internal cache
 
 | estimated size of state only on current version
-a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Estimated size of the <<spark-sql-streaming-HDFSBackedStateStore.md#mapToUpdate, current state>> (of the <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>>)
+a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Estimated size of the [current state](HDFSBackedStateStore.md#mapToUpdate) (of the [HDFSBackedStateStore](HDFSBackedStateStore.md))
 
 |===
 
@@ -69,7 +69,7 @@ As a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>>, `HDFSBa
 
 The <<stateStoreId, StateStoreId>> is then used for the following:
 
-* `HDFSBackedStateStore` is requested for the <<spark-sql-streaming-HDFSBackedStateStore.md#id, id>>
+* `HDFSBackedStateStore` is requested for the [id](HDFSBackedStateStore.md#id)
 
 * `HDFSBackedStateStoreProvider` is requested for the <<toString, textual representation>> and the <<baseDir, state checkpoint base directory>>
 
@@ -100,7 +100,7 @@ NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.md#getS
 
 `getStore` creates a new empty state (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`) and <<loadMap, loads the specified version of state (from internal cache or snapshot and delta files)>> for versions greater than `0`.
 
-In the end, `getStore` creates a new <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> for the specified version with the new state and prints out the following INFO message to the logs:
+In the end, `getStore` creates a new [HDFSBackedStateStore](HDFSBackedStateStore.md) for the specified version with the new state and prints out the following INFO message to the logs:
 
 ```
 Retrieved version [version] of [this] for update
@@ -121,14 +121,11 @@ deltaFile(version: Long): Path
 
 `deltaFile` simply returns the Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path] of the `[version].delta` file in the <<baseDir, state checkpoint base directory>>.
 
-[NOTE]
-====
 `deltaFile` is used when:
 
-* <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> is created (and creates the <<finalDeltaFile, final delta file>>)
+* [HDFSBackedStateStore](HDFSBackedStateStore.md) is created (and creates the <<finalDeltaFile, final delta file>>)
 
-* `HDFSBackedStateStoreProvider` is requested to <<updateFromDeltaFile, updateFromDeltaFile>>
-====
+* `HDFSBackedStateStoreProvider` is requested to [updateFromDeltaFile](#updateFromDeltaFile)
 
 === [[snapshotFile]] `snapshotFile` Internal Method
 
@@ -148,7 +145,7 @@ NOTE: `snapshotFile` is used when `HDFSBackedStateStoreProvider` is requested to
 fetchFiles(): Seq[StoreFile]
 ----
 
-`fetchFiles` requests the <<fm, CheckpointFileManager>> for <<spark-sql-streaming-CheckpointFileManager.md#list, all the files>> in the <<baseDir, state checkpoint directory>>.
+`fetchFiles` requests the <<fm, CheckpointFileManager>> for [all the files](CheckpointFileManager.md#list) in the <<baseDir, state checkpoint directory>>.
 
 For every file, `fetchFiles` splits the name into two parts with `.` (dot) as a separator (files with more or less than two parts are simply ignored) and registers a new `StoreFile` for `snapshot` and `delta` files:
 
@@ -189,9 +186,9 @@ NOTE: `init` is part of the <<spark-sql-streaming-StateStoreProvider.md#init, St
 
 `init` records the values of the input arguments as the <<stateStoreId, stateStoreId>>, <<keySchema, keySchema>>, <<valueSchema, valueSchema>>, <<storeConf, storeConf>>, and <<hadoopConf, hadoopConf>> internal properties.
 
-`init` requests the given `StateStoreConf` for the <<spark-sql-streaming-StateStoreConf.md#maxVersionsToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> configuration property (that is then recorded in the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> internal property).
+`init` requests the given `StateStoreConf` for the [spark.sql.streaming.maxBatchesToRetainInMemory](StateStoreConf.md#maxVersionsToRetainInMemory) configuration property (that is then recorded in the <<numberOfVersionsToRetainInMemory, numberOfVersionsToRetainInMemory>> internal property).
 
-In the end, `init` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#mkdirs, create>> the <<baseDir, baseDir>> directory (with parent directories).
+In the end, `init` requests the <<fm, CheckpointFileManager>> to [create](CheckpointFileManager.md#mkdirs) the <<baseDir, baseDir>> directory (with parent directories).
 
 === [[filesForVersion]] Finding Snapshot File and Delta Files For Version -- `filesForVersion` Internal Method
 
@@ -285,7 +282,7 @@ fetchFiles() took [time] ms.
 
 `cleanup` takes the version of the latest state file (`lastVersion`) and decrements it by <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) that gives the earliest version to retain (and all older state files to be removed).
 
-`cleanup` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#delete, delete the path>> of every old state file.
+`cleanup` requests the <<fm, CheckpointFileManager>> to [delete the path](CheckpointFileManager.md#delete) of every old state file.
 
 `cleanup` prints out the following DEBUG message to the logs:
 
@@ -333,7 +330,7 @@ getMetricsForProvider(): Map[String, Long]
 
 * <<metricLoadedMapCacheMiss, metricLoadedMapCacheMiss>>
 
-NOTE: `getMetricsForProvider` is used exclusively when `HDFSBackedStateStore` is requested for <<spark-sql-streaming-HDFSBackedStateStore.md#metrics, performance metrics>>.
+`getMetricsForProvider` is used when `HDFSBackedStateStore` is requested for [performance metrics](HDFSBackedStateStore.md#metrics).
 
 === [[supportedCustomMetrics]] Supported StateStoreCustomMetrics -- `supportedCustomMetrics` Method
 
@@ -364,7 +361,7 @@ commitUpdates(
 
 `commitUpdates` <<finalizeDeltaFile, finalizeDeltaFile>> (with the given `DataOutputStream`) followed by <<putStateIntoStateCacheMap, caching the new version of state>> (with the given `newVersion` and the `map` state).
 
-NOTE: `commitUpdates` is used exclusively when `HDFSBackedStateStore` is requested to <<spark-sql-streaming-HDFSBackedStateStore.md#commit, commit state changes>>.
+`commitUpdates` is used when `HDFSBackedStateStore` is requested to [commit state changes](HDFSBackedStateStore.md#commit).
 
 === [[loadMap]] Loading Specified Version of State (from Internal Cache or Snapshot and Delta Files) -- `loadMap` Internal Method
 
@@ -409,7 +406,7 @@ readSnapshotFile(
 
 `readSnapshotFile` <<snapshotFile, creates the path of the snapshot file>> for the given `version`.
 
-`readSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#open, open the snapshot file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
+`readSnapshotFile` requests the <<fm, CheckpointFileManager>> to [open the snapshot file for reading](CheckpointFileManager.md#open) and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
 
 `readSnapshotFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in a state map (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`):
 
@@ -455,7 +452,7 @@ The following description is almost an exact copy of <<readSnapshotFile, readSna
 
 `updateFromDeltaFile` <<deltaFile, creates the path of the delta file>> for the requested `version`.
 
-`updateFromDeltaFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#open, open the delta file for reading>> and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
+`updateFromDeltaFile` requests the <<fm, CheckpointFileManager>> to [open the delta file for reading](CheckpointFileManager.md#open) and <<decompressStream, creates a decompressed DataInputStream>> (`input`).
 
 `updateFromDeltaFile` reads the decompressed input stream until an EOF (that is marked as the integer `-1` in the stream) and inserts key and value rows in the given state map:
 
@@ -513,13 +510,13 @@ writeSnapshotFile(
 
 `writeSnapshotFile` <<snapshotFile, snapshotFile>> for the given version.
 
-`writeSnapshotFile` requests the <<fm, CheckpointFileManager>> to <<spark-sql-streaming-CheckpointFileManager.md#createAtomic, create the snapshot file>> (with overwriting enabled) and <<compressStream, compress the stream>>.
+`writeSnapshotFile` requests the <<fm, CheckpointFileManager>> to [create the snapshot file](CheckpointFileManager.md#createAtomic) (with overwriting enabled) and <<compressStream, compress the stream>>.
 
 For every key-value `UnsafeRow` pair in the given map, `writeSnapshotFile` writes the size of the key followed by the key itself (as bytes). `writeSnapshotFile` then writes the size of the value followed by the value itself (as bytes).
 
 In the end, `writeSnapshotFile` prints out the following INFO message to the logs:
 
-```
+```text
 Written snapshot file for version [version] of [this] at [targetFile]
 ```
 
@@ -605,11 +602,11 @@ Used when `HDFSBackedStateStoreProvider` is requested for the following:
 | Description
 
 | fm
-a| [[fm]] <<spark-sql-streaming-CheckpointFileManager.md#, CheckpointFileManager>> for the <<baseDir, state checkpoint base directory>> (and the <<hadoopConf, Hadoop Configuration>>)
+a| [[fm]] [CheckpointFileManager](CheckpointFileManager.md) for the <<baseDir, state checkpoint base directory>> (and the <<hadoopConf, Hadoop Configuration>>)
 
 Used when:
 
-* Creating a new <<spark-sql-streaming-HDFSBackedStateStore.md#, HDFSBackedStateStore>> (to create the <<spark-sql-streaming-HDFSBackedStateStore.md#deltaFileStream, CancellableFSDataOutputStream>> for the <<spark-sql-streaming-HDFSBackedStateStore.md#finalDeltaFile, finalDeltaFile>>)
+* Creating a new [HDFSBackedStateStore](HDFSBackedStateStore.md) (to create the [CancellableFSDataOutputStream](HDFSBackedStateStore.md#deltaFileStream) for the [finalDeltaFile](HDFSBackedStateStore.md#finalDeltaFile))
 
 * `HDFSBackedStateStoreProvider` is requested to <<init, initialize>> (to create the <<baseDir, state checkpoint base directory>>), <<updateFromDeltaFile, updateFromDeltaFile>>, <<writeSnapshotFile, write the compressed snapshot file for a specified state version>>, <<readSnapshotFile, readSnapshotFile>>, <<cleanup, clean up>>, and <<fetchFiles, list all delta and snapshot files in the state checkpoint directory>>
 

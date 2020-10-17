@@ -23,7 +23,7 @@ Used when:
 
 * `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> and <<MicroBatchExecution.md#runBatch, run a streaming micro-batch>> (with <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> sources)
 
-* `OffsetSeq` is requested for the <<spark-sql-streaming-OffsetSeq.md#toString, textual representation>>
+* `OffsetSeq` is requested for the [textual representation](OffsetSeq.md#toString)
 
 * `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#serialize, serialize metadata (write metadata in serialized format)>>
 

@@ -171,7 +171,7 @@ populateStartOffsets(
   sparkSessionToRunBatches: SparkSession): Unit
 ----
 
-`populateStartOffsets` requests the [Offset Write-Ahead Log](StreamExecution.md#offsetLog) for the <<spark-sql-streaming-HDFSMetadataLog.md#getLatest, latest committed batch id with metadata>> (i.e. <<spark-sql-streaming-OffsetSeq.md#, OffsetSeq>>).
+`populateStartOffsets` requests the [Offset Write-Ahead Log](StreamExecution.md#offsetLog) for the [latest committed batch id with metadata](HDFSMetadataLog.md#getLatest) (i.e. [OffsetSeq](OffsetSeq.md)).
 
 NOTE: The batch id could not be available in the write-ahead log when a streaming query started with a new log or no batch was persisted (_added_) to the log before.
 
@@ -189,7 +189,7 @@ When the latest committed batch id with the metadata was available in the [Offse
 
 * Sets the <<availableOffsets, available offsets>> to the offsets (from the metadata)
 
-When the latest batch ID found is greater than `0`, `populateStartOffsets` requests the [Offset Write-Ahead Log](StreamExecution.md#offsetLog) for the <<spark-sql-streaming-HDFSMetadataLog.md#get, second latest batch ID with metadata>> or throws an `IllegalStateException` if not found.
+When the latest batch ID found is greater than `0`, `populateStartOffsets` requests the [Offset Write-Ahead Log](StreamExecution.md#offsetLog) for the [second latest batch ID with metadata](HDFSMetadataLog.md#get) or throws an `IllegalStateException` if not found.
 
 ```text
 batch [latestBatchId - 1] doesn't exist
@@ -202,7 +202,7 @@ batch [latestBatchId - 1] doesn't exist
 
 CAUTION: FIXME Describe me
 
-`populateStartOffsets` requests the [Offset Commit Log](StreamExecution.md#commitLog) for the <<spark-sql-streaming-HDFSMetadataLog.md#getLatest, latest committed batch id with metadata>> (i.e. <<spark-sql-streaming-CommitMetadata.md#, CommitMetadata>>).
+`populateStartOffsets` requests the [Offset Commit Log](StreamExecution.md#commitLog) for the [latest committed batch id with metadata](HDFSMetadataLog.md#getLatest) (i.e. <<spark-sql-streaming-CommitMetadata.md#, CommitMetadata>>).
 
 CAUTION: FIXME Describe me
 
@@ -329,7 +329,7 @@ Writing offsets to log
 ```
 
 [[constructNextBatch-walCommit]]
-In *walCommit* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the [availableOffsets StreamProgress](StreamExecution.md#availableOffsets) to <<spark-sql-streaming-StreamProgress.md#toOffsetSeq, convert to OffsetSeq>> (with the <<sources, BaseStreamingSources>> and the [current batch metadata (event-time watermark and timestamp)](StreamExecution.md#offsetSeqMetadata)) that is in turn [added](spark-sql-streaming-HDFSMetadataLog.md#add) to the [write-ahead log](StreamExecution.md#offsetLog) for the [current batch ID](StreamExecution.md#currentBatchId).
+In *walCommit* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the [availableOffsets StreamProgress](StreamExecution.md#availableOffsets) to <<spark-sql-streaming-StreamProgress.md#toOffsetSeq, convert to OffsetSeq>> (with the <<sources, BaseStreamingSources>> and the [current batch metadata (event-time watermark and timestamp)](StreamExecution.md#offsetSeqMetadata)) that is in turn [added](HDFSMetadataLog.md#add) to the [write-ahead log](StreamExecution.md#offsetLog) for the [current batch ID](StreamExecution.md#currentBatchId).
 
 `constructNextBatch` prints out the following INFO message to the logs:
 
@@ -343,7 +343,7 @@ NOTE: FIXME (`if (minLogEntriesToMaintain < currentBatchId) ...`)
 
 `constructNextBatch` turns the [noNewData](StreamExecution.md#noNewData) internal flag off (`false`).
 
-In case of a failure while <<spark-sql-streaming-HDFSMetadataLog.md#add, adding the available offsets>> to the [write-ahead log](StreamExecution.md#offsetLog), `constructNextBatch` throws an `AssertionError`:
+In case of a failure while [adding the available offsets](HDFSMetadataLog.md#add) to the [write-ahead log](StreamExecution.md#offsetLog), `constructNextBatch` throws an `AssertionError`:
 
 ```text
 Concurrent update to the log. Multiple streaming jobs detected for [currentBatchId]
@@ -547,7 +547,7 @@ NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart`
 
 `runBatch` requests the <<watermarkTracker, WatermarkTracker>> to <<spark-sql-streaming-WatermarkTracker.md#updateWatermark, update event-time watermark>> (with the `executedPlan` of the <<runBatch-queryPlanning, IncrementalExecution>>).
 
-`runBatch` requests the [Offset Commit Log](StreamExecution.md#commitLog) to <<spark-sql-streaming-HDFSMetadataLog.md#add, persisting metadata of the streaming micro-batch>> (with the current [batch ID](StreamExecution.md#currentBatchId) and <<spark-sql-streaming-WatermarkTracker.md#currentWatermark, event-time watermark>> of the <<watermarkTracker, WatermarkTracker>>).
+`runBatch` requests the [Offset Commit Log](StreamExecution.md#commitLog) to [persisting metadata of the streaming micro-batch](HDFSMetadataLog.md#add) (with the current [batch ID](StreamExecution.md#currentBatchId) and <<spark-sql-streaming-WatermarkTracker.md#currentWatermark, event-time watermark>> of the <<watermarkTracker, WatermarkTracker>>).
 
 In the end, `runBatch` <<spark-sql-streaming-StreamProgress.md#plusplus, adds>> the [available offsets](StreamExecution.md#availableOffsets) to the [committed offsets](StreamExecution.md#committedOffsets) (and updates the <<spark-sql-streaming-Offset.md#, offsets>> of every source with new data in the current micro-batch).
 
@@ -651,9 +651,9 @@ Default: `false`
 
 * Disabled (`false`) after <<runBatch, running a streaming micro-batch>> (when enabled after <<constructNextBatch, constructing the next streaming micro-batch>>)
 
-* Enabled (`true`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and <<spark-sql-streaming-HDFSMetadataLog.md#getLatest, re-starting a streaming query from a checkpoint>> (using the [Offset Write-Ahead Log](StreamExecution.md#offsetLog))
+* Enabled (`true`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and [re-starting a streaming query from a checkpoint](HDFSMetadataLog.md#getLatest) (using the [Offset Write-Ahead Log](StreamExecution.md#offsetLog))
 
-* Disabled (`false`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and <<spark-sql-streaming-HDFSMetadataLog.md#getLatest, re-starting a streaming query from a checkpoint>> when the latest offset checkpointed (written) to the [offset write-ahead log](StreamExecution.md#offsetLog) has been successfully processed and <<spark-sql-streaming-HDFSMetadataLog.md#getLatest, committed>> to the [Offset Commit Log](StreamExecution.md#commitLog)
+* Disabled (`false`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and [re-starting a streaming query from a checkpoint](HDFSMetadataLog.md#getLatest) when the latest offset checkpointed (written) to the [offset write-ahead log](StreamExecution.md#offsetLog) has been successfully processed and [committed](HDFSMetadataLog.md#getLatest) to the [Offset Commit Log](StreamExecution.md#commitLog)
 
 | readerToDataSourceMap
 a| [[readerToDataSourceMap]] (`Map[MicroBatchReader, (DataSourceV2, Map[String, String])]`)

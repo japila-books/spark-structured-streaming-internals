@@ -315,7 +315,7 @@ a| [[nullLeft]] `GenericInternalRow` of the size of the output schema of the <<l
 a| [[nullRight]] `GenericInternalRow` of the size of the output schema of the <<right, right physical operator>>
 
 | storeConf
-a| [[storeConf]] <<spark-sql-streaming-StateStoreConf.md#, StateStoreConf>>
+a| [[storeConf]] [StateStoreConf](../StateStoreConf.md)
 
 Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
 

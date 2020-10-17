@@ -1,6 +1,6 @@
 # CompactibleFileStreamLog
 
-`CompactibleFileStreamLog` is an [extension](#contract) of the [HDFSMetadataLog](../../spark-sql-streaming-HDFSMetadataLog.md) abstraction for [metadata logs](#implementations) that can [compactLogs](#compactLogs) every [compact interval](#compactInterval).
+`CompactibleFileStreamLog` is an [extension](#contract) of the [HDFSMetadataLog](../../HDFSMetadataLog.md) abstraction for [metadata logs](#implementations) that can [compactLogs](#compactLogs) every [compact interval](#compactInterval).
 
 ## Creating Instance
 
@@ -71,7 +71,7 @@ add(
 
 `add`...FIXME
 
-`add` is part of the [MetadataLog](../../spark-sql-streaming-MetadataLog.md#add) abstraction.
+`add` is part of the [MetadataLog](../../MetadataLog.md#add) abstraction.
 
 ### <span id="compact"> Compacting
 
@@ -116,7 +116,7 @@ batchIdToPath(
 
 `batchIdToPath`...FIXME
 
-`batchIdToPath` is part of the [HDFSMetadataLog](../../spark-sql-streaming-HDFSMetadataLog.md#batchIdToPath) abstraction.
+`batchIdToPath` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#batchIdToPath) abstraction.
 
 ## <span id="pathToBatchId"> Converting Hadoop Path to Batch Id
 
@@ -127,7 +127,7 @@ pathToBatchId(
 
 `pathToBatchId`...FIXME
 
-`pathToBatchId` is part of the [HDFSMetadataLog](../../spark-sql-streaming-HDFSMetadataLog.md#pathToBatchId) abstraction.
+`pathToBatchId` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#pathToBatchId) abstraction.
 
 ## <span id="isBatchFile"> isBatchFile
 
@@ -138,7 +138,7 @@ isBatchFile(
 
 `isBatchFile` is `true` when successful to [get the batchId](#getBatchIdFromFileName) for the given path. Otherwise is `false`.
 
-`isBatchFile` is part of the [HDFSMetadataLog](../../spark-sql-streaming-HDFSMetadataLog.md#isBatchFile) abstraction.
+`isBatchFile` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#isBatchFile) abstraction.
 
 ## <span id="serialize"> Serializing Metadata (Writing Metadata in Serialized Format)
 
@@ -150,9 +150,9 @@ serialize(
 
 `serialize` writes the version header (`v` and the <<metadataLogVersion, metadataLogVersion>>) out to the given output stream (in `UTF_8`).
 
-`serialize` then writes the log data (serialized using [Json4s (with Jackson binding)](../../spark-sql-streaming-HDFSMetadataLog.md#formats) library). Entries are separated by new lines.
+`serialize` then writes the log data (serialized using [Json4s (with Jackson binding)](../../HDFSMetadataLog.md#formats) library). Entries are separated by new lines.
 
-`serialize` is part of the [HDFSMetadataLog](../../spark-sql-streaming-HDFSMetadataLog.md#serialize) abstraction.
+`serialize` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#serialize) abstraction.
 
 ## <span id="deserialize"> Deserializing Metadata
 
@@ -163,7 +163,7 @@ deserialize(
 
 `deserialize`...FIXME
 
-`deserialize` is part of the [HDFSMetadataLog](../../spark-sql-streaming-HDFSMetadataLog.md#deserialize) abstraction.
+`deserialize` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#deserialize) abstraction.
 
 ## <span id="getBatchIdFromFileName"> getBatchIdFromFileName Utility
 

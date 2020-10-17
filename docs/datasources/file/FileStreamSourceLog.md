@@ -30,11 +30,11 @@ add(
   logs: Array[FileEntry]): Boolean
 ----
 
-NOTE: `add` is part of the <<spark-sql-streaming-MetadataLog.md#add, MetadataLog Contract>> to store (_add_) metadata of a streaming batch.
-
 `add` requests the parent `CompactibleFileStreamLog` to [store metadata](CompactibleFileStreamLog.md#add) (possibly [compacting logs](CompactibleFileStreamLog.md#compact) if the batch is [compaction](CompactibleFileStreamLog.md#isCompactionBatch)).
 
 If so (and this is a compation batch), `add` adds the batch and the logs to <<fileEntryCache, fileEntryCache>> internal registry (and possibly removing the eldest entry if the size is above the <<cacheSize, cacheSize>>).
+
+`add` is part of the [MetadataLog](../../MetadataLog.md#add) abstraction.
 
 === [[get]][[get-range]] `get` Method
 
@@ -45,9 +45,9 @@ get(
   endId: Option[Long]): Array[(Long, Array[FileEntry])]
 ----
 
-NOTE: `get` is part of the <<spark-sql-streaming-MetadataLog.md#get, MetadataLog Contract>> to...FIXME.
-
 `get`...FIXME
+
+`get` is part of the [MetadataLog](../../MetadataLog.md#get) abstraction.
 
 ## Internal Properties
 

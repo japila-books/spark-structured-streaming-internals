@@ -205,7 +205,7 @@ createQuery(
   triggerClock: Clock): StreamingQueryWrapper
 ----
 
-`createQuery` creates a spark-sql-streaming-StreamingQueryWrapper.md#creating-instance[StreamingQueryWrapper] (for a StreamExecution.md#creating-instance[StreamExecution] per the input user-defined properties).
+`createQuery` creates a [StreamingQueryWrapper](StreamingQueryWrapper.md) (for a [StreamExecution](StreamExecution.md) per the input user-defined properties).
 
 Internally, `createQuery` first finds the name of the checkpoint directory of a query (aka *checkpoint location*) in the following order:
 
@@ -231,11 +231,11 @@ Unless spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperatio
 
 (only when `spark.sql.adaptive.enabled` Spark property is turned on) `createQuery` prints out a WARN message to the logs:
 
-```
-WARN spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
+```text
+spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
 ```
 
-In the end, `createQuery` creates a spark-sql-streaming-StreamingQueryWrapper.md#creating-instance[StreamingQueryWrapper] with a new <<MicroBatchExecution.md#creating-instance, MicroBatchExecution>>.
+In the end, `createQuery` creates a [StreamingQueryWrapper](StreamingQueryWrapper.md) with a new [MicroBatchExecution](MicroBatchExecution.md).
 
 [NOTE]
 ====
@@ -275,9 +275,9 @@ startQuery(
 
 NOTE: `trigger` defaults to `0` milliseconds (as spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0)]).
 
-Internally, `startQuery` first <<createQuery, creates a StreamingQueryWrapper>>, registers it in <<activeQueries, activeQueries>> internal registry (by the [id](StreamExecution.md#id)), requests it for the underlying <<spark-sql-streaming-StreamingQueryWrapper.md#streamingQuery, StreamExecution>> and [starts it](StreamExecution.md#start).
+Internally, `startQuery` first <<createQuery, creates a StreamingQueryWrapper>>, registers it in <<activeQueries, activeQueries>> internal registry (by the [id](StreamExecution.md#id)), requests it for the underlying [StreamExecution](StreamingQueryWrapper.md#streamingQuery) and [starts it](StreamExecution.md#start).
 
-In the end, `startQuery` returns the <<spark-sql-streaming-StreamingQueryWrapper.md#, StreamingQueryWrapper>> (as part of the fluent API so you can chain operators) or throws the exception that was reported when attempting to start the query.
+In the end, `startQuery` returns the [StreamingQueryWrapper](StreamingQueryWrapper.md) (as part of the fluent API so you can chain operators) or throws the exception that was reported when attempting to start the query.
 
 `startQuery` throws an `IllegalArgumentException` when there is another query registered under `name`. `startQuery` looks it up in the <<activeQueries, activeQueries>> internal registry.
 
