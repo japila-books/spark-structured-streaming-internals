@@ -920,7 +920,7 @@
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/demo/using-file-streaming-sink/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/demo/deep-dive-into-filestreamsink/</loc>
      <lastmod>2020-10-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
