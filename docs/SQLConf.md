@@ -5,6 +5,12 @@
 !!! tip
     Find out more on [SQLConf](https://jaceklaskowski.github.io/mastering-spark-sql-book/SQLConf/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book)
 
+## <span id="streamingFileCommitProtocolClass"><span id="STREAMING_FILE_COMMIT_PROTOCOL_CLASS"> streamingFileCommitProtocolClass
+
+[spark.sql.streaming.commitProtocolClass](spark-sql-streaming-properties.md#spark.sql.streaming.commitProtocolClass) configuration property
+
+Used when `FileStreamSink` is requested to ["add" a batch of data](datasources/file/FileStreamSink.md#addBatch)
+
 ## <span id="streamingMetricsEnabled"><span id="STREAMING_METRICS_ENABLED"> streamingMetricsEnabled
 
 [spark.sql.streaming.metricsEnabled](spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled) configuration property

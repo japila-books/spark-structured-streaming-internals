@@ -164,6 +164,13 @@ scala> println(sink)
 FileSink[/tmp/socket-file]
 ```
 
+Since `FileStreamSink` has already been requested to add at least one batch, requesting it to add `0`th batch should be skipped.
+
+```text
+scala> sink.addBatch(batchId = 0, data = spark.range(5).toDF)
+FileStreamSink: Skipping already committed batch 0
+```
+
 ## Stop Query
 
 ```scala

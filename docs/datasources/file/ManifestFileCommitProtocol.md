@@ -1,4 +1,4 @@
-== [[ManifestFileCommitProtocol]] ManifestFileCommitProtocol
+# ManifestFileCommitProtocol
 
 `ManifestFileCommitProtocol` is...FIXME
 

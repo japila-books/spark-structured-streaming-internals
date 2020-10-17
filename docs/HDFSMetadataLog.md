@@ -46,6 +46,22 @@
 
 While being <<creating-instance, created>> `HDFSMetadataLog` creates the <<path, path>> unless exists already.
 
+## <span id="getLatest"> Latest Committed Batch Id with Metadata (If Available)
+
+```scala
+getLatest(): Option[(Long, T)]
+```
+
+`getLatest` requests the internal <<fileManager, FileManager>> for the files in <<metadataPath, metadata directory>> that match <<batchFilesFilter, batch file filter>>.
+
+`getLatest` takes the batch ids (the batch files correspond to) and sorts the ids in reverse order.
+
+`getLatest` gives the first batch id with the metadata which <<get, could be found in the metadata storage>>.
+
+NOTE: It is possible that the batch id could be in the metadata storage, but not available for retrieval.
+
+`getLatest` is a part of [MetadataLog](MetadataLog.md#getLatest) abstraction.
+
 === [[serialize]] Serializing Metadata (Writing Metadata in Serialized Format) -- `serialize` Method
 
 [source, scala]
@@ -110,23 +126,6 @@ Internally, `add` <<get, looks up metadata of the given streaming batch>> (`batc
 Otherwise, when not found, `add` <<batchIdToPath, creates a metadata log file>> for the given `batchId` and <<writeBatchToFile, writes metadata to the file>>. `add` returns `true` if successful.
 
 `add` is part of the [MetadataLog](MetadataLog.md#add) abstraction.
-
-=== [[getLatest]] Latest Committed Batch Id with Metadata (When Available) -- `getLatest` Method
-
-[source, scala]
-----
-getLatest(): Option[(Long, T)]
-----
-
-`getLatest` requests the internal <<fileManager, FileManager>> for the files in <<metadataPath, metadata directory>> that match <<batchFilesFilter, batch file filter>>.
-
-`getLatest` takes the batch ids (the batch files correspond to) and sorts the ids in reverse order.
-
-`getLatest` gives the first batch id with the metadata which <<get, could be found in the metadata storage>>.
-
-NOTE: It is possible that the batch id could be in the metadata storage, but not available for retrieval.
-
-`getLatest` is a part of [MetadataLog](MetadataLog.md#getLatest) abstraction.
 
 === [[purge]] Removing Expired Metadata (Purging) -- `purge` Method
 

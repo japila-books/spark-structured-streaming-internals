@@ -2,7 +2,7 @@
 
 `FileStreamSink` is a [streaming sink](../../Sink.md) that writes out to files (in a given [file format](#fileFormat)) in a [directory](#path).
 
-`FileStreamSink` is used with [Append output mode](../../OutputMode.md#Append) only.
+`FileStreamSink` can only be used with [Append](../../OutputMode.md#Append) output mode.
 
 !!! tip
     Learn more in [Demo: Deep Dive into FileStreamSink](../../demo/deep-dive-into-filestreamsink.md).
@@ -59,7 +59,25 @@ addBatch(
   data: DataFrame): Unit
 ```
 
-`addBatch`...FIXME
+`addBatch` requests the [FileStreamSinkLog](#fileLog) for the [latest committed batch ID](../../HDFSMetadataLog.md#getLatest).
+
+With a newer `batchId`, `addBatch` creates a `FileCommitProtocol` based on [spark.sql.streaming.commitProtocolClass](../../spark-sql-streaming-properties.md#spark.sql.streaming.commitProtocolClass) configuration property.
+
+!!! tip "The Internals of Apache Spark"
+    Learn more on [FileCommitProtocol]({{ book.spark_core }}/FileCommitProtocol) in [The Internals of Apache Spark]({{ book.spark_core }}).
+
+For a [ManifestFileCommitProtocol](ManifestFileCommitProtocol.md), `addBatch` requests it to [setupManifestOptions](ManifestFileCommitProtocol.md#setupManifestOptions) (with the [FileStreamSinkLog](#fileLog) and the given `batchId`).
+
+In the end, `addBatch` writes out the data using `FileFormatWriter.write` workflow (with the `FileCommitProtocol` and [BasicWriteJobStatsTracker](#basicWriteJobStatsTracker)).
+
+!!! tip "The Internals of Spark SQL"
+    Learn more on [FileFormatWriter]({{ book.spark_sql }}/spark-sql-FileFormatWriter/) in [The Internals of Spark SQL]({{ book.spark_sql }}).
+
+`addBatch` prints out the following INFO message to the logs when the given `batchId` is below the latest committed batch ID:
+
+```text
+Skipping already committed batch [batchId]
+```
 
 `addBatch` is a part of the [Sink](../../Sink.md#addBatch) abstraction.
 

@@ -5,6 +5,14 @@
 !!! tip
     Find out more on [Configuration Properties](https://jaceklaskowski.github.io/mastering-spark-sql-book/spark-sql-properties/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book)
 
+## <span id="spark.sql.streaming.commitProtocolClass"> spark.sql.streaming.commitProtocolClass
+
+**(internal)**
+
+Default: [org.apache.spark.sql.execution.streaming.ManifestFileCommitProtocol](datasources/file/ManifestFileCommitProtocol.md)
+
+Use [SQLConf.streamingFileCommitProtocolClass](SQLConf.md#streamingFileCommitProtocolClass) to access the current value.
+
 ## <span id="spark.sql.streaming.metricsEnabled"> spark.sql.streaming.metricsEnabled
 
 Enables streaming metrics
