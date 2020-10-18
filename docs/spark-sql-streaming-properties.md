@@ -2,16 +2,19 @@
 
 **Configuration properties** (aka **settings**) allow you to fine-tune a Spark Structured Streaming application.
 
-!!! tip
-    Find out more on [Configuration Properties](https://jaceklaskowski.github.io/mastering-spark-sql-book/spark-sql-properties/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book)
+??? tip "The Internals of Spark SQL"
+    Learn more about [Configuration Properties]({{ book.spark_sql }}/spark-sql-properties/) in [The Internals of Spark SQL]({{ book.spark_sql }}).
 
 ## <span id="spark.sql.streaming.commitProtocolClass"> spark.sql.streaming.commitProtocolClass
 
-**(internal)**
+**(internal)** `FileCommitProtocol` to use for [writing out micro-batches](datasources/file/FileStreamSink.md#addBatch) in [FileStreamSink](datasources/file/FileStreamSink.md).
 
 Default: [org.apache.spark.sql.execution.streaming.ManifestFileCommitProtocol](datasources/file/ManifestFileCommitProtocol.md)
 
 Use [SQLConf.streamingFileCommitProtocolClass](SQLConf.md#streamingFileCommitProtocolClass) to access the current value.
+
+??? tip "The Internals of Apache Spark"
+    Learn more on [FileCommitProtocol]({{ book.spark_core }}/FileCommitProtocol) in [The Internals of Apache Spark]({{ book.spark_core }}).
 
 ## <span id="spark.sql.streaming.metricsEnabled"> spark.sql.streaming.metricsEnabled
 

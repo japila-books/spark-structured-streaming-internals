@@ -93,6 +93,7 @@ nav:
     - Welcome: index.md
     - Spark Structured Streaming and Streaming Queries: spark-structured-streaming.md
     - StreamingQuery: StreamingQuery.md
+    - Configuration Properties: spark-sql-streaming-properties.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
     - MicroBatchStream: MicroBatchStream.md
@@ -174,8 +175,6 @@ nav:
         - OutputMode: OutputMode.md
         - Trigger: spark-sql-streaming-Trigger.md
       - window Function: spark-sql-streaming-window.md
-      - SQLConf: SQLConf.md
-      - Configuration Properties: spark-sql-streaming-properties.md
     - Query Planning and Execution:
       - StreamExecution: StreamExecution.md
       - TriggerExecutor: spark-sql-streaming-TriggerExecutor.md
@@ -263,6 +262,7 @@ nav:
         - ContinuousWriteRDD: spark-sql-streaming-ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: spark-sql-streaming-ContinuousDataSourceRDD.md
     - UnsupportedOperationChecker: spark-sql-streaming-UnsupportedOperationChecker.md
+    - SQLConf: SQLConf.md
   - Streaming Operators:
     - Streaming Operators: operators/index.md
     - crossJoin: operators/crossJoin.md

@@ -31,7 +31,7 @@ Metadata Log Directory is managed by [FileStreamSinkLog](#fileLog).
 logPath: Path
 ```
 
-`logPath` is the location of the [Metadata Log](#getMetadataLogPath) (as Hadoop's [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html)).
+`logPath` is the location of the [Metadata Log](#getMetadataLogPath) (as a Hadoop [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html)).
 
 ### <span id="fileLog"> FileStreamSinkLog
 
