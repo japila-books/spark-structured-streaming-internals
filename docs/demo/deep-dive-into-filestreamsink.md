@@ -151,7 +151,7 @@ assert(qe != null, "No physical plan. Waiting for data.")
 
 ### FileStreamSink
 
-A streaming query (as a [StreamExecution](../StreamExecution.md)) is associated with [one sink](../StreamExecution.md#sink). That's a [FileStreamSink](../datasources/file/FileStreamSink.md) in this demo.
+A streaming query (as a [StreamExecution](../StreamExecution.md)) is associated with [one sink](../StreamExecution.md#sink). That's the [FileStreamSink](../datasources/file/FileStreamSink.md) in this demo.
 
 ```scala
 import org.apache.spark.sql.execution.streaming.FileStreamSink
@@ -164,7 +164,7 @@ scala> println(sink)
 FileSink[/tmp/socket-file]
 ```
 
-Since `FileStreamSink` has already been requested to add at least one batch, requesting it to add `0`th batch should be skipped.
+Since `FileStreamSink` has already been requested to add at least one batch, requesting it to add `0`th batch again should be skipped.
 
 ```text
 scala> sink.addBatch(batchId = 0, data = spark.range(5).toDF)

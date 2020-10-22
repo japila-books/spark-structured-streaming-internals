@@ -1,6 +1,6 @@
 # FileStreamSink
 
-`FileStreamSink` is a [streaming sink](../../Sink.md) that writes out to files (in a given [file format](#fileFormat)) in a [directory](#path).
+`FileStreamSink` is a [streaming sink](../../Sink.md) that writes data out to files (in a given [file format](#fileFormat) and a [directory](#path)).
 
 `FileStreamSink` can only be used with [Append](../../OutputMode.md#Append) output mode.
 
@@ -41,11 +41,11 @@ fileLog: FileStreamSinkLog
 
 `fileLog` is a [FileStreamSinkLog](FileStreamSinkLog.md) (for the [version 1](FileStreamSinkLog.md#VERSION) and the [metadata log path](#logPath))
 
-Used for ["adding" batch](#addBatch)
+Used for ["adding" batch](#addBatch).
 
 ## <span id="toString"> Text Representation
 
-The text representation of `FileStreamSink` uses the [path](#path) and is as follows:
+`FileStreamSink` uses the [path](#path) for the text representation (`toString`):
 
 ```text
 FileSink[path]

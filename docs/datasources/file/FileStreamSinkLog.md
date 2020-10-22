@@ -31,7 +31,11 @@ compactLogs(
   logs: Seq[SinkFileStatus]): Seq[SinkFileStatus]
 ```
 
-`compactLogs`...FIXME
+`compactLogs` finds [delete](#DELETE_ACTION) actions in the given collection of [SinkFileStatus](SinkFileStatus.md)es.
+
+If there are no deletes, `compactLogs` gives the `SinkFileStatus`es back (unmodified).
+
+Otherwise, `compactLogs` removes the deleted paths from the `SinkFileStatus`es.
 
 `compactLogs` is part of the [CompactibleFileStreamLog](CompactibleFileStreamLog.md#compactLogs) abstraction.
 
@@ -39,10 +43,15 @@ compactLogs(
 
 `FileStreamSinkLog` uses **1** for the version.
 
-## <span id="ADD_ACTION"> Add Action
+## Actions
+
+### <span id="ADD_ACTION"> Add
 
 `FileStreamSinkLog` uses **add** action to create new [metadata logs](SinkFileStatus.md).
 
-## <span id="DELETE_ACTION"> Delete Action
+### <span id="DELETE_ACTION"> Delete
 
-`FileStreamSinkLog` uses **delete** action to mark [metadata logs](SinkFileStatus.md) that should be excluded from [compaction](#compactLogs).
+`FileStreamSinkLog` uses **delete** action to mark [status files](SinkFileStatus.md) to be excluded from [compaction](#compactLogs).
+
+!!! note
+    Delete action does not seem to be used in Spark Structured Streaming.
