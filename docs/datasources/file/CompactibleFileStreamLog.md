@@ -22,15 +22,15 @@ compactLogs(
   logs: Seq[T]): Seq[T]
 ```
 
-Used to [store metadata](#add) and for [all files (except deleted)](#allFiles)
+Used when [storing metadata](#add) and for [all files (except deleted)](#allFiles)
 
-### <span id="defaultCompactInterval"> Compact Interval
+### <span id="defaultCompactInterval"> Default Compact Interval
 
 ```scala
 defaultCompactInterval: Int
 ```
 
-Used for [compactInterval](#compactInterval)
+Used for the [compact interval](#compactInterval)
 
 ### <span id="fileCleanupDelayMs"> File Cleanup Delay
 
@@ -69,6 +69,8 @@ add(
   logs: Array[T]): Boolean
 ```
 
+`add` [isCompactionBatch](#isCompactionBatch) with the given `batchId` and [compactInterval](#compactInterval).
+
 `add`...FIXME
 
 `add` is part of the [MetadataLog](../../MetadataLog.md#add) abstraction.
@@ -93,6 +95,34 @@ deleteExpiredLog(
 `deleteExpiredLog`...FIXME
 
 `deleteExpiredLog` does nothing and simply returns when the current batch ID incremented (`currentBatchId + 1`) is below the [compact interval](#compactInterval) plus the [minBatchesToRetain](#minBatchesToRetain).
+
+## <span id="compactInterval"> Compact Interval
+
+```scala
+compactInterval: Int
+```
+
+`compactInterval` is the number of metadata log files between compactions.
+
+??? note "Lazy Value"
+    `compactInterval` is a Scala **lazy value** which means that the code to initialize it is executed once only (when accessed for the first time) and cached afterwards.
+
+`compactInterval` finds compacted IDs and determines the compact interval.
+
+`compactInterval` requests the [CheckpointFileManager](../../HDFSMetadataLog.md#fileManager) for the [files](../../CheckpointFileManager.md#list) in the [metadataPath](../../HDFSMetadataLog.md#metadataPath) that are [batch](#isBatchFile) (and possibly [compacted](#COMPACT_FILE_SUFFIX)). `compactInterval` takes the [compacted files](#COMPACT_FILE_SUFFIX) only (if available), [converts them to batch IDs](#pathToBatchId) and sorts in descending order.
+
+`compactInterval` starts with the [default compact interval](#defaultCompactInterval).
+
+* If there are two compacted IDs, their difference is the compact interval
+* If there is one compacted ID only, `compactInterval` "derives" the compact interval (FIXME)
+
+`compactInterval` asserts that the compact interval is a positive value or throws an `AssertionError`.
+
+`compactInterval` prints out the following INFO message to the logs (with the [defaultCompactInterval](#defaultCompactInterval)):
+
+```text
+Set the compact interval to [interval] [defaultCompactInterval: [defaultCompactInterval]]
+```
 
 ## <span id="allFiles"> All Files (Except Deleted)
 
