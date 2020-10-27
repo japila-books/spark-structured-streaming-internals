@@ -10,7 +10,7 @@
 `MetadataLogFileIndex` takes the following to be created:
 
 * <span id="sparkSession"> `SparkSession`
-* <span id="path"> Hadoop [Path]({{ hadoop.doc }}/org/apache/hadoop/fs/Path.html)
+* <span id="path"> Hadoop [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html)
 * <span id="parameters"> Parameters (`Map[String, String]`)
 * <span id="userSpecifiedSchema"> User-Defined Schema (`Option[StructType]`)
 
@@ -32,7 +32,7 @@ Reading streaming file log from [metadataDirectory]
 metadataDirectory: Path
 ```
 
-`metadataDirectory` is a Hadoop [Path]({{ hadoop.doc }}/org/apache/hadoop/fs/Path.html) of **Metadata Directory**.
+`metadataDirectory` is a Hadoop [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html) of **Metadata Directory**.
 
 `metadataDirectory` is a [_spark_metadata](FileStreamSink.md#metadataDir) directory in the given [path](#path).
 

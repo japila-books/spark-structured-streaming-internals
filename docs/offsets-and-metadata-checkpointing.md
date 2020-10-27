@@ -6,17 +6,17 @@ A streaming query can be started from scratch or from checkpoint (that gives fau
 
 `StreamExecution` resumes (populates the start offsets) from the latest checkpointed offsets from the [Write-Ahead Log (WAL) of Offsets](StreamExecution.md#offsetLog) that may have already been processed (and, if so, committed to the [Offset Commit Log](StreamExecution.md#commitLog)).
 
-* [Hadoop DFS-based metadata storage](spark-sql-streaming-OffsetSeqLog.md) of [OffsetSeq](OffsetSeq.md)s
+* [Hadoop DFS-based metadata storage](OffsetSeqLog.md) of [OffsetSeq](OffsetSeq.md)s
 
-* [OffsetSeq](OffsetSeq.md) and [StreamProgress](spark-sql-streaming-StreamProgress.md)
+* [OffsetSeq](OffsetSeq.md) and [StreamProgress](StreamProgress.md)
 
-* <<spark-sql-streaming-StreamProgress.md#, StreamProgress>> and [StreamExecutions](StreamExecution.md) ([committed](StreamExecution.md#committedOffsets) and [available](StreamExecution.md#availableOffsets) offsets)
+* [StreamProgress](StreamProgress.md) and [StreamExecutions](StreamExecution.md) ([committed](StreamExecution.md#committedOffsets) and [available](StreamExecution.md#availableOffsets) offsets)
 
 ## Micro-Batch Stream Processing
 
 In <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>, the [available offsets](StreamExecution.md#availableOffsets) registry is populated with the [latest offsets](HDFSMetadataLog.md#getLatest) from the [Write-Ahead Log (WAL)](StreamExecution.md#offsetLog) when `MicroBatchExecution` stream processing engine is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets from checkpoint>> (if available) when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>> ([before the first "zero" micro-batch](MicroBatchExecution.md#runActivatedStream-triggerExecution-populateStartOffsets)).
 
-The [available offsets](StreamExecution.md#availableOffsets) are then <<spark-sql-streaming-StreamProgress.md#plusplus, added>> to the [committed offsets](StreamExecution.md#committedOffsets) when the latest batch ID available (as described above) is exactly the [latest batch ID](HDFSMetadataLog.md#getLatest) committed to the [Offset Commit Log](StreamExecution.md#commitLog) when `MicroBatchExecution` stream processing engine is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets from checkpoint>>.
+The [available offsets](StreamExecution.md#availableOffsets) are then [added](StreamProgress.md#plusplus) to the [committed offsets](StreamExecution.md#committedOffsets) when the latest batch ID available (as described above) is exactly the [latest batch ID](HDFSMetadataLog.md#getLatest) committed to the [Offset Commit Log](StreamExecution.md#commitLog) when `MicroBatchExecution` stream processing engine is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets from checkpoint>>.
 
 When a streaming query is started from scratch (with no checkpoint that has offsets in the [Offset Write-Ahead Log](StreamExecution.md#offsetLog)), `MicroBatchExecution` prints out the following INFO message:
 
@@ -32,7 +32,7 @@ Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and
 
 Every time `MicroBatchExecution` is requested to <<MicroBatchExecution.md#isNewDataAvailable, check whether a new data is available>> (in any of the streaming sources)...FIXME
 
-When `MicroBatchExecution` is requested to <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> (when `MicroBatchExecution` requested to <<MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>), every [streaming source](StreamExecution.md#uniqueSources) is requested for the latest offset available that are <<spark-sql-streaming-StreamProgress.md#plusplus, added>> to the [availableOffsets](StreamExecution.md#availableOffsets) registry. Streaming sources report some offsets or none at all (if this source has never received any data). Streaming sources with no data are excluded (_filtered out_).
+When `MicroBatchExecution` is requested to <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> (when `MicroBatchExecution` requested to <<MicroBatchExecution.md#runActivatedStream, run the activated streaming query>>), every [streaming source](StreamExecution.md#uniqueSources) is requested for the latest offset available that are [added](StreamProgress.md#plusplus) to the [availableOffsets](StreamExecution.md#availableOffsets) registry. Streaming sources report some offsets or none at all (if this source has never received any data). Streaming sources with no data are excluded (_filtered out_).
 
 `MicroBatchExecution` prints out the following TRACE message to the logs:
 

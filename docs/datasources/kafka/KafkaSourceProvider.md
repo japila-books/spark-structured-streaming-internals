@@ -143,7 +143,7 @@ Key      | ConsumerStrategy
 
 ### <span id="AssignStrategy"> AssignStrategy
 
-[AssignStrategy](ConsumerStrategy.md#AssignStrategy) with Kafka [TopicPartitions]({{ kafka.doc }}/org/apache/kafka/common/TopicPartition.html)
+[AssignStrategy](ConsumerStrategy.md#AssignStrategy) with Kafka [TopicPartitions]({{ kafka.api }}/org/apache/kafka/common/TopicPartition.html)
 
 `strategy` uses `JsonUtils.partitions` method to parse a JSON with topic names and partitions, e.g.
 
@@ -165,7 +165,7 @@ topic1,topic2,topic3
 
 ### <span id="SubscribePatternStrategy"> SubscribePatternStrategy
 
-[SubscribePatternStrategy](ConsumerStrategy.md#SubscribePatternStrategy) with topic subscription regex pattern (that uses a Java [java.util.regex.Pattern]({{ java.doc }}/java/util/regex/Pattern.html) for the pattern), e.g.
+[SubscribePatternStrategy](ConsumerStrategy.md#SubscribePatternStrategy) with topic subscription regex pattern (that uses a Java [java.util.regex.Pattern]({{ java.api }}/java/util/regex/Pattern.html) for the pattern), e.g.
 
 ```text
 topic\d

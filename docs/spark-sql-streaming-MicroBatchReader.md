@@ -1,6 +1,6 @@
 # MicroBatchReader -- Data Source Readers in Micro-Batch Stream Processing (Data Source API V2)
 
-`MicroBatchReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` abstraction for <<implementations, data source readers>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+`MicroBatchReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` abstraction for <<implementations, data source readers>> in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
 `MicroBatchReader` is part of the novel Data Source API V2 in Spark SQL.
 
@@ -31,7 +31,7 @@ a| [[deserializeOffset]]
 Offset deserializeOffset(String json)
 ----
 
-Deserializes <<spark-sql-streaming-Offset.md#, offset>> (from JSON format)
+Deserializes [offset](Offset.md) (from JSON format)
 
 Used when...FIXME
 
@@ -43,7 +43,7 @@ a| [[getEndOffset]]
 Offset getEndOffset()
 ----
 
-End <<spark-sql-streaming-Offset.md#, offset>> of this reader
+End [offset](Offset.md) of this reader
 
 Used when...FIXME
 
@@ -55,7 +55,7 @@ a| [[getStartOffset]]
 Offset getStartOffset()
 ----
 
-Start (beginning) <<spark-sql-streaming-Offset.md#, offsets>> of this reader
+Start (beginning) [offset](Offset.md) of this reader
 
 Used when...FIXME
 

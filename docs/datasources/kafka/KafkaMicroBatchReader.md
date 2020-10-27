@@ -1,8 +1,8 @@
 # KafkaMicroBatchReader
 
-`KafkaMicroBatchReader` is the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md) for [kafka data source](index.md) for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+`KafkaMicroBatchReader` is the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md) for [kafka data source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md).
 
-`KafkaMicroBatchReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a MicroBatchReader](KafkaSourceProvider.md#createMicroBatchReader).
+`KafkaMicroBatchReader` is created when `KafkaSourceProvider` is requested to [create a MicroBatchReader](KafkaSourceProvider.md#createMicroBatchReader).
 
 [[pollTimeoutMs]]
 `KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [kafkaConsumer.pollTimeoutMs](index.md#kafkaConsumer.pollTimeoutMs) option (default: `spark.network.timeout` or `120s`).
@@ -109,7 +109,7 @@ NOTE: `getOrCreateInitialPartitionOffsets` is used exclusively for the <<initial
 getStartOffset: Offset
 ----
 
-NOTE: `getStartOffset` is part of the <<spark-sql-streaming-MicroBatchReader.md#getStartOffset, MicroBatchReader Contract>> to get the start (beginning) <<spark-sql-streaming-Offset.md#, offsets>>.
+`getStartOffset` is part of the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md#getStartOffset) abstraction.
 
 `getStartOffset`...FIXME
 
@@ -120,7 +120,7 @@ NOTE: `getStartOffset` is part of the <<spark-sql-streaming-MicroBatchReader.md#
 getEndOffset: Offset
 ----
 
-NOTE: `getEndOffset` is part of the <<spark-sql-streaming-MicroBatchReader.md#getEndOffset, MicroBatchReader Contract>> to get the end <<spark-sql-streaming-Offset.md#, offsets>>.
+`getEndOffset` is part of the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md#getEndOffset) abstraction.
 
 `getEndOffset`...FIXME
 
@@ -131,7 +131,7 @@ NOTE: `getEndOffset` is part of the <<spark-sql-streaming-MicroBatchReader.md#ge
 deserializeOffset(json: String): Offset
 ----
 
-NOTE: `deserializeOffset` is part of the <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, MicroBatchReader Contract>> to deserialize an <<spark-sql-streaming-Offset.md#, offset>> (from JSON format).
+`deserializeOffset` is part of the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md#deserializeOffset) abstraction.
 
 `deserializeOffset`...FIXME
 

@@ -1,6 +1,6 @@
-== [[MemoryStream]] MemoryStream -- Streaming Reader for Micro-Batch Stream Processing
+# MemoryStream -- Streaming Reader for Micro-Batch Stream Processing
 
-`MemoryStream` is a concrete <<spark-sql-streaming-MemoryStreamBase.md#, streaming source>> of <<spark-sql-streaming-memory-data-source.md#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.md#, reading>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+`MemoryStream` is a concrete [streaming source](spark-sql-streaming-MemoryStreamBase.md) of <<spark-sql-streaming-memory-data-source.md#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.md#, reading>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 [[logging]]
 [TIP]
@@ -154,13 +154,13 @@ NOTE: `generateDebugString` is used exclusively when `MemoryStream` is requested
 a| [[batches]] Batch data (`ListBuffer[Array[UnsafeRow]]`)
 
 | currentOffset
-a| [[currentOffset]] Current <<spark-sql-streaming-Offset.md#, offset>> (as <<spark-sql-streaming-Offset.md#, LongOffset>>)
+a| [[currentOffset]] Current [offset](Offset.md)
 
 | lastOffsetCommitted
-a| [[lastOffsetCommitted]] Last committed <<spark-sql-streaming-Offset.md#, offset>> (as <<spark-sql-streaming-Offset.md#, LongOffset>>)
+a| [[lastOffsetCommitted]] Last committed [offset](Offset.md)
 
 | output
-a| [[output]] Output schema (`Seq[Attribute]`) of the <<logicalPlan, logical query plan>>
+a| [[output]] Output schema (`Seq[Attribute]`) of the [logical query plan](#logicalPlan)
 
 Used exclusively for <<toString, toString>>
 

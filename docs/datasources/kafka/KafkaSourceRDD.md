@@ -1,6 +1,6 @@
 # KafkaSourceRDD
 
-`KafkaSourceRDD` is an `RDD` of Kafka's [ConsumerRecords]({{ kafka.doc }}/org/apache/kafka/clients/consumer/ConsumerRecords.html) (`RDD[ConsumerRecord[Array[Byte], Array[Byte]]]`) and no parent RDDs.
+`KafkaSourceRDD` is an `RDD` of Kafka's [ConsumerRecords]({{ kafka.api }}/org/apache/kafka/clients/consumer/ConsumerRecords.html) (`RDD[ConsumerRecord[Array[Byte], Array[Byte]]]`) and no parent RDDs.
 
 `KafkaSourceRDD` is <<creating-instance, created>> when:
 

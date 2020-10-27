@@ -1,6 +1,6 @@
 # StreamProgress &mdash; Collection of Offsets per Streaming Source
 
-`StreamProgress` is a collection of <<spark-sql-streaming-Offset.md#, Offsets>> per streaming source.
+`StreamProgress` is a collection of [Offset](Offset.md)s per streaming source.
 
 `StreamProgress` is <<creating-instance, created>> when:
 
@@ -8,13 +8,13 @@
 
 * `OffsetSeq` is requested to [convert to StreamProgress](OffsetSeq.md#toStreamProgress)
 
-`StreamProgress` is an extension of Scala's https://www.scala-lang.org/api/2.11.11/index.html#scala.collection.immutable.Map[scala.collection.immutable.Map] with streaming sources as keys and their <<spark-sql-streaming-Offset.md#, Offsets>> as values.
+`StreamProgress` is an extension of Scala's [scala.collection.immutable.Map]({{ scala.api }}/index.html#scala.collection.immutable.Map) with streaming sources as keys and their [Offset](Offset.md)s as values.
 
-=== [[creating-instance]] Creating StreamProgress Instance
+## Creating Instance
 
 `StreamProgress` takes the following to be created:
 
-* [[baseMap]] Optional collection of <<spark-sql-streaming-Offset.md#, offsets>> per streaming source (`Map[BaseStreamingSource, Offset]`) (default: empty)
+* [[baseMap]] [Offset](Offset.md)s per streaming source (`Map[BaseStreamingSource, Offset]`) (default: empty)
 
 === [[get]] Looking Up Offset by Streaming Source -- `get` Method
 
@@ -25,7 +25,7 @@ get(key: BaseStreamingSource): Option[Offset]
 
 NOTE: `get` is part of the Scala's `scala.collection.MapLike` to...FIXME.
 
-`get` simply looks up an <<spark-sql-streaming-Offset.md#, Offsets>> for the given streaming source in the <<baseMap, baseMap>>.
+`get` simply looks up an [Offset](Offset.md)s for the given streaming source in the <<baseMap, baseMap>>.
 
 === [[plusplus]] `++` Method
 

@@ -55,7 +55,7 @@ a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Es
 baseDir: Path
 ----
 
-`baseDir` is the base directory (as Hadoop DFS's https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/fs/Path.html[Path]) for <<spark-sql-streaming-offsets-and-metadata-checkpointing.md#, state checkpointing>> (for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files).
+`baseDir` is the base directory (as a Hadoop [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html)) for [state checkpointing](offsets-and-metadata-checkpointing.md) (for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files).
 
 `baseDir` is initialized lazily since it is not yet known when `HDFSBackedStateStoreProvider` is <<creating-instance, created>>.
 

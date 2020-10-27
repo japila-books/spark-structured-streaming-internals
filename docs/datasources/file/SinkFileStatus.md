@@ -18,7 +18,7 @@
 toFileStatus: FileStatus
 ----
 
-`toFileStatus` simply creates a new Hadoop [FileStatus]({{ hadoop.doc }}/org/apache/hadoop/fs/FileStatus.html).
+`toFileStatus` simply creates a new Hadoop [FileStatus]({{ hadoop.api }}/org/apache/hadoop/fs/FileStatus.html).
 
 NOTE: `toFileStatus` is used exclusively when `MetadataLogFileIndex` is [created](MetadataLogFileIndex.md).
 

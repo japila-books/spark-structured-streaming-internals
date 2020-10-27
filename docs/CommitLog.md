@@ -2,7 +2,7 @@
 
 `CommitLog` is an [HDFSMetadataLog](HDFSMetadataLog.md) with [CommitMetadata](#CommitMetadata) metadata.
 
-`CommitLog` is <<creating-instance, created>> exclusively for the [offset commit log](StreamExecution.md#commitLog) (of [StreamExecution](StreamExecution.md)).
+`CommitLog` is the [offset commit log](StreamExecution.md#commitLog) of [streaming query execution engines](StreamExecution.md).
 
 [[CommitMetadata]][[nextBatchWatermarkMs]]
 `CommitLog` uses `CommitMetadata` for the metadata with *nextBatchWatermarkMs* attribute (of type `Long` and the default `0`).

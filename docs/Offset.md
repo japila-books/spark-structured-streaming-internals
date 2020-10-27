@@ -1,4 +1,4 @@
-== [[Offset]] Offset -- Read Position of Streaming Query
+# Offset -- Read Position of Streaming Query
 
 `Offset` is the <<contract, base>> of <<extensions, stream positions>> that represent progress of a streaming query in <<json, json>> format.
 
@@ -25,7 +25,7 @@ Used when:
 
 * `OffsetSeq` is requested for the [textual representation](OffsetSeq.md#toString)
 
-* `OffsetSeqLog` is requested to <<spark-sql-streaming-OffsetSeqLog.md#serialize, serialize metadata (write metadata in serialized format)>>
+* `OffsetSeqLog` is requested to [serialize metadata (write metadata in serialized format)](OffsetSeqLog.md#serialize)
 
 * `ProgressReporter` is requested to [record trigger offsets](monitoring/ProgressReporter.md#recordTriggerOffsets)
 
@@ -56,7 +56,7 @@ Used when:
 | [[RateStreamOffset]]
 
 | SerializedOffset
-| [[SerializedOffset]] JSON-encoded offset that is used when loading an offset from an external storage, e.g. from <<spark-sql-streaming-offsets-and-metadata-checkpointing.md#, checkpoint>> after restart
+| [[SerializedOffset]] JSON-encoded offset that is used when loading an offset from an external storage, e.g. from [checkpoint](offsets-and-metadata-checkpointing.md) after restart
 
 | TextSocketOffset
 | [[TextSocketOffset]]

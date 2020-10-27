@@ -1,11 +1,11 @@
 # OffsetSeqLog &mdash; Hadoop DFS-based Metadata Storage of OffsetSeqs
 
-`OffsetSeqLog` is a [Hadoop DFS-based metadata storage](HDFSMetadataLog.md) for <<OffsetSeq, OffsetSeq>> metadata.
+`OffsetSeqLog` is a [Hadoop DFS-based metadata storage](HDFSMetadataLog.md) for [OffsetSeq](#OffsetSeq) metadata.
+
+`OffsetSeqLog` is created as the [write-ahead log (WAL) of offsets](StreamExecution.md#offsetLog) of [streaming query execution engines](StreamExecution.md).
 
 [[OffsetSeq]][[offsets]][[metadata]]
 `OffsetSeqLog` uses [OffsetSeq](OffsetSeq.md) for metadata which holds an ordered collection of offsets and optional metadata (as <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> for <<spark-sql-streaming-watermark.md#, event-time watermark>>).
-
-`OffsetSeqLog` is <<creating-instance, created>> exclusively for the [write-ahead log (WAL) of offsets](StreamExecution.md#offsetLog) of [stream execution engines](StreamExecution.md).
 
 [[VERSION]]
 `OffsetSeqLog` uses `1` for the version when <<serialize, serializing>> and <<deserialize, deserializing>> metadata.
@@ -55,7 +55,7 @@ deserialize(in: InputStream): OffsetSeq
 
 `deserialize` reads the optional metadata (with an empty line for metadata not available).
 
-`deserialize` creates a <<spark-sql-streaming-Offset.md#SerializedOffset, SerializedOffset>> for every line left.
+`deserialize` creates a [SerializedOffset](Offset.md#SerializedOffset) for every line left.
 
 In the end, `deserialize` creates a [OffsetSeq](OffsetSeq.md#fill) for the optional metadata and the `SerializedOffsets`.
 

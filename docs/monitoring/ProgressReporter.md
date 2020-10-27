@@ -416,7 +416,7 @@ recordTriggerOffsets(
   to: StreamProgress): Unit
 ```
 
-`recordTriggerOffsets` simply sets (_records_) the <<currentTriggerStartOffsets, currentTriggerStartOffsets>> and <<currentTriggerEndOffsets, currentTriggerEndOffsets>> internal registries to the <<spark-sql-streaming-Offset.md#json, json>> representations of the `from` and `to` <<spark-sql-streaming-StreamProgress.md#, StreamProgresses>>.
+`recordTriggerOffsets` simply sets (_records_) the <<currentTriggerStartOffsets, currentTriggerStartOffsets>> and <<currentTriggerEndOffsets, currentTriggerEndOffsets>> internal registries to the [json](../Offset.md#json) representations of the `from` and `to` [StreamProgresses](../StreamProgress.md).
 
 `recordTriggerOffsets` is used when:
 
@@ -461,7 +461,7 @@ Default: `-1L`
 currentTriggerStartOffsets: Map[BaseStreamingSource, String]
 ```
 
-Start offsets (in [JSON format](../spark-sql-streaming-Offset.md#json)) per streaming source
+Start offsets (in [JSON format](../Offset.md#json)) per streaming source
 
 Used exclusively when <<finishTrigger, finishing up a streaming batch (trigger) and generating StreamingQueryProgress>> (for a [SourceProgress](SourceProgress.md))
 

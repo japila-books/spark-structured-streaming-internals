@@ -275,22 +275,20 @@ NOTE: `StreamExecution` is a Scala abstract class and cannot be <<creating-insta
 offsetLog: OffsetSeqLog
 ----
 
-`offsetLog` is a <<spark-sql-streaming-OffsetSeqLog.md#, Hadoop DFS-based metadata storage>> (of [OffsetSeq](OffsetSeq.md)s) with `offsets` <<checkpointFile, metadata directory>>.
+`offsetLog` is a [Hadoop DFS-based metadata storage](OffsetSeqLog.md) (of [OffsetSeq](OffsetSeq.md)s) with `offsets` [metadata directory](#checkpointFile).
 
-`offsetLog` is used as *Write-Ahead Log of Offsets* to [persist offsets](HDFSMetadataLog.md#add) of the data about to be processed in every trigger.
+`offsetLog` is used as **Write-Ahead Log of Offsets** to [persist offsets](HDFSMetadataLog.md#add) of the data about to be processed in every trigger.
 
-NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
+!!! note
+    **Metadata log** or **metadata checkpoint** are synonyms and are often used interchangeably.
 
 The number of entries in the `OffsetSeqLog` is controlled using <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`). <<extensions, Stream execution engines>> discard (_purge_) offsets from the `offsets` metadata log when the <<currentBatchId, current batch ID>> (in <<MicroBatchExecution.md#, MicroBatchExecution>>) or the <<ContinuousExecution.md#commit, epoch committed>> (in <<ContinuousExecution.md#, ContinuousExecution>>) is above the threshold.
 
-[NOTE]
-====
 `offsetLog` is used when:
 
-* `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#commit, commit an epoch>>, <<ContinuousExecution.md#getStartOffsets, getStartOffsets>>, and <<ContinuousExecution.md#addOffset, addOffset>>
+* `ContinuousExecution` stream execution engine is requested to [commit an epoch](ContinuousExecution.md#commit), [getStartOffsets](ContinuousExecution.md#getStartOffsets), and [addOffset](ContinuousExecution.md#addOffset)
 
-* `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> and <<MicroBatchExecution.md#constructNextBatch, construct (or skip) the next streaming micro-batch>>
-====
+* `MicroBatchExecution` stream execution engine is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) and [construct (or skip) the next streaming micro-batch](MicroBatchExecution.md#constructNextBatch)
 
 === [[state]] State of Streaming Query (Execution) -- `state` Property
 
@@ -335,11 +333,11 @@ a| [[RECONFIGURING]] Used only when `ContinuousExecution` is requested to <<Cont
 availableOffsets: StreamProgress
 ----
 
-`availableOffsets` is a <<spark-sql-streaming-StreamProgress.md#, collection of offsets per streaming source>> to track what data (by <<spark-sql-streaming-Offset.md#, offset>>) is available for processing for every [streaming source](monitoring/ProgressReporter.md#sources) in the <<analyzedPlan, streaming query>> (and have not yet been <<committedOffsets, committed>>).
+`availableOffsets` is a [registry of offsets per streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) is available for processing for every [streaming source](monitoring/ProgressReporter.md#sources) in the <<analyzedPlan, streaming query>> (and have not yet been <<committedOffsets, committed>>).
 
 `availableOffsets` works in tandem with the <<committedOffsets, committedOffsets>> internal registry.
 
-`availableOffsets` is <<spark-sql-streaming-StreamProgress.md#creating-instance, empty>> when `StreamExecution` is <<creating-instance, created>> (i.e. no offsets are reported for any streaming source in the streaming query).
+`availableOffsets` is [empty](StreamProgress.md#creating-instance) when `StreamExecution` is <<creating-instance, created>> (i.e. no offsets are reported for any streaming source in the streaming query).
 
 `availableOffsets` is used when:
 
@@ -356,7 +354,7 @@ availableOffsets: StreamProgress
 committedOffsets: StreamProgress
 ----
 
-`committedOffsets` is a <<spark-sql-streaming-StreamProgress.md#, collection of offsets per streaming source>> to track what data (by <<spark-sql-streaming-Offset.md#, offset>>) has already been processed and committed (to the sink or state stores) for every [streaming source](monitoring/ProgressReporter.md#sources) in the <<analyzedPlan, streaming query>>.
+`committedOffsets` is a [registry of offsets per streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) has already been processed and committed (to the sink or state stores) for every [streaming source](monitoring/ProgressReporter.md#sources) in the <<analyzedPlan, streaming query>>.
 
 `committedOffsets` works in tandem with the <<availableOffsets, availableOffsets>> internal registry.
 
@@ -400,7 +398,7 @@ NOTE: `resolvedCheckpointRoot` uses `SparkSession` to access `SessionState` for 
 
 === [[commitLog]] Offset Commit Log -- `commits` Metadata Checkpoint Directory
 
-`StreamExecution` uses *offset commit log* (<<spark-sql-streaming-CommitLog.md#, CommitLog>> with `commits` <<checkpointFile, metadata checkpoint directory>>) for streaming batches successfully executed (with a single file per batch with a file name being the batch id) or committed epochs.
+`StreamExecution` uses **offset commit log** ([CommitLog](CommitLog.md) with `commits` [metadata checkpoint directory](#checkpointFile)) for streaming batches successfully executed (with a single file per batch with a file name being the batch id) or committed epochs.
 
 NOTE: *Metadata log* or *metadata checkpoint* are synonyms and are often used interchangeably.
 
@@ -631,7 +629,7 @@ image::images/StreamExecution-runBatches.png[align="center"]
 [[runBatches-batch-runner-finishTrigger]]
 After **triggerExecution** section has finished, `batchRunner` [finishes the streaming batch for the trigger](monitoring/ProgressReporter.md#finishTrigger) (and collects query execution statistics).
 
-When there was <<dataAvailable, data available>> in the sources, `batchRunner` updates committed offsets (by spark-sql-streaming-CommitLog.md#add[adding] the <<currentBatchId, current batch id>> to <<batchCommitLog, BatchCommitLog>> and adding <<availableOffsets, availableOffsets>> to <<committedOffsets, committedOffsets>>).
+When there was <<dataAvailable, data available>> in the sources, `batchRunner` updates committed offsets (by [adding](CommitLog.md#add) the <<currentBatchId, current batch id>> to <<batchCommitLog, BatchCommitLog>> and adding <<availableOffsets, availableOffsets>> to <<committedOffsets, committedOffsets>>).
 
 You should see the following DEBUG message in the logs:
 

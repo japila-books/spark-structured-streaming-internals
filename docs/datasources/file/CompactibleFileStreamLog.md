@@ -1,6 +1,6 @@
 # CompactibleFileStreamLog
 
-`CompactibleFileStreamLog` is an [extension](#contract) of the [HDFSMetadataLog](../../HDFSMetadataLog.md) abstraction for [metadata logs](#implementations) that can [compactLogs](#compactLogs) every [compact interval](#compactInterval).
+`CompactibleFileStreamLog` is an [extension](#contract) of the [HDFSMetadataLog](../../HDFSMetadataLog.md) abstraction for [metadata logs](#implementations) that can [compact logs](#compactLogs) at [regular intervals](#compactInterval).
 
 ## Creating Instance
 

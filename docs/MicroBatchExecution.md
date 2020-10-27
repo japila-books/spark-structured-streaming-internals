@@ -202,7 +202,7 @@ batch [latestBatchId - 1] doesn't exist
 
 CAUTION: FIXME Describe me
 
-`populateStartOffsets` requests the [Offset Commit Log](StreamExecution.md#commitLog) for the [latest committed batch id with metadata](HDFSMetadataLog.md#getLatest) (i.e. <<spark-sql-streaming-CommitMetadata.md#, CommitMetadata>>).
+`populateStartOffsets` requests the [Offset Commit Log](StreamExecution.md#commitLog) for the [latest committed batch id with metadata](HDFSMetadataLog.md#getLatest).
 
 CAUTION: FIXME Describe me
 
@@ -289,7 +289,7 @@ Getting offsets from [source]
 ```
 
 [[constructNextBatch-setOffsetRange]]
-In *setOffsetRange* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the <<availableOffsets, available offset>> internal registry) and, if found, requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, deserialize the offset>> (from <<spark-sql-streaming-Offset.md#json, JSON format>>). `constructNextBatch` requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#setOffsetRange, set the desired offset range>>.
+In *setOffsetRange* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the <<availableOffsets, available offset>> internal registry) and, if found, requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, deserialize the offset>> (from [JSON format](Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#setOffsetRange, set the desired offset range>>.
 
 [[constructNextBatch-getEndOffset]]
 In *getEndOffset* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.md#getEndOffset, end offset>>.
@@ -329,7 +329,7 @@ Writing offsets to log
 ```
 
 [[constructNextBatch-walCommit]]
-In *walCommit* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the [availableOffsets StreamProgress](StreamExecution.md#availableOffsets) to <<spark-sql-streaming-StreamProgress.md#toOffsetSeq, convert to OffsetSeq>> (with the <<sources, BaseStreamingSources>> and the [current batch metadata (event-time watermark and timestamp)](StreamExecution.md#offsetSeqMetadata)) that is in turn [added](HDFSMetadataLog.md#add) to the [write-ahead log](StreamExecution.md#offsetLog) for the [current batch ID](StreamExecution.md#currentBatchId).
+In *walCommit* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the [availableOffsets StreamProgress](StreamExecution.md#availableOffsets) to [convert to OffsetSeq](StreamProgress.md#toOffsetSeq) (with the <<sources, BaseStreamingSources>> and the [current batch metadata (event-time watermark and timestamp)](StreamExecution.md#offsetSeqMetadata)) that is in turn [added](HDFSMetadataLog.md#add) to the [write-ahead log](StreamExecution.md#offsetLog) for the [current batch ID](StreamExecution.md#currentBatchId).
 
 `constructNextBatch` prints out the following INFO message to the logs:
 
@@ -397,7 +397,7 @@ image::images/StreamExecution-runBatch-getBatch.png[align="center"]
 
 ### <span id="runBatch-getBatch-Source"> getBatch Phase and Sources
 
-For a [Source](Source.md) (with the available <<spark-sql-streaming-Offset.md#, offsets>> different from the [committedOffsets](StreamExecution.md#committedOffsets) registry), `runBatch` does the following:
+For a [Source](Source.md) (with the available [offset](Offset.md)s different from the [committedOffsets](StreamExecution.md#committedOffsets) registry), `runBatch` does the following:
 
 * Requests the [committedOffsets](StreamExecution.md#committedOffsets) for the committed offsets for the `Source` (if available)
 
@@ -419,13 +419,13 @@ DataFrame returned by getBatch from [source] did not have isStreaming=true\n[log
 
 ==== [[runBatch-getBatch-MicroBatchReader]] getBatch Phase and MicroBatchReaders
 
-For a <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> (with the available <<spark-sql-streaming-Offset.md#, offsets>> different from the [committedOffsets](StreamExecution.md#committedOffsets) registry),  `runBatch` does the following:
+For a <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> (with the available [offset](Offset.md)s different from the [committedOffsets](StreamExecution.md#committedOffsets) registry),  `runBatch` does the following:
 
 * Requests the [committedOffsets](StreamExecution.md#committedOffsets) for the committed offsets for the `MicroBatchReader` (if available)
 
 * Requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, deserialize the committed offsets>> (if available)
 
-* Requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, deserialize the available offsets>> (only for <<spark-sql-streaming-Offset.md#SerializedOffset, SerializedOffsets>>)
+* Requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, deserialize the available offsets>> (only for [SerializedOffset](Offset.md#SerializedOffset)s)
 
 * Requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#setOffsetRange, set the offset range>> (the current and available offsets)
 
@@ -549,7 +549,7 @@ NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart`
 
 `runBatch` requests the [Offset Commit Log](StreamExecution.md#commitLog) to [persisting metadata of the streaming micro-batch](HDFSMetadataLog.md#add) (with the current [batch ID](StreamExecution.md#currentBatchId) and <<spark-sql-streaming-WatermarkTracker.md#currentWatermark, event-time watermark>> of the <<watermarkTracker, WatermarkTracker>>).
 
-In the end, `runBatch` <<spark-sql-streaming-StreamProgress.md#plusplus, adds>> the [available offsets](StreamExecution.md#availableOffsets) to the [committed offsets](StreamExecution.md#committedOffsets) (and updates the <<spark-sql-streaming-Offset.md#, offsets>> of every source with new data in the current micro-batch).
+In the end, `runBatch` [adds](StreamProgress.md#plusplus) the [available offsets](StreamExecution.md#availableOffsets) to the [committed offsets](StreamExecution.md#committedOffsets) (and updates the [offset](Offset.md)s of every source with new data in the current micro-batch).
 
 ## <span id="stop"> Stopping Stream Processing (Execution of Streaming Query)
 

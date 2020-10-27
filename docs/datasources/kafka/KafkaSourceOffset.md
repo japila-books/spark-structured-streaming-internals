@@ -1,6 +1,6 @@
 # KafkaSourceOffset
 
-`KafkaSourceOffset` is an [Offset](../../spark-sql-streaming-Offset.md) for [kafka data source](index.md).
+`KafkaSourceOffset` is an [Offset](../../Offset.md) for [kafka data source](index.md).
 
 `KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
 
@@ -52,7 +52,7 @@ Invalid conversion from offset of [class] to KafkaSourceOffset
 json: String
 ----
 
-NOTE: `json` is part of the <<../../spark-sql-streaming-Offset.md#json, Offset Contract>> for a JSON-encoded offset.
+`json` is part of the [Offset](../../Offset.md#json) abstraction.
 
 `json`...FIXME
 

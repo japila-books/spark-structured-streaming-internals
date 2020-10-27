@@ -30,7 +30,7 @@ a| `ReportPartitionOffset`
 
 * [[ReportPartitionOffset-partitionId]] Partition ID
 * [[ReportPartitionOffset-epoch]] Epoch
-* [[ReportPartitionOffset-offset]] <<spark-sql-streaming-PartitionOffset.md#, PartitionOffset>>
+* [[ReportPartitionOffset-offset]] [PartitionOffset](spark-sql-streaming-PartitionOffset.md)
 
 | [[ReportPartitionOffset]] Sent out (in one-way asynchronous mode) exclusively when `ContinuousQueuedDataReader` is requested for the <<spark-sql-streaming-ContinuousQueuedDataReader.md#next, next row>> to be read in the current epoch, and the epoch is done
 
