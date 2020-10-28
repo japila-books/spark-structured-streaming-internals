@@ -24,11 +24,19 @@
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/SparkDataStream/</loc>
+     <lastmod>2020-10-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/MicroBatchStream/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousStream/</loc>
+     <lastmod>2020-10-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/Trigger/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -85,10 +93,6 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/DataSource/</loc>
-     <lastmod>2020-10-28</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/SparkDataStream/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -272,10 +276,6 @@
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-Trigger/</loc>
-     <lastmod>2020-10-28</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-window/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
@@ -284,11 +284,15 @@
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-TriggerExecutor/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/IncrementalExecution/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/IncrementalExecution/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/TriggerExecutor/</loc>
+     <lastmod>2020-10-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingQueryWrapper/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -325,6 +329,10 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingExecutionRelation/</loc>
+     <lastmod>2020-10-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/MicroBatchScanExec/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -396,10 +404,6 @@
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingQueryWrapper/</loc>
-     <lastmod>2020-10-28</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/offsets-and-metadata-checkpointing/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
@@ -461,10 +465,6 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-MicroBatchWriter/</loc>
-     <lastmod>2020-10-28</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/MicroBatchReadSupport/</loc>
      <lastmod>2020-10-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
