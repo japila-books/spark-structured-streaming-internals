@@ -3,9 +3,9 @@
 `KafkaSourceProvider` is a `DataSourceRegister` that registers **kafka** data source alias.
 
 !!! tip "The Internals of Spark SQL"
-    Read up on [DataSourceRegister](https://jaceklaskowski.github.io/mastering-spark-sql-book/spark-sql-DataSourceRegister) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) book.
+    Read up on [DataSourceRegister]({{ book.spark_sql }}/spark-sql-DataSourceRegister) in [The Internals of Spark SQL]({{ book.spark_sql }}) book.
 
-`KafkaSourceProvider` supports [micro-batch stream processing](../../micro-batch-stream-processing.md) (through [MicroBatchReadSupport](../../MicroBatchReadSupport.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
+`KafkaSourceProvider` supports [micro-batch stream processing](../../micro-batch-stream-processing.md) (through [MicroBatchStream](../../MicroBatchStream.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
 
 ## Properties of Kafka Consumers on Executors
 

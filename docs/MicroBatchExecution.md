@@ -2,11 +2,11 @@
 
 `MicroBatchExecution` is the [stream execution engine](StreamExecution.md) in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
-`MicroBatchExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)) with the following:
+`MicroBatchExecution` is created when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)) with the following:
 
 * Any type of <<sink, sink>>
 
-* Any type of <<trigger, trigger>> but <<spark-sql-streaming-Trigger.md#ContinuousTrigger, ContinuousTrigger>>
+* Any type of [trigger](#trigger) but [ContinuousTrigger](Trigger.md#ContinuousTrigger)
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
@@ -57,7 +57,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[name]] Name of the streaming query
 * [[checkpointRoot]] Path of the checkpoint directory
 * [[analyzedPlan]] Analyzed logical query plan of the streaming query (`LogicalPlan`)
-* [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
+* [[trigger]] [Trigger](Trigger.md)
 * [[triggerClock]] Trigger clock (`Clock`)
 * [[outputMode]] [OutputMode](OutputMode.md)
 * [[extraOptions]] Extra options (`Map[String, String]`)
@@ -72,17 +72,17 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 triggerExecutor: TriggerExecutor
 ----
 
-`triggerExecutor` is the <<spark-sql-streaming-TriggerExecutor.md#, TriggerExecutor>> of the streaming query that is how micro-batches are executed at regular intervals.
+`triggerExecutor` is the [TriggerExecutor](TriggerExecutor.md) of the streaming query that is how micro-batches are executed at regular intervals.
 
 `triggerExecutor` is initialized based on the given <<trigger, Trigger>> (that was used to create the `MicroBatchExecution`):
 
-* <<spark-sql-streaming-TriggerExecutor.md#, ProcessingTimeExecutor>> for <<spark-sql-streaming-Trigger.md#ProcessingTime, Trigger.ProcessingTime>>
+* [ProcessingTimeExecutor](TriggerExecutor.md) for [Trigger.ProcessingTime](Trigger.md#ProcessingTime)
 
-* <<spark-sql-streaming-TriggerExecutor.md#, OneTimeExecutor>> for <<spark-sql-streaming-Trigger.md#OneTimeTrigger, OneTimeTrigger>> (aka <<spark-sql-streaming-Trigger.md#Once, Trigger.Once>> trigger)
+* [OneTimeExecutor](TriggerExecutor.md) for [OneTimeTrigger](Trigger.md#OneTimeTrigger) (aka [Trigger.Once](Trigger.md#Once) trigger)
 
-`triggerExecutor` throws an `IllegalStateException` when the <<trigger, Trigger>> is not one of the <<spark-sql-streaming-Trigger.md#available-implementations, built-in implementations>>.
+`triggerExecutor` throws an `IllegalStateException` when the <<trigger, Trigger>> is not one of the [built-in implementations](Trigger.md#available-implementations).
 
-```
+```text
 Unknown type of trigger: [trigger]
 ```
 
@@ -603,7 +603,7 @@ For every <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>> logic
 Using Source [source] from DataSourceV1 named '[sourceName]' [dataSourceV1]
 ```
 
-For every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operator with a [MicroBatchReadSupport](MicroBatchReadSupport.md) data source (which is not on the list of <<spark-sql-streaming-properties.md#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>), `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `MicroBatchReadSupport` to [create a MicroBatchReader](MicroBatchReadSupport.md#createMicroBatchReader) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
+For every <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operator with a [MicroBatchStream](MicroBatchStream.md) data source (which is not on the list of <<spark-sql-streaming-properties.md#spark.sql.streaming.disabledV2MicroBatchReaders, spark.sql.streaming.disabledV2MicroBatchReaders>>), `logicalPlan` tries to replace it with the [StreamingExecutionRelation](StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `MicroBatchStream` to [create a MicroBatchStream](MicroBatchStream.md#createMicroBatchReader) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
 
 ```text
 Using MicroBatchReader [reader] from DataSourceV2 named '[sourceName]' [dataSourceV2]

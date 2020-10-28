@@ -100,8 +100,10 @@ nav:
     - Configuration Properties: spark-sql-streaming-properties.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
+    - SparkDataStream: SparkDataStream.md
     - MicroBatchStream: MicroBatchStream.md
     - ContinuousStream: ContinuousStream.md
+    - Trigger: Trigger.md
     - Streaming Join:
       - Streaming Join: spark-sql-streaming-join.md
       - StateStoreAwareZipPartitionsRDD: spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md
@@ -120,7 +122,6 @@ nav:
     - Extending Structured Streaming with New Data Sources:
       - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
       - DataSource: DataSource.md
-      - SparkDataStream: SparkDataStream.md
       - SupportsAdmissionControl: SupportsAdmissionControl.md
     - Streaming Aggregation:
       - Streaming Aggregation: spark-sql-streaming-aggregation.md
@@ -177,12 +178,13 @@ nav:
       - DataStreamWriter:
         - DataStreamWriter: DataStreamWriter.md
         - OutputMode: OutputMode.md
-        - Trigger: spark-sql-streaming-Trigger.md
       - window Function: spark-sql-streaming-window.md
-    - Query Planning and Execution:
+    - Query Execution:
       - StreamExecution: StreamExecution.md
-      - TriggerExecutor: spark-sql-streaming-TriggerExecutor.md
       - IncrementalExecution: IncrementalExecution.md
+      - TriggerExecutor: TriggerExecutor.md
+      - StreamingQueryWrapper: StreamingQueryWrapper.md
+    - Query Planning:
       - StreamMetadata: StreamMetadata.md
       - Logical Operators:
         - EventTimeWatermark: EventTimeWatermark.md
@@ -194,6 +196,7 @@ nav:
         - StreamingRelationV2: spark-sql-streaming-StreamingRelationV2.md
         - StreamingExecutionRelation: StreamingExecutionRelation.md
       - Physical Operators:
+        - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
         - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
         - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
         - StatefulOperator: physical-operators/StatefulOperator.md
@@ -212,7 +215,6 @@ nav:
         - StreamingGlobalLimitStrategy: spark-sql-streaming-StreamingGlobalLimitStrategy.md
         - StreamingJoinStrategy: spark-sql-streaming-StreamingJoinStrategy.md
         - StreamingRelationStrategy: spark-sql-streaming-StreamingRelationStrategy.md
-      - StreamingQueryWrapper: StreamingQueryWrapper.md
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
       - MetadataLog: MetadataLog.md
@@ -235,8 +237,6 @@ nav:
       - MicroBatchExecution:
         - MicroBatchExecution: MicroBatchExecution.md
         - MicroBatchWriter: spark-sql-streaming-MicroBatchWriter.md
-      - MicroBatchReadSupport:
-        - MicroBatchReadSupport: MicroBatchReadSupport.md
         - MicroBatchReader: spark-sql-streaming-MicroBatchReader.md
       - WatermarkTracker: spark-sql-streaming-WatermarkTracker.md
       - Source:

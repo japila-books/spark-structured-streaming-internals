@@ -76,7 +76,7 @@ When [DataStreamReader.load](DataStreamReader.md#load) method is executed, `load
 
 ### V2 Code Path
 
-For [MicroBatchReadSupport](MicroBatchReadSupport.md) or [ContinuousReadSupport](ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
+For [MicroBatchStream](MicroBatchStream.md) or [ContinuousReadSupport](ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
 
 ```text
 // rate data source is V2
@@ -206,7 +206,7 @@ There are however two special output formats that do have corresponding `DataStr
 
 * [OutputMode](OutputMode.md) that you specify using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode) method
 
-* [Trigger](spark-sql-streaming-Trigger.md) that you specify using [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method
+* [Trigger](Trigger.md) that you specify using [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method
 
 You may also want to give a streaming query a name using [DataStreamWriter.queryName](DataStreamWriter.md#queryName) method.
 
@@ -231,11 +231,11 @@ assert(sq.isInstanceOf[StreamingQuery])
 
 When `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start), it allows for the following data source formats:
 
-* **memory** with [MemorySinkV2](spark-sql-streaming-MemorySinkV2.md) (with [ContinuousTrigger](spark-sql-streaming-Trigger.md#ContinuousTrigger)) or [MemorySink](spark-sql-streaming-MemorySink.md)
+* **memory** with [MemorySinkV2](spark-sql-streaming-MemorySinkV2.md) (with [ContinuousTrigger](Trigger.md#ContinuousTrigger)) or [MemorySink](spark-sql-streaming-MemorySink.md)
 
 * **foreach** with [ForeachWriterProvider](spark-sql-streaming-ForeachWriterProvider.md) sink
 
-* **foreachBatch** with [ForeachBatchSink](spark-sql-streaming-ForeachBatchSink.md) sink (that does not support [ContinuousTrigger](spark-sql-streaming-Trigger.md#ContinuousTrigger))
+* **foreachBatch** with [ForeachBatchSink](spark-sql-streaming-ForeachBatchSink.md) sink (that does not support [ContinuousTrigger](Trigger.md#ContinuousTrigger))
 
 * Any `DataSourceRegister` data source
 

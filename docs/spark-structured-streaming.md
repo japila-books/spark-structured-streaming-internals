@@ -82,7 +82,7 @@ Structured streaming is defined by the following data abstractions in `org.apach
 
 Structured Streaming follows micro-batch model and periodically fetches data from the data source (and uses the `DataFrame` data abstraction to represent the fetched data for a certain batch).
 
-With Datasets as Spark SQL's view of structured data, structured streaming checks input sources for new data every [trigger](spark-sql-streaming-Trigger.md) (time) and executes the (continuous) queries.
+With Datasets as Spark SQL's view of structured data, structured streaming checks input sources for new data every [trigger](Trigger.md) (time) and executes the (continuous) queries.
 
 !!! note
     The feature has also been called **Streaming Spark SQL Query**, **Streaming DataFrames**, **Continuous DataFrame** or **Continuous Query**. There have been lots of names before the Spark project settled on Structured Streaming.

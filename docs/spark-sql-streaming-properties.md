@@ -99,7 +99,7 @@ a| [[spark.sql.streaming.continuous.executorPollIntervalMs]] *(internal)* The in
 Default: `100` (ms)
 
 | spark.sql.streaming.disabledV2MicroBatchReaders
-a| [[spark.sql.streaming.disabledV2MicroBatchReaders]] *(internal)* A comma-separated list of fully-qualified class names of data source providers for which [MicroBatchReadSupport](MicroBatchReadSupport.md) is disabled. Reads from these sources will fall back to the V1 Sources.
+a| [[spark.sql.streaming.disabledV2MicroBatchReaders]] *(internal)* A comma-separated list of fully-qualified class names of data source providers for which [MicroBatchStream](MicroBatchStream.md) is disabled. Reads from these sources will fall back to the V1 Sources.
 
 Default: `(empty)`
 

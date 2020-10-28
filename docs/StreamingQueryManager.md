@@ -273,8 +273,6 @@ startQuery(
 
 `startQuery` starts a StreamingQuery.md[streaming query] and returns a handle to it.
 
-NOTE: `trigger` defaults to `0` milliseconds (as spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0)]).
-
 Internally, `startQuery` first <<createQuery, creates a StreamingQueryWrapper>>, registers it in <<activeQueries, activeQueries>> internal registry (by the [id](StreamExecution.md#id)), requests it for the underlying [StreamExecution](StreamingQueryWrapper.md#streamingQuery) and [starts it](StreamExecution.md#start).
 
 In the end, `startQuery` returns the [StreamingQueryWrapper](StreamingQueryWrapper.md) (as part of the fluent API so you can chain operators) or throws the exception that was reported when attempting to start the query.

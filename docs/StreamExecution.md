@@ -259,7 +259,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 * [[name]] Name of the streaming query (can also be `null`)
 * [[checkpointRoot]] Path of the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Streaming query (as an analyzed logical query plan, i.e. `LogicalPlan`)
-* [[trigger]] [Trigger](spark-sql-streaming-Trigger.md)
+* [[trigger]] [Trigger](Trigger.md)
 * [[triggerClock]] `Clock`
 * [[outputMode]] [OutputMode](OutputMode.md)
 * [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag (to control whether to delete the checkpoint directory on stop)

@@ -1,10 +1,11 @@
 # KafkaSource
 
-`KafkaSource` is a [streaming source](../../Source.md) that <<getBatch, generates DataFrames of records from one or more topics in Apache Kafka>>.
+`KafkaSource` is a [streaming source](../../Source.md) that [loads data from Apache Kafka](#getBatch).
 
-NOTE: Kafka topics are checked for new records every spark-sql-streaming-Trigger.md[trigger] and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
+!!! note
+    Kafka topics are checked for new records every [trigger](../../Trigger.md) and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
-`KafkaSource` uses the <<metadataPath, streaming metadata log directory>> to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](../../StreamExecution.md#checkpointRoot) (of the [StreamExecution](../../StreamExecution.md)).
+`KafkaSource` uses the [metadata log directory](#metadataPath) to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](../../StreamExecution.md#checkpointRoot) (of the [StreamExecution](../../StreamExecution.md)).
 
 !!! note
     The [checkpointRoot](../../StreamExecution.md#checkpointRoot) directory is one of the following:
@@ -12,52 +13,34 @@ NOTE: Kafka topics are checked for new records every spark-sql-streaming-Trigger
     * `checkpointLocation` option
     * [spark.sql.streaming.checkpointLocation](../../spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property
 
-`KafkaSource` <<creating-instance, is created>> for *kafka* format (that is registered by [KafkaSourceProvider](KafkaSourceProvider.md#shortName)).
+`KafkaSource` <<creating-instance, is created>> for **kafka** format (that is registered by [KafkaSourceProvider](KafkaSourceProvider.md#shortName)).
 
-.KafkaSource Is Created for kafka Format by KafkaSourceProvider
-image::images/KafkaSource-creating-instance.png[align="center"]
+![KafkaSource and KafkaSourceProvider](../../images/KafkaSource-creating-instance.png)
 
 [[schema]]
 `KafkaSource` uses a [predefined (fixed) schema](index.md#schema) (that [cannot be changed](KafkaSourceProvider.md#sourceSchema)).
 
 `KafkaSource` also supports batch Datasets.
 
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaSource` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
-
 ## Creating Instance
 
 `KafkaSource` takes the following to be created:
 
-* [[sqlContext]] `SQLContext`
-* [[kafkaReader]] [KafkaOffsetReader](KafkaOffsetReader.md)
-* [[executorKafkaParams]] Parameters of executors (reading from Kafka)
-* [[sourceOptions]] Collection of key-value options
-* [[metadataPath]] *Streaming metadata log directory*, i.e. the directory for streaming metadata log (where `KafkaSource` persists [KafkaSourceOffset](KafkaSourceOffset.md) offsets in JSON format)
-* [[startingOffsets]] [Starting offsets](KafkaOffsetRangeLimit.md) (as defined using [startingOffsets](index.md#startingOffsets) option)
-* [[failOnDataLoss]] Flag used to create [KafkaSourceRDD](KafkaSourceRDD.md)s every trigger and when checking to [report a IllegalStateException on data loss](#reportDataLoss).
+* <span id="sqlContext"> `SQLContext`
+* <span id="kafkaReader"> [KafkaOffsetReader](KafkaOffsetReader.md)
+* <span id="executorKafkaParams"> Parameters of executors (reading from Kafka)
+* <span id="sourceOptions"> Source Options
+* <span id="metadataPath"> Path of Metadata Log (where `KafkaSource` persists [KafkaSourceOffset](KafkaSourceOffset.md) offsets in JSON format)
+* <span id="startingOffsets"> [Starting offsets](KafkaOffsetRangeLimit.md) (defined using [startingOffsets](index.md#startingOffsets) option)
+* <span id="failOnDataLoss"> `failOnDataLoss` flag to create [KafkaSourceRDD](KafkaSourceRDD.md)s every trigger and to [report an IllegalStateException on data loss](#reportDataLoss).
 
-`KafkaSource` initializes the <<internal-properties, internal properties>>.
+## <span id="getBatch"> Loading Kafka Records for Streaming Micro-Batch
 
-=== [[getBatch]] Generating Streaming DataFrame with Records From Kafka for Streaming Micro-Batch -- `getBatch` Method
-
-[source, scala]
-----
+```scala
 getBatch(
   start: Option[Offset],
   end: Offset): DataFrame
-----
+```
 
 `getBatch` is part of the [Source](../../Source.md#getBatch) abstraction.
 
@@ -67,7 +50,7 @@ Internally, `getBatch` initializes <<initialPartitionOffsets, initial partition 
 
 You should see the following INFO message in the logs:
 
-```
+```text
 GetBatch called with start = [start], end = [end]
 ```
 
@@ -79,31 +62,31 @@ GetBatch called with start = [start], end = [end]
 
 `getBatch` <<reportDataLoss, reports a data loss>> if the new partitions don't match to what <<kafkaReader, KafkaOffsetReader>> fetched.
 
-```
+```text
 Cannot find earliest offsets of [partitions]. Some data may have been missed
 ```
 
 You should see the following INFO message in the logs:
 
-```
+```text
 Partitions added: [newPartitionOffsets]
 ```
 
 `getBatch` <<reportDataLoss, reports a data loss>> if the new partitions don't have their offsets `0`.
 
-```
+```text
 Added partition [partition] starts from [offset] instead of 0. Some data may have been missed
 ```
 
 `getBatch` <<reportDataLoss, reports a data loss>> if the `fromPartitionOffsets` partitions differ from `untilPartitionOffsets` partitions.
 
-```
+```text
 [partitions] are gone. Some data may have been missed
 ```
 
 You should see the following DEBUG message in the logs:
 
-```
+```text
 TopicPartitions: [topicPartitions]
 ```
 
@@ -461,3 +444,15 @@ Used when:
 * Initializing the [pollTimeoutMs](#pollTimeoutMs) internal property
 
 |===
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaSource` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
+```
+
+Refer to [Logging](../../spark-logging.md).

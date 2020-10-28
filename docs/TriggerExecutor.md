@@ -30,7 +30,7 @@ or `ProcessingTimeExecutor`.
 | Executes `batchRunner` exactly once.
 
 | [[ProcessingTimeExecutor]] `ProcessingTimeExecutor`
-a| Executes `batchRunner` at regular intervals (as defined using [ProcessingTime](spark-sql-streaming-Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method).
+a| Executes `batchRunner` at regular intervals (as defined using [ProcessingTime](Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method).
 
 [source, scala]
 ----

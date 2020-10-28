@@ -38,7 +38,7 @@ val records = spark
 
 Kafka data source supports many options for reading.
 
-Internally, the *kafka* data source format for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchReadSupport](../../MicroBatchReadSupport.md) and [ContinuousReadSupport](../../ContinuousReadSupport.md) for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
+Internally, the *kafka* data source format for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchStream](../../MicroBatchStream.md) and [ContinuousReadSupport](../../ContinuousReadSupport.md) for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
 
 === [[schema]] Predefined (Fixed) Schema
 
@@ -124,9 +124,9 @@ val sq = records
 
 Internally, the **kafka** data source format for writing is available through [KafkaSourceProvider](KafkaSourceProvider.md).
 
-=== [[micro-batch-stream-processing]] Micro-Batch Stream Processing
+## Micro-Batch Stream Processing
 
-Kafka Data Source supports <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.md#Once, Trigger.Once>> and <<spark-sql-streaming-Trigger.md#ProcessingTime, Trigger.ProcessingTime>> triggers) via [KafkaMicroBatchReader](KafkaMicroBatchReader.md).
+Kafka Data Source supports [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md) using [KafkaMicroBatchReader](KafkaMicroBatchReader.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
@@ -154,9 +154,9 @@ Kafka Data Source can assign a single task per Kafka partition (using [KafkaOffs
 
 Kafka Data Source can reuse a Kafka consumer (using [KafkaMicroBatchReader](KafkaMicroBatchReader.md) in [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md)).
 
-=== [[continuous-stream-processing]] Continuous Stream Processing
+## Continuous Stream Processing
 
-Kafka Data Source supports <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> (i.e. <<spark-sql-streaming-Trigger.md#Continuous, Trigger.Continuous>> trigger) via [KafkaContinuousReader](KafkaContinuousReader.md).
+Kafka Data Source supports [Continuous Stream Processing](../../spark-sql-streaming-continuous-stream-processing.md) using [KafkaContinuousReader](KafkaContinuousReader.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger

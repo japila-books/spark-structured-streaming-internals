@@ -67,6 +67,17 @@ log4j.logger.org.apache.spark.sql.execution.streaming.continuous.ContinuousExecu
 Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
+## <span id="triggerExecutor"> TriggerExecutor
+
+[TriggerExecutor](TriggerExecutor.md) for the [Trigger](#trigger):
+
+* `ProcessingTimeExecutor` for [ContinuousTrigger](Trigger.md#ContinuousTrigger)
+
+Used when...FIXME
+
+!!! note
+    `StreamExecution` throws an `IllegalStateException` when the [Trigger](#trigger) is not a [ContinuousTrigger](Trigger.md#ContinuousTrigger).
+
 === [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
 
 [source, scala]
@@ -112,7 +123,7 @@ In *queryPlanning* [time-tracking section](monitoring/ProgressReporter.md#report
 
 * <<EPOCH_COORDINATOR_ID_KEY, __epoch_coordinator_id>> as the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, i.e. [runId](StreamExecution.md#runId) followed by `--` with a random UUID
 
-* <<EPOCH_INTERVAL_KEY, __continuous_epoch_interval>> as the interval of the <<spark-sql-streaming-Trigger.md#ContinuousTrigger, ContinuousTrigger>>
+* <<EPOCH_INTERVAL_KEY, __continuous_epoch_interval>> as the interval of the [ContinuousTrigger](Trigger.md#ContinuousTrigger)
 
 `runContinuous` uses the `EpochCoordinatorRef` helper to <<spark-sql-streaming-EpochCoordinatorRef.md#create, create a remote reference to the EpochCoordinator RPC endpoint>> (with the <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>, the <<currentEpochCoordinatorId, currentEpochCoordinatorId>>, and the [currentBatchId](StreamExecution.md#currentBatchId)).
 
@@ -228,7 +239,7 @@ Data source [name] does not support continuous processing.
 * [[name]] The name of the structured query
 * [[checkpointRoot]] Path to the checkpoint directory (aka _metadata directory_)
 * [[analyzedPlan]] Analyzed logical query plan (`LogicalPlan`)
-* [[trigger]] <<spark-sql-streaming-Trigger.md#, Trigger>>
+* [[trigger]] [Trigger](Trigger.md)
 * [[triggerClock]] `Clock`
 * [[outputMode]] [OutputMode](OutputMode.md)
 * [[extraOptions]] Options (`Map[String, String]`)
@@ -296,13 +307,4 @@ Use <<sources, sources>> to access the current value
 | [[currentEpochCoordinatorId]] FIXME
 
 Used when...FIXME
-
-| triggerExecutor
-a| [[triggerExecutor]] <<spark-sql-streaming-TriggerExecutor.md#, TriggerExecutor>> for the <<trigger, Trigger>>:
-
-* `ProcessingTimeExecutor` for <<spark-sql-streaming-Trigger.md#ContinuousTrigger, ContinuousTrigger>>
-
-Used when...FIXME
-
-NOTE: `StreamExecution` throws an `IllegalStateException` when the <<trigger, Trigger>> is not a <<spark-sql-streaming-Trigger.md#ContinuousTrigger, ContinuousTrigger>>.
 |===

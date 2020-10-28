@@ -133,7 +133,7 @@ a|
 trigger(trigger: Trigger): DataStreamWriter[T]
 ----
 
-Sets the spark-sql-streaming-Trigger.md[Trigger] for how often a streaming query should be executed and the result saved.
+Sets the [Trigger](Trigger.md) for how often a streaming query should be executed and the result saved.
 
 |===
 
@@ -223,16 +223,13 @@ Internally, it is just an additional <<option, option>> with the key `queryName`
 
 [source, scala]
 ----
-trigger(trigger: Trigger): DataStreamWriter[T]
+trigger(
+  trigger: Trigger): DataStreamWriter[T]
 ----
 
 `trigger` method sets the time interval of the *trigger* (that executes a batch runner) for a streaming query.
 
-NOTE: `Trigger` specifies how often results should be produced by a StreamingQuery.md[StreamingQuery]. See spark-sql-streaming-Trigger.md[Trigger].
-
-The default trigger is spark-sql-streaming-Trigger.md#ProcessingTime[ProcessingTime(0L)] that runs a streaming query as often as possible.
-
-TIP: Consult spark-sql-streaming-Trigger.md[Trigger] to learn about `Trigger` and `ProcessingTime` types.
+The default trigger is [ProcessingTime(0L)](Trigger.md#ProcessingTime) that runs a streaming query as often as possible.
 
 === [[start]] Creating and Starting Execution of Streaming Query -- `start` Method
 
