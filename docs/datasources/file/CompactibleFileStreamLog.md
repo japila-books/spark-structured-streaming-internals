@@ -15,7 +15,7 @@
 
 ## Contract
 
-### <span id="compactLogs"> Compacting Logs
+### <span id="compactLogs"> Filtering Out Obsolete Logs
 
 ```scala
 compactLogs(
@@ -23,6 +23,9 @@ compactLogs(
 ```
 
 Used when [storing metadata](#add) and for [all files (except deleted)](#allFiles)
+
+!!! important
+    `compactLogs` does nothing important in the available [implementations](#implementations). Consider this method a noop.
 
 ### <span id="defaultCompactInterval"> Default Compact Interval
 
@@ -53,6 +56,41 @@ Used to [store metadata](#add)
 * [FileStreamSinkLog](FileStreamSinkLog.md)
 * [FileStreamSourceLog](FileStreamSourceLog.md)
 
+## <span id="compact"> Compaction
+
+```scala
+compact(
+  batchId: Long,
+  logs: Array[T]): Boolean
+```
+
+`compact` [finds valid metadata files for compaction](#getValidBatchesBeforeCompactionBatch) (for the given compaction `batchId` and [compact interval](#compactInterval)) and makes sure that [they are all available](../../HDFSMetadataLog.md#get). `compact` tracks elapsed time (`loadElapsedMs`).
+
+`compact` [filters out obsolete logs](#compactLogs) among the valid metadata files and the input `logs` (which actually does nothing important given the note in [compactLogs](#compactLogs)).
+
+`compact` [stores the metadata](../../HDFSMetadataLog.md#add) (the filtered metadata files and the input `logs`) for the input `batchId`. `compact` tracks elapsed time (`writeElapsedMs`).
+
+`compact` prints out the following DEBUG message (only when the total elapsed time of `loadElapsedMs` and `writeElapsedMs` are below the unconfigurable `2000` ms):
+
+```text
+Compacting took [elapsedMs] ms (load: [loadElapsedMs] ms, write: [writeElapsedMs] ms) for compact batch [batchId]
+```
+
+In case the total epased time is above the unconfigurable `2000` ms, `compact` prints out the following WARN messages:
+
+```text
+Compacting took [elapsedMs] ms (load: [loadElapsedMs] ms, write: [writeElapsedMs] ms) for compact batch [batchId]
+Loaded [allLogs] entries (estimated [allLogs] bytes in memory), and wrote [compactedLogs] entries for compact batch [batchId]
+```
+
+`compact` throws an `IllegalStateException` when one of the metadata files to compact is not valid (not accessible on a file system or of incorrect format):
+
+```text
+[batchIdToPath] doesn't exist when compacting batch [batchId] (compactInterval: [compactInterval])
+```
+
+`compact` is used while [storing metadata for streaming batch](#add).
+
 ## <span id="minBatchesToRetain"> spark.sql.streaming.fileSink.log.cleanupDelay
 
 `CompactibleFileStreamLog` uses [spark.sql.streaming.fileSink.log.cleanupDelay](../../spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property to [delete expired log entries](#deleteExpiredLog).
@@ -61,7 +99,7 @@ Used to [store metadata](#add)
 
 `CompactibleFileStreamLog` uses **.compact** file suffix for [batchIdToPath](#batchIdToPath), [getBatchIdFromFileName](#getBatchIdFromFileName), and the [compactInterval](#compactInterval).
 
-## <span id="add"> Storing Metadata
+## <span id="add"> Storing Metadata for Streaming Batch
 
 ```scala
 add(
@@ -69,21 +107,11 @@ add(
   logs: Array[T]): Boolean
 ```
 
-`add` [isCompactionBatch](#isCompactionBatch) with the given `batchId` and [compactInterval](#compactInterval).
+`add` checks whether the given `batchId` is [compaction batch](#isCompactionBatch) or not (alongside [compact interval](#compactInterval)).
 
 `add`...FIXME
 
 `add` is part of the [MetadataLog](../../MetadataLog.md#add) abstraction.
-
-### <span id="compact"> Compacting
-
-```scala
-compact(
-  batchId: Long,
-  logs: Array[T]): Boolean
-```
-
-`compact`...FIXME
 
 ### <span id="deleteExpiredLog"> Deleting Expired Log Entries
 
@@ -195,7 +223,9 @@ deserialize(
 
 `deserialize` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#deserialize) abstraction.
 
-## <span id="getBatchIdFromFileName"> getBatchIdFromFileName Utility
+## Utilities
+
+### <span id="getBatchIdFromFileName"> getBatchIdFromFileName
 
 ```scala
 getBatchIdFromFileName(
@@ -205,3 +235,15 @@ getBatchIdFromFileName(
 `getBatchIdFromFileName` simply removes the [.compact](#COMPACT_FILE_SUFFIX) suffix from the given `fileName` and converts the remaining part to a number.
 
 `getBatchIdFromFileName` is used for [pathToBatchId](#pathToBatchId), [isBatchFile](#isBatchFile), and [delete expired log entries](#deleteExpiredLog).
+
+### <span id="getValidBatchesBeforeCompactionBatch"> getValidBatchesBeforeCompactionBatch
+
+```scala
+getValidBatchesBeforeCompactionBatch(
+  compactionBatchId: Long,
+  compactInterval: Int): Seq[Long]
+```
+
+`getValidBatchesBeforeCompactionBatch`...FIXME
+
+`getBatchIdFromFileName` is used for [compaction](#compact).

@@ -2,6 +2,8 @@
 
 `FileStreamSinkLog` is a [CompactibleFileStreamLog](CompactibleFileStreamLog.md) (of [SinkFileStatus](SinkFileStatus.md)es) for [FileStreamSink](FileStreamSink.md#fileLog) and [MetadataLogFileIndex](MetadataLogFileIndex.md#metadataLog).
 
+`FileStreamSinkLog` concatenates metadata logs to a single compact file after defined compact interval.
+
 ## Creating Instance
 
 `FileStreamSinkLog` (like the parent [CompactibleFileStreamLog](CompactibleFileStreamLog.md)) takes the following to be created:
@@ -53,5 +55,5 @@ Otherwise, `compactLogs` removes the deleted paths from the `SinkFileStatus`es.
 
 `FileStreamSinkLog` uses **delete** action to mark [status files](SinkFileStatus.md) to be excluded from [compaction](#compactLogs).
 
-!!! note
-    Delete action does not seem to be used in Spark Structured Streaming.
+!!! important
+    Delete action is not used in Spark Structured Streaming and [will be removed in 3.1.0](https://issues.apache.org/jira/browse/SPARK-32648).
