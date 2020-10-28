@@ -1,29 +1,25 @@
 # MetadataLog
 
-`MetadataLog` is the <<contract, abstraction>> of <<implementations, metadata storage>> that can <<add, persist>>, <<get, retrieve>>, and <<purge, remove>> metadata (of type `T`).
+`MetadataLog` is an [abstraction](#contract) of [metadata logs](#implementations) that can [add](#add), [get](#get), [getLatest](#getLatest) and [purge](#purge) metadata (of type `T`).
 
-[[contract]]
-.MetadataLog Contract
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
+??? note "Type Constructor"
+    `MetadataLog[T]` is a Scala type constructor with the type parameter `T`
 
-| add
-a| [[add]]
+## Contract
 
-[source, scala]
-----
+### <span id="add"> Storing Metadata of Streaming Batch
+
+```scala
 add(
   batchId: Long,
   metadata: T): Boolean
-----
+```
 
-Persists (_adds_) metadata of a streaming batch
+Stores (_adds_) metadata of a streaming batch
 
 Used when:
 
-* `KafkaMicroBatchReader` is requested to [getOrCreateInitialPartitionOffsets](datasources/kafka/KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets)
+* `KafkaMicroBatchStream` is requested to [getOrCreateInitialPartitionOffsets](datasources/kafka/KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets)
 
 * `KafkaSource` is requested for the [initialPartitionOffsets](datasources/kafka/KafkaSource.md#initialPartitionOffsets)
 
@@ -41,45 +37,41 @@ Used when:
 
 * `RateStreamMicroBatchReader` is created (`creationTimeMs`)
 
-| get
-a| [[get]]
+### <span id="get"> get
 
-[source, scala]
-----
+```scala
 get(
   batchId: Long): Option[T]
 get(
   startId: Option[Long],
   endId: Option[Long]): Array[(Long, T)]
-----
+```
 
-Retrieves (_gets_) metadata of one or more batches
+Looks up (_gets_) metadata of one or more streaming batches
 
 Used when...FIXME
 
-| getLatest
-a| [[getLatest]]
+### <span id="getLatest"> getLatest
 
-[source, scala]
-----
+```scala
 getLatest(): Option[(Long, T)]
-----
+```
 
-Retrieves the latest-committed metadata (if available)
-
-Used when...FIXME
-
-| purge
-a| [[purge]]
-
-[source, scala]
-----
-purge(thresholdBatchId: Long): Unit
-----
+Looks up the latest-committed metadata (if available)
 
 Used when...FIXME
 
-|===
+### <span id="purge"> purge
 
-[[implementations]]
-NOTE: [HDFSMetadataLog](HDFSMetadataLog.md) is the only direct implementation of the <<contract, MetadataLog Contract>> in Spark Structured Streaming.
+```scala
+purge(
+  thresholdBatchId: Long): Unit
+```
+
+Purging (_removing_) metadata older than the given threshold
+
+Used when...FIXME
+
+## Implementations
+
+* [HDFSMetadataLog](HDFSMetadataLog.md)
