@@ -100,7 +100,9 @@ nav:
     - Configuration Properties: spark-sql-streaming-properties.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
+    - DataSource: DataSource.md
     - SparkDataStream: SparkDataStream.md
+    - SupportsAdmissionControl: SupportsAdmissionControl.md
     - MicroBatchStream: MicroBatchStream.md
     - ContinuousStream: ContinuousStream.md
     - Trigger: Trigger.md
@@ -119,10 +121,6 @@ nav:
         - StateStoreAwareZipPartitionsHelper: spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md
         - StreamingSymmetricHashJoinHelper: spark-sql-streaming-StreamingSymmetricHashJoinHelper.md
         - StreamingJoinHelper: spark-sql-streaming-StreamingJoinHelper.md
-    - Extending Structured Streaming with New Data Sources:
-      - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
-      - DataSource: DataSource.md
-      - SupportsAdmissionControl: SupportsAdmissionControl.md
     - Streaming Aggregation:
       - Streaming Aggregation: spark-sql-streaming-aggregation.md
       - StateStoreRDD: spark-sql-streaming-StateStoreRDD.md
@@ -266,6 +264,7 @@ nav:
         - ContinuousWriteRDD: spark-sql-streaming-ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: spark-sql-streaming-ContinuousDataSourceRDD.md
     - UnsupportedOperationChecker: spark-sql-streaming-UnsupportedOperationChecker.md
+    - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
     - SQLConf: SQLConf.md
   - Streaming Operators:
     - Streaming Operators: operators/index.md
@@ -295,6 +294,7 @@ nav:
     - Kafka:
       - Kafka Data Source: datasources/kafka/index.md
       - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
+      - KafkaMicroBatchStream: datasources/kafka/KafkaMicroBatchStream.md
       - KafkaTable: datasources/kafka/KafkaTable.md
       - KafkaSource: datasources/kafka/KafkaSource.md
       - KafkaRelation: datasources/kafka/KafkaRelation.md

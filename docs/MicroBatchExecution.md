@@ -240,31 +240,31 @@ Starting new streaming query.
 [[populateStartOffsets-currentBatchId-0]]
 `populateStartOffsets` sets the [current batch ID](StreamExecution.md#currentBatchId) to `0` and creates a new <<watermarkTracker, WatermarkTracker>>.
 
-=== [[constructNextBatch]] Constructing Or Skipping Next Streaming Micro-Batch -- `constructNextBatch` Internal Method
+## <span id="constructNextBatch"> Constructing Or Skipping Next Streaming Micro-Batch
 
-[source, scala]
-----
+```scala
 constructNextBatch(
   noDataBatchesEnabled: Boolean): Boolean
-----
+```
 
-NOTE: `constructNextBatch` will only be executed when the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag is enabled (`true`).
+`constructNextBatch` is used when `MicroBatchExecution` is requested to [run the activated streaming query](#runActivatedStream).
+
+!!! note
+    `constructNextBatch` is only executed when the [isCurrentBatchConstructed](#isCurrentBatchConstructed) internal flag is enabled (`true`).
 
 `constructNextBatch` performs the following steps:
 
-. <<constructNextBatch-latestOffsets, Requesting the latest offsets from every streaming source>> (of the streaming query)
+1. [Requesting the latest offsets from every streaming source](#constructNextBatch-latestOffsets) (of the streaming query)
 
-. <<constructNextBatch-availableOffsets, Updating availableOffsets StreamProgress with the latest available offsets>>
+1. [Updating availableOffsets StreamProgress with the latest available offsets](#constructNextBatch-availableOffsets)
 
-. <<constructNextBatch-offsetSeqMetadata, Updating batch metadata with the current event-time watermark and batch timestamp>>
+1. [Updating batch metadata with the current event-time watermark and batch timestamp](#constructNextBatch-offsetSeqMetadata)
 
-. <<constructNextBatch-shouldConstructNextBatch, Checking whether to construct the next micro-batch or not (skip it)>>
+1. [Checking whether to construct the next micro-batch or not (skip it)](#constructNextBatch-shouldConstructNextBatch)
 
-In the end, `constructNextBatch` returns <<constructNextBatch-shouldConstructNextBatch, whether the next streaming micro-batch was constructed or skipped>>.
+In the end, `constructNextBatch` returns [whether the next streaming micro-batch was constructed or skipped](#constructNextBatch-shouldConstructNextBatch).
 
-NOTE: `constructNextBatch` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run the activated streaming query>>.
-
-==== [[constructNextBatch-latestOffsets]] Requesting Latest Offsets from Streaming Sources (getOffset, setOffsetRange and getEndOffset Phases)
+### <span id="constructNextBatch-latestOffsets"> Requesting Latest Offsets from Streaming Sources (getOffset, setOffsetRange and getEndOffset Phases)
 
 `constructNextBatch` firstly requests every [streaming source](StreamExecution.md#uniqueSources) for the latest offsets.
 
@@ -302,7 +302,7 @@ In *getEndOffset* [time-tracking section](monitoring/ProgressReporter.md#reportT
 
 `constructNextBatch` updates the [batch metadata](StreamExecution.md#offsetSeqMetadata) with the current <<spark-sql-streaming-WatermarkTracker.md#currentWatermark, event-time watermark>> (from the <<watermarkTracker, WatermarkTracker>>) and the batch timestamp.
 
-==== [[constructNextBatch-shouldConstructNextBatch]] Checking Whether to Construct Next Micro-Batch or Not (Skip It)
+### <span id="constructNextBatch-shouldConstructNextBatch"> Checking Whether to Construct Next Micro-Batch or Not (Skip It)
 
 `constructNextBatch` checks whether or not the next streaming micro-batch should be constructed (`lastExecutionRequiresAnotherBatch`).
 
@@ -320,7 +320,7 @@ noDataBatchesEnabled = [noDataBatchesEnabled], lastExecutionRequiresAnotherBatch
 
 `constructNextBatch` branches off per whether to <<constructNextBatch-shouldConstructNextBatch-enabled, constructs>> or <<constructNextBatch-shouldConstructNextBatch-disabled, skip>> the next batch (per `shouldConstructNextBatch` flag in the above TRACE message).
 
-==== [[constructNextBatch-shouldConstructNextBatch-enabled]] Constructing Next Micro-Batch -- `shouldConstructNextBatch` Flag Enabled
+### <span id="constructNextBatch-shouldConstructNextBatch-enabled"> Constructing Next Micro-Batch
 
 With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag enabled (`true`), `constructNextBatch` [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to the following:
 
@@ -349,7 +349,7 @@ In case of a failure while [adding the available offsets](HDFSMetadataLog.md#add
 Concurrent update to the log. Multiple streaming jobs detected for [currentBatchId]
 ```
 
-### <span id="constructNextBatch-shouldConstructNextBatch-disabled"> Skipping Next Micro-Batch -- `shouldConstructNextBatch` Flag Disabled
+### <span id="constructNextBatch-shouldConstructNextBatch-disabled"> Skipping Next Micro-Batch
 
 With the <<constructNextBatch-shouldConstructNextBatch, shouldConstructNextBatch>> flag disabled (`false`), `constructNextBatch` turns the [noNewData](StreamExecution.md#noNewData) flag on (`true`) and wakes up (_notifies_) all threads waiting for the [awaitProgressLockCondition](StreamExecution.md#awaitProgressLockCondition) lock.
 
@@ -582,18 +582,18 @@ isNewDataAvailable: Boolean
 
 NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> and <<constructNextBatch, construct the next streaming micro-batch>>.
 
-=== [[logicalPlan]] Analyzed Logical Plan With Unique StreamingExecutionRelation Operators -- `logicalPlan` Lazy Property
+## <span id="logicalPlan"> Analyzed Logical Plan
 
-[source, scala]
-----
+```scala
 logicalPlan: LogicalPlan
-----
+```
 
 `logicalPlan` is part of the [StreamExecution](StreamExecution.md#logicalPlan) abstraction.
 
 `logicalPlan` resolves (_replaces_) <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>>, <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> logical operators to [StreamingExecutionRelation](StreamingExecutionRelation.md) logical operators. `logicalPlan` uses the transformed logical plan to set the [uniqueSources](StreamExecution.md#uniqueSources) and <<sources, sources>> internal registries to be the [BaseStreamingSources](StreamingExecutionRelation.md#source) of all the `StreamingExecutionRelations` unique and not, respectively.
 
-NOTE: `logicalPlan` is a Scala lazy value and so the initialization is guaranteed to happen only once at the first access (and is cached for later use afterwards).
+??? note "Lazy Value"
+    `logicalPlan` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and cached afterwards.
 
 Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>>.
 

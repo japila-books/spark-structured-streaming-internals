@@ -2,8 +2,6 @@
 
 `FileStreamSource` is a [streaming source](../../Source.md) that reads files (in a given [file format](#fileFormatClassName)) from a [directory](#path).
 
-`FileStreamSource` is a [SupportsAdmissionControl](../../SupportsAdmissionControl.md).
-
 `FileStreamSource` is used by [DataSource.createSource](../../DataSource.md#createSource) for `FileFormat`.
 
 !!! tip
@@ -84,6 +82,10 @@ Maximum number of files per trigger (batch)
 ### <span id="sourceArchiveDir"> sourceArchiveDir
 
 Archive directory to move completed files to (for [cleanSource](#cleanSource) set to `archive`)
+
+## SupportsAdmissionControl
+
+`FileStreamSource` is a [SupportsAdmissionControl](../../SupportsAdmissionControl.md) and controls the rate of data ingested.
 
 ## <span id="sourceCleaner"> FileStreamSourceCleaner
 
