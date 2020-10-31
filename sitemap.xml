@@ -780,15 +780,15 @@
      <lastmod>2020-10-31</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ForeachWriterProvider/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/ForeachWriterProvider/</loc>
      <lastmod>2020-10-31</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ForeachWriter/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/ForeachWriter/</loc>
      <lastmod>2020-10-31</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ForeachSink/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/ForeachSink/</loc>
      <lastmod>2020-10-31</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
