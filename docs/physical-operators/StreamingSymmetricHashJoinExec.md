@@ -89,7 +89,7 @@ NOTE: `outputPartitioning` is part of the `SparkPlan` Contract to specify how da
 eventTimeWatermark: Option[Long]
 ----
 
-When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the current streaming micro-batch.
+When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the current streaming micro-batch.
 
 `eventTimeWatermark` is an optional property that is specified only after [IncrementalExecution](../IncrementalExecution.md) was requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../ContinuousExecution.md) and every trigger for [MicroBatchExecution](../MicroBatchExecution.md) in the **queryPlanning** phase).
 
@@ -198,7 +198,7 @@ shouldRunAnotherBatch(
 
 * Either the <<spark-sql-streaming-JoinStateWatermarkPredicates.md#left, left>> or <<spark-sql-streaming-JoinStateWatermarkPredicates.md#right, right>> join state watermark predicates are defined (in the <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
 
-* <<eventTimeWatermark, Event-time watermark>> threshold (of the `StreamingSymmetricHashJoinExec` operator) is defined and the current <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
+* <<eventTimeWatermark, Event-time watermark>> threshold (of the `StreamingSymmetricHashJoinExec` operator) is defined and the current [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
 
 `shouldRunAnotherBatch` is negative (`false`) otherwise.
 

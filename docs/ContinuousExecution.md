@@ -1,4 +1,4 @@
-# ContinuousExecution &mdash; Stream Execution Engine of Continuous Stream Processing
+# ContinuousExecution
 
 `ContinuousExecution` is the [stream execution engine](StreamExecution.md) of [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md).
 

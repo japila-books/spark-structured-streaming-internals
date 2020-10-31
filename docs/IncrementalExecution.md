@@ -35,7 +35,7 @@ Once <<creating-instance, created>>, `IncrementalExecution` is immediately execu
 * [[checkpointLocation]] <<state-checkpoint-location, State checkpoint location>>
 * [[runId]] Run ID of a streaming query (`UUID`)
 * [[currentBatchId]] Batch ID
-* [[offsetSeqMetadata]] <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>>
+* [[offsetSeqMetadata]] [OffsetSeqMetadata](OffsetSeqMetadata.md)
 
 === [[state-checkpoint-location]] State Checkpoint Location (Directory)
 
@@ -84,7 +84,7 @@ numStateStores: Int
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-properties.html#spark.sql.shuffle.partitions[spark.sql.shuffle.partitions] configuration property (and the others) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 
-Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata>> for the <<SQLConf.md#SHUFFLE_PARTITIONS, spark.sql.shuffle.partitions>> configuration property (using the <<spark-sql-streaming-OffsetSeqMetadata.md#conf, streaming configuration>>) or simply takes whatever was defined for the given <<sparkSession, SparkSession>> (default: `200`).
+Internally, `numStateStores` requests the <<offsetSeqMetadata, OffsetSeqMetadata>> for the <<SQLConf.md#SHUFFLE_PARTITIONS, spark.sql.shuffle.partitions>> configuration property (using the [streaming configuration](OffsetSeqMetadata.md#conf)) or simply takes whatever was defined for the given <<sparkSession, SparkSession>> (default: `200`).
 
 `numStateStores` is initialized right when `IncrementalExecution` is <<creating-instance, created>>.
 
@@ -128,9 +128,9 @@ state: Rule[SparkPlan]
 
 * <<outputMode, OutputMode>>
 
-* <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, batchWatermarkMs>> (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the event-time watermark
+* [batchWatermarkMs](OffsetSeqMetadata.md#batchWatermarkMs) (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the event-time watermark
 
-* <<spark-sql-streaming-OffsetSeqMetadata.md#batchTimestampMs, batchTimestampMs>> (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the current timestamp
+* [batchTimestampMs](OffsetSeqMetadata.md#batchTimestampMs) (through the <<offsetSeqMetadata, OffsetSeqMetadata>>) for the current timestamp
 
 * <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, getStateWatermarkPredicates>> for the state watermark predicates (for <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>>)
 
@@ -165,7 +165,7 @@ NOTE: `nextStatefulOperationStateInfo` is used exclusively when `IncrementalExec
 shouldRunAnotherBatch(newMetadata: OffsetSeqMetadata): Boolean
 ----
 
-`shouldRunAnotherBatch` is positive (`true`) if there is at least one [StateStoreWriter](physical-operators/StateStoreWriter.md) operator (in the <<executedPlan, executedPlan physical query plan>>) that [requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch) (per the given <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> with the event-time watermark and the batch timestamp).
+`shouldRunAnotherBatch` is positive (`true`) if there is at least one [StateStoreWriter](physical-operators/StateStoreWriter.md) operator (in the <<executedPlan, executedPlan physical query plan>>) that [requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch) (per the given [OffsetSeqMetadata](OffsetSeqMetadata.md) with the event-time watermark and the batch timestamp).
 
 Otherwise, `shouldRunAnotherBatch` is negative (`false`).
 

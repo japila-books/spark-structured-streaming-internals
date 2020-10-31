@@ -77,6 +77,7 @@ extra:
     api: https://hadoop.apache.org/docs/r3.2.0/api
   java:
     version: 11
+    docs: https://docs.oracle.com/en/java/javase/11/docs
     api: https://docs.oracle.com/en/java/javase/11/docs/api
   kafka:
     version: 2.4.1
@@ -223,7 +224,7 @@ nav:
       - OffsetSeqLog:
         - OffsetSeqLog: OffsetSeqLog.md
         - OffsetSeq: OffsetSeq.md
-      - OffsetSeqMetadata: spark-sql-streaming-OffsetSeqMetadata.md
+      - OffsetSeqMetadata: OffsetSeqMetadata.md
       - CheckpointFileManager:
         - CheckpointFileManager: CheckpointFileManager.md
         - FileContextBasedCheckpointFileManager: FileContextBasedCheckpointFileManager.md

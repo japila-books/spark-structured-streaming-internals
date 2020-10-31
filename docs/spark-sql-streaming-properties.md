@@ -52,6 +52,8 @@ Use [SQLConf.fileSinkLogCompactInterval](SQLConf.md#fileSinkLogCompactInterval) 
 
 **(internal)** Minimum number of batches that must be retained and made recoverable
 
+ [Stream execution engines](StreamExecution.md) discard (_purge_) offsets from the `offsets` metadata log when the [current batch ID](StreamExecution.md#currentBatchId) (in [MicroBatchExecution](MicroBatchExecution.md)) or the [epoch committed](ContinuousExecution.md#commit) (in [ContinuousExecution](ContinuousExecution.md)) is above the threshold.
+
 Default: `100`
 
 Use [SQLConf.minBatchesToRetain](SQLConf.md#minBatchesToRetain) to access the current value.
@@ -76,7 +78,7 @@ Supported values:
 
 Used when <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy is executed (and plans a streaming query with an aggregate that simply boils down to creating a <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> with the proper _implementation version_ of <<spark-sql-streaming-StreamingAggregationStateManager.md#, StreamingAggregationStateManager>>)
 
-Among the <<spark-sql-streaming-OffsetSeqMetadata.md#relevantSQLConfs, checkpointed properties>> that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
+Among the [checkpointed properties](OffsetSeqMetadata.md#relevantSQLConfs) that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 
 | spark.sql.streaming.checkpointFileManagerClass
 a| [[spark.sql.streaming.checkpointFileManagerClass]] *(internal)* [CheckpointFileManager](CheckpointFileManager.md) to use to write checkpoint files atomically
@@ -138,7 +140,7 @@ Supported values:
 * `1`
 * `2`
 
-Among the <<spark-sql-streaming-OffsetSeqMetadata.md#relevantSQLConfs, checkpointed properties>> that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
+Among the [checkpointed properties](OffsetSeqMetadata.md#relevantSQLConfs) that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 
 | spark.sql.streaming.maxBatchesToRetainInMemory
 a| [[spark.sql.streaming.maxBatchesToRetainInMemory]] *(internal)* The maximum number of batches which will be retained in memory to avoid loading from files.

@@ -101,7 +101,7 @@ a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]] Used when:
 
 * <<spark-sql-streaming-FlatMapGroupsWithStateStrategy.md#, FlatMapGroupsWithStateStrategy>> execution planning strategy is requested to plan a streaming query (and creates a [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator for every [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operator)
 
-* Among the <<spark-sql-streaming-OffsetSeqMetadata.md#relevantSQLConfs, checkpointed properties>>
+* Among the [checkpointed properties](OffsetSeqMetadata.md#relevantSQLConfs)
 
 | `SHUFFLE_PARTITIONS`
 
@@ -131,7 +131,7 @@ a| [[STREAMING_AGGREGATION_STATE_FORMAT_VERSION]] Used when:
 
 * <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy is executed
 
-* `OffsetSeqMetadata` is requested for the <<spark-sql-streaming-OffsetSeqMetadata.md#relevantSQLConfs, relevantSQLConfs>> and the <<spark-sql-streaming-OffsetSeqMetadata.md#relevantSQLConfDefaultValues, relevantSQLConfDefaultValues>>
+* `OffsetSeqMetadata` is requested for the [relevantSQLConfs](OffsetSeqMetadata.md#relevantSQLConfs) and the [relevantSQLConfDefaultValues](OffsetSeqMetadata.md#relevantSQLConfDefaultValues)
 
 | `STREAMING_CHECKPOINT_FILE_MANAGER_CLASS`
 

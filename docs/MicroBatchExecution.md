@@ -1,4 +1,4 @@
-# MicroBatchExecution &mdash; Stream Execution Engine of Micro-Batch Stream Processing
+# MicroBatchExecution
 
 `MicroBatchExecution` is the [stream execution engine](StreamExecution.md) in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
@@ -460,7 +460,7 @@ Invalid batch: [output] != [dataPlan.output]
 
 ### <span id="runBatch-newAttributePlan"> Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)
 
-`runBatch` replaces all `CurrentTimestamp` and `CurrentDate` expressions in the <<runBatch-newBatchesPlan, transformed logical plan (with new data)>> with the <<spark-sql-streaming-OffsetSeqMetadata.md#batchTimestampMs, current batch timestamp>> (based on the [batch metadata](StreamExecution.md#offsetSeqMetadata)).
+`runBatch` replaces all `CurrentTimestamp` and `CurrentDate` expressions in the <<runBatch-newBatchesPlan, transformed logical plan (with new data)>> with the [current batch timestamp](OffsetSeqMetadata.md#batchTimestampMs) (based on the [batch metadata](StreamExecution.md#offsetSeqMetadata)).
 
 !!! note
     `CurrentTimestamp` and `CurrentDate` expressions correspond to `current_timestamp` and `current_date` standard function, respectively.

@@ -72,7 +72,7 @@ Used when `ProgressReporter` is requested to [extractSourceToNumInputRows](#extr
 offsetSeqMetadata: OffsetSeqMetadata
 ```
 
-[OffsetSeqMetadata](../spark-sql-streaming-OffsetSeqMetadata.md) (with the current micro-batch [event-time watermark](../spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs) and [timestamp](../spark-sql-streaming-OffsetSeqMetadata.md#batchTimestampMs))
+[OffsetSeqMetadata](../OffsetSeqMetadata.md) (with the current micro-batch [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) and [timestamp](../OffsetSeqMetadata.md#batchTimestampMs))
 
 ### <span id="postEvent"> postEvent
 
@@ -379,7 +379,7 @@ extractExecutionStats(
 
 `extractExecutionStats` generates an [ExecutionStats](ExecutionStats.md) of the <<lastExecution, last execution>> of the streaming query.
 
-Internally, `extractExecutionStats` generate *watermark* metric (using the <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a [EventTimeWatermark](../EventTimeWatermark.md) unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
+Internally, `extractExecutionStats` generate *watermark* metric (using the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a [EventTimeWatermark](../EventTimeWatermark.md) unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
 
 `extractExecutionStats` [extractStateOperatorMetrics](#extractStateOperatorMetrics).
 

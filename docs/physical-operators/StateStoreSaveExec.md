@@ -260,7 +260,7 @@ shouldRunAnotherBatch(
 
 * <<outputMode, Output mode>> is either [Append](../OutputMode.md#Append) or [Update](../OutputMode.md#Update)
 
-* <<eventTimeWatermark, Event-time watermark>> is defined and is older (below) the current <<spark-sql-streaming-OffsetSeqMetadata.md#batchWatermarkMs, event-time watermark>> (of the given `OffsetSeqMetadata`)
+* <<eventTimeWatermark, Event-time watermark>> is defined and is older (below) the current [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) (of the given `OffsetSeqMetadata`)
 
 Otherwise, `shouldRunAnotherBatch` is negative (`false`).
 

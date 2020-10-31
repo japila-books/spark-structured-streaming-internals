@@ -10,12 +10,12 @@
 
 * `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#getStartOffsets, get start offsets>> and <<ContinuousExecution.md#addOffset, addOffset>>
 
-=== [[creating-instance]] Creating OffsetSeq Instance
+## Creating Instance
 
 `OffsetSeq` takes the following when created:
 
 * [[offsets]] Collection of optional [Offsets](Offset.md) (with `None` for <<toStreamProgress, streaming sources with no new data available>>)
-* [[metadata]] Optional <<spark-sql-streaming-OffsetSeqMetadata.md#, OffsetSeqMetadata>> (default: `None`)
+* [[metadata]] Optional [OffsetSeqMetadata](OffsetSeqMetadata.md) (default: `None`)
 
 === [[toStreamProgress]] Converting to StreamProgress -- `toStreamProgress` Method
 
@@ -64,7 +64,7 @@ fill(
 ----
 <1> Uses no metadata (`None`)
 
-`fill` simply creates an <<creating-instance, OffsetSeq>> for the given variable sequence of [Offset](Offset.md)s and the optional [OffsetSeqMetadata](spark-sql-streaming-OffsetSeqMetadata.md) (in JSON format).
+`fill` simply creates an <<creating-instance, OffsetSeq>> for the given variable sequence of [Offset](Offset.md)s and the optional [OffsetSeqMetadata](OffsetSeqMetadata.md) (in JSON format).
 
 `fill` is used when:
 
