@@ -234,22 +234,9 @@ The <<name, name>>, <<id, id>> and <<runId, runId>> are all unique across all ac
 [[streamMetadata]]
 `StreamExecution` uses a [StreamMetadata](StreamMetadata.md) that is [persisted](StreamMetadata.md#write) in the `metadata` file in the <<checkpointFile, checkpoint directory>>. If the `metadata` file is available it is [read](StreamMetadata.md#read) and is the way to recover the <<id, ID>> of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
 
-[[IS_CONTINUOUS_PROCESSING]]
-`StreamExecution` uses *__is_continuous_processing* local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to <<spark-sql-streaming-StateStoreRDD.md#compute, compute a partition>> (and <<spark-sql-streaming-StateStore.md#get, finds a StateStore>> for a given version).
+## <span id="IS_CONTINUOUS_PROCESSING"> __is_continuous_processing Local Property
 
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.StreamExecution` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
+`StreamExecution` uses **__is_continuous_processing** local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to <<spark-sql-streaming-StateStoreRDD.md#compute, compute a partition>> (and <<spark-sql-streaming-StateStore.md#get, finds a StateStore>> for a given version).
 
 ## Creating Instance
 
@@ -964,3 +951,15 @@ spark.streaming.[name or id]
 `MetricsReporter` is registered only when [spark.sql.streaming.metricsEnabled](spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled (when `StreamExecution` is requested to [runStream](#runStream)).
 
 `MetricsReporter` is deactivated (_removed_) when a streaming query is stopped (when `StreamExecution` is requested to [runStream](#runStream)).
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.StreamExecution` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.StreamExecution=ALL
+```
+
+Refer to [Logging](spark-logging.md).

@@ -1,47 +1,26 @@
-# Sink &mdash; Streaming Sinks for Micro-Batch Stream Processing
+# Sink
 
-`Sink` is part of Data Source API V1 and used in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> only.
+`Sink` is an [extension](#contract) of the `Table` abstraction for [streaming sinks](#implementations) that [add the batch results of a streaming query](#addBatch) in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
-[[contract]]
-.Sink Contract
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
+!!! note
+    `Sink` extends `Table` interface for the only purpose of making it compatible with Data Source V2. All `Table` methods simply throw an `IllegalStateException`.
 
-| addBatch
-a| [[addBatch]]
+## Contract
 
-[source, scala]
-----
+### <span id="addBatch"> Adding Batch
+
+```scala
 addBatch(
   batchId: Long,
   data: DataFrame): Unit
-----
+```
 
 Adds a batch of data to the sink
 
-Used exclusively when <<MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine (<<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>) is requested to <<MicroBatchExecution.md#runBatch-addBatch, add a streaming batch to a sink (addBatch phase)>> while <<MicroBatchExecution.md#runActivatedStream, running an activated streaming query>>.
+Used when `MicroBatchExecution` stream execution engine is requested to [add a batch to a sink (addBatch phase)](MicroBatchExecution.md#runBatch-addBatch) (while [running micro-batches of a streaming query](MicroBatchExecution.md#runBatch))
 
-|===
+## Implementations
 
-[[implementations]]
-.Sinks
-[cols="30,70",options="header",width="100%"]
-|===
-| Sink
-| Description
-
-| [FileStreamSink](datasources/file/FileStreamSink.md)
-| [[FileStreamSink]] Used in file-based data sources (`FileFormat`)
-
-| [ForeachBatchSink](spark-sql-streaming-ForeachBatchSink.md)
-| [[ForeachBatchSink]] Used for [DataStreamWriter.foreachBatch](DataStreamWriter.md#foreachBatch) operator
-
-| [KafkaSink](datasources/kafka/KafkaSink.md)
-| [[KafkaSink]] Used for [kafka](datasources/kafka/index.md) output format
-
-| [MemorySink](spark-sql-streaming-MemorySink.md)
-| [[MemorySink]] Used for `memory` output format
-
-|===
+* [FileStreamSink](datasources/file/FileStreamSink.md)
+* [ForeachBatchSink](datasources/ForeachBatchSink.md)
+* [KafkaSink](datasources/kafka/KafkaSink.md)

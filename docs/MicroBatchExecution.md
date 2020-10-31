@@ -413,11 +413,11 @@ In the end, `runBatch` returns the `Source` and the logical plan of the streamin
 
 In case the `Source` returns a dataframe that is not streaming, `runBatch` throws an `AssertionError`:
 
-```
+```text
 DataFrame returned by getBatch from [source] did not have isStreaming=true\n[logicalQueryPlan]
 ```
 
-==== [[runBatch-getBatch-MicroBatchReader]] getBatch Phase and MicroBatchReaders
+### <span id="runBatch-getBatch-MicroBatchReader"> getBatch Phase and MicroBatchReaders
 
 For a <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> (with the available [offset](Offset.md)s different from the [committedOffsets](StreamExecution.md#committedOffsets) registry),  `runBatch` does the following:
 
@@ -439,7 +439,7 @@ Retrieving data from [reader]: [current] -> [availableV2]
 
 In the end, `runBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.md#readSchema, read schema>> and creates a `StreamingDataSourceV2Relation` logical operator (with the read schema, the `DataSourceV2`, options, and the `MicroBatchReader`).
 
-==== [[runBatch-newBatchesPlan]] Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data
+### <span id="runBatch-newBatchesPlan"> Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data
 
 .StreamExecution's Running Single Streaming Batch (and Transforming Logical Plan for New Data)
 image::images/StreamExecution-runBatch-newBatchesPlan.png[align="center"]
@@ -458,14 +458,14 @@ In case the number of columns in dataframes with new data and ``StreamingExecuti
 Invalid batch: [output] != [dataPlan.output]
 ```
 
-==== [[runBatch-newAttributePlan]] Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)
+### <span id="runBatch-newAttributePlan"> Transforming CurrentTimestamp and CurrentDate Expressions (Per Batch Metadata)
 
 `runBatch` replaces all `CurrentTimestamp` and `CurrentDate` expressions in the <<runBatch-newBatchesPlan, transformed logical plan (with new data)>> with the <<spark-sql-streaming-OffsetSeqMetadata.md#batchTimestampMs, current batch timestamp>> (based on the [batch metadata](StreamExecution.md#offsetSeqMetadata)).
 
 !!! note
     `CurrentTimestamp` and `CurrentDate` expressions correspond to `current_timestamp` and `current_date` standard function, respectively.
 
-==== [[runBatch-triggerLogicalPlan]] Adapting Transformed Logical Plan to Sink with StreamWriteSupport
+### <span id="runBatch-triggerLogicalPlan"> Adapting Transformed Logical Plan to Sink with StreamWriteSupport
 
 `runBatch`...FIXME
 
@@ -477,25 +477,16 @@ For any other <<sink, BaseStreamingSink>> type, `runBatch` simply throws an `Ill
 unknown sink type for [sink]
 ```
 
-==== [[runBatch-setLocalProperty]] Setting Local Properties
+### <span id="runBatch-setLocalProperty"> Setting Local Properties
 
-`runBatch` sets the <<runBatch-setLocalProperty-local-properties, local properties>>.
+`runBatch` sets the local properties.
 
-[[runBatch-setLocalProperty-local-properties]]
-.runBatch's Local Properties
-[cols="30,70",options="header",width="100%"]
-|===
-| Local Property
-| Value
+Local Property | Value
+---------------|------
+[streaming.sql.batchId](#BATCH_ID_KEY) | [currentBatchId](StreamExecution.md#currentBatchId)
+[__is_continuous_processing](StreamExecution.md#IS_CONTINUOUS_PROCESSING) | `false`
 
-| <<BATCH_ID_KEY, streaming.sql.batchId>>
-a| [currentBatchId](StreamExecution.md#currentBatchId)
-
-| [__is_continuous_processing](StreamExecution.md#IS_CONTINUOUS_PROCESSING)
-a| `false`
-|===
-
-==== [[runBatch-queryPlanning]] queryPlanning Phase -- Creating and Preparing IncrementalExecution for Execution
+### <span id="runBatch-queryPlanning"> queryPlanning Phase -- Creating and Preparing IncrementalExecution for Execution
 
 .StreamExecution's Query Planning (queryPlanning Phase)
 image::images/StreamExecution-runBatch-queryPlanning.png[align="center"]
@@ -518,32 +509,31 @@ In the end (of the `queryPlanning` phase), `runBatch` requests the `IncrementalE
 
 TIP: Read up on the `executedPlan` query execution phase in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[The Internals of Spark SQL].
 
-==== [[runBatch-nextBatch]] nextBatch Phase -- Creating DataFrame (with IncrementalExecution for New Data)
+### <span id="runBatch-nextBatch"> nextBatch Phase &mdash; Creating DataFrame (with IncrementalExecution for New Data)
 
-.StreamExecution Creates DataFrame with New Data
-image::images/StreamExecution-runBatch-nextBatch.png[align="center"]
+![StreamExecution Creates DataFrame with New Data](images/StreamExecution-runBatch-nextBatch.png)
 
 `runBatch` creates a new `DataFrame` with the new <<runBatch-queryPlanning, IncrementalExecution>>.
 
 The `DataFrame` represents the result of executing the current micro-batch of the streaming query.
 
-==== [[runBatch-addBatch]] addBatch Phase -- Adding DataFrame With New Data to Sink
+### <span id="runBatch-addBatch"> addBatch Phase &mdash; Adding DataFrame With New Data to Sink
 
-.StreamExecution Adds DataFrame With New Data to Sink
-image::images/StreamExecution-runBatch-addBatch.png[align="center"]
+![StreamExecution Adds DataFrame With New Data to Sink](images/StreamExecution-runBatch-addBatch.png)
 
-In *addBatch* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runBatch` adds the `DataFrame` with new data to the <<sink, BaseStreamingSink>>.
+In **addBatch** [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runBatch` adds the `DataFrame` with new data to the [BaseStreamingSink](#sink).
 
 For a [Sink](Sink.md) (Data Source API V1), `runBatch` simply requests the `Sink` to [add the DataFrame](Sink.md#addBatch) (with the [batch ID](StreamExecution.md#currentBatchId)).
 
-NOTE: `runBatch` uses `SQLExecution.withNewExecutionId` to execute and track all the Spark jobs under one execution id (so it is reported as one single multi-job execution, e.g. in web UI).
+`runBatch` uses `SQLExecution.withNewExecutionId` to execute and track all the Spark jobs under one execution id (so it is reported as one single multi-job execution, e.g. in web UI).
 
-NOTE: `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before execution and a `SparkListenerSQLExecutionEnd` event right afterwards.
+!!! note
+    `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before execution and a `SparkListenerSQLExecutionEnd` event right afterwards.
 
 !!! tip
     Register `SparkListener` to get notified about the SQL execution events (`SparkListenerSQLExecutionStart` and `SparkListenerSQLExecutionEnd`).
 
-==== [[runBatch-updateWatermark-commitLog]] Updating Watermark and Committing Offsets to Offset Commit Log
+### <span id="runBatch-updateWatermark-commitLog"> Updating Watermark and Committing Offsets to Offset Commit Log
 
 `runBatch` requests the <<watermarkTracker, WatermarkTracker>> to <<spark-sql-streaming-WatermarkTracker.md#updateWatermark, update event-time watermark>> (with the `executedPlan` of the <<runBatch-queryPlanning, IncrementalExecution>>).
 
@@ -625,17 +615,16 @@ In the end, `logicalPlan` sets the [uniqueSources](StreamExecution.md#uniqueSour
 logicalPlan must be initialized in QueryExecutionThread but the current thread was [currentThread]
 ```
 
-=== [[BATCH_ID_KEY]][[streaming.sql.batchId]] `streaming.sql.batchId` Local Property
+## <span id="BATCH_ID_KEY"><span id="streaming.sql.batchId"> streaming.sql.batchId Local Property
 
-`MicroBatchExecution` defines *streaming.sql.batchId* as the name of the local property to be the current *batch* or *epoch IDs* (that Spark tasks can use)
+`MicroBatchExecution` defines **streaming.sql.batchId** as the name of the local property to be the current **batch** or **epoch IDs** (that Spark tasks can use at execution time).
 
 `streaming.sql.batchId` is used when:
 
-* `MicroBatchExecution` is requested to <<runBatch, run a single streaming micro-batch>> (and sets the property to be the current batch ID)
-
+* `MicroBatchExecution` is requested to [run a single streaming micro-batch](#runBatch) (and sets the property to be the current batch ID)
 * `DataWritingSparkTask` is requested to run (and needs an epoch ID)
 
-=== [[internal-properties]] Internal Properties
+## Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
 |===

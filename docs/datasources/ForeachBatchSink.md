@@ -1,14 +1,13 @@
 # ForeachBatchSink
 
-`ForeachBatchSink` is a [streaming sink](Sink.md) that is used for [DataStreamWriter.foreachBatch](DataStreamWriter.md#foreachBatch) streaming operator.
+`ForeachBatchSink` is a [streaming sink](../Sink.md) that is used for [DataStreamWriter.foreachBatch](../DataStreamWriter.md#foreachBatch) streaming operator.
 
-`ForeachBatchSink` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to [start execution of the streaming query](DataStreamWriter.md#start) (with the [foreachBatch](DataStreamWriter.md#foreachBatch) source).
+`ForeachBatchSink` is <<creating-instance, created>> exclusively when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start) (with the [foreachBatch](../DataStreamWriter.md#foreachBatch) source).
 
 [[toString]]
 `ForeachBatchSink` uses *ForeachBatchSink* name.
 
-[source, scala]
-----
+```text
 import org.apache.spark.sql.Dataset
 val q = spark.readStream
   .format("rate")
@@ -23,24 +22,25 @@ val q = spark.readStream
 
 scala> println(q.lastProgress.sink.description)
 ForeachBatchSink
-----
+```
 
 NOTE: `ForeachBatchSink` was added in Spark 2.4.0 as part of https://issues.apache.org/jira/browse/SPARK-24565[SPARK-24565 Add API for in Structured Streaming for exposing output rows of each microbatch as a DataFrame].
 
-=== [[creating-instance]] Creating ForeachBatchSink Instance
+## Creating Instance
 
 `ForeachBatchSink` takes the following when created:
 
 * [[batchWriter]] Batch writer (`(Dataset[T], Long) => Unit`)
 * [[encoder]] Encoder (`ExpressionEncoder[T]`)
 
-=== [[addBatch]] Adding Batch -- `addBatch` Method
+## <span id="addBatch"> Adding Batch
 
-[source, scala]
-----
-addBatch(batchId: Long, data: DataFrame): Unit
-----
+```scala
+addBatch(
+  batchId: Long,
+  data: DataFrame): Unit
+```
 
 `addBatch`...FIXME
 
-`addBatch` is a part of [Sink](Sink.md#addBatch) abstraction.
+`addBatch` is a part of the [Sink](../Sink.md#addBatch) abstraction.

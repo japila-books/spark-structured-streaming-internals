@@ -1,4 +1,4 @@
-# Micro-Batch Stream Processing (Structured Streaming V1)
+# Micro-Batch Stream Processing
 
 **Micro-Batch Stream Processing** is a stream processing model in Spark Structured Streaming that is used for streaming queries with [Trigger.Once](Trigger.md#Once) and [Trigger.ProcessingTime](Trigger.md#ProcessingTime) triggers.
 

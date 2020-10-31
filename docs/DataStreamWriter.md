@@ -328,7 +328,7 @@ a| [[foreachBatchWriter]]
 foreachBatchWriter: (Dataset[T], Long) => Unit
 ----
 
-The function that is used as the batch writer in the [ForeachBatchSink](spark-sql-streaming-ForeachBatchSink.md) for <<foreachBatch, foreachBatch>>
+The function that is used as the batch writer in the [ForeachBatchSink](datasources/ForeachBatchSink.md) for <<foreachBatch, foreachBatch>>
 
 | foreachWriter
 |

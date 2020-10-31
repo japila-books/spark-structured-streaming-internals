@@ -236,12 +236,12 @@ nav:
         - MicroBatchExecution: MicroBatchExecution.md
         - MicroBatchWriter: spark-sql-streaming-MicroBatchWriter.md
         - MicroBatchReader: spark-sql-streaming-MicroBatchReader.md
-      - WatermarkTracker: spark-sql-streaming-WatermarkTracker.md
       - Source:
         - Source: Source.md
         - StreamSourceProvider: StreamSourceProvider.md
       - Sink: Sink.md
       - StreamSinkProvider: StreamSinkProvider.md
+      - WatermarkTracker: spark-sql-streaming-WatermarkTracker.md
     - Continuous Stream Processing:
       - Continuous Stream Processing: spark-sql-streaming-continuous-stream-processing.md
       - ContinuousExecution: ContinuousExecution.md
@@ -333,7 +333,7 @@ nav:
       - ForeachWriter: spark-sql-streaming-ForeachWriter.md
       - ForeachSink: spark-sql-streaming-ForeachSink.md
     - ForeachBatch Sink:
-      - ForeachBatchSink: spark-sql-streaming-ForeachBatchSink.md
+      - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Memory:
       - Memory Data Source: spark-sql-streaming-memory-data-source.md
       - MemoryStream: spark-sql-streaming-MemoryStream.md

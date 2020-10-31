@@ -235,7 +235,7 @@ When `DataStreamWriter` is requested to [start a streaming query](DataStreamWrit
 
 * **foreach** with [ForeachWriterProvider](spark-sql-streaming-ForeachWriterProvider.md) sink
 
-* **foreachBatch** with [ForeachBatchSink](spark-sql-streaming-ForeachBatchSink.md) sink (that does not support [ContinuousTrigger](Trigger.md#ContinuousTrigger))
+* **foreachBatch** with [ForeachBatchSink](datasources/ForeachBatchSink.md) sink (that does not support [ContinuousTrigger](Trigger.md#ContinuousTrigger))
 
 * Any `DataSourceRegister` data source
 
