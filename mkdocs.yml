@@ -329,9 +329,9 @@ nav:
       - ConsoleSinkProvider: spark-sql-streaming-ConsoleSinkProvider.md
       - ConsoleWriter: spark-sql-streaming-ConsoleWriter.md
     - Foreach Sink:
-      - ForeachWriterProvider: spark-sql-streaming-ForeachWriterProvider.md
-      - ForeachWriter: spark-sql-streaming-ForeachWriter.md
-      - ForeachSink: spark-sql-streaming-ForeachSink.md
+      - ForeachWriterProvider: datasources/ForeachWriterProvider.md
+      - ForeachWriter: datasources/ForeachWriter.md
+      - ForeachSink: datasources/ForeachSink.md
     - ForeachBatch Sink:
       - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Memory:

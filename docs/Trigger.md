@@ -1,6 +1,6 @@
-== [[Trigger]] Trigger -- How Frequently to Check Sources For New Data
+# Trigger
 
-`Trigger` defines how often a StreamingQuery.md[streaming query] should be executed (_triggered_) and emit a new data (which `StreamExecution` uses to [resolve a TriggerExecutor](StreamExecution.md#triggerExecutor)).
+`Trigger` defines how often a [streaming query](StreamingQuery.md) should be executed (_triggered_) and emit a new data (which `StreamExecution` uses to [resolve a TriggerExecutor](StreamExecution.md#triggerExecutor)).
 
 [[available-implementations]]
 [[available-triggers]]

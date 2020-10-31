@@ -1,8 +1,8 @@
 # DataStreamWriter &mdash; Writing Datasets To Streaming Sink
 
-`DataStreamWriter` is the <<methods, interface>> to describe when and what rows of a streaming query are sent out to the <<format, streaming sink>>.
+`DataStreamWriter` is the interface that Spark developers use to describe when the result of executing a streaming query is sent out to the [streaming sink](#format).
 
-`DataStreamWriter` is available using [Dataset.writeStream](operators/writeStream.md) method (on a streaming query).
+`DataStreamWriter` is available using [Dataset.writeStream](operators/writeStream.md) method.
 
 ```text
 import org.apache.spark.sql.streaming.DataStreamWriter
@@ -15,236 +15,79 @@ assert(streamingQuery.isStreaming)
 val writer: DataStreamWriter[Row] = streamingQuery.writeStream
 ```
 
-[[methods]]
-.DataStreamWriter's Methods
-[cols="1m,3",options="header",width="100%"]
-|===
-| Method
-| Description
+## <span id="foreach"> Writing to ForeachWriter
 
-| <<foreach, foreach>>
-a|
+```scala
+foreach(
+  writer: ForeachWriter[T]): DataStreamWriter[T]
+```
 
-[source, scala]
-----
-foreach(writer: ForeachWriter[T]): DataStreamWriter[T]
-----
+Sets [ForeachWriter](datasources/ForeachWriter.md) as responsible for streaming writes
 
-Sets spark-sql-streaming-ForeachWriter.md[ForeachWriter] in the full control of streaming writes
+## <span id="foreachBatch"> Writing Micro-Batches to ForeachBatchSink
 
-| foreachBatch
-a| [[foreachBatch]]
-
-[source, scala]
-----
+```scala
 foreachBatch(
   function: (Dataset[T], Long) => Unit): DataStreamWriter[T]
-----
+```
 
-(*New in 2.4.0*) Sets the <<source, source>> to `foreachBatch` and the <<foreachBatchWriter, foreachBatchWriter>> to the given function.
+Sets the [source](#source) as **foreachBatch** and creates a [ForeachBatchSink](datasources/ForeachBatchSink.md) to be responsible for streaming writes.
 
-As per https://issues.apache.org/jira/browse/SPARK-24565[SPARK-24565 Add API for in Structured Streaming for exposing output rows of each microbatch as a DataFrame], the purpose of the method is to expose the micro-batch output as a dataframe for the following:
+!!! quote "SPARK-24565"
+    As per [SPARK-24565 Add API for in Structured Streaming for exposing output rows of each microbatch as a DataFrame](https://issues.apache.org/jira/browse/SPARK-24565), the purpose of the method is to expose the micro-batch output as a dataframe for the following:
 
-* Pass the output rows of each batch to a library that is designed for the batch jobs only
-* Reuse batch data sources for output whose streaming version does not exist
-* Multi-writes where the output rows are written to multiple outputs by writing twice for every batch
+    Pass the output rows of each batch to a library that is designed for the batch jobs only
+    Reuse batch data sources for output whose streaming version does not exist
+    Multi-writes where the output rows are written to multiple outputs by writing twice for every batch
 
-| format
-a| [[format]]
+## <span id="format"> Streaming Sink by Name
 
-[source, scala]
-----
-format(source: String): DataStreamWriter[T]
-----
+```scala
+format(
+  source: String): DataStreamWriter[T]
+```
 
-Specifies the format of the <<source, data sink>> (aka _output format_)
+Specifies the [streaming sink](Sink.md) by name (_alias_)
 
-The format is used internally as the name (_alias_) of the [streaming sink](Sink.md) to use to write the data to
+## <span id="outputMode"> Output Mode
 
-| <<option, option>>
-a|
+```scala
+outputMode(
+  outputMode: OutputMode): DataStreamWriter[T]
+outputMode(
+  outputMode: String): DataStreamWriter[T]
+```
 
-[source, scala]
-----
-option(key: String, value: Boolean): DataStreamWriter[T]
-option(key: String, value: Double): DataStreamWriter[T]
-option(key: String, value: Long): DataStreamWriter[T]
-option(key: String, value: String): DataStreamWriter[T]
-----
+Specifies the [OutputMode](OutputMode.md) of the streaming query (what data is sent out to a [streaming sink](Sink.md) when there is new data available in [streaming data sources](Source.md))
 
-| options
-a| [[options]]
+Default: [Append](OutputMode.md#Append)
 
-[source, scala]
-----
-options(options: Map[String, String]): DataStreamWriter[T]
-----
+## <span id="partitionBy"> Partitioning Streaming Writes
 
-Specifies the configuration options of a data sink
+```scala
+partitionBy(
+  colNames: String*): DataStreamWriter[T]
+```
 
-NOTE: You could use <<option, option>> method if you prefer specifying the options one by one or there is only one in use.
+## <span id="queryName"> Query Name
 
-| <<outputMode, outputMode>>
-a|
+```scala
+queryName(
+  queryName: String): DataStreamWriter[T]
+```
 
-[source, scala]
-----
-outputMode(outputMode: OutputMode): DataStreamWriter[T]
-outputMode(outputMode: String): DataStreamWriter[T]
-----
+Assigns the name of a query that is just an additional option with the key `queryName`.
 
-Specifies the [OutputMode](OutputMode.md)
+## <span id="start"> Starting Streaming Query (Streaming Writes)
 
-| partitionBy
-a| [[partitionBy]]
-
-[source, scala]
-----
-partitionBy(colNames: String*): DataStreamWriter[T]
-----
-
-| <<queryName, queryName>>
-a|
-
-[source, scala]
-----
-queryName(queryName: String): DataStreamWriter[T]
-----
-
-Assigns the name of a query
-
-| <<start, start>>
-a|
-
-[source, scala]
-----
+```scala
 start(): StreamingQuery
-start(path: String): StreamingQuery // <1>
-----
-<1> Explicit `path` (that could also be specified as an <<option, option>>)
+// Explicit `path` (that could also be specified as an option)
+start(
+  path: String): StreamingQuery
+```
 
-Creates and immediately starts a <<StreamingQuery.md#, StreamingQuery>>
-
-| <<trigger, trigger>>
-a|
-
-[source, scala]
-----
-trigger(trigger: Trigger): DataStreamWriter[T]
-----
-
-Sets the [Trigger](Trigger.md) for how often a streaming query should be executed and the result saved.
-
-|===
-
-[NOTE]
-====
-A streaming query is a spark-sql-Dataset.md[Dataset] with a spark-sql-LogicalPlan.md#isStreaming[streaming logical plan].
-
-[source, scala]
-----
-import org.apache.spark.sql.streaming.Trigger
-import scala.concurrent.duration._
-import org.apache.spark.sql.DataFrame
-val rates: DataFrame = spark.
-  readStream.
-  format("rate").
-  load
-
-scala> rates.isStreaming
-res1: Boolean = true
-
-scala> rates.queryExecution.logical.isStreaming
-res2: Boolean = true
-----
-====
-
-Like the batch `DataFrameWriter`, `DataStreamWriter` has a direct support for many <<writing-dataframes-to-files, file formats>> and <<format, an extension point to plug in new formats>>.
-
-[source, scala]
-----
-// see above for writer definition
-
-// Save dataset in JSON format
-writer.format("json")
-----
-
-In the end, you start the actual continuous writing of the result of executing a `Dataset` to a sink using <<start, start>> operator.
-
-[source, scala]
-----
-writer.save
-----
-
-Beside the above operators, there are the following to work with a `Dataset` as a whole.
-
-NOTE: `hive` <<start, is not supported>> for streaming writing (and leads to a `AnalysisException`).
-
-NOTE: `DataFrameWriter` is responsible for writing in a batch fashion.
-
-=== [[option]] Specifying Write Option -- `option` Method
-
-[source, scala]
-----
-option(key: String, value: String): DataStreamWriter[T]
-option(key: String, value: Boolean): DataStreamWriter[T]
-option(key: String, value: Long): DataStreamWriter[T]
-option(key: String, value: Double): DataStreamWriter[T]
-----
-
-Internally, `option` adds the `key` and `value` to <<extraOptions, extraOptions>> internal option registry.
-
-=== [[outputMode]] Specifying Output Mode -- `outputMode` Method
-
-[source, scala]
-----
-outputMode(outputMode: String): DataStreamWriter[T]
-outputMode(outputMode: OutputMode): DataStreamWriter[T]
-----
-
-`outputMode` specifies the [OutputMode](OutputMode.md) of a streaming query, i.e.  what data is sent out to a [streaming sink](Sink.md) when there is new data available in [streaming data sources](Source.md).
-
-NOTE: When not defined explicitly, `outputMode` defaults to [Append](OutputMode.md#Append) output mode.
-
-`outputMode` can be specified by name or one of the [OutputMode](OutputMode.md) values.
-
-=== [[queryName]] Setting Query Name -- `queryName` method
-
-[source, scala]
-----
-queryName(queryName: String): DataStreamWriter[T]
-----
-
-`queryName` sets the name of a StreamingQuery.md[streaming query].
-
-Internally, it is just an additional <<option, option>> with the key `queryName`.
-
-=== [[trigger]] Setting How Often to Execute Streaming Query -- `trigger` method
-
-[source, scala]
-----
-trigger(
-  trigger: Trigger): DataStreamWriter[T]
-----
-
-`trigger` method sets the time interval of the *trigger* (that executes a batch runner) for a streaming query.
-
-The default trigger is [ProcessingTime(0L)](Trigger.md#ProcessingTime) that runs a streaming query as often as possible.
-
-=== [[start]] Creating and Starting Execution of Streaming Query -- `start` Method
-
-[source, scala]
-----
-start(): StreamingQuery
-start(path: String): StreamingQuery  // <1>
-----
-<1> Sets `path` option to `path` and passes the call on to `start()`
-
-`start` starts a streaming query.
-
-`start` gives a StreamingQuery.md[StreamingQuery] to control the execution of the continuous query.
-
-NOTE: Whether or not you have to specify `path` option depends on the streaming sink in use.
+Creates and immediately starts a [StreamingQuery](StreamingQuery.md) that is returned as a handle to control the execution of the query
 
 Internally, `start` branches off per `source`.
 
@@ -254,24 +97,9 @@ Internally, `start` branches off per `source`.
 
 ...FIXME
 
-[[start-options]]
-.start's Options
-[cols="1,2",options="header",width="100%"]
-|===
-| Option
-| Description
+`start` throws an `AnalysisException` for `source` to be `hive`.
 
-| `queryName`
-| Name of active streaming query
-
-| [[checkpointLocation]] `checkpointLocation`
-| Directory for checkpointing (and to store query metadata like offsets before and after being processed, the [query id](StreamExecution.md#id), etc.)
-|===
-
-`start` reports a `AnalysisException` when `source` is `hive`.
-
-[source, scala]
-----
+```text
 val q =  spark.
   readStream.
   text("server-logs/*").
@@ -281,74 +109,15 @@ scala> q.start
 org.apache.spark.sql.AnalysisException: Hive data source can only be used with tables, you can not write files of Hive data source directly.;
   at org.apache.spark.sql.streaming.DataStreamWriter.start(DataStreamWriter.scala:234)
   ... 48 elided
-----
-
-NOTE: Define options using <<option, option>> or <<options, options>> methods.
-
-=== [[foreach]] Making ForeachWriter in Charge of Streaming Writes -- `foreach` method
-
-[source, scala]
-----
-foreach(writer: ForeachWriter[T]): DataStreamWriter[T]
-----
-
-`foreach` sets the input spark-sql-streaming-ForeachWriter.md[ForeachWriter] to be in control of streaming writes.
-
-Internally, `foreach` sets the streaming output <<format, format>> as `foreach` and `foreachWriter` as the input `writer`.
-
-NOTE: `foreach` uses `SparkSession` to access `SparkContext` to clean the `ForeachWriter`.
-
-[NOTE]
-====
-`foreach` reports an `IllegalArgumentException` when `writer` is `null`.
-
 ```
-foreach writer cannot be null
+
+## <span id="trigger"> Trigger
+
+```scala
+trigger(
+  trigger: Trigger): DataStreamWriter[T]
 ```
-====
 
-=== [[internal-properties]] Internal Properties
+Sets the [Trigger](Trigger.md) for how often the streaming query should be executed
 
-[cols="20m,20,60",options="header",width="100%"]
-|===
-| Name
-| Initial Value
-| Description
-
-| extraOptions
-|
-| [[extraOptions]]
-
-| foreachBatchWriter
-| `null`
-a| [[foreachBatchWriter]]
-
-[source, scala]
-----
-foreachBatchWriter: (Dataset[T], Long) => Unit
-----
-
-The function that is used as the batch writer in the [ForeachBatchSink](datasources/ForeachBatchSink.md) for <<foreachBatch, foreachBatch>>
-
-| foreachWriter
-|
-| [[foreachWriter]]
-
-| partitioningColumns
-|
-| [[partitioningColumns]]
-
-| source
-|
-| [[source]]
-
-| outputMode
-| [Append](OutputMode.md#Append)
-| [[outputMode-property]] [OutputMode](OutputMode.md) of the streaming sink
-
-Set using <<outputMode, outputMode>> method.
-
-| trigger
-|
-| [[trigger-property]]
-|===
+Default: [ProcessingTime(0L)](Trigger.md#ProcessingTime) that runs a streaming query as often as possible.
