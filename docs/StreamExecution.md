@@ -8,9 +8,9 @@
     **Continuous query**, **streaming query**, **continuous Dataset**, **streaming Dataset** are all considered high-level synonyms for an executable entity that stream execution engines run using the [analyzed logical plan](#logicalPlan) internally.
 
 !!! important
-    `StreamExecution` does not support adaptive query execution and cost-based optimizer (and turns them off when requested to <<runStream, run stream processing>>).
+    `StreamExecution` does not support adaptive query execution and cost-based optimizer (and turns them off when requested to [run stream processing](#runStream)).
 
-`StreamExecution` is the *execution environment* of a [single streaming query](StreamingQuery.md) that is executed every [trigger](#trigger) and in the end [adds the results to a sink](#MicroBatchExecution.md#runBatch-addBatch).
+`StreamExecution` is the **execution environment** of a [streaming query](StreamingQuery.md) that is executed every [trigger](#trigger) and in the end [adds the results to a sink](#MicroBatchExecution.md#runBatch-addBatch).
 
 `StreamExecution` corresponds to a [single streaming query](StreamingQuery.md) with one or more [streaming sources](Source.md) and exactly one [streaming sink](Sink.md).
 
@@ -82,7 +82,7 @@ Used when `StreamExecution` is requested to [run the streaming query](#runStream
 ??? note "Abstract Class"
     `StreamExecution` is an abstract class and cannot be created directly. It is created indirectly for the [concrete StreamExecutions](#implementations).
 
-## Demo: Streaming Query and Stream Execution Engine
+## Demo
 
 ```text
 import org.apache.spark.sql.streaming.StreamingQuery
@@ -101,7 +101,7 @@ org.apache.spark.sql.execution.streaming.StreamExecution
 
 `StreamExecution` uses the [spark.sql.streaming.minBatchesToRetain](spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property to allow the [StreamExecutions](#implementations) to discard old log entries (from the [offset](#offsetLog) and [commit](#commitLog) logs).
 
-### <span id="pollingDelayMs"><span id="spark.sql.streaming.pollingDelay"> s.s.s.pollingDelay
+### <span id="pollingDelayMs"><span id="streamingPollingDelay"><span id="spark.sql.streaming.pollingDelay"> s.s.s.pollingDelay
 
 `StreamExecution` uses [spark.sql.streaming.pollingDelay](spark-sql-streaming-properties.md#spark.sql.streaming.pollingDelay) configuration property to control how long to [delay polling for new data](#runBatches-batchRunner-no-data) (when no data was available to process in a batch).
 
@@ -169,49 +169,6 @@ Used when `StreamExecution`:
 * [Constructs the next streaming micro-batch](#constructNextBatch) (and gets new offsets for every streaming data source)
 * [Stops all streaming data sources](#stopSources)
 
-## <span id="durationMs"> durationMs
-
-`StreamExecution` collects `durationMs` for the execution units of streaming batches.
-
-![StreamExecution's durationMs](images/StreamExecution-durationMs.png)
-
-```text
-scala> :type q
-org.apache.spark.sql.streaming.StreamingQuery
-
-scala> println(q.lastProgress)
-{
-  "id" : "03fc78fc-fe19-408c-a1ae-812d0e28fcee",
-  "runId" : "8c247071-afba-40e5-aad2-0e6f45f22488",
-  "name" : null,
-  "timestamp" : "2017-08-14T20:30:00.004Z",
-  "batchId" : 1,
-  "numInputRows" : 432,
-  "inputRowsPerSecond" : 0.9993568953312452,
-  "processedRowsPerSecond" : 1380.1916932907347,
-  "durationMs" : {
-    "addBatch" : 237,
-    "getBatch" : 26,
-    "getOffset" : 0,
-    "queryPlanning" : 1,
-    "triggerExecution" : 313,
-    "walCommit" : 45
-  },
-  "stateOperators" : [ ],
-  "sources" : [ {
-    "description" : "RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8]",
-    "startOffset" : 0,
-    "endOffset" : 432,
-    "numInputRows" : 432,
-    "inputRowsPerSecond" : 0.9993568953312452,
-    "processedRowsPerSecond" : 1380.1916932907347
-  } ],
-  "sink" : {
-    "description" : "ConsoleSink[numRows=20, truncate=true]"
-  }
-}
-```
-
 ## Streaming Query Identifiers
 
 The [name](#name), [id](#id) and [runId](#runId) are all unique across all active queries (in a [StreamingQueryManager](StreamingQueryManager.md)). The difference is that:
@@ -240,11 +197,9 @@ Since the [StreamMetadata](#streamMetadata) is persisted (to the `metadata` file
 
 If the `metadata` file is available it is [read](StreamMetadata.md#read) and is the way to recover the [id](#id) of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
 
-## <span id="IS_CONTINUOUS_PROCESSING"> __is_continuous_processing Local Property
+## Metadata Logs
 
-`StreamExecution` uses **__is_continuous_processing** local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to <<spark-sql-streaming-StateStoreRDD.md#compute, compute a partition>> (and <<spark-sql-streaming-StateStore.md#get, finds a StateStore>> for a given version).
-
-## <span id="offsetLog"> Write-Ahead Log of Offsets
+### <span id="offsetLog"> Write-Ahead Offset Log
 
 ```scala
 offsetLog: OffsetSeqLog
@@ -264,6 +219,19 @@ The number of entries in the `OffsetSeqLog` is controlled using [spark.sql.strea
 * `ContinuousExecution` stream execution engine is requested to [commit an epoch](ContinuousExecution.md#commit), [getStartOffsets](ContinuousExecution.md#getStartOffsets), and [addOffset](ContinuousExecution.md#addOffset)
 
 * `MicroBatchExecution` stream execution engine is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) and [construct (or skip) the next streaming micro-batch](MicroBatchExecution.md#constructNextBatch)
+
+### <span id="commitLog"> Offset Commit Log
+
+`StreamExecution` uses **offset commit log** ([CommitLog](CommitLog.md) with `commits` [metadata checkpoint directory](#checkpointFile)) for streaming batches successfully executed (with a single file per batch with a file name being the batch id) or committed epochs.
+
+!!! note
+    **Metadata log** or **metadata checkpoint** are synonyms and are often used interchangeably.
+
+`commitLog` is used by the <<extensions, stream execution engines>> for the following:
+
+* `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>> (that in turn requests to <<MicroBatchExecution.md#populateStartOffsets, populate the start offsets>> at the very beginning of the streaming query execution and later regularly every <<MicroBatchExecution.md#runBatch, single batch>>)
+
+* `ContinuousExecution` is requested to <<ContinuousExecution.md#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<ContinuousExecution.md#getStartOffsets, retrieve the start offsets>> at the very beginning of the streaming query execution and later regularly every <<ContinuousExecution.md#commit, commit>>)
 
 ## <span id="state"> State of Streaming Query
 
@@ -292,6 +260,19 @@ Indicates that:
 ### <span id="RECONFIGURING"> RECONFIGURING
 
 Used when `ContinuousExecution` is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) (and the [ContinuousReader](spark-sql-streaming-ContinuousReader.md) indicated a [need for reconfiguration](spark-sql-streaming-ContinuousReader.md#needsReconfiguration))
+
+## <span id="createStreamingWrite"> createStreamingWrite
+
+```scala
+createStreamingWrite(
+  table: SupportsWrite,
+  options: Map[String, String],
+  inputPlan: LogicalPlan): StreamingWrite
+```
+
+`createStreamingWrite`...FIXME
+
+`createStreamingWrite` is used when [MicroBatchExecution](MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans
 
 ## <span id="availableOffsets"> Available Offsets (StreamProgress)
 
@@ -337,33 +318,35 @@ resolvedCheckpointRoot: String
 
 `resolvedCheckpointRoot` is a fully-qualified path of the given [checkpoint root directory](#checkpointRoot).
 
-The given <<checkpointRoot, checkpoint root directory>> is defined using **checkpointLocation** option or the [spark.sql.streaming.checkpointLocation](spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property with `queryName` option.
+The given [checkpoint root directory](#checkpointRoot) is defined using **checkpointLocation** option or the [spark.sql.streaming.checkpointLocation](spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property with `queryName` option.
 
 `checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery).
 
-`resolvedCheckpointRoot` is used when <<checkpointFile, creating the path to the checkpoint directory>> and when `StreamExecution` finishes <<runBatches, running streaming batches>>.
+`resolvedCheckpointRoot` is used when [creating the path to the checkpoint directory](#checkpointFile) and when `StreamExecution` finishes [running streaming batches](#runBatches).
 
-`resolvedCheckpointRoot` is used for the <<logicalPlan, logicalPlan>> (while transforming <<analyzedPlan, analyzedPlan>> and planning `StreamingRelation` logical operators to corresponding `StreamingExecutionRelation` physical operators with the streaming data sources created passing in the path to `sources` directory to store checkpointing metadata).
+`resolvedCheckpointRoot` is used for the [logicalPlan](#logicalPlan) (while transforming [analyzedPlan](#analyzedPlan) and planning `StreamingRelation` logical operators to corresponding `StreamingExecutionRelation` physical operators with the streaming data sources created passing in the path to `sources` directory to store checkpointing metadata).
 
-!!! tip
-    You can see `resolvedCheckpointRoot` in the INFO message when `StreamExecution` is [started](#start).
+`resolvedCheckpointRoot` is printed out immediately when resolved as a INFO message to the logs:
 
-    ```text
-    Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
-    ```
+```text
+Checkpoint root [checkpointRoot] resolved to [resolvedCheckpointRoot].
+```
 
-## <span id="commitLog"> Offset Commit Log
+`resolvedCheckpointRoot` is printed out again as a INFO message to the logs when `StreamExecution` is [started](#start):
 
-`StreamExecution` uses **offset commit log** ([CommitLog](CommitLog.md) with `commits` [metadata checkpoint directory](#checkpointFile)) for streaming batches successfully executed (with a single file per batch with a file name being the batch id) or committed epochs.
+```text
+Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
+```
 
-!!! note
-    **Metadata log** or **metadata checkpoint** are synonyms and are often used interchangeably.
+## <span id="sinkCommitProgress"> StreamWriterCommitProgress
 
-`commitLog` is used by the <<extensions, stream execution engines>> for the following:
+```scala
+sinkCommitProgress: Option[StreamWriterCommitProgress]
+```
 
-* `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>> (that in turn requests to <<MicroBatchExecution.md#populateStartOffsets, populate the start offsets>> at the very beginning of the streaming query execution and later regularly every <<MicroBatchExecution.md#runBatch, single batch>>)
+`sinkCommitProgress` is part of the [ProgressReporter](monitoring/ProgressReporter.md#sinkCommitProgress) abstraction.
 
-* `ContinuousExecution` is requested to <<ContinuousExecution.md#runActivatedStream, run an activated streaming query in continuous mode>> (that in turn requests to <<ContinuousExecution.md#getStartOffsets, retrieve the start offsets>> at the very beginning of the streaming query execution and later regularly every <<ContinuousExecution.md#commit, commit>>)
+`StreamExecution` initializes `sinkCommitProgress` registry to be `None` when [created](#creating-instance).
 
 ## <span id="lastExecution"> Last Query Execution Of Streaming Query (IncrementalExecution)
 
@@ -450,6 +433,7 @@ Internally, `runStream` sets the job group (to all the Spark jobs started by thi
 
 `runStream` requests the `MetricsSystem` to register the [MetricsReporter](#streamMetrics) when [spark.sql.streaming.metricsEnabled](spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled.
 
+<span id="runStream-QueryStartedEvent"/>
 `runStream` notifies [StreamingQueryListeners](monitoring/StreamingQueryListener.md) that the streaming query has been started (by [posting](#postEvent) a new [QueryStartedEvent](monitoring/StreamingQueryListener.md#QueryStartedEvent) event with [id](#id), [runId](#runId), and [name](#name)).
 
 ![StreamingQueryListener Notified about Query's Start (onQueryStarted)](images/StreamingQueryListener-onQueryStarted.png)
@@ -785,24 +769,6 @@ Set when `StreamExecution` is requested to [requests unprocessed data from strea
 
 Used when `StreamExecution` is requested to [transform the logical plan (of the streaming query) to include the Sources and the MicroBatchReaders with new data](MicroBatchExecution.md#runBatch-newBatchesPlan) (while [running a single streaming batch](#runBatch))
 
-## Latches
-
-### <span id="startLatch"> startLatch
-
-[java.util.concurrent.CountDownLatch]({{ java.api }}/java/util/concurrent/CountDownLatch.html) with count `1`.
-
-Used when `StreamExecution` is requested to [start](#start) to pause the main thread until `StreamExecution` was requested to [run the streaming query](#runStream).
-
-### <span id="initializationLatch"> initializationLatch
-
-## Locks
-
-### <span id="awaitProgressLock"> awaitProgressLock
-
-Java's fair reentrant mutual exclusion [java.util.concurrent.locks.ReentrantLock]({{ java.api }}/java/util/concurrent/locks/ReentrantLock.html) (that favors granting access to the longest-waiting thread under contention)
-
-### <span id="awaitProgressLockCondition"> awaitProgressLockCondition
-
 ## <span id="streamMetrics"> Streaming Metrics
 
 `StreamExecution` uses [MetricsReporter](monitoring/MetricsReporter.md) for reporting streaming metrics.
@@ -816,6 +782,44 @@ spark.streaming.[name or id]
 `MetricsReporter` is registered only when [spark.sql.streaming.metricsEnabled](spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled (when `StreamExecution` is requested to [runStream](#runStream)).
 
 `MetricsReporter` is deactivated (_removed_) when a streaming query is stopped (when `StreamExecution` is requested to [runStream](#runStream)).
+
+## Latches
+
+`StreamExecution` uses [java.util.concurrent.CountDownLatch]({{ java.api }}/java/util/concurrent/CountDownLatch.html)es (with count `1`).
+
+### <span id="initializationLatch"> initializationLatch
+
+Counted down when requested to [runStream](#runStream):
+
+* Changes state from [INITIALIZING](#INITIALIZING) to [ACTIVE](#ACTIVE) just before [runActivatedStream](#runActivatedStream)
+* In [runStream's finally block](#runStream-finally)
+
+Awaited for tests only (which seems to indicate that it is a test-only latch)
+
+### <span id="startLatch"> startLatch
+
+Counted down when requested to [runStream](#runStream):
+
+* [Right after posting a QueryStartedEvent](#runStream-QueryStartedEvent)
+* In [runStream's finally block](#runStream-finally)
+
+Awaited when requested to [start](#start) (to pause the main thread until `StreamExecution` was requested to [run the streaming query](#runStream) on a separate thread)
+
+### <span id="terminationLatch"> terminationLatch
+
+Counted down at the end of [runStream](#runStream)
+
+Awaited when requested to [awaitTermination](#awaitTermination) (that pauses the thread until the streaming query has finished successfully or not).
+
+## Locks
+
+### <span id="awaitProgressLock"> awaitProgressLock
+
+`StreamExecution` uses a fair reentrant mutual exclusion [java.util.concurrent.locks.ReentrantLock]({{ java.api }}/java/util/concurrent/locks/ReentrantLock.html) (that favors granting access to the longest-waiting thread under contention)
+
+## <span id="IS_CONTINUOUS_PROCESSING"> __is_continuous_processing Local Property
+
+`StreamExecution` uses **__is_continuous_processing** local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to [compute a partition](spark-sql-streaming-StateStoreRDD.md#compute) (and <<spark-sql-streaming-StateStore.md#get, finds a StateStore>> for a given version).
 
 ## Logging
 

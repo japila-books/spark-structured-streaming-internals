@@ -110,6 +110,14 @@ The one and only `Table` of the streaming query
 sinkCommitProgress: Option[StreamWriterCommitProgress]
 ```
 
+`StreamWriterCommitProgress` with number of output rows:
+
+* `None` when `MicroBatchExecution` stream execution engine is requested to [populateStartOffsets](../MicroBatchExecution.md#populateStartOffsets)
+
+* Assigned a `StreamWriterCommitProgress` when `MicroBatchExecution` stream execution engine is about to complete [running a micro-batch](../MicroBatchExecution.md#runBatch)
+
+Used when [finishTrigger](#finishTrigger) (and [updating progress](#updateProgress))
+
 ### <span id="sources"> sources
 
 ```scala
@@ -432,22 +440,57 @@ lastProgress: StreamingQueryProgress
 
 The last [StreamingQueryProgress](StreamingQueryProgress.md)
 
+## currentDurationsMs
+
+[scala.collection.mutable.HashMap]({{ scala.api }}/index.html#scala.collection.mutable.HashMap) of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
+
+![currentDurationsMs](../images/ProgressReporter-currentDurationsMs.png)
+
+Starts empty when `ProgressReporter` [sets the state for a new batch](#startTrigger) with new entries added or updated when [reporting execution time](#reportTimeTaken) (of an action).
+
+`currentDurationsMs` is available as `durationMs` of a streaming query.
+
+```text
+scala> :type q
+org.apache.spark.sql.streaming.StreamingQuery
+
+scala> query.lastProgress.durationMs
+res1: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBatch=5, getOffset=0, addBatch=30, walCommit=23}
+
+scala> println(q.lastProgress)
+{
+  "id" : "03fc78fc-fe19-408c-a1ae-812d0e28fcee",
+  "runId" : "8c247071-afba-40e5-aad2-0e6f45f22488",
+  "name" : null,
+  "timestamp" : "2017-08-14T20:30:00.004Z",
+  "batchId" : 1,
+  "numInputRows" : 432,
+  "inputRowsPerSecond" : 0.9993568953312452,
+  "processedRowsPerSecond" : 1380.1916932907347,
+  "durationMs" : {
+    "addBatch" : 237,
+    "getBatch" : 26,
+    "getOffset" : 0,
+    "queryPlanning" : 1,
+    "triggerExecution" : 313,
+    "walCommit" : 45
+  },
+  "stateOperators" : [ ],
+  "sources" : [ {
+    "description" : "RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8]",
+    "startOffset" : 0,
+    "endOffset" : 432,
+    "numInputRows" : 432,
+    "inputRowsPerSecond" : 0.9993568953312452,
+    "processedRowsPerSecond" : 1380.1916932907347
+  } ],
+  "sink" : {
+    "description" : "ConsoleSink[numRows=20, truncate=true]"
+  }
+}
+```
+
 ## Internal Properties
-
-
-### currentDurationsMs
-
-[scala.collection.mutable.HashMap](http://www.scala-lang.org/api/2.11.11/index.html#scala.collection.mutable.HashMap) of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
-
-Starts empty when `ProgressReporter` <<startTrigger, sets the state for a new batch>> with new entries added or updated when <<reportTimeTaken, reporting execution time>> (of an action).
-
-!!! tip
-    You can see the current value of `currentDurationsMs` in progress reports under `durationMs`.
-
-    ```text
-    scala> query.lastProgress.durationMs
-    res3: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBatch=5, getOffset=0, addBatch=30, walCommit=23}
-    ```
 
 ### currentTriggerEndTimestamp
 
