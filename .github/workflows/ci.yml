@@ -6,15 +6,15 @@ name: CI
 on:
   push:
     branches:
-      - mkdocs-material
+      - master
   pull_request:
     branches:
-      - mkdocs-material
+      - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
-    if: github.event != 'pull_request' && github.ref == 'refs/heads/mkdocs-material'
+    if: github.event != 'pull_request' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

@@ -22,7 +22,7 @@ Use the following demos and complete applications to learn more:
 
 * [groupByKey Streaming Aggregation in Update Mode](demo/groupByKey-count-Update.md)
 
-* [FlatMapGroupsWithStateApp](https://github.com/jaceklaskowski/spark-structured-streaming-book/blob/mkdocs-material/examples/src/main/scala/pl/japila/spark/FlatMapGroupsWithStateApp.scala)
+* [FlatMapGroupsWithStateApp](https://github.com/jaceklaskowski/spark-structured-streaming-book/blob/master/examples/src/main/scala/pl/japila/spark/FlatMapGroupsWithStateApp.scala)
 
 ## <span id="metrics"> Performance Metrics
 
