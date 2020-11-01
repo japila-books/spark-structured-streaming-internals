@@ -88,11 +88,11 @@
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingSymmetricHashJoinHelper/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingSymmetricHashJoinHelper/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingJoinHelper/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingJoinHelper/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -176,7 +176,7 @@
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StatefulOperatorStateInfo/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StatefulOperatorStateInfo/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -376,27 +376,27 @@
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-FlatMapGroupsWithStateStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/FlatMapGroupsWithStateStrategy/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StatefulAggregationStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StatefulAggregationStrategy/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingDeduplicationStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingDeduplicationStrategy/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingGlobalLimitStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingGlobalLimitStrategy/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingJoinStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingJoinStrategy/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StreamingRelationStrategy/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StreamingRelationStrategy/</loc>
      <lastmod>2020-11-01</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
