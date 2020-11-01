@@ -91,10 +91,10 @@ runActivatedStream(sparkSessionForStream: SparkSession): Unit
 
 ## <span id="runContinuous"> Running Streaming Query in Continuous Mode
 
-[source, scala]
-----
-runContinuous(sparkSessionForQuery: SparkSession): Unit
-----
+```scala
+runContinuous(
+  sparkSessionForQuery: SparkSession): Unit
+```
 
 `runContinuous` initializes the <<continuousSources, continuousSources>> internal registry by traversing the <<logicalPlan, analyzed logical plan>> to find [ContinuousExecutionRelation](ContinuousExecutionRelation.md) leaf logical operators and requests their [ContinuousReadSupport](ContinuousReadSupport.md) data sources to [create a ContinuousReader](ContinuousReadSupport.md#createContinuousReader) (with the *sources* metadata directory under the [checkpoint directory](StreamExecution.md#resolvedCheckpointRoot)).
 
@@ -112,8 +112,8 @@ NOTE: `CurrentTimestamp` and `CurrentDate` expressions are not supported for con
 
 `runContinuous` finds the only <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
 
-[[runContinuous-queryPlanning]]
-In *queryPlanning* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runContinuous` creates an [IncrementalExecution](IncrementalExecution.md) (that becomes the [lastExecution](StreamExecution.md#lastExecution)) that is immediately executed (i.e. the entire query execution pipeline is executed up to and including _executedPlan_).
+<span id="runContinuous-queryPlanning"/>
+In **queryPlanning** [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runContinuous` creates an [IncrementalExecution](IncrementalExecution.md) (that becomes the [lastExecution](StreamExecution.md#lastExecution)) that is immediately executed (the entire query execution pipeline is executed up to and including _executedPlan_).
 
 `runContinuous` sets the following local properties:
 

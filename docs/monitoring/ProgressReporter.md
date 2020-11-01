@@ -1,6 +1,6 @@
 # ProgressReporter
 
-`ProgressReporter` is an [abstraction](#contract) of [stream execution progress reporters](#implementations) that report statistics of execution of a streaming query.
+`ProgressReporter` is an [abstraction](#contract) of [execution progress reporters](#implementations) that report statistics of execution of a streaming query.
 
 ## Contract
 
@@ -10,7 +10,14 @@
 currentBatchId: Long
 ```
 
-ID of the active (_currently-running_) streaming batch
+ID of the streaming batch
+
+Used when:
+
+* `MicroBatchExecution` is requested to [plan a query for the batch](../MicroBatchExecution.md#runBatch-queryPlanning) (while [running a batch](../MicroBatchExecution.md#runBatch))
+* `ContinuousExecution` is requested to [plan a query for the epoch](../ContinuousExecution.md#runContinuous-queryPlanning) (while [running continuously](../MicroBatchExecution.md#runContinuous))
+* `ProgressReporter` is requested for a new [StreamingQueryProgress](StreamingQueryProgress.md) (while [finishing a trigger](#finishTrigger))
+* _other usage_
 
 ### <span id="id"> id
 
@@ -18,7 +25,7 @@ ID of the active (_currently-running_) streaming batch
 id: UUID
 ```
 
-[Universally unique identifier (UUID)](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html) of the streaming query (that remains unchanged between restarts)
+[Universally unique identifier (UUID)]({{ java.api }}/java.base/java/util/UUID.html) of the streaming query (that remains unchanged between restarts)
 
 ### <span id="lastExecution"> lastExecution
 
@@ -26,7 +33,7 @@ id: UUID
 lastExecution: QueryExecution
 ```
 
-[IncrementalExecution](../IncrementalExecution.md) of the active (_currently-running_) streaming batch
+[IncrementalExecution](../IncrementalExecution.md) of the streaming execution round (a batch or an epoch)
 
 `IncrementalExecution` is created and executed in the **queryPlanning** phase of [MicroBatchExecution](../MicroBatchExecution.md) and [ContinuousExecution](../ContinuousExecution.md) stream execution engines.
 
