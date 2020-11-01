@@ -1,7 +1,7 @@
-== [[JoinStateWatermarkPredicates]] JoinStateWatermarkPredicates -- Watermark Predicates for State Removal
+# JoinStateWatermarkPredicates -- Watermark Predicates for State Removal
 
 [[creating-instance]]
-`JoinStateWatermarkPredicates` contains watermark predicates for state removal of the children of a <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator:
+`JoinStateWatermarkPredicates` contains watermark predicates for state removal of the children of a [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operator:
 
 * [[left]] <<spark-sql-streaming-JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> for the left-hand side of a join (default: `None`)
 
@@ -11,7 +11,7 @@
 
 * <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator is created (with the optional properties undefined, including <<physical-operators/StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
 
-* `StreamingSymmetricHashJoinHelper` utility is requested for <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, one>> (for `IncrementalExecution` for the [state preparation rule](IncrementalExecution.md#state) to optimize and specify the execution-specific configuration for a query plan with [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operators)
+* `StreamingSymmetricHashJoinHelper` utility is requested for [one](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) (for `IncrementalExecution` for the [state preparation rule](IncrementalExecution.md#state) to optimize and specify the execution-specific configuration for a query plan with [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operators)
 
 === [[toString]] Textual Representation -- `toString` Method
 

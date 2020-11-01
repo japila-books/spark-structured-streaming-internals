@@ -22,21 +22,20 @@ In other words, `StateStoreProviderId` is a <<storeId, StateStoreId>> with the <
 
 * `StateStoreHandler` is requested to <<spark-sql-streaming-StateStoreHandler.md#getStateStore, look up a state store>>
 
-=== [[apply]] Creating StateStoreProviderId -- `apply` Factory Method
+## <span id="apply"> Creating StateStoreProviderId
 
-[source, scala]
-----
+```scala
 apply(
   stateInfo: StatefulOperatorStateInfo,
   partitionIndex: Int,
   storeName: String): StateStoreProviderId
-----
+```
 
-`apply` simply creates a <<creating-instance, new StateStoreProviderId>> for the <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>, the partition and the store name.
+`apply` simply creates a <<creating-instance, new StateStoreProviderId>> for the [StatefulOperatorStateInfo](StatefulOperatorStateInfo.md), the partition and the store name.
 
-Internally, `apply` requests the `StatefulOperatorStateInfo` for the <<spark-sql-streaming-StatefulOperatorStateInfo.md#checkpointLocation, checkpoint directory>> (aka _checkpointLocation_) and the <<spark-sql-streaming-StatefulOperatorStateInfo.md#operatorId, stateful operator ID>> and creates a new <<spark-sql-streaming-StateStoreId.md#, StateStoreId>> (with the `partitionIndex` and `storeName`).
+Internally, `apply` requests the `StatefulOperatorStateInfo` for the [checkpoint directory](StatefulOperatorStateInfo.md#checkpointLocation) (_checkpointLocation_) and the [stateful operator ID](StatefulOperatorStateInfo.md#operatorId) and creates a new [StateStoreId](spark-sql-streaming-StateStoreId.md) (with the `partitionIndex` and `storeName`).
 
-In the end, `apply` requests the `StatefulOperatorStateInfo` for the <<spark-sql-streaming-StatefulOperatorStateInfo.md#queryRunId, run ID of a streaming query>> and creates a <<creating-instance, new StateStoreProviderId>> (together with the run ID).
+In the end, `apply` requests the `StatefulOperatorStateInfo` for the [run ID of a streaming query](StatefulOperatorStateInfo.md#queryRunId) and creates a <<creating-instance, new StateStoreProviderId>> (together with the run ID).
 
 [NOTE]
 ====

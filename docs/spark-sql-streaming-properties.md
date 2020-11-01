@@ -76,7 +76,7 @@ Supported values:
 
 * [[spark.sql.streaming.aggregation.stateFormatVersion-default]] `2` (for the default <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV2, StreamingAggregationStateManagerImplV2>>)
 
-Used when <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy is executed (and plans a streaming query with an aggregate that simply boils down to creating a <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> with the proper _implementation version_ of <<spark-sql-streaming-StreamingAggregationStateManager.md#, StreamingAggregationStateManager>>)
+Used when [StatefulAggregationStrategy](StatefulAggregationStrategy.md) execution planning strategy is executed (and plans a streaming query with an aggregate that simply boils down to creating a <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> with the proper _implementation version_ of <<spark-sql-streaming-StreamingAggregationStateManager.md#, StreamingAggregationStateManager>>)
 
 Among the [checkpointed properties](OffsetSeqMetadata.md#relevantSQLConfs) that are not supposed to be overriden after a streaming query has once been started (and could later recover from a checkpoint after being restarted)
 

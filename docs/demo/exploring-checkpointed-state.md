@@ -1,11 +1,10 @@
-== Demo: Exploring Checkpointed State
+# Demo: Exploring Checkpointed State
 
-The following demo shows the internals of the checkpointed state of a <<spark-sql-streaming-stateful-stream-processing.md#, stateful streaming query>>.
+The following demo shows the internals of the checkpointed state of a [stateful streaming query](../spark-sql-streaming-stateful-stream-processing.md).
 
-The demo uses the state checkpoint directory that was used in <<spark-sql-streaming-demo-watermark-aggregation-append.md#, Demo: Streaming Watermark with Aggregation in Append Output Mode>>.
+The demo uses the state checkpoint directory that was used in [Demo: Streaming Watermark with Aggregation in Append Output Mode](watermark-aggregation-append.md).
 
-[source, scala]
-----
+```text
 // Change the path to match your configuration
 val checkpointRootLocation = "/tmp/checkpoint-watermark_demo/state"
 val version = 1L
@@ -87,5 +86,4 @@ def formatRowPair(rowPair: UnsafeRowPair) = {
   s"(key: [$begin, $end], ($t, $v, $b))"
 }
 store.iterator.map(formatRowPair).foreach(println)
-
-----
+```

@@ -9,7 +9,7 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StateStoreSaveExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> for execution (`Aggregate` logical operators in the logical plan of a streaming query).
+`StateStoreSaveExec` is <<creating-instance, created>> when [StatefulAggregationStrategy](../StatefulAggregationStrategy.md) execution planning strategy is requested to plan a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> for execution (`Aggregate` logical operators in the logical plan of a streaming query).
 
 ![StateStoreSaveExec and StatefulAggregationStrategy](../images/StateStoreSaveExec-StatefulAggregationStrategy.png)
 
@@ -124,15 +124,15 @@ Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQuery
 a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.md#, StateStore>> (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, StateStoreMetrics>> of the <<spark-sql-streaming-StateStore.md#metrics, StateStore>>)
 |===
 
-=== [[creating-instance]] Creating StateStoreSaveExec Instance
+## Creating Instance
 
 `StateStoreSaveExec` takes the following to be created:
 
-* [[keyExpressions]] *Key expressions*, i.e. Catalyst attributes for the grouping keys
-* [[stateInfo]] Execution-specific <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> (default: `None`)
+* [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
+* [[stateInfo]] Execution-specific [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
 * [[outputMode]] Execution-specific [OutputMode](../OutputMode.md) (default: `None`)
-* [[eventTimeWatermark]] <<spark-sql-streaming-watermark.md#, Event-time watermark>> (default: `None`)
-* [[stateFormatVersion]] Version of the state format (based on the <<spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
+* [[eventTimeWatermark]] [Event-time watermark](../spark-sql-streaming-watermark.md) (default: `None`)
+* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
 ## <span id="doExecute"> Executing Physical Operator

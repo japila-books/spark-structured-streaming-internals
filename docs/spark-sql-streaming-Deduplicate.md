@@ -45,19 +45,17 @@ org.apache.spark.sql.AnalysisException: dropDuplicates is not supported after ag
 ```
 ====
 
-[NOTE]
-====
-`Deduplicate` logical operator is translated (aka _planned_) to:
+!!! note
+    `Deduplicate` logical operator is translated (_planned_) to:
 
-* physical-operators/StreamingDeduplicateExec.md[StreamingDeduplicateExec] physical operator in spark-sql-streaming-StreamingDeduplicationStrategy.md[StreamingDeduplicationStrategy] execution planning strategy for streaming Datasets (aka _streaming plans_)
+    * [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md) physical operator in [StreamingDeduplicationStrategy](StreamingDeduplicationStrategy.md) execution planning strategy for streaming Datasets (aka _streaming plans_)
 
-* `Aggregate` physical operator in `ReplaceDeduplicateWithAggregate` execution planning strategy for non-streaming/batch Datasets (aka _batch plans_)
-====
+    * `Aggregate` physical operator in `ReplaceDeduplicateWithAggregate` execution planning strategy for non-streaming/batch Datasets (_batch plans_)
 
 [[output]]
 The output schema of `Deduplicate` is exactly the <<child, child>>'s output schema.
 
-=== [[creating-instance]] Creating Deduplicate Instance
+## Creating Instance
 
 `Deduplicate` takes the following when created:
 

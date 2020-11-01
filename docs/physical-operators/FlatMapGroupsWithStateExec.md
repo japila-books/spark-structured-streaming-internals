@@ -28,7 +28,7 @@
 * <span id="groupingAttributes"> Grouping attributes (as used for grouping in [KeyValueGroupedDataset](../KeyValueGroupedDataset.md#groupingAttributes) for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
 * <span id="dataAttributes"> Data attributes
 * <span id="outputObjAttr"> Output object attribute (that is the reference to the single object field this operator outputs)
-* <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../spark-sql-streaming-StatefulOperatorStateInfo.md)
+* <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md)
 * <span id="stateEncoder"> State encoder (`ExpressionEncoder[Any]`)
 * <span id="stateFormatVersion"> State format version
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
@@ -37,7 +37,7 @@
 * <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../spark-sql-streaming-watermark.md)
 * <span id="child"> Child physical operator
 
-`FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../spark-sql-streaming-FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).
+`FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).
 
 ## <span id="doExecute"> Executing Physical Operator
 
@@ -83,7 +83,7 @@ doExecute(): RDD[InternalRow]
 
 `FlatMapGroupsWithStateExec` is given the [optional event time watermark](#eventTimeWatermark) when created.
 
-The [event-time watermark](#eventTimeWatermark) is initially undefined (`None`) when planned for execution (in [FlatMapGroupsWithStateStrategy](../spark-sql-streaming-FlatMapGroupsWithStateStrategy.md) execution planning strategy).
+The [event-time watermark](#eventTimeWatermark) is initially undefined (`None`) when planned for execution (in [FlatMapGroupsWithStateStrategy](../FlatMapGroupsWithStateStrategy.md) execution planning strategy).
 
 !!! note
     `FlatMapGroupsWithStateStrategy` converts [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined [StatefulOperatorStateInfo](#stateInfo), [batchTimestampMs](#batchTimestampMs), and [eventTimeWatermark](#eventTimeWatermark).

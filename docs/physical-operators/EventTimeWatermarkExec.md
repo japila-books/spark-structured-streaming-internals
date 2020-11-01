@@ -24,7 +24,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-accum
 
 * `StreamExecution` to observe and possibly update event-time watermark when <<MicroBatchExecution.md#constructNextBatch-hasNewData-true, constructing the next streaming batch>>.
 
-`EventTimeWatermarkExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a logical plan with <<EventTimeWatermark.md#, EventTimeWatermark>> logical operators for execution.
+`EventTimeWatermarkExec` is <<creating-instance, created>> exclusively when [StatefulAggregationStrategy](../StatefulAggregationStrategy.md) execution planning strategy is requested to plan a logical plan with <<EventTimeWatermark.md#, EventTimeWatermark>> logical operators for execution.
 
 TIP: Check out <<spark-sql-streaming-demo-watermark-aggregation-append.md#, Demo: Streaming Watermark with Aggregation in Append Output Mode>> to deep dive into the internals of <<spark-sql-streaming-watermark.md#, Streaming Watermark>>.
 

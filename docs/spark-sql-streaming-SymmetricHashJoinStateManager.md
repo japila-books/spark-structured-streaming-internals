@@ -2,23 +2,20 @@
 
 `SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right <<spark-sql-streaming-OneSideHashJoiner.md#joinStateManager, OneSideHashJoiners>> of a <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
 
-.SymmetricHashJoinStateManager and Stream-Stream Join
-image::images/SymmetricHashJoinStateManager.png[align="center"]
+![SymmetricHashJoinStateManager and Stream-Stream Join](images/SymmetricHashJoinStateManager.png)
 
 `SymmetricHashJoinStateManager` manages join state using the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>> state store handlers (and simply acts like their facade).
 
-=== [[creating-instance]] Creating SymmetricHashJoinStateManager Instance
+## Creating Instance
 
 `SymmetricHashJoinStateManager` takes the following to be created:
 
-* [[joinSide]] <<joinSide-internals, JoinSide>>
+* [[joinSide]] [JoinSide](#joinSide-internals)
 * [[inputValueAttributes]] Attributes of input values
 * [[joinKeys]] Join keys (`Seq[Expression]`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
+* [[stateInfo]] [StatefulOperatorStateInfo](StatefulOperatorStateInfo.md)
 * [[storeConf]] [StateStoreConf](StateStoreConf.md)
-* [[hadoopConf]] Hadoop https://hadoop.apache.org/docs/r2.7.3/api/org/apache/hadoop/conf/Configuration.html[Configuration]
-
-`SymmetricHashJoinStateManager` initializes the <<internal-properties, internal properties>>.
+* [[hadoopConf]] Hadoop [Configuration]({{ hadoop.api }}/org/apache/hadoop/conf/Configuration.html)
 
 === [[keyToNumValues]][[keyWithIndexToValue]] KeyToNumValuesStore and KeyWithIndexToValueStore State Store Handlers -- `keyToNumValues` and `keyWithIndexToValue` Internal Properties
 

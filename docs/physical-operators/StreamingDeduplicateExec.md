@@ -9,7 +9,7 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when `StreamingDeduplicationStrategy` spark-sql-streaming-StreamingDeduplicationStrategy.md#apply[plans Deduplicate unary logical operators].
+`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when [StreamingDeduplicationStrategy](../StreamingDeduplicationStrategy.md) execution planning strategy is executed (to plan Deduplicate unary logical operators).
 
 ![StreamingDeduplicateExec and StreamingDeduplicationStrategy](../images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png)
 
@@ -218,7 +218,7 @@ The completion function does the following:
 
 * [[keyExpressions]] Duplicate keys (as used in [dropDuplicates](../operators/dropDuplicates.md) operator)
 * [[child]] Child physical operator (`SparkPlan`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
+* [[stateInfo]] [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md)
 * [[eventTimeWatermark]] Event-time watermark
 
 ## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not

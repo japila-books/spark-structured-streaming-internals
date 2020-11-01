@@ -1,18 +1,16 @@
-# StreamingSymmetricHashJoinExec Binary Physical Operator &mdash; Stream-Stream Joins
+# StreamingSymmetricHashJoinExec Binary Physical Operator
 
 `StreamingSymmetricHashJoinExec` is a binary physical operator for [stream-stream equi-join](../spark-sql-streaming-join.md) at execution time.
 
-[NOTE]
-====
-A binary physical operator (`BinaryExecNode`) is a physical operator with <<left, left>> and <<right, right>> child physical operators.
+!!! note
+    A binary physical operator (`BinaryExecNode`) is a physical operator with <<left, left>> and <<right, right>> child physical operators.
 
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[BinaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
-====
+    Learn more about [BinaryExecNode]({{ book.spark_sql }}/physical-operators/SparkPlan) (and physical operators in general) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
 [[supported-join-types]][[joinType]]
 `StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, and `RightOuter` join types (with the <<leftKeys, left>> and the <<rightKeys, right>> keys using the exact same data types).
 
-`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingJoinStrategy.md#, StreamingJoinStrategy>> execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
+`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when [StreamingJoinStrategy](../StreamingJoinStrategy.md) execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
 
 `StreamingSymmetricHashJoinExec` is given execution-specific configuration (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>) when `IncrementalExecution` is requested to plan a streaming query for execution (and uses the [state preparation rule](../IncrementalExecution.md#state)).
 
@@ -26,11 +24,11 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Spar
 
 * [[leftKeys]] Left keys (Catalyst expressions of the keys on the left side)
 * [[rightKeys]] Right keys (Catalyst expressions of the keys on the right side)
-* <<joinType, Join type>>
+* [Join type](#joinType)
 * [[condition]] Join condition (`JoinConditionSplitPredicates`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
-* <<eventTimeWatermark, Event-Time Watermark>>
-* <<stateWatermarkPredicates, Watermark Predicates for State Removal>>
+* [[stateInfo]] [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md)
+* [Event-Time Watermark](#eventTimeWatermark)
+* [Watermark Predicates for State Removal](#stateWatermarkPredicates)
 * [[left]] Physical operator on the left side (`SparkPlan`)
 * [[right]] Physical operator on the right side (`SparkPlan`)
 
@@ -108,7 +106,7 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 stateWatermarkPredicates: JoinStateWatermarkPredicates
 ```
 
-When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, StreamingSymmetricHashJoinHelper>> utility).
+When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the [StreamingSymmetricHashJoinHelper](../StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) utility).
 
 `stateWatermarkPredicates` contains the left and right predicates only when [IncrementalExecution](../IncrementalExecution.md) is requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../ContinuousExecution.md) and every trigger for [MicroBatchExecution](../MicroBatchExecution.md) in the **queryPlanning** phase).
 
@@ -135,7 +133,7 @@ requiredChildDistribution: Seq[Distribution]
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[SparkPlan Contract] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
 ====
 
-`requiredChildDistribution` returns two `HashClusteredDistributions` for the <<leftKeys, left>> and <<rightKeys, right>> keys with the required <<spark-sql-streaming-StatefulOperatorStateInfo.md#numPartitions, number of partitions>> based on the <<stateInfo, StatefulOperatorStateInfo>>.
+`requiredChildDistribution` returns two `HashClusteredDistributions` for the <<leftKeys, left>> and <<rightKeys, right>> keys with the required [number of partitions](../StatefulOperatorStateInfo.md#numPartitions) based on the [StatefulOperatorStateInfo](#stateInfo).
 
 [NOTE]
 ====

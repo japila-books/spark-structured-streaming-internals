@@ -2,8 +2,6 @@
 
 `StreamingRelationExec` is a leaf physical operator (i.e. `LeafExecNode`) that...FIXME
 
-`StreamingRelationExec` is <<creating-instance, created>> when `StreamingRelationStrategy` spark-sql-streaming-StreamingRelationStrategy.md#apply[plans] `StreamingRelation` and `StreamingExecutionRelation` logical operators.
-
 [source, scala]
 ----
 scala> spark.version
@@ -33,3 +31,5 @@ StreamingRelation rate, [timestamp#0, value#1L]
 
 * [[sourceName]] The name of a [streaming source](../Source.md)
 * [[output]] Output attributes
+
+`StreamingRelationExec` is created when [StreamingRelationStrategy](../StreamingRelationStrategy.md) execution planning strategy is executed (to plan `StreamingRelation` and `StreamingExecutionRelation` logical operators).

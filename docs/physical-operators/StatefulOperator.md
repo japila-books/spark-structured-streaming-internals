@@ -17,7 +17,7 @@ a| [[stateInfo]]
 stateInfo: Option[StatefulOperatorStateInfo]
 ----
 
-The <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> of the physical operator
+The [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) of the physical operator
 |===
 
 [[extensions]]

@@ -332,7 +332,7 @@ get(
 
 `get` finds `StateStore` for the specified <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> and version.
 
-NOTE: The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) or the <<spark-sql-streaming-StatefulOperatorStateInfo.md#storeVersion, current batch ID>> (in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
+NOTE: The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) or the [current batch ID](StatefulOperatorStateInfo.md#storeVersion) (in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
 
 Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> (by `storeProviderId`) in the <<loadedProviders, loadedProviders>> internal cache. If unavailable, `get` uses the `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize one>>.
 

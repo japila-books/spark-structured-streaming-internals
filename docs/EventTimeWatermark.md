@@ -11,7 +11,7 @@ Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Logi
 
 When requested for the <<output, output attributes>>, `EventTimeWatermark` logical operator goes over the output attributes of the <<child, child>> logical operator to find the matching attribute based on the <<eventTime, eventTime>> attribute and updates it to include `spark.watermarkDelayMs` metadata key with the <<delay, watermark delay>> interval (<<getDelayMs, converted to milliseconds>>).
 
-`EventTimeWatermark` is resolved (_planned_) to [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator in [StatefulAggregationStrategy](spark-sql-streaming-StatefulAggregationStrategy.md) execution planning strategy.
+`EventTimeWatermark` is resolved (_planned_) to [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator in [StatefulAggregationStrategy](StatefulAggregationStrategy.md) execution planning strategy.
 
 [NOTE]
 ====

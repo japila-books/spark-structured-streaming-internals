@@ -9,7 +9,7 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StatefulAggregationStrategy.md#, StatefulAggregationStrategy>> execution planning strategy is requested to plan a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> for execution (`Aggregate` logical operators in the logical plan of a streaming query).
+`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when [StatefulAggregationStrategy](../StatefulAggregationStrategy.md) execution planning strategy is requested to plan a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> for execution (`Aggregate` logical operators in the logical plan of a streaming query).
 
 .StateStoreRestoreExec and StatefulAggregationStrategy
 image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="center"]
@@ -42,13 +42,13 @@ The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child
 .StateStoreRestoreExec in web UI (Details for Query)
 image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 
-=== [[creating-instance]] Creating StateStoreRestoreExec Instance
+## Creating Instance
 
 `StateStoreRestoreExec` takes the following to be created:
 
-* [[keyExpressions]] *Key expressions*, i.e. Catalyst attributes for the grouping keys
-* [[stateInfo]] Optional <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> (default: `None`)
-* [[stateFormatVersion]] Version of the state format (based on the <<spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> configuration property)
+* [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
+* [[stateInfo]] Optional [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
+* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
 === [[stateManager]] StateStoreRestoreExec and StreamingAggregationStateManager -- `stateManager` Property

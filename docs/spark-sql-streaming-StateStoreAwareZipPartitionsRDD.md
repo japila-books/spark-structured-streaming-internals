@@ -12,7 +12,7 @@
 * [[f]] Function (`(Iterator[A], Iterator[B]) => Iterator[V]`, e.g. <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, processPartitions>>)
 * [[rdd1]] *Left RDD* - the RDD of the left side of a join (`RDD[A]`)
 * [[rdd2]] *Right RDD* - the RDD of the right side of a join (`RDD[B]`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>>
+* [[stateInfo]] [StatefulOperatorStateInfo](StatefulOperatorStateInfo.md)
 * [[stateStoreNames]] Names of the <<spark-sql-streaming-StateStore.md#, state stores>>
 * [[storeCoordinator]] <<spark-sql-streaming-StateStoreCoordinatorRef.md#, StateStoreCoordinatorRef>>
 

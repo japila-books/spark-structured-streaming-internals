@@ -145,5 +145,3 @@ In the end, `planStreamingAggregation` creates the final aggregate physical oper
 * `initialInputBufferOffset` as the length of `groupingExpressions`
 * `functionsWithoutDistinct` in `Final` mode
 * `child` operator as <<saved, StateStoreSaveExec>> physical operator created above
-
-NOTE: `planStreamingAggregation` is used exclusively when `StatefulAggregationStrategy` spark-sql-streaming-StatefulAggregationStrategy.md#apply[plans a streaming aggregation].

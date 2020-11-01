@@ -44,7 +44,7 @@ getOneSideStateWatermarkPredicate(
 
 * <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate, JoinStateKeyWatermarkPredicate>> if the watermark was defined on a join key (with the watermark expression for the index of the join key expression)
 
-* <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> if the watermark was defined among the `oneSideInputAttributes` (with the <<spark-sql-streaming-StreamingJoinHelper.md#getStateValueWatermark, state value watermark>> based on the given `oneSideInputAttributes` and `otherSideInputAttributes`)
+* <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> if the watermark was defined among the `oneSideInputAttributes` (with the [state value watermark](StreamingJoinHelper.md#getStateValueWatermark) based on the given `oneSideInputAttributes` and `otherSideInputAttributes`)
 
 NOTE: `getOneSideStateWatermarkPredicate` creates no <<spark-sql-streaming-JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> (`None`) for no watermark found.
 

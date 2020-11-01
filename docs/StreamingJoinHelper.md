@@ -1,4 +1,4 @@
-== [[StreamingJoinHelper]] StreamingJoinHelper Utility
+# StreamingJoinHelper Utility
 
 `StreamingJoinHelper` is a Scala object with the following utility methods:
 
@@ -18,24 +18,20 @@ log4j.logger.org.apache.spark.sql.catalyst.analysis.StreamingJoinHelper=ALL
 Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
-=== [[getStateValueWatermark]] State Value Watermark -- `getStateValueWatermark` Object Method
+## <span id="getStateValueWatermark"> State Value Watermark
 
-[source, scala]
-----
+```scala
 getStateValueWatermark(
   attributesToFindStateWatermarkFor: AttributeSet,
   attributesWithEventWatermark: AttributeSet,
   joinCondition: Option[Expression],
   eventWatermark: Option[Long]): Option[Long]
-----
+```
 
 `getStateValueWatermark`...FIXME
 
-[NOTE]
-====
 `getStateValueWatermark` is used when:
 
-* `UnsupportedOperationChecker` utility is used to <<spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming, checkForStreaming>>
+* `UnsupportedOperationChecker` utility is used to [checkForStreaming](spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming)
 
-* `StreamingSymmetricHashJoinHelper` utility is used to <<spark-sql-streaming-StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates, create a JoinStateWatermarkPredicates>>
-====
+* `StreamingSymmetricHashJoinHelper` utility is used to [create a JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates)

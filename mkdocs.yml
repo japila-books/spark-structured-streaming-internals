@@ -120,8 +120,8 @@ nav:
       - JoinStateWatermarkPredicate: spark-sql-streaming-JoinStateWatermarkPredicate.md
       - StateStoreAwareZipPartitionsHelper:
         - StateStoreAwareZipPartitionsHelper: spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md
-        - StreamingSymmetricHashJoinHelper: spark-sql-streaming-StreamingSymmetricHashJoinHelper.md
-        - StreamingJoinHelper: spark-sql-streaming-StreamingJoinHelper.md
+        - StreamingSymmetricHashJoinHelper: StreamingSymmetricHashJoinHelper.md
+        - StreamingJoinHelper: StreamingJoinHelper.md
     - Streaming Aggregation:
       - Streaming Aggregation: spark-sql-streaming-aggregation.md
       - StateStoreRDD: spark-sql-streaming-StateStoreRDD.md
@@ -147,7 +147,7 @@ nav:
         - StateStoreCoordinator: spark-sql-streaming-StateStoreCoordinator.md
         - StateStoreCoordinatorRef: spark-sql-streaming-StateStoreCoordinatorRef.md
       - WatermarkSupport: spark-sql-streaming-WatermarkSupport.md
-      - StatefulOperatorStateInfo: spark-sql-streaming-StatefulOperatorStateInfo.md
+      - StatefulOperatorStateInfo: StatefulOperatorStateInfo.md
       - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
       - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
       - StateStoreUpdater: spark-sql-streaming-StateStoreUpdater.md
@@ -208,12 +208,12 @@ nav:
         - StreamingRelationExec: physical-operators/StreamingRelationExec.md
         - StreamingSymmetricHashJoinExec: physical-operators/StreamingSymmetricHashJoinExec.md
       - Execution Planning Strategies:
-        - FlatMapGroupsWithStateStrategy: spark-sql-streaming-FlatMapGroupsWithStateStrategy.md
-        - StatefulAggregationStrategy: spark-sql-streaming-StatefulAggregationStrategy.md
-        - StreamingDeduplicationStrategy: spark-sql-streaming-StreamingDeduplicationStrategy.md
-        - StreamingGlobalLimitStrategy: spark-sql-streaming-StreamingGlobalLimitStrategy.md
-        - StreamingJoinStrategy: spark-sql-streaming-StreamingJoinStrategy.md
-        - StreamingRelationStrategy: spark-sql-streaming-StreamingRelationStrategy.md
+        - FlatMapGroupsWithStateStrategy: FlatMapGroupsWithStateStrategy.md
+        - StatefulAggregationStrategy: StatefulAggregationStrategy.md
+        - StreamingDeduplicationStrategy: StreamingDeduplicationStrategy.md
+        - StreamingGlobalLimitStrategy: StreamingGlobalLimitStrategy.md
+        - StreamingJoinStrategy: StreamingJoinStrategy.md
+        - StreamingRelationStrategy: StreamingRelationStrategy.md
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
       - MetadataLog: MetadataLog.md

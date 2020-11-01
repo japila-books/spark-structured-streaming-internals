@@ -9,8 +9,6 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StreamingGlobalLimitExec` is <<creating-instance, created>> exclusively when <<spark-sql-streaming-StreamingGlobalLimitStrategy.md#, StreamingGlobalLimitStrategy>> execution planning strategy is requested to plan a `Limit` logical operator (in the logical plan of a streaming query) for execution.
-
 [NOTE]
 ====
 `Limit` logical operator represents `Dataset.limit` operator in a logical query plan.
@@ -28,12 +26,12 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and t
 
 `StreamingGlobalLimitExec` takes the following to be created:
 
-* [[streamLimit]] *Streaming Limit*
+* [[streamLimit]] **Streaming Limit**
 * [[child]] Child physical operator (`SparkPlan`)
-* [[stateInfo]] <<spark-sql-streaming-StatefulOperatorStateInfo.md#, StatefulOperatorStateInfo>> (default: `None`)
+* [[stateInfo]] [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
 * [[outputMode]] [OutputMode](../OutputMode.md) (default: `None`)
 
-`StreamingGlobalLimitExec` initializes the <<internal-properties, internal properties>>.
+`StreamingGlobalLimitExec` is created when [StreamingGlobalLimitStrategy](../StreamingGlobalLimitStrategy.md) execution planning strategy is requested to plan a `Limit` logical operator (in the logical plan of a streaming query) for execution.
 
 === [[StateStoreWriter]] StreamingGlobalLimitExec as StateStoreWriter
 
