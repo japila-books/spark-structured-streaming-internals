@@ -122,7 +122,7 @@ NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](op
 * `child` operator as <<partialAggregate, partialAggregate>> aggregate physical operator created above
 
 [[restored]]
-`planStreamingAggregation` creates spark-sql-streaming-StateStoreRestoreExec.md#creating-instance[StateStoreRestoreExec] with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
+`planStreamingAggregation` creates [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) physical operator with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
 
 [[partialMerged2]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialMerged2`) with:

@@ -1,4 +1,4 @@
-# StreamingQueryManager &mdash; Streaming Query Management
+# StreamingQueryManager
 
 `StreamingQueryManager` is the <<methods, management interface>> for <<activeQueries, active streaming queries>> of a <<sparkSession, SparkSession>>.
 
@@ -352,16 +352,16 @@ a| [[lastTerminatedQuery]] <<StreamingQuery.md#, StreamingQuery>> that has recen
 * Set when `StreamingQueryManager` <<notifyQueryTermination, is notified that a streaming query has terminated>>
 
 | stateStoreCoordinator
-a| [[stateStoreCoordinator]] <<spark-sql-streaming-StateStoreCoordinatorRef.md#, StateStoreCoordinatorRef>> to the `StateStoreCoordinator` RPC Endpoint
+a| [[stateStoreCoordinator]] [StateStoreCoordinatorRef](spark-sql-streaming-StateStoreCoordinatorRef.md) to the `StateStoreCoordinator` RPC Endpoint
 
-* spark-sql-streaming-StateStoreCoordinatorRef.md#forDriver[Created] when `StreamingQueryManager` is <<creating-instance, created>>
+* [Created](spark-sql-streaming-StateStoreCoordinatorRef.md#forDriver) when `StreamingQueryManager` is [created](#creating-instance)
 
 Used when:
 
 * `StreamingQueryManager` <<notifyQueryTermination, is notified that a streaming query has terminated>>
 
-* Stateful operators are executed, i.e. [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), spark-sql-streaming-StateStoreRestoreExec.md#doExecute[StateStoreRestoreExec], StateStoreSaveExec.md#doExecute[StateStoreSaveExec], physical-operators/StreamingDeduplicateExec.md#doExecute[StreamingDeduplicateExec] and physical-operators/StreamingSymmetricHashJoinExec.md#doExecute[StreamingSymmetricHashJoinExec]
+* Stateful operators are executed ([FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md), [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md), [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md) and [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
 
-* spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)]
+* [Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)](StateStoreOps.md#mapPartitionsWithStateStore)
 
 |===

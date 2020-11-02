@@ -4,7 +4,7 @@
 
 In Spark Structured Streaming, a streaming query is stateful when is one of the following (that makes use of [StateStores](spark-sql-streaming-StateStore.md)):
 
-* [Streaming Aggregation](spark-sql-streaming-aggregation.md)
+* [Streaming Aggregation](streaming-aggregation.md)
 
 * [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md)
 
@@ -16,15 +16,15 @@ In Spark Structured Streaming, a streaming query is stateful when is one of the 
 
 ## <span id="versioned-state-statestores-and-statestoreproviders"> Versioned State, StateStores and StateStoreProviders
 
-Spark Structured Streaming uses <<spark-sql-streaming-StateStore.md#, StateStores>> for versioned and fault-tolerant key-value state stores.
+Spark Structured Streaming uses [StateStore](spark-sql-streaming-StateStore.md)s for versioned and fault-tolerant key-value state stores.
 
 State stores are checkpointed incrementally to avoid state loss and for increased performance.
 
-State stores are managed by <<spark-sql-streaming-StateStoreProvider.md#, State Store Providers>> with [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md) being the default and only known implementation. `HDFSBackedStateStoreProvider` uses Hadoop DFS-compliant file system for [state checkpointing and fault-tolerance](HDFSBackedStateStoreProvider.md#baseDir).
+State stores are managed by [StateStoreProvider](spark-sql-streaming-StateStoreProvider.md)s with [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md) being the default and only known implementation. `HDFSBackedStateStoreProvider` uses Hadoop DFS-compliant file system for [state checkpointing and fault-tolerance](HDFSBackedStateStoreProvider.md#baseDir).
 
-State store providers manage versioned state per <<spark-sql-streaming-StateStoreId.md#, stateful operator (and partition it operates on)>>.
+State store providers manage versioned state per [stateful operator (and partition it operates on)](spark-sql-streaming-StateStoreId.md).
 
-The lifecycle of a `StateStoreProvider` begins when `StateStore` utility (on a Spark executor) is requested for the <<spark-sql-streaming-StateStore.md#get-StateStore, StateStore by provider ID and version>>.
+The lifecycle of a `StateStoreProvider` begins when `StateStore` utility (on a Spark executor) is requested for the [StateStore by provider ID and version](spark-sql-streaming-StateStore.md#get-StateStore).
 
 IMPORTANT: It is worth to notice that since `StateStore` and `StateStoreProvider` utilities are Scala objects that makes it possible that there can only be one instance of `StateStore` and `StateStoreProvider` on a single JVM. Scala objects are (sort of) singletons which means that there will be exactly one instance of each per JVM and that is exactly the JVM of a Spark executor. As long as the executor is up and running state versions are cached and no Hadoop DFS is used (except for the initial load).
 
@@ -85,14 +85,13 @@ a| [[shouldRunAnotherBatch-StreamingSymmetricHashJoinExec]] Based on <<physical-
 
 |===
 
-=== [[StateStoreRDD]] StateStoreRDD
+## <span id="StateStoreRDD"> StateStoreRDD
 
-Right after <<IncrementalExecution, query planning>>, a stateful streaming query (a single micro-batch actually) becomes an RDD with one or more <<spark-sql-streaming-StateStoreRDD.md#, StateStoreRDDs>>.
+Right after [query planning](#IncrementalExecution), a stateful streaming query (a single micro-batch actually) becomes an RDD with one or more [StateStoreRDD](StateStoreRDD.md)s.
 
 You can find the `StateStoreRDDs` of a streaming query in the RDD lineage.
 
-[source, scala]
-----
+```text
 scala> :type streamingQuery
 org.apache.spark.sql.streaming.StreamingQuery
 
@@ -133,20 +132,20 @@ res3: String =
     |  MapPartitionsRDD[14] at start at <pastie>:67 []
     |  MapPartitionsRDD[13] at start at <pastie>:67 []
     |  ParallelCollectionRDD[12] at start at <pastie>:67 []
-----
+```
 
-=== [[StateStoreCoordinator]] StateStoreCoordinator RPC Endpoint, StateStoreRDD and Preferred Locations
+## <span id="StateStoreCoordinator"> StateStoreCoordinator RPC Endpoint, StateStoreRDD and Preferred Locations
 
 Since execution of a stateful streaming query happens on Spark executors whereas planning is on the driver, Spark Structured Streaming uses RPC environment for tracking locations of the state stores in use. That makes the tasks (of a structured query) to be scheduled where the state (of a partition) is.
 
-When planned for execution, the `StateStoreRDD` is first asked for the <<spark-sql-streaming-StateStoreRDD.md#getPreferredLocations, preferred locations of a partition>> (which happens on the driver) that are later used to <<spark-sql-streaming-StateStoreRDD.md#compute, compute it>> (on Spark executors).
+When planned for execution, the `StateStoreRDD` is first asked for the [preferred locations of a partition](StateStoreRDD.md#getPreferredLocations) (which happens on the driver) that are later used to [compute it](StateStoreRDD.md#compute) (on Spark executors).
 
-Spark Structured Streaming uses RPC environment to keep track of <<spark-sql-streaming-StateStore.md#, StateStores>> (their <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> actually) for RDD planning.
+Spark Structured Streaming uses RPC environment to keep track of [StateStore](spark-sql-streaming-StateStore.md)s (their [StateStoreProvider](spark-sql-streaming-StateStoreProvider.md) actually) for RDD planning.
 
-Every time <<spark-sql-streaming-StateStoreRDD.md#, StateStoreRDD>> is requested for the <<spark-sql-streaming-StateStoreRDD.md#getPreferredLocations, preferred locations of a partition>>, it communicates with the <<spark-sql-streaming-StateStoreCoordinator.md#, StateStoreCoordinator RPC endpoint>> that knows the locations of the required `StateStores` (per host and executor ID).
+Every time [StateStoreRDD](StateStoreRDD.md) is requested for the [preferred locations of a partition](StateStoreRDD.md#getPreferredLocations), it communicates with the [StateStoreCoordinator](spark-sql-streaming-StateStoreCoordinator.md) RPC endpoint that knows the locations of the required `StateStores` (per host and executor ID).
 
-`StateStoreRDD` uses <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> with <<spark-sql-streaming-StateStoreId.md#, StateStoreId>> to uniquely identify the <<spark-sql-streaming-StateStore.md#, state store>> to use for (_associate with_) a stateful operator and a partition.
+`StateStoreRDD` uses [StateStoreProviderId](spark-sql-streaming-StateStoreProviderId.md) with [StateStoreId](spark-sql-streaming-StateStoreId.md) to uniquely identify the [state store](spark-sql-streaming-StateStore.md) to use for (_associate with_) a stateful operator and a partition.
 
-=== State Management
+## State Management
 
 The state in a stateful streaming query can be implicit or explicit.

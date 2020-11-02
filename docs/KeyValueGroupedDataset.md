@@ -1,14 +1,13 @@
-== [[KeyValueGroupedDataset]] KeyValueGroupedDataset -- Streaming Aggregation
+# KeyValueGroupedDataset
 
-`KeyValueGroupedDataset` represents a *grouped dataset* as a result of [Dataset.groupByKey](operators/groupByKey.md) operator (that aggregates records by a grouping function).
+`KeyValueGroupedDataset` represents a **grouped dataset** as a result of [Dataset.groupByKey](operators/groupByKey.md) operator (that aggregates records by a grouping function).
 
 ```text
 // Dataset[T]
 groupByKey(func: T => K): KeyValueGroupedDataset[K, T]
 ```
 
-[source, scala]
-----
+```text
 import java.sql.Timestamp
 val numGroups = spark.
   readStream.
@@ -19,33 +18,30 @@ val numGroups = spark.
 
 scala> :type numGroups
 org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
-----
+```
 
 `KeyValueGroupedDataset` is also <<creating-instance, created>> for <<keyAs, KeyValueGroupedDataset.keyAs>> and <<mapValues, KeyValueGroupedDataset.mapValues>> operators.
 
-[source, scala]
-----
+```text
 scala> :type numGroups
 org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
 
 scala> :type numGroups.keyAs[String]
 org.apache.spark.sql.KeyValueGroupedDataset[String,(java.sql.Timestamp, Long)]
-----
+```
 
-[source, scala]
-----
+```text
 scala> :type numGroups
 org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
 
 val mapped = numGroups.mapValues { case (ts, n) => s"($ts, $n)" }
 scala> :type mapped
 org.apache.spark.sql.KeyValueGroupedDataset[Long,String]
-----
+```
 
-`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>>.
+`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for [Streaming Aggregation](streaming-aggregation.md).
 
-[source, scala]
-----
+```text
 scala> :type numGroups
 org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
 
@@ -88,7 +84,7 @@ Batch: 2
 
 // Eventually...
 spark.streams.active.foreach(_.stop)
-----
+```
 
 The most prestigious use case of `KeyValueGroupedDataset` however is [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md) that allows for accumulating **streaming state** (by means of [GroupState](GroupState.md)) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
 

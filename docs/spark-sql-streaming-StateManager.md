@@ -1,6 +1,6 @@
-== [[StateManager]] StateManager Contract -- State Managers for Arbitrary Stateful Streaming Aggregation
+# StateManager
 
-`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between <<spark-sql-streaming-StateStore.md#, state stores>> and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
+`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](spark-sql-streaming-StateStore.md) and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
 
 [[contract]]
 .StateManager Contract
@@ -75,13 +75,14 @@ stateSchema: StructType
 
 *State schema*
 
-NOTE: <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, It looks like>> (in <<FlatMapGroupsWithStateExec.md#stateManager, StateManager>> of the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator) `stateSchema` is used for the schema of state value objects (not state keys as they are described by the grouping attributes instead).
+!!! note
+    [It looks like](StateStoreOps.md#mapPartitionsWithStateStore) (in [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) of the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator) `stateSchema` is used for the schema of state value objects (not state keys as they are described by the grouping attributes instead).
 
 Used when:
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator is executed
 
-* `StateManagerImplBase` is requested for the <<spark-sql-streaming-StateManagerImplBase.md#stateDeserializerFunc, stateDeserializerFunc>>
+* `StateManagerImplBase` is requested for the [stateDeserializerFunc](spark-sql-streaming-StateManagerImplBase.md#stateDeserializerFunc)
 
 |===
 

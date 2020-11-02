@@ -1,8 +1,8 @@
-== [[StateStoreCoordinator]] StateStoreCoordinator RPC Endpoint -- Tracking Locations of StateStores for StateStoreRDD
+# StateStoreCoordinator RPC Endpoint
 
-`StateStoreCoordinator` keeps track of <<spark-sql-streaming-StateStore.md#, state stores>> on Spark executors (per host and executor ID).
+`StateStoreCoordinator` keeps track of [StateStore](spark-sql-streaming-StateStore.md)s on Spark executors (per host and executor ID).
 
-`StateStoreCoordinator` is used by `StateStoreRDD` when requested to spark-sql-streaming-StateStoreRDD.md#getPreferredLocations[get the location preferences of partitions] (based on the location of the stores).
+`StateStoreCoordinator` is used by `StateStoreRDD` when requested to [get the location preferences of partitions](StateStoreRDD.md#getPreferredLocations) (based on the location of the stores).
 
 `StateStoreCoordinator` is a `ThreadSafeRpcEndpoint` RPC endpoint that manipulates <<instances, instances>> registry through <<messages, RPC messages>>.
 

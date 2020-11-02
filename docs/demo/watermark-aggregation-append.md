@@ -1,13 +1,13 @@
 # Demo: Streaming Watermark with Aggregation in Append Output Mode
 
-The following demo shows the behaviour and the internals of <<spark-sql-streaming-watermark.md#, streaming watermark>> with a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> in [Append](../OutputMode.md#Append) output mode.
+The following demo shows the behaviour and the internals of [streaming watermark](../spark-sql-streaming-watermark.md) with a [streaming aggregation](../streaming-aggregation.md) in [Append](../OutputMode.md#Append) output mode.
 
-The demo also shows the behaviour and the internals of <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator in <<StateStoreSaveExec.md#doExecute-Append, Append output mode>>.
+The demo also shows the behaviour and the internals of [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator in [Append](../physical-operators/StateStoreSaveExec.md#doExecute-Append) output mode.
 
-TIP: The below code is part of https://github.com/jaceklaskowski/spark-structured-streaming-book/blob/v{{ spark.version }}/examples/src/main/scala/pl/japila/spark/StreamingAggregationAppendMode.scala[StreamingAggregationAppendMode] streaming application.
+!!! tip
+    The below code is part of [StreamingAggregationAppendMode](https://github.com/jaceklaskowski/spark-structured-streaming-book/blob/v{{ spark.version }}/examples/src/main/scala/pl/japila/spark/StreamingAggregationAppendMode.scala) streaming application.
 
-[source, scala]
-----
+```text
 // Reduce the number of partitions and hence the state stores
 // That is supposed to make debugging state checkpointing easier
 val numShufflePartitions = 1
@@ -423,4 +423,4 @@ EventTimeStats(-9223372036854775808,9223372036854775807,0.0,0)
 
 // Eventually...
 streamingQuery.stop()
-----
+```

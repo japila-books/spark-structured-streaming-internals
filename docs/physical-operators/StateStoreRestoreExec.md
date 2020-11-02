@@ -9,16 +9,15 @@ A unary physical operator (`UnaryExecNode`) is a physical operator with a single
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
 ====
 
-`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when [StatefulAggregationStrategy](../StatefulAggregationStrategy.md) execution planning strategy is requested to plan a <<spark-sql-streaming-aggregation.md#, streaming aggregation>> for execution (`Aggregate` logical operators in the logical plan of a streaming query).
+`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when [StatefulAggregationStrategy](../StatefulAggregationStrategy.md) execution planning strategy is requested to plan a [streaming aggregation](../streaming-aggregation.md) for execution (`Aggregate` logical operators in the logical plan of a streaming query).
 
-.StateStoreRestoreExec and StatefulAggregationStrategy
-image::images/StateStoreRestoreExec-StatefulAggregationStrategy.png[align="center"]
+![StateStoreRestoreExec and StatefulAggregationStrategy](../images/StateStoreRestoreExec-StatefulAggregationStrategy.png)
 
 The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` [prepares a streaming physical plan for execution](../IncrementalExecution.md#preparations) (and [state](../IncrementalExecution.md#state) preparation rule is executed when `StreamExecution` MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
 ![StateStoreRestoreExec and IncrementalExecution](../images/StateStoreRestoreExec-IncrementalExecution.png)
 
-When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, creates a StateStoreRDD to map over partitions>> with `storeUpdateFunction` that restores the state for the keys in the input rows if available.
+When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and [creates a StateStoreRDD to map over partitions](../StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that restores the state for the keys in the input rows if available.
 
 [[output]]
 The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s output schema.
@@ -58,28 +57,27 @@ image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 stateManager: StreamingAggregationStateManager
 ----
 
-`stateManager` is a <<spark-sql-streaming-StreamingAggregationStateManager.md#, StreamingAggregationStateManager>> that is created together with `StateStoreRestoreExec`.
+`stateManager` is a [StreamingAggregationStateManager](../StreamingAggregationStateManager.md) that is created together with `StateStoreRestoreExec`.
 
 The `StreamingAggregationStateManager` is created for the <<keyExpressions, keys>>, the output schema of the <<child, child>> physical operator and the <<stateFormatVersion, version of the state format>>.
 
 The `StreamingAggregationStateManager` is used when `StateStoreRestoreExec` is requested to <<doExecute, generate a recipe for a distributed computation (as a RDD[InternalRow])>> for the following:
 
-* <<spark-sql-streaming-StreamingAggregationStateManager.md#getStateValueSchema, Schema of the values in a state store>>
+* [Schema of the values in a state store](../StreamingAggregationStateManager.md#getStateValueSchema)
 
-* <<spark-sql-streaming-StreamingAggregationStateManager.md#getKey, Extracting the columns for the key from the input row>>
+* [Extracting the columns for the key from the input row](../StreamingAggregationStateManager.md#getKey)
 
-* <<spark-sql-streaming-StreamingAggregationStateManager.md#get, Looking up the value of a key from a state store>>
+* [Looking up the value of a key from a state store](../StreamingAggregationStateManager.md#get)
 
-=== [[doExecute]] Executing Physical Operator (Generating RDD[InternalRow]) -- `doExecute` Method
+## <span id="doExecute"> Executing Physical Operator (Generating RDD[InternalRow])
 
-[source, scala]
-----
+```scala
 doExecute(): RDD[InternalRow]
-----
+```
 
-NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime representation of an physical operator as a distributed computation over internal binary rows on Apache Spark (i.e. `RDD[InternalRow]`).
+`doExecute` is part of the `SparkPlan` abstraction.
 
-Internally, `doExecute` executes <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that does the following per <<child, child>> operator's RDD partition:
+Internally, `doExecute` executes <<child, child>> physical operator and [creates a StateStoreRDD](../StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that does the following per <<child, child>> operator's RDD partition:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>> operator).
 

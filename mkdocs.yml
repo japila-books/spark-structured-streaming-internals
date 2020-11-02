@@ -123,13 +123,13 @@ nav:
         - StreamingSymmetricHashJoinHelper: StreamingSymmetricHashJoinHelper.md
         - StreamingJoinHelper: StreamingJoinHelper.md
     - Streaming Aggregation:
-      - Streaming Aggregation: spark-sql-streaming-aggregation.md
-      - StateStoreRDD: spark-sql-streaming-StateStoreRDD.md
-      - StateStoreOps: spark-sql-streaming-StateStoreOps.md
-      - StreamingAggregationStateManager: spark-sql-streaming-StreamingAggregationStateManager.md
-      - StreamingAggregationStateManagerBaseImpl: spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md
-      - StreamingAggregationStateManagerImplV1: spark-sql-streaming-StreamingAggregationStateManagerImplV1.md
-      - StreamingAggregationStateManagerImplV2: spark-sql-streaming-StreamingAggregationStateManagerImplV2.md
+      - Streaming Aggregation: streaming-aggregation.md
+      - StateStoreRDD: StateStoreRDD.md
+      - StateStoreOps: StateStoreOps.md
+      - StreamingAggregationStateManager: StreamingAggregationStateManager.md
+      - StreamingAggregationStateManagerBaseImpl: StreamingAggregationStateManagerBaseImpl.md
+      - StreamingAggregationStateManagerImplV1: StreamingAggregationStateManagerImplV1.md
+      - StreamingAggregationStateManagerImplV2: StreamingAggregationStateManagerImplV2.md
     - Stateful Stream Processing:
       - Stateful Stream Processing: spark-sql-streaming-stateful-stream-processing.md
       - Streaming Watermark: spark-sql-streaming-watermark.md

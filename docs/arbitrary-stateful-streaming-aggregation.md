@@ -1,6 +1,6 @@
 # Arbitrary Stateful Streaming Aggregation
 
-**Arbitrary Stateful Streaming Aggregation** is a [streaming aggregation query](spark-sql-streaming-aggregation.md) that uses the following [KeyValueGroupedDataset](KeyValueGroupedDataset.md) operators:
+**Arbitrary Stateful Streaming Aggregation** is a [streaming aggregation query](streaming-aggregation.md) that uses the following [KeyValueGroupedDataset](KeyValueGroupedDataset.md) operators:
 
 * [mapGroupsWithState](KeyValueGroupedDataset.md#mapGroupsWithState) for implicit state logic
 
@@ -41,20 +41,20 @@ When executed, `FlatMapGroupsWithStateExec` first validates a selected [GroupSta
 !!! note
     FIXME When are the above requirements met?
 
-`FlatMapGroupsWithStateExec` physical operator then [mapPartitionsWithStateStore](spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore) with a custom `storeUpdateFunction` of the following signature:
+`FlatMapGroupsWithStateExec` physical operator then [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore) with a custom `storeUpdateFunction` of the following signature:
 
 ```scala
 (StateStore, Iterator[T]) => Iterator[U]
 ```
 
-While generating the recipe, `FlatMapGroupsWithStateExec` uses [StateStoreOps](spark-sql-streaming-StateStoreOps.md) extension method object to register a listener that is executed on a task completion. The listener makes sure that a given [StateStore](spark-sql-streaming-StateStore.md) has all state changes either [committed](spark-sql-streaming-StateStore.md#hasCommitted) or [aborted](spark-sql-streaming-StateStore.md#abort).
+While generating the recipe, `FlatMapGroupsWithStateExec` uses [StateStoreOps](StateStoreOps.md) extension method object to register a listener that is executed on a task completion. The listener makes sure that a given [StateStore](spark-sql-streaming-StateStore.md) has all state changes either [committed](spark-sql-streaming-StateStore.md#hasCommitted) or [aborted](spark-sql-streaming-StateStore.md#abort).
 
-In the end, `FlatMapGroupsWithStateExec` creates a new [StateStoreRDD](spark-sql-streaming-StateStoreRDD.md) and adds it to the RDD lineage.
+In the end, `FlatMapGroupsWithStateExec` creates a new [StateStoreRDD](StateStoreRDD.md) and adds it to the RDD lineage.
 
-`StateStoreRDD` is used to properly distribute tasks across executors (per [preferred locations](spark-sql-streaming-StateStoreRDD.md#getPreferredLocations)) with help of [StateStoreCoordinator](spark-sql-streaming-StateStoreCoordinator.md) (that runs on the driver).
+`StateStoreRDD` is used to properly distribute tasks across executors (per [preferred locations](StateStoreRDD.md#getPreferredLocations)) with help of [StateStoreCoordinator](spark-sql-streaming-StateStoreCoordinator.md) (that runs on the driver).
 
 `StateStoreRDD` uses `StateStore` helper to [look up a StateStore](spark-sql-streaming-StateStore.md#get-StateStore) by [StateStoreProviderId](spark-sql-streaming-StateStoreProviderId.md) and store version.
 
-`FlatMapGroupsWithStateExec` physical operator uses [state managers](spark-sql-streaming-StateManager.md) that are different than [state managers](spark-sql-streaming-StreamingAggregationStateManager.md) for [Streaming Aggregation](spark-sql-streaming-aggregation.md). [StateStore](spark-sql-streaming-StateStore.md) abstraction is the same as in [Streaming Aggregation](spark-sql-streaming-aggregation.md).
+`FlatMapGroupsWithStateExec` physical operator uses [state managers](spark-sql-streaming-StateManager.md) that are different than [state managers](StreamingAggregationStateManager.md) for [Streaming Aggregation](streaming-aggregation.md). [StateStore](spark-sql-streaming-StateStore.md) abstraction is the same as in [Streaming Aggregation](streaming-aggregation.md).
 
 One of the important execution steps is when `InputProcessor` (of [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator) is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState). That executes the **user-defined state function** on a per-group state key object, value objects, and a [GroupStateImpl](GroupStateImpl.md).

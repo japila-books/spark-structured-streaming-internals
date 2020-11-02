@@ -819,7 +819,7 @@ Awaited when requested to [awaitTermination](#awaitTermination) (that pauses the
 
 ## <span id="IS_CONTINUOUS_PROCESSING"> __is_continuous_processing Local Property
 
-`StreamExecution` uses **__is_continuous_processing** local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to [compute a partition](spark-sql-streaming-StateStoreRDD.md#compute) (and <<spark-sql-streaming-StateStore.md#get, finds a StateStore>> for a given version).
+`StreamExecution` uses **__is_continuous_processing** local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to [compute a partition](StateStoreRDD.md#compute) (and <<spark-sql-streaming-StateStore.md#get, finds a StateStore>> for a given version).
 
 ## Logging
 

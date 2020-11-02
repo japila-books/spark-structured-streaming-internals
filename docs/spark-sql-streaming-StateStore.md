@@ -1,8 +1,8 @@
-# StateStore &mdash; Kay-Value Store for Streaming State Data
+# StateStore
 
-`StateStore` is the <<contract, abstraction>> of <<implementations, key-value stores>> for managing state in <<spark-sql-streaming-stateful-stream-processing.md#, Stateful Stream Processing>> (e.g. for persisting running aggregates in <<spark-sql-streaming-aggregation.md#, Streaming Aggregation>>).
+`StateStore` is the <<contract, abstraction>> of <<implementations, key-value stores>> for managing state in [Stateful Stream Processing](spark-sql-streaming-stateful-stream-processing.md) (e.g. for persisting running aggregates in [Streaming Aggregation](streaming-aggregation.md)).
 
-`StateStore` supports *incremental checkpointing* in which only the key-value "Row" pairs that changed are <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
+`StateStore` supports **incremental checkpointing** in which only the key-value "Row" pairs that changed are <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
 
 `StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for identification).
 
@@ -28,9 +28,9 @@ Aborts (_discards_) changes to the state store
 
 Used when:
 
-* `StateStoreOps` implicit class is requested to <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
+* `StateStoreOps` implicit class is requested to [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore) (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
 
-* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#abortIfNeeded, abortIfNeeded>> (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](spark-sql-streaming-SymmetricHashJoinStateManager.md)) is requested to [abortIfNeeded](spark-sql-streaming-StateStoreHandler.md#abortIfNeeded) (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
 
 | commit
 a| [[commit]]
@@ -44,33 +44,33 @@ Commits the changes to the state store (and returns the current version)
 
 Used when:
 
-* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed (right after all rows in a partition have been processed)
+* [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md) and [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md) physical operators are executed (right after all rows in a partition have been processed)
 
-* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#commit, commit (changes to) a state store>> (exclusively when <<StateStoreSaveExec.md#, StateStoreSaveExec>> physical operator is executed)
+* `StreamingAggregationStateManagerBaseImpl` is requested to [commit (changes to) a state store](StreamingAggregationStateManagerBaseImpl.md#commit) (when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed)
 
-* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#commit, commit changes to a state store>>
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](spark-sql-streaming-SymmetricHashJoinStateManager.md)) is requested to [commit changes to a state store](spark-sql-streaming-StateStoreHandler.md#commit)
 
 | get
 a| [[get]]
 
-[source, scala]
-----
-get(key: UnsafeRow): UnsafeRow
-----
+```scala
+get(
+  key: UnsafeRow): UnsafeRow
+```
 
 Looks up (_gets_) the value of the given non-`null` key
 
 Used when:
 
-* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed
+* [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md) and [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md) physical operators are executed
 
 * `StateManagerImplBase` (of `FlatMapGroupsWithStateExecHelper`) is requested to `getState`
 
-* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#get, StreamingAggregationStateManagerImplV1>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.md#get, StreamingAggregationStateManagerImplV2>> are requested to get the value of a non-null key
+* [StreamingAggregationStateManagerImplV1](StreamingAggregationStateManagerImplV1.md#get) and [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerImplV2.md#get) are requested to get the value of a non-null key
 
-* `KeyToNumValuesStore` is requested to <<spark-sql-streaming-KeyToNumValuesStore.md#get, get>>
+* `KeyToNumValuesStore` is requested to [get](spark-sql-streaming-KeyToNumValuesStore.md#get)
 
-* KeyWithIndexToValueStore` is requested to <<spark-sql-streaming-KeyWithIndexToValueStore.md#get, get>> and <<spark-sql-streaming-KeyWithIndexToValueStore.md#getAll, getAll>>
+* KeyWithIndexToValueStore` is requested to [get](spark-sql-streaming-KeyWithIndexToValueStore.md#get) and [getAll](spark-sql-streaming-KeyWithIndexToValueStore.md#getAll)
 
 | getRange
 a| [[getRange]]
@@ -86,13 +86,13 @@ Gets the key-value pairs of `UnsafeRows` for the specified range (with optional 
 
 Used when:
 
-* `WatermarkSupport` is requested to <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark, removeKeysOlderThanWatermark>>
+* `WatermarkSupport` is requested to [removeKeysOlderThanWatermark](spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark)
 
 * `StateManagerImplBase` is requested to `getAllState`
 
-* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#keys, keys>>
+* `StreamingAggregationStateManagerBaseImpl` is requested for [keys](StreamingAggregationStateManagerBaseImpl.md#keys)
 
-* <<spark-sql-streaming-KeyToNumValuesStore.md#iterator, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.md#iterator, KeyWithIndexToValueStore>> are requested to `iterator`
+* [KeyToNumValuesStore](spark-sql-streaming-KeyToNumValuesStore.md#iterator) and [KeyWithIndexToValueStore](spark-sql-streaming-KeyWithIndexToValueStore.md#iterator) are requested to `iterator`
 
 NOTE: All the uses above assume the `start` and `end` as `None` that basically is <<iterator, iterator>>.
 
@@ -108,7 +108,7 @@ Flag to indicate whether state changes have been committed (`true`) or not (`fal
 
 Used when:
 
-* `RDD` (via `StateStoreOps` implicit class) is requested to <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, mapPartitionsWithStateStore>> (and a task finishes and may need to <<abort, abort state updates>>)
+* `RDD` (via `StateStoreOps` implicit class) is requested to [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore) (and a task finishes and may need to <<abort, abort state updates>>)
 
 * `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#abortIfNeeded, abortIfNeeded>> (when a task finishes and may need to <<abort, abort state updates>>))
 
@@ -140,13 +140,13 @@ Returns an iterator with all the kay-value pairs in the state store
 
 Used when:
 
-* <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>> physical operator is requested to execute
+* [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) physical operator is requested to execute
 
-* [HDFSBackedStateStore](HDFSBackedStateStore.md#getRange) state store in particular and any <<getRange, StateStore>> in general are requested to `getRange`
+* [HDFSBackedStateStore](HDFSBackedStateStore.md#getRange) state store in particular and any [StateStore](#getRange) in general are requested to `getRange`
 
-* `StreamingAggregationStateManagerImplV1` state manager is requested for the <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#values, values>>
+* `StreamingAggregationStateManagerImplV1` state manager is requested for the [iterator](StreamingAggregationStateManagerImplV1.md#iterator) and [values](StreamingAggregationStateManagerImplV1.md#values)
 
-* `StreamingAggregationStateManagerImplV2` state manager is requested to <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.md#iterator, iterator>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.md#values, values>>
+* `StreamingAggregationStateManagerImplV2` state manager is requested to [iterator](StreamingAggregationStateManagerImplV2.md#iterator) and [values](StreamingAggregationStateManagerImplV2.md#values)
 
 | metrics
 a| [[metrics]]
@@ -178,13 +178,13 @@ Stores (_puts_) the value for the (non-null) key
 
 Used when:
 
-* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>> and <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>> physical operators are executed
+* [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md) and [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md) physical operators are executed
 
 * `StateManagerImplBase` is requested to `putState`
 
-* <<spark-sql-streaming-StreamingAggregationStateManagerImplV1.md#put, StreamingAggregationStateManagerImplV1>> and <<spark-sql-streaming-StreamingAggregationStateManagerImplV2.md#put, StreamingAggregationStateManagerImplV2>> are requested to store a row in a state store
+* [StreamingAggregationStateManagerImplV1](StreamingAggregationStateManagerImplV1.md#put) and [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerImplV2.md#put) are requested to store a row in a state store
 
-* <<spark-sql-streaming-KeyToNumValuesStore.md#put, KeyToNumValuesStore>> and <<spark-sql-streaming-KeyWithIndexToValueStore.md#put, KeyWithIndexToValueStore>> are requested to store a new value for a given key
+* [KeyToNumValuesStore](spark-sql-streaming-KeyToNumValuesStore.md#put) and [KeyWithIndexToValueStore](spark-sql-streaming-KeyWithIndexToValueStore.md#put) are requested to store a new value for a given key
 
 | remove
 a| [[remove]]
@@ -202,9 +202,9 @@ Used when:
 
 * `StateManagerImplBase` is requested to `removeState`
 
-* `StreamingAggregationStateManagerBaseImpl` is requested to <<spark-sql-streaming-StreamingAggregationStateManagerBaseImpl.md#remove, remove a key from a state store>>
+* `StreamingAggregationStateManagerBaseImpl` is requested to [remove a key from a state store](StreamingAggregationStateManagerBaseImpl.md#remove)
 
-* `KeyToNumValuesStore` is requested to <<spark-sql-streaming-KeyToNumValuesStore.md#remove, remove a key>>
+* `KeyToNumValuesStore` is requested to [remove a key](spark-sql-streaming-KeyToNumValuesStore.md#remove)
 
 * `KeyWithIndexToValueStore` is requested to <<spark-sql-streaming-KeyWithIndexToValueStore.md#remove, remove a key>> and <<spark-sql-streaming-KeyWithIndexToValueStore.md#removeAllValues, removeAllValues>>
 
@@ -316,10 +316,9 @@ When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProvider
 
 `MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> (default: `60s`).
 
-=== [[get-StateStore]] Looking Up StateStore by Provider ID -- `get` Object Method
+## <span id="get-StateStore"> Looking Up StateStore by Provider ID
 
-[source, scala]
-----
+```scala
 get(
   storeProviderId: StateStoreProviderId,
   keySchema: StructType,
@@ -328,9 +327,9 @@ get(
   version: Long,
   storeConf: StateStoreConf,
   hadoopConf: Configuration): StateStore
-----
+```
 
-`get` finds `StateStore` for the specified <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> and version.
+`get` finds `StateStore` for the specified [StateStoreProviderId](spark-sql-streaming-StateStoreProviderId.md) and version.
 
 NOTE: The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>>) or the [current batch ID](StatefulOperatorStateInfo.md#storeVersion) (in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>).
 
@@ -340,14 +339,11 @@ Internally, `get` looks up the <<spark-sql-streaming-StateStoreProvider.md#, Sta
 
 In the end, `get` requests the `StateStoreProvider` to <<spark-sql-streaming-StateStoreProvider.md#getStore, look up the StateStore by the specified version>>.
 
-[NOTE]
-====
 `get` is used when:
 
-* `StateStoreRDD` is requested to <<spark-sql-streaming-StateStoreRDD.md#compute, compute a partition>>
+* `StateStoreRDD` is requested to [compute a partition](StateStoreRDD.md#compute)
 
 * `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#getStateStore, look up a StateStore (by key and value schemas)>>
-====
 
 ==== [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Object Method
 

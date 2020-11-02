@@ -8,7 +8,7 @@
 
 * [StateStore](#store)
 
-`InputProcessor` is created when [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator is executed (for [storeUpdateFunction](spark-sql-streaming-StateStoreOps.md#storeUpdateFunction) while processing rows per partition with a corresponding per-partition state store).
+`InputProcessor` is created when [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator is executed (for [storeUpdateFunction](StateStoreOps.md#storeUpdateFunction) while processing rows per partition with a corresponding per-partition state store).
 
 ## <span id="store"> StateStore
 

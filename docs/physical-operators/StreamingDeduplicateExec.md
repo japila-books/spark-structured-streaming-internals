@@ -184,7 +184,7 @@ NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime repres
 
 Internally, `doExecute` initializes [metrics](StateStoreWriter.md#metrics).
 
-`doExecute` executes <<child, child>> physical operator and spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore[creates a StateStoreRDD] with `storeUpdateFunction` that:
+`doExecute` executes <<child, child>> physical operator and [creates a StateStoreRDD](../StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 

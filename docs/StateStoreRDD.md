@@ -1,36 +1,33 @@
-== [[StateStoreRDD]] StateStoreRDD -- RDD for Updating State (in StateStores Across Spark Cluster)
+# StateStoreRDD
 
-`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with spark-sql-streaming-StateStore.md[StateStore] (and data from partitions of the <<dataRDD, data RDD>>).
+`StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with [StateStore](spark-sql-streaming-StateStore.md) (and data from partitions of the <<dataRDD, data RDD>>).
 
-`StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using <<spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore, StateStoreOps.mapPartitionsWithStateStore>>):
+`StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using [StateStoreOps.mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore)):
 
 * [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md)
-* <<spark-sql-streaming-StateStoreRestoreExec.md#, StateStoreRestoreExec>>
-* <<StateStoreSaveExec.md#, StateStoreSaveExec>>
-* <<physical-operators/StreamingDeduplicateExec.md#, StreamingDeduplicateExec>>
-* <<physical-operators/StreamingGlobalLimitExec.md#, StreamingGlobalLimitExec>>
+* [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md)
+* [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md)
+* [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md)
+* [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md)
 
-.StateStoreRDD, Physical and Logical Plans, and operators
-image::images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png[align="center"]
+![StateStoreRDD, Physical and Logical Plans, and operators](images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png)
 
 `StateStoreRDD` uses `StateStoreCoordinator` for the <<getPreferredLocations, preferred locations of a partition>> for job scheduling.
 
-.StateStoreRDD and StateStoreCoordinator
-image::images/StateStoreRDD-StateStoreCoordinator.png[align="center"]
+![StateStoreRDD and StateStoreCoordinator](images/StateStoreRDD-StateStoreCoordinator.png)
 
 [[getPartitions]]
 `getPartitions` is exactly the partitions of the <<dataRDD, data RDD>>.
 
-=== [[compute]] Computing Partition -- `compute` Method
+## <span id="compute"> Computing Partition
 
-[source, scala]
-----
+```scala
 compute(
   partition: Partition,
   ctxt: TaskContext): Iterator[U]
-----
+```
 
-NOTE: `compute` is part of the RDD Contract to compute a given partition.
+`compute` is part of the `RDD` abstraction.
 
 `compute` computes <<dataRDD, dataRDD>> passing the result on to <<storeUpdateFunction, storeUpdateFunction>> (with a configured spark-sql-streaming-StateStore.md[StateStore]).
 

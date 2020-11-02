@@ -18,7 +18,7 @@ Spark Structured Streaming comes with two [stream execution engines](StreamExecu
 
 The goal of Spark Structured Streaming is to unify streaming, interactive, and batch queries over structured datasets for developing end-to-end stream processing applications dubbed **continuous applications** using Spark SQL's Datasets API with additional support for the following features:
 
-* [Streaming Aggregation](spark-sql-streaming-aggregation.md)
+* [Streaming Aggregation](streaming-aggregation.md)
 
 * [Streaming Join](spark-sql-streaming-join.md)
 

@@ -1,10 +1,10 @@
-== [[StateStoreProviderId]] StateStoreProviderId -- Unique Identifier of State Store Provider
+# StateStoreProviderId
 
 [[creating-instance]]
 `StateStoreProviderId` is a unique identifier of a <<spark-sql-streaming-StateStoreProvider.md#, state store provider>> with the following properties:
 
-* [[storeId]] <<spark-sql-streaming-StateStoreId.md#, StateStoreId>>
-* [[queryRunId]] Run ID of a streaming query (https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html[java.util.UUID])
+* [[storeId]] [StateStoreId](spark-sql-streaming-StateStoreId.md)
+* [[queryRunId]] Run ID of a streaming query ([java.util.UUID]({{ java.api }}/java/util/UUID.html))
 
 In other words, `StateStoreProviderId` is a <<storeId, StateStoreId>> with the <<queryRunId, run ID>> that is different every restart.
 
@@ -16,7 +16,7 @@ In other words, `StateStoreProviderId` is a <<storeId, StateStoreId>> with the <
 
 `StateStoreProviderId` is <<creating-instance, created>> (directly or using <<apply, apply>> factory method) when:
 
-* `StateStoreRDD` is requested for the <<spark-sql-streaming-StateStoreRDD.md#getPreferredLocations, placement preferences of a partition>> and to <<spark-sql-streaming-StateStoreRDD.md#compute, compute a partition>>
+* `StateStoreRDD` is requested for the [placement preferences of a partition](StateStoreRDD.md#getPreferredLocations) and to [compute a partition](StateStoreRDD.md#compute)
 
 * `StateStoreAwareZipPartitionsRDD` is requested for the <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md#getPreferredLocations, preferred locations of a partition>>
 

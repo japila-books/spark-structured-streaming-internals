@@ -49,7 +49,7 @@ doExecute(): RDD[InternalRow]
 
 `doExecute` then requests the [child](#child) physical operator to execute (and generate an `RDD[InternalRow]`).
 
-`doExecute` uses [StateStoreOps](../spark-sql-streaming-StateStoreOps.md) to [create a StateStoreRDD](../spark-sql-streaming-StateStoreOps.md#mapPartitionsWithStateStore) with a `storeUpdateFunction` that does the following (for a partition):
+`doExecute` uses [StateStoreOps](../StateStoreOps.md) to [create a StateStoreRDD](../StateStoreOps.md#mapPartitionsWithStateStore) with a `storeUpdateFunction` that does the following (for a partition):
 
 1. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](../spark-sql-streaming-StateStore.md)
 
@@ -114,7 +114,7 @@ The [state format version](#stateFormatVersion) is controlled by [spark.sql.stre
 
 The `StateManager` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is [executed](#doExecute) for the following:
 
-* [State schema](../spark-sql-streaming-StateManager.md#stateSchema) (for the [value schema](../spark-sql-streaming-StateStoreRDD.md#valueSchema) of a [StateStoreRDD](../spark-sql-streaming-StateStoreRDD.md))
+* [State schema](../spark-sql-streaming-StateManager.md#stateSchema) (for the [value schema](../StateStoreRDD.md#valueSchema) of a [StateStoreRDD](../StateStoreRDD.md))
 
 * [State data for a key in a StateStore](../spark-sql-streaming-StateManager.md#getState) while [processing new data](../InputProcessor.md#processNewData)
 
