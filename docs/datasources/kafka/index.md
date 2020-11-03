@@ -299,48 +299,44 @@ Default: `(empty)`
 Unless defined, Kafka data source uses the topic names as defined in the `topic` field in the incoming data.
 |===
 
-=== [[logical-query-plan-for-reading]] Logical Query Plan for Reading
+## Logical Query Plan for Reading
 
-When `DataStreamReader` is requested to load a dataset with *kafka* data source format, it creates a DataFrame with a <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> leaf logical operator.
+When `DataStreamReader` is requested to load a dataset with *kafka* data source format, it creates a DataFrame with a [StreamingRelationV2](../../logical-operators/StreamingRelationV2.md) leaf logical operator.
 
-[source, scala]
-----
+```text
 scala> records.explain(extended = true)
 == Parsed Logical Plan ==
 StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1a366d0, kafka, Map(maxOffsetsPerTrigger -> 1, startingOffsets -> latest, subscribepattern -> topic\d, kafka.bootstrap.servers -> :9092), [key#7, value#8, topic#9, partition#10, offset#11L, timestamp#12, timestampType#13], StreamingRelation DataSource(org.apache.spark.sql.SparkSession@39b3de87,kafka,List(),None,List(),None,Map(maxOffsetsPerTrigger -> 1, startingOffsets -> latest, subscribepattern -> topic\d, kafka.bootstrap.servers -> :9092),None), kafka, [key#0, value#1, topic#2, partition#3, offset#4L, timestamp#5, timestampType#6]
 ...
-----
+```
 
-=== [[logical-query-plan-for-writing]] Logical Query Plan for Writing
+## Logical Query Plan for Writing
 
 When `DataStreamWriter` is requested to start a streaming query with *kafka* data source format for writing, it requests the `StreamingQueryManager` to [create a streaming query](../../StreamingQueryManager.md#createQuery) that in turn creates (a [StreamingQueryWrapper](../../StreamingQueryWrapper.md) with) a <<ContinuousExecution.md#, ContinuousExecution>> or a <<MicroBatchExecution.md#, MicroBatchExecution>> for <<continuous-stream-processing, continuous>> and <<micro-batch-stream-processing, micro-batch>> stream processing, respectively.
 
-[source, scala]
-----
+```text
 scala> sq.explain(extended = true)
 == Parsed Logical Plan ==
 WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWriter@bf98b73
 +- Project [key#28 AS key#7, value#29 AS value#8, topic#30 AS topic#9, partition#31 AS partition#10, offset#32L AS offset#11L, timestamp#33 AS timestamp#12, timestampType#34 AS timestampType#13]
    +- Streaming RelationV2 kafka[key#28, value#29, topic#30, partition#31, offset#32L, timestamp#33, timestampType#34] (Options: [subscribepattern=kafka2console.*,kafka.bootstrap.servers=:9092])
-----
-
-=== [[demo]] Demo: Streaming Aggregation with Kafka Data Source
-
-Check out <<spark-sql-streaming-demo-kafka-data-source.md#, Demo: Streaming Aggregation with Kafka Data Source>>.
-
-[TIP]
-====
-Use the following to publish events to Kafka.
-
 ```
-// 1st streaming batch
-$ cat /tmp/1
-1,1,1
-15,2,1
 
-$ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
+## <span id="demo"> Demo: Streaming Aggregation with Kafka Data Source
 
-// Alternatively (and slower due to JVM bootup)
-$ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
-```
-====
+Check out [Demo: Streaming Aggregation with Kafka Data Source](../../demo/kafka-data-source.md).
+
+!!! tip
+    Use the following to publish events to Kafka.
+
+    ```
+    // 1st streaming batch
+    $ cat /tmp/1
+    1,1,1
+    15,2,1
+
+    $ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
+
+    // Alternatively (and slower due to JVM bootup)
+    $ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
+    ```

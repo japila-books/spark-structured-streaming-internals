@@ -47,11 +47,12 @@ a| [[load]]
 [source, scala]
 ----
 load(): DataFrame
-load(path: String): DataFrame // <1>
+load(
+  path: String): DataFrame // <1>
 ----
 <1> Explicit `path` (that could also be specified as an <<option, option>>)
 
-Creates a streaming `DataFrame` that represents "loading" streaming data (and is internally a logical plan with a <<spark-sql-streaming-StreamingRelationV2.md#, StreamingRelationV2>> or <<spark-sql-streaming-StreamingRelation.md#, StreamingRelation>> leaf logical operators)
+Creates a streaming `DataFrame` that represents "loading" streaming data (and is internally a logical plan with a [StreamingRelationV2](logical-operators/StreamingRelationV2.md) or [StreamingRelation](logical-operators/StreamingRelation.md) leaf logical operators)
 
 | <<option, option>>
 a|
@@ -130,12 +131,12 @@ textFile(path: String): Dataset[String]
 
 |===
 
-.DataStreamReader and The Others
-image::images/DataStreamReader-SparkSession-StreamingRelation.png[align="center"]
+![DataStreamReader and The Others](images/DataStreamReader-SparkSession-StreamingRelation.png)
 
 `DataStreamReader` is used for a Spark developer to describe how Spark Structured Streaming loads datasets from a streaming source (that <<load, in the end>> creates a logical plan for a streaming query).
 
-NOTE: `DataStreamReader` is the Spark developer-friendly API to create a spark-sql-streaming-StreamingRelation.md[StreamingRelation] logical operator (that represents a [streaming source](Source.md) in a logical plan).
+!!! note
+    `DataStreamReader` is the Spark developer-friendly API to create a [StreamingRelation](logical-operators/StreamingRelation.md) logical operator (that represents a [streaming source](Source.md) in a logical plan).
 
 You can access `DataStreamReader` using `SparkSession.readStream` method.
 

@@ -191,8 +191,8 @@ nav:
         - Deduplicate: spark-sql-streaming-Deduplicate.md
         - MemoryPlan: spark-sql-streaming-MemoryPlan.md
         - StreamingDataSourceV2Relation: StreamingDataSourceV2Relation.md
-        - StreamingRelation: spark-sql-streaming-StreamingRelation.md
-        - StreamingRelationV2: spark-sql-streaming-StreamingRelationV2.md
+        - StreamingRelation: logical-operators/StreamingRelation.md
+        - StreamingRelationV2: logical-operators/StreamingRelationV2.md
         - StreamingExecutionRelation: StreamingExecutionRelation.md
       - Physical Operators:
         - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md

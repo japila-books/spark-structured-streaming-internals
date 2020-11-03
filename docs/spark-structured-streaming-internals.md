@@ -68,7 +68,7 @@ Whenever you create a Dataset (be it batch in Spark SQL or streaming in Spark St
 
 A logical query plan is made up of logical operators.
 
-Spark Structured Streaming gives you two logical operators to represent streaming sources ([StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) and [StreamingRelation](spark-sql-streaming-StreamingRelation.md)).
+Spark Structured Streaming gives you two logical operators to represent streaming sources ([StreamingRelationV2](logical-operators/StreamingRelationV2.md) and [StreamingRelation](logical-operators/StreamingRelation.md)).
 
 When [DataStreamReader.load](DataStreamReader.md#load) method is executed, `load` first looks up the requested data source (that you specified using [DataStreamReader.format](DataStreamReader.md#format)) and creates an instance of it (_instantiation_). That'd be **data source resolution** step (that I described in...FIXME).
 
@@ -76,7 +76,7 @@ When [DataStreamReader.load](DataStreamReader.md#load) method is executed, `load
 
 ### V2 Code Path
 
-For [MicroBatchStream](MicroBatchStream.md) or [ContinuousReadSupport](ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](spark-sql-streaming-StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
+For [MicroBatchStream](MicroBatchStream.md) or [ContinuousReadSupport](ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](logical-operators/StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
 
 ```text
 // rate data source is V2
@@ -88,7 +88,7 @@ scala> println(plan.numberedTreeString)
 
 ### V1 Code Path
 
-For all other types of streaming data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelation](spark-sql-streaming-StreamingRelation.md) leaf logical operator. That is the former **V1 code path**.
+For all other types of streaming data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelation](logical-operators/StreamingRelation.md) leaf logical operator. That is the former **V1 code path**.
 
 ```text
 // text data source is V1

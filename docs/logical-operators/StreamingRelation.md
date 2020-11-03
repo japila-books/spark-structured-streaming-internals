@@ -1,11 +1,10 @@
-# StreamingRelation Leaf Logical Operator for Streaming Source
+# StreamingRelation Leaf Logical Operator
 
-`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a [streaming source](Source.md) in a logical plan.
+`StreamingRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a [streaming source](../Source.md) in a logical plan.
 
-`StreamingRelation` is <<creating-instance, created>> when `DataStreamReader` is requested to [load data from a streaming source](DataStreamReader.md#load) and creates a streaming query.
+`StreamingRelation` is <<creating-instance, created>> when `DataStreamReader` is requested to [load data from a streaming source](../DataStreamReader.md#load) and creates a streaming query.
 
-.StreamingRelation Represents Streaming Source
-image::images/StreamingRelation.png[align="center"]
+![StreamingRelation Represents Streaming Source](../images/StreamingRelation.png)
 
 ```text
 val rate = spark.
@@ -34,7 +33,7 @@ scala> println(relation)
 rate
 ```
 
-NOTE: `StreamingRelation` is [resolved](StreamExecution.md#logicalPlan) (aka _planned_) to [StreamingExecutionRelation](StreamingExecutionRelation.md) (right after `StreamExecution` [starts running batches](StreamExecution.md#runStream)).
+NOTE: `StreamingRelation` is [resolved](../StreamExecution.md#logicalPlan) (aka _planned_) to [StreamingExecutionRelation](../StreamingExecutionRelation.md) (right after `StreamExecution` [starts running batches](../StreamExecution.md#runStream)).
 
 === [[apply]] Creating StreamingRelation for DataSource -- `apply` Object Method
 
@@ -43,14 +42,14 @@ NOTE: `StreamingRelation` is [resolved](StreamExecution.md#logicalPlan) (aka _pl
 apply(dataSource: DataSource): StreamingRelation
 ----
 
-`apply` creates a `StreamingRelation` for the given [DataSource](DataSource.md) (that represents a streaming source).
+`apply` creates a `StreamingRelation` for the given [DataSource](#dataSource) (that represents a streaming source).
 
-`apply` is used when `DataStreamReader` is requested for a [streaming query](DataStreamReader.md#load).
+`apply` is used when `DataStreamReader` is requested for a [streaming query](../DataStreamReader.md#load).
 
 ## Creating Instance
 
 `StreamingRelation` takes the following when created:
 
-* [[dataSource]] [DataSource](DataSource.md)
+* [[dataSource]] [DataSource](../DataSource.md)
 * [[sourceName]] Short name of the streaming source
 * [[output]] Output attributes of the schema of the streaming source
