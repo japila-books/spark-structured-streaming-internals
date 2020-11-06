@@ -1,6 +1,8 @@
-# DataStreamWriter &mdash; Writing Datasets To Streaming Sink
+# DataStreamWriter
 
-`DataStreamWriter` is the interface that Spark developers use to describe when the result of executing a streaming query is sent out to the [streaming sink](#format).
+`DataStreamWriter` is an interface that Spark developers use to describe when the result of executing a streaming query is sent out to a [streaming data source](#format).
+
+## <span id="writeStream"> Accessing DataStreamWriter
 
 `DataStreamWriter` is available using [Dataset.writeStream](operators/writeStream.md) method.
 

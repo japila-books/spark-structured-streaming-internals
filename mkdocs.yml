@@ -172,11 +172,10 @@ nav:
       - InputProcessor: InputProcessor.md
     - StreamingQueryManager: StreamingQueryManager.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
-    - Developing Streaming Applications:
+    - Developer-Facing APIs:
       - DataStreamReader: DataStreamReader.md
-      - DataStreamWriter:
-        - DataStreamWriter: DataStreamWriter.md
-        - OutputMode: OutputMode.md
+      - DataStreamWriter: DataStreamWriter.md
+      - OutputMode: OutputMode.md
       - window Function: spark-sql-streaming-window.md
     - Query Execution:
       - StreamExecution: StreamExecution.md
