@@ -9,7 +9,7 @@ The following standard functions (and their Catalyst expressions) allow accessin
 * `current_date` function (`CurrentDate`)
 
 !!! note
-    `CurrentTimestamp` or `CurrentDate` expressions are not supported in [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md).
+    `CurrentTimestamp` or `CurrentDate` expressions are not supported in [Continuous Stream Processing](continuous-stream-processing.md).
 
 ## Internals
 
@@ -21,4 +21,4 @@ The current timestamp (and other batch-specific configurations) is given as the 
 
 * `MicroBatchExecution` is requested to [construct a next streaming micro-batch](MicroBatchExecution.md#constructNextBatch) in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
 
-* In [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md) the base `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) and initializes `OffsetSeqMetadata` to ``0``s.
+* In [Continuous Stream Processing](continuous-stream-processing.md) the base `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) and initializes `OffsetSeqMetadata` to ``0``s.

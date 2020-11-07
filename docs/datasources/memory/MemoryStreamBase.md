@@ -35,10 +35,10 @@ logicalPlan: LogicalPlan
 | MemoryStreamBase
 | Description
 
-| <<spark-sql-streaming-ContinuousMemoryStream.md#, ContinuousMemoryStream>>
+| [ContinuousMemoryStream](ContinuousMemoryStream.md)
 | [[ContinuousMemoryStream]]
 
-| <<spark-sql-streaming-MemoryStream.md#, MemoryStream>>
+| [MemoryStream](MemoryStream.md)
 | [[MemoryStream]] <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
 
 |===

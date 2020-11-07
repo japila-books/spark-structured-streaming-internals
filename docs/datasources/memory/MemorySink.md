@@ -1,6 +1,6 @@
 # MemorySink
 
-`MemorySink` is a [streaming sink](Sink.md) that <<addBatch, stores batches (records) in memory>>.
+`MemorySink` is a [streaming sink](../../Sink.md) that <<addBatch, stores batches (records) in memory>>.
 
 `MemorySink` is intended only for testing or demos.
 
@@ -26,7 +26,7 @@ It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created
 
 NOTE: At this point you can query the table as if it were a regular non-streaming table using spark-sql-sqlcontext.md#sql[sql] method.
 
-A new StreamingQuery.md[StreamingQuery] is started (using [StreamingQueryManager.startQuery](StreamingQueryManager.md#startQuery)) and returned.
+A new StreamingQuery.md[StreamingQuery] is started (using [StreamingQueryManager.startQuery](../../StreamingQueryManager.md#startQuery)) and returned.
 
 [[logging]]
 [TIP]
@@ -47,7 +47,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 `MemorySink` takes the following to be created:
 
 * [[schema]] Output schema
-* [[outputMode]] [OutputMode](OutputMode.md)
+* [[outputMode]] [OutputMode](../../OutputMode.md)
 
 `MemorySink` initializes the <<batches, batches>> internal property.
 
@@ -60,9 +60,9 @@ batches: ArrayBuffer[AddedData]
 
 `batches` holds data from streaming batches that have been <<addBatch, added>> (_written_) to this sink.
 
-For [Append](OutputMode.md#Append) and [Update](OutputMode.md#Update) output modes, `batches` holds rows from all batches.
+For [Append](../../OutputMode.md#Append) and [Update](../../OutputMode.md#Update) output modes, `batches` holds rows from all batches.
 
-For [Complete](OutputMode.md#Complete) output mode, `batches` holds rows from the last batch only.
+For [Complete](../../OutputMode.md#Complete) output mode, `batches` holds rows from the last batch only.
 
 `batches` can be cleared (_emptied_) using <<clear, clear>>.
 
@@ -79,7 +79,7 @@ addBatch(
 
 A batch ID is considered *committed* when the given batch ID is greater than the <<latestBatchId, latest batch ID>> (if available).
 
-`addBatch` is part of the [Sink](Sink.md#addBatch) abstraction.
+`addBatch` is part of the [Sink](../../Sink.md#addBatch) abstraction.
 
 ==== [[addBatch-not-committed]] Batch Not Committed
 

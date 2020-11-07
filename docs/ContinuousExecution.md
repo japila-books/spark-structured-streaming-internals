@@ -1,6 +1,6 @@
 # ContinuousExecution
 
-`ContinuousExecution` is the [stream execution engine](StreamExecution.md) of [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md).
+`ContinuousExecution` is the [stream execution engine](StreamExecution.md) of [Continuous Stream Processing](continuous-stream-processing.md).
 
 `ContinuousExecution` is <<creating-instance, created>> when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) with a <<sink, StreamWriteSupport sink>> and a <<trigger, ContinuousTrigger>> (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
 

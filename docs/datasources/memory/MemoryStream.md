@@ -1,6 +1,6 @@
 # MemoryStream -- Streaming Reader for Micro-Batch Stream Processing
 
-`MemoryStream` is a concrete [streaming source](spark-sql-streaming-MemoryStreamBase.md) of <<spark-sql-streaming-memory-data-source.md#, memory data source>> that supports <<spark-sql-streaming-MicroBatchReader.md#, reading>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
+`MemoryStream` is a concrete [streaming source](MemoryStreamBase.md) of [memory data source](index.md) that supports <<spark-sql-streaming-MicroBatchReader.md#, reading>> in <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>.
 
 [[logging]]
 [TIP]
@@ -55,7 +55,7 @@ In the end, `addData` increments the <<currentOffset, current offset>> and adds 
 
 === [[getBatch]] Generating Next Streaming Batch -- `getBatch` Method
 
-`getBatch` is a part of the [Source](Source.md#getBatch) abstraction.
+`getBatch` is a part of the [Source](../../Source.md#getBatch) abstraction.
 
 When executed, `getBatch` uses the internal <<batches, batches>> collection to return requested offsets.
 
@@ -72,11 +72,11 @@ DEBUG MemoryStream: MemoryBatch [[startOrdinal], [endOrdinal]]: [newBlocks]
 logicalPlan: LogicalPlan
 ----
 
-NOTE: `logicalPlan` is part of the <<spark-sql-streaming-MemoryStreamBase.md#logicalPlan, MemoryStreamBase Contract>> for the logical query plan of the memory stream.
+`logicalPlan` is part of the [MemoryStreamBase](MemoryStreamBase.md#logicalPlan) abstraction.
 
-`logicalPlan` is simply a [StreamingExecutionRelation](StreamingExecutionRelation.md) (for this memory source and the <<spark-sql-streaming-MemoryStreamBase.md#attributes, attributes>>).
+`logicalPlan` is simply a [StreamingExecutionRelation](../../logical-operators/StreamingExecutionRelation.md) (for this memory source and the [attributes](MemoryStreamBase.md#attributes)).
 
-`MemoryStream` uses [StreamingExecutionRelation](StreamingExecutionRelation.md) logical plan to build Datasets or DataFrames when requested.
+`MemoryStream` uses [StreamingExecutionRelation](../../logical-operators/StreamingExecutionRelation.md) logical plan to build Datasets or DataFrames when requested.
 
 ```text
 scala> val ints = MemoryStream[Int]
@@ -133,17 +133,17 @@ generateDebugString(
   endOrdinal: Int): String
 ----
 
-`generateDebugString` resolves and binds the <<spark-sql-streaming-MemoryStreamBase.md#encoder, encoder>> for the data.
+`generateDebugString` resolves and binds the [encoder](MemoryStreamBase.md#encoder) for the data.
 
 In the end, `generateDebugString` returns the following string:
 
-```
+```text
 MemoryBatch [[startOrdinal], [endOrdinal]]: [rows]
 ```
 
 NOTE: `generateDebugString` is used exclusively when `MemoryStream` is requested to <<planInputPartitions, planInputPartitions>>.
 
-=== [[internal-properties]] Internal Properties
+## Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
 |===
@@ -154,10 +154,10 @@ NOTE: `generateDebugString` is used exclusively when `MemoryStream` is requested
 a| [[batches]] Batch data (`ListBuffer[Array[UnsafeRow]]`)
 
 | currentOffset
-a| [[currentOffset]] Current [offset](Offset.md)
+a| [[currentOffset]] Current [offset](../../Offset.md)
 
 | lastOffsetCommitted
-a| [[lastOffsetCommitted]] Last committed [offset](Offset.md)
+a| [[lastOffsetCommitted]] Last committed [offset](../../Offset.md)
 
 | output
 a| [[output]] Output schema (`Seq[Attribute]`) of the [logical query plan](#logicalPlan)

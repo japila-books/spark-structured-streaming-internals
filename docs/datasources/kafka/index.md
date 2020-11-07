@@ -156,7 +156,7 @@ Kafka Data Source can reuse a Kafka consumer (using [KafkaMicroBatchReader](Kafk
 
 ## Continuous Stream Processing
 
-Kafka Data Source supports [Continuous Stream Processing](../../spark-sql-streaming-continuous-stream-processing.md) using [KafkaContinuousReader](KafkaContinuousReader.md).
+Kafka Data Source supports [Continuous Stream Processing](../../continuous-stream-processing.md) using [KafkaContinuousReader](KafkaContinuousReader.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger

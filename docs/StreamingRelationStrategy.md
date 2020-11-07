@@ -1,7 +1,7 @@
 # StreamingRelationStrategy Execution Planning Strategy
 
 [[apply]]
-`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with [StreamingRelation](logical-operators/StreamingRelation.md), [StreamingExecutionRelation](StreamingExecutionRelation.md), and [StreamingRelationV2](logical-operators/StreamingRelationV2.md) logical operators to [StreamingRelationExec](physical-operators/StreamingRelationExec.md) physical operators.
+`StreamingRelationStrategy` is an execution planning strategy that can plan streaming queries with [StreamingRelation](logical-operators/StreamingRelation.md), [StreamingExecutionRelation](logical-operators/StreamingExecutionRelation.md), and [StreamingRelationV2](logical-operators/StreamingRelationV2.md) logical operators to [StreamingRelationExec](physical-operators/StreamingRelationExec.md) physical operators.
 
 ![StreamingRelationStrategy, StreamingRelation, StreamingExecutionRelation and StreamingRelationExec Operators](images/StreamingRelationStrategy-apply.png)
 

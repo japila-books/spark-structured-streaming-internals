@@ -188,11 +188,10 @@ nav:
         - EventTimeWatermark: EventTimeWatermark.md
         - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
         - Deduplicate: spark-sql-streaming-Deduplicate.md
-        - MemoryPlan: spark-sql-streaming-MemoryPlan.md
-        - StreamingDataSourceV2Relation: StreamingDataSourceV2Relation.md
+        - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md
         - StreamingRelation: logical-operators/StreamingRelation.md
         - StreamingRelationV2: logical-operators/StreamingRelationV2.md
-        - StreamingExecutionRelation: StreamingExecutionRelation.md
+        - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
       - Physical Operators:
         - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
         - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
@@ -243,7 +242,7 @@ nav:
       - StreamSinkProvider: StreamSinkProvider.md
       - WatermarkTracker: spark-sql-streaming-WatermarkTracker.md
     - Continuous Stream Processing:
-      - Continuous Stream Processing: spark-sql-streaming-continuous-stream-processing.md
+      - Continuous Stream Processing: continuous-stream-processing.md
       - ContinuousExecution: ContinuousExecution.md
       - ContinuousReadSupport: ContinuousReadSupport.md
       - ContinuousReader: spark-sql-streaming-ContinuousReader.md
@@ -335,15 +334,16 @@ nav:
     - ForeachBatch Sink:
       - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Memory:
-      - Memory Data Source: spark-sql-streaming-memory-data-source.md
-      - MemoryStream: spark-sql-streaming-MemoryStream.md
-      - ContinuousMemoryStream: spark-sql-streaming-ContinuousMemoryStream.md
-      - MemorySink: spark-sql-streaming-MemorySink.md
+      - Memory Data Source: datasources/memory/index.md
+      - MemoryStream: datasources/memory/MemoryStream.md
+      - ContinuousMemoryStream: datasources/memory/ContinuousMemoryStream.md
+      - MemorySink: datasources/memory/MemorySink.md
       - MemorySinkV2:
-        - MemorySinkV2: spark-sql-streaming-MemorySinkV2.md
+        - MemorySinkV2: datasources/memory/MemorySinkV2.md
         - MemoryStreamWriter: spark-sql-streaming-MemoryStreamWriter.md
-      - MemoryStreamBase: spark-sql-streaming-MemoryStreamBase.md
-      - MemorySinkBase: spark-sql-streaming-MemorySinkBase.md
+      - MemoryStreamBase: datasources/memory/MemoryStreamBase.md
+      - MemorySinkBase: datasources/memory/MemorySinkBase.md
+      - MemoryPlan: datasources/memory/MemoryPlan.md
   - Monitoring:
     - StreamingQueryListener: monitoring/StreamingQueryListener.md
     - ProgressReporter: monitoring/ProgressReporter.md

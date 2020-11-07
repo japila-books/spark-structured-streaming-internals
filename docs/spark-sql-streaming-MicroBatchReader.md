@@ -85,7 +85,7 @@ Used when...FIXME
 | [KafkaMicroBatchReader](datasources/kafka/KafkaMicroBatchReader.md)
 | [[KafkaMicroBatchReader]]
 
-| [MemoryStream](spark-sql-streaming-MemoryStream.md)
+| [MemoryStream](datasources/memory/MemoryStream.md)
 | [[MemoryStream]]
 
 | RateStreamMicroBatchReader

@@ -1,6 +1,6 @@
 # ContinuousReader &mdash; Data Source Readers in Continuous Stream Processing
 
-`ContinuousReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` abstraction for <<implementations, data source readers>> in [Continuous Stream Processing](spark-sql-streaming-continuous-stream-processing.md).
+`ContinuousReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` abstraction for <<implementations, data source readers>> in [Continuous Stream Processing](continuous-stream-processing.md).
 
 `ContinuousReader` is part of the novel Data Source API V2 in Spark SQL.
 
@@ -88,7 +88,7 @@ Used exclusively when `ContinuousExecution` is requested to <<ContinuousExecutio
 | ContinuousReader
 | Description
 
-| [ContinuousMemoryStream](spark-sql-streaming-ContinuousMemoryStream.md)
+| [ContinuousMemoryStream](datasources/memory/ContinuousMemoryStream.md)
 | [[ContinuousMemoryStream]]
 
 | [KafkaContinuousReader](datasources/kafka/KafkaContinuousReader.md)

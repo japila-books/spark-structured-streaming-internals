@@ -1,12 +1,12 @@
-== Memory Data Source
+# Memory Data Source
 
 *Memory Data Source* is made up of the following two base implementations to support the older DataSource API V1 and the modern DataSource API V2:
 
-* <<spark-sql-streaming-MemoryStreamBase.md#, MemoryStreamBase>>
+* [MemoryStreamBase](MemoryStreamBase.md)
 
-* <<spark-sql-streaming-MemorySinkBase.md#, MemorySinkBase>>
+* [MemorySinkBase](MemorySinkBase.md)
 
-Memory data source supports <<micro-batch-stream-processing.md#, Micro-Batch>> and <<spark-sql-streaming-continuous-stream-processing.md#, Continuous>> stream processing modes.
+Memory data source supports [Micro-Batch](../../micro-batch-stream-processing.md) and [Continuous](../../continuous-stream-processing.md) stream processing modes.
 
 [cols="30,35,35",options="header",width="100%"]
 |===
@@ -14,13 +14,13 @@ Memory data source supports <<micro-batch-stream-processing.md#, Micro-Batch>> a
 | Source
 | Sink
 
-| [Micro-Batch](micro-batch-stream-processing.md)
-| [MemoryStream](spark-sql-streaming-MemoryStream.md)
-| [MemorySink](spark-sql-streaming-MemorySink.md)
+| [Micro-Batch](../../micro-batch-stream-processing.md)
+| [MemoryStream](MemoryStream.md)
+| [MemorySink](MemorySink.md)
 
-| [Continuous](spark-sql-streaming-continuous-stream-processing.md)
-| [ContinuousMemoryStream](spark-sql-streaming-ContinuousMemoryStream.md)
-| [MemorySinkV2](spark-sql-streaming-MemorySinkV2.md)
+| [Continuous](../../continuous-stream-processing.md)
+| [ContinuousMemoryStream](ContinuousMemoryStream.md)
+| [MemorySinkV2](MemorySinkV2.md)
 
 |===
 
@@ -33,15 +33,15 @@ Memory Data Source is *not* for production use due to design contraints, e.g. in
 
 === [[memory-sink]] Memory Sink
 
-Memory sink requires that a streaming query has a name (defined using [DataStreamWriter.queryName](DataStreamWriter.md#queryName) or `queryName` option).
+Memory sink requires that a streaming query has a name (defined using [DataStreamWriter.queryName](../../DataStreamWriter.md#queryName) or `queryName` option).
 
-Memory sink may optionally define checkpoint location using `checkpointLocation` option that is used to recover from for [Complete](OutputMode.md#Complete) output mode only.
+Memory sink may optionally define checkpoint location using `checkpointLocation` option that is used to recover from for [Complete](../../OutputMode.md#Complete) output mode only.
 
 ### Memory Sink and CreateViewCommand
 
-When a streaming query with `memory` sink is [started](DataStreamWriter.md#start), [DataStreamWriter](DataStreamWriter.md) uses `Dataset.createOrReplaceTempView` operator to create or replace a local temporary view with the name of the query (which is required).
+When a streaming query with `memory` sink is [started](../../DataStreamWriter.md#start), [DataStreamWriter](../../DataStreamWriter.md) uses `Dataset.createOrReplaceTempView` operator to create or replace a local temporary view with the name of the query (which is required).
 
-![Memory Sink and CreateViewCommand](images/memory-sink-webui-createviewcommand.png)
+![Memory Sink and CreateViewCommand](../../images/memory-sink-webui-createviewcommand.png)
 
 ## Examples
 

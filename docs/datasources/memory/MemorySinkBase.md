@@ -49,10 +49,10 @@ latestBatchId: Option[Long]
 | MemorySinkBase
 | Description
 
-| [MemorySink](spark-sql-streaming-MemorySink.md)
-| [[MemorySink]] [Streaming sink](Sink.md) for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (based on Data Source API V1)
+| [MemorySink](MemorySink.md)
+| [[MemorySink]] [Streaming sink](../../Sink.md) for [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md) (based on Data Source API V1)
 
-| <<spark-sql-streaming-MemorySinkV2.md#, MemorySinkV2>>
-| [[MemorySinkV2]] Streaming sink for <<spark-sql-streaming-continuous-stream-processing.md#, Continuous Stream Processing>> (based on Data Source API V2)
+| [MemorySinkV2](MemorySinkV2.md)
+| [[MemorySinkV2]] Streaming sink for [Continuous Stream Processing](../../continuous-stream-processing.md) (based on Data Source API V2)
 
 |===

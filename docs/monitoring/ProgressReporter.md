@@ -46,7 +46,7 @@ logicalPlan: LogicalPlan
 Logical query plan of the streaming query
 
 !!! important
-    The most interesting usage of the `LogicalPlan` is when stream execution engines replace (_transform_) input [StreamingExecutionRelation](../StreamingExecutionRelation.md) and [StreamingDataSourceV2Relation](../StreamingDataSourceV2Relation.md) operators with (operators with) data or `LocalRelation` (to represent no data at a source).
+    The most interesting usage of the `LogicalPlan` is when stream execution engines replace (_transform_) input [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) and [StreamingDataSourceV2Relation](../logical-operators/StreamingDataSourceV2Relation.md) operators with (operators with) data or `LocalRelation` (to represent no data at a source).
 
 Used when `ProgressReporter` is requested for the following:
 
