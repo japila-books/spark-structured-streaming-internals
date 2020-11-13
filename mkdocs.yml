@@ -182,36 +182,35 @@ nav:
       - IncrementalExecution: IncrementalExecution.md
       - TriggerExecutor: TriggerExecutor.md
       - StreamingQueryWrapper: StreamingQueryWrapper.md
-    - Query Planning:
-      - StreamMetadata: StreamMetadata.md
-      - Logical Operators:
-        - EventTimeWatermark: EventTimeWatermark.md
-        - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
-        - Deduplicate: spark-sql-streaming-Deduplicate.md
-        - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md
-        - StreamingRelation: logical-operators/StreamingRelation.md
-        - StreamingRelationV2: logical-operators/StreamingRelationV2.md
-        - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
-      - Physical Operators:
-        - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
-        - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
-        - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
-        - StatefulOperator: physical-operators/StatefulOperator.md
-        - StateStoreReader: physical-operators/StateStoreReader.md
-        - StateStoreRestoreExec: physical-operators/StateStoreRestoreExec.md
-        - StateStoreSaveExec: physical-operators/StateStoreSaveExec.md
-        - StateStoreWriter: physical-operators/StateStoreWriter.md
-        - StreamingDeduplicateExec: physical-operators/StreamingDeduplicateExec.md
-        - StreamingGlobalLimitExec: physical-operators/StreamingGlobalLimitExec.md
-        - StreamingRelationExec: physical-operators/StreamingRelationExec.md
-        - StreamingSymmetricHashJoinExec: physical-operators/StreamingSymmetricHashJoinExec.md
-      - Execution Planning Strategies:
-        - FlatMapGroupsWithStateStrategy: FlatMapGroupsWithStateStrategy.md
-        - StatefulAggregationStrategy: StatefulAggregationStrategy.md
-        - StreamingDeduplicationStrategy: StreamingDeduplicationStrategy.md
-        - StreamingGlobalLimitStrategy: StreamingGlobalLimitStrategy.md
-        - StreamingJoinStrategy: StreamingJoinStrategy.md
-        - StreamingRelationStrategy: StreamingRelationStrategy.md
+    - StreamMetadata: StreamMetadata.md
+    - Logical Operators:
+      - EventTimeWatermark: EventTimeWatermark.md
+      - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
+      - Deduplicate: spark-sql-streaming-Deduplicate.md
+      - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md
+      - StreamingRelation: logical-operators/StreamingRelation.md
+      - StreamingRelationV2: logical-operators/StreamingRelationV2.md
+      - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
+    - Physical Operators:
+      - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
+      - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
+      - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
+      - StatefulOperator: physical-operators/StatefulOperator.md
+      - StateStoreReader: physical-operators/StateStoreReader.md
+      - StateStoreRestoreExec: physical-operators/StateStoreRestoreExec.md
+      - StateStoreSaveExec: physical-operators/StateStoreSaveExec.md
+      - StateStoreWriter: physical-operators/StateStoreWriter.md
+      - StreamingDeduplicateExec: physical-operators/StreamingDeduplicateExec.md
+      - StreamingGlobalLimitExec: physical-operators/StreamingGlobalLimitExec.md
+      - StreamingRelationExec: physical-operators/StreamingRelationExec.md
+      - StreamingSymmetricHashJoinExec: physical-operators/StreamingSymmetricHashJoinExec.md
+    - Execution Planning Strategies:
+      - FlatMapGroupsWithStateStrategy: FlatMapGroupsWithStateStrategy.md
+      - StatefulAggregationStrategy: StatefulAggregationStrategy.md
+      - StreamingDeduplicationStrategy: StreamingDeduplicationStrategy.md
+      - StreamingGlobalLimitStrategy: StreamingGlobalLimitStrategy.md
+      - StreamingJoinStrategy: StreamingJoinStrategy.md
+      - StreamingRelationStrategy: StreamingRelationStrategy.md
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
       - MetadataLog: MetadataLog.md

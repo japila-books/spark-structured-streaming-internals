@@ -437,7 +437,7 @@ Retrieving data from [reader]: [current] -> [availableV2]
 
 `runBatch` looks up the `DataSourceV2` and the options for the `MicroBatchReader` (in the <<readerToDataSourceMap, readerToDataSourceMap>> internal registry).
 
-In the end, `runBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.md#readSchema, read schema>> and creates a `StreamingDataSourceV2Relation` logical operator (with the read schema, the `DataSourceV2`, options, and the `MicroBatchReader`).
+In the end, `runBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.md#readSchema, read schema>> and creates a [StreamingDataSourceV2Relation](logical-operators/StreamingDataSourceV2Relation.md) logical operator (with the read schema, the `DataSourceV2`, options, and the `MicroBatchReader`).
 
 ### <span id="runBatch-newBatchesPlan"> Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data
 

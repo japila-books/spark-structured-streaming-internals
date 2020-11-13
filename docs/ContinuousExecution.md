@@ -103,15 +103,16 @@ runContinuous(
 
 `runContinuous` <<getStartOffsets, gets the start offsets>> (they may or may not be available).
 
-`runContinuous` transforms the <<logicalPlan, analyzed logical plan>>. For every [ContinuousExecutionRelation](ContinuousExecutionRelation.md) `runContinuous` finds the corresponding <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> (in the <<continuousSources, continuousSources>>), requests it to <<spark-sql-streaming-ContinuousReader.md#deserializeOffset, deserialize the start offsets>> (from their JSON representation), and then <<spark-sql-streaming-ContinuousReader.md#setStartOffset, setStartOffset>>. In the end, `runContinuous` creates a `StreamingDataSourceV2Relation` (with the read schema of the `ContinuousReader` and the `ContinuousReader` itself).
+`runContinuous` transforms the <<logicalPlan, analyzed logical plan>>. For every [ContinuousExecutionRelation](ContinuousExecutionRelation.md) `runContinuous` finds the corresponding <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> (in the <<continuousSources, continuousSources>>), requests it to <<spark-sql-streaming-ContinuousReader.md#deserializeOffset, deserialize the start offsets>> (from their JSON representation), and then <<spark-sql-streaming-ContinuousReader.md#setStartOffset, setStartOffset>>. In the end, `runContinuous` creates a [StreamingDataSourceV2Relation](logical-operators/StreamingDataSourceV2Relation.md) (with the read schema of the `ContinuousReader` and the `ContinuousReader` itself).
 
 `runContinuous` rewires the transformed plan (with the `StreamingDataSourceV2Relation`) to use the new attributes from the source (the reader).
 
-NOTE: `CurrentTimestamp` and `CurrentDate` expressions are not supported for continuous processing.
+!!! important
+    `CurrentTimestamp` and `CurrentDate` expressions are not supported for continuous processing.
 
 `runContinuous`...FIXME
 
-`runContinuous` finds the only <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
+`runContinuous` finds the only [ContinuousReader](spark-sql-streaming-ContinuousReader.md) (of the only `StreamingDataSourceV2Relation`) in the query plan with the `WriteToContinuousDataSource`.
 
 <span id="runContinuous-queryPlanning"/>
 In **queryPlanning** [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runContinuous` creates an [IncrementalExecution](IncrementalExecution.md) (that becomes the [lastExecution](StreamExecution.md#lastExecution)) that is immediately executed (the entire query execution pipeline is executed up to and including _executedPlan_).

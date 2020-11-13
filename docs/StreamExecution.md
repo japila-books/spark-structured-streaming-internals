@@ -261,7 +261,7 @@ Indicates that:
 
 Used when `ContinuousExecution` is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) (and the [ContinuousReader](spark-sql-streaming-ContinuousReader.md) indicated a [need for reconfiguration](spark-sql-streaming-ContinuousReader.md#needsReconfiguration))
 
-## <span id="createStreamingWrite"> createStreamingWrite
+## <span id="createStreamingWrite"> Creating StreamingWrite
 
 ```scala
 createStreamingWrite(
@@ -270,9 +270,25 @@ createStreamingWrite(
   inputPlan: LogicalPlan): StreamingWrite
 ```
 
-`createStreamingWrite`...FIXME
+`createStreamingWrite` creates a `LogicalWriteInfoImpl` (with the [query ID](#id), the schema of the input `LogicalPlan` and the given options).
 
-`createStreamingWrite` is used when [MicroBatchExecution](MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans
+`createStreamingWrite` requests the given `SupportsWrite` table for a `WriteBuilder` (for the `LogicalWriteInfoImpl`).
+
+!!! tip
+    Learn more about [SupportsWrite]({{ book.spark_sql }}/connector/SupportsWrite/) and [WriteBuilder]({{ book.spark_sql }}/connector/WriteBuilder/) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
+
+`createStreamingWrite` branches based on the [OutputMode](#outputMode):
+
+* For [Append](OutputMode.md#Append) output mode, `createStreamingWrite` requests the `WriteBuilder` to build a `StreamingWrite`.
+
+* For [Complete](OutputMode.md#Complete) output mode, `createStreamingWrite` assumes that the `WriteBuilder` is a `SupportsTruncate` and requests it to `truncate` followed by `buildForStreaming`
+
+* For [Update](OutputMode.md#Update) output mode, `createStreamingWrite` assumes that the `WriteBuilder` is a `SupportsStreamingUpdate` and requests it to `update` followed by `buildForStreaming`
+
+!!! tip
+    Learn more about [SupportsTruncate]({{ book.spark_sql }}/connector/SupportsTruncate/) and [SupportsStreamingUpdate]({{ book.spark_sql }}/connector/SupportsStreamingUpdate/) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
+
+`createStreamingWrite` is used when [MicroBatchExecution](MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans.
 
 ## <span id="availableOffsets"> Available Offsets (StreamProgress)
 
