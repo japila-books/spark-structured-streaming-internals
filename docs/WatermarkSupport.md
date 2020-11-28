@@ -1,4 +1,4 @@
-== [[WatermarkSupport]] WatermarkSupport Contract -- Unary Physical Operators with Streaming Watermark Support
+# WatermarkSupport Unary Physical Operators
 
 `WatermarkSupport` is the <<contract, abstraction>> of unary physical operators (`UnaryExecNode`) with support for streaming event-time watermark.
 
@@ -24,13 +24,13 @@ a| Optional Catalyst expression that matches rows older than the event time wate
 
 ---
 
-When initialized, `watermarkExpression` finds EventTimeWatermark.md#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in the child output's metadata.
+When initialized, `watermarkExpression` finds [spark.watermarkDelayMs](logical-operators/EventTimeWatermark.md#watermarkDelayMs) watermark attribute in the child output's metadata.
 
 If found, `watermarkExpression` creates `evictionExpression` with the watermark attribute that is less than or equal <<eventTimeWatermark, eventTimeWatermark>>.
 
 The watermark attribute may be of type `StructType`. If it is, `watermarkExpression` uses the first field as the watermark.
 
-`watermarkExpression` prints out the following INFO message to the logs when EventTimeWatermark.md#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute is found.
+`watermarkExpression` prints out the following INFO message to the logs when [spark.watermarkDelayMs](logical-operators/EventTimeWatermark.md#watermarkDelayMs) watermark attribute is found.
 
 ```text
 INFO [physicalOperator]Exec: Filtering state store on: [evictionExpression]
@@ -70,7 +70,7 @@ trait WatermarkSupport extends UnaryExecNode {
 | Used mainly in <<watermarkExpression, watermarkExpression>> to create a `LessThanOrEqual` Catalyst binary expression that matches rows older than the watermark.
 
 | [[keyExpressions]] `keyExpressions`
-| Grouping keys (in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#keyExpressions)), duplicate keys (in physical-operators/StreamingDeduplicateExec.md#keyExpressions[StreamingDeduplicateExec]) or key attributes (in StateStoreSaveExec.md#keyExpressions[StateStoreSaveExec]) with at most one that may have EventTimeWatermark.md#watermarkDelayMs[spark.watermarkDelayMs] watermark attribute in metadata
+| Grouping keys (in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#keyExpressions)), duplicate keys (in physical-operators/StreamingDeduplicateExec.md#keyExpressions[StreamingDeduplicateExec]) or key attributes (in StateStoreSaveExec.md#keyExpressions[StateStoreSaveExec]) with at most one that may have [spark.watermarkDelayMs](logical-operators/EventTimeWatermark.md#watermarkDelayMs) watermark attribute in metadata
 
 Used in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Predicate` to match rows older than the event time watermark.
 

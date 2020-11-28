@@ -45,7 +45,7 @@ Use the following demos to learn more:
 
 ## Internals
 
-Under the covers, [Dataset.withWatermark](operators/withWatermark.md) high-level operator creates a logical query plan with [EventTimeWatermark](EventTimeWatermark.md) logical operator.
+Under the covers, [Dataset.withWatermark](operators/withWatermark.md) high-level operator creates a logical query plan with [EventTimeWatermark](logical-operators/EventTimeWatermark.md) logical operator.
 
 `EventTimeWatermark` logical operator is planned to [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator that extracts the event times (from the data being processed) and adds them to an accumulator.
 

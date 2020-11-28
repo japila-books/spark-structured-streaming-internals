@@ -53,7 +53,7 @@ doExecute(): RDD[InternalRow]
 
 1. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](../spark-sql-streaming-StateStore.md)
 
-1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](../spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](../spark-sql-streaming-WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
+1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
 
 1. Requests the `InputProcessor` to [create an iterator of a new data processed](../InputProcessor.md#processNewData) from the (possibly filtered) iterator
 
@@ -79,7 +79,7 @@ doExecute(): RDD[InternalRow]
 
 ## <span id="WatermarkSupport"> Streaming Event-Time Watermark Support
 
-`FlatMapGroupsWithStateExec` is a [physical operator that supports streaming event-time watermark](../spark-sql-streaming-WatermarkSupport.md).
+`FlatMapGroupsWithStateExec` is a [physical operator that supports streaming event-time watermark](../WatermarkSupport.md).
 
 `FlatMapGroupsWithStateExec` is given the [optional event time watermark](#eventTimeWatermark) when created.
 
@@ -132,7 +132,7 @@ keyExpressions: Seq[Attribute]
 
 `keyExpressions` simply returns the [grouping attributes](#groupingAttributes).
 
-`keyExpressions` is part of the [WatermarkSupport](../spark-sql-streaming-WatermarkSupport.md#keyExpressions) abstraction.
+`keyExpressions` is part of the [WatermarkSupport](../WatermarkSupport.md#keyExpressions) abstraction.
 
 ## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
 
@@ -164,7 +164,7 @@ Used when:
 
 ### <span id="watermarkPresent"> watermarkPresent Flag
 
-Flag that says whether the [child](#child) physical operator has a [watermark attribute](../EventTimeWatermark.md#delayKey) (among the output attributes).
+Flag that says whether the [child](#child) physical operator has a [watermark attribute](../logical-operators/EventTimeWatermark.md#delayKey) (among the output attributes).
 
 Used when `InputProcessor` is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState)
 

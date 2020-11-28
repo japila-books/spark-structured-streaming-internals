@@ -85,7 +85,7 @@ keys(store: StateStore): Iterator[UnsafeRow]
 
 Returns all the keys in the given [StateStore](spark-sql-streaming-StateStore.md)
 
-Used exclusively when physical operators with `WatermarkSupport` are requested to [removeKeysOlderThanWatermark](spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store) (when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed).
+Used exclusively when physical operators with `WatermarkSupport` are requested to [removeKeysOlderThanWatermark](WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store) (when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed).
 
 | put
 a| [[put]]
@@ -113,7 +113,7 @@ remove(
 
 Removes the key-value pair from the given [StateStore](spark-sql-streaming-StateStore.md) per key
 
-Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed (directly or indirectly as a [WatermarkSupport](spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store))
+Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed (directly or indirectly as a [WatermarkSupport](WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store))
 
 | values
 a| [[values]]

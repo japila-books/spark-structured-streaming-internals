@@ -30,7 +30,7 @@ Used when:
 
 * `StateStoreOps` implicit class is requested to [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore) (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
 
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](spark-sql-streaming-SymmetricHashJoinStateManager.md)) is requested to [abortIfNeeded](spark-sql-streaming-StateStoreHandler.md#abortIfNeeded) (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md)) is requested to [abortIfNeeded](spark-sql-streaming-StateStoreHandler.md#abortIfNeeded) (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
 
 | commit
 a| [[commit]]
@@ -48,7 +48,7 @@ Used when:
 
 * `StreamingAggregationStateManagerBaseImpl` is requested to [commit (changes to) a state store](StreamingAggregationStateManagerBaseImpl.md#commit) (when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed)
 
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](spark-sql-streaming-SymmetricHashJoinStateManager.md)) is requested to [commit changes to a state store](spark-sql-streaming-StateStoreHandler.md#commit)
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md)) is requested to [commit changes to a state store](spark-sql-streaming-StateStoreHandler.md#commit)
 
 | get
 a| [[get]]
@@ -86,7 +86,7 @@ Gets the key-value pairs of `UnsafeRows` for the specified range (with optional 
 
 Used when:
 
-* `WatermarkSupport` is requested to [removeKeysOlderThanWatermark](spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark)
+* `WatermarkSupport` is requested to [removeKeysOlderThanWatermark](WatermarkSupport.md#removeKeysOlderThanWatermark)
 
 * `StateManagerImplBase` is requested to `getAllState`
 
@@ -110,7 +110,7 @@ Used when:
 
 * `RDD` (via `StateStoreOps` implicit class) is requested to [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore) (and a task finishes and may need to <<abort, abort state updates>>)
 
-* `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#abortIfNeeded, abortIfNeeded>> (when a task finishes and may need to <<abort, abort state updates>>))
+* `SymmetricHashJoinStateManager` is requested to [abortIfNeeded](SymmetricHashJoinStateManager.md#abortIfNeeded) (when a task finishes and may need to <<abort, abort state updates>>))
 
 | id
 a| [[id]]
@@ -126,7 +126,7 @@ Used when:
 
 * `HDFSBackedStateStore` state store is requested for the [textual representation](HDFSBackedStateStore.md#toString)
 
-* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#abortIfNeeded, abortIfNeeded>> and <<spark-sql-streaming-StateStoreHandler.md#getStateStore, getStateStore>>
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md)) is requested to <<spark-sql-streaming-StateStoreHandler.md#abortIfNeeded, abortIfNeeded>> and <<spark-sql-streaming-StateStoreHandler.md#getStateStore, getStateStore>>
 
 | iterator
 a| [[iterator]]
@@ -162,7 +162,7 @@ Used when:
 
 * `StateStoreWriter` stateful physical operator is requested to [setStoreMetrics](physical-operators/StateStoreWriter.md#setStoreMetrics)
 
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](spark-sql-streaming-SymmetricHashJoinStateManager.md)) is requested to [commit](spark-sql-streaming-StateStoreHandler.md#commit) and for the [metrics](spark-sql-streaming-StateStoreHandler.md#metrics)
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md)) is requested to [commit](spark-sql-streaming-StateStoreHandler.md#commit) and for the [metrics](spark-sql-streaming-StateStoreHandler.md#metrics)
 
 | put
 a| [[put]]
@@ -198,7 +198,7 @@ Removes the (non-null) key from the state store
 
 Used when:
 
-* Physical operators with `WatermarkSupport` are requested to <<spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark, removeKeysOlderThanWatermark>>
+* Physical operators with `WatermarkSupport` are requested to [removeKeysOlderThanWatermark](WatermarkSupport.md#removeKeysOlderThanWatermark)
 
 * `StateManagerImplBase` is requested to `removeState`
 
@@ -343,7 +343,7 @@ In the end, `get` requests the `StateStoreProvider` to <<spark-sql-streaming-Sta
 
 * `StateStoreRDD` is requested to [compute a partition](StateStoreRDD.md#compute)
 
-* `StateStoreHandler` (of <<spark-sql-streaming-SymmetricHashJoinStateManager.md#, SymmetricHashJoinStateManager>>) is requested to <<spark-sql-streaming-StateStoreHandler.md#getStateStore, look up a StateStore (by key and value schemas)>>
+* `StateStoreHandler` (of [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md)) is requested to <<spark-sql-streaming-StateStoreHandler.md#getStateStore, look up a StateStore (by key and value schemas)>>
 
 ==== [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Object Method
 

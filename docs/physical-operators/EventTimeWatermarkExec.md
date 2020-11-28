@@ -69,11 +69,11 @@ output: Seq[Attribute]
 
 `output` is part of the `QueryPlan` ([Spark SQL]({{ book.spark_sql }}/catalyst/QueryPlan)) abstraction.
 
-`output` requests the [child](#child) physical operator for the output attributes to find the [event time attribute](#eventTime) and any other column with metadata that contains [spark.watermarkDelayMs](../EventTimeWatermark.md#delayKey) key.
+`output` requests the [child](#child) physical operator for the output attributes to find the [event time attribute](#eventTime) and any other column with metadata that contains [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#delayKey) key.
 
-For the event time attribute, `output` updates the metadata to include the [delay interval](#delayMs) for the [spark.watermarkDelayMs](../EventTimeWatermark.md#delayKey) key.
+For the event time attribute, `output` updates the metadata to include the [delay interval](#delayMs) for the [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#delayKey) key.
 
-For any other column (not the [event time attribute](#eventTime)) with the [spark.watermarkDelayMs](../EventTimeWatermark.md#delayKey) key, `output` removes the key from the attribute metadata.
+For any other column (not the [event time attribute](#eventTime)) with the [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#delayKey) key, `output` removes the key from the attribute metadata.
 
 ## Demo
 

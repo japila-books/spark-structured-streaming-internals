@@ -1,4 +1,4 @@
-== [[StateStoreMetrics]] StateStoreMetrics
+# StateStoreMetrics
 
 [[creating-instance]]
 `StateStoreMetrics` holds the performance metrics of a <<spark-sql-streaming-StateStore.md#, state store>>:
@@ -9,8 +9,8 @@
 
 `StateStoreMetrics` is used (and <<creating-instance, created>>) when the following are requested for the performance metrics:
 
-* <<spark-sql-streaming-StateStore.md#metrics, StateStore>>
+* [StateStore](spark-sql-streaming-StateStore.md#metrics)
 
-* <<spark-sql-streaming-StateStoreHandler.md#metrics, StateStoreHandler>>
+* [StateStoreHandler](spark-sql-streaming-StateStoreHandler.md#metrics)
 
-* <<spark-sql-streaming-SymmetricHashJoinStateManager.md#metrics, SymmetricHashJoinStateManager>>
+* [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md#metrics)

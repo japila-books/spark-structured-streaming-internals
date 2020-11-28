@@ -1,6 +1,6 @@
 # SymmetricHashJoinStateManager
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right <<spark-sql-streaming-OneSideHashJoiner.md#joinStateManager, OneSideHashJoiners>> of a <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
+`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right [OneSideHashJoiners](OneSideHashJoiner.md#joinStateManager) of a [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to [process partitions of the left and right sides of a stream-stream join](physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions)).
 
 ![SymmetricHashJoinStateManager and Stream-Stream Join](images/SymmetricHashJoinStateManager.png)
 
@@ -19,7 +19,7 @@
 
 === [[keyToNumValues]][[keyWithIndexToValue]] KeyToNumValuesStore and KeyWithIndexToValueStore State Store Handlers -- `keyToNumValues` and `keyWithIndexToValue` Internal Properties
 
-`SymmetricHashJoinStateManager` uses a <<spark-sql-streaming-KeyToNumValuesStore.md#, KeyToNumValuesStore>> (`keyToNumValues`) and a <<spark-sql-streaming-KeyWithIndexToValueStore.md#, KeyWithIndexToValueStore>> (`keyWithIndexToValue`) internally that are created immediately when `SymmetricHashJoinStateManager` is <<creating-instance, created>> (for a <<spark-sql-streaming-OneSideHashJoiner.md#joinStateManager, OneSideHashJoiner>>).
+`SymmetricHashJoinStateManager` uses a <<spark-sql-streaming-KeyToNumValuesStore.md#, KeyToNumValuesStore>> (`keyToNumValues`) and a <<spark-sql-streaming-KeyWithIndexToValueStore.md#, KeyWithIndexToValueStore>> (`keyWithIndexToValue`) internally that are created immediately when `SymmetricHashJoinStateManager` is <<creating-instance, created>> (for a [OneSideHashJoiner](OneSideHashJoiner.md#joinStateManager)).
 
 `keyToNumValues` and `keyWithIndexToValue` are used when `SymmetricHashJoinStateManager` is requested for the following:
 
@@ -45,7 +45,7 @@
 
 * [[RightSide]][[right]] `RightSide` (alias: `right`)
 
-They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute>> (and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>> with an <<spark-sql-streaming-OneSideHashJoiner.md#, OneSideHashJoiner>>).
+They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute>> (and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>> with an [OneSideHashJoiner](OneSideHashJoiner.md)).
 
 === [[metrics]] Performance Metrics -- `metrics` Method
 
@@ -56,7 +56,7 @@ metrics: StateStoreMetrics
 
 `metrics` returns the combined <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>> of the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>> state store handlers.
 
-NOTE: `metrics` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#commitStateAndGetMetrics, commitStateAndGetMetrics>>.
+`metrics` is used when `OneSideHashJoiner` is requested to [commitStateAndGetMetrics](OneSideHashJoiner.md#commitStateAndGetMetrics).
 
 === [[removeByKeyCondition]] `removeByKeyCondition` Method
 
@@ -71,7 +71,7 @@ removeByKeyCondition(
 [[removeByKeyCondition-allKeyToNumValues]]
 `removeByKeyCondition` uses the <<keyToNumValues, KeyToNumValuesStore>> for <<spark-sql-streaming-KeyToNumValuesStore.md#iterator, all state keys and values (in the underlying state store)>>.
 
-NOTE: `removeByKeyCondition` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#removeOldState, remove an old state>> (for <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate, JoinStateKeyWatermarkPredicate>>).
+`removeByKeyCondition` is used when `OneSideHashJoiner` is requested to [remove an old state](OneSideHashJoiner.md#removeOldState) (for [JoinStateKeyWatermarkPredicate](spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate)).
 
 ==== [[removeByKeyCondition-getNext]] `getNext` Internal Method (of `removeByKeyCondition` Method)
 
@@ -92,7 +92,7 @@ removeByValueCondition(
 
 `removeByValueCondition` creates an `Iterator` of `UnsafeRowPairs` that <<removeByValueCondition-getNext, removes values (and associated keys if needed)>> for which the given `removalCondition` predicate holds.
 
-NOTE: `removeByValueCondition` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#removeOldState, remove an old state>> (when <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> is used).
+`removeByValueCondition` is used when `OneSideHashJoiner` is requested to [remove an old state](OneSideHashJoiner.md#removeOldState) (when [JoinStateValueWatermarkPredicate](spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate) is used).
 
 ==== [[removeByValueCondition-getNext]] `getNext` Internal Method (of `removeByValueCondition` Method)
 
@@ -120,7 +120,7 @@ In the end, `append` requests the stores for the following:
 
 * <<keyToNumValues, KeyToNumValuesStore>> to <<spark-sql-streaming-KeyToNumValuesStore.md#put, store the given key with the number of value rows incremented>>.
 
-NOTE: `append` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>>.
+`append` is used when `OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](OneSideHashJoiner.md#storeAndJoinWithOtherSide).
 
 === [[get]] Retrieving Value Rows By Key -- `get` Method
 
@@ -133,7 +133,7 @@ get(key: UnsafeRow): Iterator[UnsafeRow]
 
 In the end, `get` requests the <<keyWithIndexToValue, KeyWithIndexToValueStore>> to <<spark-sql-streaming-KeyWithIndexToValueStore.md#getAll, retrieve that number of value rows for the given key>> and leaves value rows only.
 
-NOTE: `get` is used when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#storeAndJoinWithOtherSide, storeAndJoinWithOtherSide>> and <<spark-sql-streaming-OneSideHashJoiner.md#get, retrieving value rows for a key>>.
+`get` is used when `OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](OneSideHashJoiner.md#storeAndJoinWithOtherSide) and [retrieving value rows for a key](OneSideHashJoiner.md#get).
 
 === [[commit]] Committing State (Changes) -- `commit` Method
 
@@ -144,7 +144,7 @@ commit(): Unit
 
 `commit` simply requests the <<keyToNumValues, keyToNumValues>> and <<keyWithIndexToValue, keyWithIndexToValue>> state store handlers to <<spark-sql-streaming-StateStoreHandler.md#commit, commit state changes>>.
 
-NOTE: `commit` is used exclusively when `OneSideHashJoiner` is requested to <<spark-sql-streaming-OneSideHashJoiner.md#commitStateAndGetMetrics, commit state changes and get performance metrics>>.
+`commit` is used when `OneSideHashJoiner` is requested to [commit state changes and get performance metrics](OneSideHashJoiner.md#commitStateAndGetMetrics).
 
 === [[abortIfNeeded]] Aborting State (Changes) -- `abortIfNeeded` Method
 

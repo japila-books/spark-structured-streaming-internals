@@ -50,7 +50,7 @@ Logical query plan of the streaming query
 
 Used when `ProgressReporter` is requested for the following:
 
-* [extract statistics from the most recent query execution](#extractExecutionStats) (to add `watermark` metric for [streaming watermark](../EventTimeWatermark.md))
+* [extract statistics from the most recent query execution](#extractExecutionStats) (to add `watermark` metric for [streaming watermark](../logical-operators/EventTimeWatermark.md))
 * [extractSourceToNumInputRows](#extractSourceToNumInputRows)
 
 ### <span id="name"> name
@@ -394,7 +394,7 @@ extractExecutionStats(
 
 `extractExecutionStats` generates an [ExecutionStats](ExecutionStats.md) of the <<lastExecution, last execution>> of the streaming query.
 
-Internally, `extractExecutionStats` generate *watermark* metric (using the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a [EventTimeWatermark](../EventTimeWatermark.md) unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
+Internally, `extractExecutionStats` generate *watermark* metric (using the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
 
 `extractExecutionStats` [extractStateOperatorMetrics](#extractStateOperatorMetrics).
 

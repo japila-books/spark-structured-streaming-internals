@@ -4,86 +4,92 @@
 
 `WatermarkTracker` is used in [MicroBatchExecution](MicroBatchExecution.md#watermarkTracker).
 
-`WatermarkTracker` is <<creating-instance, created>> (using the <<apply, factory method>>) when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+## Creating Instance
 
-[[policy]]
-[[creating-instance]]
-`WatermarkTracker` takes a single <<MultipleWatermarkPolicy, MultipleWatermarkPolicy>> to be created.
+`WatermarkTracker` takes the following to be created:
 
-[[MultipleWatermarkPolicy]]
-`MultipleWatermarkPolicy` can be one of the following:
+* [MultipleWatermarkPolicy](#policy)
 
-* [[MaxWatermark]] `MaxWatermark` (alias: `min`)
-* [[MinWatermark]] `MinWatermark` (alias: `max`)
+`WatermarkTracker` is created (using [apply](#apply)) when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint)..
 
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.WatermarkTracker` to see what happens inside.
+## <span id="policy"><span id="MultipleWatermarkPolicy"><span id="MaxWatermark"><span id="MinWatermark"> MultipleWatermarkPolicy
 
-Add the following line to `conf/log4j.properties`:
+`WatermarkTracker` is given a `MultipleWatermarkPolicy` when [created](#creating-instance) that can be one of the following:
 
+* `MaxWatermark` (alias: `min`)
+* `MinWatermark` (alias: `max`)
+
+## <span id="apply"> Creating WatermarkTracker
+
+```scala
+apply(
+  conf: RuntimeConfig): WatermarkTracker
 ```
-log4j.logger.org.apache.spark.sql.execution.streaming.WatermarkTracker=ALL
+
+`apply` uses the [spark.sql.streaming.multipleWatermarkPolicy](spark-sql-streaming-properties.md#spark.sql.streaming.multipleWatermarkPolicy) configuration property for the global watermark policy (default: `min`) and creates a `WatermarkTracker`.
+
+`apply` is used when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
+
+## <span id="globalWatermarkMs"><span id="currentWatermark"> Global Event-Time Watermark
+
+```scala
+globalWatermarkMs: Long
 ```
 
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
+`WatermarkTracker` uses `globalWatermarkMs` internal registry to keep track of **global event-time watermark** (based on [MultipleWatermarkPolicy](#policy) across [all EventTimeWatermarkExec operators](#operatorToWatermarkMap) in a physical query plan).
 
-=== [[apply]] Creating WatermarkTracker -- `apply` Factory Method
+Default: `0`
 
-[source, scala]
-----
-apply(conf: RuntimeConfig): WatermarkTracker
-----
+`globalWatermarkMs` is used when `WatermarkTracker` is requested to [updateWatermark](#updateWatermark).
 
-`apply` uses the <<spark-sql-streaming-properties.md#spark.sql.streaming.multipleWatermarkPolicy, spark.sql.streaming.multipleWatermarkPolicy>> configuration property for the global watermark policy (default: `min`) and creates a <<creating-instance, WatermarkTracker>>.
+The event-time watermark can be updated in [setWatermark](#setWatermark) and [updateWatermark](#updateWatermark).
 
-NOTE: `apply` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+The event-time watermark is used (as `currentWatermark` method) when `MicroBatchExecution` stream execution engine is requested to [populateStartOffsets](MicroBatchExecution.md#populateStartOffsets) and [constructNextBatch](MicroBatchExecution.md#constructNextBatch) and [runBatch](MicroBatchExecution.md#runBatch).
 
-=== [[setWatermark]] `setWatermark` Method
+### <span id="setWatermark"> Updating Watermark (at Startup and Restart)
 
-[source, scala]
-----
-setWatermark(newWatermarkMs: Long): Unit
-----
+```scala
+setWatermark(
+  newWatermarkMs: Long): Unit
+```
 
-`setWatermark` simply updates the <<globalwatermarkms, global event-time watermark>> to the given `newWatermarkMs`.
+`setWatermark` sets the [global event-time watermark](#globalwatermarkms) to the given `newWatermarkMs` value.
 
-NOTE: `setWatermark` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+`setWatermark` is used when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
 
-=== [[updateWatermark]] Updating Event-Time Watermark -- `updateWatermark` Method
+### <span id="updateWatermark"> Updating Watermark (at Execution)
 
-[source, scala]
-----
-updateWatermark(executedPlan: SparkPlan): Unit
-----
+```scala
+updateWatermark(
+  executedPlan: SparkPlan): Unit
+```
 
-`updateWatermark` requests the given physical operator (`SparkPlan`) to collect all [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) unary physical operators.
+`updateWatermark` requests the given `SparkPlan` physical operator to collect all [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) unary physical operators.
 
 `updateWatermark` simply exits when no `EventTimeWatermarkExec` was found.
 
 `updateWatermark`...FIXME
 
-NOTE: `updateWatermark` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runBatch, run a single streaming batch>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
+`updateWatermark` is used when `MicroBatchExecution` is requested to [run a single streaming batch](MicroBatchExecution.md#runBatch) (when requested to [run an activated streaming query](MicroBatchExecution.md#runActivatedStream)).
 
-=== [[internal-properties]] Internal Properties
+### <span id="operatorToWatermarkMap"> Watermarks by EventTimeWatermarkExec Operator Registry
 
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
+```scala
+operatorToWatermarkMap: Map[Int, Long]
+```
 
-| globalWatermarkMs
-a| [[globalWatermarkMs]][[currentWatermark]] Current *global event-time watermark* per <<policy, MultipleWatermarkPolicy>> (across <<operatorToWatermarkMap, all EventTimeWatermarkExec operators>> in a physical query plan)
+`WatermarkTracker` uses `operatorToWatermarkMap` internal registry to keep track of event-time watermarks of every [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator in a streaming query plan.
 
-Default: `0`
+`operatorToWatermarkMap` is used when `WatermarkTracker` is requested to [updateWatermark](#updateWatermark).
 
-Used when...FIXME
+## Logging
 
-| operatorToWatermarkMap
-a| [[operatorToWatermarkMap]] Event-time watermark per [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator (`mutable.HashMap[Int, Long]`)
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.WatermarkTracker` logger to see what happens inside.
 
-Used when...FIXME
+Add the following line to `conf/log4j.properties`:
 
-|===
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.WatermarkTracker=ALL
+```
+
+Refer to [Logging](spark-logging.md).

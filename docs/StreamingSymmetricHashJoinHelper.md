@@ -18,9 +18,7 @@ getStateWatermarkPredicates(
 ----
 
 [[getStateWatermarkPredicates-joinKeyOrdinalForWatermark]]
-`getStateWatermarkPredicates` tries to find the index of the <<EventTimeWatermark.md#delayKey, watermark attribute>> among the left keys first, and if not found, the right keys.
-
-NOTE: The <<EventTimeWatermark.md#delayKey, watermark attribute>> is defined using [Dataset.withWatermark](operators/withWatermark.md) operator.
+`getStateWatermarkPredicates` tries to find the index of the [watermark attribute](logical-operators/EventTimeWatermark.md#delayKey) among the left keys first, and if not found, the right keys.
 
 `getStateWatermarkPredicates` <<getOneSideStateWatermarkPredicate, determines the state watermark predicate>> for the left side of a join (for the given `leftAttributes`, the `leftKeys` and the `rightAttributes`).
 
@@ -40,7 +38,7 @@ getOneSideStateWatermarkPredicate(
   otherSideInputAttributes: Seq[Attribute]): Option[JoinStateWatermarkPredicate]
 ----
 
-`getOneSideStateWatermarkPredicate` finds what attributes were used to define the <<EventTimeWatermark.md#delayKey, watermark attribute>> (the `oneSideInputAttributes` attributes, the <<getStateWatermarkPredicates-joinKeyOrdinalForWatermark, left or right join keys>>) and creates a <<spark-sql-streaming-JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> as follows:
+`getOneSideStateWatermarkPredicate` finds what attributes were used to define the [watermark attribute](logical-operators/EventTimeWatermark.md#delayKey) (the `oneSideInputAttributes` attributes, the <<getStateWatermarkPredicates-joinKeyOrdinalForWatermark, left or right join keys>>) and creates a <<spark-sql-streaming-JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> as follows:
 
 * <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate, JoinStateKeyWatermarkPredicate>> if the watermark was defined on a join key (with the watermark expression for the index of the join key expression)
 

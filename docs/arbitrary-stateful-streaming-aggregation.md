@@ -36,7 +36,7 @@ When executed, `FlatMapGroupsWithStateExec` first validates a selected [GroupSta
 
 * For [ProcessingTimeTimeout](spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout), [batch timeout threshold](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) has to be defined
 
-* For [EventTimeTimeout](spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout), [event-time watermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) has to be defined and the [input schema has the watermark attribute](spark-sql-streaming-WatermarkSupport.md#watermarkExpression)
+* For [EventTimeTimeout](spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout), [event-time watermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) has to be defined and the [input schema has the watermark attribute](WatermarkSupport.md#watermarkExpression)
 
 !!! note
     FIXME When are the above requirements met?

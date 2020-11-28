@@ -111,11 +111,11 @@ nav:
       - Streaming Join: spark-sql-streaming-join.md
       - StateStoreAwareZipPartitionsRDD: spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md
       - SymmetricHashJoinStateManager:
-        - SymmetricHashJoinStateManager: spark-sql-streaming-SymmetricHashJoinStateManager.md
+        - SymmetricHashJoinStateManager: SymmetricHashJoinStateManager.md
         - StateStoreHandler: spark-sql-streaming-StateStoreHandler.md
         - KeyToNumValuesStore: spark-sql-streaming-KeyToNumValuesStore.md
         - KeyWithIndexToValueStore: spark-sql-streaming-KeyWithIndexToValueStore.md
-      - OneSideHashJoiner: spark-sql-streaming-OneSideHashJoiner.md
+      - OneSideHashJoiner: OneSideHashJoiner.md
       - JoinStateWatermarkPredicates: spark-sql-streaming-JoinStateWatermarkPredicates.md
       - JoinStateWatermarkPredicate: spark-sql-streaming-JoinStateWatermarkPredicate.md
       - StateStoreAwareZipPartitionsHelper:
@@ -146,7 +146,7 @@ nav:
       - StateStoreCoordinator:
         - StateStoreCoordinator: spark-sql-streaming-StateStoreCoordinator.md
         - StateStoreCoordinatorRef: spark-sql-streaming-StateStoreCoordinatorRef.md
-      - WatermarkSupport: spark-sql-streaming-WatermarkSupport.md
+      - WatermarkSupport: WatermarkSupport.md
       - StatefulOperatorStateInfo: StatefulOperatorStateInfo.md
       - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
       - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
@@ -185,7 +185,7 @@ nav:
       - StreamingQueryWrapper: StreamingQueryWrapper.md
     - StreamMetadata: StreamMetadata.md
     - Logical Operators:
-      - EventTimeWatermark: EventTimeWatermark.md
+      - EventTimeWatermark: logical-operators/EventTimeWatermark.md
       - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
       - Deduplicate: spark-sql-streaming-Deduplicate.md
       - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md

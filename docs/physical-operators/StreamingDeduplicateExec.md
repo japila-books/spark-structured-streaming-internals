@@ -1,6 +1,6 @@
 # StreamingDeduplicateExec Unary Physical Operator
 
-`StreamingDeduplicateExec` is a unary physical operator that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](../spark-sql-streaming-WatermarkSupport.md).
+`StreamingDeduplicateExec` is a unary physical operator that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](../WatermarkSupport.md).
 
 [NOTE]
 ====
@@ -206,7 +206,7 @@ The completion function does the following:
 
 * Updates <<allUpdatesTimeMs, allUpdatesTimeMs>> metric (that is the total time to execute `storeUpdateFunction`)
 
-* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to spark-sql-streaming-WatermarkSupport.md#removeKeysOlderThanWatermark[remove keys older than the watermark from the StateStore]
+* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to [remove keys older than the watermark from the StateStore](../WatermarkSupport.md#removeKeysOlderThanWatermark)
 
 * Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to spark-sql-streaming-StateStore.md#commit[commit the changes to the StateStore]
 

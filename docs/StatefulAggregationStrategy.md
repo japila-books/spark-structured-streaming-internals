@@ -2,7 +2,7 @@
 
 `StatefulAggregationStrategy` is an execution planning strategy that is used to <<apply, plan streaming queries>> with the two logical operators:
 
-* [EventTimeWatermark](EventTimeWatermark.md) logical operator ([Dataset.withWatermark](operators/withWatermark.md) operator)
+* [EventTimeWatermark](logical-operators/EventTimeWatermark.md) logical operator ([Dataset.withWatermark](operators/withWatermark.md) operator)
 
 * `Aggregate` logical operator (for [Dataset.groupBy](operators/groupBy.md) and [Dataset.groupByKey](operators/groupByKey.md) operators, and `GROUP BY` SQL clause)
 
@@ -24,7 +24,7 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Logical Operator
 | Physical Operator
 
-| EventTimeWatermark.md[EventTimeWatermark]
+| [EventTimeWatermark](logical-operators/EventTimeWatermark.md)
 a| [[EventTimeWatermark]] [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md)
 
 | `Aggregate`

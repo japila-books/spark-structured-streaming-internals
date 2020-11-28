@@ -1,15 +1,15 @@
-== [[KeyWithIndexToValueStore]] KeyWithIndexToValueStore -- State Store (Handler) Of Join Keys With Index Of Values
+# KeyWithIndexToValueStore
 
-`KeyWithIndexToValueStore` is a <<spark-sql-streaming-StateStoreHandler.md#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.md#KeyWithIndexToValueType, KeyWithIndexToValueType>>) for <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keyWithIndexToValue, SymmetricHashJoinStateManager>> to manage a <<stateStore, join state>>.
+`KeyWithIndexToValueStore` is a <<spark-sql-streaming-StateStoreHandler.md#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.md#KeyWithIndexToValueType, KeyWithIndexToValueType>>) for [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md#keyWithIndexToValue) to manage a <<stateStore, join state>>.
 
 .KeyToNumValuesStore, KeyWithIndexToValueStore and Stream-Stream Join
 image::images/KeyToNumValuesStore-KeyWithIndexToValueStore.png[align="center"]
 
 [[stateStore]]
-As a <<spark-sql-streaming-StateStoreHandler.md#, StateStoreHandler>>, `KeyWithIndexToValueStore` manages a <<spark-sql-streaming-StateStore.md#, state store>> (that is <<spark-sql-streaming-StateStoreHandler.md#getStateStore, loaded>>) for keys and values per the <<keyWithIndexSchema, keys with index>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.md#inputValueAttributes, input values>> schemas, respectively.
+As a <<spark-sql-streaming-StateStoreHandler.md#, StateStoreHandler>>, `KeyWithIndexToValueStore` manages a <<spark-sql-streaming-StateStore.md#, state store>> (that is <<spark-sql-streaming-StateStoreHandler.md#getStateStore, loaded>>) for keys and values per the <<keyWithIndexSchema, keys with index>> and [input values](SymmetricHashJoinStateManager.md#inputValueAttributes) schemas, respectively.
 
 [[keyWithIndexSchema]]
-`KeyWithIndexToValueStore` uses a schema (for the <<stateStore, state store>>) that is the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keySchema, key schema>> (of the parent `SymmetricHashJoinStateManager`) with an extra field `index` of type `long`.
+`KeyWithIndexToValueStore` uses a schema (for the <<stateStore, state store>>) that is the [key schema](SymmetricHashJoinStateManager.md#keySchema) (of the parent `SymmetricHashJoinStateManager`) with an extra field `index` of type `long`.
 
 [[logging]]
 [TIP]
@@ -36,7 +36,7 @@ get(
 
 `get` simply requests the internal <<stateStore, state store>> to <<spark-sql-streaming-StateStore.md#get, look up>> the value for the given <<keyWithIndexRow, key and valueIndex>>.
 
-NOTE: `get` is used exclusively when `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#removeByValueCondition, removeByValueCondition>>
+`get` is used when `SymmetricHashJoinStateManager` is requested to [removeByValueCondition](SymmetricHashJoinStateManager.md#removeByValueCondition).
 
 === [[getAll]] Retrieving (Given Number of) Values for Key -- `getAll` Method
 
@@ -49,7 +49,7 @@ getAll(
 
 `getAll`...FIXME
 
-NOTE: `getAll` is used when `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#get, get values for a given key>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.md#removeByKeyCondition, removeByKeyCondition>>.
+`getAll` is used when `SymmetricHashJoinStateManager` is requested to [get values for a given key](SymmetricHashJoinStateManager.md#get) and [removeByKeyCondition](SymmetricHashJoinStateManager.md#removeByKeyCondition).
 
 === [[put]] Storing State Row For Given Key and Index -- `put` Method
 
@@ -63,7 +63,7 @@ put(
 
 `put`...FIXME
 
-NOTE: `put` is used when `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#append, append a new value to a given key>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.md#removeByKeyCondition, removeByKeyCondition>>.
+`put` is used when `SymmetricHashJoinStateManager` is requested to [append a new value to a given key](SymmetricHashJoinStateManager.md#append) and [removeByKeyCondition](SymmetricHashJoinStateManager.md#removeByKeyCondition).
 
 === [[remove]] `remove` Method
 
@@ -76,7 +76,7 @@ remove(
 
 `remove`...FIXME
 
-NOTE: `remove` is used when `SymmetricHashJoinStateManager` is requested to <<spark-sql-streaming-SymmetricHashJoinStateManager.md#removeByKeyCondition, removeByKeyCondition>> and <<spark-sql-streaming-SymmetricHashJoinStateManager.md#removeByValueCondition, removeByValueCondition>>.
+`remove` is used when `SymmetricHashJoinStateManager` is requested to [removeByKeyCondition](SymmetricHashJoinStateManager.md#removeByKeyCondition) and [removeByValueCondition](SymmetricHashJoinStateManager.md#removeByValueCondition).
 
 === [[keyWithIndexRow]] `keyWithIndexRow` Internal Method
 
@@ -115,7 +115,7 @@ iterator: Iterator[KeyWithIndexAndValue]
 
 NOTE: `iterator` does not _seem_ to be used at all.
 
-=== [[internal-properties]] Internal Properties
+## Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
 |===
@@ -123,17 +123,17 @@ NOTE: `iterator` does not _seem_ to be used at all.
 | Description
 
 | indexOrdinalInKeyWithIndexRow
-a| [[indexOrdinalInKeyWithIndexRow]] Position of the index in the key row (which corresponds to the number of the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keyAttributes, key attributes>>)
+a| [[indexOrdinalInKeyWithIndexRow]] Position of the index in the key row (which corresponds to the number of the [key attributes](SymmetricHashJoinStateManager.md#keyAttributes))
 
 Used exclusively in the <<keyWithIndexRow, keyWithIndexRow>>
 
 | keyWithIndexExprs
-a| [[keyWithIndexExprs]] <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keyAttributes, keyAttributes>> with `Literal(1L)` expression appended
+a| [[keyWithIndexExprs]] [keyAttributes](SymmetricHashJoinStateManager.md#keyAttributes) with `Literal(1L)` expression appended
 
 Used exclusively for the <<keyWithIndexRowGenerator, keyWithIndexRowGenerator>> projection
 
 | keyWithIndexRowGenerator
-a| [[keyWithIndexRowGenerator]] `UnsafeProjection` for the <<keyWithIndexExprs, keyWithIndexExprs>> bound to the <<spark-sql-streaming-SymmetricHashJoinStateManager.md#keyAttributes, keyAttributes>>
+a| [[keyWithIndexRowGenerator]] `UnsafeProjection` for the <<keyWithIndexExprs, keyWithIndexExprs>> bound to the [keyAttributes](SymmetricHashJoinStateManager.md#keyAttributes)
 
 Used exclusively in <<keyWithIndexRow, keyWithIndexRow>>
 
