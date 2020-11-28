@@ -2,7 +2,7 @@
 
 `HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> that uses a Hadoop DFS-compatible file system for <<baseDir, versioned state checkpointing>>.
 
-`HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>> internal configuration property.
+`HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the [spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass) internal configuration property.
 
 `HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the <<spark-sql-streaming-StateStore.md#, state store>> to use for a stateful operator and a partition.
 
@@ -249,7 +249,7 @@ fetchFiles() took [time] ms.
 
 `doSnapshot` looks up the last version in the <<loadedMaps, internal state cache>>.
 
-When the last version was found in the cache and the number of delta files is above <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>> internal threshold, `doSnapshot` <<writeSnapshotFile, writes a compressed snapshot file for the last version>>.
+When the last version was found in the cache and the number of delta files is above [spark.sql.streaming.stateStore.minDeltasForSnapshot](configuration-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot) internal threshold, `doSnapshot` <<writeSnapshotFile, writes a compressed snapshot file for the last version>>.
 
 In the end, `doSnapshot` prints out the following DEBUG message to the logs:
 
@@ -280,7 +280,7 @@ fetchFiles() took [time] ms.
 
 `cleanup` returns immediately (and does nothing) when there are no delta and snapshot files.
 
-`cleanup` takes the version of the latest state file (`lastVersion`) and decrements it by <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>> configuration property (default: `100`) that gives the earliest version to retain (and all older state files to be removed).
+`cleanup` takes the version of the latest state file (`lastVersion`) and decrements it by [spark.sql.streaming.minBatchesToRetain](configuration-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property that gives the earliest version to retain (and all older state files to be removed).
 
 `cleanup` requests the <<fm, CheckpointFileManager>> to [delete the path](CheckpointFileManager.md#delete) of every old state file.
 
@@ -574,7 +574,7 @@ loadedMaps: TreeMap[
 
 `loadedMaps` is a https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html[java.util.TreeMap] of state versions sorted according to the reversed ordering of the versions (i.e. long numbers).
 
-A new entry (a version and the state updates) can only be added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> (and only when the <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is above `0`).
+A new entry (a version and the state updates) can only be added when `HDFSBackedStateStoreProvider` is requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> (and only when the [spark.sql.streaming.maxBatchesToRetainInMemory](configuration-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory) internal configuration is above `0`).
 
 `loadedMaps` is mainly used when `HDFSBackedStateStoreProvider` is requested to <<loadMap, load the specified version of state (from the internal cache or snapshot and delta files)>>. Positive hits (when a version could be found in the cache) is available as the <<loadedMapCacheHitCount, count of cache hit on states cache in provider>> performance metric while misses are counted in the <<loadedMapCacheMissCount, count of cache miss on states cache in provider>> performance metric.
 
@@ -582,7 +582,7 @@ NOTE: With no or missing versions in cache <<loadedMapCacheMissCount, count of c
 
 The estimated size of `loadedMaps` is available as the <<memoryUsedBytes, memoryUsedBytes>> performance metric.
 
-The <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration is used as the threshold of the number of elements in `loadedMaps`. When `0` or negative, every <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> removes all elements in (_clears_) `loadedMaps`.
+The [spark.sql.streaming.maxBatchesToRetainInMemory](configuration-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory) internal configuration is used as the threshold of the number of elements in `loadedMaps`. When `0` or negative, every <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>> removes all elements in (_clears_) `loadedMaps`.
 
 NOTE: It is possible to change the configuration at restart of a structured query.
 
@@ -643,7 +643,7 @@ a| [[numberOfVersionsToRetainInMemory]]
 numberOfVersionsToRetainInMemory: Int
 ----
 
-`numberOfVersionsToRetainInMemory` is the maximum number of entries in the <<loadedMaps, loadedMaps>> internal registry and is configured by the <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>> internal configuration.
+`numberOfVersionsToRetainInMemory` is the maximum number of entries in the <<loadedMaps, loadedMaps>> internal registry and is configured by the [spark.sql.streaming.maxBatchesToRetainInMemory](configuration-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory) internal configuration.
 
 `numberOfVersionsToRetainInMemory` is a threshold when `HDFSBackedStateStoreProvider` removes the last key from the <<loadedMaps, loadedMaps>> internal registry (per reverse ordering of state versions) when requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
 

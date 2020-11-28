@@ -3,7 +3,7 @@
 `StreamingAggregationStateManagerImplV2` is the default [state manager for streaming aggregations](StreamingAggregationStateManagerBaseImpl.md).
 
 !!! note
-    The version of a state manager is controlled using [spark.sql.streaming.aggregation.stateFormatVersion](spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) internal configuration property.
+    The version of a state manager is controlled using [spark.sql.streaming.aggregation.stateFormatVersion](configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) internal configuration property.
 
 ## Creating Instance
 

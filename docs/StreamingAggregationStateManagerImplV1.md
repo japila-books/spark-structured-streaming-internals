@@ -3,7 +3,7 @@
 `StreamingAggregationStateManagerImplV1` is the legacy [state manager for streaming aggregations](StreamingAggregationStateManagerBaseImpl.md).
 
 !!! note
-    The version of a state manager is controlled using [spark.sql.streaming.aggregation.stateFormatVersion](spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) internal configuration property.
+    The version of a state manager is controlled using [spark.sql.streaming.aggregation.stateFormatVersion](configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) internal configuration property.
 
 ## <span id="put"> Storing Row in State Store
 

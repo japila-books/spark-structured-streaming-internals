@@ -1,14 +1,14 @@
-== [[ContinuousDataSourceRDD]] ContinuousDataSourceRDD -- Input RDD of DataSourceV2ScanExec Physical Operator with ContinuousReader
+# ContinuousDataSourceRDD
 
 `ContinuousDataSourceRDD` is a specialized `RDD` (`RDD[InternalRow]`) that is used exclusively for the only input RDD (with the input rows) of `DataSourceV2ScanExec` leaf physical operator with a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>.
 
 `ContinuousDataSourceRDD` is <<creating-instance, created>> exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (which there is only one actually).
 
 [[spark.sql.streaming.continuous.executorQueueSize]]
-`ContinuousDataSourceRDD` uses <<spark-sql-streaming-properties.md#spark.sql.streaming.continuous.executorQueueSize, spark.sql.streaming.continuous.executorQueueSize>> configuration property for the <<dataQueueSize, size of the data queue>>.
+`ContinuousDataSourceRDD` uses [spark.sql.streaming.continuous.executorQueueSize](configuration-properties.md#spark.sql.streaming.continuous.executorQueueSize) configuration property for the <<dataQueueSize, size of the data queue>>.
 
 [[spark.sql.streaming.continuous.executorPollIntervalMs]]
-`ContinuousDataSourceRDD` uses <<spark-sql-streaming-properties.md#spark.sql.streaming.continuous.executorPollIntervalMs, spark.sql.streaming.continuous.executorPollIntervalMs>> configuration property for the <<epochPollIntervalMs, epochPollIntervalMs>>.
+`ContinuousDataSourceRDD` uses [spark.sql.streaming.continuous.executorPollIntervalMs](configuration-properties.md#spark.sql.streaming.continuous.executorPollIntervalMs) configuration property for the <<epochPollIntervalMs, epochPollIntervalMs>>.
 
 [[creating-instance]]
 `ContinuousDataSourceRDD` takes the following to be created:

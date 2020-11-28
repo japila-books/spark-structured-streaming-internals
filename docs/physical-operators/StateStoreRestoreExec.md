@@ -47,7 +47,7 @@ image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 
 * [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
 * [[stateInfo]] Optional [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
-* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
+* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
 === [[stateManager]] StateStoreRestoreExec and StreamingAggregationStateManager -- `stateManager` Property

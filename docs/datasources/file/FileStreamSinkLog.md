@@ -16,15 +16,15 @@
 
 ### <span id="fileCleanupDelayMs"><span id="fileSinkLogCleanupDelay"> spark.sql.streaming.fileSink.log.cleanupDelay
 
-`FileStreamSinkLog` uses [spark.sql.streaming.fileSink.log.cleanupDelay](../../spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property for [fileCleanupDelayMs](CompactibleFileStreamLog.md#fileCleanupDelayMs).
+`FileStreamSinkLog` uses [spark.sql.streaming.fileSink.log.cleanupDelay](../../configuration-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property for [fileCleanupDelayMs](CompactibleFileStreamLog.md#fileCleanupDelayMs).
 
 ### <span id="defaultCompactInterval"><span id="fileSinkLogDeletion"> spark.sql.streaming.fileSink.log.compactInterval
 
-`FileStreamSinkLog` uses [spark.sql.streaming.fileSink.log.compactInterval](../../spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.compactInterval) configuration property for [defaultCompactInterval](CompactibleFileStreamLog.md#defaultCompactInterval).
+`FileStreamSinkLog` uses [spark.sql.streaming.fileSink.log.compactInterval](../../configuration-properties.md#spark.sql.streaming.fileSink.log.compactInterval) configuration property for [defaultCompactInterval](CompactibleFileStreamLog.md#defaultCompactInterval).
 
 ### <span id="isDeletingExpiredLog"><span id="fileSinkLogDeletion"> spark.sql.streaming.fileSink.log.deletion
 
-`FileStreamSinkLog` uses [spark.sql.streaming.fileSink.log.deletion](../../spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.deletion) configuration property for [isDeletingExpiredLog](CompactibleFileStreamLog.md#isDeletingExpiredLog).
+`FileStreamSinkLog` uses [spark.sql.streaming.fileSink.log.deletion](../../configuration-properties.md#spark.sql.streaming.fileSink.log.deletion) configuration property for [isDeletingExpiredLog](CompactibleFileStreamLog.md#isDeletingExpiredLog).
 
 ## <span id="compactLogs"> Compacting Logs
 

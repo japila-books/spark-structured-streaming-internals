@@ -2,7 +2,7 @@
 
 `UnsupportedOperationChecker` checks whether the [logical plan of a streaming query uses supported operations only](#checkForStreaming).
 
-`UnsupportedOperationChecker` is used when the internal [spark.sql.streaming.unsupportedOperationCheck](spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck) Spark property is enabled.
+`UnsupportedOperationChecker` is used when the internal [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.md#spark.sql.streaming.unsupportedOperationCheck) Spark property is enabled.
 
 !!! note
     `UnsupportedOperationChecker` comes actually with two methods, i.e. `checkForBatch` and <<checkForStreaming, checkForStreaming>>, whose names reveal the different flavours of Spark SQL (as of 2.0), i.e. batch and streaming, respectively.
@@ -74,4 +74,4 @@ Multiple flatMapGroupsWithStates are not supported when they are not all in appe
 
 CAUTION: FIXME
 
-`checkForStreaming` is used when `StreamingQueryManager` is requested to [create a StreamingQueryWrapper](StreamingQueryManager.md#createQuery) (for starting a streaming query), but only when the internal [spark.sql.streaming.unsupportedOperationCheck](spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled.
+`checkForStreaming` is used when `StreamingQueryManager` is requested to [create a StreamingQueryWrapper](StreamingQueryManager.md#createQuery) (for starting a streaming query), but only when the internal [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled.

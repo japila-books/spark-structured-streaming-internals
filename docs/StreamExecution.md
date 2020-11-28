@@ -99,11 +99,11 @@ org.apache.spark.sql.execution.streaming.StreamExecution
 
 ### <span id="minLogEntriesToMaintain"><span id="spark.sql.streaming.minBatchesToRetain"> s.s.s.minBatchesToRetain
 
-`StreamExecution` uses the [spark.sql.streaming.minBatchesToRetain](spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property to allow the [StreamExecutions](#implementations) to discard old log entries (from the [offset](#offsetLog) and [commit](#commitLog) logs).
+`StreamExecution` uses the [spark.sql.streaming.minBatchesToRetain](configuration-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property to allow the [StreamExecutions](#implementations) to discard old log entries (from the [offset](#offsetLog) and [commit](#commitLog) logs).
 
 ### <span id="pollingDelayMs"><span id="streamingPollingDelay"><span id="spark.sql.streaming.pollingDelay"> s.s.s.pollingDelay
 
-`StreamExecution` uses [spark.sql.streaming.pollingDelay](spark-sql-streaming-properties.md#spark.sql.streaming.pollingDelay) configuration property to control how long to [delay polling for new data](#runBatches-batchRunner-no-data) (when no data was available to process in a batch).
+`StreamExecution` uses [spark.sql.streaming.pollingDelay](configuration-properties.md#spark.sql.streaming.pollingDelay) configuration property to control how long to [delay polling for new data](#runBatches-batchRunner-no-data) (when no data was available to process in a batch).
 
 ## ProgressReporter
 
@@ -212,7 +212,7 @@ offsetLog: OffsetSeqLog
 !!! tip
     Monitor `offsets` and `commits` metadata logs to know the progress of a streaming query.
 
-The number of entries in the `OffsetSeqLog` is controlled using [spark.sql.streaming.minBatchesToRetain](spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property.
+The number of entries in the `OffsetSeqLog` is controlled using [spark.sql.streaming.minBatchesToRetain](configuration-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property.
 
 `offsetLog` is used when:
 
@@ -334,7 +334,7 @@ resolvedCheckpointRoot: String
 
 `resolvedCheckpointRoot` is a fully-qualified path of the given [checkpoint root directory](#checkpointRoot).
 
-The given [checkpoint root directory](#checkpointRoot) is defined using **checkpointLocation** option or the [spark.sql.streaming.checkpointLocation](spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property with `queryName` option.
+The given [checkpoint root directory](#checkpointRoot) is defined using **checkpointLocation** option or the [spark.sql.streaming.checkpointLocation](configuration-properties.md#spark.sql.streaming.checkpointLocation) configuration property with `queryName` option.
 
 `checkpointLocation` and `queryName` options are defined when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery).
 
@@ -447,7 +447,7 @@ Internally, `runStream` sets the job group (to all the Spark jobs started by thi
 
 `runStream` sets `sql.streaming.queryId` local property to [id](#id).
 
-`runStream` requests the `MetricsSystem` to register the [MetricsReporter](#streamMetrics) when [spark.sql.streaming.metricsEnabled](spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled.
+`runStream` requests the `MetricsSystem` to register the [MetricsReporter](#streamMetrics) when [spark.sql.streaming.metricsEnabled](configuration-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled.
 
 <span id="runStream-QueryStartedEvent"/>
 `runStream` notifies [StreamingQueryListeners](monitoring/StreamingQueryListener.md) that the streaming query has been started (by [posting](#postEvent) a new [QueryStartedEvent](monitoring/StreamingQueryListener.md#QueryStartedEvent) event with [id](#id), [runId](#runId), and [name](#name)).
@@ -795,7 +795,7 @@ Used when `StreamExecution` is requested to [transform the logical plan (of the 
 spark.streaming.[name or id]
 ```
 
-`MetricsReporter` is registered only when [spark.sql.streaming.metricsEnabled](spark-sql-streaming-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled (when `StreamExecution` is requested to [runStream](#runStream)).
+`MetricsReporter` is registered only when [spark.sql.streaming.metricsEnabled](configuration-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled (when `StreamExecution` is requested to [runStream](#runStream)).
 
 `MetricsReporter` is deactivated (_removed_) when a streaming query is stopped (when `StreamExecution` is requested to [runStream](#runStream)).
 

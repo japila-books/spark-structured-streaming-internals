@@ -156,7 +156,7 @@ Clock of the streaming query
 
 ## <span id="noDataProgressEventInterval"> spark.sql.streaming.noDataProgressEventInterval
 
-`ProgressReporter` uses the [spark.sql.streaming.noDataProgressEventInterval](../spark-sql-streaming-properties.md#spark.sql.streaming.noDataProgressEventInterval) configuration property to control how long to wait between two progress events when there is no data (default: `10000L`) when [finishing a trigger](#finishTrigger).
+`ProgressReporter` uses the [spark.sql.streaming.noDataProgressEventInterval](../configuration-properties.md#spark.sql.streaming.noDataProgressEventInterval) configuration property to control how long to wait between two progress events when there is no data (default: `10000L`) when [finishing a trigger](#finishTrigger).
 
 ## Demo
 
@@ -216,7 +216,7 @@ progressBuffer: Queue[StreamingQueryProgress]
 
 `progressBuffer` has a new `StreamingQueryProgress` added when `ProgressReporter` is requested to [update progress of a streaming query](#updateProgress).
 
-The oldest `StreamingQueryProgress` is removed (_dequeued_) above [spark.sql.streaming.numRecentProgressUpdates](../spark-sql-streaming-properties.md#spark.sql.streaming.numRecentProgressUpdates) threshold.
+The oldest `StreamingQueryProgress` is removed (_dequeued_) above [spark.sql.streaming.numRecentProgressUpdates](../configuration-properties.md#spark.sql.streaming.numRecentProgressUpdates) threshold.
 
 `progressBuffer` is used when `ProgressReporter` is requested for the [last](#lastProgress) and the [recent StreamingQueryProgresses](#recentProgress).
 
@@ -243,7 +243,7 @@ updateProgress(
 
 `updateProgress` adds the input `newProgress` to [progressBuffer](#progressBuffer).
 
-`updateProgress` removes elements from [progressBuffer](#progressBuffer) if their number is or exceeds the value of [spark.sql.streaming.numRecentProgressUpdates](../spark-sql-streaming-properties.md#spark.sql.streaming.numRecentProgressUpdates) configuration property.
+`updateProgress` removes elements from [progressBuffer](#progressBuffer) if their number is or exceeds the value of [spark.sql.streaming.numRecentProgressUpdates](../configuration-properties.md#spark.sql.streaming.numRecentProgressUpdates) configuration property.
 
 `updateProgress` [posts a QueryProgressEvent](#postEvent) (with the input `newProgress`).
 

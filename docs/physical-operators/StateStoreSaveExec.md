@@ -129,7 +129,7 @@ a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.m
 * [[stateInfo]] Execution-specific [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
 * [[outputMode]] Execution-specific [OutputMode](../OutputMode.md) (default: `None`)
 * [[eventTimeWatermark]] [Event-time watermark](../spark-sql-streaming-watermark.md) (default: `None`)
-* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
+* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
 ## <span id="doExecute"> Executing Physical Operator

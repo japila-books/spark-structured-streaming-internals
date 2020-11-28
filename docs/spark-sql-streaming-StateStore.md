@@ -314,7 +314,7 @@ NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` utility 
 
 When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProviders>> internal registry.
 
-`MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.maintenanceInterval, spark.sql.streaming.stateStore.maintenanceInterval>> (default: `60s`).
+`MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every [spark.sql.streaming.stateStore.maintenanceInterval](configuration-properties.md#spark.sql.streaming.stateStore.maintenanceInterval).
 
 ## <span id="get-StateStore"> Looking Up StateStore by Provider ID
 
@@ -352,7 +352,7 @@ In the end, `get` requests the `StateStoreProvider` to <<spark-sql-streaming-Sta
 startMaintenanceIfNeeded(): Unit
 ----
 
-`startMaintenanceIfNeeded` schedules <<MaintenanceTask, MaintenanceTask>> to start after and every spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.maintenanceInterval[spark.sql.streaming.stateStore.maintenanceInterval] (defaults to `60s`).
+`startMaintenanceIfNeeded` schedules <<MaintenanceTask, MaintenanceTask>> to start after and every [spark.sql.streaming.stateStore.maintenanceInterval](configuration-properties.md#spark.sql.streaming.stateStore.maintenanceInterval) (defaults to `60s`).
 
 NOTE: `startMaintenanceIfNeeded` does nothing when the maintenance task has already been started and is still running.
 

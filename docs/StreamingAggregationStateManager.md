@@ -131,7 +131,7 @@ Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec
 |===
 
 [[supportedVersions]]
-`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>> (per the <<spark-sql-streaming-properties.md#spark.sql.streaming.aggregation.stateFormatVersion, spark.sql.streaming.aggregation.stateFormatVersion>> internal configuration property):
+`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>> (per the [spark.sql.streaming.aggregation.stateFormatVersion](configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) internal configuration property):
 
 * [[legacyVersion]] `1` (for the legacy [StreamingAggregationStateManagerImplV1](StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV1))
 

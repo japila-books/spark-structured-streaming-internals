@@ -61,7 +61,7 @@ addBatch(
 
 `addBatch` requests the [FileStreamSinkLog](#fileLog) for the [latest committed batch ID](../../HDFSMetadataLog.md#getLatest).
 
-With a newer `batchId`, `addBatch` creates a `FileCommitProtocol` based on [spark.sql.streaming.commitProtocolClass](../../spark-sql-streaming-properties.md#spark.sql.streaming.commitProtocolClass) configuration property.
+With a newer `batchId`, `addBatch` creates a `FileCommitProtocol` based on [spark.sql.streaming.commitProtocolClass](../../configuration-properties.md#spark.sql.streaming.commitProtocolClass) configuration property.
 
 !!! tip "The Internals of Apache Spark"
     Learn more on [FileCommitProtocol]({{ book.spark_core }}/FileCommitProtocol) in [The Internals of Apache Spark]({{ book.spark_core }}).

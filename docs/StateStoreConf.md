@@ -1,28 +1,21 @@
-== [[StateStoreConf]] StateStoreConf
+# StateStoreConf
 
-`StateStoreConf` is...FIXME
+## <span id="minDeltasForSnapshot"> minDeltasForSnapshot
 
-[[properties]]
-.StateStoreConf's Properties
-[cols="1m,3",options="header",width="100%"]
-|===
-| Name
-| Configuration Property
+[spark.sql.streaming.stateStore.minDeltasForSnapshot](configuration-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot)
 
-| minDeltasForSnapshot
-| [[minDeltasForSnapshot]] <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot, spark.sql.streaming.stateStore.minDeltasForSnapshot>>
+## <span id="maxVersionsToRetainInMemory"> maxVersionsToRetainInMemory
 
-| maxVersionsToRetainInMemory
-| [[maxVersionsToRetainInMemory]] <<spark-sql-streaming-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory, spark.sql.streaming.maxBatchesToRetainInMemory>>
+[spark.sql.streaming.maxBatchesToRetainInMemory](configuration-properties.md#spark.sql.streaming.maxBatchesToRetainInMemory)
 
-| minVersionsToRetain
-| [[minVersionsToRetain]] <<spark-sql-streaming-properties.md#spark.sql.streaming.minBatchesToRetain, spark.sql.streaming.minBatchesToRetain>>
+## <span id="minVersionsToRetain"> minVersionsToRetain
 
-Used exclusively when `HDFSBackedStateStoreProvider` is requested for [cleanup](HDFSBackedStateStoreProvider.md#cleanup).
+[spark.sql.streaming.minBatchesToRetain](configuration-properties.md#spark.sql.streaming.minBatchesToRetain)
 
-| providerClass
-a| [[providerClass]] <<spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass, spark.sql.streaming.stateStore.providerClass>>
+Used when `HDFSBackedStateStoreProvider` is requested for [cleanup](HDFSBackedStateStoreProvider.md#cleanup).
 
-Used exclusively when `StateStoreProvider` helper object is requested to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize the StateStoreProvider>>.
+## <span id="providerClass"> providerClass
 
-|===
+[spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass)
+
+Used when `StateStoreProvider` helper object is requested to [create and initialize the StateStoreProvider](spark-sql-streaming-StateStoreProvider.md#createAndInit).

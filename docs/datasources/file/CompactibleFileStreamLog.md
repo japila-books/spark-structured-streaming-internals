@@ -93,7 +93,7 @@ Loaded [allLogs] entries (estimated [allLogs] bytes in memory), and wrote [compa
 
 ## <span id="minBatchesToRetain"> spark.sql.streaming.fileSink.log.cleanupDelay
 
-`CompactibleFileStreamLog` uses [spark.sql.streaming.fileSink.log.cleanupDelay](../../spark-sql-streaming-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property to [delete expired log entries](#deleteExpiredLog).
+`CompactibleFileStreamLog` uses [spark.sql.streaming.fileSink.log.cleanupDelay](../../configuration-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property to [delete expired log entries](#deleteExpiredLog).
 
 ## <span id="COMPACT_FILE_SUFFIX"> compact File Suffix
 

@@ -209,17 +209,18 @@ createQuery(
 
 Internally, `createQuery` first finds the name of the checkpoint directory of a query (aka *checkpoint location*) in the following order:
 
-. Exactly the input `userSpecifiedCheckpointLocation` if defined
+1. Exactly the input `userSpecifiedCheckpointLocation` if defined
 
-. spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation[spark.sql.streaming.checkpointLocation] Spark property if defined for the parent directory with a subdirectory per the optional `userSpecifiedName` (or a randomly-generated UUID)
+1. [spark.sql.streaming.checkpointLocation](configuration-properties.md#spark.sql.streaming.checkpointLocation) Spark property if defined for the parent directory with a subdirectory per the optional `userSpecifiedName` (or a randomly-generated UUID)
 
-. (only when `useTempCheckpointLocation` is enabled) A temporary directory (as specified by `java.io.tmpdir` JVM property) with a subdirectory with `temporary` prefix.
+1. (only when `useTempCheckpointLocation` is enabled) A temporary directory (as specified by `java.io.tmpdir` JVM property) with a subdirectory with `temporary` prefix.
 
-NOTE: `userSpecifiedCheckpointLocation` can be any path that is acceptable by Hadoop's https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/fs/Path.html[Path].
+!!! note
+    `userSpecifiedCheckpointLocation` can be any path that is acceptable by Hadoop's [Path]({{ hadoop.api }}/org/apache/hadoop/fs/Path.html).
 
 If the directory name for the checkpoint location could not be found, `createQuery` reports a `AnalysisException`.
 
-```
+```text
 checkpointLocation must be specified either through option("checkpointLocation", ...) or SparkSession.conf.set("spark.sql.streaming.checkpointLocation", ...)
 ```
 
@@ -227,7 +228,7 @@ checkpointLocation must be specified either through option("checkpointLocation",
 
 `createQuery` makes sure that the logical plan of the structured query is analyzed (i.e. no logical errors have been found).
 
-Unless spark-sql-streaming-properties.md#spark.sql.streaming.unsupportedOperationCheck[spark.sql.streaming.unsupportedOperationCheck] Spark property is turned on, `createQuery` spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[checks the logical plan of the streaming query for unsupported operations].
+Unless [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.md#spark.sql.streaming.unsupportedOperationCheck) Spark property is turned on, `createQuery` spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming[checks the logical plan of the streaming query for unsupported operations].
 
 (only when `spark.sql.adaptive.enabled` Spark property is turned on) `createQuery` prints out a WARN message to the logs:
 

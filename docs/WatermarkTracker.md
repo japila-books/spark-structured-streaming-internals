@@ -10,7 +10,7 @@
 
 * [MultipleWatermarkPolicy](#policy)
 
-`WatermarkTracker` is created (using [apply](#apply)) when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint)..
+`WatermarkTracker` is created (using [apply](#apply)) when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
 
 ## <span id="policy"><span id="MultipleWatermarkPolicy"><span id="MaxWatermark"><span id="MinWatermark"> MultipleWatermarkPolicy
 
@@ -26,7 +26,7 @@ apply(
   conf: RuntimeConfig): WatermarkTracker
 ```
 
-`apply` uses the [spark.sql.streaming.multipleWatermarkPolicy](spark-sql-streaming-properties.md#spark.sql.streaming.multipleWatermarkPolicy) configuration property for the global watermark policy (default: `min`) and creates a `WatermarkTracker`.
+`apply` uses the [spark.sql.streaming.multipleWatermarkPolicy](configuration-properties.md#spark.sql.streaming.multipleWatermarkPolicy) configuration property for the global watermark policy (default: `min`) and creates a `WatermarkTracker`.
 
 `apply` is used when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
 

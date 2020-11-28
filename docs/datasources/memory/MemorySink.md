@@ -12,7 +12,7 @@ Use `toDebugString` to see the batches.
 
 Its aim is to allow users to test streaming applications in the Spark shell or other local tests.
 
-You can set `checkpointLocation` using `option` method or it will be set to spark-sql-streaming-properties.md#spark-sql-streaming-properties.md[spark.sql.streaming.checkpointLocation] property.
+You can set `checkpointLocation` using `option` method or it will be set to [spark.sql.streaming.checkpointLocation](../../configuration-properties.md#spark.sql.streaming.checkpointLocation) property.
 
 If `spark.sql.streaming.checkpointLocation` is set, the code uses `$location/$queryName` directory.
 

@@ -6,7 +6,7 @@
 
 * [[batchTimestampMs]] [Batch timestamp](spark-structured-streaming-batch-processing-time.md) (in millis)
 
-* [[conf]] **Streaming configuration** with `spark.sql.shuffle.partitions` and [spark.sql.streaming.stateStore.providerClass](spark-sql-streaming-properties.md#spark.sql.streaming.stateStore.providerClass) configuration properties
+* [[conf]] **Streaming configuration** with `spark.sql.shuffle.partitions` and [spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration properties
 
 `OffsetSeqMetadata` is used mainly when [IncrementalExecution](IncrementalExecution.md) is created.
 

@@ -1,6 +1,6 @@
-== [[StateManagerImplV2]] StateManagerImplV2 -- Default StateManager of FlatMapGroupsWithStateExec Physical Operator
+# StateManagerImplV2
 
-`StateManagerImplV2` is a concrete <<spark-sql-streaming-StateManager.md#, StateManager>> (as a <<spark-sql-streaming-StateManagerImplBase.md#, StateManagerImplBase>>) that is used by default in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator (per <<spark-sql-streaming-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion, spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion>> internal configuration property).
+`StateManagerImplV2` is a concrete <<spark-sql-streaming-StateManager.md#, StateManager>> (as a <<spark-sql-streaming-StateManagerImplBase.md#, StateManagerImplBase>>) that is used by default in [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator (per [spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](configuration-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion) internal configuration property).
 
 `StateManagerImplV2` is <<creating-instance, created>> exclusively when `FlatMapGroupsWithStateExecHelper` utility is requested for a <<spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md#createStateManager, StateManager>> (when the `stateFormatVersion` is `2`).
 

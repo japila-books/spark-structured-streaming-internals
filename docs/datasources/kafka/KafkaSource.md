@@ -11,7 +11,7 @@
     The [checkpointRoot](../../StreamExecution.md#checkpointRoot) directory is one of the following:
 
     * `checkpointLocation` option
-    * [spark.sql.streaming.checkpointLocation](../../spark-sql-streaming-properties.md#spark.sql.streaming.checkpointLocation) configuration property
+    * [spark.sql.streaming.checkpointLocation](../../configuration-properties.md#spark.sql.streaming.checkpointLocation) configuration property
 
 `KafkaSource` <<creating-instance, is created>> for **kafka** format (that is registered by [KafkaSourceProvider](KafkaSourceProvider.md#shortName)).
 

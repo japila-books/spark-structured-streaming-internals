@@ -98,7 +98,7 @@ nav:
     - Welcome: index.md
     - Spark Structured Streaming and Streaming Queries: spark-structured-streaming.md
     - StreamingQuery: StreamingQuery.md
-    - Configuration Properties: spark-sql-streaming-properties.md
+    - Configuration Properties: configuration-properties.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
     - DataSource: DataSource.md

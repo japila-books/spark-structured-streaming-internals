@@ -110,7 +110,7 @@ While being created, `FlatMapGroupsWithStateExec` creates a [StateManager](../sp
 
 A `StateManager` is [created](../spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md#createStateManager) per [state format version](#stateFormatVersion) that is given while creating a `FlatMapGroupsWithStateExec` (to choose between the [available implementations](../spark-sql-streaming-StateManagerImplBase.md#implementations)).
 
-The [state format version](#stateFormatVersion) is controlled by [spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](../spark-sql-streaming-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion) internal configuration property.
+The [state format version](#stateFormatVersion) is controlled by [spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion) internal configuration property.
 
 The `StateManager` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is [executed](#doExecute) for the following:
 
