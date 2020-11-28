@@ -88,23 +88,23 @@ Unknown type of trigger: [trigger]
 
 NOTE: `triggerExecutor` is used exclusively when `StreamExecution` is requested to <<runActivatedStream, run an activated streaming query>> (at regular intervals).
 
-=== [[runActivatedStream]] Running Activated Streaming Query -- `runActivatedStream` Method
+## <span id="runActivatedStream"> Running Activated Streaming Query
 
-[source, scala]
-----
+```scala
 runActivatedStream(
   sparkSessionForStream: SparkSession): Unit
-----
+```
 
-`runActivatedStream` simply requests the <<triggerExecutor, TriggerExecutor>> to execute micro-batches using the <<batchRunner, batch runner>> (until `MicroBatchExecution` is [terminated](StreamExecution.md#isActive) due to a query stop or a failure).
+`runActivatedStream` simply requests the [TriggerExecutor](#triggerExecutor) to execute micro-batches using the [batch runner](#batchRunner) (until `MicroBatchExecution` is [terminated](StreamExecution.md#isActive) due to a query stop or a failure).
 
 `runActivatedStream` is part of [StreamExecution](StreamExecution.md#runActivatedStream) abstraction.
 
-==== [[batchRunner]][[batch-runner]] TriggerExecutor's Batch Runner
+### <span id="batchRunner"><span id="batch-runner"> TriggerExecutor's Batch Runner
 
-The batch runner (of the <<triggerExecutor, TriggerExecutor>>) is executed as long as the `MicroBatchExecution` is [active](StreamExecution.md#isActive).
+The batch runner (of the [TriggerExecutor](#triggerExecutor)) is executed as long as the `MicroBatchExecution` is [active](StreamExecution.md#isActive).
 
-NOTE: _trigger_ and _batch_ are considered equivalent and used interchangeably.
+!!! note
+    _trigger_ and _batch_ are considered equivalent and used interchangeably.
 
 [[runActivatedStream-startTrigger]]
 The batch runner [initializes query progress for the new trigger](monitoring/ProgressReporter.md#startTrigger) (aka _startTrigger_).
@@ -112,11 +112,11 @@ The batch runner [initializes query progress for the new trigger](monitoring/Pro
 [[runActivatedStream-triggerExecution]][[runActivatedStream-triggerExecution-populateStartOffsets]]
 The batch runner starts *triggerExecution* [execution phase](monitoring/ProgressReporter.md#reportTimeTaken) that is made up of the following steps:
 
-. <<populateStartOffsets, Populating start offsets from checkpoint>> before the first "zero" batch (at every start or restart)
+1. [Populating start offsets from checkpoint](#populateStartOffsets) before the first "zero" batch (at every start or restart)
 
-. <<constructNextBatch, Constructing or skipping the next streaming micro-batch>>
+1. [Constructing or skipping the next streaming micro-batch](#constructNextBatch)
 
-. <<runBatch, Running the streaming micro-batch>>
+1. [Running the streaming micro-batch](#runBatch)
 
 At the start or restart (_resume_) of a streaming query (when the <<currentBatchId, current batch ID>> is uninitialized and `-1`), the batch runner <<populateStartOffsets, populates start offsets from checkpoint>> and then prints out the following INFO message to the logs (using the [committedOffsets](StreamExecution.md#committedOffsets) internal registry):
 
@@ -163,31 +163,31 @@ In the end, the batch runner [updates the status message](monitoring/ProgressRep
 Waiting for next trigger
 ```
 
-=== [[populateStartOffsets]] Populating Start Offsets From Checkpoint (Resuming from Checkpoint) -- `populateStartOffsets` Internal Method
+## <span id="populateStartOffsets"> Populating Start Offsets From Checkpoint (Resuming from Checkpoint)
 
-[source, scala]
-----
+```scala
 populateStartOffsets(
   sparkSessionToRunBatches: SparkSession): Unit
-----
+```
 
 `populateStartOffsets` requests the [Offset Write-Ahead Log](StreamExecution.md#offsetLog) for the [latest committed batch id with metadata](HDFSMetadataLog.md#getLatest) (i.e. [OffsetSeq](OffsetSeq.md)).
 
-NOTE: The batch id could not be available in the write-ahead log when a streaming query started with a new log or no batch was persisted (_added_) to the log before.
+!!! note
+    The batch id could not be available in the write-ahead log when a streaming query started with a new log or no batch was persisted (_added_) to the log before.
 
-`populateStartOffsets` branches off based on whether the latest committed batch was <<populateStartOffsets-getLatest-available, available>> or <<populateStartOffsets-getLatest-not-available, not>>.
+`populateStartOffsets` branches off based on whether the latest committed batch was [available](#populateStartOffsets-getLatest-available) or [not](#populateStartOffsets-getLatest-not-available).
 
-NOTE: `populateStartOffsets` is used exclusively when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> ([before the first "zero" micro-batch](#runActivatedStream-triggerExecution-populateStartOffsets)).
+`populateStartOffsets` is used when `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream) ([before the first "zero" micro-batch](#runActivatedStream-triggerExecution-populateStartOffsets)).
 
-==== [[populateStartOffsets-getLatest-available]] Latest Committed Batch Available
+### <span id="populateStartOffsets-getLatest-available"> Latest Committed Batch Available
 
 When the latest committed batch id with the metadata was available in the [Offset Write-Ahead Log](StreamExecution.md#offsetLog), `populateStartOffsets` (re)initializes the internal state as follows:
 
 * Sets the [current batch ID](StreamExecution.md#currentBatchId) to the latest committed batch ID found
 
-* Turns the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag on (`true`)
+* Turns the [isCurrentBatchConstructed](#isCurrentBatchConstructed) internal flag on (`true`)
 
-* Sets the <<availableOffsets, available offsets>> to the offsets (from the metadata)
+* Sets the [available offsets](#availableOffsets) to the offsets (from the metadata)
 
 When the latest batch ID found is greater than `0`, `populateStartOffsets` requests the [Offset Write-Ahead Log](StreamExecution.md#offsetLog) for the [second latest batch ID with metadata](HDFSMetadataLog.md#get) or throws an `IllegalStateException` if not found.
 
@@ -195,7 +195,7 @@ When the latest batch ID found is greater than `0`, `populateStartOffsets` reque
 batch [latestBatchId - 1] doesn't exist
 ```
 
-`populateStartOffsets` sets the <<committedOffsets, committed offsets>> to the second latest committed offsets.
+`populateStartOffsets` sets the [committed offsets](#committedOffsets) to the second latest committed offsets.
 
 [[populateStartOffsets-getLatest-available-offsetSeqMetadata]]
 `populateStartOffsets` updates the offset metadata.
@@ -210,10 +210,9 @@ When the latest committed batch id with metadata was found which is exactly the 
 
 When the latest committed batch id with metadata was found, but it is not exactly the second latest batch ID (found in the [Offset Commit Log](StreamExecution.md#commitLog)), `populateStartOffsets` prints out the following WARN message to the logs:
 
-[options="wrap"]
-----
+```text
 Batch completion log latest batch id is [latestCommittedBatchId], which is not trailing batchid [latestBatchId] by one
-----
+```
 
 When no commit log present in the [Offset Commit Log](StreamExecution.md#commitLog), `populateStartOffsets` prints out the following INFO message to the logs:
 
@@ -227,7 +226,7 @@ In the end, `populateStartOffsets` prints out the following DEBUG message to the
 Resuming at batch [currentBatchId] with committed offsets [committedOffsets] and available offsets [availableOffsets]
 ```
 
-==== [[populateStartOffsets-getLatest-not-available]] No Latest Committed Batch
+### <span id="populateStartOffsets-getLatest-not-available"> No Latest Committed Batch
 
 When the latest committed batch id with the metadata could not be found in the [Offset Write-Ahead Log](StreamExecution.md#offsetLog), it is assumed that the streaming query is started for the very first time (or the [checkpoint location](StreamExecution.md#checkpointRoot) has changed).
 
@@ -238,7 +237,7 @@ Starting new streaming query.
 ```
 
 [[populateStartOffsets-currentBatchId-0]]
-`populateStartOffsets` sets the [current batch ID](StreamExecution.md#currentBatchId) to `0` and creates a new <<watermarkTracker, WatermarkTracker>>.
+`populateStartOffsets` sets the [current batch ID](StreamExecution.md#currentBatchId) to `0` and creates a new [WatermarkTracker](#watermarkTracker).
 
 ## <span id="constructNextBatch"> Constructing Or Skipping Next Streaming Micro-Batch
 
