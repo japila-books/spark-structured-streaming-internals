@@ -52,7 +52,7 @@
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStoreAwareZipPartitionsRDD/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StateStoreAwareZipPartitionsRDD/</loc>
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -128,7 +128,7 @@
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-watermark/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/streaming-watermark/</loc>
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -140,7 +140,7 @@
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStore/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StateStore/</loc>
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -164,11 +164,11 @@
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStoreCoordinator/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StateStoreCoordinator/</loc>
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-StateStoreCoordinatorRef/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/StateStoreCoordinatorRef/</loc>
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -308,7 +308,7 @@
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-Deduplicate/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/logical-operators/Deduplicate/</loc>
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -556,7 +556,7 @@
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-UnsupportedOperationChecker/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/UnsupportedOperationChecker/</loc>
      <lastmod>2020-11-28</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
