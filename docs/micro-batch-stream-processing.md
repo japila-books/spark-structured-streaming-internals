@@ -77,7 +77,7 @@ sq.lastProgress.durationMs.get("walCommit")
 
 ## Monitoring
 
-`MicroBatchExecution` [posts events](monitoring/ProgressReporter.md#postEvent) to announce when a streaming query is started and stopped as well as after every micro-batch. <<spark-sql-streaming-StreamingQueryListener.md#, StreamingQueryListener>> interface can be used to intercept the events and act accordingly.
+`MicroBatchExecution` [posts events](monitoring/ProgressReporter.md#postEvent) to announce when a streaming query is started and stopped as well as after every micro-batch. [StreamingQueryListener](monitoring/StreamingQueryListener.md) interface can be used to intercept the events and act accordingly.
 
 After <<triggerExecution, triggerExecution phase>> `MicroBatchExecution` is requested to [finish up a streaming batch (trigger) and generate a StreamingQueryProgress](monitoring/ProgressReporter.md#finishTrigger) (with execution statistics).
 

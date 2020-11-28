@@ -593,7 +593,7 @@ NOTE: `start` uses Java's ++https://docs.oracle.com/javase/8/docs/api/java/lang/
 
 NOTE: When started, a streaming query runs in its own execution thread on JVM.
 
-In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` is requested to <<runStream, run the streaming query>> that in turn sends a <<spark-sql-streaming-StreamingQueryListener.md#QueryStartedEvent, QueryStartedEvent>> to all streaming listeners followed by decrementing the count of the <<startLatch, startLatch>>).
+In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` is requested to <<runStream, run the streaming query>> that in turn sends a [QueryStartedEvent](monitoring/StreamingQueryListener.md#QueryStartedEvent) to all streaming listeners followed by decrementing the count of the <<startLatch, startLatch>>).
 
 `start` is used when `StreamingQueryManager` is requested to [start a streaming query](StreamingQueryManager.md#startQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
 
