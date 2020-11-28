@@ -1,6 +1,16 @@
 # EventTimeStatsAccum Accumulator
 
-`EventTimeStatsAccum` is a Spark accumulator that is used for the <<EventTimeStats, statistics of the event-time column>> (that [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator uses for event-time watermark):
+`EventTimeStatsAccum` is an `AccumulatorV2` ([Spark Core]({{ book.spark_core }}/accumulators/AccumulatorV2/)) that accumulates `Long` values and produces an [EventTimeStats](#currentStats).
+
+## Creating Instance
+
+`EventTimeStatsAccum` takes the following to be created:
+
+* <span id="currentStats"> [EventTimeStats](EventTimeStats.md) (default: [EventTimeStats.zero](EventTimeStats.md#zero))
+
+`EventTimeStatsAccum` is created when [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) unary physical operator is created (and initializes [eventTimeStats](physical-operators/EventTimeWatermarkExec.md#eventTimeStats)).
+
+ that is used for the <<EventTimeStats, statistics of the event-time column>> (that [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md) physical operator uses for event-time watermark):
 
 * [[max]] Maximum value
 * [[min]] Minimum value

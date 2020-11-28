@@ -151,7 +151,8 @@ nav:
       - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
       - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
       - StateStoreUpdater: spark-sql-streaming-StateStoreUpdater.md
-      - EventTimeStatsAccum: spark-sql-streaming-EventTimeStatsAccum.md
+      - EventTimeStatsAccum: EventTimeStatsAccum.md
+      - EventTimeStats: EventTimeStats.md
       - StateStoreConf: StateStoreConf.md
     - Arbitrary Stateful Streaming Aggregation:
       - Arbitrary Stateful Streaming Aggregation: arbitrary-stateful-streaming-aggregation.md
@@ -239,7 +240,7 @@ nav:
         - StreamSourceProvider: StreamSourceProvider.md
       - Sink: Sink.md
       - StreamSinkProvider: StreamSinkProvider.md
-      - WatermarkTracker: spark-sql-streaming-WatermarkTracker.md
+      - WatermarkTracker: WatermarkTracker.md
     - Continuous Stream Processing:
       - Continuous Stream Processing: continuous-stream-processing.md
       - ContinuousExecution: ContinuousExecution.md

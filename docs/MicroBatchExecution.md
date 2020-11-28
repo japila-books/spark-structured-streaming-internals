@@ -300,7 +300,7 @@ In *getEndOffset* [time-tracking section](monitoring/ProgressReporter.md#reportT
 
 ### <span id="constructNextBatch-offsetSeqMetadata"> Updating Batch Metadata with Current Event-Time Watermark and Batch Timestamp
 
-`constructNextBatch` updates the [batch metadata](StreamExecution.md#offsetSeqMetadata) with the current <<spark-sql-streaming-WatermarkTracker.md#currentWatermark, event-time watermark>> (from the <<watermarkTracker, WatermarkTracker>>) and the batch timestamp.
+`constructNextBatch` updates the [batch metadata](StreamExecution.md#offsetSeqMetadata) with the current [event-time watermark](WatermarkTracker.md#currentWatermark) (from the <<watermarkTracker, WatermarkTracker>>) and the batch timestamp.
 
 ### <span id="constructNextBatch-shouldConstructNextBatch"> Checking Whether to Construct Next Micro-Batch or Not (Skip It)
 
@@ -535,9 +535,9 @@ For a [Sink](Sink.md) (Data Source API V1), `runBatch` simply requests the `Sink
 
 ### <span id="runBatch-updateWatermark-commitLog"> Updating Watermark and Committing Offsets to Offset Commit Log
 
-`runBatch` requests the <<watermarkTracker, WatermarkTracker>> to <<spark-sql-streaming-WatermarkTracker.md#updateWatermark, update event-time watermark>> (with the `executedPlan` of the <<runBatch-queryPlanning, IncrementalExecution>>).
+`runBatch` requests the [WatermarkTracker](#watermarkTracker) to [update event-time watermark](WatermarkTracker.md#updateWatermark) (with the `executedPlan` of the [IncrementalExecution](#runBatch-queryPlanning)).
 
-`runBatch` requests the [Offset Commit Log](StreamExecution.md#commitLog) to [persisting metadata of the streaming micro-batch](HDFSMetadataLog.md#add) (with the current [batch ID](StreamExecution.md#currentBatchId) and <<spark-sql-streaming-WatermarkTracker.md#currentWatermark, event-time watermark>> of the <<watermarkTracker, WatermarkTracker>>).
+`runBatch` requests the [Offset Commit Log](StreamExecution.md#commitLog) to [persisting metadata of the streaming micro-batch](HDFSMetadataLog.md#add) (with the current [batch ID](StreamExecution.md#currentBatchId) and [event-time watermark](WatermarkTracker.md#currentWatermark) of the [WatermarkTracker](#watermarkTracker)).
 
 In the end, `runBatch` [adds](StreamProgress.md#plusplus) the [available offsets](StreamExecution.md#availableOffsets) to the [committed offsets](StreamExecution.md#committedOffsets) (and updates the [offset](Offset.md)s of every source with new data in the current micro-batch).
 
@@ -624,6 +624,10 @@ logicalPlan must be initialized in QueryExecutionThread but the current thread w
 * `MicroBatchExecution` is requested to [run a single streaming micro-batch](#runBatch) (and sets the property to be the current batch ID)
 * `DataWritingSparkTask` is requested to run (and needs an epoch ID)
 
+## <span id="watermarkTracker"> WatermarkTracker
+
+[WatermarkTracker](WatermarkTracker.md) that is created when `MicroBatchExecution` is requested to [populate start offsets](#populateStartOffsets) (when requested to [run an activated streaming query](#runActivatedStream))
+
 ## Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
@@ -661,8 +665,5 @@ Used when:
 * <<populateStartOffsets, Populating start offsets>> (for the [available](StreamExecution.md#availableOffsets) and [committed](StreamExecution.md#committedOffsets) offsets)
 
 * <<constructNextBatch, Constructing or skipping next streaming micro-batch>> (and persisting offsets to write-ahead log)
-
-| watermarkTracker
-a| [[watermarkTracker]] <<spark-sql-streaming-WatermarkTracker.md#, WatermarkTracker>> that is created when `MicroBatchExecution` is requested to <<populateStartOffsets, populate start offsets>> (when requested to <<runActivatedStream, run an activated streaming query>>)
 
 |===

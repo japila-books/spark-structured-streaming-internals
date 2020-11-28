@@ -1,8 +1,8 @@
-== [[WatermarkTracker]] WatermarkTracker
+# WatermarkTracker
 
-`WatermarkTracker` tracks the <<globalWatermarkMs, event-time watermark>> of a streaming query (across <<operatorToWatermarkMap, EventTimeWatermarkExec operators>> in a physical query plan) based on a given <<policy, MultipleWatermarkPolicy>>.
+`WatermarkTracker` tracks the [event-time watermark](#globalWatermarkMs) of a streaming query (across [EventTimeWatermarkExec operators](#operatorToWatermarkMap) in a physical query plan) based on a given [MultipleWatermarkPolicy](#policy).
 
-`WatermarkTracker` is used exclusively in <<MicroBatchExecution.md#watermarkTracker, MicroBatchExecution>>.
+`WatermarkTracker` is used in [MicroBatchExecution](MicroBatchExecution.md#watermarkTracker).
 
 `WatermarkTracker` is <<creating-instance, created>> (using the <<apply, factory method>>) when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>> (when requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>).
 
