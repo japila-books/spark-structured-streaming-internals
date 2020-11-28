@@ -2,7 +2,7 @@
 
 `OffsetSeqMetadata` holds the metadata for the current streaming batch:
 
-* [[batchWatermarkMs]] [Event-time watermark](spark-sql-streaming-watermark.md) threshold
+* [[batchWatermarkMs]] [Event-time watermark](streaming-watermark.md) threshold
 
 * [[batchTimestampMs]] [Batch timestamp](spark-structured-streaming-batch-processing-time.md) (in millis)
 

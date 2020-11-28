@@ -84,11 +84,11 @@ Used also when StateStoreSaveExec.md#doExecute[StateStoreSaveExec] and physical-
 removeKeysOlderThanWatermark(store: StateStore): Unit
 ----
 
-`removeKeysOlderThanWatermark` requests the input `store` for spark-sql-streaming-StateStore.md#getRange[all rows].
+`removeKeysOlderThanWatermark` requests the input `store` for [all rows](StateStore.md#getRange).
 
-`removeKeysOlderThanWatermark` then uses <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to spark-sql-streaming-StateStore.md#remove[remove matching rows from the store].
+`removeKeysOlderThanWatermark` then uses [watermarkPredicateForKeys](#watermarkPredicateForKeys) to [remove matching rows from the store](StateStore.md#remove).
 
-NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StreamingDeduplicateExec` physical operator is requested to <<physical-operators/StreamingDeduplicateExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
+`removeKeysOlderThanWatermark` is used when [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md) physical operator is requested to execute.
 
 === [[removeKeysOlderThanWatermark-StreamingAggregationStateManager-store]] `removeKeysOlderThanWatermark` Method
 

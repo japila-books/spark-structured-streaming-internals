@@ -24,7 +24,7 @@ In [Append](OutputMode.md#Append) output mode the current event-time streaming w
 
 * Dropping late events, i.e. don't save them to a state store or include in aggregation (*Late events* in the demo)
 
-Streaming watermark is [required](spark-sql-streaming-UnsupportedOperationChecker.md#streaming-aggregation-append-mode-requires-watermark) for a [streaming aggregation](streaming-aggregation.md) in [append](OutputMode.md#Append) output mode.
+Streaming watermark is [required](UnsupportedOperationChecker.md#streaming-aggregation-append-mode-requires-watermark) for a [streaming aggregation](streaming-aggregation.md) in [append](OutputMode.md#Append) output mode.
 
 ## Streaming Aggregation
 

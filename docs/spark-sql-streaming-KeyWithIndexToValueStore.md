@@ -1,12 +1,12 @@
 # KeyWithIndexToValueStore
 
-`KeyWithIndexToValueStore` is a <<spark-sql-streaming-StateStoreHandler.md#, StateStoreHandler>> (of <<spark-sql-streaming-StateStoreHandler.md#KeyWithIndexToValueType, KeyWithIndexToValueType>>) for [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md#keyWithIndexToValue) to manage a <<stateStore, join state>>.
+`KeyWithIndexToValueStore` is a [StateStoreHandler](spark-sql-streaming-StateStoreHandler.md) (of [KeyWithIndexToValueType](spark-sql-streaming-StateStoreHandler.md#KeyWithIndexToValueType)) for [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md#keyWithIndexToValue) to manage a <<stateStore, join state>>.
 
 .KeyToNumValuesStore, KeyWithIndexToValueStore and Stream-Stream Join
 image::images/KeyToNumValuesStore-KeyWithIndexToValueStore.png[align="center"]
 
 [[stateStore]]
-As a <<spark-sql-streaming-StateStoreHandler.md#, StateStoreHandler>>, `KeyWithIndexToValueStore` manages a <<spark-sql-streaming-StateStore.md#, state store>> (that is <<spark-sql-streaming-StateStoreHandler.md#getStateStore, loaded>>) for keys and values per the <<keyWithIndexSchema, keys with index>> and [input values](SymmetricHashJoinStateManager.md#inputValueAttributes) schemas, respectively.
+As a [StateStoreHandler](spark-sql-streaming-StateStoreHandler.md), `KeyWithIndexToValueStore` manages a [state store](StateStore.md) (that is [loaded](spark-sql-streaming-StateStoreHandler.md#getStateStore)) for keys and values per the <<keyWithIndexSchema, keys with index>> and [input values](SymmetricHashJoinStateManager.md#inputValueAttributes) schemas, respectively.
 
 [[keyWithIndexSchema]]
 `KeyWithIndexToValueStore` uses a schema (for the <<stateStore, state store>>) that is the [key schema](SymmetricHashJoinStateManager.md#keySchema) (of the parent `SymmetricHashJoinStateManager`) with an extra field `index` of type `long`.
@@ -34,7 +34,7 @@ get(
   valueIndex: Long): UnsafeRow
 ----
 
-`get` simply requests the internal <<stateStore, state store>> to <<spark-sql-streaming-StateStore.md#get, look up>> the value for the given <<keyWithIndexRow, key and valueIndex>>.
+`get` simply requests the internal [state store](#stateStore) to [look up](StateStore.md#get) the value for the given <<keyWithIndexRow, key and valueIndex>>.
 
 `get` is used when `SymmetricHashJoinStateManager` is requested to [removeByValueCondition](SymmetricHashJoinStateManager.md#removeByValueCondition).
 

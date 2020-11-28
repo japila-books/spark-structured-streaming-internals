@@ -32,6 +32,6 @@ getStateValueWatermark(
 
 `getStateValueWatermark` is used when:
 
-* `UnsupportedOperationChecker` utility is used to [checkForStreaming](spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming)
+* `UnsupportedOperationChecker` utility is used to [checkForStreaming](UnsupportedOperationChecker.md#checkForStreaming)
 
 * `StreamingSymmetricHashJoinHelper` utility is used to [create a JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates)

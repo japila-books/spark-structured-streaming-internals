@@ -252,7 +252,7 @@ coordinatorRef: Option[StateStoreCoordinatorRef]
 
 `coordinatorRef` requests the `SparkEnv` helper object for the current `SparkEnv`.
 
-If the `SparkEnv` is available and the <<_coordRef, _coordRef>> is not assigned yet, `coordinatorRef` prints out the following DEBUG message to the logs followed by requesting the `StateStoreCoordinatorRef` for the <<spark-sql-streaming-StateStoreCoordinatorRef.md#forExecutor, StateStoreCoordinator endpoint>>.
+If the `SparkEnv` is available and the <<_coordRef, _coordRef>> is not assigned yet, `coordinatorRef` prints out the following DEBUG message to the logs followed by requesting the `StateStoreCoordinatorRef` for the [StateStoreCoordinator endpoint](StateStoreCoordinatorRef.md#forExecutor).
 
 ```
 Getting StateStoreCoordinatorRef
@@ -296,7 +296,7 @@ reportActiveStoreInstance(
   storeProviderId: StateStoreProviderId): Unit
 ----
 
-`reportActiveStoreInstance` takes the current host and `executorId` (from the `BlockManager` on the Spark executor) and requests the <<coordinatorRef, StateStoreCoordinatorRef>> to <<spark-sql-streaming-StateStoreCoordinatorRef.md#reportActiveInstance, reportActiveInstance>>.
+`reportActiveStoreInstance` takes the current host and `executorId` (from the `BlockManager` on the Spark executor) and requests the <<coordinatorRef, StateStoreCoordinatorRef>> to [reportActiveInstance](StateStoreCoordinatorRef.md#reportActiveInstance).
 
 NOTE: `reportActiveStoreInstance` uses `SparkEnv` to access the `BlockManager`.
 
@@ -405,7 +405,7 @@ NOTE: `verifyIfStoreInstanceActive` is used exclusively when `StateStore` helper
 Used in...FIXME
 
 | _coordRef
-| [[_coordRef]] <<spark-sql-streaming-StateStoreCoordinatorRef.md#, StateStoreCoordinator RPC endpoint>> (a `RpcEndpointRef` to <<spark-sql-streaming-StateStoreCoordinator.md#, StateStoreCoordinator>>)
+| [[_coordRef]] [StateStoreCoordinator RPC endpoint](StateStoreCoordinatorRef.md) (a `RpcEndpointRef` to [StateStoreCoordinator](StateStoreCoordinator.md))
 
 Used in...FIXME
 |===

@@ -206,7 +206,7 @@ Default: `10` (milliseconds)
 
 ## <span id="spark.sql.streaming.stateStore.maintenanceInterval"> spark.sql.streaming.stateStore.maintenanceInterval
 
-The initial delay and how often to execute StateStore's [maintenance task](spark-sql-streaming-StateStore.md#MaintenanceTask).
+The initial delay and how often to execute StateStore's [maintenance task](StateStore.md#MaintenanceTask).
 
 Default: `60s`
 
@@ -228,6 +228,6 @@ Use [SQLConf.stateStoreProviderClass](SQLConf.md#stateStoreProviderClass) to get
 
 ## <span id="spark.sql.streaming.unsupportedOperationCheck"> spark.sql.streaming.unsupportedOperationCheck
 
-**(internal)** When enabled (`true`), `StreamingQueryManager` [makes sure that the logical plan of a streaming query uses supported operations only](spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming)
+**(internal)** When enabled (`true`), `StreamingQueryManager` [makes sure that the logical plan of a streaming query uses supported operations only](UnsupportedOperationChecker.md#checkForStreaming)
 
 Default: `true`

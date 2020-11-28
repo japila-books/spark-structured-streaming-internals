@@ -28,7 +28,7 @@ In [streaming aggregations](streaming-aggregation.md), a "new" row is when the i
 
 Required for datasets with `FileFormat` format (to create [FileStreamSink](datasources/file/FileStreamSink.md))
 
-`Append` is spark-sql-streaming-UnsupportedOperationChecker.md#multiple-flatMapGroupsWithState[mandatory] when multiple `flatMapGroupsWithState` operators are used in a structured query.
+`Append` is [mandatory](UnsupportedOperationChecker.md#multiple-flatMapGroupsWithState) when multiple `flatMapGroupsWithState` operators are used in a structured query.
 
 ## <span id="Complete"> Complete Output Mode
 
@@ -36,7 +36,7 @@ Required for datasets with `FileFormat` format (to create [FileStreamSink](datas
 
 Complete mode does not drop old aggregation state and preserves all data in the Result Table.
 
-Supported only for [streaming aggregations](streaming-aggregation.md) (as asserted by [UnsupportedOperationChecker](spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming)).
+Supported only for [streaming aggregations](streaming-aggregation.md) (as asserted by [UnsupportedOperationChecker](UnsupportedOperationChecker.md#checkForStreaming)).
 
 ## <span id="Update"> Update Output Mode
 

@@ -29,7 +29,7 @@ setStoreMetrics(
   store: StateStore): Unit
 ```
 
-`setStoreMetrics` requests the specified [StateStore](../spark-sql-streaming-StateStore.md) for the [metrics](../spark-sql-streaming-StateStore.md#metrics) and records the following metrics of a physical operator:
+`setStoreMetrics` requests the specified [StateStore](../StateStore.md) for the [metrics](../StateStore.md#metrics) and records the following metrics of a physical operator:
 
 * [numTotalStateRows](#numTotalStateRows) as the [number of keys](../spark-sql-streaming-StateStoreMetrics.md#numKeys)
 

@@ -109,7 +109,7 @@ nav:
     - Trigger: Trigger.md
     - Streaming Join:
       - Streaming Join: spark-sql-streaming-join.md
-      - StateStoreAwareZipPartitionsRDD: spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md
+      - StateStoreAwareZipPartitionsRDD: StateStoreAwareZipPartitionsRDD.md
       - SymmetricHashJoinStateManager:
         - SymmetricHashJoinStateManager: SymmetricHashJoinStateManager.md
         - StateStoreHandler: spark-sql-streaming-StateStoreHandler.md
@@ -132,11 +132,11 @@ nav:
       - StreamingAggregationStateManagerImplV2: StreamingAggregationStateManagerImplV2.md
     - Stateful Stream Processing:
       - Stateful Stream Processing: spark-sql-streaming-stateful-stream-processing.md
-      - Streaming Watermark: spark-sql-streaming-watermark.md
+      - Streaming Watermark: streaming-watermark.md
       - Streaming Deduplication: spark-sql-streaming-deduplication.md
       - Streaming Limit: spark-sql-streaming-limit.md
       - StateStore:
-        - StateStore: spark-sql-streaming-StateStore.md
+        - StateStore: StateStore.md
         - StateStoreId: spark-sql-streaming-StateStoreId.md
         - HDFSBackedStateStore: HDFSBackedStateStore.md
       - StateStoreProvider:
@@ -144,8 +144,8 @@ nav:
         - StateStoreProviderId: spark-sql-streaming-StateStoreProviderId.md
         - HDFSBackedStateStoreProvider: HDFSBackedStateStoreProvider.md
       - StateStoreCoordinator:
-        - StateStoreCoordinator: spark-sql-streaming-StateStoreCoordinator.md
-        - StateStoreCoordinatorRef: spark-sql-streaming-StateStoreCoordinatorRef.md
+        - StateStoreCoordinator: StateStoreCoordinator.md
+        - StateStoreCoordinatorRef: StateStoreCoordinatorRef.md
       - WatermarkSupport: WatermarkSupport.md
       - StatefulOperatorStateInfo: StatefulOperatorStateInfo.md
       - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
@@ -187,7 +187,7 @@ nav:
     - Logical Operators:
       - EventTimeWatermark: logical-operators/EventTimeWatermark.md
       - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
-      - Deduplicate: spark-sql-streaming-Deduplicate.md
+      - Deduplicate: logical-operators/Deduplicate.md
       - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md
       - StreamingRelation: logical-operators/StreamingRelation.md
       - StreamingRelationV2: logical-operators/StreamingRelationV2.md
@@ -262,7 +262,7 @@ nav:
         - WriteToContinuousDataSourceExec Unary Physical Operator: spark-sql-streaming-WriteToContinuousDataSourceExec.md
         - ContinuousWriteRDD: spark-sql-streaming-ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: spark-sql-streaming-ContinuousDataSourceRDD.md
-    - UnsupportedOperationChecker: spark-sql-streaming-UnsupportedOperationChecker.md
+    - UnsupportedOperationChecker: UnsupportedOperationChecker.md
     - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
     - SQLConf: SQLConf.md
   - Streaming Operators:

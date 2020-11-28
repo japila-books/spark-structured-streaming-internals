@@ -1,6 +1,6 @@
 # Demo: Streaming Watermark with Aggregation in Append Output Mode
 
-The following demo shows the behaviour and the internals of [streaming watermark](../spark-sql-streaming-watermark.md) with a [streaming aggregation](../streaming-aggregation.md) in [Append](../OutputMode.md#Append) output mode.
+The following demo shows the behaviour and the internals of [streaming watermark](../streaming-watermark.md) with a [streaming aggregation](../streaming-aggregation.md) in [Append](../OutputMode.md#Append) output mode.
 
 The demo also shows the behaviour and the internals of [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator in [Append](../physical-operators/StateStoreSaveExec.md#doExecute-Append) output mode.
 

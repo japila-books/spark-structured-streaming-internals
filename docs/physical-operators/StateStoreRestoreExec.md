@@ -85,7 +85,7 @@ Internally, `doExecute` executes <<child, child>> physical operator and [creates
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* spark-sql-streaming-StateStore.md#get[Gets the saved state] in `StateStore` for the key if available (it might not be if the key appeared in the input the first time)
+* [Gets the saved state](../StateStore.md#get) in `StateStore` for the key if available (it might not be if the key appeared in the input the first time)
 
 * Increments <<numOutputRows, numOutputRows>> metric (that in the end is the number of rows from the <<child, child>> operator)
 

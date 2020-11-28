@@ -34,7 +34,7 @@
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
 * <span id="timeoutConf"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
 * <span id="batchTimestampMs"> Optional [Batch Processing Time](../spark-structured-streaming-batch-processing-time.md)
-* <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../spark-sql-streaming-watermark.md)
+* <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../streaming-watermark.md)
 * <span id="child"> Child physical operator
 
 `FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).
@@ -51,7 +51,7 @@ doExecute(): RDD[InternalRow]
 
 `doExecute` uses [StateStoreOps](../StateStoreOps.md) to [create a StateStoreRDD](../StateStoreOps.md#mapPartitionsWithStateStore) with a `storeUpdateFunction` that does the following (for a partition):
 
-1. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](../spark-sql-streaming-StateStore.md)
+1. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](../StateStore.md)
 
 1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
 
@@ -61,7 +61,7 @@ doExecute(): RDD[InternalRow]
 
 1. Creates an iterator by concatenating the above iterators (with the new data processed first)
 
-1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../spark-sql-streaming-StateStore.md#commit) followed by [setting the store-specific metrics](StateStoreWriter.md#setStoreMetrics)
+1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../StateStore.md#commit) followed by [setting the store-specific metrics](StateStoreWriter.md#setStoreMetrics)
 
 `doExecute` is part of Spark SQL's `SparkPlan` abstraction.
 

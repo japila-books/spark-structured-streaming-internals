@@ -26,7 +26,7 @@ a| [[stateStore]]
 stateStore: StateStore
 ----
 
-<<spark-sql-streaming-StateStore.md#, StateStore>>
+[StateStore](StateStore.md)
 |===
 
 [[extensions]]
@@ -65,7 +65,7 @@ Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 metrics: StateStoreMetrics
 ----
 
-`metrics` simply requests the <<stateStore, StateStore>> for the <<spark-sql-streaming-StateStore.md#metrics, StateStoreMetrics>>.
+`metrics` simply requests the [StateStore](#stateStore) for the [StateStoreMetrics](StateStore.md#metrics).
 
 `metrics` is used when `SymmetricHashJoinStateManager` is requested for the [metrics](SymmetricHashJoinStateManager.md#metrics).
 
@@ -102,7 +102,7 @@ getStateStore(
 
 `getStateStore` creates a new <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> (for the [StatefulOperatorStateInfo](SymmetricHashJoinStateManager.md#stateInfo) of the owning `SymmetricHashJoinStateManager`, the partition ID from the execution context, and the [name of the state store](SymmetricHashJoinStateManager.md#getStateStoreName) for the [JoinSide](SymmetricHashJoinStateManager.md#joinSide) and <<stateStoreType, StateStoreType>>).
 
-`getStateStore` uses the `StateStore` utility to <<spark-sql-streaming-StateStore.md#get-StateStore, look up a StateStore for the StateStoreProviderId>>.
+`getStateStore` uses the `StateStore` utility to [look up a StateStore for the StateStoreProviderId](StateStore.md#get-StateStore).
 
 In the end, `getStateStore` prints out the following INFO message to the logs:
 

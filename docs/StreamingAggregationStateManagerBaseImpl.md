@@ -36,7 +36,7 @@ commit(
 
 `commit` is part of the [StreamingAggregationStateManager](StreamingAggregationStateManager.md#commit) abstraction.
 
-`commit` simply requests the [state store](spark-sql-streaming-StateStore.md) to [commit state changes](spark-sql-streaming-StateStore.md#commit).
+`commit` simply requests the [state store](StateStore.md) to [commit state changes](StateStore.md#commit).
 
 ## <span id="remove"> Removing Key From State Store
 

@@ -1,7 +1,7 @@
 # StateStoreMetrics
 
 [[creating-instance]]
-`StateStoreMetrics` holds the performance metrics of a <<spark-sql-streaming-StateStore.md#, state store>>:
+`StateStoreMetrics` holds the performance metrics of a [state store](StateStore.md):
 
 * [[numKeys]] Number of keys
 * [[memoryUsedBytes]] Memory used (in bytes)
@@ -9,7 +9,7 @@
 
 `StateStoreMetrics` is used (and <<creating-instance, created>>) when the following are requested for the performance metrics:
 
-* [StateStore](spark-sql-streaming-StateStore.md#metrics)
+* [StateStore](StateStore.md#metrics)
 
 * [StateStoreHandler](spark-sql-streaming-StateStoreHandler.md#metrics)
 

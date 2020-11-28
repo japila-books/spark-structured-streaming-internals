@@ -1,6 +1,6 @@
 # StateStoreCoordinator RPC Endpoint
 
-`StateStoreCoordinator` keeps track of [StateStore](spark-sql-streaming-StateStore.md)s on Spark executors (per host and executor ID).
+`StateStoreCoordinator` keeps track of [StateStore](StateStore.md)s on Spark executors (per host and executor ID).
 
 `StateStoreCoordinator` is used by `StateStoreRDD` when requested to [get the location preferences of partitions](StateStoreRDD.md#getPreferredLocations) (based on the location of the stores).
 
@@ -38,7 +38,7 @@ Got location of the state store [id]: [executorId]
 | ReportActiveInstance
 a| [[ReportActiveInstance]] One-way asynchronous (fire-and-forget) message to register a new <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> on an executor (given `host` and `executorId`).
 
-Sent out exclusively when <<spark-sql-streaming-StateStoreCoordinatorRef.md#, StateStoreCoordinatorRef>> RPC endpoint reference is requested to <<spark-sql-streaming-StateStoreCoordinatorRef.md#reportActiveInstance, reportActiveInstance>> (when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.md#get-StateStore, look up the StateStore by provider ID>> when the `StateStore` and a corresponding `StateStoreProvider` were just created and initialized).
+Sent out exclusively when [StateStoreCoordinatorRef](StateStoreCoordinatorRef.md) RPC endpoint reference is requested to [reportActiveInstance](StateStoreCoordinatorRef.md#reportActiveInstance) (when `StateStore` utility is requested to [look up the StateStore by provider ID](StateStore.md#get-StateStore) when the `StateStore` and a corresponding `StateStoreProvider` were just created and initialized).
 
 ---
 

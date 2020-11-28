@@ -1,6 +1,6 @@
 # StateManager
 
-`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](spark-sql-streaming-StateStore.md) and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
+`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](StateStore.md) and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
 
 [[contract]]
 .StateManager Contract
@@ -17,7 +17,7 @@ a| [[getAllState]]
 getAllState(store: StateStore): Iterator[StateData]
 ----
 
-Retrieves all state data (for all keys) from the <<spark-sql-streaming-StateStore.md#, StateStore>>
+Retrieves all state data (for all keys) from the [StateStore](StateStore.md)
 
 Used when `InputProcessor` is requested to [processTimedOutState](InputProcessor.md#processTimedOutState)
 
@@ -31,7 +31,7 @@ getState(
   keyRow: UnsafeRow): StateData
 ----
 
-Gets the state data for the key from the <<spark-sql-streaming-StateStore.md#, StateStore>>
+Gets the state data for the key from the [StateStore](StateStore.md)
 
 Used exclusively when `InputProcessor` is requested to [processNewData](InputProcessor.md#processNewData)
 
@@ -47,7 +47,7 @@ putState(
   timeoutTimestamp: Long): Unit
 ----
 
-Persists (_puts_) the state value for the key in the <<spark-sql-streaming-StateStore.md#, StateStore>>
+Persists (_puts_) the state value for the key in the [StateStore](StateStore.md)
 
 Used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState) ([right after all rows have been processed](InputProcessor.md#onIteratorCompletion))
 
@@ -61,7 +61,7 @@ removeState(
   keyRow: UnsafeRow): Unit
 ----
 
-Removes the state for the key from the <<spark-sql-streaming-StateStore.md#, StateStore>>
+Removes the state for the key from the [StateStore](StateStore.md)
 
 Used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState) ([right after all rows have been processed](InputProcessor.md#onIteratorCompletion))
 

@@ -158,7 +158,7 @@ checkpointLocation must be specified either through option("checkpointLocation",
 
 `createQuery` makes sure that the logical plan of the structured query is analyzed (i.e. no logical errors have been found).
 
-Unless [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled, `createQuery` [checks the logical plan of the streaming query for unsupported operations](spark-sql-streaming-UnsupportedOperationChecker.md#checkForStreaming).
+Unless [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled, `createQuery` [checks the logical plan of the streaming query for unsupported operations](UnsupportedOperationChecker.md#checkForStreaming).
 
 (only when `spark.sql.adaptive.enabled` Spark property is turned on) `createQuery` prints out a WARN message to the logs:
 
@@ -248,7 +248,7 @@ notifyQueryTermination(
 
 `notifyQueryTermination` notifies others that are blocked on [awaitTerminationLock](#awaitTerminationLock).
 
-In the end, `notifyQueryTermination` requests [StateStoreCoordinator](#stateStoreCoordinator) to [deactivate all active runs of the streaming query](spark-sql-streaming-StateStoreCoordinatorRef.md#deactivateInstances).
+In the end, `notifyQueryTermination` requests [StateStoreCoordinator](#stateStoreCoordinator) to [deactivate all active runs of the streaming query](StateStoreCoordinatorRef.md#deactivateInstances).
 
 ![StreamingQueryManager's Marking Streaming Query as Terminated](images/StreamingQueryManager-notifyQueryTermination.png)
 
@@ -272,9 +272,9 @@ Used when `StreamingQueryManager` is requested for [active streaming queries](#a
 
 ## <span id="stateStoreCoordinator"> StateStoreCoordinatorRef
 
-[StateStoreCoordinatorRef](spark-sql-streaming-StateStoreCoordinatorRef.md) to the `StateStoreCoordinator` RPC Endpoint
+[StateStoreCoordinatorRef](StateStoreCoordinatorRef.md) to the `StateStoreCoordinator` RPC Endpoint
 
-* [Created](spark-sql-streaming-StateStoreCoordinatorRef.md#forDriver) when `StreamingQueryManager` is [created](#creating-instance)
+* [Created](StateStoreCoordinatorRef.md#forDriver) when `StreamingQueryManager` is [created](#creating-instance)
 
 Used when:
 

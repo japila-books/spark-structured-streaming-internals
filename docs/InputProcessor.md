@@ -12,7 +12,7 @@
 
 ## <span id="store"> StateStore
 
-`InputProcessor` is given a [StateStore](spark-sql-streaming-StateStore.md) when [created](#creating-instance).
+`InputProcessor` is given a [StateStore](StateStore.md) when [created](#creating-instance).
 
 The `StateStore` manages the per-group state (and is used when processing [new data](#processNewData) and [timed-out state data](#processTimedOutState), and in the ["all rows processed" callback](#onIteratorCompletion)).
 

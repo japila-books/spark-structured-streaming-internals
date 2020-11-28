@@ -47,14 +47,14 @@ When executed, `FlatMapGroupsWithStateExec` first validates a selected [GroupSta
 (StateStore, Iterator[T]) => Iterator[U]
 ```
 
-While generating the recipe, `FlatMapGroupsWithStateExec` uses [StateStoreOps](StateStoreOps.md) extension method object to register a listener that is executed on a task completion. The listener makes sure that a given [StateStore](spark-sql-streaming-StateStore.md) has all state changes either [committed](spark-sql-streaming-StateStore.md#hasCommitted) or [aborted](spark-sql-streaming-StateStore.md#abort).
+While generating the recipe, `FlatMapGroupsWithStateExec` uses [StateStoreOps](StateStoreOps.md) extension method object to register a listener that is executed on a task completion. The listener makes sure that a given [StateStore](StateStore.md) has all state changes either [committed](StateStore.md#hasCommitted) or [aborted](StateStore.md#abort).
 
 In the end, `FlatMapGroupsWithStateExec` creates a new [StateStoreRDD](StateStoreRDD.md) and adds it to the RDD lineage.
 
-`StateStoreRDD` is used to properly distribute tasks across executors (per [preferred locations](StateStoreRDD.md#getPreferredLocations)) with help of [StateStoreCoordinator](spark-sql-streaming-StateStoreCoordinator.md) (that runs on the driver).
+`StateStoreRDD` is used to properly distribute tasks across executors (per [preferred locations](StateStoreRDD.md#getPreferredLocations)) with help of [StateStoreCoordinator](StateStoreCoordinator.md) (that runs on the driver).
 
-`StateStoreRDD` uses `StateStore` helper to [look up a StateStore](spark-sql-streaming-StateStore.md#get-StateStore) by [StateStoreProviderId](spark-sql-streaming-StateStoreProviderId.md) and store version.
+`StateStoreRDD` uses `StateStore` helper to [look up a StateStore](StateStore.md#get-StateStore) by [StateStoreProviderId](spark-sql-streaming-StateStoreProviderId.md) and store version.
 
-`FlatMapGroupsWithStateExec` physical operator uses [state managers](spark-sql-streaming-StateManager.md) that are different than [state managers](StreamingAggregationStateManager.md) for [Streaming Aggregation](streaming-aggregation.md). [StateStore](spark-sql-streaming-StateStore.md) abstraction is the same as in [Streaming Aggregation](streaming-aggregation.md).
+`FlatMapGroupsWithStateExec` physical operator uses [state managers](spark-sql-streaming-StateManager.md) that are different than [state managers](StreamingAggregationStateManager.md) for [Streaming Aggregation](streaming-aggregation.md). [StateStore](StateStore.md) abstraction is the same as in [Streaming Aggregation](streaming-aggregation.md).
 
 One of the important execution steps is when `InputProcessor` (of [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator) is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState). That executes the **user-defined state function** on a per-group state key object, value objects, and a [GroupStateImpl](GroupStateImpl.md).

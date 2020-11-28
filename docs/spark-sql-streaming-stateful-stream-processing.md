@@ -2,7 +2,7 @@
 
 **Stateful Stream Processing** is a stream processing with state (implicit or explicit).
 
-In Spark Structured Streaming, a streaming query is stateful when is one of the following (that makes use of [StateStores](spark-sql-streaming-StateStore.md)):
+In Spark Structured Streaming, a streaming query is stateful when is one of the following (that makes use of [StateStores](StateStore.md)):
 
 * [Streaming Aggregation](streaming-aggregation.md)
 
@@ -16,7 +16,7 @@ In Spark Structured Streaming, a streaming query is stateful when is one of the 
 
 ## <span id="versioned-state-statestores-and-statestoreproviders"> Versioned State, StateStores and StateStoreProviders
 
-Spark Structured Streaming uses [StateStore](spark-sql-streaming-StateStore.md)s for versioned and fault-tolerant key-value state stores.
+Spark Structured Streaming uses [StateStore](StateStore.md)s for versioned and fault-tolerant key-value state stores.
 
 State stores are checkpointed incrementally to avoid state loss and for increased performance.
 
@@ -24,15 +24,15 @@ State stores are managed by [StateStoreProvider](spark-sql-streaming-StateStoreP
 
 State store providers manage versioned state per [stateful operator (and partition it operates on)](spark-sql-streaming-StateStoreId.md).
 
-The lifecycle of a `StateStoreProvider` begins when `StateStore` utility (on a Spark executor) is requested for the [StateStore by provider ID and version](spark-sql-streaming-StateStore.md#get-StateStore).
+The lifecycle of a `StateStoreProvider` begins when `StateStore` utility (on a Spark executor) is requested for the [StateStore by provider ID and version](StateStore.md#get-StateStore).
 
 IMPORTANT: It is worth to notice that since `StateStore` and `StateStoreProvider` utilities are Scala objects that makes it possible that there can only be one instance of `StateStore` and `StateStoreProvider` on a single JVM. Scala objects are (sort of) singletons which means that there will be exactly one instance of each per JVM and that is exactly the JVM of a Spark executor. As long as the executor is up and running state versions are cached and no Hadoop DFS is used (except for the initial load).
 
-When requested for a <<spark-sql-streaming-StateStore.md#get-StateStore, StateStore>>, `StateStore` utility is given the version of a state store to look up. The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in [Continuous Stream Processing](continuous-stream-processing.md)) or the [current batch ID](StatefulOperatorStateInfo.md#storeVersion) (in [Micro-Batch Stream Processing](micro-batch-stream-processing.md)).
+When requested for a [StateStore](StateStore.md#get-StateStore), `StateStore` utility is given the version of a state store to look up. The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in [Continuous Stream Processing](continuous-stream-processing.md)) or the [current batch ID](StatefulOperatorStateInfo.md#storeVersion) (in [Micro-Batch Stream Processing](micro-batch-stream-processing.md)).
 
 `StateStore` utility requests `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, createAndInit>> that creates the `StateStoreProvider` implementation (based on [spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass) internal configuration property) and requests it to <<spark-sql-streaming-StateStoreProvider.md#init, initialize>>.
 
-The initialized `StateStoreProvider` is cached in <<spark-sql-streaming-StateStore.md#loadedProviders, loadedProviders>> internal lookup table (for a <<spark-sql-streaming-StateStoreId.md#, StateStoreId>>) for later lookups.
+The initialized `StateStoreProvider` is cached in [loadedProviders](StateStore.md#loadedProviders) internal lookup table (for a <<spark-sql-streaming-StateStoreId.md#, StateStoreId>>) for later lookups.
 
 `StateStoreProvider` utility then requests the `StateStoreProvider` for the <<spark-sql-streaming-StateStoreProvider.md#getStore, state store for a specified version>>. (e.g. a [HDFSBackedStateStore](HDFSBackedStateStore.md) in case of [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#getStore)).
 
@@ -140,11 +140,11 @@ Since execution of a stateful streaming query happens on Spark executors whereas
 
 When planned for execution, the `StateStoreRDD` is first asked for the [preferred locations of a partition](StateStoreRDD.md#getPreferredLocations) (which happens on the driver) that are later used to [compute it](StateStoreRDD.md#compute) (on Spark executors).
 
-Spark Structured Streaming uses RPC environment to keep track of [StateStore](spark-sql-streaming-StateStore.md)s (their [StateStoreProvider](spark-sql-streaming-StateStoreProvider.md) actually) for RDD planning.
+Spark Structured Streaming uses RPC environment to keep track of [StateStore](StateStore.md)s (their [StateStoreProvider](spark-sql-streaming-StateStoreProvider.md) actually) for RDD planning.
 
-Every time [StateStoreRDD](StateStoreRDD.md) is requested for the [preferred locations of a partition](StateStoreRDD.md#getPreferredLocations), it communicates with the [StateStoreCoordinator](spark-sql-streaming-StateStoreCoordinator.md) RPC endpoint that knows the locations of the required `StateStores` (per host and executor ID).
+Every time [StateStoreRDD](StateStoreRDD.md) is requested for the [preferred locations of a partition](StateStoreRDD.md#getPreferredLocations), it communicates with the [StateStoreCoordinator](StateStoreCoordinator.md) RPC endpoint that knows the locations of the required `StateStores` (per host and executor ID).
 
-`StateStoreRDD` uses [StateStoreProviderId](spark-sql-streaming-StateStoreProviderId.md) with [StateStoreId](spark-sql-streaming-StateStoreId.md) to uniquely identify the [state store](spark-sql-streaming-StateStore.md) to use for (_associate with_) a stateful operator and a partition.
+`StateStoreRDD` uses [StateStoreProviderId](spark-sql-streaming-StateStoreProviderId.md) with [StateStoreId](spark-sql-streaming-StateStoreId.md) to uniquely identify the [state store](StateStore.md) to use for (_associate with_) a stateful operator and a partition.
 
 ## State Management
 

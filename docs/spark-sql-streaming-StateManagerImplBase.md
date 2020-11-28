@@ -83,7 +83,7 @@ getState(
   keyRow: UnsafeRow): StateData
 ----
 
-NOTE: `getState` is part of the <<spark-sql-streaming-StateManager.md#getState, StateManager Contract>> to get the state data for the key from the <<spark-sql-streaming-StateStore.md#, StateStore>>.
+`getState` is part of the [StateManager](spark-sql-streaming-StateManager.md#getState) abstraction.
 
 `getState`...FIXME
 
@@ -98,7 +98,7 @@ putState(
   timestamp: Long): Unit
 ----
 
-NOTE: `putState` is part of the <<spark-sql-streaming-StateManager.md#putState, StateManager Contract>> to persist (_put_) the state value for the key in the <<spark-sql-streaming-StateStore.md#, StateStore>>.
+`putState` is part of the [StateManager](spark-sql-streaming-StateManager.md#putState) abstraction.
 
 `putState`...FIXME
 
@@ -111,7 +111,7 @@ removeState(
   keyRow: UnsafeRow): Unit
 ----
 
-NOTE: `removeState` is part of the <<spark-sql-streaming-StateManager.md#removeState, StateManager Contract>> to remove the state for the key from the <<spark-sql-streaming-StateStore.md#, StateStore>>.
+`removeState` is part of the [StateManager](spark-sql-streaming-StateManager.md#removeState) abstraction.
 
 `removeState`...FIXME
 
@@ -122,7 +122,7 @@ NOTE: `removeState` is part of the <<spark-sql-streaming-StateManager.md#removeS
 getAllState(store: StateStore): Iterator[StateData]
 ----
 
-NOTE: `getAllState` is part of the <<spark-sql-streaming-StateManager.md#getAllState, StateManager Contract>> to retrieve all state data (for all keys) from the <<spark-sql-streaming-StateStore.md#, StateStore>>.
+`getAllState` is part of the [StateManager](spark-sql-streaming-StateManager.md#getAllState) abstraction.
 
 `getAllState`...FIXME
 
@@ -135,7 +135,7 @@ getStateObject(row: UnsafeRow): Any
 
 `getStateObject`...FIXME
 
-NOTE: `getStateObject` is used when...FIXME
+`getStateObject` is used when...FIXME
 
 === [[getStateRow]] `getStateRow` Internal Method
 
@@ -146,7 +146,7 @@ getStateRow(obj: Any): UnsafeRow
 
 `getStateRow`...FIXME
 
-NOTE: `getStateRow` is used when...FIXME
+`getStateRow` is used when...FIXME
 
 === [[getTimestamp]] Getting Timeout Timestamp (from State Row) -- `getTimestamp` Internal Method
 
@@ -157,7 +157,7 @@ getTimestamp(stateRow: UnsafeRow): Long
 
 `getTimestamp`...FIXME
 
-NOTE: `getTimestamp` is used when...FIXME
+`getTimestamp` is used when...FIXME
 
 === [[setTimestamp]] Setting Timeout Timestamp (to State Row) -- `setTimestamp` Internal Method
 
@@ -170,7 +170,7 @@ setTimestamp(
 
 `setTimestamp`...FIXME
 
-NOTE: `setTimestamp` is used when...FIXME
+`setTimestamp` is used when...FIXME
 
 === [[internal-properties]] Internal Properties
 

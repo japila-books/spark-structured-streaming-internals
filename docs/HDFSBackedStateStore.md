@@ -1,8 +1,8 @@
 # HDFSBackedStateStore
 
-`HDFSBackedStateStore` is a concrete <<spark-sql-streaming-StateStore.md#, StateStore>> that uses a Hadoop DFS-compatible file system for versioned state persistence.
+`HDFSBackedStateStore` is a concrete [StateStore](StateStore.md) that uses a Hadoop DFS-compatible file system for versioned state persistence.
 
-`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for the [specified version of state (store) for update](HDFSBackedStateStoreProvider.md#getStore) (when `StateStore` utility is requested to [look up a StateStore by provider id](spark-sql-streaming-StateStore.md#get-StateStore)).
+`HDFSBackedStateStore` is <<creating-instance, created>> exclusively when `HDFSBackedStateStoreProvider` is requested for the [specified version of state (store) for update](HDFSBackedStateStoreProvider.md#getStore) (when `StateStore` utility is requested to [look up a StateStore by provider id](StateStore.md#get-StateStore)).
 
 [[id]]
 `HDFSBackedStateStore` uses the [StateStoreId](spark-sql-streaming-StateStoreId.md) of the owning [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#stateStoreId).
@@ -81,7 +81,7 @@ put(
   value: UnsafeRow): Unit
 ----
 
-NOTE: `put` is a part of spark-sql-streaming-StateStore.md#put[StateStore Contract] to...FIXME
+NOTE: `put` is a part of StateStore.md#put[StateStore Contract] to...FIXME
 
 `put` stores the copies of the key and value in <<mapToUpdate, mapToUpdate>> internal registry followed by <<writeUpdateToDeltaFile, writing them to a delta file>> (using <<tempDeltaFileStream, tempDeltaFileStream>>).
 
@@ -98,7 +98,7 @@ Cannot put after already committed or aborted
 commit(): Long
 ----
 
-NOTE: `commit` is part of the <<spark-sql-streaming-StateStore.md#commit, StateStore Contract>> to commit state changes.
+`commit` is part of the [StateStore](StateStore.md#commit) abstraction.
 
 `commit` requests the parent `HDFSBackedStateStoreProvider` to [commit state changes (as a new version of state)](HDFSBackedStateStoreProvider.md#commitUpdates) (with the <<newVersion, newVersion>>, the <<mapToUpdate, mapToUpdate>> and the <<compressedStream, compressed stream>>).
 
@@ -131,7 +131,7 @@ Error committing version [newVersion] into [this]
 abort(): Unit
 ----
 
-NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.md#abort, StateStore Contract>> to abort the state changes.
+`abort` is part of the [StateStore](StateStore.md#abort) abstraction.
 
 `abort`...FIXME
 
@@ -142,7 +142,7 @@ NOTE: `abort` is part of the <<spark-sql-streaming-StateStore.md#abort, StateSto
 metrics: StateStoreMetrics
 ----
 
-NOTE: `metrics` is part of the <<spark-sql-streaming-StateStore.md#metrics, StateStore Contract>> to get the <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>>.
+`metrics` is part of the [StateStore](StateStore.md#metrics) abstraction.
 
 `metrics` requests the [performance metrics](HDFSBackedStateStoreProvider.md#getMetricsForProvider) of the parent `HDFSBackedStateStoreProvider`.
 
@@ -163,11 +163,11 @@ In the end, `metrics` returns a new [StateStoreMetrics](spark-sql-streaming-Stat
 hasCommitted: Boolean
 ----
 
-NOTE: `hasCommitted` is part of the <<spark-sql-streaming-StateStore.md#hasCommitted, StateStore Contract>> to indicate whether state changes have been committed or not.
+`hasCommitted` is part of the [StateStore](StateStore.md#hasCommitted) abstraction.
 
 `hasCommitted` returns `true` when `HDFSBackedStateStore` is in <<COMMITTED, COMMITTED>> state and `false` otherwise.
 
-=== [[internal-properties]] Internal Properties
+## Internal Properties
 
 [cols="30m,70",options="header",width="100%"]
 |===

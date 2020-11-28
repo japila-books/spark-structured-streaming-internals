@@ -194,7 +194,7 @@ Internally, `doExecute` initializes [metrics](StateStoreWriter.md#metrics).
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* spark-sql-streaming-StateStore.md#get[Gets the saved state] in `StateStore` for the key
+* [Gets the saved state](../StateStore.md#get) in `StateStore` for the key
 
 * (when there was a state for the key in the row) Filters out (aka _drops_) the row
 
@@ -208,11 +208,11 @@ The completion function does the following:
 
 * Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to [remove keys older than the watermark from the StateStore](../WatermarkSupport.md#removeKeysOlderThanWatermark)
 
-* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to spark-sql-streaming-StateStore.md#commit[commit the changes to the StateStore]
+* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to [commit the changes to the StateStore](../StateStore.md#commit)
 
 * [Sets StateStore-specific metrics](StateStoreWriter.md#setStoreMetrics)
 
-=== [[creating-instance]] Creating StreamingDeduplicateExec Instance
+## Creating Instance
 
 `StreamingDeduplicateExec` takes the following when created:
 

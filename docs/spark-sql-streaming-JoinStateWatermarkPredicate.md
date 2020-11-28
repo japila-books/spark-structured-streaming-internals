@@ -45,9 +45,9 @@ Used for the <<toString, textual representation>> and a [JoinStateWatermarkPredi
 | Description
 
 | JoinStateKeyWatermarkPredicate
-a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. when the <<spark-sql-streaming-watermark.md#, streaming watermark>> is defined either on the <<physical-operators/StreamingSymmetricHashJoinExec.md#leftKeys, left>> or <<physical-operators/StreamingSymmetricHashJoinExec.md#rightKeys, right>> join keys)
+a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. when the [streaming watermark](streaming-watermark.md) is defined either on the [left](physical-operators/StreamingSymmetricHashJoinExec.md#leftKeys) or [right](physical-operators/StreamingSymmetricHashJoinExec.md#rightKeys) join keys)
 
-Created when `StreamingSymmetricHashJoinHelper` utility is requested for a [JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator)
+Created when `StreamingSymmetricHashJoinHelper` utility is requested for a [JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operator)
 
 Used when `OneSideHashJoiner` is requested for the [stateKeyWatermarkPredicateFunc](OneSideHashJoiner.md#stateKeyWatermarkPredicateFunc) and then to [remove an old state](OneSideHashJoiner.md#removeOldState)
 

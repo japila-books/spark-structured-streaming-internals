@@ -97,17 +97,17 @@ a| [[numOutputRows]]
 
 * For <<outputMode, Append>> output mode, the metric does not seem to be used
 
-* For <<outputMode, Complete>> output mode, the number of rows in a <<spark-sql-streaming-StateStore.md#, StateStore>> (i.e. all [values](../StreamingAggregationStateManager.md#values) in a <<spark-sql-streaming-StateStore.md#, StateStore>> in the <<stateManager, StreamingAggregationStateManager>> that should be equivalent to the <<numTotalStateRows, number of total state rows>> metric)
+* For <<outputMode, Complete>> output mode, the number of rows in a [StateStore](../StateStore.md) (i.e. all [values](../StreamingAggregationStateManager.md#values) in a [StateStore](../StateStore.md) in the <<stateManager, StreamingAggregationStateManager>> that should be equivalent to the <<numTotalStateRows, number of total state rows>> metric)
 
 * For <<outputMode, Update>> output mode, the number of rows that the <<stateManager, StreamingAggregationStateManager>> was requested to [store in a state store](../StreamingAggregationStateManager.md#put) (that did not expire per the optional [watermarkPredicateForData](../WatermarkSupport.md#watermarkPredicateForData) predicate) that is equivalent to the <<numUpdatedStateRows, number of updated state rows>> metric)
 
 | number of total state rows
-a| [[numTotalStateRows]] Number of entries in a [state store](../spark-sql-streaming-StateStore.md) at the very end of <<doExecute, executing the StateStoreSaveExec operator>> (aka _numTotalStateRows_)
+a| [[numTotalStateRows]] Number of entries in a [state store](../StateStore.md) at the very end of <<doExecute, executing the StateStoreSaveExec operator>> (aka _numTotalStateRows_)
 
 Corresponds to `numRowsTotal` attribute in `stateOperators` in [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | number of updated state rows
-a| [[numUpdatedStateRows]] Number of the entries that <<spark-sql-streaming-StateStore.md#put, were stored as updates in a state store>> in a trigger and for the keys in the result rows of the upstream physical operator (aka _numUpdatedStateRows_)
+a| [[numUpdatedStateRows]] Number of the entries that [were stored as updates in a state store](../StateStore.md#put) in a trigger and for the keys in the result rows of the upstream physical operator (aka _numUpdatedStateRows_)
 
 * For <<outputMode, Append>> output mode, the number of input rows that have not expired yet (per the required [watermarkPredicateForData](../WatermarkSupport.md#watermarkPredicateForData) predicate) and that the <<stateManager, StreamingAggregationStateManager>> was requested to [store in a state store](../StreamingAggregationStateManager.md#put) (the time taken is the <<allUpdatesTimeMs, total time to update rows>> metric)
 
@@ -118,7 +118,7 @@ a| [[numUpdatedStateRows]] Number of the entries that <<spark-sql-streaming-Stat
 Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | memory used by state
-a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.md#, StateStore>> (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, StateStoreMetrics>> of the <<spark-sql-streaming-StateStore.md#metrics, StateStore>>)
+a| [[stateMemory]] Estimated memory used by a [StateStore](../StateStore.md) (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the [StateStoreMetrics](../spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes) of the [StateStore](../StateStore.md#metrics))
 |===
 
 ## Creating Instance
@@ -128,7 +128,7 @@ a| [[stateMemory]] Estimated memory used by a <<spark-sql-streaming-StateStore.m
 * [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
 * [[stateInfo]] Execution-specific [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
 * [[outputMode]] Execution-specific [OutputMode](../OutputMode.md) (default: `None`)
-* [[eventTimeWatermark]] [Event-time watermark](../spark-sql-streaming-watermark.md) (default: `None`)
+* [[eventTimeWatermark]] [Event-time watermark](../streaming-watermark.md) (default: `None`)
 * [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
@@ -160,17 +160,17 @@ Invalid output mode: [outputMode]
 
 NOTE: [Append](../OutputMode.md#Append) is the default output mode when not specified explicitly.
 
-NOTE: `Append` output mode requires that a streaming query defines <<spark-sql-streaming-watermark.md#, event-time watermark>> (e.g. using [withWatermark](../operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using <<spark-sql-streaming-window.md#, window>> standard function).
+NOTE: `Append` output mode requires that a streaming query defines [event-time watermark](../streaming-watermark.md) (e.g. using [withWatermark](../operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using [window](../spark-sql-streaming-window.md) standard function).
 
 For [Append](../OutputMode.md#Append) output mode, `doExecute` does the following:
 
 1. Finds late (aggregate) rows from <<child, child>> physical operator (that have expired per [watermark](../WatermarkSupport.md#watermarkPredicateForData))
 
-1. <<spark-sql-streaming-StateStore.md#put, Stores the late rows in the state store>> and increments the <<numUpdatedStateRows, numUpdatedStateRows>> metric
+1. [Stores the late rows in the state store](../StateStore.md#put) and increments the <<numUpdatedStateRows, numUpdatedStateRows>> metric
 
-1. <<spark-sql-streaming-StateStore.md#getRange, Gets all the added (late) rows from the state store>>
+1. [Gets all the added (late) rows from the state store](../StateStore.md#getRange)
 
-1. Creates an iterator that <<spark-sql-streaming-StateStore.md#remove, removes the late rows from the state store>> when requested the next row and in the end <<spark-sql-streaming-StateStore.md#commit, commits the state updates>>
+1. Creates an iterator that [removes the late rows from the state store](../StateStore.md#remove) when requested the next row and in the end [commits the state updates](../StateStore.md#commit)
 
 TIP: Refer to <<spark-sql-streaming-demo-watermark-aggregation-append.md#, Demo: Streaming Watermark with Aggregation in Append Output Mode>> for an example of `StateStoreSaveExec` with `Append` output mode.
 
@@ -178,29 +178,29 @@ CAUTION: FIXME When is "Filtering state store on:" printed out?
 
 ---
 
-1. Uses [watermarkPredicateForData](../WatermarkSupport.md#watermarkPredicateForData) predicate to exclude matching rows and (like in [Complete](#doExecute-Complete) output mode) [stores all the remaining rows](../spark-sql-streaming-StateStore.md#put) in `StateStore`.
+1. Uses [watermarkPredicateForData](../WatermarkSupport.md#watermarkPredicateForData) predicate to exclude matching rows and (like in [Complete](#doExecute-Complete) output mode) [stores all the remaining rows](../StateStore.md#put) in `StateStore`.
 
 1. (like in <<doExecute-Complete, Complete>> output mode) While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
 
-1. spark-sql-streaming-StateStore.md#getRange[Takes all the rows] from `StateStore` and returns a `NextIterator` that:
+1. [Takes all the rows](../StateStore.md#getRange) from `StateStore` and returns a `NextIterator` that:
 
-* In `getNext`, finds the first row that matches [watermarkPredicateForKeys](../WatermarkSupport.md#watermarkPredicateForKeys) predicate, [removes it](../spark-sql-streaming-StateStore.md#remove) from `StateStore`, and returns it back.
+* In `getNext`, finds the first row that matches [watermarkPredicateForKeys](../WatermarkSupport.md#watermarkPredicateForKeys) predicate, [removes it](../StateStore.md#remove) from `StateStore`, and returns it back.
 +
 If no row was found, `getNext` also marks the iterator as finished.
 
-* In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, spark-sql-streaming-StateStore.md#commit[commits the updates] to `StateStore` followed by recording the time in <<commitTimeMs, commitTimeMs>> metric and [recording StateStore metrics](StateStoreWriter.md#setStoreMetrics).
+* In `close`, records the time to iterate over all the rows in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric, [commits the updates](../StateStore.md#commit) to `StateStore` followed by recording the time in <<commitTimeMs, commitTimeMs>> metric and [recording StateStore metrics](StateStoreWriter.md#setStoreMetrics).
 
-==== [[doExecute-Complete]] Complete Output Mode
+### <span id="doExecute-Complete"> Complete Output Mode
 
 For [Complete](../OutputMode.md#Complete) output mode, `doExecute` does the following:
 
 1. Takes all `UnsafeRow` rows (from the parent iterator)
 
-1. <<spark-sql-streaming-StateStore.md#put, Stores the rows by key in the state store>> eagerly (i.e. all rows that are available in the parent iterator before proceeding)
+1. [Stores the rows by key in the state store](../StateStore.md#put) eagerly (i.e. all rows that are available in the parent iterator before proceeding)
 
-1. <<spark-sql-streaming-StateStore.md#commit, Commits the state updates>>
+1. [Commits the state updates](../StateStore.md#commit)
 
-1. In the end, <<spark-sql-streaming-StateStore.md#iterator, reads the key-row pairs from the state store>> and passes the rows along (i.e. to the following physical operator)
+1. In the end, [reads the key-row pairs from the state store](../StateStore.md#iterator) and passes the rows along (i.e. to the following physical operator)
 
 The number of keys stored in the state store is recorded in <<numUpdatedStateRows, numUpdatedStateRows>> metric.
 
@@ -210,23 +210,23 @@ TIP: Refer to <<spark-sql-streaming-StateStoreSaveExec-Complete.md#, Demo: State
 
 ---
 
-1. spark-sql-streaming-StateStore.md#put[Stores all rows] (as `UnsafeRow`) in `StateStore`.
+1. [Stores all rows](../StateStore.md#put) (as `UnsafeRow`) in `StateStore`.
 
 1. While storing the rows, increments <<numUpdatedStateRows, numUpdatedStateRows>> metric (for every row) and records the total time in <<allUpdatesTimeMs, allUpdatesTimeMs>> metric.
 
 1. Records `0` in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
 
-1. spark-sql-streaming-StateStore.md#commit[Commits the state updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
+1. [Commits the state updates](../StateStore.md#commit) to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
 
 1. [Records StateStore metrics](StateStoreWriter.md#setStoreMetrics)
 
-1. In the end, [takes all the rows stored](../spark-sql-streaming-StateStore.md#iterator) in `StateStore` and increments [numOutputRows](#numOutputRows) metric.
+1. In the end, [takes all the rows stored](../StateStore.md#iterator) in `StateStore` and increments [numOutputRows](#numOutputRows) metric.
 
-==== [[doExecute-Update]] Update Output Mode
+### <span id="doExecute-Update"> Update Output Mode
 
-For [Update](../OutputMode.md#Update) output mode, `doExecute` returns an iterator that filters out late aggregate rows (per [watermark](../WatermarkSupport.md#watermarkPredicateForData) if defined) and <<spark-sql-streaming-StateStore.md#put, stores the "young" rows in the state store>> (one by one, i.e. every `next`).
+For [Update](../OutputMode.md#Update) output mode, `doExecute` returns an iterator that filters out late aggregate rows (per [watermark](../WatermarkSupport.md#watermarkPredicateForData) if defined) and [stores the "young" rows in the state store](../StateStore.md#put) (one by one, i.e. every `next`).
 
-With no more rows available, that <<spark-sql-streaming-StateStore.md#remove, removes the late rows from the state store>> (all at once) and <<spark-sql-streaming-StateStore.md#commit, commits the state updates>>.
+With no more rows available, that [removes the late rows from the state store](../StateStore.md#remove) (all at once) and [commits the state updates](../StateStore.md#commit).
 
 TIP: Refer to <<spark-sql-streaming-StateStoreSaveExec-Update.md#, Demo: StateStoreSaveExec with Update Output Mode>> for an example of `StateStoreSaveExec` with `Update` output mode.
 
@@ -240,11 +240,11 @@ In `hasNext`, when rows are no longer available:
 
 1. [removeKeysOlderThanWatermark](../WatermarkSupport.md#removeKeysOlderThanWatermark) and records the time in <<allRemovalsTimeMs, allRemovalsTimeMs>> metric.
 
-1. spark-sql-streaming-StateStore.md#commit[Commits the updates] to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
+1. [Commits the updates](../StateStore.md#commit) to `StateStore` and records the time in <<commitTimeMs, commitTimeMs>> metric.
 
 1. [Records StateStore metrics](StateStoreWriter.md#setStoreMetrics)
 
-In `next`, [stores a row](../spark-sql-streaming-StateStore.md#put) in `StateStore` and increments [numOutputRows](#numOutputRows) and [numUpdatedStateRows](#numUpdatedStateRows) metrics.
+In `next`, [stores a row](../StateStore.md#put) in `StateStore` and increments [numOutputRows](#numOutputRows) and [numUpdatedStateRows](#numUpdatedStateRows) metrics.
 
 === [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
 

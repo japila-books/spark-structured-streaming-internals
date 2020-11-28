@@ -1,18 +1,18 @@
 # StateStoreId
 
 [[creating-instance]]
-`StateStoreId` is a unique identifier of a [StateStore](spark-sql-streaming-StateStore.md) with the following attributes:
+`StateStoreId` is a unique identifier of a [StateStore](StateStore.md) with the following attributes:
 
 * [[checkpointRootLocation]] *Checkpoint Root Location* - the root directory for state checkpointing
 * [[operatorId]] *Operator ID* - a unique ID of the stateful operator
 * [[partitionId]] *Partition ID* - the index of the partition
-* [[storeName]] *Store Name* - the name of the [state store](spark-sql-streaming-StateStore.md) (default: <<DEFAULT_STORE_NAME, default>>)
+* [[storeName]] *Store Name* - the name of the [state store](StateStore.md) (default: <<DEFAULT_STORE_NAME, default>>)
 
 `StateStoreId` is <<creating-instance, created>> when:
 
 * `StateStoreRDD` is requested for the [preferred locations of a partition](StateStoreRDD.md#getPreferredLocations) (executed on the driver) and to [compute it](StateStoreRDD.md#compute) (later on an executor)
 
-* `StateStoreProviderId` helper object is requested to create a <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> (with a <<StateStoreId, StateStoreId>> and the run ID of a streaming query) that is then used for the <<spark-sql-streaming-StateStoreAwareZipPartitionsRDD.md#getPreferredLocations, preferred locations of a partition>> of a `StateStoreAwareZipPartitionsRDD` (executed on the driver) and to...FIXME
+* `StateStoreProviderId` helper object is requested to create a <<spark-sql-streaming-StateStoreProviderId.md#, StateStoreProviderId>> (with a <<StateStoreId, StateStoreId>> and the run ID of a streaming query) that is then used for the [preferred locations of a partition](StateStoreAwareZipPartitionsRDD.md#getPreferredLocations) of a `StateStoreAwareZipPartitionsRDD` (executed on the driver) and to...FIXME
 
 [[DEFAULT_STORE_NAME]]
 The name of the *default state store* (for reading state store data that was generated before store names were used, i.e. in Spark 2.2 and earlier) is *default*.

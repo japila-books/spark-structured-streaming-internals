@@ -1,10 +1,10 @@
 # HDFSBackedStateStoreProvider
 
-`HDFSBackedStateStoreProvider` is a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> that uses a Hadoop DFS-compatible file system for <<baseDir, versioned state checkpointing>>.
+`HDFSBackedStateStoreProvider` is a [StateStoreProvider](spark-sql-streaming-StateStoreProvider.md) that uses a Hadoop DFS-compatible file system for [versioned state checkpointing](#baseDir).
 
 `HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the [spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass) internal configuration property.
 
-`HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the <<spark-sql-streaming-StateStore.md#, state store>> to use for a stateful operator and a partition.
+`HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the [state store](StateStore.md) to use for a stateful operator and a partition.
 
 `HDFSStateStoreProvider` uses [HDFSBackedStateStores](HDFSBackedStateStore.md) to manage state (<<getStore, one per version>>).
 
@@ -27,7 +27,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStore
 Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
-=== [[metrics]] Performance Metrics
+## Performance Metrics
 
 [cols="30,70",options="header",width="100%"]
 |===
@@ -63,7 +63,7 @@ baseDir: Path
 
 === [[stateStoreId]][[stateStoreId_]] StateStoreId -- Unique Identifier of State Store
 
-As a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.md#stateStoreId, StateStoreId>> (which is a unique identifier of the <<spark-sql-streaming-StateStore.md#, state store>> for a stateful operator and a partition).
+As a <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>>, `HDFSBackedStateStoreProvider` is associated with a <<spark-sql-streaming-StateStoreProvider.md#stateStoreId, StateStoreId>> (which is a unique identifier of the [state store](StateStore.md) for a stateful operator and a partition).
 
 `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> at <<init, initialization>> (as requested by the <<spark-sql-streaming-StateStoreProvider.md#, StateStoreProvider>> contract).
 
@@ -96,7 +96,7 @@ getStore(
   version: Long): StateStore
 ----
 
-NOTE: `getStore` is part of the <<spark-sql-streaming-StateStoreProvider.md#getStore, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStore.md#, StateStore>> for a specified version.
+`getStore` is part of the [StateStoreProvider](spark-sql-streaming-StateStoreProvider.md#getStore) abstraction.
 
 `getStore` creates a new empty state (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`) and <<loadMap, loads the specified version of state (from internal cache or snapshot and delta files)>> for versions greater than `0`.
 

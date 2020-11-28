@@ -25,7 +25,7 @@ close(): Unit
 
 Closes the state store provider
 
-Used exclusively when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.md#unload, unload a state store provider>>
+Used exclusively when `StateStore` helper object is requested to [unload a state store provider](StateStore.md#unload)
 
 | doMaintenance
 a| [[doMaintenance]]
@@ -37,7 +37,7 @@ doMaintenance(): Unit = {}
 
 Optional state maintenance
 
-Used exclusively when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.md#doMaintenance, perform maintenance of registered state store providers>> (on a separate <<spark-sql-streaming-StateStore.md#MaintenanceTask, MaintenanceTask daemon thread>>)
+Used exclusively when `StateStore` utility is requested to [perform maintenance of registered state store providers](StateStore.md#doMaintenance) (on a separate [MaintenanceTask daemon thread](StateStore.md#MaintenanceTask))
 
 | getStore
 a| [[getStore]]
@@ -48,9 +48,9 @@ getStore(
   version: Long): StateStore
 ----
 
-Finds the <<spark-sql-streaming-StateStore.md#, StateStore>> for the specified version
+Finds the [StateStore](StateStore.md) for the specified version
 
-Used exclusively when `StateStore` utility is requested to <<spark-sql-streaming-StateStore.md#get-StateStore, look up the StateStore by a given provider ID>>
+Used exclusively when `StateStore` utility is requested to [look up the StateStore by a given provider ID](StateStore.md#get-StateStore)
 
 | init
 a| [[init]]
@@ -68,7 +68,7 @@ init(
 
 Initializes the state store provider
 
-Used exclusively when `StateStoreProvider` helper object is requested to <<createAndInit, create and initialize the StateStoreProvider>> for a given <<spark-sql-streaming-StateStoreId.md#, StateStoreId>> (when `StateStore` helper object is requested to <<spark-sql-streaming-StateStore.md#get-StateStore, retrieve a StateStore by ID and version>>)
+Used exclusively when `StateStoreProvider` helper object is requested to <<createAndInit, create and initialize the StateStoreProvider>> for a given [StateStoreId](spark-sql-streaming-StateStoreId.md) (when `StateStore` helper object is requested to [retrieve a StateStore by ID and version](StateStore.md#get-StateStore))
 
 | stateStoreId
 a| [[stateStoreId]]
@@ -78,7 +78,7 @@ a| [[stateStoreId]]
 stateStoreId: StateStoreId
 ----
 
-<<spark-sql-streaming-StateStoreId.md#, StateStoreId>> associated with the provider (at <<init, initialization>>)
+[StateStoreId](spark-sql-streaming-StateStoreId.md) associated with the provider (at <<init, initialization>>)
 
 Used when:
 
@@ -121,4 +121,4 @@ createAndInit(
 
 `createAndInit` requests the `StateStoreProvider` to <<init, initialize>>.
 
-NOTE: `createAndInit` is used exclusively when `StateStore` utility is requested for the <<spark-sql-streaming-StateStore.md#get-StateStore, StateStore by given provider ID and version>>.
+`createAndInit` is used when `StateStore` utility is requested for the [StateStore by given provider ID and version](StateStore.md#get-StateStore).
