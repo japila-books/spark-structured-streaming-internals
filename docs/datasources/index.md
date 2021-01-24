@@ -4,7 +4,7 @@ Spark Structured Streaming comes with the following streaming sources and sinks:
 
 * [File](file/index.md)
 * [Kafka](kafka/index.md)
-* Text Socket
+* [Text Socket](socket/index.md)
 * Rate
 * Console
 * Foreach

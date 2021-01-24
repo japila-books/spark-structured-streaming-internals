@@ -35,7 +35,7 @@ ContinuousReader createContinuousReader(
 | <<spark-sql-streaming-RateStreamProvider.md#, RateStreamProvider>>
 | [[RateStreamProvider]] Data source provider for `rate` format
 
-| <<spark-sql-streaming-TextSocketSourceProvider.md#, TextSocketSourceProvider>>
+| [TextSocketSourceProvider](datasources/socket/TextSocketSourceProvider.md)
 | [[TextSocketSourceProvider]] Data source provider for `socket` format
 
 |===

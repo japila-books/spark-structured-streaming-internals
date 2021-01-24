@@ -1,27 +1,25 @@
 # TextSocketSourceProvider
 
-`TextSocketSourceProvider` is a [StreamSourceProvider](StreamSourceProvider.md) for [TextSocketSource](spark-sql-streaming-TextSocketSource.md) that read records from `host` and `port`.
+`TextSocketSourceProvider` is a [StreamSourceProvider](../../StreamSourceProvider.md) for [Text Socket Data Source](index.md).
 
-`TextSocketSourceProvider` is also a `DataSourceRegister`.
-
-The short name of the data source is `socket`.
-
-It requires two mandatory options (that you can set using `option` method):
+`TextSocketSourceProvider` requires two options (that you can set using `option` method):
 
 1. `host` which is the host name.
 2. `port` which is the port number. It must be an integer.
 
 `TextSocketSourceProvider` also supports <<includeTimestamp, includeTimestamp>> option that is a boolean flag that you can use to include timestamps in the schema.
 
-=== [[includeTimestamp]] includeTimestamp Option
+## DataSourceRegister
 
-CAUTION: FIXME
+`TextSocketSourceProvider` is a `DataSourceRegister` with the short name of **socket**.
 
-=== [[createSource]] createSource
+## <span id="includeTimestamp"> includeTimestamp Option
 
-`createSource` grabs the two mandatory options -- `host` and `port` -- and returns an spark-sql-streaming-TextSocketSource.md[TextSocketSource].
+## <span id="createSource"> createSource
 
-=== [[sourceSchema]] sourceSchema
+`createSource` creates a [TextSocketSource](TextSocketSource.md) (with the `host` and `port`).
+
+## <span id="sourceSchema"> sourceSchema
 
 `sourceSchema` returns `textSocket` as the name of the source and the schema that can be one of the two available schemas:
 
@@ -33,12 +31,12 @@ TIP: Read about spark-sql-schema.md[schema].
 
 Internally, it starts by printing out the following WARN message to the logs:
 
-```
-WARN TextSocketSourceProvider: The socket source should not be used for production applications! It does not support recovery and stores state indefinitely.
+```text
+The socket source should not be used for production applications! It does not support recovery and stores state indefinitely.
 ```
 
 It then checks whether `host` and `port` parameters are defined and if not it throws a `AnalysisException`:
 
-```
+```text
 Set a host to read from with option("host", ...).
 ```

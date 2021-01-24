@@ -331,9 +331,10 @@ nav:
       - KafkaContinuousReader:
         - KafkaContinuousReader: datasources/kafka/KafkaContinuousReader.md
         - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
-    - Socket:
-      - TextSocketSourceProvider: spark-sql-streaming-TextSocketSourceProvider.md
-      - TextSocketSource: spark-sql-streaming-TextSocketSource.md
+    - Text Socket:
+      - Text Socket Data Source: datasources/socket/index.md
+      - TextSocketSourceProvider: datasources/socket/TextSocketSourceProvider.md
+      - TextSocketSource: datasources/socket/TextSocketSource.md
     - Rate:
       - RateSourceProvider: spark-sql-streaming-RateSourceProvider.md
       - RateStreamProvider: spark-sql-streaming-RateStreamProvider.md
