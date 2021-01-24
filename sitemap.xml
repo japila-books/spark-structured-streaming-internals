@@ -748,11 +748,15 @@
      <lastmod>2021-01-24</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-TextSocketSourceProvider/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/socket/</loc>
      <lastmod>2021-01-24</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-TextSocketSource/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/socket/TextSocketSourceProvider/</loc>
+     <lastmod>2021-01-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/datasources/socket/TextSocketSource/</loc>
      <lastmod>2021-01-24</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
