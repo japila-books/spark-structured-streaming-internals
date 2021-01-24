@@ -17,11 +17,13 @@ createSource(
   parameters: Map[String, String]): Source
 ```
 
-Creates a [streaming source](Source.md)
+Creates a [Streaming Source](Source.md)
 
 `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by [StreamingQueryManager](StreamingQueryManager.md#createQuery).
 
-Used when `DataSource` is requested to [create a streaming source](DataSource.md#createSource) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
+Used when:
+
+* `DataSource` is requested to [create a streaming source](DataSource.md#createSource) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
 
 ### <span id="sourceSchema"> Source Schema
 
@@ -33,9 +35,11 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ```
 
-Name and schema of the [streaming source](Source.md)
+Name and schema of the [Streaming Source](Source.md)
 
-Used when `DataSource` is requested for [metadata of a streaming source](DataSource.md#sourceSchema) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
+Used when:
+
+* `DataSource` is requested for [metadata of a streaming source](DataSource.md#sourceSchema) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
 
 ## Implementations
 

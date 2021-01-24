@@ -1,13 +1,11 @@
 # StreamingExecutionRelation Leaf Logical Operator
 
-`StreamingExecutionRelation` is a leaf logical operator (i.e. `LogicalPlan`) that represents a [streaming source](../Source.md) in the logical query plan of a streaming `Dataset`.
+`StreamingExecutionRelation` is a leaf logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LeafNode)) that represents a [streaming source](../Source.md) in the logical query plan of a streaming query.
 
-The main use of `StreamingExecutionRelation` logical operator is to be a "placeholder" in a logical query plan that will be replaced with the real relation (with new data that has arrived since the last batch) or an empty `LocalRelation` when `StreamExecution` is requested to <<MicroBatchExecution.md#runBatch-newBatchesPlan, transforming logical plan to include the Sources and MicroBatchReaders with new data>>.
-
-`StreamingExecutionRelation` is <<creating-instance, created>> for a [StreamingRelation](StreamingRelation.md) in [analyzed logical query plan](../StreamExecution.md#analyzedPlan) (that is the execution representation of a streaming Dataset).
+The main use of `StreamingExecutionRelation` logical operator is to be a "placeholder" in a logical query plan that will be replaced with the real relation (with new data that has arrived since the last batch) or an empty `LocalRelation` when `StreamExecution` is requested to [transforming logical plan to include the Sources and MicroBatchReaders with new data](../MicroBatchExecution.md#runBatch-newBatchesPlan).
 
 !!! note
-    Right after `StreamExecution` MicroBatchExecution.md#runStream-initializing-sources[has started running streaming batches] it initializes the streaming sources by transforming the analyzed logical plan of the streaming Dataset so that every [StreamingRelation](StreamingRelation.md) logical operator is replaced by the corresponding `StreamingExecutionRelation`.
+    Right after `StreamExecution` [has started running streaming batches](../MicroBatchExecution.md#runStream-initializing-sources) it initializes the streaming sources by transforming the analyzed logical plan of the streaming query so that every [StreamingRelation](StreamingRelation.md) logical operator is replaced by the corresponding `StreamingExecutionRelation`.
 
 ![StreamingExecutionRelation Represents Streaming Source At Execution](../images/StreamingExecutionRelation.png)
 
@@ -16,18 +14,12 @@ The main use of `StreamingExecutionRelation` logical operator is to be a "placeh
 
 ## Creating Instance
 
-`StreamingExecutionRelation` takes the following when created:
+`StreamingExecutionRelation` takes the following to be created:
 
-* [[source]] [Streaming source](../Source.md)
-* [[output]] Output attributes
+* <span id="source"> `BaseStreamingSource`
+* <span id="output"> Output Attributes (`Seq[Attribute]`)
+* <span id="session"> `SparkSession`
 
-=== [[apply]] Creating StreamingExecutionRelation (based on a Source) -- `apply` Object Method
+`StreamingExecutionRelation` is created when:
 
-[source, scala]
-----
-apply(source: Source): StreamingExecutionRelation
-----
-
-`apply` creates a `StreamingExecutionRelation` for the input `source` and with the attributes of the [schema](../Source.md#schema) of the `source`.
-
-NOTE: `apply` _seems_ to be used for tests only.
+* `MicroBatchExecution` stream execution engine is requested for the [analyzed logical query plan](../MicroBatchExecution.md#logicalPlan) (for every [StreamingRelation](StreamingRelation.md))
