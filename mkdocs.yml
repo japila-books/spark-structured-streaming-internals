@@ -8,12 +8,12 @@ site_author: Jacek Laskowski
 site_description: Demystifying inner-workings of Spark Structured Streaming
 
 # https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/
-repo_name: spark-structured-streaming-book
+repo_name: spark-structured-streaming-internals
 repo_url: https://github.com/jaceklaskowski/spark-structured-streaming-book
-edit_uri: edit/master/docs/
+edit_uri: edit/main/docs/
 
 copyright: |
-  Copyright &copy; 2020 <a href="https://twitter.com/jaceklaskowski" target="_blank" rel="noopener">Jacek Laskowski</a>
+  Copyright &copy; 2021 Jacek Laskowski
 
 theme:
   name: material
@@ -24,6 +24,20 @@ theme:
   features:
     - navigation.tabs
     - navigation.instant
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
 
 markdown_extensions:
   - admonition
@@ -37,11 +51,9 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.critic
   - pymdownx.details
-  - pymdownx.emoji
-  # the following two lines don't seem to work on ReadTheDocs
-  # https://github.com/readthedocs/readthedocs.org/issues/6889
-  #     emoji_index: !!python/name:materialx.emoji.twemoji
-  #     emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.inlinehilite
   - pymdownx.magiclink
   - pymdownx.mark
@@ -72,8 +84,10 @@ extra:
   spark:
     version: 3.0.1
     github: https://github.com/apache/spark/blob/v3.0.1
+    doc: http://spark.apache.org/docs/3.0.1
   hadoop:
     version: 3.2.0
+    doc: https://hadoop.apache.org/docs/r2.7.4
     api: https://hadoop.apache.org/docs/r3.2.0/api
   java:
     version: 11
@@ -96,6 +110,7 @@ google_analytics:
 nav:
   - Home:
     - Welcome: index.md
+  - Internals:
     - Spark Structured Streaming and Streaming Queries: spark-structured-streaming.md
     - StreamingQuery: StreamingQuery.md
     - Configuration Properties: configuration-properties.md
@@ -359,6 +374,7 @@ nav:
   - Web UI:
     - Web UI: webui.md
   - Demos:
+    - Welcome: demo/index.md
     - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
     - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md
     - Exploring Checkpointed State: demo/exploring-checkpointed-state.md

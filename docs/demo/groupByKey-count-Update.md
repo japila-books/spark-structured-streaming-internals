@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: groupByKey Streaming Aggregation in Update Mode
 
 The example shows [Dataset.groupByKey](../operators/groupByKey.md) streaming operator to count rows in [Update](../OutputMode.md#Update) output mode.

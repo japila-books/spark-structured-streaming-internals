@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: Using File Streaming Source
 
 This demo shows a streaming query that reads files using [FileStreamSource](../datasources/file/FileStreamSource.md).

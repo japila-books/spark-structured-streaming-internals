@@ -1,4 +1,9 @@
-== Demo: StateStoreSaveExec with Complete Output Mode
+---
+hide:
+  - navigation
+---
+
+# Demo: StateStoreSaveExec with Complete Output Mode
 
 The following example code shows the behaviour of StateStoreSaveExec.md#doExecute-Complete[StateStoreSaveExec in Complete output mode].
 

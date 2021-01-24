@@ -1,4 +1,9 @@
-== Demo: current_timestamp Function For Processing Time in Streaming Queries
+---
+hide:
+  - navigation
+---
+
+# Demo: current_timestamp Function For Processing Time in Streaming Queries
 
 The demo shows what happens when you use `current_timestamp` function in your structured queries.
 

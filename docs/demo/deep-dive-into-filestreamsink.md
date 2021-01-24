@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: Deep Dive into FileStreamSink
 
 This demo shows a streaming query that writes out to [FileStreamSink](../datasources/file/FileStreamSink.md).

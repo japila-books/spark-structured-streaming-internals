@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: Developing Custom Streaming Sink (and Monitoring SQL Queries in web UI)
 
 The demo shows the steps to develop a custom [streaming sink](../Sink.md) and use it to monitor whether and what SQL queries are executed at runtime (using web UI's SQL tab).

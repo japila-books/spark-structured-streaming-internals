@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: Streaming Aggregation with Kafka Data Source
 
 The following example code shows a [streaming aggregation](../streaming-aggregation.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) that reads records from Kafka (with [Kafka Data Source](../datasources/kafka/index.md)).

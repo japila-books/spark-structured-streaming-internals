@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: Exploring Checkpointed State
 
 The following demo shows the internals of the checkpointed state of a [stateful streaming query](../spark-sql-streaming-stateful-stream-processing.md).

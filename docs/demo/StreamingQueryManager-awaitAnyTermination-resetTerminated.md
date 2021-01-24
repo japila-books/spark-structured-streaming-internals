@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: Using StreamingQueryManager for Query Termination Management
 
 The demo shows how to use [StreamingQueryManager](../StreamingQueryManager.md) (and specifically [awaitAnyTermination](../StreamingQueryManager.md#awaitAnyTermination) and [resetTerminated](../StreamingQueryManager.md#resetTerminated)) for query termination management.

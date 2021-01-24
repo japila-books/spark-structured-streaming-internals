@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Demo: Internals of FlatMapGroupsWithStateExec Physical Operator
 
 The following demo shows the internals of [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator in a [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md).

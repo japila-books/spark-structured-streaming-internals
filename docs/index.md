@@ -1,8 +1,14 @@
+---
+hide:
+  - toc
+  - navigation
+---
+
 # The Internals of Spark Structured Streaming (Apache Spark {{ spark.version }})
 
-Welcome to **The Internals of Spark Structured Streaming** online book!
+Welcome to **The Internals of Spark Structured Streaming** online book! 🤙
 
-I'm [Jacek Laskowski](https://pl.linkedin.com/in/jaceklaskowski), a Seasoned IT Professional specializing in [Apache Spark](https://spark.apache.org/), [Delta Lake](https://delta.io/), [Apache Kafka](https://kafka.apache.org/) and [Kafka Streams](https://kafka.apache.org/documentation/streams/).
+I'm [Jacek Laskowski](https://pl.linkedin.com/in/jaceklaskowski), an IT freelancer specializing in [Apache Spark](https://spark.apache.org/), [Delta Lake](https://delta.io/) and [Apache Kafka](https://kafka.apache.org/) (with brief forays into a wider data engineering space, e.g. [Trino](https://trino.io/) and [ksqlDB](https://ksqldb.io/), mostly during [Warsaw Data Engineering](https://www.meetup.com/Warsaw-Data-Engineering/) meetups).
 
 I'm very excited to have you here and hope you will enjoy exploring the internals of Spark Structured Streaming as much as I have.
 
@@ -14,4 +20,4 @@ I'm very excited to have you here and hope you will enjoy exploring the internal
 
 Expect text and code snippets from a variety of public sources. Attribution follows.
 
-Now, let me introduce you to [Spark Structured Streaming and Streaming Queries](spark-structured-streaming.md).
+Now, let me introduce you to [Spark Structured Streaming and Streaming Queries](spark-structured-streaming.md) 🔥
