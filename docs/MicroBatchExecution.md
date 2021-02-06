@@ -1,92 +1,79 @@
 # MicroBatchExecution
 
-`MicroBatchExecution` is the [stream execution engine](StreamExecution.md) in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
+`MicroBatchExecution` is a [stream execution engine](StreamExecution.md) for [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
 
 `MicroBatchExecution` is created when `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)) with the following:
 
-* Any type of <<sink, sink>>
+* All [sink](#sink)s
 
-* Any type of [trigger](#trigger) but [ContinuousTrigger](Trigger.md#ContinuousTrigger)
-
-```text
-import org.apache.spark.sql.streaming.Trigger
-val query = spark
-  .readStream
-  .format("rate")
-  .load
-  .writeStream
-  .format("console")          // <-- not a StreamWriteSupport sink
-  .option("truncate", false)
-  .trigger(Trigger.Once)      // <-- Gives MicroBatchExecution
-  .queryName("rate2console")
-  .start
-
-// The following gives access to the internals
-// And to MicroBatchExecution
-import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
-val engine = query.asInstanceOf[StreamingQueryWrapper].streamingQuery
-import org.apache.spark.sql.execution.streaming.StreamExecution
-assert(engine.isInstanceOf[StreamExecution])
-
-import org.apache.spark.sql.execution.streaming.MicroBatchExecution
-val microBatchEngine = engine.asInstanceOf[MicroBatchExecution]
-assert(microBatchEngine.trigger == Trigger.Once)
-```
-
-Once <<creating-instance, created>>, `MicroBatchExecution` (as a [stream execution engine](StreamExecution.md)) is requested to <<runActivatedStream, run an activated streaming query>>.
-
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MicroBatchExecution` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.MicroBatchExecution=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
+* All [trigger](#trigger)s but [ContinuousTrigger](Trigger.md#ContinuousTrigger)
 
 ## Creating Instance
 
 `MicroBatchExecution` takes the following to be created:
 
-* [[sparkSession]] `SparkSession`
-* [[name]] Name of the streaming query
-* [[checkpointRoot]] Path of the checkpoint directory
-* [[analyzedPlan]] Analyzed logical query plan of the streaming query (`LogicalPlan`)
-* [[trigger]] [Trigger](Trigger.md)
-* [[triggerClock]] Trigger clock (`Clock`)
-* [[outputMode]] [OutputMode](OutputMode.md)
-* [[extraOptions]] Extra options (`Map[String, String]`)
-* [[deleteCheckpointOnStop]] `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
+* <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
+* <span id="name"> Name of the streaming query
+* <span id="checkpointRoot"> Path of the Checkpoint Directory
+* <span id="analyzedPlan"> Analyzed logical query plan of the streaming query ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan))
+* <span id="sink"> `Table` Sink ([Spark SQL]({{ book.spark_sql }}/connector/Table))
+* <span id="trigger"> [Trigger](Trigger.md)
+* <span id="triggerClock"> `Clock`
+* <span id="outputMode"> [OutputMode](OutputMode.md)
+* <span id="extraOptions"> Extra Options (`Map[String, String]`)
+* <span id="deleteCheckpointOnStop"> `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
 
-`MicroBatchExecution` initializes the <<internal-properties, internal properties>>.
+`MicroBatchExecution` is created when:
 
-=== [[triggerExecutor]] MicroBatchExecution and TriggerExecutor -- `triggerExecutor` Property
+* `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery)
 
-[source, scala]
-----
+Once created, `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream).
+
+## <span id="sources"> Streaming Sources Registry
+
+```scala
+sources: Seq[SparkDataStream]
+```
+
+`MicroBatchExecution` uses...FIXME
+
+Streaming sources and readers (of the [StreamingExecutionRelations](logical-operators/StreamingExecutionRelation.md) of the [analyzed logical query plan](#analyzedPlan) of the streaming query)
+
+Default: (empty)
+
+`sources` is part of the [ProgressReporter](monitoring/ProgressReporter.md#sources) abstraction.
+
+* Initialized when `MicroBatchExecution` is requested for the [transformed logical query plan](#logicalPlan)
+
+Used when:
+
+* [Populating start offsets](#populateStartOffsets) (for the [available](StreamExecution.md#availableOffsets) and [committed](StreamExecution.md#committedOffsets) offsets)
+
+* [Constructing or skipping next streaming micro-batch](#constructNextBatch) (and persisting offsets to write-ahead log)
+
+## <span id="triggerExecutor"> TriggerExecutor
+
+```scala
 triggerExecutor: TriggerExecutor
-----
+```
 
-`triggerExecutor` is the [TriggerExecutor](TriggerExecutor.md) of the streaming query that is how micro-batches are executed at regular intervals.
+`MicroBatchExecution` uses a [TriggerExecutor](TriggerExecutor.md) that is how micro-batches are executed at regular intervals.
 
-`triggerExecutor` is initialized based on the given <<trigger, Trigger>> (that was used to create the `MicroBatchExecution`):
+`triggerExecutor` is initialized based on the given [Trigger](#trigger) (given when creating the `MicroBatchExecution`):
 
 * [ProcessingTimeExecutor](TriggerExecutor.md) for [Trigger.ProcessingTime](Trigger.md#ProcessingTime)
 
 * [OneTimeExecutor](TriggerExecutor.md) for [OneTimeTrigger](Trigger.md#OneTimeTrigger) (aka [Trigger.Once](Trigger.md#Once) trigger)
 
-`triggerExecutor` throws an `IllegalStateException` when the <<trigger, Trigger>> is not one of the [built-in implementations](Trigger.md#available-implementations).
+`triggerExecutor` throws an `IllegalStateException` when the [Trigger](#trigger) is not one of the [built-in implementations](Trigger.md#available-implementations).
 
 ```text
 Unknown type of trigger: [trigger]
 ```
 
-NOTE: `triggerExecutor` is used exclusively when `StreamExecution` is requested to <<runActivatedStream, run an activated streaming query>> (at regular intervals).
+`triggerExecutor` is used when:
+
+* `StreamExecution` is requested to [run an activated streaming query](#runActivatedStream) (at regular intervals)
 
 ## <span id="runActivatedStream"> Running Activated Streaming Query
 
@@ -106,10 +93,10 @@ The batch runner (of the [TriggerExecutor](#triggerExecutor)) is executed as lon
 !!! note
     _trigger_ and _batch_ are considered equivalent and used interchangeably.
 
-[[runActivatedStream-startTrigger]]
+<span id="runActivatedStream-startTrigger">
 The batch runner [initializes query progress for the new trigger](monitoring/ProgressReporter.md#startTrigger) (aka _startTrigger_).
 
-[[runActivatedStream-triggerExecution]][[runActivatedStream-triggerExecution-populateStartOffsets]]
+<span id="runActivatedStream-triggerExecution"><span id="runActivatedStream-triggerExecution-populateStartOffsets">
 The batch runner starts *triggerExecution* [execution phase](monitoring/ProgressReporter.md#reportTimeTaken) that is made up of the following steps:
 
 1. [Populating start offsets from checkpoint](#populateStartOffsets) before the first "zero" batch (at every start or restart)
@@ -118,7 +105,7 @@ The batch runner starts *triggerExecution* [execution phase](monitoring/Progress
 
 1. [Running the streaming micro-batch](#runBatch)
 
-At the start or restart (_resume_) of a streaming query (when the <<currentBatchId, current batch ID>> is uninitialized and `-1`), the batch runner <<populateStartOffsets, populates start offsets from checkpoint>> and then prints out the following INFO message to the logs (using the [committedOffsets](StreamExecution.md#committedOffsets) internal registry):
+At the start or restart (_resume_) of a streaming query (when the [current batch ID](#currentBatchId) is uninitialized and `-1`), the batch runner [populates start offsets from checkpoint](#populateStartOffsets) and then prints out the following INFO message to the logs (using the [committedOffsets](StreamExecution.md#committedOffsets) internal registry):
 
 ```text
 Stream started from [committedOffsets]
@@ -126,15 +113,15 @@ Stream started from [committedOffsets]
 
 The batch runner sets the human-readable description for any Spark job submitted (that streaming sources may submit to get new data) as the [batch description](StreamExecution.md#getBatchDescriptionString).
 
-[[runActivatedStream-triggerExecution-isCurrentBatchConstructed]]
-The batch runner <<constructNextBatch, constructs the next streaming micro-batch>> (when the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> internal flag is off).
+<span id="runActivatedStream-triggerExecution-isCurrentBatchConstructed">
+The batch runner [constructs the next streaming micro-batch](#constructNextBatch) (when the [isCurrentBatchConstructed](#isCurrentBatchConstructed) internal flag is off).
 
-The batch runner <<recordTriggerOffsets, records trigger offsets>> (with the [committed](StreamExecution.md#committedOffsets) and [available](StreamExecution.md#availableOffsets) offsets).
+The batch runner [records trigger offsets](#recordTriggerOffsets) (with the [committed](StreamExecution.md#committedOffsets) and [available](StreamExecution.md#availableOffsets) offsets).
 
-The batch runner updates the [current StreamingQueryStatus](monitoring/ProgressReporter.md#currentStatus) with the <<isNewDataAvailable, isNewDataAvailable>> for [isDataAvailable](monitoring/StreamingQueryStatus.md#isDataAvailable) property.
+The batch runner updates the [current StreamingQueryStatus](monitoring/ProgressReporter.md#currentStatus) with the [isNewDataAvailable](#isNewDataAvailable) for [isDataAvailable](monitoring/StreamingQueryStatus.md#isDataAvailable) property.
 
-[[runActivatedStream-triggerExecution-runBatch]]
-With the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag enabled (`true`), the batch runner [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to one of the following (per <<isNewDataAvailable, isNewDataAvailable>>) and <<runBatch, runs the streaming micro-batch>>.
+<span id="runActivatedStream-triggerExecution-runBatch">
+With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag enabled, the batch runner [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to one of the following (per [isNewDataAvailable](#isNewDataAvailable)) and [runs the streaming micro-batch](#runBatch).
 
 ```text
 Processing new data
@@ -153,9 +140,9 @@ Waiting for data to arrive
 [[runActivatedStream-triggerExecution-finishTrigger]]
 The batch runner [finalizes query progress for the trigger](monitoring/ProgressReporter.md#finishTrigger) (with a flag that indicates whether the current batch had new data).
 
-With the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag enabled (`true`), the batch runner increments the <<currentBatchId, currentBatchId>> and turns the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag off (`false`).
+With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag enabled (`true`), the batch runner increments the [currentBatchId](#currentBatchId) and turns the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag off (`false`).
 
-With the <<isCurrentBatchConstructed, isCurrentBatchConstructed>> flag disabled (`false`), the batch runner simply sleeps (as long as configured using the [spark.sql.streaming.pollingDelay](StreamExecution.md#pollingDelayMs) configuration property).
+With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag disabled (`false`), the batch runner simply sleeps (as long as configured using the [spark.sql.streaming.pollingDelay](StreamExecution.md#pollingDelayMs) configuration property).
 
 In the end, the batch runner [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to the following status and returns whether the `MicroBatchExecution` is [active](StreamExecution.md#isActive) or not.
 
@@ -278,20 +265,20 @@ For every [streaming source](Source.md) (Data Source API V1), `constructNextBatc
 Getting offsets from [source]
 ```
 
-[[constructNextBatch-getOffset]]
-In *getOffset* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `Source` for the <<getOffset, latest offset>>.
+<span id="constructNextBatch-getOffset">
+In **getOffset** [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `Source` for the <<getOffset, latest offset>>.
 
-For every <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> (Data Source API V2), `constructNextBatch` [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+For every [MicroBatchReader](spark-sql-streaming-MicroBatchReader.md) (Data Source API V2), `constructNextBatch` [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Getting offsets from [source]
 ```
 
-[[constructNextBatch-setOffsetRange]]
-In *setOffsetRange* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the <<availableOffsets, available offset>> internal registry) and, if found, requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, deserialize the offset>> (from [JSON format](Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#setOffsetRange, set the desired offset range>>.
+<span id="constructNextBatch-setOffsetRange">
+In **setOffsetRange** [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the <<availableOffsets, available offset>> internal registry) and, if found, requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#deserializeOffset, deserialize the offset>> (from [JSON format](Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to <<spark-sql-streaming-MicroBatchReader.md#setOffsetRange, set the desired offset range>>.
 
-[[constructNextBatch-getEndOffset]]
-In *getEndOffset* [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.md#getEndOffset, end offset>>.
+<span id="constructNextBatch-getEndOffset">
+In **getEndOffset** [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for the <<spark-sql-streaming-MicroBatchReader.md#getEndOffset, end offset>>.
 
 ### <span id="constructNextBatch-availableOffsets"> Updating availableOffsets StreamProgress with Latest Available Offsets
 
@@ -558,18 +545,17 @@ Query [prettyIdString] was stopped
 
 `stop` is part of the [StreamingQuery](StreamingQuery.md#stop) abstraction.
 
-=== [[isNewDataAvailable]] Checking Whether New Data Is Available (Based on Available and Committed Offsets) -- `isNewDataAvailable` Internal Method
+## <span id="isNewDataAvailable"> Checking Whether New Data Is Available
 
-[source, scala]
-----
+```scala
 isNewDataAvailable: Boolean
-----
+```
 
-`isNewDataAvailable` checks whether there is a streaming source (in the <<availableOffsets, available offsets>>) for which <<committedOffsets, committed offsets>> are different from the available offsets or not available (committed) at all.
+`isNewDataAvailable` checks whether there is a streaming source (in the [available offsets](#availableOffsets)) for which [committed offsets](#committedOffsets) are different from the available offsets or not available (committed) at all.
 
 `isNewDataAvailable` is positive (`true`) when there is at least one such streaming source.
 
-NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to <<runActivatedStream, run an activated streaming query>> and <<constructNextBatch, construct the next streaming micro-batch>>.
+NOTE: `isNewDataAvailable` is used when `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream) and [construct the next streaming micro-batch](#constructNextBatch).
 
 ## <span id="logicalPlan"> Analyzed Logical Plan
 
@@ -579,12 +565,12 @@ logicalPlan: LogicalPlan
 
 `logicalPlan` is part of the [StreamExecution](StreamExecution.md#logicalPlan) abstraction.
 
-`logicalPlan` resolves (_replaces_) [StreamingRelation](logical-operators/StreamingRelation.md), [StreamingRelationV2](logical-operators/StreamingRelationV2.md) logical operators to [StreamingExecutionRelation](logical-operators/StreamingExecutionRelation.md) logical operators. `logicalPlan` uses the transformed logical plan to set the [uniqueSources](StreamExecution.md#uniqueSources) and <<sources, sources>> internal registries to be the [BaseStreamingSources](logical-operators/StreamingExecutionRelation.md#source) of all the `StreamingExecutionRelations` unique and not, respectively.
+`logicalPlan` resolves (_replaces_) [StreamingRelation](logical-operators/StreamingRelation.md), [StreamingRelationV2](logical-operators/StreamingRelationV2.md) logical operators to [StreamingExecutionRelation](logical-operators/StreamingExecutionRelation.md) logical operators. `logicalPlan` uses the transformed logical plan to set the [uniqueSources](StreamExecution.md#uniqueSources) and [sources](#sources) internal registries to be the [BaseStreamingSources](logical-operators/StreamingExecutionRelation.md#source) of all the `StreamingExecutionRelations` unique and not, respectively.
 
 ??? note "Lazy Value"
     `logicalPlan` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and cached afterwards.
 
-Internally, `logicalPlan` transforms the <<analyzedPlan, analyzed logical plan>>.
+Internally, `logicalPlan` transforms the [analyzed logical plan](#analyzedPlan).
 
 For every [StreamingRelation](logical-operators/StreamingRelation.md) logical operator, `logicalPlan` tries to replace it with the [StreamingExecutionRelation](logical-operators/StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelation` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `DataSource` to [create a streaming Source](DataSource.md#createSource) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
 
@@ -627,42 +613,59 @@ logicalPlan must be initialized in QueryExecutionThread but the current thread w
 
 [WatermarkTracker](WatermarkTracker.md) that is created when `MicroBatchExecution` is requested to [populate start offsets](#populateStartOffsets) (when requested to [run an activated streaming query](#runActivatedStream))
 
-## Internal Properties
+## <span id="isCurrentBatchConstructed"> isCurrentBatchConstructed Flag
 
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
+```scala
+isCurrentBatchConstructed: Boolean
+```
 
-| isCurrentBatchConstructed
-a| [[isCurrentBatchConstructed]] Flag to control whether to <<runBatch, run a streaming micro-batch>> (`true`) or not (`false`)
+`MicroBatchExecution` uses `isCurrentBatchConstructed` internal flag to control whether or not to [run a streaming micro-batch](#runBatch).
 
 Default: `false`
 
-* When disabled (`false`), changed to whatever <<constructNextBatch, constructing the next streaming micro-batch>> gives back when <<runActivatedStream, running activated streaming query>>
+When `false`, changed to whatever [constructing the next streaming micro-batch](#constructNextBatch) gives back when [running activated streaming query](#runActivatedStream)
 
-* Disabled (`false`) after <<runBatch, running a streaming micro-batch>> (when enabled after <<constructNextBatch, constructing the next streaming micro-batch>>)
+Disabled (`false`) after [running a streaming micro-batch](#runBatch) (when enabled after [constructing the next streaming micro-batch](#constructNextBatch))
 
-* Enabled (`true`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and [re-starting a streaming query from a checkpoint](HDFSMetadataLog.md#getLatest) (using the [Offset Write-Ahead Log](StreamExecution.md#offsetLog))
+Enabled (`true`) when [populating start offsets](#populateStartOffsets) (when [running an activated streaming query](#runActivatedStream)) and [re-starting a streaming query from a checkpoint](HDFSMetadataLog.md#getLatest) (using the [Offset Write-Ahead Log](StreamExecution.md#offsetLog))
 
-* Disabled (`false`) when <<populateStartOffsets, populating start offsets>> (when <<runActivatedStream, running an activated streaming query>>) and [re-starting a streaming query from a checkpoint](HDFSMetadataLog.md#getLatest) when the latest offset checkpointed (written) to the [offset write-ahead log](StreamExecution.md#offsetLog) has been successfully processed and [committed](HDFSMetadataLog.md#getLatest) to the [Offset Commit Log](StreamExecution.md#commitLog)
+Disabled (`false`) when [populating start offsets](#populateStartOffsets) (when [running an activated streaming query](#runActivatedStream)) and [re-starting a streaming query from a checkpoint](HDFSMetadataLog.md#getLatest) when the latest offset checkpointed (written) to the [offset write-ahead log](StreamExecution.md#offsetLog) has been successfully processed and [committed](HDFSMetadataLog.md#getLatest) to the [Offset Commit Log](StreamExecution.md#commitLog)
 
-| readerToDataSourceMap
-a| [[readerToDataSourceMap]] (`Map[MicroBatchReader, (DataSourceV2, Map[String, String])]`)
+## Demo
 
-| sources
-a| [[sources]] Streaming sources and readers (of the [StreamingExecutionRelations](logical-operators/StreamingExecutionRelation.md) of the <<analyzedPlan, analyzed logical query plan>> of the streaming query)
+```text
+import org.apache.spark.sql.streaming.Trigger
+val query = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")          // <-- not a StreamWriteSupport sink
+  .option("truncate", false)
+  .trigger(Trigger.Once)      // <-- Gives MicroBatchExecution
+  .queryName("rate2console")
+  .start
 
-Default: (empty)
+// The following gives access to the internals
+// And to MicroBatchExecution
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val engine = query.asInstanceOf[StreamingQueryWrapper].streamingQuery
+import org.apache.spark.sql.execution.streaming.StreamExecution
+assert(engine.isInstanceOf[StreamExecution])
 
-`sources` is part of the [ProgressReporter](monitoring/ProgressReporter.md#sources) abstraction.
+import org.apache.spark.sql.execution.streaming.MicroBatchExecution
+val microBatchEngine = engine.asInstanceOf[MicroBatchExecution]
+assert(microBatchEngine.trigger == Trigger.Once)
+```
 
-* Initialized when `MicroBatchExecution` is requested for the <<logicalPlan, transformed logical query plan>>
+## Logging
 
-Used when:
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MicroBatchExecution` logger to see what happens inside.
 
-* <<populateStartOffsets, Populating start offsets>> (for the [available](StreamExecution.md#availableOffsets) and [committed](StreamExecution.md#committedOffsets) offsets)
+Add the following line to `conf/log4j.properties`:
 
-* <<constructNextBatch, Constructing or skipping next streaming micro-batch>> (and persisting offsets to write-ahead log)
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.MicroBatchExecution=ALL
+```
 
-|===
+Refer to [Logging](spark-logging.md).
