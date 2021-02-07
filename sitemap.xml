@@ -4,7 +4,7 @@
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-structured-streaming/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/overview/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -228,7 +228,7 @@
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-GroupStateTimeout/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/GroupStateTimeout/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
