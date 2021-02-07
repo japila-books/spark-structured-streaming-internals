@@ -32,7 +32,7 @@
 * <span id="stateEncoder"> State encoder (`ExpressionEncoder[Any]`)
 * <span id="stateFormatVersion"> State format version
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
-* <span id="timeoutConf"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
+* <span id="timeoutConf"> [GroupStateTimeout](../GroupStateTimeout.md)
 * <span id="batchTimestampMs"> Optional [Batch Processing Time](../spark-structured-streaming-batch-processing-time.md)
 * <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../streaming-watermark.md)
 * <span id="child"> Child physical operator
@@ -53,7 +53,7 @@ doExecute(): RDD[InternalRow]
 
 1. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](../StateStore.md)
 
-1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
+1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
 
 1. Requests the `InputProcessor` to [create an iterator of a new data processed](../InputProcessor.md#processNewData) from the (possibly filtered) iterator
 
@@ -143,11 +143,11 @@ shouldRunAnotherBatch(
 
 `shouldRunAnotherBatch` uses the [GroupStateTimeout](#timeoutConf) as follows:
 
-* With [EventTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout), `shouldRunAnotherBatch` is `true` only when the [event-time watermark](#eventTimeWatermark) is defined and is older (below) the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the given `OffsetSeqMetadata`
+* With [EventTimeTimeout](../GroupStateTimeout.md#EventTimeTimeout), `shouldRunAnotherBatch` is `true` only when the [event-time watermark](#eventTimeWatermark) is defined and is older (below) the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the given `OffsetSeqMetadata`
 
-* With [NoTimeout](../spark-sql-streaming-GroupStateTimeout.md#NoTimeout) (and other [GroupStateTimeouts](../spark-sql-streaming-GroupStateTimeout.md#extensions) if there were any), `shouldRunAnotherBatch` is always `false`
+* With [NoTimeout](../GroupStateTimeout.md#NoTimeout) (and other [GroupStateTimeouts](../GroupStateTimeout.md#extensions) if there were any), `shouldRunAnotherBatch` is always `false`
 
-* With [ProcessingTimeTimeout](../spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout), `shouldRunAnotherBatch` is always `true`
+* With [ProcessingTimeTimeout](../GroupStateTimeout.md#ProcessingTimeTimeout), `shouldRunAnotherBatch` is always `true`
 
 `shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
 
@@ -155,7 +155,7 @@ shouldRunAnotherBatch(
 
 ### <span id="isTimeoutEnabled"> isTimeoutEnabled Flag
 
-Flag that says whether the [GroupStateTimeout](#timeoutConf) is not [NoTimeout](../spark-sql-streaming-GroupStateTimeout.md#NoTimeout)
+Flag that says whether the [GroupStateTimeout](#timeoutConf) is not [NoTimeout](../GroupStateTimeout.md#NoTimeout)
 
 Used when:
 

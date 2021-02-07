@@ -10,18 +10,16 @@
 
 * <<createForBatch, createForBatch>>
 
-=== [[creating-instance]] Creating GroupStateImpl Instance
+## Creating Instance
 
 `GroupStateImpl` takes the following to be created:
 
 * [[optionalValue]] State value (of type `S`)
-* [[batchProcessingTimeMs]] <<spark-structured-streaming-batch-processing-time.md#, Batch processing time>>
+* [[batchProcessingTimeMs]] [Batch processing time](spark-structured-streaming-batch-processing-time.md)
 * [[eventTimeWatermarkMs]] `eventTimeWatermarkMs`
-* [[timeoutConf]] <<spark-sql-streaming-GroupStateTimeout.md#, GroupStateTimeout>>
+* [[timeoutConf]] [GroupStateTimeout](GroupStateTimeout.md)
 * [[hasTimedOut]] `hasTimedOut` flag
 * [[watermarkPresent]] `watermarkPresent` flag
-
-`GroupStateImpl` initializes the <<internal-properties, internal properties>>.
 
 === [[createForStreaming]] Creating GroupStateImpl for Streaming Query -- `createForStreaming` Factory Method
 
@@ -155,7 +153,7 @@ Disabled (`false`) when `GroupStateImpl` is requested to <<update, update the st
 Enabled (`true`) when `GroupStateImpl` is requested to <<remove, remove the state>>
 
 | timeoutTimestamp
-a| [[timeoutTimestamp]][[getTimeoutTimestamp]] Current *timeout timestamp* (in millis) for <<spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>> or <<spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout, GroupStateTimeout.ProcessingTimeTimeout>>
+a| [[timeoutTimestamp]][[getTimeoutTimestamp]] Current *timeout timestamp* (in millis) for [GroupStateTimeout.EventTimeTimeout](GroupStateTimeout.md#EventTimeTimeout) or [GroupStateTimeout.ProcessingTimeTimeout](GroupStateTimeout.md#ProcessingTimeTimeout)
 
 [[NO_TIMESTAMP]] Default: `-1`
 

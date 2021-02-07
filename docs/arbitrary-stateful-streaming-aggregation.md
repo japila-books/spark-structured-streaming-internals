@@ -10,7 +10,7 @@
 
 `mapGroupsWithState` and `flatMapGroupsWithState` operators use [GroupState](GroupState.md) as **group streaming aggregation state** that is created separately for every **aggregation key** with an **aggregation state value** (of a user-defined type).
 
-`mapGroupsWithState` and `flatMapGroupsWithState` operators use [GroupStateTimeout](spark-sql-streaming-GroupStateTimeout.md) as an **aggregation state timeout** that defines when a [GroupState](GroupState.md) is considered **timed-out** (_expired_).
+`mapGroupsWithState` and `flatMapGroupsWithState` operators use [GroupStateTimeout](GroupStateTimeout.md) as an **aggregation state timeout** that defines when a [GroupState](GroupState.md) is considered **timed-out** (_expired_).
 
 ## Demos
 
@@ -32,11 +32,11 @@ Arbitrary Stateful Streaming Aggregation uses **performance metrics** (of the [S
 
 One of the most important internal execution components of Arbitrary Stateful Streaming Aggregation is [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator.
 
-When executed, `FlatMapGroupsWithStateExec` first validates a selected [GroupStateTimeout](spark-sql-streaming-GroupStateTimeout.md):
+When executed, `FlatMapGroupsWithStateExec` first validates a selected [GroupStateTimeout](GroupStateTimeout.md):
 
-* For [ProcessingTimeTimeout](spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout), [batch timeout threshold](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) has to be defined
+* For [ProcessingTimeTimeout](GroupStateTimeout.md#ProcessingTimeTimeout), [batch timeout threshold](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) has to be defined
 
-* For [EventTimeTimeout](spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout), [event-time watermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) has to be defined and the [input schema has the watermark attribute](WatermarkSupport.md#watermarkExpression)
+* For [EventTimeTimeout](GroupStateTimeout.md#EventTimeTimeout), [event-time watermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) has to be defined and the [input schema has the watermark attribute](WatermarkSupport.md#watermarkExpression)
 
 !!! note
     FIXME When are the above requirements met?

@@ -39,9 +39,9 @@ processTimedOutState(): Iterator[InternalRow]
 
 With [timeout enabled](physical-operators/FlatMapGroupsWithStateExec.md#isTimeoutEnabled), `processTimedOutState` gets the current timeout threshold per [GroupStateTimeout](physical-operators/FlatMapGroupsWithStateExec.md#timeoutConf):
 
-* [batchTimestampMs](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) for [ProcessingTimeTimeout](spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout)
+* [batchTimestampMs](physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) for [ProcessingTimeTimeout](GroupStateTimeout.md#ProcessingTimeTimeout)
 
-* [eventTimeWatermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) for [EventTimeTimeout](spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout)
+* [eventTimeWatermark](physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) for [EventTimeTimeout](GroupStateTimeout.md#EventTimeTimeout)
 
 `processTimedOutState` creates an iterator of timed-out state data by requesting the [StateManager](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) for [all the available state data](spark-sql-streaming-StateManager.md#getAllState) (in the [StateStore](#store)) and takes only the state data with timeout defined and below the current timeout threshold.
 

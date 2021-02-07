@@ -113,7 +113,7 @@ nav:
   - Home:
     - Welcome: index.md
   - Internals:
-    - Spark Structured Streaming and Streaming Queries: spark-structured-streaming.md
+    - Spark Structured Streaming and Streaming Queries: overview.md
     - StreamingQuery: StreamingQuery.md
     - Configuration Properties: configuration-properties.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
@@ -180,7 +180,7 @@ nav:
       - GroupState:
         - GroupState: GroupState.md
         - GroupStateImpl: GroupStateImpl.md
-      - GroupStateTimeout: spark-sql-streaming-GroupStateTimeout.md
+      - GroupStateTimeout: GroupStateTimeout.md
       - StateManager:
         - StateManager: spark-sql-streaming-StateManager.md
         - StateManagerImplV2: spark-sql-streaming-StateManagerImplV2.md

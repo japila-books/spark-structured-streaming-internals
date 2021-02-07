@@ -1,6 +1,6 @@
-# GroupStateTimeout &mdash; Group State Timeout in Arbitrary Stateful Streaming Aggregation
+# GroupStateTimeout
 
-`GroupStateTimeout` represents an *aggregation state timeout* that defines when a [GroupState](GroupState.md) can be considered *timed-out* (_expired_) in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
+`GroupStateTimeout` represents an **aggregation state timeout** that defines when a [GroupState](GroupState.md) can be considered **timed-out** (_expired_) in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
 
 `GroupStateTimeout` is used with the following [KeyValueGroupedDataset](KeyValueGroupedDataset.md) operations:
 

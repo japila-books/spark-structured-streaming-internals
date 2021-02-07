@@ -1,4 +1,4 @@
-# GroupState -- Group State in Arbitrary Stateful Streaming Aggregation
+# GroupState
 
 `GroupState` is an <<contract, abstraction>> of <<implementations, group state>> (of type `S`) in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
 
@@ -106,7 +106,7 @@ setTimeoutDuration(durationMs: Long): Unit
 setTimeoutDuration(duration: String): Unit
 ----
 
-Specifies the *timeout duration* for the state key (in millis or as a string, e.g. "10 seconds", "1 hour") for <<spark-sql-streaming-GroupStateTimeout.md#ProcessingTimeTimeout, GroupStateTimeout.ProcessingTimeTimeout>>
+Specifies the *timeout duration* for the state key (in millis or as a string, e.g. "10 seconds", "1 hour") for [GroupStateTimeout.ProcessingTimeTimeout](GroupStateTimeout.md#ProcessingTimeTimeout)
 
 | setTimeoutTimestamp
 a| [[setTimeoutTimestamp]]
@@ -123,7 +123,7 @@ setTimeoutTimestamp(
   additionalDuration: String): Unit
 ----
 
-Specifies the *timeout timestamp* for the state key for <<spark-sql-streaming-GroupStateTimeout.md#EventTimeTimeout, GroupStateTimeout.EventTimeTimeout>>
+Specifies the *timeout timestamp* for the state key for [GroupStateTimeout.EventTimeTimeout](GroupStateTimeout.md#EventTimeTimeout)
 
 | update
 a| [[update]]

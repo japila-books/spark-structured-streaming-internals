@@ -32,7 +32,7 @@
 * <span id="stateEncoder"> State `ExpressionEncoder`
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
 * <span id="isMapGroupsWithState"> `isMapGroupsWithState` flag (default: `false`)
-* <span id="timeout"> [GroupStateTimeout](../spark-sql-streaming-GroupStateTimeout.md)
+* <span id="timeout"> [GroupStateTimeout](../GroupStateTimeout.md)
 * <span id="child"> Child logical operator
 
 `FlatMapGroupsWithState` is created (using [apply](#apply) factory method) for [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
