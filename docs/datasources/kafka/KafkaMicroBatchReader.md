@@ -1,30 +1,16 @@
 # KafkaMicroBatchReader
 
-`KafkaMicroBatchReader` is the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md) for [kafka data source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md).
+`KafkaMicroBatchReader` is the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) for [kafka data source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
 
 `KafkaMicroBatchReader` is created when `KafkaSourceProvider` is requested to [create a MicroBatchReader](KafkaSourceProvider.md#createMicroBatchReader).
 
 [[pollTimeoutMs]]
-`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [kafkaConsumer.pollTimeoutMs](index.md#kafkaConsumer.pollTimeoutMs) option (default: `spark.network.timeout` or `120s`).
+`KafkaMicroBatchReader` uses the [DataSourceOptions](#options) to access the [kafkaConsumer.pollTimeoutMs](index.md#kafkaConsumer.pollTimeoutMs) option (default: `spark.network.timeout` or `120s`).
 
 [[maxOffsetsPerTrigger]]
-`KafkaMicroBatchReader` uses the <<options, DataSourceOptions>> to access the [maxOffsetsPerTrigger](index.md#maxOffsetsPerTrigger) option (default: `(undefined)`).
+`KafkaMicroBatchReader` uses the [DataSourceOptions](#options) to access the [maxOffsetsPerTrigger](index.md#maxOffsetsPerTrigger) option (default: `(undefined)`).
 
-`KafkaMicroBatchReader` uses the <<executorKafkaParams, Kafka properties for executors>> to create [KafkaMicroBatchInputPartitions](KafkaMicroBatchInputPartition.md) when requested to <<planInputPartitions, planInputPartitions>>.
-
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaMicroBatchReader` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaMicroBatchReader=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
+`KafkaMicroBatchReader` uses the [Kafka properties for executors](#executorKafkaParams) to create [KafkaMicroBatchInputPartitions](KafkaMicroBatchInputPartition.md) when requested to [planInputPartitions](#planInputPartitions).
 
 ## Creating Instance
 
@@ -109,7 +95,7 @@ NOTE: `getOrCreateInitialPartitionOffsets` is used exclusively for the <<initial
 getStartOffset: Offset
 ----
 
-`getStartOffset` is part of the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md#getStartOffset) abstraction.
+`getStartOffset` is part of the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md#getStartOffset) abstraction.
 
 `getStartOffset`...FIXME
 
@@ -120,7 +106,7 @@ getStartOffset: Offset
 getEndOffset: Offset
 ----
 
-`getEndOffset` is part of the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md#getEndOffset) abstraction.
+`getEndOffset` is part of the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md#getEndOffset) abstraction.
 
 `getEndOffset`...FIXME
 
@@ -131,7 +117,7 @@ getEndOffset: Offset
 deserializeOffset(json: String): Offset
 ----
 
-`deserializeOffset` is part of the [MicroBatchReader](../../spark-sql-streaming-MicroBatchReader.md#deserializeOffset) abstraction.
+`deserializeOffset` is part of the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md#deserializeOffset) abstraction.
 
 `deserializeOffset`...FIXME
 
@@ -166,3 +152,15 @@ a| [[startPartitionOffsets]] Starting offsets for the assigned partitions (`Map[
 Used when...FIXME
 
 |===
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaMicroBatchReader` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.kafka010.KafkaMicroBatchReader=ALL
+```
+
+Refer to [Logging](../../spark-logging.md).

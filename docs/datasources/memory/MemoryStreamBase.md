@@ -39,7 +39,7 @@ logicalPlan: LogicalPlan
 | [[ContinuousMemoryStream]]
 
 | [MemoryStream](MemoryStream.md)
-| [[MemoryStream]] <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> for <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>
+| [[MemoryStream]] [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)
 
 |===
 

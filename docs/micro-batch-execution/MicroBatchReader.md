@@ -1,6 +1,6 @@
 # MicroBatchReader -- Data Source Readers in Micro-Batch Stream Processing (Data Source API V2)
 
-`MicroBatchReader` is the <<contract, extension>> of Spark SQL's `DataSourceReader` abstraction for <<implementations, data source readers>> in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
+`MicroBatchReader` is the [extension](#contract) of Spark SQL's `DataSourceReader` abstraction for [data source readers](#implementations) in [Micro-Batch Stream Processing](index.md).
 
 `MicroBatchReader` is part of the novel Data Source API V2 in Spark SQL.
 
@@ -31,7 +31,7 @@ a| [[deserializeOffset]]
 Offset deserializeOffset(String json)
 ----
 
-Deserializes [offset](Offset.md) (from JSON format)
+Deserializes [offset](../Offset.md) (from JSON format)
 
 Used when...FIXME
 
@@ -43,7 +43,7 @@ a| [[getEndOffset]]
 Offset getEndOffset()
 ----
 
-End [offset](Offset.md) of this reader
+End [offset](../Offset.md) of this reader
 
 Used when...FIXME
 
@@ -55,7 +55,7 @@ a| [[getStartOffset]]
 Offset getStartOffset()
 ----
 
-Start (beginning) [offset](Offset.md) of this reader
+Start (beginning) [offset](../Offset.md) of this reader
 
 Used when...FIXME
 
@@ -82,10 +82,10 @@ Used when...FIXME
 | MicroBatchReader
 | Description
 
-| [KafkaMicroBatchReader](datasources/kafka/KafkaMicroBatchReader.md)
+| [KafkaMicroBatchReader](../datasources/kafka/KafkaMicroBatchReader.md)
 | [[KafkaMicroBatchReader]]
 
-| [MemoryStream](datasources/memory/MemoryStream.md)
+| [MemoryStream](../datasources/memory/MemoryStream.md)
 | [[MemoryStream]]
 
 | RateStreamMicroBatchReader

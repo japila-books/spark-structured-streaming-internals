@@ -130,7 +130,7 @@ Generated code:
 
 ### MicroBatchExecution
 
-Access [MicroBatchExecution](../MicroBatchExecution.md).
+Access [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md).
 
 ```scala
 import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper

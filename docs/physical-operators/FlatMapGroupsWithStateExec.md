@@ -75,7 +75,7 @@ doExecute(): RDD[InternalRow]
 
 `FlatMapGroupsWithStateExec` is a [stateful physical operator that can write to a state store](StateStoreWriter.md) (and `MicroBatchExecution` requests [whether to run another batch or not](#shouldRunAnotherBatch) based on the [GroupStateTimeout](#timeoutConf)).
 
-`FlatMapGroupsWithStateExec` uses the [GroupStateTimeout](#timeoutConf) (and possibly the updated [metadata](../OffsetSeqMetadata.md)) when asked [whether to run another batch or not](#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](../MicroBatchExecution.md#constructNextBatch) when requested to [run the activated streaming query](../MicroBatchExecution.md#runActivatedStream)).
+`FlatMapGroupsWithStateExec` uses the [GroupStateTimeout](#timeoutConf) (and possibly the updated [metadata](../OffsetSeqMetadata.md)) when asked [whether to run another batch or not](#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch) when requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream)).
 
 ## <span id="WatermarkSupport"> Streaming Event-Time Watermark Support
 
@@ -95,7 +95,7 @@ The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorState
 
     Read up on [Structured Query Execution Pipeline](https://jaceklaskowski.github.io/mastering-spark-sql-book/QueryExecution/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
 
-`IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
+`IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
 
 !!! note
     The [optional event-time watermark](#eventTimeWatermark) can only be defined when the [state](../IncrementalExecution.md#state) preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the **queryPlanning** phase.

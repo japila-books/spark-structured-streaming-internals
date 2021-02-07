@@ -246,12 +246,11 @@ nav:
         - FileSystemBasedCheckpointFileManager: FileSystemBasedCheckpointFileManager.md
         - Offset: Offset.md
         - StreamProgress: StreamProgress.md
-    - Micro-Batch Stream Processing:
-      - Micro-Batch Stream Processing: micro-batch-stream-processing.md
-      - MicroBatchExecution:
-        - MicroBatchExecution: MicroBatchExecution.md
-        - MicroBatchWriter: spark-sql-streaming-MicroBatchWriter.md
-        - MicroBatchReader: spark-sql-streaming-MicroBatchReader.md
+    - Micro-Batch Execution:
+      - Micro-Batch Execution: micro-batch-execution/index.md
+      - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
+      - MicroBatchWriter: micro-batch-execution/MicroBatchWriter.md
+      - MicroBatchReader: micro-batch-execution/MicroBatchReader.md
       - Source:
         - Source: Source.md
         - StreamSourceProvider: StreamSourceProvider.md

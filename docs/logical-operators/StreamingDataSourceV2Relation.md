@@ -17,7 +17,7 @@
 
 `StreamingDataSourceV2Relation` is created when:
 
-* `MicroBatchExecution` stream execution engine is requested for an [analyzed logical query plan](../MicroBatchExecution.md#logicalPlan) (for [StreamingRelationV2](StreamingRelationV2.md) with a `SupportsRead` table with `MICRO_BATCH_READ` capability)
+* `MicroBatchExecution` stream execution engine is requested for an [analyzed logical query plan](../micro-batch-execution/MicroBatchExecution.md#logicalPlan) (for [StreamingRelationV2](StreamingRelationV2.md) with a `SupportsRead` table with `MICRO_BATCH_READ` capability)
 
 * `ContinuousExecution` stream execution engine is requested for an [analyzed logical query plan](../ContinuousExecution.md#logicalPlan) (for [StreamingRelationV2](StreamingRelationV2.md) with a `SupportsRead` table with `CONTINUOUS_READ` capability)
 

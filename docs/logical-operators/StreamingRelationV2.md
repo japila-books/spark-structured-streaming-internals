@@ -26,5 +26,5 @@
 
 `StreamingRelationV2` is resolved to the following leaf logical operators:
 
-* [StreamingDataSourceV2Relation](StreamingDataSourceV2Relation.md) or [StreamingExecutionRelation](StreamingExecutionRelation.md) when `MicroBatchExecution` stream execution engine is requested for an [analyzed logical plan](../MicroBatchExecution.md#logicalPlan)
+* [StreamingDataSourceV2Relation](StreamingDataSourceV2Relation.md) or [StreamingExecutionRelation](StreamingExecutionRelation.md) when `MicroBatchExecution` stream execution engine is requested for an [analyzed logical plan](../micro-batch-execution/MicroBatchExecution.md#logicalPlan)
 * [StreamingDataSourceV2Relation](StreamingDataSourceV2Relation.md) when `ContinuousExecution` stream execution engine is created (and initializes an [analyzed logical plan](../ContinuousExecution.md#logicalPlan))

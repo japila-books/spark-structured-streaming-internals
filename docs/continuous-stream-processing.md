@@ -2,9 +2,6 @@
 
 **Continuous Stream Processing** is a stream processing engine in Spark Structured Streaming used for execution of structured streaming queries with [Trigger.Continuous](Trigger.md#Continuous) trigger.
 
-!!! note
-    The other feature-richer stream processing engine is [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
-
 Continuous Stream Processing execution engine uses the novel *Data Source API V2* (Spark SQL) and for the very first time makes stream processing truly *continuous*.
 
 TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-data-source-api-v2.html[Data Source API V2] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.

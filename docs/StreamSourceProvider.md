@@ -2,7 +2,7 @@
 
 `StreamSourceProvider` is an [abstraction](#contract) of [data source providers](#implementations) that can [create a streaming source](#createSource) for a data format or system.
 
-`StreamSourceProvider` is part of Data Source API V1 for [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
+`StreamSourceProvider` is part of Data Source API V1 for [Micro-Batch Stream Processing](micro-batch-execution/index.md).
 
 ## Contract
 
@@ -23,7 +23,7 @@ Creates a [Streaming Source](Source.md)
 
 Used when:
 
-* `DataSource` is requested to [create a streaming source](DataSource.md#createSource) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
+* `DataSource` is requested to [create a streaming source](DataSource.md#createSource) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan))
 
 ### <span id="sourceSchema"> Source Schema
 
@@ -39,7 +39,7 @@ Name and schema of the [Streaming Source](Source.md)
 
 Used when:
 
-* `DataSource` is requested for [metadata of a streaming source](DataSource.md#sourceSchema) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
+* `DataSource` is requested for [metadata of a streaming source](DataSource.md#sourceSchema) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan))
 
 ## Implementations
 

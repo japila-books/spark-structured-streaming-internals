@@ -21,7 +21,7 @@ Converts the offset to JSON format (JSON-encoded offset)
 
 Used when:
 
-* `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> and <<MicroBatchExecution.md#runBatch, run a streaming micro-batch>> (with <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> sources)
+* `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) and [run a streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (with [MicroBatchReader](micro-batch-execution/MicroBatchReader.md) sources)
 
 * `OffsetSeq` is requested for the [textual representation](OffsetSeq.md#toString)
 
@@ -29,7 +29,7 @@ Used when:
 
 * `ProgressReporter` is requested to [record trigger offsets](monitoring/ProgressReporter.md#recordTriggerOffsets)
 
-* `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> and <<ContinuousExecution.md#commit, commit an epoch>>
+* `ContinuousExecution` stream execution engine is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) and [commit an epoch](ContinuousExecution.md#commit)
 
 |===
 

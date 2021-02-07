@@ -38,7 +38,7 @@ lines: ArrayBuffer[(String, Timestamp)]
 
 ``TextSocketSource``'s offset can either be none or `LongOffset` of the number of lines in the internal <<lines, lines>> buffer.
 
-`getOffset` is a part of the [Source](Source.md#getOffset) abstraction.
+`getOffset` is a part of the [Source](../../Source.md#getOffset) abstraction.
 
 === [[schema]] Schema (schema method)
 

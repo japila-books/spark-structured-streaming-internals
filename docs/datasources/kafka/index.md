@@ -86,9 +86,7 @@ root
  |-- timestampType: integer (nullable = true)
 ----
 
-Internally, the fixed schema is defined as part of the `DataSourceReader` contract through <<spark-sql-streaming-MicroBatchReader.md#, MicroBatchReader>> and <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> extension contracts for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
-
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-DataSourceReader.html[DataSourceReader] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+Internally, the fixed schema is defined as part of the `DataSourceReader` contract through [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) and [ContinuousReader](../../spark-sql-streaming-ContinuousReader.md) extension contracts for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
 
 [TIP]
 ====
@@ -126,7 +124,7 @@ Internally, the **kafka** data source format for writing is available through [K
 
 ## Micro-Batch Stream Processing
 
-Kafka Data Source supports [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md) using [KafkaMicroBatchReader](KafkaMicroBatchReader.md).
+Kafka Data Source supports [Micro-Batch Stream Processing](../../micro-batch-execution/index.md) using [KafkaMicroBatchReader](KafkaMicroBatchReader.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
@@ -150,9 +148,9 @@ val sq = spark
 sq.stop
 ```
 
-Kafka Data Source can assign a single task per Kafka partition (using [KafkaOffsetRangeCalculator](KafkaOffsetRangeCalculator.md) in [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md)).
+Kafka Data Source can assign a single task per Kafka partition (using [KafkaOffsetRangeCalculator](KafkaOffsetRangeCalculator.md) in [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)).
 
-Kafka Data Source can reuse a Kafka consumer (using [KafkaMicroBatchReader](KafkaMicroBatchReader.md) in [Micro-Batch Stream Processing](../../micro-batch-stream-processing.md)).
+Kafka Data Source can reuse a Kafka consumer (using [KafkaMicroBatchReader](KafkaMicroBatchReader.md) in [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)).
 
 ## Continuous Stream Processing
 

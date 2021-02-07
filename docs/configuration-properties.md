@@ -52,7 +52,7 @@ Use [SQLConf.fileSinkLogCompactInterval](SQLConf.md#fileSinkLogCompactInterval) 
 
 **(internal)** Minimum number of batches that must be retained and made recoverable
 
- [Stream execution engines](StreamExecution.md) discard (_purge_) offsets from the `offsets` metadata log when the [current batch ID](StreamExecution.md#currentBatchId) (in [MicroBatchExecution](MicroBatchExecution.md)) or the [epoch committed](ContinuousExecution.md#commit) (in [ContinuousExecution](ContinuousExecution.md)) is above the threshold.
+ [Stream execution engines](StreamExecution.md) discard (_purge_) offsets from the `offsets` metadata log when the [current batch ID](StreamExecution.md#currentBatchId) (in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md)) or the [epoch committed](ContinuousExecution.md#commit) (in [ContinuousExecution](ContinuousExecution.md)) is above the threshold.
 
 Default: `100`
 
@@ -176,7 +176,7 @@ Cannot be changed between query restarts from the same checkpoint location.
 
 ## <span id="spark.sql.streaming.noDataMicroBatches.enabled"> spark.sql.streaming.noDataMicroBatches.enabled
 
-Flag to control whether the [streaming micro-batch engine](MicroBatchExecution.md) should execute batches with no data to process for eager state management for stateful streaming queries (`true`) or not (`false`).
+Flag to control whether the [streaming micro-batch engine](micro-batch-execution/MicroBatchExecution.md) should execute batches with no data to process for eager state management for stateful streaming queries (`true`) or not (`false`).
 
 Default: `true`
 
@@ -200,7 +200,7 @@ Use [SQLConf.streamingProgressRetention](SQLConf.md#streamingProgressRetention) 
 
 ## <span id="spark.sql.streaming.pollingDelay"> spark.sql.streaming.pollingDelay
 
-**(internal)** How long (in millis) to delay `StreamExecution` before [polls for new data when no data was available in a batch](MicroBatchExecution.md#runBatches-batchRunner-no-data)
+**(internal)** How long (in millis) to delay `StreamExecution` before [polls for new data when no data was available in a batch](micro-batch-execution/MicroBatchExecution.md#runBatches-batchRunner-no-data)
 
 Default: `10` (milliseconds)
 

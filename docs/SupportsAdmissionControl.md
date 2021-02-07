@@ -1,6 +1,6 @@
 # SupportsAdmissionControl
 
-`SupportsAdmissionControl` is an [extension](#contract) of the [SparkDataStream](SparkDataStream.md) abstraction for [streaming sources](#implementations) that want to control the rate of data ingested in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
+`SupportsAdmissionControl` is an [extension](#contract) of the [SparkDataStream](SparkDataStream.md) abstraction for [streaming sources](#implementations) that want to control the rate of data ingested in [Micro-Batch Stream Processing](micro-batch-execution/index.md).
 
 ## Contract
 
@@ -12,7 +12,7 @@ ReadLimit getDefaultReadLimit()
 
 Default: `ReadLimit.allAvailable`
 
-Used when `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](MicroBatchExecution.md#logicalPlan) (of the streaming query)
+Used when `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (of the streaming query)
 
 ### <span id="latestOffset"> Latest Offset
 
@@ -22,7 +22,7 @@ Offset latestOffset(
   ReadLimit limit)
 ```
 
-Used when `MicroBatchExecution` stream execution engine is requested for the [next micro-batch](MicroBatchExecution.md#constructNextBatch)
+Used when `MicroBatchExecution` stream execution engine is requested for the [next micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
 ## Implementations
 

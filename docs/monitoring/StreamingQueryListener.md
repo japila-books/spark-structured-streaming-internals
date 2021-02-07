@@ -19,7 +19,7 @@ onQueryProgress(
   event: QueryProgressEvent): Unit
 ```
 
-Informs that `MicroBatchExecution` has finished [triggerExecution phase](../MicroBatchExecution.md#runActivatedStream-triggerExecution) (the end of a streaming batch)
+Informs that `MicroBatchExecution` has finished [triggerExecution phase](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream-triggerExecution) (the end of a streaming batch)
 
 ![StreamingQueryListener Notified about Query's Progress (onQueryProgress)](../images/StreamingQueryListener-onQueryProgress.png)
 
@@ -68,7 +68,7 @@ Posted when `StreamExecution` is requested to [run stream processing](../StreamE
 
 Intercepted by [onQueryProgress](#onQueryProgress)
 
-Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished [triggerExecution phase](../MicroBatchExecution.md#runActivatedStream-triggerExecution) at the end of a streaming batch)
+Posted when `ProgressReporter` is requested to [update progress of a streaming query](ProgressReporter.md#updateProgress) (after `MicroBatchExecution` has finished [triggerExecution phase](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream-triggerExecution) at the end of a streaming batch)
 
 ### <span id="QueryTerminatedEvent"> QueryTerminatedEvent
 

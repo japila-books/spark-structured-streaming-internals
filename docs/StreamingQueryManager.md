@@ -166,7 +166,7 @@ Unless [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.
 spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
 ```
 
-In the end, `createQuery` creates a [StreamingQueryWrapper](StreamingQueryWrapper.md) with a new [MicroBatchExecution](MicroBatchExecution.md).
+In the end, `createQuery` creates a [StreamingQueryWrapper](StreamingQueryWrapper.md) with a new [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md).
 
 `createQuery` is used when `StreamingQueryManager` is requested to [start a streaming query](#startQuery) (when `DataStreamWriter` is requested to [start an execution of a streaming query](DataStreamWriter.md#start)).
 

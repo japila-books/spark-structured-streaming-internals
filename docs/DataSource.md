@@ -16,7 +16,7 @@ createSource(
 * [FileFormat](#createSource-FileFormat)
 * [other types](#createSource-other)
 
-`createSource` is used when `MicroBatchExecution` is requested for an [analyzed logical plan](MicroBatchExecution.md#logicalPlan).
+`createSource` is used when `MicroBatchExecution` is requested for an [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan).
 
 ### <span id="createSource-StreamSourceProvider"> StreamSourceProvider
 
@@ -59,7 +59,7 @@ Metadata of a [Source](Source.md) with the following:
 
 Used when:
 
-* `DataSource` is requested to [create a streaming source](#createSource) for a [File-Based Data Source](datasources/file/index.md) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](MicroBatchExecution.md#logicalPlan))
+* `DataSource` is requested to [create a streaming source](#createSource) for a [File-Based Data Source](datasources/file/index.md) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan))
 
 * `StreamingRelation` utility is used to [create a StreamingRelation](logical-operators/StreamingRelation.md#apply) (when `DataStreamReader` is requested for a [streaming query](DataStreamReader.md#load))
 

@@ -72,7 +72,7 @@ Spark Structured Streaming gives you two logical operators to represent streamin
 
 When [DataStreamReader.load](DataStreamReader.md#load) method is executed, `load` first looks up the requested data source (that you specified using [DataStreamReader.format](DataStreamReader.md#format)) and creates an instance of it (_instantiation_). That'd be **data source resolution** step (that I described in...FIXME).
 
-`DataStreamReader.load` is where you can find the intersection of the former [Micro-Batch Stream Processing](micro-batch-stream-processing.md) V1 API with the new [Continuous Stream Processing](continuous-stream-processing.md) V2 API.
+`DataStreamReader.load` is where you can find the intersection of the former [Micro-Batch Stream Processing](micro-batch-execution/index.md) V1 API with the new [Continuous Stream Processing](continuous-stream-processing.md) V2 API.
 
 ### V2 Code Path
 

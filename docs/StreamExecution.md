@@ -63,7 +63,7 @@ Used when `StreamExecution` is requested to [run the streaming query](#runStream
 ## Implementations
 
 * [ContinuousExecution](ContinuousExecution.md)
-* [MicroBatchExecution](MicroBatchExecution.md)
+* [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md)
 
 ## Creating Instance
 
@@ -218,7 +218,7 @@ The number of entries in the `OffsetSeqLog` is controlled using [spark.sql.strea
 
 * `ContinuousExecution` stream execution engine is requested to [commit an epoch](ContinuousExecution.md#commit), [getStartOffsets](ContinuousExecution.md#getStartOffsets), and [addOffset](ContinuousExecution.md#addOffset)
 
-* `MicroBatchExecution` stream execution engine is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) and [construct (or skip) the next streaming micro-batch](MicroBatchExecution.md#constructNextBatch)
+* `MicroBatchExecution` stream execution engine is requested to [populate start offsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) and [construct (or skip) the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
 ### <span id="commitLog"> Offset Commit Log
 
@@ -253,7 +253,7 @@ state: AtomicReference[State]
 
 Indicates that:
 
-* `MicroBatchExecution` has been requested to [stop](MicroBatchExecution.md#stop)
+* `MicroBatchExecution` has been requested to [stop](micro-batch-execution/MicroBatchExecution.md#stop)
 * `ContinuousExecution` has been requested to [stop](#ContinuousExecution.md#stop)
 * `StreamExecution` has been requested to [run stream processing](runStream) (and has finished [running the activated streaming query](#runActivatedStream))
 
@@ -288,7 +288,7 @@ createStreamingWrite(
 !!! tip
     Learn more about [SupportsTruncate]({{ book.spark_sql }}/connector/SupportsTruncate/) and [SupportsStreamingUpdate]({{ book.spark_sql }}/connector/SupportsStreamingUpdate/) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
-`createStreamingWrite` is used when [MicroBatchExecution](MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans.
+`createStreamingWrite` is used when [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans.
 
 ## <span id="availableOffsets"> Available Offsets (StreamProgress)
 
@@ -692,7 +692,7 @@ offsetSeqMetadata: OffsetSeqMetadata
 
 `offsetSeqMetadata` is a [OffsetSeqMetadata](OffsetSeqMetadata.md).
 
-`offsetSeqMetadata` is used to create an [IncrementalExecution](IncrementalExecution.md) in the **queryPlanning** phase of the [MicroBatchExecution](MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](ContinuousExecution.md#runContinuous-queryPlanning) execution engines.
+`offsetSeqMetadata` is used to create an [IncrementalExecution](IncrementalExecution.md) in the **queryPlanning** phase of the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](ContinuousExecution.md#runContinuous-queryPlanning) execution engines.
 
 `offsetSeqMetadata` is initialized (with `0` for `batchWatermarkMs` and `batchTimestampMs`) when `StreamExecution` is requested to <<runStream, run stream processing>>.
 
@@ -781,9 +781,9 @@ Registry of the streaming sources (in the [logical query plan](#logicalPlan)) th
 
 `newData` is part of the [ProgressReporter](monitoring/ProgressReporter.md#newData) abstraction.
 
-Set when `StreamExecution` is requested to [requests unprocessed data from streaming sources](MicroBatchExecution.md#runBatch-getBatch) (while [running a single streaming batch](#runBatch))
+Set when `StreamExecution` is requested to [requests unprocessed data from streaming sources](micro-batch-execution/MicroBatchExecution.md#runBatch-getBatch) (while [running a single streaming batch](#runBatch))
 
-Used when `StreamExecution` is requested to [transform the logical plan (of the streaming query) to include the Sources and the MicroBatchReaders with new data](MicroBatchExecution.md#runBatch-newBatchesPlan) (while [running a single streaming batch](#runBatch))
+Used when `StreamExecution` is requested to [transform the logical plan (of the streaming query) to include the Sources and the MicroBatchReaders with new data](micro-batch-execution/MicroBatchExecution.md#runBatch-newBatchesPlan) (while [running a single streaming batch](#runBatch))
 
 ## <span id="streamMetrics"> Streaming Metrics
 

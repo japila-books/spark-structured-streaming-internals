@@ -6,7 +6,7 @@
 
 * `OffsetSeqLog` is requested to [deserialize metadata](OffsetSeqLog.md#deserialize) (retrieve metadata from a persistent storage)
 
-* `StreamProgress` is requested to [convert itself to OffsetSeq](StreamProgress.md#toOffsetSeq) (most importantly when `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](MicroBatchExecution.md#constructNextBatch) to [commit available offsets for a batch to the write-ahead log](MicroBatchExecution.md#constructNextBatch-walCommit))
+* `StreamProgress` is requested to [convert itself to OffsetSeq](StreamProgress.md#toOffsetSeq) (most importantly when `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) to [commit available offsets for a batch to the write-ahead log](micro-batch-execution/MicroBatchExecution.md#constructNextBatch-walCommit))
 
 * `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#getStartOffsets, get start offsets>> and <<ContinuousExecution.md#addOffset, addOffset>>
 

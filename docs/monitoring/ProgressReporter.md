@@ -14,8 +14,8 @@ ID of the streaming batch
 
 Used when:
 
-* `MicroBatchExecution` is requested to [plan a query for the batch](../MicroBatchExecution.md#runBatch-queryPlanning) (while [running a batch](../MicroBatchExecution.md#runBatch))
-* `ContinuousExecution` is requested to [plan a query for the epoch](../ContinuousExecution.md#runContinuous-queryPlanning) (while [running continuously](../MicroBatchExecution.md#runContinuous))
+* `MicroBatchExecution` is requested to [plan a query for the batch](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) (while [running a batch](../micro-batch-execution/MicroBatchExecution.md#runBatch))
+* `ContinuousExecution` is requested to [plan a query for the epoch](../ContinuousExecution.md#runContinuous-queryPlanning) (while [running continuously](../micro-batch-execution/MicroBatchExecution.md#runContinuous))
 * `ProgressReporter` is requested for a new [StreamingQueryProgress](StreamingQueryProgress.md) (while [finishing a trigger](#finishTrigger))
 * _other usage_
 
@@ -35,7 +35,7 @@ lastExecution: QueryExecution
 
 [IncrementalExecution](../IncrementalExecution.md) of the streaming execution round (a batch or an epoch)
 
-`IncrementalExecution` is created and executed in the **queryPlanning** phase of [MicroBatchExecution](../MicroBatchExecution.md) and [ContinuousExecution](../ContinuousExecution.md) stream execution engines.
+`IncrementalExecution` is created and executed in the **queryPlanning** phase of [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](../ContinuousExecution.md) stream execution engines.
 
 ### <span id="logicalPlan"> logicalPlan
 
@@ -69,7 +69,7 @@ newData: Map[SparkDataStream, LogicalPlan]
 
 [SparkDataStream](../SparkDataStream.md)s (from all data [sources](#sources)) with the more recent unprocessed input data (as `LogicalPlan`)
 
-Used exclusively for [MicroBatchExecution](../MicroBatchExecution.md) (when requested to [run a single micro-batch](../MicroBatchExecution.md#runBatch))
+Used exclusively for [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) (when requested to [run a single micro-batch](../micro-batch-execution/MicroBatchExecution.md#runBatch))
 
 Used when `ProgressReporter` is requested to [extractSourceToNumInputRows](#extractSourceToNumInputRows)
 
@@ -119,9 +119,9 @@ sinkCommitProgress: Option[StreamWriterCommitProgress]
 
 `StreamWriterCommitProgress` with number of output rows:
 
-* `None` when `MicroBatchExecution` stream execution engine is requested to [populateStartOffsets](../MicroBatchExecution.md#populateStartOffsets)
+* `None` when `MicroBatchExecution` stream execution engine is requested to [populateStartOffsets](../micro-batch-execution/MicroBatchExecution.md#populateStartOffsets)
 
-* Assigned a `StreamWriterCommitProgress` when `MicroBatchExecution` stream execution engine is about to complete [running a micro-batch](../MicroBatchExecution.md#runBatch)
+* Assigned a `StreamWriterCommitProgress` when `MicroBatchExecution` stream execution engine is about to complete [running a micro-batch](../micro-batch-execution/MicroBatchExecution.md#runBatch)
 
 Used when [finishTrigger](#finishTrigger) (and [updating progress](#updateProgress))
 
@@ -295,7 +295,7 @@ Starting Trigger Calculation
 
 `startTrigger` is used when:
 
-* `MicroBatchExecution` stream execution engine is requested to [run an activated streaming query](../MicroBatchExecution.md#runActivatedStream) (at the [beginning of every trigger](../MicroBatchExecution.md#runActivatedStream-startTrigger))
+* `MicroBatchExecution` stream execution engine is requested to [run an activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream) (at the [beginning of every trigger](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream-startTrigger))
 
 * `ContinuousExecution` stream execution engine is requested to [run an activated streaming query](../ContinuousExecution.md#runContinuous) (at the beginning of every trigger)
 
@@ -357,14 +357,14 @@ In the end, `reportTimeTaken` prints out the following DEBUG message to the logs
 `reportTimeTaken` is used when [stream execution engines](../StreamExecution.md) are requested to execute the following phases (that appear as `triggerDetailKey` in the DEBUG message in the logs):
 
 1. `MicroBatchExecution`
-    1. [triggerExecution](../MicroBatchExecution.md#runActivatedStream-triggerExecution)
-    1. [getOffset](../MicroBatchExecution.md#constructNextBatch-getOffset)
-    1. [setOffsetRange](../MicroBatchExecution.md#constructNextBatch-setOffsetRange)
-    1. [getEndOffset](../MicroBatchExecution.md#constructNextBatch-getEndOffset)
-    1. [walCommit](../MicroBatchExecution.md#constructNextBatch-walCommit)
-    1. [getBatch](../MicroBatchExecution.md#runBatch-getBatch)
-    1. [queryPlanning](../MicroBatchExecution.md#runBatch-queryPlanning)
-    1. [addBatch](../MicroBatchExecution.md#runBatch-addBatch)
+    1. [triggerExecution](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream-triggerExecution)
+    1. [getOffset](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-getOffset)
+    1. [setOffsetRange](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-setOffsetRange)
+    1. [getEndOffset](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-getEndOffset)
+    1. [walCommit](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-walCommit)
+    1. [getBatch](../micro-batch-execution/MicroBatchExecution.md#runBatch-getBatch)
+    1. [queryPlanning](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning)
+    1. [addBatch](../micro-batch-execution/MicroBatchExecution.md#runBatch-addBatch)
 
 1. `ContinuousExecution`
     1. [queryPlanning](../ContinuousExecution.md#runContinuous-queryPlanning)
@@ -383,7 +383,7 @@ updateStatusMessage(
 
 * `StreamExecution` is requested to [run stream processing](../StreamExecution.md#runStream)
 
-* `MicroBatchExecution` is requested to [run an activated streaming query](../MicroBatchExecution.md#runActivatedStream) or [construct the next streaming micro-batch](../MicroBatchExecution.md#constructNextBatch)
+* `MicroBatchExecution` is requested to [run an activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream) or [construct the next streaming micro-batch](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
 ## <span id="extractExecutionStats"> Generating Execution Statistics
 
@@ -537,4 +537,4 @@ Configure logging of the [concrete stream execution progress reporters](#impleme
 
 * [ContinuousExecution](../ContinuousExecution.md#logging)
 
-* [MicroBatchExecution](../MicroBatchExecution.md#logging)
+* [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#logging)

@@ -12,7 +12,7 @@ As of Spark 2.2.0, Structured Streaming has been marked stable and ready for pro
 
 Spark Structured Streaming comes with two [stream execution engines](StreamExecution.md) for executing streaming queries:
 
-* [MicroBatchExecution](MicroBatchExecution.md) for [Micro-Batch Stream Processing](micro-batch-stream-processing.md)
+* [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) for [Micro-Batch Stream Processing](micro-batch-execution/index.md)
 
 * [ContinuousExecution](ContinuousExecution.md) for [Continuous Stream Processing](continuous-stream-processing.md)
 

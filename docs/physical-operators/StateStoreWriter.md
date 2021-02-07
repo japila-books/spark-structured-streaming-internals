@@ -52,7 +52,7 @@ getProgress(): StateOperatorProgress
 
 `getProgress`...FIXME
 
-`getProgress` is used when `ProgressReporter` is requested to [extractStateOperatorMetrics](../monitoring/ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](../MicroBatchExecution.md#runActivatedStream)).
+`getProgress` is used when `ProgressReporter` is requested to [extractStateOperatorMetrics](../monitoring/ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream)).
 
 ## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
 
@@ -63,7 +63,7 @@ shouldRunAnotherBatch(
 
 `shouldRunAnotherBatch` is negative (`false`) by default (to indicate that another non-data batch is not required given the [OffsetSeqMetadata](../OffsetSeqMetadata.md) with the event-time watermark and the batch timestamp).
 
-`shouldRunAnotherBatch` is used when `IncrementalExecution` is requested to [check out whether the last batch execution requires another batch](../IncrementalExecution.md#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [run the activated streaming query](../MicroBatchExecution.md#runActivatedStream)).
+`shouldRunAnotherBatch` is used when `IncrementalExecution` is requested to [check out whether the last batch execution requires another batch](../IncrementalExecution.md#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream)).
 
 ## <span id="stateStoreCustomMetrics"> stateStoreCustomMetrics Internal Method
 

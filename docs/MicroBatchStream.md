@@ -1,6 +1,6 @@
 # MicroBatchStream
 
-`MicroBatchStream` is an [extension](#contract) of the [SparkDataStream](SparkDataStream.md) abstraction for [streaming sources](#implementations) for [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
+`MicroBatchStream` is an [extension](#contract) of the [SparkDataStream](SparkDataStream.md) abstraction for [streaming sources](#implementations) for [Micro-Batch Stream Processing](micro-batch-execution/index.md).
 
 ## Contract
 
@@ -18,7 +18,7 @@ Used when `MicroBatchScanExec` physical operator is requested for a [PartitionRe
 Offset latestOffset()
 ```
 
-Used when `MicroBatchExecution` is requested to [constructNextBatch](MicroBatchExecution.md#constructNextBatch)
+Used when `MicroBatchExecution` is requested to [constructNextBatch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
 ### <span id="planInputPartitions"> Input Partitions
 

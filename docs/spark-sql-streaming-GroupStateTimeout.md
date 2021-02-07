@@ -30,6 +30,6 @@ a| [[ProcessingTimeTimeout]] Timeout based on processing time
 
 [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator requires that `batchTimestampMs` is specified when `ProcessingTimeTimeout` is used.
 
-`batchTimestampMs` is defined when [IncrementalExecution](IncrementalExecution.md) is created (with the [state](IncrementalExecution.md#state)). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` is requested to [run a streaming batch](MicroBatchExecution.md#runBatch).
+`batchTimestampMs` is defined when [IncrementalExecution](IncrementalExecution.md) is created (with the [state](IncrementalExecution.md#state)). `IncrementalExecution` is given `OffsetSeqMetadata` when `StreamExecution` is requested to [run a streaming batch](micro-batch-execution/MicroBatchExecution.md#runBatch).
 
 |===

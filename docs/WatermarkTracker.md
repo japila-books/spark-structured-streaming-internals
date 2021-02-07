@@ -2,7 +2,7 @@
 
 `WatermarkTracker` tracks the [event-time watermark](#globalWatermarkMs) of a streaming query (across [EventTimeWatermarkExec operators](#operatorToWatermarkMap) in a physical query plan) based on a given [MultipleWatermarkPolicy](#policy).
 
-`WatermarkTracker` is used in [MicroBatchExecution](MicroBatchExecution.md#watermarkTracker).
+`WatermarkTracker` is used in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#watermarkTracker).
 
 ## Creating Instance
 
@@ -10,7 +10,7 @@
 
 * [MultipleWatermarkPolicy](#policy)
 
-`WatermarkTracker` is created (using [apply](#apply)) when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
+`WatermarkTracker` is created (using [apply](#apply)) when `MicroBatchExecution` is requested to [populate start offsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
 
 ## <span id="policy"><span id="MultipleWatermarkPolicy"><span id="MaxWatermark"><span id="MinWatermark"> MultipleWatermarkPolicy
 
@@ -28,7 +28,7 @@ apply(
 
 `apply` uses the [spark.sql.streaming.multipleWatermarkPolicy](configuration-properties.md#spark.sql.streaming.multipleWatermarkPolicy) configuration property for the global watermark policy (default: `min`) and creates a `WatermarkTracker`.
 
-`apply` is used when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
+`apply` is used when `MicroBatchExecution` is requested to [populate start offsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
 
 ## <span id="globalWatermarkMs"><span id="currentWatermark"> Global Event-Time Watermark
 
@@ -44,7 +44,7 @@ Default: `0`
 
 The event-time watermark can be updated in [setWatermark](#setWatermark) and [updateWatermark](#updateWatermark).
 
-The event-time watermark is used (as `currentWatermark` method) when `MicroBatchExecution` stream execution engine is requested to [populateStartOffsets](MicroBatchExecution.md#populateStartOffsets) and [constructNextBatch](MicroBatchExecution.md#constructNextBatch) and [runBatch](MicroBatchExecution.md#runBatch).
+The event-time watermark is used (as `currentWatermark` method) when `MicroBatchExecution` stream execution engine is requested to [populateStartOffsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) and [constructNextBatch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) and [runBatch](micro-batch-execution/MicroBatchExecution.md#runBatch).
 
 ### <span id="setWatermark"> Updating Watermark (at Startup and Restart)
 
@@ -55,7 +55,7 @@ setWatermark(
 
 `setWatermark` sets the [global event-time watermark](#globalwatermarkms) to the given `newWatermarkMs` value.
 
-`setWatermark` is used when `MicroBatchExecution` is requested to [populate start offsets](MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
+`setWatermark` is used when `MicroBatchExecution` is requested to [populate start offsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
 
 ### <span id="updateWatermark"> Updating Watermark (at Execution)
 
@@ -70,7 +70,7 @@ updateWatermark(
 
 `updateWatermark`...FIXME
 
-`updateWatermark` is used when `MicroBatchExecution` is requested to [run a single streaming batch](MicroBatchExecution.md#runBatch) (when requested to [run an activated streaming query](MicroBatchExecution.md#runActivatedStream)).
+`updateWatermark` is used when `MicroBatchExecution` is requested to [run a single streaming batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (when requested to [run an activated streaming query](micro-batch-execution/MicroBatchExecution.md#runActivatedStream)).
 
 ### <span id="operatorToWatermarkMap"> Watermarks by EventTimeWatermarkExec Operator Registry
 

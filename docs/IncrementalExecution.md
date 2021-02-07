@@ -17,7 +17,7 @@ When requested for the optimized logical plan (of the [logical plan](#logicalPla
 Current batch timestamp = [timestamp]
 ```
 
-Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](MicroBatchExecution.md) and [ContinuousExecution](ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
+Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
 
 ## Creating Instance
 
@@ -34,7 +34,7 @@ Right after [being created](#creating-instance), `IncrementalExecution` is execu
 
 `IncrementalExecution` is created (and becomes the [StreamExecution.lastExecution](StreamExecution.md#lastExecution)) when:
 
-* `MicroBatchExecution` is requested to [run a single streaming micro-batch](MicroBatchExecution.md#runBatch) (in [queryPlanning](MicroBatchExecution.md#runBatch-queryPlanning) phase)
+* `MicroBatchExecution` is requested to [run a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (in [queryPlanning](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) phase)
 
 * `ContinuousExecution` is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) (in [queryPlanning](ContinuousExecution.md#runContinuous-queryPlanning) phase)
 
@@ -44,7 +44,7 @@ Right after [being created](#creating-instance), `IncrementalExecution` is execu
 
 `IncrementalExecution` is given the [checkpoint location](#checkpointLocation) when [created](#creating-instance).
 
-For the two available execution engines ([MicroBatchExecution](MicroBatchExecution.md) and [ContinuousExecution](ContinuousExecution.md)), the checkpoint location is actually **state** directory under the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot).
+For the two available execution engines ([MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](ContinuousExecution.md)), the checkpoint location is actually **state** directory under the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot).
 
 ```text
 val queryName = "rate2memory"
@@ -137,7 +137,7 @@ state: Rule[SparkPlan]
 
 * [getStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the state watermark predicates (for [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
 
-`state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](ContinuousExecution.md) and every trigger for [MicroBatchExecution](MicroBatchExecution.md) in **queryPlanning** phase).
+`state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](ContinuousExecution.md) and every trigger for [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) in **queryPlanning** phase).
 
 !!! tip
     Learn more about [Physical Query Optimizations]({{ book.spark_sql }}/QueryExecution#preparations) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
@@ -155,7 +155,7 @@ nextStatefulOperationStateInfo(): StatefulOperatorStateInfo
  
     All the other properties (the [state checkpoint location](#state-checkpoint-location), the [run ID](#runId), the [current batch ID](#currentBatchId), and the [number of state stores](#numStateStores)) are the same within a single `IncrementalExecution` instance.
  
-    The only two properties that may ever change are the [run ID](#runId) (after a streaming query is restarted from the checkpoint) and  the [current batch ID](#currentBatchId) (every micro-batch in [MicroBatchExecution](MicroBatchExecution.md) execution engine).
+    The only two properties that may ever change are the [run ID](#runId) (after a streaming query is restarted from the checkpoint) and  the [current batch ID](#currentBatchId) (every micro-batch in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) execution engine).
 
 `nextStatefulOperationStateInfo` is used when `IncrementalExecution` is requested to optimize a streaming physical plan using the [state preparation rule](#state) (and creates the stateful physical operators: [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md), [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md), [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md), [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md), and [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md)).
 
@@ -170,7 +170,7 @@ shouldRunAnotherBatch(
 
 Otherwise, `shouldRunAnotherBatch` is negative (`false`).
 
-`shouldRunAnotherBatch` is used when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](MicroBatchExecution.md#constructNextBatch) (and checks out whether the last batch execution requires another non-data batch).
+`shouldRunAnotherBatch` is used when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) (and checks out whether the last batch execution requires another non-data batch).
 
 ## Demo: State Checkpoint Directory
 

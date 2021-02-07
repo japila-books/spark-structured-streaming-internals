@@ -2,7 +2,7 @@
 
 `Source` is an [extension](#contract) of the [SparkDataStream](SparkDataStream.md) abstraction for [streaming sources](#implementations) for "streamed reading" of continually arriving data for a streaming query (identified by [offset](Offset.md)).
 
-`Source` is used in [Micro-Batch Stream Processing](micro-batch-stream-processing.md).
+`Source` is used in [Micro-Batch Stream Processing](micro-batch-execution/index.md).
 
 `Source` is created using [StreamSourceProvider.createSource](StreamSourceProvider.md#createSource) (and [DataSource.createSource](DataSource.md#createSource)).
 
@@ -19,7 +19,7 @@ commit(
 
 Commits data up to the end [offset](Offset.md) (informs the source that Spark has completed processing all data for offsets less than or equal to the end offset and will only request offsets greater than the end offset in the future).
 
-Used when [MicroBatchExecution](MicroBatchExecution.md) stream execution engine is requested to [write offsets to a commit log (walCommit phase)](MicroBatchExecution.md#constructNextBatch-walCommit) while [running an activated streaming query](MicroBatchExecution.md#runActivatedStream).
+Used when [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) stream execution engine is requested to [write offsets to a commit log (walCommit phase)](micro-batch-execution/MicroBatchExecution.md#constructNextBatch-walCommit) while [running an activated streaming query](micro-batch-execution/MicroBatchExecution.md#runActivatedStream).
 
 ### <span id="getBatch"> getBatch
 
@@ -33,11 +33,11 @@ Generating a streaming `DataFrame` with data between the start and end [offsets]
 
 Start offset can be undefined (`None`) to indicate that the batch should begin with the first record
 
-Used when [MicroBatchExecution](MicroBatchExecution.md) stream execution engine is requested to [run an activated streaming query](MicroBatchExecution.md#runActivatedStream), namely:
+Used when [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) stream execution engine is requested to [run an activated streaming query](micro-batch-execution/MicroBatchExecution.md#runActivatedStream), namely:
 
-* [Populate start offsets from checkpoint (resuming from checkpoint)](MicroBatchExecution.md#populateStartOffsets)
+* [Populate start offsets from checkpoint (resuming from checkpoint)](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets)
 
-* [Request unprocessed data from all sources (getBatch phase)](MicroBatchExecution.md#runBatch-getBatch)
+* [Request unprocessed data from all sources (getBatch phase)](micro-batch-execution/MicroBatchExecution.md#runBatch-getBatch)
 
 ### <span id="getOffset"> getOffset
 
@@ -47,7 +47,7 @@ getOffset: Option[Offset]
 
 Latest (maximum) [offset](Offset.md) of the source (or `None` to denote no data)
 
-Used when <<MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine (<<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>>) is requested for <<MicroBatchExecution.md#constructNextBatch-getOffset, latest offsets of all sources (getOffset phase)>> while <<MicroBatchExecution.md#runActivatedStream, running activated streaming query>>.
+Used when <<MicroBatchExecution.md#, MicroBatchExecution>> stream execution engine ([Micro-Batch Stream Processing](micro-batch-execution/index.md)) is requested for <<MicroBatchExecution.md#constructNextBatch-getOffset, latest offsets of all sources (getOffset phase)>> while <<MicroBatchExecution.md#runActivatedStream, running activated streaming query>>.
 
 ### <span id="schema"> schema
 

@@ -26,9 +26,10 @@ State store providers manage versioned state per [stateful operator (and partiti
 
 The lifecycle of a `StateStoreProvider` begins when `StateStore` utility (on a Spark executor) is requested for the [StateStore by provider ID and version](StateStore.md#get-StateStore).
 
-IMPORTANT: It is worth to notice that since `StateStore` and `StateStoreProvider` utilities are Scala objects that makes it possible that there can only be one instance of `StateStore` and `StateStoreProvider` on a single JVM. Scala objects are (sort of) singletons which means that there will be exactly one instance of each per JVM and that is exactly the JVM of a Spark executor. As long as the executor is up and running state versions are cached and no Hadoop DFS is used (except for the initial load).
+!!! IMPORTANT
+    It is worth to notice that since `StateStore` and `StateStoreProvider` utilities are Scala objects that makes it possible that there can only be one instance of `StateStore` and `StateStoreProvider` on a single JVM. Scala objects are (sort of) singletons which means that there will be exactly one instance of each per JVM and that is exactly the JVM of a Spark executor. As long as the executor is up and running state versions are cached and no Hadoop DFS is used (except for the initial load).
 
-When requested for a [StateStore](StateStore.md#get-StateStore), `StateStore` utility is given the version of a state store to look up. The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in [Continuous Stream Processing](continuous-stream-processing.md)) or the [current batch ID](StatefulOperatorStateInfo.md#storeVersion) (in [Micro-Batch Stream Processing](micro-batch-stream-processing.md)).
+When requested for a [StateStore](StateStore.md#get-StateStore), `StateStore` utility is given the version of a state store to look up. The version is either the <<spark-sql-streaming-EpochTracker.md#getCurrentEpoch, current epoch>> (in [Continuous Stream Processing](continuous-stream-processing.md)) or the [current batch ID](StatefulOperatorStateInfo.md#storeVersion) (in [Micro-Batch Stream Processing](micro-batch-execution/index.md)).
 
 `StateStore` utility requests `StateStoreProvider` utility to <<spark-sql-streaming-StateStoreProvider.md#createAndInit, createAndInit>> that creates the `StateStoreProvider` implementation (based on [spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass) internal configuration property) and requests it to <<spark-sql-streaming-StateStoreProvider.md#init, initialize>>.
 
@@ -60,7 +61,7 @@ While [planning a streaming query for execution](IncrementalExecution.md#execute
 
 ==== [[IncrementalExecution-shouldRunAnotherBatch]] Micro-Batch Stream Processing and Extra Non-Data Batch for StateStoreWriter Stateful Operators
 
-In <<micro-batch-stream-processing.md#, Micro-Batch Stream Processing>> (with <<MicroBatchExecution.md#runActivatedStream, MicroBatchExecution>> engine), `IncrementalExecution` uses [shouldRunAnotherBatch](IncrementalExecution.md#shouldRunAnotherBatch) flag that allows [StateStoreWriters](physical-operators/StateStoreWriter.md) stateful physical operators to [indicate whether the last batch execution requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch).
+In [Micro-Batch Stream Processing](micro-batch-execution/index.md) (with [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runActivatedStream) engine), `IncrementalExecution` uses [shouldRunAnotherBatch](IncrementalExecution.md#shouldRunAnotherBatch) flag that allows [StateStoreWriters](physical-operators/StateStoreWriter.md) stateful physical operators to [indicate whether the last batch execution requires another non-data batch](physical-operators/StateStoreWriter.md#shouldRunAnotherBatch).
 
 The following `StateStoreWriters` redefine `shouldRunAnotherBatch` flag.
 
