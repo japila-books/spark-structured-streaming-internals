@@ -300,6 +300,10 @@
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/logical-operators/ContinuousExecutionRelation/</loc>
+     <lastmod>2021-02-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/logical-operators/EventTimeWatermark/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
@@ -325,6 +329,10 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/logical-operators/StreamingExecutionRelation/</loc>
+     <lastmod>2021-02-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/logical-operators/WriteToContinuousDataSource/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -373,6 +381,10 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/StreamingSymmetricHashJoinExec/</loc>
+     <lastmod>2021-02-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/physical-operators/WriteToContinuousDataSourceExec/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -488,71 +500,55 @@
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/continuous-stream-processing/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/continuous-execution/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousExecution/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/continuous-execution/ContinuousExecution/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousReadSupport/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/continuous-execution/ContinuousReadSupport/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/continuous-execution/ContinuousReader/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-RateStreamContinuousReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/EpochCoordinator/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-EpochCoordinator/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/EpochCoordinatorRef/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-EpochCoordinatorRef/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/EpochTracker/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-EpochTracker/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousQueuedDataReader/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousQueuedDataReader/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/DataReaderThread/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/EpochMarkerGenerator/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/PartitionOffset/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-PartitionOffset/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousWriteRDD/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousExecutionRelation/</loc>
-     <lastmod>2021-02-07</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/WriteToContinuousDataSource/</loc>
-     <lastmod>2021-02-07</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-WriteToContinuousDataSourceExec/</loc>
-     <lastmod>2021-02-07</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousWriteRDD/</loc>
-     <lastmod>2021-02-07</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-ContinuousDataSourceRDD/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/ContinuousDataSourceRDD/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -764,7 +760,7 @@
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-RateStreamProvider/</loc>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/RateStreamProvider/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -773,6 +769,10 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/spark-sql-streaming-RateStreamMicroBatchReader/</loc>
+     <lastmod>2021-02-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://jaceklaskowski.github.io/spark-structured-streaming-book/RateStreamContinuousReader/</loc>
      <lastmod>2021-02-07</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
