@@ -1,0 +1,3 @@
+# RateStreamProvider
+
+`RateStreamProvider` is...FIXME

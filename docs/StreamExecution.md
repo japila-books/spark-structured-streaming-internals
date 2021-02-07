@@ -62,7 +62,7 @@ Used when `StreamExecution` is requested to [run the streaming query](#runStream
 
 ## Implementations
 
-* [ContinuousExecution](ContinuousExecution.md)
+* [ContinuousExecution](continuous-execution/ContinuousExecution.md)
 * [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md)
 
 ## Creating Instance
@@ -216,7 +216,7 @@ The number of entries in the `OffsetSeqLog` is controlled using [spark.sql.strea
 
 `offsetLog` is used when:
 
-* `ContinuousExecution` stream execution engine is requested to [commit an epoch](ContinuousExecution.md#commit), [getStartOffsets](ContinuousExecution.md#getStartOffsets), and [addOffset](ContinuousExecution.md#addOffset)
+* `ContinuousExecution` stream execution engine is requested to [commit an epoch](continuous-execution/ContinuousExecution.md#commit), [getStartOffsets](continuous-execution/ContinuousExecution.md#getStartOffsets), and [addOffset](continuous-execution/ContinuousExecution.md#addOffset)
 
 * `MicroBatchExecution` stream execution engine is requested to [populate start offsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) and [construct (or skip) the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
@@ -259,7 +259,7 @@ Indicates that:
 
 ### <span id="RECONFIGURING"> RECONFIGURING
 
-Used when `ContinuousExecution` is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) (and the [ContinuousReader](spark-sql-streaming-ContinuousReader.md) indicated a [need for reconfiguration](spark-sql-streaming-ContinuousReader.md#needsReconfiguration))
+Used when `ContinuousExecution` is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) (and the [ContinuousReader](continuous-execution/ContinuousReader.md) indicated a [need for reconfiguration](continuous-execution/ContinuousReader.md#needsReconfiguration))
 
 ## <span id="createStreamingWrite"> Creating StreamingWrite
 
@@ -288,7 +288,7 @@ createStreamingWrite(
 !!! tip
     Learn more about [SupportsTruncate]({{ book.spark_sql }}/connector/SupportsTruncate/) and [SupportsStreamingUpdate]({{ book.spark_sql }}/connector/SupportsStreamingUpdate/) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
-`createStreamingWrite` is used when [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans.
+`createStreamingWrite` is used when [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans.
 
 ## <span id="availableOffsets"> Available Offsets (StreamProgress)
 
@@ -306,7 +306,7 @@ availableOffsets: StreamProgress
 
 * `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#populateStartOffsets, resume and fetch the start offsets from checkpoint>>, <<MicroBatchExecution.md#isNewDataAvailable, check whether new data is available>>, <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> and <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>>
 
-* `ContinuousExecution` stream execution engine is requested to [commit an epoch](ContinuousExecution.md#commit)
+* `ContinuousExecution` stream execution engine is requested to [commit an epoch](continuous-execution/ContinuousExecution.md#commit)
 
 * `StreamExecution` is requested for the [internal string representation](#toDebugString)
 
@@ -692,7 +692,7 @@ offsetSeqMetadata: OffsetSeqMetadata
 
 `offsetSeqMetadata` is a [OffsetSeqMetadata](OffsetSeqMetadata.md).
 
-`offsetSeqMetadata` is used to create an [IncrementalExecution](IncrementalExecution.md) in the **queryPlanning** phase of the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](ContinuousExecution.md#runContinuous-queryPlanning) execution engines.
+`offsetSeqMetadata` is used to create an [IncrementalExecution](IncrementalExecution.md) in the **queryPlanning** phase of the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) execution engines.
 
 `offsetSeqMetadata` is initialized (with `0` for `batchWatermarkMs` and `batchTimestampMs`) when `StreamExecution` is requested to <<runStream, run stream processing>>.
 

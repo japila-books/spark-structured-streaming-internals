@@ -14,7 +14,7 @@ Spark Structured Streaming comes with two [stream execution engines](StreamExecu
 
 * [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) for [Micro-Batch Stream Processing](micro-batch-execution/index.md)
 
-* [ContinuousExecution](ContinuousExecution.md) for [Continuous Stream Processing](continuous-stream-processing.md)
+* [ContinuousExecution](continuous-execution/ContinuousExecution.md) for [Continuous Stream Processing](continuous-execution/index.md)
 
 The goal of Spark Structured Streaming is to unify streaming, interactive, and batch queries over structured datasets for developing end-to-end stream processing applications dubbed **continuous applications** using Spark SQL's Datasets API with additional support for the following features:
 

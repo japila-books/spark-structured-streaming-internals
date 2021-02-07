@@ -1,6 +1,6 @@
 # ContinuousDataSourceRDD
 
-`ContinuousDataSourceRDD` is a specialized `RDD` (`RDD[InternalRow]`) that is used exclusively for the only input RDD (with the input rows) of `DataSourceV2ScanExec` leaf physical operator with a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>.
+`ContinuousDataSourceRDD` is a specialized `RDD` (`RDD[InternalRow]`) that is used exclusively for the only input RDD (with the input rows) of `DataSourceV2ScanExec` leaf physical operator with a [ContinuousReader](continuous-execution/ContinuousReader.md).
 
 `ContinuousDataSourceRDD` is <<creating-instance, created>> exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (which there is only one actually).
 

@@ -10,37 +10,36 @@ Kafka Data Source is part of the *spark-sql-kafka-0-10* external module that is 
 
 You should define `spark-sql-kafka-0-10` module as part of the build definition in your Spark project, e.g. as a `libraryDependency` in `build.sbt` for sbt:
 
-```
+```text
 libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ spark.version }}"
 ```
 
 For Spark environments like `spark-submit` (and "derivatives" like `spark-shell`), you should use `--packages` command-line option:
 
-```
+```text
 ./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ spark.version }}
 ```
 
 NOTE: Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ spark.version }}` above) with one of the available versions found at https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12[The Central Repository's Search] that matches your version of Apache Spark.
 
-=== [[streaming-source]] Streaming Source
+## Streaming Source
 
 With <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 module>> you can use *kafka* data source format for loading data (reading records) from one or more Kafka topics as a streaming Dataset.
 
-[source, scala]
-----
+```scala
 val records = spark
   .readStream
   .format("kafka")
   .option("subscribePattern", """topic-\d{2}""") // topics with two digits at the end
   .option("kafka.bootstrap.servers", ":9092")
   .load
-----
+```
 
 Kafka data source supports many options for reading.
 
-Internally, the *kafka* data source format for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchStream](../../MicroBatchStream.md) and [ContinuousReadSupport](../../ContinuousReadSupport.md) for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing, respectively.
+Internally, the *kafka* data source format for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchStream](../../MicroBatchStream.md) and [ContinuousReadSupport](../../continuous-execution/ContinuousReadSupport.md) for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
 
-=== [[schema]] Predefined (Fixed) Schema
+## <span id="schema"> Predefined (Fixed) Schema
 
 Kafka Data Source uses a predefined (fixed) schema.
 
@@ -86,7 +85,7 @@ root
  |-- timestampType: integer (nullable = true)
 ----
 
-Internally, the fixed schema is defined as part of the `DataSourceReader` contract through [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) and [ContinuousReader](../../spark-sql-streaming-ContinuousReader.md) extension contracts for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
+Internally, the fixed schema is defined as part of the `DataSourceReader` contract through [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) and [ContinuousReader](../../continuous-execution/ContinuousReader.md) extension contracts for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
 
 [TIP]
 ====
@@ -154,7 +153,7 @@ Kafka Data Source can reuse a Kafka consumer (using [KafkaMicroBatchReader](Kafk
 
 ## Continuous Stream Processing
 
-Kafka Data Source supports [Continuous Stream Processing](../../continuous-stream-processing.md) using [KafkaContinuousReader](KafkaContinuousReader.md).
+Kafka Data Source supports [Continuous Stream Processing](../../continuous-execution/index.md) using [KafkaContinuousReader](KafkaContinuousReader.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger

@@ -1,6 +1,6 @@
 # KafkaContinuousReader
 
-`KafkaContinuousReader` is a [ContinuousReader](../../spark-sql-streaming-ContinuousReader.md) for [Kafka Data Source](index.md) in [Continuous Stream Processing](../../continuous-stream-processing.md).
+`KafkaContinuousReader` is a [ContinuousReader](../../continuous-execution/ContinuousReader.md) for [Kafka Data Source](index.md) in [Continuous Stream Processing](../../continuous-execution/index.md).
 
 `KafkaContinuousReader` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a ContinuousReader](KafkaSourceProvider.md#createContinuousReader).
 
@@ -52,7 +52,7 @@ setStartOffset(
   start: Optional[Offset]): Unit
 ----
 
-NOTE: `setStartOffset` is part of the <<spark-sql-streaming-ContinuousReader.md#setStartOffset, ContinuousReader Contract>> to...FIXME.
+`setStartOffset` is part of the [ContinuousReader](../../continuous-execution/ContinuousReader.md#setStartOffset) abstraction.
 
 `setStartOffset`...FIXME
 
@@ -64,7 +64,7 @@ deserializeOffset(
   json: String): Offset
 ----
 
-NOTE: `deserializeOffset` is part of the <<spark-sql-streaming-ContinuousReader.md#deserializeOffset, ContinuousReader Contract>> to...FIXME.
+`deserializeOffset` is part of the [ContinuousReader](../../continuous-execution/ContinuousReader.md#deserializeOffset) abstraction.
 
 `deserializeOffset`...FIXME
 
@@ -76,6 +76,6 @@ mergeOffsets(
   offsets: Array[PartitionOffset]): Offset
 ----
 
-NOTE: `mergeOffsets` is part of the <<spark-sql-streaming-ContinuousReader.md#mergeOffsets, ContinuousReader Contract>> to...FIXME.
+`mergeOffsets` is part of the [ContinuousReader](../../continuous-execution/ContinuousReader.md#mergeOffsets) abstraction.
 
 `mergeOffsets`...FIXME

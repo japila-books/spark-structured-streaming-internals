@@ -52,7 +52,7 @@ Use [SQLConf.fileSinkLogCompactInterval](SQLConf.md#fileSinkLogCompactInterval) 
 
 **(internal)** Minimum number of batches that must be retained and made recoverable
 
- [Stream execution engines](StreamExecution.md) discard (_purge_) offsets from the `offsets` metadata log when the [current batch ID](StreamExecution.md#currentBatchId) (in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md)) or the [epoch committed](ContinuousExecution.md#commit) (in [ContinuousExecution](ContinuousExecution.md)) is above the threshold.
+ [Stream execution engines](StreamExecution.md) discard (_purge_) offsets from the `offsets` metadata log when the [current batch ID](StreamExecution.md#currentBatchId) (in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md)) or the [epoch committed](continuous-execution/ContinuousExecution.md#commit) (in [ContinuousExecution](continuous-execution/ContinuousExecution.md)) is above the threshold.
 
 Default: `100`
 

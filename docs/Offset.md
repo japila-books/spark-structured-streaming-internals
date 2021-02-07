@@ -29,7 +29,7 @@ Used when:
 
 * `ProgressReporter` is requested to [record trigger offsets](monitoring/ProgressReporter.md#recordTriggerOffsets)
 
-* `ContinuousExecution` stream execution engine is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) and [commit an epoch](ContinuousExecution.md#commit)
+* `ContinuousExecution` stream execution engine is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) and [commit an epoch](continuous-execution/ContinuousExecution.md#commit)
 
 |===
 

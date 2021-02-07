@@ -95,7 +95,7 @@ The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorState
 
     Read up on [Structured Query Execution Pipeline](https://jaceklaskowski.github.io/mastering-spark-sql-book/QueryExecution/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
 
-`IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
+`IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
 
 !!! note
     The [optional event-time watermark](#eventTimeWatermark) can only be defined when the [state](../IncrementalExecution.md#state) preparation rule is executed which is at the `executedPlan` phase of Structured Query Execution Pipeline which is also part of the **queryPlanning** phase.

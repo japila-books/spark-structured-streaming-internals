@@ -18,10 +18,10 @@ a| `CommitPartitionEpoch`
 * [[CommitPartitionEpoch-epoch]] Epoch
 * [[CommitPartitionEpoch-message]] DataSource API V2's `WriterCommitMessage`
 
-| [[CommitPartitionEpoch]] Sent out (in one-way asynchronous mode) exclusively when `ContinuousWriteRDD` is requested to <<spark-sql-streaming-ContinuousWriteRDD.md#compute, compute a partition>> (after all rows were written down to a streaming sink)
+| [[CommitPartitionEpoch]] Sent out (in one-way asynchronous mode) exclusively when `ContinuousWriteRDD` is requested to <<ContinuousWriteRDD.md#compute, compute a partition>> (after all rows were written down to a streaming sink)
 
 | GetCurrentEpoch
-| [[GetCurrentEpoch]] Sent out (in request-response synchronous mode) exclusively when `EpochMarkerGenerator` thread is requested to <<spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.md#run, run>>
+| [[GetCurrentEpoch]] Sent out (in request-response synchronous mode) exclusively when `EpochMarkerGenerator` thread is requested to <<EpochMarkerGenerator.md#run, run>>
 
 | IncrementAndGetEpoch
 | [[IncrementAndGetEpoch]] Sent out (in request-response synchronous mode) exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> (and start a separate epoch update thread)
@@ -30,15 +30,15 @@ a| `ReportPartitionOffset`
 
 * [[ReportPartitionOffset-partitionId]] Partition ID
 * [[ReportPartitionOffset-epoch]] Epoch
-* [[ReportPartitionOffset-offset]] [PartitionOffset](spark-sql-streaming-PartitionOffset.md)
+* [[ReportPartitionOffset-offset]] [PartitionOffset](PartitionOffset.md)
 
-| [[ReportPartitionOffset]] Sent out (in one-way asynchronous mode) exclusively when `ContinuousQueuedDataReader` is requested for the <<spark-sql-streaming-ContinuousQueuedDataReader.md#next, next row>> to be read in the current epoch, and the epoch is done
+| [[ReportPartitionOffset]] Sent out (in one-way asynchronous mode) exclusively when `ContinuousQueuedDataReader` is requested for the <<ContinuousQueuedDataReader.md#next, next row>> to be read in the current epoch, and the epoch is done
 
 a| `SetReaderPartitions`
 
 * [[SetReaderPartitions-numPartitions]] Number of partitions
 
-| [[SetReaderPartitions]] Sent out (in request-response synchronous mode) exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (for a <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>> and is about to create a <<spark-sql-streaming-ContinuousDataSourceRDD.md#, ContinuousDataSourceRDD>>)
+| [[SetReaderPartitions]] Sent out (in request-response synchronous mode) exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (for a [ContinuousReader](continuous-execution/ContinuousReader.md) and is about to create a <<ContinuousDataSourceRDD.md#, ContinuousDataSourceRDD>>)
 
 The <<SetReaderPartitions-numPartitions, number of partitions>> is exactly the number of `InputPartitions` from the `ContinuousReader`.
 
@@ -46,7 +46,7 @@ a| `SetWriterPartitions`
 
 * [[SetWriterPartitions-numPartitions]] Number of partitions
 
-| [[SetWriterPartitions]] Sent out (in request-response synchronous mode) exclusively when `WriteToContinuousDataSourceExec` leaf physical operator is requested to <<spark-sql-streaming-WriteToContinuousDataSourceExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and requests a <<spark-sql-streaming-ContinuousWriteRDD.md#, ContinuousWriteRDD>> to collect that simply never finishes...and that's the _trick_ of continuous mode)
+| [[SetWriterPartitions]] Sent out (in request-response synchronous mode) exclusively when `WriteToContinuousDataSourceExec` leaf physical operator is requested to <<WriteToContinuousDataSourceExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>> (and requests a <<ContinuousWriteRDD.md#, ContinuousWriteRDD>> to collect that simply never finishes...and that's the _trick_ of continuous mode)
 
 a| `StopContinuousExecutionWrites`
 | [[StopContinuousExecutionWrites]] Sent out (in request-response synchronous mode) exclusively when `ContinuousExecution` is requested to <<ContinuousExecution.md#runContinuous, run a streaming query in continuous mode>> (and it finishes successfully or not)
@@ -128,13 +128,11 @@ NOTE: `commitEpoch` is used exclusively when `EpochCoordinator` is requested to 
 
 `EpochCoordinator` takes the following to be created:
 
-* [[reader]] <<spark-sql-streaming-ContinuousReader.md#, ContinuousReader>>
-* [[query]] <<ContinuousExecution.md#, ContinuousExecution>>
+* [[reader]] [ContinuousReader](continuous-execution/ContinuousReader.md)
+* [[query]] [ContinuousExecution](continuous-execution/ContinuousExecution.md)
 * [[startEpoch]] Start epoch
 * [[session]] `SparkSession`
 * [[rpcEnv]] `RpcEnv`
-
-`EpochCoordinator` initializes the <<internal-properties, internal properties>>.
 
 === [[create]] Registering EpochCoordinator RPC Endpoint -- `create` Factory Method
 

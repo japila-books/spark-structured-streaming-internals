@@ -202,6 +202,7 @@ nav:
       - StreamingQueryWrapper: StreamingQueryWrapper.md
     - StreamMetadata: StreamMetadata.md
     - Logical Operators:
+      - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
       - EventTimeWatermark: logical-operators/EventTimeWatermark.md
       - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
       - Deduplicate: logical-operators/Deduplicate.md
@@ -209,6 +210,7 @@ nav:
       - StreamingRelation: logical-operators/StreamingRelation.md
       - StreamingRelationV2: logical-operators/StreamingRelationV2.md
       - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
+      - WriteToContinuousDataSource: logical-operators/WriteToContinuousDataSource.md
     - Physical Operators:
       - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
       - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
@@ -222,6 +224,7 @@ nav:
       - StreamingGlobalLimitExec: physical-operators/StreamingGlobalLimitExec.md
       - StreamingRelationExec: physical-operators/StreamingRelationExec.md
       - StreamingSymmetricHashJoinExec: physical-operators/StreamingSymmetricHashJoinExec.md
+      - WriteToContinuousDataSourceExec: physical-operators/WriteToContinuousDataSourceExec.md
     - Execution Planning Strategies:
       - FlatMapGroupsWithStateStrategy: FlatMapGroupsWithStateStrategy.md
       - StatefulAggregationStrategy: StatefulAggregationStrategy.md
@@ -247,37 +250,31 @@ nav:
         - Offset: Offset.md
         - StreamProgress: StreamProgress.md
     - Micro-Batch Execution:
-      - Micro-Batch Execution: micro-batch-execution/index.md
+      - micro-batch-execution/index.md
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
       - MicroBatchWriter: micro-batch-execution/MicroBatchWriter.md
       - MicroBatchReader: micro-batch-execution/MicroBatchReader.md
-      - Source:
-        - Source: Source.md
-        - StreamSourceProvider: StreamSourceProvider.md
+      - Source: Source.md
+      - StreamSourceProvider: StreamSourceProvider.md
       - Sink: Sink.md
       - StreamSinkProvider: StreamSinkProvider.md
       - WatermarkTracker: WatermarkTracker.md
-    - Continuous Stream Processing:
-      - Continuous Stream Processing: continuous-stream-processing.md
-      - ContinuousExecution: ContinuousExecution.md
-      - ContinuousReadSupport: ContinuousReadSupport.md
-      - ContinuousReader: spark-sql-streaming-ContinuousReader.md
-      - RateStreamContinuousReader: spark-sql-streaming-RateStreamContinuousReader.md
+    - Continuous Execution:
+      - continuous-execution/index.md
+      - ContinuousExecution: continuous-execution/ContinuousExecution.md
+      - ContinuousReadSupport: continuous-execution/ContinuousReadSupport.md
+      - ContinuousReader: continuous-execution/ContinuousReader.md
       - EpochCoordinator:
-        - EpochCoordinator RPC Endpoint: spark-sql-streaming-EpochCoordinator.md
-        - EpochCoordinatorRef: spark-sql-streaming-EpochCoordinatorRef.md
-        - EpochTracker: spark-sql-streaming-EpochTracker.md
+        - EpochCoordinator RPC Endpoint: EpochCoordinator.md
+        - EpochCoordinatorRef: EpochCoordinatorRef.md
+        - EpochTracker: EpochTracker.md
       - ContinuousQueuedDataReader:
-        - ContinuousQueuedDataReader: spark-sql-streaming-ContinuousQueuedDataReader.md
-        - DataReaderThread: spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.md
-        - EpochMarkerGenerator: spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.md
-      - PartitionOffset: spark-sql-streaming-PartitionOffset.md
-      - ContinuousExecutionRelation: ContinuousExecutionRelation.md
-      - WriteToContinuousDataSource: WriteToContinuousDataSource.md
-      - WriteToContinuousDataSourceExec:
-        - WriteToContinuousDataSourceExec Unary Physical Operator: spark-sql-streaming-WriteToContinuousDataSourceExec.md
-        - ContinuousWriteRDD: spark-sql-streaming-ContinuousWriteRDD.md
-      - ContinuousDataSourceRDD: spark-sql-streaming-ContinuousDataSourceRDD.md
+        - ContinuousQueuedDataReader: ContinuousQueuedDataReader.md
+        - DataReaderThread: DataReaderThread.md
+        - EpochMarkerGenerator: EpochMarkerGenerator.md
+      - PartitionOffset: PartitionOffset.md
+      - ContinuousWriteRDD: ContinuousWriteRDD.md
+      - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
     - UnsupportedOperationChecker: UnsupportedOperationChecker.md
     - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
     - SQLConf: SQLConf.md
@@ -338,9 +335,10 @@ nav:
       - TextSocketSource: datasources/socket/TextSocketSource.md
     - Rate:
       - RateSourceProvider: spark-sql-streaming-RateSourceProvider.md
-      - RateStreamProvider: spark-sql-streaming-RateStreamProvider.md
+      - RateStreamProvider: RateStreamProvider.md
       - RateStreamSource: spark-sql-streaming-RateStreamSource.md
       - RateStreamMicroBatchReader: spark-sql-streaming-RateStreamMicroBatchReader.md
+      - RateStreamContinuousReader: RateStreamContinuousReader.md
     - Console Sink:
       - ConsoleSinkProvider: spark-sql-streaming-ConsoleSinkProvider.md
       - ConsoleWriter: spark-sql-streaming-ConsoleWriter.md

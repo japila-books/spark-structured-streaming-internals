@@ -9,7 +9,7 @@ The following standard functions (and their Catalyst expressions) allow accessin
 * `current_date` function (`CurrentDate`)
 
 !!! note
-    `CurrentTimestamp` or `CurrentDate` expressions are not supported in [Continuous Stream Processing](continuous-stream-processing.md).
+    `CurrentTimestamp` or `CurrentDate` expressions are not supported in [Continuous Stream Processing](continuous-execution/index.md).
 
 ## Internals
 
@@ -21,4 +21,4 @@ The current timestamp (and other batch-specific configurations) is given as the 
 
 * `MicroBatchExecution` is requested to [construct a next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) in [Micro-Batch Stream Processing](micro-batch-execution/index.md)
 
-* In [Continuous Stream Processing](continuous-stream-processing.md) the base `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) and initializes `OffsetSeqMetadata` to ``0``s.
+* In [Continuous Stream Processing](continuous-execution/index.md) the base `StreamExecution` is requested to [run stream processing](StreamExecution.md#runStream) and initializes `OffsetSeqMetadata` to ``0``s.

@@ -53,6 +53,6 @@ latestBatchId: Option[Long]
 | [[MemorySink]] [Streaming sink](../../Sink.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md) (based on Data Source API V1)
 
 | [MemorySinkV2](MemorySinkV2.md)
-| [[MemorySinkV2]] Streaming sink for [Continuous Stream Processing](../../continuous-stream-processing.md) (based on Data Source API V2)
+| [[MemorySinkV2]] Streaming sink for [Continuous Stream Processing](../../continuous-execution/index.md) (based on Data Source API V2)
 
 |===

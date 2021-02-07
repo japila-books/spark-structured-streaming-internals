@@ -70,4 +70,4 @@ fill(
 
 * `OffsetSeqLog` is requested to [deserialize metadata](OffsetSeqLog.md#deserialize)
 
-* `ContinuousExecution` stream execution engine is requested to [get start offsets](ContinuousExecution.md#getStartOffsets) and [addOffset](ContinuousExecution.md#addOffset)
+* `ContinuousExecution` stream execution engine is requested to [get start offsets](continuous-execution/ContinuousExecution.md#getStartOffsets) and [addOffset](continuous-execution/ContinuousExecution.md#addOffset)

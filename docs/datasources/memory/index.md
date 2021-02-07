@@ -6,7 +6,7 @@
 
 * [MemorySinkBase](MemorySinkBase.md)
 
-Memory data source supports [Micro-Batch](../../micro-batch-execution/index.md) and [Continuous](../../continuous-stream-processing.md) stream processing modes.
+Memory data source supports [Micro-Batch](../../micro-batch-execution/index.md) and [Continuous](../../continuous-execution/index.md) stream processing modes.
 
 [cols="30,35,35",options="header",width="100%"]
 |===
@@ -18,7 +18,7 @@ Memory data source supports [Micro-Batch](../../micro-batch-execution/index.md) 
 | [MemoryStream](MemoryStream.md)
 | [MemorySink](MemorySink.md)
 
-| [Continuous](../../continuous-stream-processing.md)
+| [Continuous](../../continuous-execution/index.md)
 | [ContinuousMemoryStream](ContinuousMemoryStream.md)
 | [MemorySinkV2](MemorySinkV2.md)
 

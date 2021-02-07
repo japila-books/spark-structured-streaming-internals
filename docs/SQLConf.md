@@ -60,7 +60,7 @@ Used when:
 
 a| [[continuousStreamingExecutorQueueSize]] Used when:
 
-* `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<spark-sql-streaming-ContinuousDataSourceRDD.md#, ContinuousDataSourceRDD>>)
+* `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<ContinuousDataSourceRDD.md#, ContinuousDataSourceRDD>>)
 
 * `ContinuousCoalesceExec` unary physical operator is requested to execute
 
@@ -68,7 +68,7 @@ a| [[continuousStreamingExecutorQueueSize]] Used when:
 
 [spark.sql.streaming.continuous.executorPollIntervalMs](configuration-properties.md#spark.sql.streaming.continuous.executorPollIntervalMs)
 
-a| [[continuousStreamingExecutorPollIntervalMs]] Used exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<spark-sql-streaming-ContinuousDataSourceRDD.md#, ContinuousDataSourceRDD>>)
+a| [[continuousStreamingExecutorPollIntervalMs]] Used exclusively when `DataSourceV2ScanExec` leaf physical operator is requested for the input RDDs (and creates a <<ContinuousDataSourceRDD.md#, ContinuousDataSourceRDD>>)
 
 | `disabledV2StreamingMicroBatchReaders`
 

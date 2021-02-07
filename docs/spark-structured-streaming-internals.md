@@ -72,11 +72,11 @@ Spark Structured Streaming gives you two logical operators to represent streamin
 
 When [DataStreamReader.load](DataStreamReader.md#load) method is executed, `load` first looks up the requested data source (that you specified using [DataStreamReader.format](DataStreamReader.md#format)) and creates an instance of it (_instantiation_). That'd be **data source resolution** step (that I described in...FIXME).
 
-`DataStreamReader.load` is where you can find the intersection of the former [Micro-Batch Stream Processing](micro-batch-execution/index.md) V1 API with the new [Continuous Stream Processing](continuous-stream-processing.md) V2 API.
+`DataStreamReader.load` is where you can find the intersection of the former [Micro-Batch Stream Processing](micro-batch-execution/index.md) V1 API with the new [Continuous Stream Processing](continuous-execution/index.md) V2 API.
 
 ### V2 Code Path
 
-For [MicroBatchStream](MicroBatchStream.md) or [ContinuousReadSupport](ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](logical-operators/StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
+For [MicroBatchStream](MicroBatchStream.md) or [ContinuousReadSupport](continuous-execution/ContinuousReadSupport.md) data sources, `DataStreamReader.load` creates a logical query plan with a [StreamingRelationV2](logical-operators/StreamingRelationV2.md) leaf logical operator. That is the new **V2 code path**.
 
 ```text
 // rate data source is V2

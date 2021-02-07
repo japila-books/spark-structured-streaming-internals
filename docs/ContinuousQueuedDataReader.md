@@ -1,6 +1,6 @@
 == [[ContinuousQueuedDataReader]] ContinuousQueuedDataReader
 
-`ContinuousQueuedDataReader` is <<creating-instance, created>> exclusively when `ContinuousDataSourceRDD` is requested to <<spark-sql-streaming-ContinuousDataSourceRDD.md#compute, compute a partition>>.
+`ContinuousQueuedDataReader` is <<creating-instance, created>> exclusively when `ContinuousDataSourceRDD` is requested to <<ContinuousDataSourceRDD.md#compute, compute a partition>>.
 
 [[ContinuousRecord]]
 `ContinuousQueuedDataReader` uses two types of *continuous records*:
@@ -59,12 +59,12 @@ a| [[currentOffset]] `PartitionOffset`
 Used when...FIXME
 
 | dataReaderThread
-a| [[dataReaderThread]] <<spark-sql-streaming-ContinuousQueuedDataReader-DataReaderThread.md#, DataReaderThread>> daemon thread that is created and started immediately when `ContinuousQueuedDataReader` is <<creating-instance, created>>
+a| [[dataReaderThread]] <<DataReaderThread.md#, DataReaderThread>> daemon thread that is created and started immediately when `ContinuousQueuedDataReader` is <<creating-instance, created>>
 
 Used when...FIXME
 
 | epochCoordEndpoint
-a| [[epochCoordEndpoint]] `RpcEndpointRef` of the <<spark-sql-streaming-EpochCoordinator.md#, EpochCoordinator>> per <<coordinatorId, coordinatorId>>
+a| [[epochCoordEndpoint]] `RpcEndpointRef` of the <<EpochCoordinator.md#, EpochCoordinator>> per <<coordinatorId, coordinatorId>>
 
 Used when...FIXME
 
@@ -74,7 +74,7 @@ a| [[epochMarkerExecutor]] https://docs.oracle.com/javase/8/docs/api/java/util/c
 Used when...FIXME
 
 | epochMarkerGenerator
-a| [[epochMarkerGenerator]] <<spark-sql-streaming-ContinuousQueuedDataReader-EpochMarkerGenerator.md#, EpochMarkerGenerator>>
+a| [[epochMarkerGenerator]] <<EpochMarkerGenerator.md#, EpochMarkerGenerator>>
 
 Used when...FIXME
 

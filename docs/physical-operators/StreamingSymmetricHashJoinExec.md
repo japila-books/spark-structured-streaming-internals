@@ -89,7 +89,7 @@ eventTimeWatermark: Option[Long]
 
 When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be given the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the current streaming micro-batch.
 
-`eventTimeWatermark` is an optional property that is specified only after [IncrementalExecution](../IncrementalExecution.md) was requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../ContinuousExecution.md) and every trigger for [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) in the **queryPlanning** phase).
+`eventTimeWatermark` is an optional property that is specified only after [IncrementalExecution](../IncrementalExecution.md) was requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) in the **queryPlanning** phase).
 
 `eventTimeWatermark` is used when:
 
@@ -104,7 +104,7 @@ stateWatermarkPredicates: JoinStateWatermarkPredicates
 
 When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<spark-sql-streaming-JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the [StreamingSymmetricHashJoinHelper](../StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) utility).
 
-`stateWatermarkPredicates` contains the left and right predicates only when [IncrementalExecution](../IncrementalExecution.md) is requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../ContinuousExecution.md) and every trigger for [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) in the **queryPlanning** phase).
+`stateWatermarkPredicates` contains the left and right predicates only when [IncrementalExecution](../IncrementalExecution.md) is requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) in the **queryPlanning** phase).
 
 `stateWatermarkPredicates` is used when `StreamingSymmetricHashJoinExec` is requested for the following:
 

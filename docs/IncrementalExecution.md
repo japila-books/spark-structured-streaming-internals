@@ -17,7 +17,7 @@ When requested for the optimized logical plan (of the [logical plan](#logicalPla
 Current batch timestamp = [timestamp]
 ```
 
-Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
+Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
 
 ## Creating Instance
 
@@ -36,7 +36,7 @@ Right after [being created](#creating-instance), `IncrementalExecution` is execu
 
 * `MicroBatchExecution` is requested to [run a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (in [queryPlanning](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) phase)
 
-* `ContinuousExecution` is requested to [run a streaming query in continuous mode](ContinuousExecution.md#runContinuous) (in [queryPlanning](ContinuousExecution.md#runContinuous-queryPlanning) phase)
+* `ContinuousExecution` is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) (in [queryPlanning](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) phase)
 
 * [Dataset.explain](operators/explain.md) operator is executed (on a streaming query)
 
@@ -44,7 +44,7 @@ Right after [being created](#creating-instance), `IncrementalExecution` is execu
 
 `IncrementalExecution` is given the [checkpoint location](#checkpointLocation) when [created](#creating-instance).
 
-For the two available execution engines ([MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](ContinuousExecution.md)), the checkpoint location is actually **state** directory under the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot).
+For the two available execution engines ([MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md)), the checkpoint location is actually **state** directory under the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot).
 
 ```text
 val queryName = "rate2memory"
@@ -137,7 +137,7 @@ state: Rule[SparkPlan]
 
 * [getStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the state watermark predicates (for [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
 
-`state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](ContinuousExecution.md) and every trigger for [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) in **queryPlanning** phase).
+`state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) in **queryPlanning** phase).
 
 !!! tip
     Learn more about [Physical Query Optimizations]({{ book.spark_sql }}/QueryExecution#preparations) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.

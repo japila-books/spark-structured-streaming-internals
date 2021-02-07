@@ -15,7 +15,7 @@ ID of the streaming batch
 Used when:
 
 * `MicroBatchExecution` is requested to [plan a query for the batch](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) (while [running a batch](../micro-batch-execution/MicroBatchExecution.md#runBatch))
-* `ContinuousExecution` is requested to [plan a query for the epoch](../ContinuousExecution.md#runContinuous-queryPlanning) (while [running continuously](../micro-batch-execution/MicroBatchExecution.md#runContinuous))
+* `ContinuousExecution` is requested to [plan a query for the epoch](../continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) (while [running continuously](../micro-batch-execution/MicroBatchExecution.md#runContinuous))
 * `ProgressReporter` is requested for a new [StreamingQueryProgress](StreamingQueryProgress.md) (while [finishing a trigger](#finishTrigger))
 * _other usage_
 
@@ -35,7 +35,7 @@ lastExecution: QueryExecution
 
 [IncrementalExecution](../IncrementalExecution.md) of the streaming execution round (a batch or an epoch)
 
-`IncrementalExecution` is created and executed in the **queryPlanning** phase of [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](../ContinuousExecution.md) stream execution engines.
+`IncrementalExecution` is created and executed in the **queryPlanning** phase of [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](../continuous-execution/ContinuousExecution.md) stream execution engines.
 
 ### <span id="logicalPlan"> logicalPlan
 
@@ -297,7 +297,7 @@ Starting Trigger Calculation
 
 * `MicroBatchExecution` stream execution engine is requested to [run an activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream) (at the [beginning of every trigger](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream-startTrigger))
 
-* `ContinuousExecution` stream execution engine is requested to [run an activated streaming query](../ContinuousExecution.md#runContinuous) (at the beginning of every trigger)
+* `ContinuousExecution` stream execution engine is requested to [run an activated streaming query](../continuous-execution/ContinuousExecution.md#runContinuous) (at the beginning of every trigger)
 
 `StreamExecution` starts [running batches](../StreamExecution.md#runStream) (as part of [TriggerExecutor](../StreamExecution.md#triggerExecutor) executing a batch runner).
 
@@ -367,8 +367,8 @@ In the end, `reportTimeTaken` prints out the following DEBUG message to the logs
     1. [addBatch](../micro-batch-execution/MicroBatchExecution.md#runBatch-addBatch)
 
 1. `ContinuousExecution`
-    1. [queryPlanning](../ContinuousExecution.md#runContinuous-queryPlanning)
-    1. [runContinuous](../ContinuousExecution.md#runContinuous-runContinuous)
+    1. [queryPlanning](../continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning)
+    1. [runContinuous](../continuous-execution/ContinuousExecution.md#runContinuous-runContinuous)
 
 ## <span id="updateStatusMessage"> Updating Status Message
 
@@ -535,6 +535,6 @@ Default: `-1L`
 
 Configure logging of the [concrete stream execution progress reporters](#implementations) to see what happens inside:
 
-* [ContinuousExecution](../ContinuousExecution.md#logging)
+* [ContinuousExecution](../continuous-execution/ContinuousExecution.md#logging)
 
 * [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#logging)

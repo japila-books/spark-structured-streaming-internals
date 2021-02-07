@@ -51,7 +51,7 @@ Under the covers, [Dataset.withWatermark](operators/withWatermark.md) high-level
 
 Since the execution (data processing) happens on Spark executors, using the accumulator is the only _Spark-approved way_ for communication between the tasks (on the executors) and the driver. Using accumulator updates the driver with the current event-time watermark.
 
-During the query planning phase (in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](ContinuousExecution.md#runContinuous-queryPlanning)) that also happens on the driver, `IncrementalExecution` is given the current [OffsetSeqMetadata](OffsetSeqMetadata.md) with the current event-time watermark.
+During the query planning phase (in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning)) that also happens on the driver, `IncrementalExecution` is given the current [OffsetSeqMetadata](OffsetSeqMetadata.md) with the current event-time watermark.
 
 ## Further Reading Or Watching
 
