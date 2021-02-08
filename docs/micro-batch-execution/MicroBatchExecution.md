@@ -26,6 +26,16 @@
 
 Once created, `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream).
 
+## <span id="startTrigger"> Initializing Query Progress for New Trigger
+
+```scala
+startTrigger(): Unit
+```
+
+`startTrigger` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#startTrigger) abstraction.
+
+`startTrigger`...FIXME
+
 ## <span id="sources"> Streaming Sources Registry
 
 ```scala
@@ -554,12 +564,13 @@ Query [prettyIdString] was stopped
 isNewDataAvailable: Boolean
 ```
 
-`isNewDataAvailable` checks whether there is a streaming source (in the [available offsets](#availableOffsets)) for which [committed offsets](#committedOffsets) are different from the available offsets or not available (committed) at all.
+`isNewDataAvailable` returns whether or not there are streaming sources (in the [available offsets](#availableOffsets)) for which [committed offsets](#committedOffsets) are different from the available offsets or not available (committed) at all.
 
-`isNewDataAvailable` is positive (`true`) when there is at least one such streaming source.
+`isNewDataAvailable` is `true` when there is at least one such streaming source.
 
-!!! NOTE
-    `isNewDataAvailable` is used when `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream) and [construct the next streaming micro-batch](#constructNextBatch).
+`isNewDataAvailable` is used when:
+
+* `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream) and [construct the next streaming micro-batch](#constructNextBatch)
 
 ## <span id="logicalPlan"> Analyzed Logical Plan
 
