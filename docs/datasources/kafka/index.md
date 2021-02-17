@@ -2,11 +2,11 @@
 
 **Kafka Data Source** is the streaming data source for [Apache Kafka](https://kafka.apache.org/) in Spark Structured Streaming.
 
-Kafka Data Source provides a <<streaming-source, streaming source>> and a <<streaming-sink, streaming sink>> for <<micro-batch-stream-processing, micro-batch>> and <<continuous-stream-processing, continuous>> stream processing.
+Kafka Data Source provides a [streaming source](#streaming-source) and a [streaming sink](#streaming-sink) for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing.
 
-=== [[spark-sql-kafka-0-10]] spark-sql-kafka-0-10 External Module
+## <span id="spark-sql-kafka-0-10"> spark-sql-kafka-0-10 External Module
 
-Kafka Data Source is part of the *spark-sql-kafka-0-10* external module that is distributed with the official distribution of Apache Spark, but it is not included in the CLASSPATH by default.
+Kafka Data Source is part of the **spark-sql-kafka-0-10** external module that is distributed with the official distribution of Apache Spark, but it is not on the CLASSPATH by default.
 
 You should define `spark-sql-kafka-0-10` module as part of the build definition in your Spark project, e.g. as a `libraryDependency` in `build.sbt` for sbt:
 
@@ -17,14 +17,16 @@ libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ spark.
 For Spark environments like `spark-submit` (and "derivatives" like `spark-shell`), you should use `--packages` command-line option:
 
 ```text
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ spark.version }}
+./bin/spark-shell \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ spark.version }}
 ```
 
-NOTE: Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ spark.version }}` above) with one of the available versions found at https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12[The Central Repository's Search] that matches your version of Apache Spark.
+!!! NOTE
+    Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ spark.version }}` above) with one of the available versions found at [The Central Repository's Search](https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12) that matches your version of Apache Spark.
 
 ## Streaming Source
 
-With <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 module>> you can use *kafka* data source format for loading data (reading records) from one or more Kafka topics as a streaming Dataset.
+Kafka data source can load streaming data (reading records) from one or more Kafka topics.
 
 ```scala
 val records = spark
@@ -37,43 +39,23 @@ val records = spark
 
 Kafka data source supports many options for reading.
 
-Internally, the *kafka* data source format for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchStream](../../MicroBatchStream.md) and [ContinuousReadSupport](../../continuous-execution/ContinuousReadSupport.md) for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
+Kafka data source for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchStream](../../MicroBatchStream.md) and [ContinuousReadSupport](../../continuous-execution/ContinuousReadSupport.md) for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
 
 ## <span id="schema"> Predefined (Fixed) Schema
 
 Kafka Data Source uses a predefined (fixed) schema.
 
-.Kafka Data Source's Fixed Schema (in the positional order)
-[cols="1m,2m",options="header",width="100%"]
-|===
-| Name
-| Type
+Name           | Type
+---------------|----------
+ key           | BinaryType
+ value         | BinaryType
+ topic         | StringType
+ partition     | IntegerType
+ offset        | LongType
+ timestamp     | TimestampType
+ timestampType | IntegerType
 
-| key
-| BinaryType
-
-| value
-| BinaryType
-
-| topic
-| StringType
-
-| partition
-| IntegerType
-
-| offset
-| LongType
-
-| timestamp
-| TimestampType
-
-| timestampType
-| IntegerType
-
-|===
-
-[source, scala]
-----
+```text
 scala> records.printSchema
 root
  |-- key: binary (nullable = true)
@@ -83,16 +65,15 @@ root
  |-- offset: long (nullable = true)
  |-- timestamp: timestamp (nullable = true)
  |-- timestampType: integer (nullable = true)
-----
+```
 
-Internally, the fixed schema is defined as part of the `DataSourceReader` contract through [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) and [ContinuousReader](../../continuous-execution/ContinuousReader.md) extension contracts for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
+Internally, the fixed schema is defined as part of the `DataSourceReader` abstraction through [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) and [ContinuousReader](../../continuous-execution/ContinuousReader.md) extension contracts for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
 
-[TIP]
-====
+### Column.cast Operator
+
 Use `Column.cast` operator to cast `BinaryType` to a `StringType` (for `key` and `value` columns).
 
-[source, scala]
-----
+```text
 scala> :type records
 org.apache.spark.sql.DataFrame
 
@@ -100,16 +81,14 @@ val values = records
   .select($"value" cast "string") // deserializing values
 scala> values.printSchema
 root
- |-- value: string (nullable = true)
-----
-====
+|-- value: string (nullable = true)
+```
 
-=== [[streaming-sink]] Streaming Sink
+## Streaming Sink
 
-With <<spark-sql-kafka-0-10, spark-sql-kafka-0-10 module>> you can use *kafka* data source format for writing the result of executing a streaming query (a streaming Dataset) to one or more Kafka topics.
+Kafka data source can write streaming data (the result of executing a streaming query) to one or more Kafka topics.
 
-[source, scala]
-----
+```scala
 val sq = records
   .writeStream
   .format("kafka")
@@ -117,7 +96,7 @@ val sq = records
   .option("topic", "kafka2console-output")
   .option("checkpointLocation", "checkpointLocation-kafka2console")
   .start
-----
+```
 
 Internally, the **kafka** data source format for writing is available through [KafkaSourceProvider](KafkaSourceProvider.md).
 
@@ -179,51 +158,47 @@ sq.stop
 
 ## <span id="options"> Configuration Options
 
-NOTE: Options with *kafka.* prefix (e.g. <<kafka.bootstrap.servers, kafka.bootstrap.servers>>) are considered configuration properties for the Kafka consumers used on the [driver](KafkaSourceProvider.md#kafkaParamsForDriver) and [executors](KafkaSourceProvider.md#kafkaParamsForExecutors).
+Options with **kafka.** prefix (e.g. [kafka.bootstrap.servers](#kafka.bootstrap.servers)) are considered configuration properties for the Kafka consumers used on the [driver](KafkaSourceProvider.md#kafkaParamsForDriver) and [executors](KafkaSourceProvider.md#kafkaParamsForExecutors).
 
-.Kafka Data Source's Options (Case-Insensitive)
-[cols="1m,3",options="header",width="100%"]
-|===
-| Option
-| Description
+### <span id="assign"> assign
 
-| assign
-a| [[assign]] [Topic subscription strategy](ConsumerStrategy.md#AssignStrategy) that accepts a JSON with topic names and partitions, e.g.
+[Topic subscription strategy](ConsumerStrategy.md#AssignStrategy) that accepts a JSON with topic names and partitions, e.g.
 
-```
+```text
 {"topicA":[0,1],"topicB":[0,1]}
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
+Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
-| failOnDataLoss
-a| [[failOnDataLoss]] Flag to control whether...FIXME
+### <span id="failOnDataLoss"> failOnDataLoss
 
 Default: `true`
 
 Used when `KafkaSourceProvider` is requested for [failOnDataLoss](KafkaSourceProvider.md#failOnDataLoss) configuration property
 
-| kafka.bootstrap.servers
-a| [[kafka.bootstrap.servers]] *(required)* `bootstrap.servers` configuration property of the Kafka consumers used on the driver and executors
+### <span id="kafka.bootstrap.servers"> kafka.bootstrap.servers
+
+**(required)** `bootstrap.servers` configuration property of the Kafka consumers used on the driver and executors
 
 Default: `(empty)`
 
-| kafkaConsumer.pollTimeoutMs
-a| [[kafkaConsumer.pollTimeoutMs]][[pollTimeoutMs]] The time (in milliseconds) spent waiting in `Consumer.poll` if data is not available in the buffer.
+### <span id="kafkaConsumer.pollTimeoutMs"><span id="pollTimeoutMs"> kafkaConsumer.pollTimeoutMs
+
+The time (in milliseconds) spent waiting in `Consumer.poll` if data is not available in the buffer.
 
 Default: `spark.network.timeout` or `120s`
 
-Used when...FIXME
+### <span id="maxOffsetsPerTrigger"> maxOffsetsPerTrigger
 
-| maxOffsetsPerTrigger
-a| [[maxOffsetsPerTrigger]] Number of records to fetch per trigger (to limit the number of records to fetch).
+Number of records to fetch per trigger (to limit the number of records to fetch).
 
 Default: `(undefined)`
 
 Unless defined, `KafkaSource` requests [KafkaOffsetReader](KafkaSource.md#kafkaReader) for the [latest offsets](KafkaOffsetReader.md#fetchLatestOffsets).
 
-| minPartitions
-a| [[minPartitions]] Minimum number of partitions per executor (given Kafka partitions)
+### <span id="minPartitions"> minPartitions
+
+Minimum number of partitions per executor (given Kafka partitions)
 
 Default: `(undefined)`
 
@@ -231,8 +206,9 @@ Must be undefined (default) or greater than `0`
 
 When undefined (default) or smaller than the number of `TopicPartitions` with records to consume from, [KafkaMicroBatchReader](KafkaMicroBatchReader.md) uses [KafkaOffsetRangeCalculator](KafkaMicroBatchReader.md#rangeCalculator) to [find the preferred executor](KafkaOffsetRangeCalculator.md#getLocation) for every `TopicPartition` (and the [available executors](KafkaMicroBatchReader.md#getSortedExecutorList)).
 
-| startingOffsets
-a| [[startingOffsets]] Starting offsets
+### <span id="startingOffsets"> startingOffsets
+
+Starting offsets
 
 Default: `latest`
 
@@ -243,58 +219,54 @@ Possible values:
 * `earliest`
 
 * JSON with topics, partitions and their starting offsets, e.g.
-+
-```
-{"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
-```
 
-[TIP]
-====
-Use Scala's tripple quotes for the JSON for topics, partitions and offsets.
+    ```json
+    {"topicA":{"part":offset,"p1":-1},"topicB":{"0":-2}}
+    ```
 
-[source, scala]
-----
-option(
-  "startingOffsets",
-  """{"topic1":{"0":5,"4":-1},"topic2":{"0":-2}}""")
-----
-====
+!!! TIP
+    Use Scala's tripple quotes for the JSON for topics, partitions and offsets.
 
-| subscribe
-a| [[subscribe]] [Topic subscription strategy](ConsumerStrategy.md#SubscribeStrategy) that accepts topic names as a comma-separated string, e.g.
+    ```text
+    option(
+      "startingOffsets",
+      """{"topic1":{"0":5,"4":-1},"topic2":{"0":-2}}""")
+    ```
 
-```
+### <span id="subscribe"> subscribe
+
+[Topic subscription strategy](ConsumerStrategy.md#SubscribeStrategy) that accepts topic names as a comma-separated string, e.g.
+
+```text
 topic1,topic2,topic3
 ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
+Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
-| subscribepattern
-a| [[subscribepattern]] [Topic subscription strategy](ConsumerStrategy.md#SubscribePatternStrategy) that uses Java's http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the topic subscription regex pattern of topics to subscribe to, e.g.
+### <span id="subscribepattern"> subscribepattern
 
-```
+[Topic subscription strategy](ConsumerStrategy.md#SubscribePatternStrategy) that uses Java's [java.util.regex.Pattern]({{ java.api }}/java.base/java/util/regex/Pattern.html) for the topic subscription regex pattern of topics to subscribe to, e.g.
+
+```text
 topic\d
 ```
 
-[TIP]
-====
-Use Scala's tripple quotes for the regular expression for topic subscription regex pattern.
+!!! tip
+    Use Scala's tripple quotes for the regular expression for topic subscription regex pattern.
 
-[source, scala]
-----
-option("subscribepattern", """topic\d""")
-----
-====
+    ```text
+    option("subscribepattern", """topic\d""")
+    ```
 
-NOTE: Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
+Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
-| topic
-a| [[topic]] Optional topic name to use for writing a streaming query
+### <span id="topic"> topic
+
+Optional topic name to use for writing a streaming query
 
 Default: `(empty)`
 
 Unless defined, Kafka data source uses the topic names as defined in the `topic` field in the incoming data.
-|===
 
 ## Logical Query Plan for Reading
 
@@ -309,7 +281,7 @@ StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1a366d0, k
 
 ## Logical Query Plan for Writing
 
-When `DataStreamWriter` is requested to start a streaming query with *kafka* data source format for writing, it requests the `StreamingQueryManager` to [create a streaming query](../../StreamingQueryManager.md#createQuery) that in turn creates (a [StreamingQueryWrapper](../../StreamingQueryWrapper.md) with) a <<ContinuousExecution.md#, ContinuousExecution>> or a <<MicroBatchExecution.md#, MicroBatchExecution>> for <<continuous-stream-processing, continuous>> and <<micro-batch-stream-processing, micro-batch>> stream processing, respectively.
+When `DataStreamWriter` is requested to start a streaming query with *kafka* data source format for writing, it requests the `StreamingQueryManager` to [create a streaming query](../../StreamingQueryManager.md#createQuery) that in turn creates (a [StreamingQueryWrapper](../../StreamingQueryWrapper.md) with) a [ContinuousExecution](../../continuous-execution/ContinuousExecution.md) or a [MicroBatchExecution](../../micro-batch-execution/MicroBatchExecution.md) for [continuous](#continuous-stream-processing) and [micro-batch](#micro-batch-stream-processing) stream processing, respectively.
 
 ```text
 scala> sq.explain(extended = true)
@@ -323,17 +295,16 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 
 Check out [Demo: Streaming Aggregation with Kafka Data Source](../../demo/kafka-data-source.md).
 
-!!! tip
-    Use the following to publish events to Kafka.
+Use the following to publish events to Kafka.
 
-    ```
-    // 1st streaming batch
-    $ cat /tmp/1
-    1,1,1
-    15,2,1
+```text
+// 1st streaming batch
+$ cat /tmp/1
+1,1,1
+15,2,1
 
-    $ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
+$ kafkacat -P -b localhost:9092 -t topic1 -l /tmp/1
 
-    // Alternatively (and slower due to JVM bootup)
-    $ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
-    ```
+// Alternatively (and slower due to JVM bootup)
+$ cat /tmp/1 | ./bin/kafka-console-producer.sh --topic topic1 --broker-list localhost:9092
+```

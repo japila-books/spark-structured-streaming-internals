@@ -52,7 +52,7 @@ Used when:
 ## Implementations
 
 * [ContinuousStream](ContinuousStream.md)
-* [MemoryStreamBase](MemoryStreamBase.md)
+* [MemoryStreamBase](datasources/memory/MemoryStreamBase.md)
 * [MicroBatchStream](MicroBatchStream.md)
 * [Source](Source.md)
 * [SupportsAdmissionControl](SupportsAdmissionControl.md)

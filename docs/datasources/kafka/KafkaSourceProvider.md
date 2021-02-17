@@ -3,7 +3,7 @@
 `KafkaSourceProvider` is a `DataSourceRegister` that registers **kafka** data source alias.
 
 !!! tip "The Internals of Spark SQL"
-    Read up on [DataSourceRegister]({{ book.spark_sql }}/spark-sql-DataSourceRegister) in [The Internals of Spark SQL]({{ book.spark_sql }}) book.
+    Read up on [DataSourceRegister]({{ book.spark_sql }}/DataSourceRegister) in [The Internals of Spark SQL]({{ book.spark_sql }}) book.
 
 `KafkaSourceProvider` supports [micro-batch stream processing](../../micro-batch-execution/index.md) (through [MicroBatchStream](../../MicroBatchStream.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
 
@@ -181,9 +181,9 @@ sourceSchema(
   parameters: Map[String, String]): (String, StructType)
 ```
 
-`sourceSchema` gives the <<shortName, short name>> (i.e. `kafka`) and the [fixed schema](KafkaOffsetReader.md#kafkaSchema).
+`sourceSchema` gives the [short name](#shortName) (i.e. `kafka`) and the [fixed schema](KafkaOffsetReader.md#kafkaSchema).
 
-Internally, `sourceSchema` <<validateStreamOptions, validates Kafka options>> and makes sure that the optional input `schema` is indeed undefined.
+Internally, `sourceSchema` [validates Kafka options](#validateStreamOptions) and makes sure that the optional input `schema` is indeed undefined.
 
 When the input `schema` is defined, `sourceSchema` reports a `IllegalArgumentException`.
 
@@ -229,7 +229,9 @@ getKafkaOffsetRangeLimit(
 
 * When the given `offsetOptionKey` is not found, `getKafkaOffsetRangeLimit` returns the given `defaultOffsets`
 
-`getKafkaOffsetRangeLimit` is used when `KafkaSourceProvider` is requested to <<createSource, createSource>>, <<createMicroBatchReader, createMicroBatchReader>>, <<createContinuousReader, createContinuousReader>>, <<createRelation, createRelation>>, and <<validateBatchOptions, validateBatchOptions>>.
+`getKafkaOffsetRangeLimit` is used when:
+
+* `KafkaSourceProvider` is requested to [createSource](#createSource), [createMicroBatchReader](#createMicroBatchReader), [createContinuousReader](#createContinuousReader), [createRelation](#createRelation), and [validateBatchOptions](#validateBatchOptions)
 
 ## <span id="createRelation"> Creating Fake BaseRelation
 
@@ -301,7 +303,7 @@ executor: Set [key] to [value], earlier value: [value]
 
 `kafkaParamsForExecutors` is used when:
 
-* `KafkaSourceProvider` is requested to <<createSource, createSource>> (for a [KafkaSource](KafkaSource.md)), <<createMicroBatchReader, createMicroBatchReader>> (for a [KafkaMicroBatchReader](KafkaMicroBatchReader.md)), and <<createContinuousReader, createContinuousReader>> (for a [KafkaContinuousReader](KafkaContinuousReader.md))
+* `KafkaSourceProvider` is requested to [createSource](#createSource) (for a [KafkaSource](KafkaSource.md)), [createMicroBatchReader](#createMicroBatchReader) (for a [KafkaMicroBatchReader](KafkaMicroBatchReader.md)), and [createContinuousReader](#createContinuousReader) (for a [KafkaContinuousReader](KafkaContinuousReader.md))
 * `KafkaRelation` is requested to [buildScan](KafkaRelation.md#buildScan) (for a `KafkaSourceRDD`)
 
 ### <span id="kafkaParamsForProducer"> Kafka Producer Parameters
