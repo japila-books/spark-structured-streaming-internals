@@ -1,64 +1,33 @@
-# Offset -- Read Position of Streaming Query
+# Offset &mdash; Read Position of Streaming Query
 
-`Offset` is the <<contract, base>> of <<extensions, stream positions>> that represent progress of a streaming query in <<json, json>> format.
+`Offset` is an [abstraction](#contract) of [stream positions](#implementations).
 
-[[contract]]
-.Offset Contract (Abstract Methods Only)
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
+!!! note
+    There are two `Offset` abstractions and new streaming data sources should use Data Source v2 API.
 
-| json
-a| [[json]]
+## Contract
 
-[source, java]
-----
+### <span id="json"> JSON Representation
+
+```java
 String json()
-----
+```
 
-Converts the offset to JSON format (JSON-encoded offset)
+JSON-encoded representation of the offset
 
 Used when:
 
 * `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) and [run a streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (with [MicroBatchReader](micro-batch-execution/MicroBatchReader.md) sources)
-
 * `OffsetSeq` is requested for the [textual representation](OffsetSeq.md#toString)
-
 * `OffsetSeqLog` is requested to [serialize metadata (write metadata in serialized format)](OffsetSeqLog.md#serialize)
-
 * `ProgressReporter` is requested to [record trigger offsets](monitoring/ProgressReporter.md#recordTriggerOffsets)
-
 * `ContinuousExecution` stream execution engine is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) and [commit an epoch](continuous-execution/ContinuousExecution.md#commit)
 
-|===
+## Implementations
 
-[[extensions]]
-.Offsets
-[cols="30,70",options="header",width="100%"]
-|===
-| Offset
-| Description
-
-| ContinuousMemoryStreamOffset
-| [[ContinuousMemoryStreamOffset]]
-
-| FileStreamSourceOffset
-| [[FileStreamSourceOffset]]
-
-| [KafkaSourceOffset](datasources/kafka/KafkaSourceOffset.md)
-| [[KafkaSourceOffset]]
-
-| LongOffset
-| [[LongOffset]]
-
-| RateStreamOffset
-| [[RateStreamOffset]]
-
-| SerializedOffset
-| [[SerializedOffset]] JSON-encoded offset that is used when loading an offset from an external storage, e.g. from [checkpoint](offsets-and-metadata-checkpointing.md) after restart
-
-| TextSocketOffset
-| [[TextSocketOffset]]
-
-|===
+* ContinuousMemoryStreamOffset
+* FileStreamSourceOffset
+* [KafkaSourceOffset](datasources/kafka/KafkaSourceOffset.md)
+* LongOffset
+* SerializedOffset
+* TextSocketOffset
