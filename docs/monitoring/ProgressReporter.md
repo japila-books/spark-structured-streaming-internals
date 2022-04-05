@@ -25,7 +25,7 @@ Used when:
 id: UUID
 ```
 
-[Universally unique identifier (UUID)]({{ java.api }}/java.base/java/util/UUID.html) of the streaming query (that remains unchanged between restarts)
+[Universally unique identifier (UUID)]({{ java.api }}/java/util/UUID.html) of the streaming query (that remains unchanged between restarts)
 
 ### <span id="lastExecution"> lastExecution
 

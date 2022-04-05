@@ -245,7 +245,7 @@ Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [
 
 ### <span id="subscribepattern"> subscribepattern
 
-[Topic subscription strategy](ConsumerStrategy.md#SubscribePatternStrategy) that uses Java's [java.util.regex.Pattern]({{ java.api }}/java.base/java/util/regex/Pattern.html) for the topic subscription regex pattern of topics to subscribe to, e.g.
+[Topic subscription strategy](ConsumerStrategy.md#SubscribePatternStrategy) that uses Java's [java.util.regex.Pattern]({{ java.api }}/java/util/regex/Pattern.html) for the topic subscription regex pattern of topics to subscribe to, e.g.
 
 ```text
 topic\d

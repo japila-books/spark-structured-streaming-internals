@@ -1,13 +1,13 @@
 site_name: The Internals of Spark Structured Streaming
-site_url: https://jaceklaskowski.github.io/spark-structured-streaming-book/
+site_url: https://books.japila.pl/spark-structured-streaming-internals
 site_author: Jacek Laskowski
 site_description: Demystifying inner-workings of Spark Structured Streaming
 
 repo_name: spark-structured-streaming-internals
-repo_url: https://github.com/jaceklaskowski/spark-structured-streaming-book
+repo_url: https://github.com/japila-books/spark-structured-streaming-internals
 edit_uri: edit/main/docs/
 
-copyright: Copyright &copy; 2021 Jacek Laskowski
+copyright: Copyright &copy; 2022 Jacek Laskowski
 
 theme:
   name: material
@@ -16,6 +16,8 @@ theme:
     logo: material/book-open-page-variant
     repo: fontawesome/brands/github
   features:
+    # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#adding-annotations
+    - content.code.annotate
     - navigation.indexes
     - navigation.instant
     - navigation.tabs
@@ -68,12 +70,31 @@ plugins:
   - search
   - minify:
       minify_html: true
-  - git-revision-date:
-      enabled_if_env: CI
   - awesome-pages
   - macros
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-tags/
+  - tags
 
 extra:
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  book:
+    title: Spark Structured Streaming
+    spark_core: https://books.japila.pl/apache-spark-internals
+    spark_sql: https://books.japila.pl/spark-sql-internals/
+  hadoop:
+    version: 3.3.1
+    docs: https://hadoop.apache.org/docs/r3.3.1
+    api: https://hadoop.apache.org/docs/r3.3.1/api
+  java:
+    docs: https://docs.oracle.com/en/java/javase/11/docs
+    api: https://docs.oracle.com/en/java/javase/11/docs/api/java.base
+  kafka:
+    api: https://kafka.apache.org/28/javadoc
+  scala:
+    api: https://www.scala-lang.org/api/2.12.15
+    docs: https://docs.scala-lang.org/
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/jaceklaskowski
@@ -81,32 +102,11 @@ extra:
       link: https://twitter.com/jaceklaskowski
     - icon: fontawesome/brands/linkedin
       link: https://linkedin.com/in/jaceklaskowski
-  book:
-    title: Spark Structured Streaming
-    spark_core: https://books.japila.pl/apache-spark-internals
-    spark_sql: https://jaceklaskowski.github.io/mastering-spark-sql-book
-  hadoop:
-    version: 3.2.0
-    docs: https://hadoop.apache.org/docs/r3.2.0
-    api: https://hadoop.apache.org/docs/r3.2.0/api
-  java:
-    docs: https://docs.oracle.com/en/java/javase/11/docs
-    api: https://docs.oracle.com/en/java/javase/11/docs/api
-  kafka:
-    version: 2.6.0
-    api: https://kafka.apache.org/26/javadoc
-  scala:
-    version: 2.12.10
-    api: https://www.scala-lang.org/api/2.12.10
-    docs: https://docs.scala-lang.org/
+    - icon: fontawesome/brands/medium
+      link: https://jaceklaskowski.medium.com
   spark:
-    version: 3.1.1
-    github: https://github.com/apache/spark/tree/v3.1.1
-    docs: http://spark.apache.org/docs/3.1.1
-
-google_analytics:
-  - !!python/object/apply:os.getenv ["GOOGLE_ANALYTICS_KEY"]
-  - auto
+    version: 3.2.1
+    github: https://github.com/apache/spark/tree/v3.2.1
 
 nav:
   - Home: index.md
