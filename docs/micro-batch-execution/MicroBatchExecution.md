@@ -26,6 +26,38 @@
 
 Once created, `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream).
 
+## <span id="uniqueSources"> Unique Streaming Sources
+
+```scala
+uniqueSources: Map[SparkDataStream, ReadLimit]
+```
+
+`uniqueSources` is part of the [StreamExecution](../StreamExecution.md#uniqueSources) abstraction.
+
+---
+
+`MicroBatchExecution` initializes the `uniqueSources` registry when requested for the [analyzed logical plan](#logicalPlan) based on the [TriggerExecutor](#triggerExecutor):
+
+* [SingleBatchExecutor](#uniqueSources-SingleBatchExecutor)
+* [MultiBatchExecutor](#uniqueSources-MultiBatchExecutor)
+* [ProcessingTimeExecutor](#uniqueSources-ProcessingTimeExecutor)
+
+### <span id="uniqueSources-SingleBatchExecutor"> SingleBatchExecutor
+
+### <span id="uniqueSources-MultiBatchExecutor"> MultiBatchExecutor
+
+For [MultiBatchExecutor](../TriggerExecutor.md#MultiBatchExecutor), `MicroBatchExecution` takes the distinct [SparkDataStreams](#sources) and converts them to [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md)s:
+
+* [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md)s are left intact
+* [Source](../Source.md)s become `AvailableNowSourceWrapper`s
+* [MicroBatchStream](../MicroBatchStream.md)s become `AvailableNowMicroBatchStreamWrapper`s
+
+Every `SupportsTriggerAvailableNow` is then requested to [prepareForTriggerAvailableNow](../SupportsTriggerAvailableNow.md#prepareForTriggerAvailableNow).
+
+In the end, `MicroBatchExecution` returns pairs of the `SupportsTriggerAvailableNow`s and their [getDefaultReadLimit](../SupportsTriggerAvailableNow.md#getDefaultReadLimit).
+
+### <span id="uniqueSources-ProcessingTimeExecutor"> ProcessingTimeExecutor
+
 ## <span id="startTrigger"> Initializing Query Progress for New Trigger
 
 ```scala
@@ -36,26 +68,23 @@ startTrigger(): Unit
 
 `startTrigger`...FIXME
 
-## <span id="sources"> Streaming Sources Registry
+## <span id="sources"> SparkDataStreams
 
 ```scala
 sources: Seq[SparkDataStream]
 ```
 
-`MicroBatchExecution` uses...FIXME
+`sources` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#sources) abstraction.
 
 Streaming sources and readers (of the [StreamingExecutionRelations](../logical-operators/StreamingExecutionRelation.md) of the [analyzed logical query plan](#analyzedPlan) of the streaming query)
 
 Default: (empty)
 
-`sources` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#sources) abstraction.
-
-* Initialized when `MicroBatchExecution` is requested for the [transformed logical query plan](#logicalPlan)
+Initialized when `MicroBatchExecution` is requested for the [transformed logical query plan](#logicalPlan)
 
 Used when:
 
 * [Populating start offsets](#populateStartOffsets) (for the [available](../StreamExecution.md#availableOffsets) and [committed](../StreamExecution.md#committedOffsets) offsets)
-
 * [Constructing or skipping next streaming micro-batch](#constructNextBatch) (and persisting offsets to write-ahead log)
 
 ## <span id="triggerExecutor"> TriggerExecutor
@@ -64,7 +93,7 @@ Used when:
 triggerExecutor: TriggerExecutor
 ```
 
-`MicroBatchExecution` uses a [TriggerExecutor](../TriggerExecutor.md) that is how micro-batches are executed at regular intervals.
+`MicroBatchExecution` uses a [TriggerExecutor](../TriggerExecutor.md) to execute micro-batches.
 
 `triggerExecutor` is initialized based on the given [Trigger](#trigger) (given when creating the `MicroBatchExecution`):
 

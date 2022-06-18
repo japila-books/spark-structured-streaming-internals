@@ -121,7 +121,6 @@ nav:
     - SupportsAdmissionControl: SupportsAdmissionControl.md
     - MicroBatchStream: MicroBatchStream.md
     - ContinuousStream: ContinuousStream.md
-    - Trigger: Trigger.md
     - Streaming Join:
       - Streaming Join: spark-sql-streaming-join.md
       - StateStoreAwareZipPartitionsRDD: StateStoreAwareZipPartitionsRDD.md
@@ -276,6 +275,9 @@ nav:
     - UnsupportedOperationChecker: UnsupportedOperationChecker.md
     - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
     - SQLConf: SQLConf.md
+  - High-Level APIs:
+    - Trigger: Trigger.md
+    - SupportsTriggerAvailableNow: SupportsTriggerAvailableNow.md
   - Streaming Operators:
     - Streaming Operators: operators/index.md
     - crossJoin: operators/crossJoin.md

@@ -125,11 +125,13 @@ sinkCommitProgress: Option[StreamWriterCommitProgress]
 
 Used when [finishTrigger](#finishTrigger) (and [updating progress](#updateProgress))
 
-### <span id="sources"> sources
+### <span id="sources"> SparkDataStreams
 
 ```scala
 sources: Seq[SparkDataStream]
 ```
+
+[SparkDataStream](../SparkDataStream.md)s of this streaming query
 
 ### <span id="sparkSession"> sparkSession
 

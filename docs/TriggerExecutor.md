@@ -1,47 +1,40 @@
-== [[TriggerExecutor]] TriggerExecutor
+# TriggerExecutor
 
-`TriggerExecutor` is the <<contract, interface>> for *trigger executors* that `StreamExecution` StreamExecution.md#runStream[uses to execute a batch runner].
+`TriggerExecutor` is an [abstraction](#contract) of [trigger executors](#implementations).
 
-[[batchRunner]]
-NOTE: *Batch runner* is an executable code that is executed at regular intervals. It is also called a *trigger handler*.
+## Contract
 
-[[contract]]
-[[execute]]
-[source, scala]
-----
-package org.apache.spark.sql.execution.streaming
+### <span id="execute"> Executing Batches
 
-trait TriggerExecutor {
-  def execute(batchRunner: () => Boolean): Unit
-}
-----
+```scala
+execute(
+  batchRunner: () => Boolean): Unit
+```
 
-NOTE: `StreamExecution` reports a `IllegalStateException` when StreamExecution.md#triggerExecutor[TriggerExecutor] is different from the <<available-implementations, two built-in implementations>>: `OneTimeExecutor`
-or `ProcessingTimeExecutor`.
+Executes batches using a batch runner (_trigger handler_). `batchRunner` is assumed to return `false` to indicate to terminate execution
 
-[[available-implementations]]
-.TriggerExecutor's Available Implementations
-[cols="1,2",options="header",width="100%"]
-|===
-| TriggerExecutor
-| Description
+Used when:
 
-| [[OneTimeExecutor]] `OneTimeExecutor`
-| Executes `batchRunner` exactly once.
+* `MicroBatchExecution` is requested to [run an activated streaming query](micro-batch-execution/MicroBatchExecution.md#runActivatedStream)
 
-| [[ProcessingTimeExecutor]] `ProcessingTimeExecutor`
-a| Executes `batchRunner` at regular intervals (as defined using [ProcessingTime](Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method).
+## Implementations
 
-[source, scala]
-----
-ProcessingTimeExecutor(
-  processingTime: ProcessingTime,
-  clock: Clock = new SystemClock())
-----
+### <span id="MultiBatchExecutor"> MultiBatchExecutor
 
-NOTE: Processing terminates when `batchRunner` returns `false`.
-|===
+Executes the batch runner until it returns `false`
 
-=== [[notifyBatchFallingBehind]] `notifyBatchFallingBehind` Method
+Handles [AvailableNowTrigger](Trigger.md#AvailableNowTrigger) in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md)
 
-CAUTION: FIXME
+Used when:
+
+* `MicroBatchExecution` is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (and [extracting unique streaming sources](micro-batch-execution/MicroBatchExecution.md#uniqueSources))
+
+### <span id="ProcessingTimeExecutor"> ProcessingTimeExecutor
+
+Executes the `batchRunner` at regular intervals (as defined using [ProcessingTime](Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method)
+
+Processing terminates when `batchRunner` returns `false`.
+
+### <span id="SingleBatchExecutor"> SingleBatchExecutor
+
+Executes `batchRunner` exactly once

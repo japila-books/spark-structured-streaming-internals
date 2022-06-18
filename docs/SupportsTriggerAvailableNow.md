@@ -1,0 +1,3 @@
+# SupportsTriggerAvailableNow
+
+`SupportsTriggerAvailableNow` is...FIXME

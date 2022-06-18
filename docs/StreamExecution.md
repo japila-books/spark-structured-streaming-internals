@@ -160,7 +160,11 @@ val sq = spark
 
 ## <span id="uniqueSources"> Unique Streaming Sources
 
-`StreamExecution` tracks unique streaming data sources in `uniqueSources` internal registry.
+```scala
+uniqueSources: Map[SparkDataStream, ReadLimit]
+```
+
+`StreamExecution` tracks the unique streaming data sources of a streaming query in the `uniqueSources` internal registry.
 
 ![StreamExecution's uniqueSources Registry of Streaming Data Sources](images/StreamExecution-uniqueSources.png)
 
