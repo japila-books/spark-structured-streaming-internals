@@ -15,7 +15,17 @@ Used when `FileStreamSink` is requested to ["add" a batch of data](datasources/f
 
 [spark.sql.streaming.metricsEnabled](configuration-properties.md#spark.sql.streaming.metricsEnabled) configuration property
 
-Used when `StreamExecution` is requested to [runStream](StreamExecution.md#runStream)
+Used when:
+
+* `StreamExecution` is requested to [runStream](StreamExecution.md#runStream)
+
+## <span id="streamingNoDataMicroBatchesEnabled"><span id="STREAMING_NO_DATA_MICRO_BATCHES_ENABLED"> streamingNoDataMicroBatchesEnabled
+
+[spark.sql.streaming.noDataMicroBatches.enabled](configuration-properties.md#spark.sql.streaming.noDataMicroBatches.enabled)
+
+Used when:
+
+* `MicroBatchExecution` stream execution engine is requested to [run an activated streaming query](micro-batch-execution/MicroBatchExecution.md#runActivatedStream)
 
 ## <span id="fileSinkLogCleanupDelay"><span id="FILE_SINK_LOG_CLEANUP_DELAY"> fileSinkLogCleanupDelay
 
@@ -151,12 +161,6 @@ a| [[streamingMetricsEnabled]] Used exclusively when `StreamExecution` is reques
 [spark.sql.streaming.multipleWatermarkPolicy](configuration-properties.md#spark.sql.streaming.multipleWatermarkPolicy)
 
 a| [[STREAMING_MULTIPLE_WATERMARK_POLICY]]
-
-| `streamingNoDataMicroBatchesEnabled`
-
-[spark.sql.streaming.noDataMicroBatches.enabled](configuration-properties.md#spark.sql.streaming.noDataMicroBatches.enabled)
-
-a| [[streamingNoDataMicroBatchesEnabled]][[STREAMING_NO_DATA_MICRO_BATCHES_ENABLED]] Used exclusively when `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#runActivatedStream, run an activated streaming query>>
 
 | `streamingNoDataProgressEventInterval`
 

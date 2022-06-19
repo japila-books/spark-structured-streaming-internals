@@ -31,6 +31,10 @@ Processes all available data in one batch then terminates the query
 
 `Trigger` is also a factory object with static methods to create the [policies](#implementations).
 
+```scala
+import org.apache.spark.sql.streaming.Trigger
+```
+
 ### <span id="AvailableNow"> AvailableNow
 
 ```java
@@ -38,10 +42,6 @@ Trigger AvailableNow()
 ```
 
 Creates an [AvailableNowTrigger](#AvailableNowTrigger)
-
-Used when:
-
-* FIXME
 
 ### <span id="Continuous"> Continuous
 
@@ -59,10 +59,6 @@ Trigger Continuous(
 
 Creates a [ContinuousTrigger](#ContinuousTrigger)
 
-Used when:
-
-* FIXME
-
 ### <span id="Once"> Once
 
 ```java
@@ -70,10 +66,6 @@ Trigger Once()
 ```
 
 Creates a [OneTimeTrigger](#OneTimeTrigger)
-
-Used when:
-
-* FIXME
 
 ### <span id="ProcessingTime"> ProcessingTime
 
@@ -90,10 +82,6 @@ Trigger ProcessingTime(
 ```
 
 Creates a [ProcessingTimeTrigger](#ProcessingTimeTrigger)
-
-Used when:
-
-* FIXME
 
 ## <span id="DataStreamWriter"> DataStreamWriter
 

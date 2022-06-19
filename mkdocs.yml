@@ -112,13 +112,10 @@ nav:
   - Home: index.md
   - Internals:
     - Overview: overview.md
-    - StreamingQuery: StreamingQuery.md
     - Configuration Properties: configuration-properties.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
     - DataSource: DataSource.md
-    - SparkDataStream: SparkDataStream.md
-    - SupportsAdmissionControl: SupportsAdmissionControl.md
     - MicroBatchStream: MicroBatchStream.md
     - ContinuousStream: ContinuousStream.md
     - Streaming Join:
@@ -185,13 +182,7 @@ nav:
         - StateManagerImplV1: spark-sql-streaming-StateManagerImplV1.md
       - FlatMapGroupsWithStateExecHelper Helper Class: spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md
       - InputProcessor: InputProcessor.md
-    - StreamingQueryManager: StreamingQueryManager.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
-    - Developer-Facing APIs:
-      - DataStreamReader: DataStreamReader.md
-      - DataStreamWriter: DataStreamWriter.md
-      - OutputMode: OutputMode.md
-      - window Function: spark-sql-streaming-window.md
     - Query Execution:
       - StreamExecution: StreamExecution.md
       - IncrementalExecution: IncrementalExecution.md
@@ -275,9 +266,18 @@ nav:
     - UnsupportedOperationChecker: UnsupportedOperationChecker.md
     - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
     - SQLConf: SQLConf.md
+    - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
   - High-Level APIs:
+    - DataStreamReader: DataStreamReader.md
+    - DataStreamWriter: DataStreamWriter.md
+    - OutputMode: OutputMode.md
+    - SparkDataStream: SparkDataStream.md
+    - StreamingQuery: StreamingQuery.md
+    - SupportsAdmissionControl: SupportsAdmissionControl.md
     - Trigger: Trigger.md
+    - StreamingQueryManager: StreamingQueryManager.md
     - SupportsTriggerAvailableNow: SupportsTriggerAvailableNow.md
+    - window Function: spark-sql-streaming-window.md
   - Streaming Operators:
     - Streaming Operators: operators/index.md
     - crossJoin: operators/crossJoin.md

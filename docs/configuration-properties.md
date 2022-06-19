@@ -176,7 +176,7 @@ Cannot be changed between query restarts from the same checkpoint location.
 
 ## <span id="spark.sql.streaming.noDataMicroBatches.enabled"> spark.sql.streaming.noDataMicroBatches.enabled
 
-Flag to control whether the [streaming micro-batch engine](micro-batch-execution/MicroBatchExecution.md) should execute batches with no data to process for eager state management for stateful streaming queries (`true`) or not (`false`).
+Controls whether the [streaming micro-batch engine](micro-batch-execution/MicroBatchExecution.md) should execute batches with no data to process for eager state management for stateful streaming queries (`true`) or not (`false`).
 
 Default: `true`
 

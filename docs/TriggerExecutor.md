@@ -4,7 +4,7 @@
 
 ## Contract
 
-### <span id="execute"> Executing Batches
+### <span id="execute"><span id="batchRunner"> Executing Batches
 
 ```scala
 execute(
@@ -21,7 +21,7 @@ Used when:
 
 ### <span id="MultiBatchExecutor"> MultiBatchExecutor
 
-Executes the batch runner until it returns `false`
+Executes the [batch runner](#batchRunner) until it returns `false`
 
 Handles [AvailableNowTrigger](Trigger.md#AvailableNowTrigger) in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md)
 
@@ -31,10 +31,10 @@ Used when:
 
 ### <span id="ProcessingTimeExecutor"> ProcessingTimeExecutor
 
-Executes the `batchRunner` at regular intervals (as defined using [ProcessingTime](Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method)
+Executes the [batch runner](#batchRunner) at regular intervals (as defined using [ProcessingTime](Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method)
 
 Processing terminates when `batchRunner` returns `false`.
 
 ### <span id="SingleBatchExecutor"> SingleBatchExecutor
 
-Executes `batchRunner` exactly once
+Executes the [batch runner](#batchRunner) exactly once

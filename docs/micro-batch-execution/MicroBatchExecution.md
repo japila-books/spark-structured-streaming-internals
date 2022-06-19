@@ -76,6 +76,8 @@ sources: Seq[SparkDataStream]
 
 `sources` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#sources) abstraction.
 
+---
+
 Streaming sources and readers (of the [StreamingExecutionRelations](../logical-operators/StreamingExecutionRelation.md) of the [analyzed logical query plan](#analyzedPlan) of the streaming query)
 
 Default: (empty)
@@ -93,23 +95,21 @@ Used when:
 triggerExecutor: TriggerExecutor
 ```
 
-`MicroBatchExecution` uses a [TriggerExecutor](../TriggerExecutor.md) to execute micro-batches.
+`MicroBatchExecution` uses a [TriggerExecutor](../TriggerExecutor.md) to [execute micro-batches](#runActivatedStream) and to determine the [unique streaming sources](#uniqueSources).
 
-`triggerExecutor` is initialized based on the given [Trigger](#trigger) (given when creating the `MicroBatchExecution`):
+`triggerExecutor` is initialized when `MicroBatchExecution` is [created](#creating-instance) (based on the given [Trigger](#trigger)):
 
-* [ProcessingTimeExecutor](../TriggerExecutor.md) for [Trigger.ProcessingTime](../Trigger.md#ProcessingTime)
+* [ProcessingTimeExecutor](../TriggerExecutor.md#ProcessingTimeExecutor) for [ProcessingTimeTrigger](../Trigger.md#ProcessingTimeTrigger)
+* [SingleBatchExecutor](../TriggerExecutor.md#SingleBatchExecutor) for [OneTimeTrigger](../Trigger.md#OneTimeTrigger)
+* [MultiBatchExecutor](../TriggerExecutor.md#MultiBatchExecutor) for [AvailableNowTrigger](../Trigger.md#AvailableNowTrigger)
 
-* [OneTimeExecutor](../TriggerExecutor.md) for [OneTimeTrigger](../Trigger.md#OneTimeTrigger) (aka [Trigger.Once](../Trigger.md#Once) trigger)
+---
 
-`triggerExecutor` throws an `IllegalStateException` when the [Trigger](#trigger) is not one of the [built-in implementations](../Trigger.md#available-implementations).
+`triggerExecutor` throws an `IllegalStateException` when the [Trigger](#trigger) is not one of the [built-in implementations](../Trigger.md#implementations).
 
 ```text
 Unknown type of trigger: [trigger]
 ```
-
-`triggerExecutor` is used when:
-
-* `StreamExecution` is requested to [run an activated streaming query](#runActivatedStream) (at regular intervals)
 
 ## <span id="runActivatedStream"> Running Activated Streaming Query
 
@@ -118,46 +118,59 @@ runActivatedStream(
   sparkSessionForStream: SparkSession): Unit
 ```
 
-`runActivatedStream` simply requests the [TriggerExecutor](#triggerExecutor) to execute micro-batches using the [batch runner](#batchRunner) (until `MicroBatchExecution` is [terminated](../StreamExecution.md#isActive) due to a query stop or a failure).
-
 `runActivatedStream` is part of [StreamExecution](../StreamExecution.md#runActivatedStream) abstraction.
 
-### <span id="batchRunner"><span id="batch-runner"> TriggerExecutor's Batch Runner
+---
 
-The batch runner (of the [TriggerExecutor](#triggerExecutor)) is executed as long as the `MicroBatchExecution` is [active](../StreamExecution.md#isActive).
+`runActivatedStream` requests the [TriggerExecutor](#triggerExecutor) to execute micro-batches using the [batch runner](#batchRunner).
 
-!!! note
-    _trigger_ and _batch_ are considered equivalent and used interchangeably.
+### <span id="batchRunner"><span id="batch-runner"> Batch Runner
 
-<span id="runActivatedStream-startTrigger">
-The batch runner [initializes query progress for the new trigger](../monitoring/ProgressReporter.md#startTrigger) (aka _startTrigger_).
+The batch runner checks [whether the streaming query is active or not](../StreamExecution.md#isActive) (and hence terminated).
 
-<span id="runActivatedStream-triggerExecution"><span id="runActivatedStream-triggerExecution-populateStartOffsets">
-The batch runner starts *triggerExecution* [execution phase](../monitoring/ProgressReporter.md#reportTimeTaken) that is made up of the following steps:
+When terminated, the batch runner is [waiting for next trigger](#runActivatedStream-waiting-for-next-trigger).
 
-1. [Populating start offsets from checkpoint](#populateStartOffsets) before the first "zero" batch (at every start or restart)
+### <span id="runActivatedStream-startTrigger"> startTrigger
 
-1. [Constructing or skipping the next streaming micro-batch](#constructNextBatch)
+When [active](../StreamExecution.md#isActive), the batch runner [initializes query progress for the new trigger](../monitoring/ProgressReporter.md#startTrigger) (aka _startTrigger_).
 
-1. [Running the streaming micro-batch](#runBatch)
+### <span id="runActivatedStream-triggerExecution"> triggerExecution Execution Phase
 
-At the start or restart (_resume_) of a streaming query (when the [current batch ID](#currentBatchId) is uninitialized and `-1`), the batch runner [populates start offsets from checkpoint](#populateStartOffsets) and then prints out the following INFO message to the logs (using the [committedOffsets](../StreamExecution.md#committedOffsets) internal registry):
+The batch runner starts **triggerExecution** [execution phase](../monitoring/ProgressReporter.md#reportTimeTaken).
+
+#### <span id="runActivatedStream-triggerExecution-populateStartOffsets"> populateStartOffsets
+
+This phase happens only at the start or restart (_resume_) of a streaming query (when the [current batch ID](../StreamExecution.md#currentBatchId) is uninitialized and `-1`).
+
+The batch runner requests the [OffsetSeqLog](../StreamExecution.md#offsetLog) for the [latest batch ID](../HDFSMetadataLog.md#getLatest) and [sets the latest seen offset](../AcceptsLatestSeenOffsetHandler.md#setLatestSeenOffsetOnSources) on the [SparkDataStreams](#sources).
+
+The batch runner [populates start offsets from checkpoint](#populateStartOffsets) and prints out the following INFO message to the logs (with the [committedOffsets](../StreamExecution.md#committedOffsets)):
 
 ```text
 Stream started from [committedOffsets]
 ```
 
-The batch runner sets the human-readable description for any Spark job submitted (that streaming sources may submit to get new data) as the [batch description](../StreamExecution.md#getBatchDescriptionString).
+#### <span id="runActivatedStream-triggerExecution-getBatchDescriptionString"> getBatchDescriptionString
 
-<span id="runActivatedStream-triggerExecution-isCurrentBatchConstructed">
-The batch runner [constructs the next streaming micro-batch](#constructNextBatch) (when the [isCurrentBatchConstructed](#isCurrentBatchConstructed) internal flag is off).
+The batch runner sets the human-readable description for any Spark job submitted as part of this micro-batch as the [batch description](../StreamExecution.md#getBatchDescriptionString) (using [SparkContext.setJobDescription]({{ book.spark_core }}/SparkContext#setJobDescription)).
 
-The batch runner [records trigger offsets](#recordTriggerOffsets) (with the [committed](../StreamExecution.md#committedOffsets) and [available](../StreamExecution.md#availableOffsets) offsets).
+A Spark job can be submitted while streaming sources are pulling new data or as part of a sink (e.g., [DataStreamWriter.foreachBatch](../DataStreamWriter.md#foreachBatch) operator).
 
-The batch runner updates the [current StreamingQueryStatus](../monitoring/ProgressReporter.md#currentStatus) with the [isNewDataAvailable](#isNewDataAvailable) for [isDataAvailable](../monitoring/StreamingQueryStatus.md#isDataAvailable) property.
+#### <span id="runActivatedStream-triggerExecution-isCurrentBatchConstructed"> isCurrentBatchConstructed
 
-<span id="runActivatedStream-triggerExecution-runBatch">
-With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag enabled, the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to one of the following (per [isNewDataAvailable](#isNewDataAvailable)) and [runs the streaming micro-batch](#runBatch).
+Unless [already constructed](#isCurrentBatchConstructed), the batch runner [constructs the next streaming micro-batch](#constructNextBatch) with the value of [spark.sql.streaming.noDataMicroBatches.enabled](../configuration-properties.md#spark.sql.streaming.noDataMicroBatches.enabled) configuration property.
+
+#### <span id="runActivatedStream-triggerExecution-recordTriggerOffsets"> Recording Offsets
+
+The batch runner [records the trigger offset range for progress reporting](#recordTriggerOffsets) (with the [committed](../StreamExecution.md#committedOffsets), [available](../StreamExecution.md#availableOffsets) and [latestOffsets](../StreamExecution.md#latestOffsets) offsets).
+
+#### <span id="runActivatedStream-triggerExecution-isNewDataAvailable"> isNewDataAvailable
+
+The batch runner remembers [whether the current batch has data or not](#isNewDataAvailable) and updates the [StreamingQueryStatus](../monitoring/ProgressReporter.md#currentStatus) (as `isDataAvailable` property).
+
+#### <span id="runActivatedStream-triggerExecution-runBatch"> Running Micro-Batch
+
+With the [streaming micro-batch constructed](#isCurrentBatchConstructed), the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to one of the following (based on [whether the current batch has data or not](#isNewDataAvailable)):
 
 ```text
 Processing new data
@@ -167,24 +180,55 @@ Processing new data
 No new data but cleaning up state
 ```
 
-With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag disabled (`false`), the batch runner simply [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+The batch runner [runs the streaming micro-batch](#runBatch).
+
+#### <span id="runActivatedStream-triggerExecution-waiting-for-data-to-arrive"> Waiting for data to arrive
+
+Otherwise, the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Waiting for data to arrive
 ```
 
-[[runActivatedStream-triggerExecution-finishTrigger]]
-The batch runner [finalizes query progress for the trigger](../monitoring/ProgressReporter.md#finishTrigger) (with a flag that indicates whether the current batch had new data).
+### <span id="runActivatedStream-finishTrigger"> finishTrigger
 
-With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag enabled (`true`), the batch runner increments the [currentBatchId](#currentBatchId) and turns the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag off (`false`).
+The batch runner [finalizes query progress for the trigger](../monitoring/ProgressReporter.md#finishTrigger) (with the flags that indicate [whether the current batch had new data](#isNewDataAvailable) and the [isCurrentBatchConstructed](#isCurrentBatchConstructed)).
 
-With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag disabled (`false`), the batch runner simply sleeps (as long as configured using the [spark.sql.streaming.pollingDelay](../StreamExecution.md#pollingDelayMs) configuration property).
+### <span id="runActivatedStream-closing-up"> Closing Up
 
-In the end, the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following status and returns whether the `MicroBatchExecution` is [active](../StreamExecution.md#isActive) or not.
+At the final step of [runActivatedStream](#runActivatedStream) when the [isActive](#isActive) was enabled, the batch runner does some _closing-up_ work.
+
+#### <span id="runActivatedStream-closing-up-isCurrentBatchConstructed"> isCurrentBatchConstructed
+
+When the [isCurrentBatchConstructed](#isCurrentBatchConstructed) is turned on (`true`), the batch runner increments the [currentBatchId](../StreamExecution.md#currentBatchId) and turns the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag off (`false`).
+
+#### <span id="runActivatedStream-closing-up-MultiBatchExecutor"> MultiBatchExecutor
+
+For [MultiBatchExecutor](../TriggerExecutor.md#MultiBatchExecutor), the batch runner prints out the following INFO message to the logs:
+
+```text
+Finished processing all available data for the trigger,
+terminating this Trigger.AvailableNow query
+```
+
+The batch runner sets the [state](../StreamExecution.md#state) to [TERMINATED](../StreamExecution.md#TERMINATED).
+
+#### <span id="runActivatedStream-closing-up-otherwise"> Otherwise
+
+With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag disabled (`false`) and the [non-MultiBatchExecutor triggerExecutor](#triggerExecutor), the batch runner sleeps (as long as configured using the [spark.sql.streaming.pollingDelay](../StreamExecution.md#pollingDelayMs) configuration property).
+
+### <span id="runActivatedStream-waiting-for-next-trigger"> Waiting for next trigger
+
+When [inactive](../StreamExecution.md#isActive), the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Waiting for next trigger
 ```
+
+In the end, the batch runner returns [whether the streaming query is active or not](../StreamExecution.md#isActive).
+
+!!! note
+    The state of the streaming query (i.e., [whether the streaming query is active or not](../StreamExecution.md#isActive)) can change while a micro-batch is executed (e.g., for [MultiBatchExecutor](#runActivatedStream-closing-up-MultiBatchExecutor) when no [next batch was constructed](#constructNextBatch)).
 
 ## <span id="populateStartOffsets"> Populating Start Offsets From Checkpoint (Resuming from Checkpoint)
 

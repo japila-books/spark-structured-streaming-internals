@@ -1,0 +1,3 @@
+# AcceptsLatestSeenOffsetHandler
+
+`AcceptsLatestSeenOffsetHandler` is...FIXME
