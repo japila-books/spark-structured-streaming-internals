@@ -12,7 +12,9 @@ ReadLimit getDefaultReadLimit()
 
 Default: `ReadLimit.allAvailable`
 
-Used when `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (of the streaming query)
+Used when:
+
+* `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (of the streaming query)
 
 ### <span id="latestOffset"> Latest Offset
 

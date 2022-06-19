@@ -273,10 +273,10 @@ nav:
     - OutputMode: OutputMode.md
     - SparkDataStream: SparkDataStream.md
     - StreamingQuery: StreamingQuery.md
-    - SupportsAdmissionControl: SupportsAdmissionControl.md
-    - Trigger: Trigger.md
     - StreamingQueryManager: StreamingQueryManager.md
+    - SupportsAdmissionControl: SupportsAdmissionControl.md
     - SupportsTriggerAvailableNow: SupportsTriggerAvailableNow.md
+    - Trigger: Trigger.md
     - window Function: spark-sql-streaming-window.md
   - Streaming Operators:
     - Streaming Operators: operators/index.md
