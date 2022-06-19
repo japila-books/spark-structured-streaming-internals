@@ -17,6 +17,9 @@ Trigger  | TriggerExecutor | Factory Method
 
 Processes all available data in multiple batches then terminates the query
 
+!!! note "SPARK-36533"
+    `AvailableNowTrigger` is a new feature in [3.3.0]({{ spark.commit }}/e33cdfb317498b04e077c4d6356fc3848cd78da0) tracked under [SPARK-36533](https://issues.apache.org/jira/browse/SPARK-36533).
+
 ### <span id="ContinuousTrigger"> ContinuousTrigger
 
 Continuously processes streaming data, asynchronously checkpointing at the specified interval
