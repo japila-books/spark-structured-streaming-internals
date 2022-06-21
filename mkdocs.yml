@@ -106,8 +106,9 @@ extra:
       link: https://jaceklaskowski.medium.com
   spark:
     version: 3.3.0
-    github: https://github.com/apache/spark/tree/v3.3.0
     commit: https://github.com/apache/spark/commit
+    github: https://github.com/apache/spark/tree/v3.3.0
+    jira: https://issues.apache.org/jira/browse
 
 nav:
   - Home: index.md
@@ -292,7 +293,13 @@ nav:
     - withWatermark: operators/withWatermark.md
     - writeStream: operators/writeStream.md
   - Data Sources:
-    - Data Sources: datasources/index.md
+    - datasources/index.md
+    - Rate Per Micro-Batch:
+      - datasources/rate-micro-batch/index.md
+      - Options: datasources/rate-micro-batch/options.md
+      - RatePerMicroBatchProvider: datasources/rate-micro-batch/RatePerMicroBatchProvider.md
+      - RatePerMicroBatchStream: datasources/rate-micro-batch/RatePerMicroBatchStream.md
+      - RatePerMicroBatchTable: datasources/rate-micro-batch/RatePerMicroBatchTable.md
     - File:
       - File Data Source: datasources/file/index.md
       - FileStreamSource: datasources/file/FileStreamSource.md

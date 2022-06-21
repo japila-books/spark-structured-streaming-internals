@@ -22,4 +22,4 @@ Used when:
 * [FileStreamSource](datasources/file/FileStreamSource.md)
 * [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md)
 * [KafkaSource](datasources/kafka/KafkaSource.md)
-* `RatePerMicroBatchStream`
+* [RatePerMicroBatchStream](datasources/rate-micro-batch/RatePerMicroBatchStream.md)

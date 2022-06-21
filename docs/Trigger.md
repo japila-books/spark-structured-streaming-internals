@@ -15,10 +15,12 @@ Trigger  | TriggerExecutor | Factory Method
 
 ### <span id="AvailableNowTrigger"> AvailableNowTrigger
 
-Processes all available data in multiple batches then terminates the query
+Processes all available data in multiple batches then terminates a query. Best for streaming sources that are [SupportsTriggerAvailableNow](SupportsTriggerAvailableNow.md).
+
+Created by [Trigger.AvailableNow](#AvailableNow)
 
 !!! note "SPARK-36533"
-    `AvailableNowTrigger` is a new feature in [3.3.0]({{ spark.commit }}/e33cdfb317498b04e077c4d6356fc3848cd78da0) tracked under [SPARK-36533](https://issues.apache.org/jira/browse/SPARK-36533).
+    `AvailableNowTrigger` is a new feature in [3.3.0]({{ spark.commit }}/e33cdfb317498b04e077c4d6356fc3848cd78da0) (tracked under [SPARK-36533](https://issues.apache.org/jira/browse/SPARK-36533)).
 
 ### <span id="ContinuousTrigger"> ContinuousTrigger
 
@@ -45,6 +47,8 @@ Trigger AvailableNow()
 ```
 
 Creates an [AvailableNowTrigger](#AvailableNowTrigger)
+
+Supported by [SupportsTriggerAvailableNow](SupportsTriggerAvailableNow.md#implementations) data sources (e.g., [files](datasources/file/index.md#AvailableNow), [kafka](datasources/kafka/index.md#AvailableNow) and [rate-micro-batch](datasources/rate-micro-batch/index.md#AvailableNow))
 
 ### <span id="Continuous"> Continuous
 

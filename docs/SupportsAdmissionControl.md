@@ -28,6 +28,4 @@ Used when `MicroBatchExecution` stream execution engine is requested for the [ne
 
 ## Implementations
 
-* [FileStreamSource](datasources/file/FileStreamSource.md)
-* [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md)
-* [KafkaSource](datasources/kafka/KafkaSource.md)
+* [SupportsTriggerAvailableNow](SupportsTriggerAvailableNow.md)

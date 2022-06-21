@@ -268,6 +268,10 @@ Default: `(empty)`
 
 Unless defined, Kafka data source uses the topic names as defined in the `topic` field in the incoming data.
 
+## <span id="AvailableNow"><span id="AvailableNowTrigger"> Trigger.AvailableNow
+
+Kafka data source supports [Trigger.AvailableNow](../../Trigger.md#AvailableNow) mode (as [KafkaMicroBatchStream](KafkaMicroBatchStream.md) is a [SupportsTriggerAvailableNow](../../SupportsTriggerAvailableNow.md)).
+
 ## Logical Query Plan for Reading
 
 When `DataStreamReader` is requested to load a dataset with *kafka* data source format, it creates a DataFrame with a [StreamingRelationV2](../../logical-operators/StreamingRelationV2.md) leaf logical operator.
