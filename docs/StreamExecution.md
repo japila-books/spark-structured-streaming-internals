@@ -69,11 +69,11 @@ Used when `StreamExecution` is requested to [run the streaming query](#runStream
 
 `StreamExecution` takes the following to be created:
 
-* <span id="sparkSession"> `SparkSession`
+* <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
 * <span id="name"> [Name](monitoring/ProgressReporter.md#name) of the streaming query (can be `null`)
 * <span id="checkpointRoot"> Path of the checkpoint directory (_metadata directory_)
 * <span id="analyzedPlan"> Streaming query (not used due to [logicalPlan](#logicalPlan))
-* <span id="sink"> `Table` ([Spark SQL]({{ book.spark_sql }}/connector/catalog/Table/))
+* [Sink](#sink)
 * <span id="trigger"> [Trigger](Trigger.md)
 * <span id="triggerClock"> `Clock`
 * <span id="outputMode"> [OutputMode](OutputMode.md)
@@ -81,6 +81,18 @@ Used when `StreamExecution` is requested to [run the streaming query](#runStream
 
 ??? note "Abstract Class"
     `StreamExecution` is an abstract class and cannot be created directly. It is created indirectly for the [concrete StreamExecutions](#implementations).
+
+### <span id="sink"> Sink
+
+```scala
+sink: Table
+```
+
+`StreamExecution` is given a `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table)) when [created](#creating-instance).
+
+The `Table` represents the sink this streaming query writes to.
+
+`sink` is part of the [ProgressReporter](monitoring/ProgressReporter.md#sink) abstraction.
 
 ## Demo
 

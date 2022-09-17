@@ -1,6 +1,6 @@
 # ProgressReporter
 
-`ProgressReporter` is an [abstraction](#contract) of [execution progress reporters](#implementations) that report statistics of execution of a streaming query.
+`ProgressReporter` is an [abstraction](#contract) of [execution progress reporters](#implementations) that report statistics of execution of a [streaming query](#logicalPlan).
 
 ## Contract
 
@@ -103,13 +103,17 @@ runId: UUID
 
 [Universally unique identifier (UUID)](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html) of a single run of the streaming query (that changes every restart)
 
-### <span id="sink"> sink
+### <span id="sink"> Sink
 
 ```scala
 sink: Table
 ```
 
-The one and only `Table` of the streaming query
+`Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table)) this streaming query writes to
+
+Used when:
+
+* `ProgressReporter` is requested to [finish a streaming batch](#finishTrigger)
 
 ### <span id="sinkCommitProgress"> sinkCommitProgress
 
@@ -306,7 +310,8 @@ Starting Trigger Calculation
 ## <span id="finishTrigger"> Finishing Up Streaming Batch (Trigger)
 
 ```scala
-finishTrigger(hasNewData: Boolean): Unit
+finishTrigger(
+  hasNewData: Boolean): Unit
 ```
 
 `finishTrigger` sets [currentTriggerEndTimestamp](#currentTriggerEndTimestamp) to the current time (using [triggerClock](#triggerClock)).

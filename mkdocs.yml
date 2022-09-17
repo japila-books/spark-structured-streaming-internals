@@ -201,6 +201,7 @@ nav:
       - StreamingRelationV2: logical-operators/StreamingRelationV2.md
       - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
       - WriteToContinuousDataSource: logical-operators/WriteToContinuousDataSource.md
+      - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
     - Physical Operators:
       - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
       - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
