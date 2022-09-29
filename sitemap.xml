@@ -1016,6 +1016,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToStream/</loc>
+         <lastmod>2022-09-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/</loc>
          <lastmod>2022-09-29</lastmod>
          <changefreq>daily</changefreq>
