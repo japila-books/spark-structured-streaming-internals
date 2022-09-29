@@ -486,21 +486,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-RateSourceProvider/</loc>
-         <lastmod>2022-09-29</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-RateStreamMicroBatchReader/</loc>
-         <lastmod>2022-09-29</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-RateStreamSource/</loc>
-         <lastmod>2022-09-29</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateManager/</loc>
          <lastmod>2022-09-29</lastmod>
          <changefreq>daily</changefreq>
@@ -1037,11 +1022,6 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/MicroBatchExecution/</loc>
-         <lastmod>2022-09-29</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/MicroBatchReader/</loc>
          <lastmod>2022-09-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
