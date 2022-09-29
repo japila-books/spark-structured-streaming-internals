@@ -46,7 +46,7 @@ The event-time watermark can be updated in [setWatermark](#setWatermark) and [up
 
 The event-time watermark is used (as `currentWatermark` method) when `MicroBatchExecution` stream execution engine is requested to [populateStartOffsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) and [constructNextBatch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) and [runBatch](micro-batch-execution/MicroBatchExecution.md#runBatch).
 
-### <span id="setWatermark"> Updating Watermark (at Startup and Restart)
+### <span id="setWatermark"> Setting Watermark
 
 ```scala
 setWatermark(
@@ -55,7 +55,11 @@ setWatermark(
 
 `setWatermark` sets the [global event-time watermark](#globalwatermarkms) to the given `newWatermarkMs` value.
 
-`setWatermark` is used when `MicroBatchExecution` is requested to [populate start offsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) at start or restart (from a checkpoint).
+---
+
+`setWatermark` is used when:
+
+* `MicroBatchExecution` is requested to [populate start offsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) at startup or restart (from a checkpoint)
 
 ### <span id="updateWatermark"> Updating Watermark (at Execution)
 
@@ -70,7 +74,11 @@ updateWatermark(
 
 `updateWatermark`...FIXME
 
-`updateWatermark` is used when `MicroBatchExecution` is requested to [run a single streaming batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (when requested to [run an activated streaming query](micro-batch-execution/MicroBatchExecution.md#runActivatedStream)).
+---
+
+`updateWatermark` is used when:
+
+* `MicroBatchExecution` is requested to [run a single streaming batch](micro-batch-execution/MicroBatchExecution.md#runBatch)
 
 ### <span id="operatorToWatermarkMap"> Watermarks by EventTimeWatermarkExec Operator Registry
 

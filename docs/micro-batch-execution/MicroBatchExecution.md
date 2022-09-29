@@ -663,7 +663,15 @@ logicalPlan must be initialized in QueryExecutionThread but the current thread w
 
 ## <span id="watermarkTracker"> WatermarkTracker
 
-[WatermarkTracker](../WatermarkTracker.md) that is created when `MicroBatchExecution` is requested to [populate start offsets](#populateStartOffsets) (when requested to [run an activated streaming query](#runActivatedStream))
+`MicroBatchExecution` creates a [WatermarkTracker](../WatermarkTracker.md) while [populating start offsets](#populateStartOffsets) (when requested to [run an activated streaming query](#runActivatedStream)).
+
+The `WatermarkTracker` is used then for the following:
+
+* [Setting watermark](../WatermarkTracker.md#setWatermark) while [populating start offsets](#populateStartOffsets)
+* [Reading the current watermark](../WatermarkTracker.md#currentWatermark) while the following:
+    * [Constructing or skipping next streaming micro-batch](#constructNextBatch) (to update the [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata))
+    * [Running a single streaming micro-batch](#runBatch) (to [add a CommitMetadata](../HDFSMetadataLog.md#add) to the [Offset Commit Log](../StreamExecution.md#commitLog))
+* [Updating watermark](../WatermarkTracker.md#updateWatermark) while [running a single streaming micro-batch](#runBatch)
 
 ## <span id="isCurrentBatchConstructed"> isCurrentBatchConstructed Flag
 
