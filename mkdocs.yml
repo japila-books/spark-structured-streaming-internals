@@ -43,8 +43,8 @@ theme:
 
 markdown_extensions:
   - admonition
-  - codehilite
   - footnotes
+  - md_in_html
   - toc:
       permalink: true
   - pymdownx.arithmatex
@@ -63,7 +63,8 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tasklist:
       custom_checkbox: true
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.tilde
 
 plugins:
@@ -72,8 +73,6 @@ plugins:
       minify_html: true
   - awesome-pages
   - macros
-  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-tags/
-  - tags
 
 extra:
   analytics:
