@@ -94,18 +94,36 @@ The `Table` represents the sink this streaming query writes to.
 
 `sink` is part of the [ProgressReporter](monitoring/ProgressReporter.md#sink) abstraction.
 
-## Demo
+## <span id="start"> Starting Streaming Query
+
+```scala
+start(): Unit
+```
+
+`start` starts a [stream execution thread](#queryExecutionThread) to [run stream processing](#runStream).
+
+![StreamExecution's Starting Streaming Query (on Execution Thread)](images/StreamExecution-start.png)
+
+---
+
+`start` prints out the following INFO message to the logs (with the [prettyId](#prettyIdString) and the [checkpointRoot](#resolvedCheckpointRoot)):
 
 ```text
-import org.apache.spark.sql.streaming.StreamingQuery
-assert(sq.isInstanceOf[StreamingQuery])
-
-import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
-val se = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
-
-scala> :type se
-org.apache.spark.sql.execution.streaming.StreamExecution
+Starting [prettyId]. Use [checkpointRoot] to store the query checkpoint.
 ```
+
+`start` then starts the [stream execution thread](#queryExecutionThread) as a daemon thread (in its own execution thread on JVM).
+
+!!! note
+    `start` uses Java's [Thread.start]({{ java.api }}/java/lang/Thread.html#start()) to run the streaming query on a separate execution thread.
+
+In the end, `start` pauses the main thread (using the [latch](#startLatch)) until `StreamExecution` is requested to [run the streaming query](#runStream) (that sends a [QueryStartedEvent](monitoring/StreamingQueryListener.md#QueryStartedEvent) to all streaming listeners followed by decrementing the count of the [startLatch](#startLatch)).
+
+---
+
+`start` is used when:
+
+* `StreamingQueryManager` is requested to [start a streaming query](StreamingQueryManager.md#startQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start))
 
 ## Configuration Properties
 
@@ -587,32 +605,6 @@ When no [data was available](#dataAvailable) in the sources to process, `batchRu
 
 `batchRunner` [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to **Waiting for next trigger** and returns whether the query is currently active or not (so [TriggerExecutor](#triggerExecutor) can decide whether to finish executing the batches or not)
 
-## <span id="start"> Starting Streaming Query (on Stream Execution Thread)
-
-```scala
-start(): Unit
-```
-
-`start` starts a [stream execution thread](#queryExecutionThread) that simply [runs stream processing](#runStream) (and hence the streaming query).
-
-![StreamExecution's Starting Streaming Query (on Execution Thread)](images/StreamExecution-start.png)
-
-`start` prints out the following INFO message to the logs:
-
-```text
-Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query checkpoint.
-```
-
-`start` then starts the <<queryExecutionThread, stream execution thread>> (as a daemon thread).
-
-NOTE: `start` uses Java's ++https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#start--++[java.lang.Thread.start] to run the streaming query on a separate execution thread.
-
-NOTE: When started, a streaming query runs in its own execution thread on JVM.
-
-In the end, `start` pauses the main thread (using the <<startLatch, startLatch>> until `StreamExecution` is requested to <<runStream, run the streaming query>> that in turn sends a [QueryStartedEvent](monitoring/StreamingQueryListener.md#QueryStartedEvent) to all streaming listeners followed by decrementing the count of the <<startLatch, startLatch>>).
-
-`start` is used when `StreamingQueryManager` is requested to [start a streaming query](StreamingQueryManager.md#startQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start)).
-
 ## <span id="checkpointFile"> Path to Checkpoint Directory
 
 ```scala
@@ -850,6 +842,19 @@ Awaited when requested to [awaitTermination](#awaitTermination) (that pauses the
 ## <span id="IS_CONTINUOUS_PROCESSING"> __is_continuous_processing Local Property
 
 `StreamExecution` uses **__is_continuous_processing** local property (default: `false`) to differentiate between <<ContinuousExecution.md#, ContinuousExecution>> (`true`) and <<MicroBatchExecution.md#, MicroBatchExecution>> (`false`) which is used when `StateStoreRDD` is requested to [compute a partition](StateStoreRDD.md#compute) (and [finds a StateStore](StateStore.md#get) for a given version).
+
+## Demo
+
+```text
+import org.apache.spark.sql.streaming.StreamingQuery
+assert(sq.isInstanceOf[StreamingQuery])
+
+import org.apache.spark.sql.execution.streaming.StreamingQueryWrapper
+val se = sq.asInstanceOf[StreamingQueryWrapper].streamingQuery
+
+scala> :type se
+org.apache.spark.sql.execution.streaming.StreamExecution
+```
 
 ## Logging
 

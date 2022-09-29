@@ -2,61 +2,25 @@
 
 `MicroBatchExecution` is a [stream execution engine](../StreamExecution.md) for [Micro-Batch Stream Processing](index.md).
 
+<figure markdown>
+  ![MicroBatchExecution](../images/MicroBatchExecution.png)
+</figure>
+
+Once [created](#creating-instance), `MicroBatchExecution` is requested to [start](../StreamExecution.md#start).
+
 ## Creating Instance
 
 `MicroBatchExecution` takes the following to be created:
 
 * <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
-* <span id="name"> Name of the streaming query
-* <span id="checkpointRoot"> Path of the Checkpoint Directory
-* <span id="analyzedPlan"> Analyzed logical query plan of the streaming query ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan))
-* <span id="sink"> `Table` Sink ([Spark SQL]({{ book.spark_sql }}/connector/Table))
 * <span id="trigger"> [Trigger](../Trigger.md)
 * <span id="triggerClock"> `Clock`
-* <span id="outputMode"> [OutputMode](../OutputMode.md)
 * <span id="extraOptions"> Extra Options (`Map[String, String]`)
-* <span id="deleteCheckpointOnStop"> `deleteCheckpointOnStop` flag to control whether to delete the checkpoint directory on stop
+* <span id="plan"> [WriteToStream](../logical-operators/WriteToStream.md) unary logical plan
 
 `MicroBatchExecution` is created when:
 
-* `StreamingQueryManager` is requested to [create a streaming query](../StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start an execution of the streaming query](../DataStreamWriter.md#start)) with the following:
-
-* All [sink](#sink)s
-* All [trigger](#trigger)s but [ContinuousTrigger](../Trigger.md#ContinuousTrigger)
-
-Once created, `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream).
-
-## <span id="uniqueSources"> Unique Streaming Sources
-
-```scala
-uniqueSources: Map[SparkDataStream, ReadLimit]
-```
-
-`uniqueSources` is part of the [StreamExecution](../StreamExecution.md#uniqueSources) abstraction.
-
----
-
-`MicroBatchExecution` initializes the `uniqueSources` registry when requested for the [analyzed logical plan](#logicalPlan) based on the [TriggerExecutor](#triggerExecutor):
-
-* [SingleBatchExecutor](#uniqueSources-SingleBatchExecutor)
-* [MultiBatchExecutor](#uniqueSources-MultiBatchExecutor)
-* [ProcessingTimeExecutor](#uniqueSources-ProcessingTimeExecutor)
-
-### <span id="uniqueSources-SingleBatchExecutor"> SingleBatchExecutor
-
-### <span id="uniqueSources-MultiBatchExecutor"> MultiBatchExecutor
-
-For [MultiBatchExecutor](../TriggerExecutor.md#MultiBatchExecutor), `MicroBatchExecution` takes the distinct [SparkDataStreams](#sources) and converts them to [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md)s:
-
-* [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md)s are left intact
-* [Source](../Source.md)s become `AvailableNowSourceWrapper`s
-* [MicroBatchStream](../MicroBatchStream.md)s become `AvailableNowMicroBatchStreamWrapper`s
-
-Every `SupportsTriggerAvailableNow` is then requested to [prepareForTriggerAvailableNow](../SupportsTriggerAvailableNow.md#prepareForTriggerAvailableNow).
-
-In the end, `MicroBatchExecution` returns pairs of the `SupportsTriggerAvailableNow`s and their [getDefaultReadLimit](../SupportsTriggerAvailableNow.md#getDefaultReadLimit).
-
-### <span id="uniqueSources-ProcessingTimeExecutor"> ProcessingTimeExecutor
+* `StreamingQueryManager` is requested to [create a streaming query](../StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start)) for all [trigger](#trigger)s but [ContinuousTrigger](../Trigger.md#ContinuousTrigger)
 
 ## <span id="startTrigger"> Initializing Query Progress for New Trigger
 
@@ -457,7 +421,7 @@ Completed batch [currentBatchId]
 ```
 
 !!! NOTE
-    `runBatch` is used exclusively when `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream) (and there is new data to process).
+    `runBatch` is used exclusively when `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream) (and there is a new data to process).
 
 ### <span id="runBatch-getBatch"> getBatch Phase -- Creating Logical Query Plans For Unprocessed Data From Sources and MicroBatchReaders
 
