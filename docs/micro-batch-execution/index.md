@@ -13,7 +13,7 @@ Micro-batch stream processing is often referred to as *Structured Streaming V1*.
 When [MicroBatchExecution](MicroBatchExecution.md) stream processing engine is requested to [run an activated streaming query](MicroBatchExecution.md#runActivatedStream), the query execution goes through the following **execution phases** every trigger (_micro-batch_):
 
 1. [triggerExecution](MicroBatchExecution.md#runActivatedStream-triggerExecution)
-1. [getOffset](MicroBatchExecution.md#constructNextBatch-getOffset) for [Source](../Source.md)s or [setOffsetRange](#MicroBatchExecution.md#constructNextBatch-setOffsetRange) for [MicroBatchReader](MicroBatchReader.md)s
+1. [getOffset](MicroBatchExecution.md#constructNextBatch-getOffset) for [Source](../Source.md)s or [setOffsetRange](#MicroBatchExecution.md#constructNextBatch-setOffsetRange) for...FIXME
 1. [getEndOffset](MicroBatchExecution.md#constructNextBatch-getEndOffset)
 1. [walCommit](MicroBatchExecution.md#constructNextBatch-walCommit)
 1. [getBatch](MicroBatchExecution.md#runBatch-getBatch)

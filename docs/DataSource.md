@@ -1,6 +1,6 @@
 # DataSource
 
-!!! tip
+!!! tip "The Internals of Spark SQL"
     Learn more about [DataSource]({{ book.spark_sql }}/DataSource) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
 ## <span id="createSource"> Creating Streaming Source (Data Source V1)
@@ -16,7 +16,9 @@ createSource(
 * [FileFormat](#createSource-FileFormat)
 * [other types](#createSource-other)
 
-`createSource` is used when `MicroBatchExecution` is requested for an [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan).
+`createSource` is used when:
+
+* `MicroBatchExecution` is requested for an [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan)
 
 ### <span id="createSource-StreamSourceProvider"> StreamSourceProvider
 
@@ -75,7 +77,11 @@ sourceSchema(): SourceInfo
 * [FileFormat](#sourceSchema-FileFormat)
 * [other types](#sourceSchema-other)
 
-`sourceSchema` is used when `DataSource` is requested for the [SourceInfo](#sourceInfo).
+---
+
+`sourceSchema` is used when:
+
+* `DataSource` is requested for the [SourceInfo](#sourceInfo)
 
 ### <span id="sourceSchema-StreamSourceProvider"> StreamSourceProvider
 
@@ -104,7 +110,7 @@ createSink(
 
 `createSink` creates a [streaming sink](Sink.md) for [StreamSinkProvider](StreamSinkProvider.md) or `FileFormat` data sources.
 
-!!! tip
+!!! tip "The Internals of Spark SQL"
     Learn more about [FileFormat]({{ book.spark_sql }}/FileFormat) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
 `createSink` creates a new instance of the data source class and branches off per the type:

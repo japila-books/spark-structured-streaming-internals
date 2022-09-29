@@ -38,9 +38,6 @@ logicalPlan: LogicalPlan
 | [ContinuousMemoryStream](ContinuousMemoryStream.md)
 | [[ContinuousMemoryStream]]
 
-| [MemoryStream](MemoryStream.md)
-| [[MemoryStream]] [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)
-
 |===
 
 === [[creating-instance]] Creating MemoryStreamBase Instance

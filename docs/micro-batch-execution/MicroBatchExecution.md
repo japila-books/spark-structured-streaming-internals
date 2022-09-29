@@ -349,7 +349,7 @@ Getting offsets from [source]
 
 In **getOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `Source` for the [latest offset](#getOffset).
 
-For every [MicroBatchReader](MicroBatchReader.md) (Data Source API V2), `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+For every data source, `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Getting offsets from [source]
@@ -357,11 +357,11 @@ Getting offsets from [source]
 
 ### <span id="constructNextBatch-setOffsetRange"> setOffsetRange Phase
 
-In **setOffsetRange** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the [available offset](#availableOffsets) internal registry) and, if found, requests the `MicroBatchReader` to [deserialize the offset](MicroBatchReader.md#deserializeOffset) (from [JSON format](../Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to [set the desired offset range](MicroBatchReader.md#setOffsetRange).
+In **setOffsetRange** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the [available offset](#availableOffsets) internal registry) and, if found, requests the `MicroBatchReader` to...FIXME (from [JSON format](../Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to...FIXME
 
 ### <span id="constructNextBatch-getEndOffset"> getEndOffset Phase
 
-In **getEndOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for the [end offset](MicroBatchReader.md#getEndOffset).
+In **getEndOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for...FIXME
 
 ### <span id="constructNextBatch-availableOffsets"> Updating availableOffsets StreamProgress with Latest Available Offsets
 
@@ -492,15 +492,15 @@ DataFrame returned by getBatch from [source] did not have isStreaming=true\n[log
 
 ### <span id="runBatch-getBatch-MicroBatchReader"> getBatch Phase and MicroBatchReaders
 
-For a [MicroBatchReader](MicroBatchReader.md) (with the available [offset](../Offset.md)s different from the [committedOffsets](../StreamExecution.md#committedOffsets) registry),  `runBatch` does the following:
+`runBatch` does the following...FIXME
 
 * Requests the [committedOffsets](../StreamExecution.md#committedOffsets) for the committed offsets for the `MicroBatchReader` (if available)
 
-* Requests the `MicroBatchReader` to [deserialize the committed offsets](MicroBatchReader.md#deserializeOffset) (if available)
+* Requests the `MicroBatchReader` to...FIXME (if available)
 
-* Requests the `MicroBatchReader` to [deserialize the available offsets](MicroBatchReader.md#deserializeOffset) (only for [SerializedOffset](../Offset.md#SerializedOffset)s)
+* Requests the `MicroBatchReader` to...FIXME (only for [SerializedOffset](../Offset.md#SerializedOffset)s)
 
-* Requests the `MicroBatchReader` to [set the offset range](MicroBatchReader.md#setOffsetRange) (the current and available offsets)
+* Requests the `MicroBatchReader` to...FIXME (the current and available offsets)
 
 `runBatch` prints out the following DEBUG message to the logs.
 
@@ -510,7 +510,7 @@ Retrieving data from [reader]: [current] -> [availableV2]
 
 `runBatch` looks up the `DataSourceV2` and the options for the `MicroBatchReader` (in the [readerToDataSourceMap](#readerToDataSourceMap) internal registry).
 
-In the end, `runBatch` requests the `MicroBatchReader` for the [read schema](MicroBatchReader.md#readSchema) and creates a [StreamingDataSourceV2Relation](../logical-operators/StreamingDataSourceV2Relation.md) logical operator (with the read schema, the `DataSourceV2`, options, and the `MicroBatchReader`).
+In the end, `runBatch` requests the `MicroBatchReader` for...FIXME and creates a [StreamingDataSourceV2Relation](../logical-operators/StreamingDataSourceV2Relation.md) logical operator (with the read schema, the `DataSourceV2`, options, and the `MicroBatchReader`).
 
 ### <span id="runBatch-newBatchesPlan"> Transforming Logical Plan to Include Sources and MicroBatchReaders with New Data
 

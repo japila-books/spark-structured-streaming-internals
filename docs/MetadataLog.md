@@ -35,8 +35,6 @@ Used when:
 
 * `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#addOffset, addOffset>> and <<ContinuousExecution.md#commit, commit an epoch>>
 
-* `RateStreamMicroBatchReader` is created (`creationTimeMs`)
-
 ### <span id="get"> get
 
 ```scala

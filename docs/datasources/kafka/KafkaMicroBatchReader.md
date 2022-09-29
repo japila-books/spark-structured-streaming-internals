@@ -1,6 +1,9 @@
 # KafkaMicroBatchReader
 
-`KafkaMicroBatchReader` is the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) for [kafka data source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
+!!! note "MicroBatchReader is gone in 3.0.0"
+    No longer used in Spark Structured Streaming and the page will soon be removed.
+
+`KafkaMicroBatchReader` is the `MicroBatchReader` for [kafka data source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
 
 `KafkaMicroBatchReader` is created when `KafkaSourceProvider` is requested to [create a MicroBatchReader](KafkaSourceProvider.md#createMicroBatchReader).
 
@@ -87,39 +90,6 @@ getOrCreateInitialPartitionOffsets(): PartitionOffsetMap
 `getOrCreateInitialPartitionOffsets`...FIXME
 
 NOTE: `getOrCreateInitialPartitionOffsets` is used exclusively for the <<initialPartitionOffsets, initialPartitionOffsets>> internal registry.
-
-=== [[getStartOffset]] `getStartOffset` Method
-
-[source, scala]
-----
-getStartOffset: Offset
-----
-
-`getStartOffset` is part of the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md#getStartOffset) abstraction.
-
-`getStartOffset`...FIXME
-
-=== [[getEndOffset]] `getEndOffset` Method
-
-[source, scala]
-----
-getEndOffset: Offset
-----
-
-`getEndOffset` is part of the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md#getEndOffset) abstraction.
-
-`getEndOffset`...FIXME
-
-=== [[deserializeOffset]] `deserializeOffset` Method
-
-[source, scala]
-----
-deserializeOffset(json: String): Offset
-----
-
-`deserializeOffset` is part of the [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md#deserializeOffset) abstraction.
-
-`deserializeOffset`...FIXME
 
 === [[internal-properties]] Internal Properties
 

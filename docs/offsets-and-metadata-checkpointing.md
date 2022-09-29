@@ -46,7 +46,7 @@ With [shouldConstructNextBatch](micro-batch-execution/MicroBatchExecution.md#con
 Committed offsets for batch [currentBatchId]. Metadata [offsetSeqMetadata]
 ```
 
-When [running a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch), `MicroBatchExecution` requests every [Source](Source.md) and [MicroBatchReader](micro-batch-execution/MicroBatchReader.md) (in the [availableOffsets](StreamExecution.md#availableOffsets) registry) for unprocessed data (that has not been [committed](StreamExecution.md#committedOffsets) yet and so considered unprocessed).
+When [running a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch), `MicroBatchExecution`...FIXME
 
 In the end (of [running a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch)), `MicroBatchExecution` commits ([adds](HDFSMetadataLog.md#add)) the available offsets (to the [committedOffsets](#committedOffsets) registry) so they are considered processed already.
 

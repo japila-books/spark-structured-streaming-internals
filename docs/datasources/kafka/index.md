@@ -67,8 +67,6 @@ root
  |-- timestampType: integer (nullable = true)
 ```
 
-Internally, the fixed schema is defined as part of the `DataSourceReader` abstraction through [MicroBatchReader](../../micro-batch-execution/MicroBatchReader.md) and [ContinuousReader](../../continuous-execution/ContinuousReader.md) extension contracts for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
-
 ### Column.cast Operator
 
 Use `Column.cast` operator to cast `BinaryType` to a `StringType` (for `key` and `value` columns).

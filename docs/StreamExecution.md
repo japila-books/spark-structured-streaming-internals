@@ -799,8 +799,6 @@ Registry of the streaming sources (in the [logical query plan](#logicalPlan)) th
 
 Set when `StreamExecution` is requested to [requests unprocessed data from streaming sources](micro-batch-execution/MicroBatchExecution.md#runBatch-getBatch) (while [running a single streaming batch](#runBatch))
 
-Used when `StreamExecution` is requested to [transform the logical plan (of the streaming query) to include the Sources and the MicroBatchReaders with new data](micro-batch-execution/MicroBatchExecution.md#runBatch-newBatchesPlan) (while [running a single streaming batch](#runBatch))
-
 ## <span id="streamMetrics"> Streaming Metrics
 
 `StreamExecution` uses [MetricsReporter](monitoring/MetricsReporter.md) for reporting streaming metrics.

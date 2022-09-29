@@ -243,7 +243,6 @@ nav:
       - micro-batch-execution/index.md
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
       - MicroBatchWriter: micro-batch-execution/MicroBatchWriter.md
-      - MicroBatchReader: micro-batch-execution/MicroBatchReader.md
       - Source: Source.md
       - StreamSourceProvider: StreamSourceProvider.md
       - Sink: Sink.md
@@ -342,10 +341,7 @@ nav:
       - TextSocketSourceProvider: datasources/socket/TextSocketSourceProvider.md
       - TextSocketSource: datasources/socket/TextSocketSource.md
     - Rate:
-      - RateSourceProvider: spark-sql-streaming-RateSourceProvider.md
       - RateStreamProvider: RateStreamProvider.md
-      - RateStreamSource: spark-sql-streaming-RateStreamSource.md
-      - RateStreamMicroBatchReader: spark-sql-streaming-RateStreamMicroBatchReader.md
       - RateStreamContinuousReader: RateStreamContinuousReader.md
     - Console Sink:
       - ConsoleSinkProvider: spark-sql-streaming-ConsoleSinkProvider.md
