@@ -376,6 +376,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingWrite/</loc>
+         <lastmod>2022-09-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SupportsAdmissionControl/</loc>
          <lastmod>2022-09-30</lastmod>
          <changefreq>daily</changefreq>
@@ -1046,7 +1051,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/MicroBatchWriter/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/MicroBatchWrite/</loc>
          <lastmod>2022-09-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
