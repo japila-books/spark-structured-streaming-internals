@@ -189,6 +189,7 @@ nav:
       - IncrementalExecution: IncrementalExecution.md
       - TriggerExecutor: TriggerExecutor.md
       - StreamingQueryWrapper: StreamingQueryWrapper.md
+    - ReportsSourceMetrics: ReportsSourceMetrics.md
     - StreamMetadata: StreamMetadata.md
     - Logical Operators:
       - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
@@ -312,7 +313,8 @@ nav:
       - FileStreamSourceLog: datasources/file/FileStreamSourceLog.md
       - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
     - Kafka:
-      - Kafka Data Source: datasources/kafka/index.md
+      - datasources/kafka/index.md
+      - Kafka Options: datasources/kafka/options.md
       - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
       - KafkaMicroBatchStream: datasources/kafka/KafkaMicroBatchStream.md
       - KafkaTable: datasources/kafka/KafkaTable.md
