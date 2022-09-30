@@ -211,6 +211,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/ReportsSourceMetrics/</loc>
+         <lastmod>2022-09-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SQLConf/</loc>
          <lastmod>2022-09-30</lastmod>
          <changefreq>daily</changefreq>
@@ -807,6 +812,11 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaTable/</loc>
+         <lastmod>2022-09-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/options/</loc>
          <lastmod>2022-09-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
