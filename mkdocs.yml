@@ -394,3 +394,4 @@ nav:
     - Using StreamingQueryManager for Query Termination Management: demo/StreamingQueryManager-awaitAnyTermination-resetTerminated.md
     - Using File Streaming Source: demo/using-file-streaming-source.md
     - Deep Dive into FileStreamSink: demo/deep-dive-into-filestreamsink.md
+    - Streaming Watermark: demo/streaming-watermark.md
