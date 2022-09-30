@@ -89,7 +89,7 @@ assert(sq.isActive)
 ```text
 scala> sq.explain
 == Physical Plan ==
-WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWriter@678e6267
+WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWrite@42363db7
 +- *(1) Project [timestamp#54, value#55L]
    +- *(1) ScanV2 rate[timestamp#54, value#55L]
 ```

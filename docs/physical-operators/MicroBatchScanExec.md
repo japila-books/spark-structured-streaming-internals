@@ -2,7 +2,7 @@
 
 `MicroBatchScanExec` is a `DataSourceV2ScanExecBase` ([Spark SQL]({{ book.spark_sql }}/physical-operators/DataSourceV2ScanExecBase)) that represents [StreamingDataSourceV2Relation](../logical-operators/StreamingDataSourceV2Relation.md) logical operator at execution.
 
-`MicroBatchScanExec` is just a very thin wrapper over [MicroBatchStream](#stream) and does nothing but relays all the important execution-specific preparation to it.
+`MicroBatchScanExec` is just a very thin wrapper over [MicroBatchStream](#stream) and does nothing but delegates all the important execution-specific preparation to it.
 
 ## Creating Instance
 

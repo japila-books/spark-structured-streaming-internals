@@ -25,7 +25,7 @@ AccumulatorV2[Long, EventTimeStats]
 
 `EventTimeStatsAccum` is given an [EventTimeStats](EventTimeStats.md) when [created](#creating-instance).
 
-Every time `AccumulatorV2` methods are called, `EventTimeStatsAccum` simply relays them to the `EventTimeStats` (that is responsible for event-time statistics, i.e. max, min, avg, count).
+Every time `AccumulatorV2` methods are called, `EventTimeStatsAccum` simply delegates them to the `EventTimeStats` (that is responsible for event-time statistics, i.e. max, min, avg, count).
 
 ## <span id="add"> Adding Value
 

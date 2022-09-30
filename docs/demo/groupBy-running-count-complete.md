@@ -73,7 +73,7 @@ val runningCounts = counts
 
 scala> runningCounts.explain
 == Physical Plan ==
-WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWriter@205f195c
+WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchWrite@42363db7
 +- *(5) HashAggregate(keys=[word#72], functions=[count(1)])
    +- StateStoreSave [word#72], state info [ checkpoint = file:/tmp/checkpoint-running_counts/state, runId = f3b2e642-1790-4a17-ab61-3d894110b063, opId = 0, ver = 0, numPartitions = 1], Complete, 0, 2
       +- *(4) HashAggregate(keys=[word#72], functions=[merge_count(1)])

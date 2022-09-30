@@ -191,6 +191,7 @@ nav:
       - StreamingQueryWrapper: StreamingQueryWrapper.md
     - ReportsSourceMetrics: ReportsSourceMetrics.md
     - StreamMetadata: StreamMetadata.md
+    - StreamingWrite: StreamingWrite.md
     - Logical Operators:
       - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
       - EventTimeWatermark: logical-operators/EventTimeWatermark.md
@@ -244,7 +245,7 @@ nav:
     - Micro-Batch Execution:
       - micro-batch-execution/index.md
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
-      - MicroBatchWriter: micro-batch-execution/MicroBatchWriter.md
+      - MicroBatchWrite: micro-batch-execution/MicroBatchWrite.md
       - Source: Source.md
       - StreamSourceProvider: StreamSourceProvider.md
       - Sink: Sink.md
