@@ -20,4 +20,4 @@
 
 ## Query Planning
 
-`WriteToMicroBatchDataSource` is planned as `WriteToDataSourceV2` ([Spark SQL]({{ book.spark_sql }}/physical-operators/WriteToDataSourceV2Exec)) physical operator by `V2Writes` ([Spark SQL]({{ book.spark_sql }}/logical-optimizations/V2Writes)) logical optimization.
+`WriteToMicroBatchDataSource` is optimized to [WriteToDataSourceV2](WriteToDataSourceV2.md) logical operator by `V2Writes` ([Spark SQL]({{ book.spark_sql }}/logical-optimizations/V2Writes)) logical optimization.

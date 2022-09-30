@@ -202,6 +202,7 @@ nav:
       - StreamingRelationV2: logical-operators/StreamingRelationV2.md
       - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
       - WriteToContinuousDataSource: logical-operators/WriteToContinuousDataSource.md
+      - WriteToDataSourceV2: logical-operators/WriteToDataSourceV2.md
       - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
       - WriteToStream: logical-operators/WriteToStream.md
     - Physical Operators:
@@ -218,6 +219,7 @@ nav:
       - StreamingRelationExec: physical-operators/StreamingRelationExec.md
       - StreamingSymmetricHashJoinExec: physical-operators/StreamingSymmetricHashJoinExec.md
       - WriteToContinuousDataSourceExec: physical-operators/WriteToContinuousDataSourceExec.md
+      - WriteToDataSourceV2Exec: physical-operators/WriteToDataSourceV2Exec.md
     - Execution Planning Strategies:
       - FlatMapGroupsWithStateStrategy: FlatMapGroupsWithStateStrategy.md
       - StatefulAggregationStrategy: StatefulAggregationStrategy.md

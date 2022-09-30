@@ -1,6 +1,6 @@
 # MicroBatchWrite
 
-`MicroBatchWrite` is a `BatchWrite` ([Spark SQL]({{ book.spark_sql }}/connector/BatchWrite)) for `WriteToDataSourceV2` ([Spark SQL]({{ book.spark_sql }}/logical-operators/WriteToDataSourceV2)) logical operator in [Micro-Batch Stream Processing](index.md).
+`MicroBatchWrite` is a `BatchWrite` ([Spark SQL]({{ book.spark_sql }}/connector/BatchWrite)) for [WriteToDataSourceV2](../logical-operators/WriteToDataSourceV2.md) logical operator in [Micro-Batch Stream Processing](index.md).
 
 !!! note "WriteToMicroBatchDataSource"
     `WriteToDataSourceV2` logical operator replaces [WriteToMicroBatchDataSource](../logical-operators/WriteToMicroBatchDataSource.md) logical operator at logical optimization (using `V2Writes` logical optimization).
