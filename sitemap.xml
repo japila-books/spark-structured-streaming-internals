@@ -1031,6 +1031,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToDataSourceV2/</loc>
+         <lastmod>2022-09-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToMicroBatchDataSource/</loc>
          <lastmod>2022-09-30</lastmod>
          <changefreq>daily</changefreq>
@@ -1217,6 +1222,11 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/WriteToContinuousDataSourceExec/</loc>
+         <lastmod>2022-09-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/WriteToDataSourceV2Exec/</loc>
          <lastmod>2022-09-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
