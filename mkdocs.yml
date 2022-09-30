@@ -203,9 +203,9 @@ nav:
       - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
       - WriteToStream: logical-operators/WriteToStream.md
     - Physical Operators:
-      - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
       - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
       - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
+      - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
       - StatefulOperator: physical-operators/StatefulOperator.md
       - StateStoreReader: physical-operators/StateStoreReader.md
       - StateStoreRestoreExec: physical-operators/StateStoreRestoreExec.md

@@ -10,7 +10,11 @@
 PartitionReaderFactory createReaderFactory()
 ```
 
-Used when `MicroBatchScanExec` physical operator is requested for a [PartitionReaderFactory](physical-operators/MicroBatchScanExec.md#readerFactory)
+`PartitionReaderFactory` ([Spark SQL]({{ book.spark_sql }}/connector/PartitionReaderFactory))
+
+Used when:
+
+* `MicroBatchScanExec` physical operator is requested for a [PartitionReaderFactory](physical-operators/MicroBatchScanExec.md#readerFactory)
 
 ### <span id="latestOffset"> Latest Offset
 
@@ -18,7 +22,11 @@ Used when `MicroBatchScanExec` physical operator is requested for a [PartitionRe
 Offset latestOffset()
 ```
 
-Used when `MicroBatchExecution` is requested to [constructNextBatch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
+Latest [Offset](Offset.md)
+
+Used when:
+
+* `MicroBatchExecution` is requested to [constructing or skipping next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
 ### <span id="planInputPartitions"> Input Partitions
 
@@ -28,11 +36,17 @@ InputPartition[] planInputPartitions(
   Offset end)
 ```
 
-Used when `MicroBatchScanExec` physical operator is requested for [partitions](physical-operators/MicroBatchScanExec.md#partitions)
+`InputPartition`s ([Spark SQL]({{ book.spark_sql }}/connector/InputPartition))
+
+Used when:
+
+* `MicroBatchScanExec` physical operator is requested for [input partitions](physical-operators/MicroBatchScanExec.md#partitions)
 
 ## Implementations
 
-* KafkaMicroBatchStream
-* MemoryStream
-* RateStreamMicroBatchStream
-* TextSocketMicroBatchStream
+* `AvailableNowMicroBatchStreamWrapper`
+* [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md)
+* [MemoryStream](datasources/memory/MemoryStream.md)
+* `RatePerMicroBatchStream`
+* `RateStreamMicroBatchStream`
+* `TextSocketMicroBatchStream`
