@@ -110,7 +110,7 @@ a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exc
 
 a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]] Used when:
 
-* [FlatMapGroupsWithStateStrategy](FlatMapGroupsWithStateStrategy.md) execution planning strategy is requested to plan a streaming query (and creates a [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator for every [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operator)
+* [FlatMapGroupsWithStateStrategy](execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy is requested to plan a streaming query (and creates a [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator for every [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operator)
 
 * Among the [checkpointed properties](OffsetSeqMetadata.md#relevantSQLConfs)
 
@@ -141,7 +141,7 @@ a| [[stateStoreProviderClass]] Used when:
 
 a| [[STREAMING_AGGREGATION_STATE_FORMAT_VERSION]] Used when:
 
-* [StatefulAggregationStrategy](StatefulAggregationStrategy.md) execution planning strategy is executed
+* [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is executed
 
 * `OffsetSeqMetadata` is requested for the [relevantSQLConfs](OffsetSeqMetadata.md#relevantSQLConfs) and the [relevantSQLConfDefaultValues](OffsetSeqMetadata.md#relevantSQLConfDefaultValues)
 

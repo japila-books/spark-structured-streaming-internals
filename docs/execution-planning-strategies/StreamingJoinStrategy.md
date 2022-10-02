@@ -1,7 +1,6 @@
 # StreamingJoinStrategy Execution Planning Strategy &mdash; Stream-Stream Equi-Joins
 
-[[apply]]
-`StreamingJoinStrategy` is an execution planning strategy that can plan streaming queries with `Join` logical operators of two streaming queries to a <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator.
+`StreamingJoinStrategy` is an execution planning strategy that can plan streaming queries with `Join` logical operators of two streaming queries to a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator.
 
 `StreamingJoinStrategy` throws an `AnalysisException` when applied to a `Join` logical operator with no equality predicate:
 
@@ -9,7 +8,7 @@
 Stream-stream join without equality predicate is not supported
 ```
 
-`StreamingJoinStrategy` is used when [IncrementalExecution](IncrementalExecution.md) is requested to plan a streaming query.
+`StreamingJoinStrategy` is used when [IncrementalExecution](../IncrementalExecution.md) is requested to plan a streaming query.
 
 [[logging]]
 [TIP]
@@ -22,7 +21,7 @@ Enable `ALL` logging level for `org.apache.spark.sql.catalyst.planning.ExtractEq
 
 Add the following line to `conf/log4j.properties`:
 
-```
+```text
 log4j.logger.org.apache.spark.sql.catalyst.planning.ExtractEquiJoinKeys=ALL
 ```
 

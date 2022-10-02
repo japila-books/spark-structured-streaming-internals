@@ -46,7 +46,7 @@ CAUTION: FIXME Example with duplicates across batches to show that `Deduplicate`
 !!! note
     `Deduplicate` logical operator is translated (_planned_) to:
 
-    * [StreamingDeduplicateExec](../physical-operators/StreamingDeduplicateExec.md) physical operator in [StreamingDeduplicationStrategy](../StreamingDeduplicationStrategy.md) execution planning strategy for streaming Datasets (aka _streaming plans_)
+    * [StreamingDeduplicateExec](../physical-operators/StreamingDeduplicateExec.md) physical operator in [StreamingDeduplicationStrategy](../execution-planning-strategies/StreamingDeduplicationStrategy.md) execution planning strategy for streaming Datasets (aka _streaming plans_)
 
     * `Aggregate` physical operator in `ReplaceDeduplicateWithAggregate` execution planning strategy for non-streaming/batch Datasets (_batch plans_)
 

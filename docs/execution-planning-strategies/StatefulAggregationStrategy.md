@@ -1,14 +1,12 @@
 # StatefulAggregationStrategy Execution Planning Strategy
 
-`StatefulAggregationStrategy` is an execution planning strategy that is used to <<apply, plan streaming queries>> with the two logical operators:
+`StatefulAggregationStrategy` is an execution planning strategy that is used to plan streaming queries with the following logical operators:
 
-* [EventTimeWatermark](logical-operators/EventTimeWatermark.md) logical operator ([Dataset.withWatermark](operators/withWatermark.md) operator)
+* [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) logical operator ([Dataset.withWatermark](../operators/withWatermark.md) operator)
 
-* `Aggregate` logical operator (for [Dataset.groupBy](operators/groupBy.md) and [Dataset.groupByKey](operators/groupByKey.md) operators, and `GROUP BY` SQL clause)
+* `Aggregate` logical operator (for [Dataset.groupBy](../operators/groupBy.md) and [Dataset.groupByKey](../operators/groupByKey.md) operators, and `GROUP BY` SQL clause)
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy.html[Execution Planning Strategies] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-
-`StatefulAggregationStrategy` is used exclusively when [IncrementalExecution](IncrementalExecution.md) is requested to plan a streaming query.
+`StatefulAggregationStrategy` is used exclusively when [IncrementalExecution](../IncrementalExecution.md) is requested to plan a streaming query.
 
 `StatefulAggregationStrategy` is available using `SessionState`.
 
@@ -24,8 +22,8 @@ spark.sessionState.planner.StatefulAggregationStrategy
 | Logical Operator
 | Physical Operator
 
-| [EventTimeWatermark](logical-operators/EventTimeWatermark.md)
-a| [[EventTimeWatermark]] [EventTimeWatermarkExec](physical-operators/EventTimeWatermarkExec.md)
+| [EventTimeWatermark](../logical-operators/EventTimeWatermark.md)
+a| [[EventTimeWatermark]] [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md)
 
 | `Aggregate`
 a| [[Aggregate]]
@@ -36,12 +34,11 @@ In the order of preference:
 1. `ObjectHashAggregateExec`
 1. `SortAggregateExec`
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-Aggregation.html[Aggregation Execution Planning Strategy for Aggregate Physical Operators] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-
 |===
 
-[source, scala]
-----
+## Demo
+
+```text
 val counts = spark.
   readStream.
   format("rate").
@@ -77,7 +74,7 @@ val consoleOutput = counts.
 
 // Eventually...
 consoleOutput.stop
-----
+```
 
 === [[planStreamingAggregation]][[AggUtils-planStreamingAggregation]] Selecting Aggregate Physical Operator Given Aggregate Expressions — `AggUtils.planStreamingAggregation` Internal Method
 
@@ -92,7 +89,7 @@ planStreamingAggregation(
 
 `planStreamingAggregation` takes the grouping attributes (from `groupingExpressions`).
 
-NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](operators/groupBy.md) operator.
+NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](../operators/groupBy.md) operator.
 
 [[partialAggregate]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialAggregate`) with:
@@ -122,7 +119,7 @@ NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](op
 * `child` operator as <<partialAggregate, partialAggregate>> aggregate physical operator created above
 
 [[restored]]
-`planStreamingAggregation` creates [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) physical operator with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
+`planStreamingAggregation` creates [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) physical operator with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
 
 [[partialMerged2]]
 `planStreamingAggregation` creates an aggregate physical operator (called `partialMerged2`) with:
@@ -132,7 +129,7 @@ NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](op
 NOTE: The only difference between <<partialMerged1, partialMerged1>> and <<partialMerged2, partialMerged2>> steps is the child physical operator.
 
 [[saved]]
-`planStreamingAggregation` creates StateStoreSaveExec.md#creating-instance[StateStoreSaveExec] with:
+`planStreamingAggregation` creates [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md#creating-instance) with:
 
 * the grouping attributes based on the input `groupingExpressions`
 * No `stateInfo`, `outputMode` and `eventTimeWatermark`

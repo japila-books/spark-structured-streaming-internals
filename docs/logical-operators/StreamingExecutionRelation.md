@@ -10,7 +10,7 @@ The main use of `StreamingExecutionRelation` logical operator is to be a "placeh
 ![StreamingExecutionRelation Represents Streaming Source At Execution](../images/StreamingExecutionRelation.png)
 
 !!! note
-    `StreamingExecutionRelation` is also resolved (_planned_) to a [StreamingRelationExec](../physical-operators/StreamingRelationExec.md) physical operator in [StreamingRelationStrategy](../StreamingRelationStrategy.md) execution planning strategy only when [explaining](../operators/explain.md) a streaming `Dataset`.
+    `StreamingExecutionRelation` is also resolved (_planned_) to a [StreamingRelationExec](../physical-operators/StreamingRelationExec.md) physical operator in [StreamingRelationStrategy](../execution-planning-strategies/StreamingRelationStrategy.md) execution planning strategy only when [explaining](../operators/explain.md) a streaming `Dataset`.
 
 ## Creating Instance
 

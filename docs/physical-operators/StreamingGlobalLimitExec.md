@@ -4,13 +4,6 @@
 
 [NOTE]
 ====
-A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
-
-[NOTE]
-====
 `Limit` logical operator represents `Dataset.limit` operator in a logical query plan.
 
 Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Limit.html[Limit Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
@@ -31,7 +24,7 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and t
 * [[stateInfo]] [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
 * [[outputMode]] [OutputMode](../OutputMode.md) (default: `None`)
 
-`StreamingGlobalLimitExec` is created when [StreamingGlobalLimitStrategy](../StreamingGlobalLimitStrategy.md) execution planning strategy is requested to plan a `Limit` logical operator (in the logical plan of a streaming query) for execution.
+`StreamingGlobalLimitExec` is created when [StreamingGlobalLimitStrategy](../execution-planning-strategies/StreamingGlobalLimitStrategy.md) execution planning strategy is requested to plan a `Limit` logical operator (in the logical plan of a streaming query) for execution.
 
 === [[StateStoreWriter]] StreamingGlobalLimitExec as StateStoreWriter
 

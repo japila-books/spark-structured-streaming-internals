@@ -2,14 +2,7 @@
 
 `StreamingDeduplicateExec` is a unary physical operator that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](../WatermarkSupport.md).
 
-[NOTE]
-====
-A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
-
-`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when [StreamingDeduplicationStrategy](../StreamingDeduplicationStrategy.md) execution planning strategy is executed (to plan Deduplicate unary logical operators).
+`StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when [StreamingDeduplicationStrategy](../execution-planning-strategies/StreamingDeduplicationStrategy.md) execution planning strategy is executed (to plan Deduplicate unary logical operators).
 
 ![StreamingDeduplicateExec and StreamingDeduplicationStrategy](../images/StreamingDeduplicateExec-StreamingDeduplicationStrategy.png)
 

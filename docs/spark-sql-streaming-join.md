@@ -21,7 +21,7 @@ Streaming joins can be *stateless* or <<spark-sql-streaming-stateful-stream-proc
 
 Spark Structured Streaming supports *stream-stream joins* with the following:
 
-* [Equality predicate](StreamingJoinStrategy.md) ([equi-joins](https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join) that use only equality comparisons in the join predicate)
+* [Equality predicate](execution-planning-strategies/StreamingJoinStrategy.md) ([equi-joins](https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join) that use only equality comparisons in the join predicate)
 
 * `Inner`, `LeftOuter`, and `RightOuter` <<physical-operators/StreamingSymmetricHashJoinExec.md#supported-join-types, join types only>>
 
@@ -47,7 +47,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 In Spark Structured Streaming [IncrementalExecution](IncrementalExecution.md) is responsible for planning streaming queries for execution.
 
-At [query planning](IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StreamingJoinStrategy](StreamingJoinStrategy.md) execution planning strategy for planning [stream-stream joins](#stream-stream-joins) as [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operators.
+At [query planning](IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StreamingJoinStrategy](execution-planning-strategies/StreamingJoinStrategy.md) execution planning strategy for planning [stream-stream joins](#stream-stream-joins) as [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md) physical operators.
 
 ## Demos
 

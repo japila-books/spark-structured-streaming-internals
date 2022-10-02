@@ -18,7 +18,7 @@ TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql
 
 In Spark Structured Streaming [IncrementalExecution](IncrementalExecution.md) is responsible for planning streaming queries for execution.
 
-At [query planning](IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StatefulAggregationStrategy](StatefulAggregationStrategy.md) execution planning strategy for planning streaming aggregations (`Aggregate` unary logical operators) as pairs of [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) and [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operators.
+At [query planning](IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy for planning streaming aggregations (`Aggregate` unary logical operators) as pairs of [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) and [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operators.
 
 ```text
 // input data from a data source

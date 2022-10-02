@@ -97,12 +97,12 @@ Internally, `numStateStores` requests the [OffsetSeqMetadata](#offsetSeqMetadata
 
 `IncrementalExecution` uses a custom `SparkPlanner` with the following **extra planning strategies** to plan the [streaming query](#logicalPlan) for execution:
 
-* [StreamingJoinStrategy](StreamingJoinStrategy.md)
-* [StatefulAggregationStrategy](StatefulAggregationStrategy.md)
-* [FlatMapGroupsWithStateStrategy](FlatMapGroupsWithStateStrategy.md)
-* [StreamingRelationStrategy](StreamingRelationStrategy.md)
-* [StreamingDeduplicationStrategy](StreamingDeduplicationStrategy.md)
-* [StreamingGlobalLimitStrategy](StreamingGlobalLimitStrategy.md)
+* [StreamingJoinStrategy](execution-planning-strategies/StreamingJoinStrategy.md)
+* [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md)
+* [FlatMapGroupsWithStateStrategy](execution-planning-strategies/FlatMapGroupsWithStateStrategy.md)
+* [StreamingRelationStrategy](execution-planning-strategies/StreamingRelationStrategy.md)
+* [StreamingDeduplicationStrategy](execution-planning-strategies/StreamingDeduplicationStrategy.md)
+* [StreamingGlobalLimitStrategy](execution-planning-strategies/StreamingGlobalLimitStrategy.md)
 
 !!! tip
     Learn more about [SparkPlanner]({{ book.spark_sql }}/SparkPlanner) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.

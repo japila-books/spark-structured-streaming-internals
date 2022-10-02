@@ -37,7 +37,7 @@
 * <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../streaming-watermark.md)
 * <span id="child"> Child physical operator
 
-`FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).
+`FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).
 
 ## <span id="doExecute"> Executing Physical Operator
 
@@ -83,7 +83,7 @@ doExecute(): RDD[InternalRow]
 
 `FlatMapGroupsWithStateExec` is given the [optional event time watermark](#eventTimeWatermark) when created.
 
-The [event-time watermark](#eventTimeWatermark) is initially undefined (`None`) when planned for execution (in [FlatMapGroupsWithStateStrategy](../FlatMapGroupsWithStateStrategy.md) execution planning strategy).
+The [event-time watermark](#eventTimeWatermark) is initially undefined (`None`) when planned for execution (in [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy).
 
 !!! note
     `FlatMapGroupsWithStateStrategy` converts [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) unary logical operator to `FlatMapGroupsWithStateExec` physical operator with undefined [StatefulOperatorStateInfo](#stateInfo), [batchTimestampMs](#batchTimestampMs), and [eventTimeWatermark](#eventTimeWatermark).

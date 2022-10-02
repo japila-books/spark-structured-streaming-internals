@@ -15,7 +15,7 @@
 
 `FlatMapGroupsWithState` is resolved (_planned_) to:
 
-* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in [FlatMapGroupsWithStateStrategy](../FlatMapGroupsWithStateStrategy.md) execution planning strategy)
+* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy)
 
 * `MapGroupsExec` physical operator for batch datasets (in `BasicOperators` execution planning strategy)
 

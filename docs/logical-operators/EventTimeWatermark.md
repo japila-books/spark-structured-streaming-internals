@@ -9,29 +9,30 @@
 
 When requested for the <<output, output attributes>>, `EventTimeWatermark` logical operator goes over the output attributes of the <<child, child>> logical operator to find the matching attribute based on the <<eventTime, eventTime>> attribute and updates it to include `spark.watermarkDelayMs` metadata key with the <<delay, watermark delay>> interval (<<getDelayMs, converted to milliseconds>>).
 
-`EventTimeWatermark` is resolved (_planned_) to [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) physical operator in [StatefulAggregationStrategy](../StatefulAggregationStrategy.md) execution planning strategy.
+`EventTimeWatermark` is resolved (_planned_) to [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) physical operator in [StatefulAggregationStrategy](../execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy.
 
-[NOTE]
-====
-`EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when [Dataset.withWatermark](../operators/withWatermark.md) operator is used on a batch query.
+!!! note
+    `EliminateEventTimeWatermark` logical optimization rule (i.e. `Rule[LogicalPlan]`) removes `EventTimeWatermark` logical operator from a logical plan if the <<child, child>> logical operator is not streaming, i.e. when [Dataset.withWatermark](../operators/withWatermark.md) operator is used on a batch query.
 
-```text
-val logs = spark.
-  read. // <-- batch non-streaming query that makes `EliminateEventTimeWatermark` rule applicable
-  format("text").
-  load("logs")
+    ```scala
+    val logs = spark.
+      read. // <-- batch non-streaming query that makes `EliminateEventTimeWatermark` rule applicable
+      format("text").
+      load("logs")
 
-// logs is a batch Dataset
-assert(!logs.isStreaming)
+    // logs is a batch Dataset
+    assert(!logs.isStreaming)
 
-val q = logs.
-  withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds") // <-- creates EventTimeWatermark
-scala> println(q.queryExecution.logical.numberedTreeString) // <-- no EventTimeWatermark as it was removed immediately
-00 Relation[value#0] text
-```
-====
+    val q = logs.
+      withWatermark(eventTime = "timestamp", delayThreshold = "30 seconds") // <-- creates EventTimeWatermark
+    ```
 
-=== [[creating-instance]] Creating EventTimeWatermark Instance
+    ```text
+    scala> println(q.queryExecution.logical.numberedTreeString) // <-- no EventTimeWatermark as it was removed immediately
+    00 Relation[value#0] text
+    ```
+
+## Creating Instance
 
 `EventTimeWatermark` takes the following to be created:
 

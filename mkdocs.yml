@@ -221,12 +221,13 @@ nav:
       - WriteToContinuousDataSourceExec: physical-operators/WriteToContinuousDataSourceExec.md
       - WriteToDataSourceV2Exec: physical-operators/WriteToDataSourceV2Exec.md
     - Execution Planning Strategies:
-      - FlatMapGroupsWithStateStrategy: FlatMapGroupsWithStateStrategy.md
-      - StatefulAggregationStrategy: StatefulAggregationStrategy.md
-      - StreamingDeduplicationStrategy: StreamingDeduplicationStrategy.md
-      - StreamingGlobalLimitStrategy: StreamingGlobalLimitStrategy.md
-      - StreamingJoinStrategy: StreamingJoinStrategy.md
-      - StreamingRelationStrategy: StreamingRelationStrategy.md
+      - execution-planning-strategies/index.md
+      - FlatMapGroupsWithStateStrategy: execution-planning-strategies/FlatMapGroupsWithStateStrategy.md
+      - StatefulAggregationStrategy: execution-planning-strategies/StatefulAggregationStrategy.md
+      - StreamingDeduplicationStrategy: execution-planning-strategies/StreamingDeduplicationStrategy.md
+      - StreamingGlobalLimitStrategy: execution-planning-strategies/StreamingGlobalLimitStrategy.md
+      - StreamingJoinStrategy: execution-planning-strategies/StreamingJoinStrategy.md
+      - StreamingRelationStrategy: execution-planning-strategies/StreamingRelationStrategy.md
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
       - MetadataLog: MetadataLog.md

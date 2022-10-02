@@ -19,7 +19,7 @@
 
 When created, `EventTimeWatermarkExec` registers the [EventTimeStatsAccum](#eventTimeStats) accumulator (with the current `SparkContext`).
 
-`EventTimeWatermarkExec` is created when [StatefulAggregationStrategy](../StatefulAggregationStrategy.md) execution planning strategy is executed (requested to plan a [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) logical operator for execution).
+`EventTimeWatermarkExec` is created when [StatefulAggregationStrategy](../execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is executed (requested to plan a [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) logical operator for execution).
 
 ## <span id="eventTimeStats"> EventTimeStats Accumulator
 
