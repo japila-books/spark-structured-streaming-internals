@@ -5,6 +5,10 @@
 !!! tip
     Find out more on [SQLConf](https://jaceklaskowski.github.io/mastering-spark-sql-book/SQLConf/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book)
 
+## <span id="FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION"> FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION
+
+[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](configuration-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion)
+
 ## <span id="streamingFileCommitProtocolClass"><span id="STREAMING_FILE_COMMIT_PROTOCOL_CLASS"> streamingFileCommitProtocolClass
 
 [spark.sql.streaming.commitProtocolClass](configuration-properties.md#spark.sql.streaming.commitProtocolClass) configuration property
@@ -103,16 +107,6 @@ a| [[fileSourceLogCleanupDelay]][[FILE_SOURCE_LOG_CLEANUP_DELAY]] Used exclusive
 [spark.sql.streaming.fileSource.log.compactInterval](configuration-properties.md#spark.sql.streaming.fileSource.log.compactInterval)
 
 a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exclusively when `FileStreamSourceLog` is requested for the [default compaction interval](datasources/file/FileStreamSourceLog.md#defaultCompactInterval)
-
-| `FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION`
-
-[spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](configuration-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion)
-
-a| [[FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION]] Used when:
-
-* [FlatMapGroupsWithStateStrategy](execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy is requested to plan a streaming query (and creates a [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator for every [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) logical operator)
-
-* Among the [checkpointed properties](OffsetSeqMetadata.md#relevantSQLConfs)
 
 | `SHUFFLE_PARTITIONS`
 

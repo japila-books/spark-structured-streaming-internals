@@ -1,12 +1,16 @@
 # FlatMapGroupsWithStateStrategy Execution Planning Strategy
 
-`FlatMapGroupsWithStateStrategy` is an execution planning strategy that can plan streaming queries with [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) unary logical operators to [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator (with undefined `StatefulOperatorStateInfo`, `batchTimestampMs`, and `eventTimeWatermark`).
+`FlatMapGroupsWithStateStrategy` is an execution planning strategy ([Spark SQL]({{ book.spark_sql }}/execution-planning-strategies/SparkStrategy)) that plans streaming queries with [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operators to [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator (with undefined `StatefulOperatorStateInfo`, `batchTimestampMs`, and `eventTimeWatermark`).
 
-`FlatMapGroupsWithStateStrategy` is used exclusively when [IncrementalExecution](../IncrementalExecution.md) is requested to plan a streaming query.
+`FlatMapGroupsWithStateStrategy` is part of `extraPlanningStrategies` of the [SparkPlanner](../IncrementalExecution.md#planner) (of [IncrementalExecution](../IncrementalExecution.md)).
+
+## <span id="spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion"> spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion
+
+`FlatMapGroupsWithStateStrategy` uses [spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion) for the state format version of [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md#stateFormatVersion).
 
 ## Demo
 
-```text
+```scala
 import org.apache.spark.sql.streaming.GroupState
 val stateFunc = (key: Long, values: Iterator[(Timestamp, Long)], state: GroupState[Long]) => {
   Iterator((key, values.size))
@@ -20,7 +24,9 @@ val numGroups = spark.
   as[(Timestamp, Long)].
   groupByKey { case (time, value) => value % 2 }.
   flatMapGroupsWithState(OutputMode.Update, GroupStateTimeout.NoTimeout)(stateFunc)
+```
 
+```text
 scala> numGroups.explain(true)
 == Parsed Logical Plan ==
 'SerializeFromObject [assertnotnull(assertnotnull(input[0, scala.Tuple2, true]))._1 AS _1#267L, assertnotnull(assertnotnull(input[0, scala.Tuple2, true]))._2 AS _2#268]

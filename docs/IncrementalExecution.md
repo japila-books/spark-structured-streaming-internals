@@ -1,9 +1,25 @@
 # IncrementalExecution
 
-`IncrementalExecution` is the `QueryExecution` of streaming queries.
+`IncrementalExecution` is the `QueryExecution` ([Spark SQL]({{ book.spark_sql }}/QueryExecution)) of streaming queries.
 
-!!! tip
-    Learn more about [QueryExecution]({{ book.spark_sql }}/QueryExecution) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
+## Creating Instance
+
+`IncrementalExecution` takes the following to be created:
+
+* <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
+* <span id="logicalPlan"> `LogicalPlan` ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan))
+* <span id="outputMode"> [OutputMode](OutputMode.md) (as specified using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode))
+* <span id="checkpointLocation"> [State checkpoint location](#state-checkpoint-location)
+* <span id="queryId"> Query ID
+* <span id="runId"> Run ID
+* <span id="currentBatchId"> Current Batch ID
+* <span id="offsetSeqMetadata"> [OffsetSeqMetadata](OffsetSeqMetadata.md)
+
+`IncrementalExecution` is created (and becomes the [StreamExecution.lastExecution](StreamExecution.md#lastExecution)) when:
+
+* `MicroBatchExecution` is requested to [run a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (in [queryPlanning](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) phase)
+* `ContinuousExecution` is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) (in [queryPlanning](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) phase)
+* [Dataset.explain](operators/explain.md) operator is executed (on a streaming query)
 
 ## <span id="statefulOperatorId"> statefulOperatorId
 
@@ -18,27 +34,6 @@ Current batch timestamp = [timestamp]
 ```
 
 Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
-
-## Creating Instance
-
-`IncrementalExecution` takes the following to be created:
-
-* <span id="sparkSession"> `SparkSession`
-* <span id="logicalPlan"> `LogicalPlan`
-* <span id="outputMode"> [OutputMode](OutputMode.md) (as specified using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode) method)
-* <span id="checkpointLocation"> [State checkpoint location](#state-checkpoint-location)
-* <span id="queryId"> ID of a streaming query
-* <span id="runId"> Run ID of a streaming query
-* <span id="currentBatchId"> Batch ID
-* <span id="offsetSeqMetadata"> [OffsetSeqMetadata](OffsetSeqMetadata.md)
-
-`IncrementalExecution` is created (and becomes the [StreamExecution.lastExecution](StreamExecution.md#lastExecution)) when:
-
-* `MicroBatchExecution` is requested to [run a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (in [queryPlanning](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) phase)
-
-* `ContinuousExecution` is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) (in [queryPlanning](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) phase)
-
-* [Dataset.explain](operators/explain.md) operator is executed (on a streaming query)
 
 ## State Checkpoint Location
 
@@ -95,17 +90,14 @@ Internally, `numStateStores` requests the [OffsetSeqMetadata](#offsetSeqMetadata
 
 ## <span id="planner"><span id="extraPlanningStrategies"> Extra Planning Strategies for Streaming Queries
 
-`IncrementalExecution` uses a custom `SparkPlanner` with the following **extra planning strategies** to plan the [streaming query](#logicalPlan) for execution:
+`IncrementalExecution` uses a custom `SparkPlanner` ([Spark SQL]({{ book.spark_sql }}/SparkPlanner)) with the following **extra planning strategies** to plan the [streaming query](#logicalPlan) for execution:
 
-* [StreamingJoinStrategy](execution-planning-strategies/StreamingJoinStrategy.md)
-* [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md)
-* [FlatMapGroupsWithStateStrategy](execution-planning-strategies/FlatMapGroupsWithStateStrategy.md)
-* [StreamingRelationStrategy](execution-planning-strategies/StreamingRelationStrategy.md)
-* [StreamingDeduplicationStrategy](execution-planning-strategies/StreamingDeduplicationStrategy.md)
-* [StreamingGlobalLimitStrategy](execution-planning-strategies/StreamingGlobalLimitStrategy.md)
-
-!!! tip
-    Learn more about [SparkPlanner]({{ book.spark_sql }}/SparkPlanner) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
+1. [StreamingJoinStrategy](execution-planning-strategies/StreamingJoinStrategy.md)
+1. [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md)
+1. [FlatMapGroupsWithStateStrategy](execution-planning-strategies/FlatMapGroupsWithStateStrategy.md)
+1. [StreamingRelationStrategy](execution-planning-strategies/StreamingRelationStrategy.md)
+1. [StreamingDeduplicationStrategy](execution-planning-strategies/StreamingDeduplicationStrategy.md)
+1. [StreamingGlobalLimitStrategy](execution-planning-strategies/StreamingGlobalLimitStrategy.md)
 
 ## <span id="state"> State Preparation Rule For Execution-Specific Configuration
 
