@@ -22,4 +22,4 @@ join(
   usingColumn: String): DataFrame
 ```
 
-[Streaming Join](../spark-sql-streaming-join.md)
+[Streaming Join](../streaming-join/index.md)

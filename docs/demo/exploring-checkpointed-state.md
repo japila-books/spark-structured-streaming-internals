@@ -5,7 +5,7 @@ hide:
 
 # Demo: Exploring Checkpointed State
 
-The following demo shows the internals of the checkpointed state of a [stateful streaming query](../spark-sql-streaming-stateful-stream-processing.md).
+The following demo shows the internals of the checkpointed state of a [stateful streaming query](../stateful-stream-processing/index.md).
 
 The demo uses the state checkpoint directory that was used in [Demo: Streaming Watermark with Aggregation in Append Output Mode](watermark-aggregation-append.md).
 

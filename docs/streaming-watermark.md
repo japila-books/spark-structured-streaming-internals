@@ -1,6 +1,6 @@
 # Streaming Watermark
 
-**Streaming Watermark** of a [stateful streaming query](spark-sql-streaming-stateful-stream-processing.md) is how long to wait for late and possibly out-of-order events until a streaming state can be considered final and not to change. Streaming watermark is used to mark events  (modeled as a row in the streaming Dataset) that are older than the threshold as "too late", and not "interesting" to update partial non-final streaming state.
+**Streaming Watermark** of a [stateful streaming query](stateful-stream-processing/index.md) is how long to wait for late and possibly out-of-order events until a streaming state can be considered final and not to change. Streaming watermark is used to mark events  (modeled as a row in the streaming Dataset) that are older than the threshold as "too late", and not "interesting" to update partial non-final streaming state.
 
 In Spark Structured Streaming, streaming watermark is defined using [Dataset.withWatermark](operators/withWatermark.md) high-level operator.
 
@@ -24,18 +24,18 @@ In [Append](OutputMode.md#Append) output mode the current event-time streaming w
 
 * Dropping late events, i.e. don't save them to a state store or include in aggregation (*Late events* in the demo)
 
-Streaming watermark is [required](UnsupportedOperationChecker.md#streaming-aggregation-append-mode-requires-watermark) for a [streaming aggregation](streaming-aggregation.md) in [append](OutputMode.md#Append) output mode.
+Streaming watermark is [required](UnsupportedOperationChecker.md#streaming-aggregation-append-mode-requires-watermark) for a [streaming aggregation](streaming-aggregation/index.md) in [append](OutputMode.md#Append) output mode.
 
 ## Streaming Aggregation
 
-In [streaming aggregation](streaming-aggregation.md), a streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using [window](spark-sql-streaming-window.md) standard function).
+In [streaming aggregation](streaming-aggregation/index.md), a streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using [window](spark-sql-streaming-window.md) standard function).
 
 !!! note
     [Dataset.withWatermark](operators/withWatermark.md) operator has to be used before an aggregation operator (for the watermark to have an effect).
 
 ## Streaming Join
 
-In [streaming join](spark-sql-streaming-join.md), a streaming watermark can be defined on [join keys or any of the join sides](spark-sql-streaming-join.md#join-state-watermark).
+In [streaming join](streaming-join/index.md), a streaming watermark can be defined on [join keys or any of the join sides](streaming-join/index.md#join-state-watermark).
 
 ## Demos
 

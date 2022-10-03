@@ -39,7 +39,7 @@ scala> :type mapped
 org.apache.spark.sql.KeyValueGroupedDataset[Long,String]
 ```
 
-`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for [Streaming Aggregation](streaming-aggregation.md).
+`KeyValueGroupedDataset` works for batch and streaming aggregations, but shines the most when used for [Streaming Aggregation](streaming-aggregation/index.md).
 
 ```text
 scala> :type numGroups
@@ -86,7 +86,7 @@ Batch: 2
 spark.streams.active.foreach(_.stop)
 ```
 
-The most prestigious use case of `KeyValueGroupedDataset` however is [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md) that allows for accumulating **streaming state** (by means of [GroupState](GroupState.md)) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
+The most prestigious use case of `KeyValueGroupedDataset` however is [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation/index.md) that allows for accumulating **streaming state** (by means of [GroupState](GroupState.md)) using <<mapGroupsWithState, mapGroupsWithState>> and the more advanced <<flatMapGroupsWithState, flatMapGroupsWithState>> operators.
 
 [[operators]]
 .KeyValueGroupedDataset's Operators
@@ -151,7 +151,7 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
   func: (K, Iterator[V], GroupState[S]) => Iterator[U]): Dataset[U]
 ```
 
-[Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md) - streaming aggregation with explicit state and state timeout
+[Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation/index.md) - streaming aggregation with explicit state and state timeout
 
 !!! note
     The difference between this `flatMapGroupsWithState` and [mapGroupsWithState](#mapGroupsWithState) operators is the state function that generates zero or more elements (that are in turn the rows in the result streaming `Dataset`).
@@ -206,13 +206,3 @@ reduceGroups(f: (V, V) => V): Dataset[(K, V)]
 ----
 
 |===
-
-=== [[creating-instance]] Creating KeyValueGroupedDataset Instance
-
-`KeyValueGroupedDataset` takes the following when created:
-
-* [[kEncoder]] `Encoder` for keys
-* [[vEncoder]] `Encoder` for values
-* [[queryExecution]] `QueryExecution`
-* [[dataAttributes]] Data attributes
-* [[groupingAttributes]] Grouping attributes

@@ -1,6 +1,6 @@
 # StateStore
 
-`StateStore` is the <<contract, abstraction>> of <<implementations, key-value stores>> for managing state in [Stateful Stream Processing](spark-sql-streaming-stateful-stream-processing.md) (e.g. for persisting running aggregates in [Streaming Aggregation](streaming-aggregation.md)).
+`StateStore` is the <<contract, abstraction>> of <<implementations, key-value stores>> for managing state in [Stateful Stream Processing](stateful-stream-processing/index.md) (e.g. for persisting running aggregates in [Streaming Aggregation](streaming-aggregation/index.md)).
 
 `StateStore` supports **incremental checkpointing** in which only the key-value "Row" pairs that changed are <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
 

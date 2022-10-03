@@ -1,6 +1,6 @@
 # GroupState
 
-`GroupState` is an <<contract, abstraction>> of <<implementations, group state>> (of type `S`) in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
+`GroupState` is an <<contract, abstraction>> of <<implementations, group state>> (of type `S`) in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation/index.md).
 
 `GroupState` is used with the following [KeyValueGroupedDataset](KeyValueGroupedDataset.md) operations:
 

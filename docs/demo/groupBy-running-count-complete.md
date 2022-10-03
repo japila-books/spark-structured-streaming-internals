@@ -5,7 +5,7 @@ hide:
 
 # Demo: Streaming Query for Running Counts (Socket Source and Complete Output Mode)
 
-The following code shows a [streaming aggregation](../streaming-aggregation.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) in [complete](../OutputMode.md#Complete) output mode that reads text lines from a socket (using socket data source) and outputs running counts of the words.
+The following code shows a [streaming aggregation](../streaming-aggregation/index.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) in [complete](../OutputMode.md#Complete) output mode that reads text lines from a socket (using socket data source) and outputs running counts of the words.
 
 NOTE: The example is "borrowed" from http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html[the official documentation of Spark]. Changes and errors are only mine.
 

@@ -1,6 +1,6 @@
 # StreamingAggregationStateManager
 
-`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](StateStore.md) and the physical operators used in [Streaming Aggregation](streaming-aggregation.md) (e.g. [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) and [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md)).
+`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](StateStore.md) and the physical operators used in [Streaming Aggregation](streaming-aggregation/index.md) (e.g. [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) and [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md)).
 
 [[contract]]
 .StreamingAggregationStateManager Contract

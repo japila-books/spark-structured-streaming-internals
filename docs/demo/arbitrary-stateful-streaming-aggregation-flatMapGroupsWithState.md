@@ -5,7 +5,7 @@ hide:
 
 # Demo: Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator
 
-The following demo shows an example of [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md) with [KeyValueGroupedDataset.flatMapGroupsWithState](../operators/flatMapGroupsWithState.md) operator.
+The following demo shows an example of [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md) with [KeyValueGroupedDataset.flatMapGroupsWithState](../operators/flatMapGroupsWithState.md) operator.
 
 ```text
 import java.sql.Timestamp

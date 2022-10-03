@@ -10,4 +10,4 @@ joinWith[U](
   joinType: String): Dataset[(T, U)]
 ```
 
-[Streaming Join](../spark-sql-streaming-join.md)
+[Streaming Join](../streaming-join/index.md)

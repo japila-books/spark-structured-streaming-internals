@@ -5,7 +5,7 @@ groupByKey(
   func: T => K): KeyValueGroupedDataset[K, T]
 ```
 
-`groupByKey` operator aggregates rows by a typed grouping function for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md).
+`groupByKey` operator aggregates rows by a typed grouping function for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md).
 
 `groupByKey` creates a [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) (with keys of type `K` and rows of type `T`) to apply aggregation functions over groups of rows (of type `T`) by key (of type `K`) per the given `func` key-generating function.
 

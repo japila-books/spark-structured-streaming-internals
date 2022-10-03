@@ -119,70 +119,6 @@ nav:
     - DataSource: DataSource.md
     - MicroBatchStream: MicroBatchStream.md
     - ContinuousStream: ContinuousStream.md
-    - Streaming Join:
-      - Streaming Join: spark-sql-streaming-join.md
-      - StateStoreAwareZipPartitionsRDD: StateStoreAwareZipPartitionsRDD.md
-      - SymmetricHashJoinStateManager:
-        - SymmetricHashJoinStateManager: SymmetricHashJoinStateManager.md
-        - StateStoreHandler: spark-sql-streaming-StateStoreHandler.md
-        - KeyToNumValuesStore: spark-sql-streaming-KeyToNumValuesStore.md
-        - KeyWithIndexToValueStore: spark-sql-streaming-KeyWithIndexToValueStore.md
-      - OneSideHashJoiner: OneSideHashJoiner.md
-      - JoinStateWatermarkPredicates: spark-sql-streaming-JoinStateWatermarkPredicates.md
-      - JoinStateWatermarkPredicate: spark-sql-streaming-JoinStateWatermarkPredicate.md
-      - StateStoreAwareZipPartitionsHelper:
-        - StateStoreAwareZipPartitionsHelper: spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md
-        - StreamingSymmetricHashJoinHelper: StreamingSymmetricHashJoinHelper.md
-        - StreamingJoinHelper: StreamingJoinHelper.md
-    - Streaming Aggregation:
-      - Streaming Aggregation: streaming-aggregation.md
-      - StateStoreRDD: StateStoreRDD.md
-      - StateStoreOps: StateStoreOps.md
-      - StreamingAggregationStateManager: StreamingAggregationStateManager.md
-      - StreamingAggregationStateManagerBaseImpl: StreamingAggregationStateManagerBaseImpl.md
-      - StreamingAggregationStateManagerImplV1: StreamingAggregationStateManagerImplV1.md
-      - StreamingAggregationStateManagerImplV2: StreamingAggregationStateManagerImplV2.md
-    - Stateful Stream Processing:
-      - Stateful Stream Processing: spark-sql-streaming-stateful-stream-processing.md
-      - Streaming Watermark: streaming-watermark.md
-      - Streaming Deduplication: spark-sql-streaming-deduplication.md
-      - Streaming Limit: spark-sql-streaming-limit.md
-      - StateStore:
-        - StateStore: StateStore.md
-        - StateStoreId: spark-sql-streaming-StateStoreId.md
-        - HDFSBackedStateStore: HDFSBackedStateStore.md
-      - StateStoreProvider:
-        - StateStoreProvider: spark-sql-streaming-StateStoreProvider.md
-        - StateStoreProviderId: spark-sql-streaming-StateStoreProviderId.md
-        - HDFSBackedStateStoreProvider: HDFSBackedStateStoreProvider.md
-      - StateStoreCoordinator:
-        - StateStoreCoordinator: StateStoreCoordinator.md
-        - StateStoreCoordinatorRef: StateStoreCoordinatorRef.md
-      - WatermarkSupport: WatermarkSupport.md
-      - StatefulOperatorStateInfo: StatefulOperatorStateInfo.md
-      - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
-      - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
-      - StateStoreUpdater: spark-sql-streaming-StateStoreUpdater.md
-      - EventTimeStatsAccum: EventTimeStatsAccum.md
-      - EventTimeStats: EventTimeStats.md
-      - StateStoreConf: StateStoreConf.md
-    - Arbitrary Stateful Streaming Aggregation:
-      - Arbitrary Stateful Streaming Aggregation: arbitrary-stateful-streaming-aggregation.md
-      - KeyValueGroupedDataset:
-        - KeyValueGroupedDataset: KeyValueGroupedDataset.md
-        - mapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
-        - flatMapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md
-      - GroupState:
-        - GroupState: GroupState.md
-        - GroupStateImpl: GroupStateImpl.md
-      - GroupStateTimeout: GroupStateTimeout.md
-      - StateManager:
-        - StateManager: spark-sql-streaming-StateManager.md
-        - StateManagerImplV2: spark-sql-streaming-StateManagerImplV2.md
-        - StateManagerImplBase: spark-sql-streaming-StateManagerImplBase.md
-        - StateManagerImplV1: spark-sql-streaming-StateManagerImplV1.md
-      - FlatMapGroupsWithStateExecHelper Helper Class: spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md
-      - InputProcessor: InputProcessor.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - Query Execution:
       - StreamExecution: StreamExecution.md
@@ -274,6 +210,72 @@ nav:
     - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
     - SQLConf: SQLConf.md
     - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
+  - Features:
+    - features/index.md
+    - Arbitrary Stateful Streaming Aggregation:
+      - arbitrary-stateful-streaming-aggregation/index.md
+      - KeyValueGroupedDataset:
+        - KeyValueGroupedDataset: KeyValueGroupedDataset.md
+        - mapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
+        - flatMapGroupsWithState Operator: spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md
+      - GroupState:
+        - GroupState: GroupState.md
+        - GroupStateImpl: GroupStateImpl.md
+      - GroupStateTimeout: GroupStateTimeout.md
+      - StateManager:
+        - StateManager: spark-sql-streaming-StateManager.md
+        - StateManagerImplV2: spark-sql-streaming-StateManagerImplV2.md
+        - StateManagerImplBase: spark-sql-streaming-StateManagerImplBase.md
+        - StateManagerImplV1: spark-sql-streaming-StateManagerImplV1.md
+      - FlatMapGroupsWithStateExecHelper Helper Class: spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md
+      - InputProcessor: InputProcessor.md
+    - Streaming Aggregation:
+      - streaming-aggregation/index.md
+      - StateStoreRDD: StateStoreRDD.md
+      - StateStoreOps: StateStoreOps.md
+      - StreamingAggregationStateManager: StreamingAggregationStateManager.md
+      - StreamingAggregationStateManagerBaseImpl: StreamingAggregationStateManagerBaseImpl.md
+      - StreamingAggregationStateManagerImplV1: StreamingAggregationStateManagerImplV1.md
+      - StreamingAggregationStateManagerImplV2: StreamingAggregationStateManagerImplV2.md
+    - Streaming Join:
+      - streaming-join/index.md
+      - StateStoreAwareZipPartitionsRDD: StateStoreAwareZipPartitionsRDD.md
+      - SymmetricHashJoinStateManager:
+        - SymmetricHashJoinStateManager: SymmetricHashJoinStateManager.md
+        - StateStoreHandler: spark-sql-streaming-StateStoreHandler.md
+        - KeyToNumValuesStore: spark-sql-streaming-KeyToNumValuesStore.md
+        - KeyWithIndexToValueStore: spark-sql-streaming-KeyWithIndexToValueStore.md
+      - OneSideHashJoiner: OneSideHashJoiner.md
+      - JoinStateWatermarkPredicates: spark-sql-streaming-JoinStateWatermarkPredicates.md
+      - JoinStateWatermarkPredicate: spark-sql-streaming-JoinStateWatermarkPredicate.md
+      - StateStoreAwareZipPartitionsHelper:
+        - StateStoreAwareZipPartitionsHelper: spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md
+        - StreamingSymmetricHashJoinHelper: StreamingSymmetricHashJoinHelper.md
+        - StreamingJoinHelper: StreamingJoinHelper.md
+    - Stateful Stream Processing:
+      - stateful-stream-processing/index.md
+      - Streaming Watermark: streaming-watermark.md
+      - Streaming Deduplication: spark-sql-streaming-deduplication.md
+      - Streaming Limit: spark-sql-streaming-limit.md
+      - StateStore:
+        - StateStore: StateStore.md
+        - StateStoreId: spark-sql-streaming-StateStoreId.md
+        - HDFSBackedStateStore: HDFSBackedStateStore.md
+      - StateStoreProvider:
+        - StateStoreProvider: spark-sql-streaming-StateStoreProvider.md
+        - StateStoreProviderId: spark-sql-streaming-StateStoreProviderId.md
+        - HDFSBackedStateStoreProvider: HDFSBackedStateStoreProvider.md
+      - StateStoreCoordinator:
+        - StateStoreCoordinator: StateStoreCoordinator.md
+        - StateStoreCoordinatorRef: StateStoreCoordinatorRef.md
+      - WatermarkSupport: WatermarkSupport.md
+      - StatefulOperatorStateInfo: StatefulOperatorStateInfo.md
+      - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
+      - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
+      - StateStoreUpdater: spark-sql-streaming-StateStoreUpdater.md
+      - EventTimeStatsAccum: EventTimeStatsAccum.md
+      - EventTimeStats: EventTimeStats.md
+      - StateStoreConf: StateStoreConf.md
   - High-Level APIs:
     - DataStreamReader: DataStreamReader.md
     - DataStreamWriter: DataStreamWriter.md

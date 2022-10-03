@@ -1,24 +1,24 @@
 # Streaming Aggregation
 
-In Spark Structured Streaming, a *streaming aggregation* is a streaming query that was described (_build_) using the following [high-level streaming operators](operators/index.md):
+In Spark Structured Streaming, **Streaming Aggregation** is an operation in a streaming query that was described (_build_) using the following [high-level streaming operators](../operators/index.md):
 
-* [Dataset.groupBy](operators/groupBy.md), `Dataset.rollup`, `Dataset.cube` (that simply create a `RelationalGroupedDataset`)
+* [Dataset.groupBy](../operators/groupBy.md), `Dataset.rollup`, `Dataset.cube` (that all create a `RelationalGroupedDataset` ([Spark SQL]({{ book.spark_sql }}/basic-aggregation/RelationalGroupedDataset)))
 
-* [Dataset.groupByKey](operators/groupByKey.md) (that simply creates a `KeyValueGroupedDataset`)
+* [Dataset.groupByKey](../operators/groupByKey.md) (that creates a `KeyValueGroupedDataset` ([Spark SQL]({{ book.spark_sql }}/basic-aggregation/KeyValueGroupedDataset)))
 
-* SQL's `GROUP BY` clause (including `WITH CUBE` and `WITH ROLLUP`)
+* SQL's `GROUP BY` clause (including `WITH CUBE` and `WITH ROLLUP` ([Spark SQL]({{ book.spark_sql }}/sql/AstBuilder/#withAggregationClause)))
 
-Streaming aggregation belongs to the category of [Stateful Stream Processing](spark-sql-streaming-stateful-stream-processing.md).
+Streaming aggregation is part of [Stateful Stream Processing](../stateful-stream-processing/index.md).
 
-=== [[IncrementalExecution]] IncrementalExecution -- QueryExecution of Streaming Queries
+## <span id="IncrementalExecution"> IncrementalExecution
 
-Under the covers, the high-level operators create a logical query plan with one or more `Aggregate` logical operators.
+Under the covers, these high-level operators create logical query plans with `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) logical operators.
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Aggregate.html[Aggregate] logical operator in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+Spark Structured Streaming uses [IncrementalExecution](../IncrementalExecution.md) for planning streaming queries for execution.
 
-In Spark Structured Streaming [IncrementalExecution](IncrementalExecution.md) is responsible for planning streaming queries for execution.
+At [query planning](../IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StatefulAggregationStrategy](../execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy for planning streaming aggregations (`Aggregate` unary logical operators) as pairs of [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) and [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operators.
 
-At [query planning](IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy for planning streaming aggregations (`Aggregate` unary logical operators) as pairs of [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) and [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operators.
+## Demo
 
 ```text
 // input data from a data source
@@ -64,14 +64,14 @@ Aggregate [(value#16L % 2)], [(value#16L % 2) AS (value % 2)#23L, count(1) AS co
 */
 ```
 
-## Demos
+## More Demos
 
 Learn more in the following demos:
 
-* [Streaming Watermark with Aggregation in Append Output Mode](demo/watermark-aggregation-append.md)
+* [Streaming Watermark with Aggregation in Append Output Mode](../demo/watermark-aggregation-append.md)
 
-* [Streaming Query for Running Counts (Socket Source and Complete Output Mode)](demo/groupBy-running-count-complete.md)
+* [Streaming Query for Running Counts (Socket Source and Complete Output Mode)](../demo/groupBy-running-count-complete.md)
 
-* [Streaming Aggregation with Kafka Data Source](demo/kafka-data-source.md)
+* [Streaming Aggregation with Kafka Data Source](../demo/kafka-data-source.md)
 
-* [groupByKey Streaming Aggregation in Update Mode](demo/groupByKey-count-Update.md)
+* [groupByKey Streaming Aggregation in Update Mode](../demo/groupByKey-count-Update.md)

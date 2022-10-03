@@ -1,6 +1,6 @@
 # OneSideHashJoiner
 
-`OneSideHashJoiner` manages join state of one side of a <<spark-sql-streaming-join.md#stream-stream-joins, stream-stream join>> (using <<joinStateManager, SymmetricHashJoinStateManager>>).
+`OneSideHashJoiner` manages join state of one side of a <<streaming-join/index.md#stream-stream-joins, stream-stream join>> (using <<joinStateManager, SymmetricHashJoinStateManager>>).
 
 `OneSideHashJoiner` is <<creating-instance, created>> exclusively for <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (when requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
 

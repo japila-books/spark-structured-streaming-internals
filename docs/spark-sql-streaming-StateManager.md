@@ -1,6 +1,6 @@
 # StateManager
 
-`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](StateStore.md) and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation.md).
+`StateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](StateStore.md) and the [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md) physical operator used in [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation/index.md).
 
 [[contract]]
 .StateManager Contract

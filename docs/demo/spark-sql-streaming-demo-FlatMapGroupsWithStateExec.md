@@ -5,7 +5,7 @@ hide:
 
 # Demo: Internals of FlatMapGroupsWithStateExec Physical Operator
 
-The following demo shows the internals of [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator in a [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation.md).
+The following demo shows the internals of [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator in a [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md).
 
 ```text
 // Reduce the number of partitions and hence the state stores
