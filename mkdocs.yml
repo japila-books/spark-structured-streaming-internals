@@ -286,9 +286,8 @@ nav:
     - SupportsAdmissionControl: SupportsAdmissionControl.md
     - SupportsTriggerAvailableNow: SupportsTriggerAvailableNow.md
     - Trigger: Trigger.md
-    - window Function: spark-sql-streaming-window.md
   - Streaming Operators:
-    - Streaming Operators: operators/index.md
+    - operators/index.md
     - crossJoin: operators/crossJoin.md
     - dropDuplicates: operators/dropDuplicates.md
     - explain: operators/explain.md
@@ -297,6 +296,7 @@ nav:
     - groupByKey: operators/groupByKey.md
     - join: operators/join.md
     - joinWith: operators/joinWith.md
+    - window: operators/window.md
     - withWatermark: operators/withWatermark.md
     - writeStream: operators/writeStream.md
   - Data Sources:

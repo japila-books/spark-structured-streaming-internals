@@ -28,7 +28,7 @@ Streaming watermark is [required](UnsupportedOperationChecker.md#streaming-aggre
 
 ## Streaming Aggregation
 
-In [streaming aggregation](streaming-aggregation/index.md), a streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using [window](spark-sql-streaming-window.md) standard function).
+In [streaming aggregation](streaming-aggregation/index.md), a streaming watermark has to be defined on one or many grouping expressions of a streaming aggregation (directly or using [window](operators/window.md) standard function).
 
 !!! note
     [Dataset.withWatermark](operators/withWatermark.md) operator has to be used before an aggregation operator (for the watermark to have an effect).

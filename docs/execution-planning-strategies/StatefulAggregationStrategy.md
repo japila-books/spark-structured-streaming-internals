@@ -1,12 +1,15 @@
 # StatefulAggregationStrategy Execution Planning Strategy
 
-`StatefulAggregationStrategy` is an execution planning strategy that is used to plan streaming queries with the following logical operators:
+`StatefulAggregationStrategy` is an execution planning strategy ([Spark SQL]({{ book.spark_sql }}/execution-planning-strategies/SparkStrategy)) to plan streaming queries with [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) and `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) logical operators.
 
-* [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) logical operator ([Dataset.withWatermark](../operators/withWatermark.md) operator)
+Logical Operator | Physical Operator
+-----------------|-------------------
+ [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) | [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md)
+ `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) | One of the following per [selection requirements](#createStreamingAggregate):<ul><li>`HashAggregateExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/HashAggregateExec))</li><li>`ObjectHashAggregateExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/ObjectHashAggregateExec))</li><li>`SortAggregateExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SortAggregateExec))</li></ul>
 
-* `Aggregate` logical operator (for [Dataset.groupBy](../operators/groupBy.md) and [Dataset.groupByKey](../operators/groupByKey.md) operators, and `GROUP BY` SQL clause)
+`StatefulAggregationStrategy` is used when [IncrementalExecution](../IncrementalExecution.md) is requested to plan a streaming query.
 
-`StatefulAggregationStrategy` is used exclusively when [IncrementalExecution](../IncrementalExecution.md) is requested to plan a streaming query.
+## Accessing StatefulAggregationStrategy
 
 `StatefulAggregationStrategy` is available using `SessionState`.
 
@@ -14,27 +17,77 @@
 spark.sessionState.planner.StatefulAggregationStrategy
 ```
 
-[[apply]]
-[[selection-requirements]]
-.StatefulAggregationStrategy's Logical to Physical Operator Conversions
-[cols="1,2",options="header",width="100%"]
-|===
-| Logical Operator
-| Physical Operator
+## <span id="planStreamingAggregation"> planStreamingAggregation
 
-| [EventTimeWatermark](../logical-operators/EventTimeWatermark.md)
-a| [[EventTimeWatermark]] [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md)
+```scala
+planStreamingAggregation(
+  groupingExpressions: Seq[NamedExpression],
+  functionsWithoutDistinct: Seq[AggregateExpression],
+  resultExpressions: Seq[NamedExpression],
+  stateFormatVersion: Int,
+  child: SparkPlan): Seq[SparkPlan]
+```
 
-| `Aggregate`
-a| [[Aggregate]]
+`planStreamingAggregation` [creates a streaming aggregate physical operator](#createStreamingAggregate) for `Partial` aggregation (with the given `child` physical operator as the child). The given `functionsWithoutDistinct` expressions are set up to work in `Partial` execution mode.
 
-In the order of preference:
+`planStreamingAggregation` [creates another streaming aggregate physical operator](#createStreamingAggregate) for `PartialMerge` aggregation (with the partial aggregate physical operator as the child). The given `functionsWithoutDistinct` expressions are set up to work in `PartialMerge` execution mode.
 
-1. `HashAggregateExec`
-1. `ObjectHashAggregateExec`
-1. `SortAggregateExec`
+`planStreamingAggregation` creates a [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) physical operator (with the partial-merge aggregate physical operator as the child).
 
-|===
+`planStreamingAggregation` [creates another streaming aggregate physical operator](#createStreamingAggregate) for `PartialMerge` aggregation (with the `StateStoreRestoreExec` physical operator as the child). The given `functionsWithoutDistinct` expressions are set up to work in `PartialMerge` execution mode.
+
+`planStreamingAggregation` creates a [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator (with the last partial-merge aggregate physical operator as the child).
+
+In the end, `planStreamingAggregation` [creates another streaming aggregate physical operator](#createStreamingAggregate) for `Final` aggregation (with the `StateStoreSaveExec` physical operator as the child). The given `functionsWithoutDistinct` expressions are set up to work in `Final` execution mode.
+
+---
+
+`planStreamingAggregation` is used when:
+
+* `StatefulAggregationStrategy` execution planning strategy is planning a streaming query with `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) logical operator with no session window
+
+## <span id="planStreamingAggregationForSession"> planStreamingAggregationForSession
+
+```scala
+planStreamingAggregationForSession(
+  groupingExpressions: Seq[NamedExpression],
+  sessionExpression: NamedExpression,
+  functionsWithoutDistinct: Seq[AggregateExpression],
+  resultExpressions: Seq[NamedExpression],
+  stateFormatVersion: Int,
+  mergeSessionsInLocalPartition: Boolean,
+  child: SparkPlan): Seq[SparkPlan]
+```
+
+`planStreamingAggregationForSession`...FIXME
+
+---
+
+`planStreamingAggregationForSession` is used when:
+
+* `StatefulAggregationStrategy` execution planning strategy is planning a streaming query with `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) logical operator with session window
+
+## <span id="createStreamingAggregate"> Creating Streaming Aggregate Physical Operator
+
+```scala
+createStreamingAggregate(
+  requiredChildDistributionExpressions: Option[Seq[Expression]] = None,
+  groupingExpressions: Seq[NamedExpression] = Nil,
+  aggregateExpressions: Seq[AggregateExpression] = Nil,
+  aggregateAttributes: Seq[Attribute] = Nil,
+  initialInputBufferOffset: Int = 0,
+  resultExpressions: Seq[NamedExpression] = Nil,
+  child: SparkPlan): SparkPlan
+```
+
+`createStreamingAggregate` creates one of the following physical operators:
+
+* `HashAggregateExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/HashAggregateExec))
+* `ObjectHashAggregateExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/ObjectHashAggregateExec))
+* `SortAggregateExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SortAggregateExec))
+
+!!! note
+    Learn more about the selection requirements in [The Internals of Spark SQL]({{ book.spark_sql }}/AggUtils/#createAggregate).
 
 ## Demo
 
@@ -75,70 +128,3 @@ val consoleOutput = counts.
 // Eventually...
 consoleOutput.stop
 ```
-
-=== [[planStreamingAggregation]][[AggUtils-planStreamingAggregation]] Selecting Aggregate Physical Operator Given Aggregate Expressions — `AggUtils.planStreamingAggregation` Internal Method
-
-[source, scala]
-----
-planStreamingAggregation(
-  groupingExpressions: Seq[NamedExpression],
-  functionsWithoutDistinct: Seq[AggregateExpression],
-  resultExpressions: Seq[NamedExpression],
-  child: SparkPlan): Seq[SparkPlan]
-----
-
-`planStreamingAggregation` takes the grouping attributes (from `groupingExpressions`).
-
-NOTE: `groupingExpressions` corresponds to the grouping function in [groupBy](../operators/groupBy.md) operator.
-
-[[partialAggregate]]
-`planStreamingAggregation` creates an aggregate physical operator (called `partialAggregate`) with:
-
-* `requiredChildDistributionExpressions` undefined (i.e. `None`)
-* `initialInputBufferOffset` as `0`
-* `functionsWithoutDistinct` in `Partial` mode
-* `child` operator as the input `child`
-
-[NOTE]
-====
-`planStreamingAggregation` creates one of the following aggregate physical operators (in the order of preference):
-
-1. `HashAggregateExec`
-1. `ObjectHashAggregateExec`
-1. `SortAggregateExec`
-
-`planStreamingAggregation` uses `AggUtils.createAggregate` method to select an aggregate physical operator that you can read about in https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-sql-SparkStrategy-Aggregation.html#AggUtils-createAggregate[Selecting Aggregate Physical Operator Given Aggregate Expressions -- `AggUtils.createAggregate` Internal Method] in *Mastering Apache Spark 2* gitbook.
-====
-
-[[partialMerged1]]
-`planStreamingAggregation` creates an aggregate physical operator (called `partialMerged1`) with:
-
-* `requiredChildDistributionExpressions` based on the input `groupingExpressions`
-* `initialInputBufferOffset` as the length of `groupingExpressions`
-* `functionsWithoutDistinct` in `PartialMerge` mode
-* `child` operator as <<partialAggregate, partialAggregate>> aggregate physical operator created above
-
-[[restored]]
-`planStreamingAggregation` creates [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) physical operator with the grouping attributes, undefined `StatefulOperatorStateInfo`, and <<partialMerged1, partialMerged1>> aggregate physical operator created above.
-
-[[partialMerged2]]
-`planStreamingAggregation` creates an aggregate physical operator (called `partialMerged2`) with:
-
-* `child` operator as <<restored, StateStoreRestoreExec>> physical operator created above
-
-NOTE: The only difference between <<partialMerged1, partialMerged1>> and <<partialMerged2, partialMerged2>> steps is the child physical operator.
-
-[[saved]]
-`planStreamingAggregation` creates [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md#creating-instance) with:
-
-* the grouping attributes based on the input `groupingExpressions`
-* No `stateInfo`, `outputMode` and `eventTimeWatermark`
-* `child` operator as <<partialMerged2, partialMerged2>> aggregate physical operator created above
-
-[[finalAndCompleteAggregate]]
-In the end, `planStreamingAggregation` creates the final aggregate physical operator (called `finalAndCompleteAggregate`) with:
-
-* `requiredChildDistributionExpressions` based on the input `groupingExpressions`
-* `initialInputBufferOffset` as the length of `groupingExpressions`
-* `functionsWithoutDistinct` in `Final` mode
-* `child` operator as <<saved, StateStoreSaveExec>> physical operator created above

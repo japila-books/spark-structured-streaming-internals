@@ -64,6 +64,18 @@ Specifies the [OutputMode](OutputMode.md) of the streaming query (what data is s
 
 Default: [Append](OutputMode.md#Append)
 
+```scala
+import org.apache.spark.sql.streaming.OutputMode.Update
+val inputStream = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")
+  .outputMode(Update) // <-- update output mode
+  .start
+```
+
 ## <span id="partitionBy"> Partitioning Streaming Writes
 
 ```scala

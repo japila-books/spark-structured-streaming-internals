@@ -8,7 +8,7 @@
 
 * <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
 * <span id="logicalPlan"> `LogicalPlan` ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan))
-* <span id="outputMode"> [OutputMode](OutputMode.md) (as specified using [DataStreamWriter.outputMode](DataStreamWriter.md#outputMode))
+* <span id="outputMode"> [OutputMode](OutputMode.md)
 * <span id="checkpointLocation"> [State checkpoint location](#state-checkpoint-location)
 * <span id="queryId"> Query ID
 * <span id="runId"> Run ID
