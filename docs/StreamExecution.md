@@ -692,15 +692,19 @@ When started, `queryExecutionThread` sets the <<callSite, call site>> and <<runS
     "stream execution thread for kafka-topic1 [id =...
     ```
 
-## <span id="offsetSeqMetadata"> Current Batch Metadata (Event-Time Watermark and Timestamp)
+## <span id="offsetSeqMetadata"> Batch Metadata
 
 ```scala
 offsetSeqMetadata: OffsetSeqMetadata
 ```
 
-`offsetSeqMetadata` is a [OffsetSeqMetadata](OffsetSeqMetadata.md).
+`offsetSeqMetadata` is part of the [ProgressReporter](monitoring/ProgressReporter.md#offsetSeqMetadata) abstraction.
 
-`offsetSeqMetadata` is used to create an [IncrementalExecution](IncrementalExecution.md) in the **queryPlanning** phase of the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) execution engines.
+---
+
+`StreamExecution` [creates an OffsetSeqMetadata](OffsetSeqMetadata.md#apply) when [created](#creating-instance).
+
+Most importantly, the `OffsetSeqMetadata` is used to create an [IncrementalExecution](IncrementalExecution.md#offsetSeqMetadata) in the **queryPlanning** phase of the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) execution engines.
 
 `offsetSeqMetadata` is initialized (with `0` for `batchWatermarkMs` and `batchTimestampMs`) when `StreamExecution` is requested to <<runStream, run stream processing>>.
 
