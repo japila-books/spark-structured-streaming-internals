@@ -1,13 +1,13 @@
 # StreamingQueryStatusListener
 
-`StreamingQueryStatusListener` is a [StreamingQueryListener](../monitoring/StreamingQueryListener.md).
+`StreamingQueryStatusListener` is a [StreamingQueryListener](../monitoring/StreamingQueryListener.md) that intercepts streaming events and writes them out to the [ElementTrackingStore](#store) (for [StreamingQueryTab](StreamingQueryTab.md)).
 
 ## Creating Instance
 
 `StreamingQueryStatusListener` takes the following to be created:
 
-* <span id="conf"> `SparkConf` (Spark Core)
-* <span id="store"> `ElementTrackingStore` (Spark Core)
+* <span id="conf"> `SparkConf` ([Spark Core]({{ book.spark_core }}/SparkConf))
+* <span id="store"> `ElementTrackingStore` ([Spark Core]({{ book.spark_core }}/status/ElementTrackingStore))
 
 `StreamingQueryStatusListener` is created when:
 

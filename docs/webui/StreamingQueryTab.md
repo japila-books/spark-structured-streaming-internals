@@ -11,13 +11,22 @@ When [created](#creating-instance), `StreamingQueryTab` attaches the following p
 
 `StreamingQueryTab` takes the following to be created:
 
-* <span id="store"> `StreamingQueryStatusStore`
+* [StreamingQueryStatusStore](#store)
 * <span id="sparkUI"> `SparkUI` ([Spark Core]({{ book.spark_core }}/webui/SparkUI))
 
 `StreamingQueryTab` is created when:
 
 * `StreamingQueryHistoryServerPlugin` is requested to `setupUI`
 * `SharedState` ([Spark SQL]({{ book.spark_sql }}/SharedState)) is created (with [spark.sql.streaming.ui.enabled](../configuration-properties.md#spark.sql.streaming.ui.enabled) enabled)
+
+### <span id="store"> StreamingQueryStatusStore
+
+`StreamingQueryTab` is given a [StreamingQueryStatusStore](StreamingQueryStatusStore.md) when [created](#creating-instance).
+
+The `StreamingQueryStatusStore` is used to [fetch the streaming query data](StreamingQueryStatusStore.md#allQueryUIData) in the attached pages:
+
+* [StreamingQueryPage](StreamingQueryPage.md#generateStreamingQueryTable)
+* [StreamingQueryStatisticsPage](StreamingQueryStatisticsPage.md#render)
 
 ## <span id="name"> Tab Name
 
