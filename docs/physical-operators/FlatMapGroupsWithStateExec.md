@@ -1,16 +1,8 @@
 # FlatMapGroupsWithStateExec Unary Physical Operator
 
-`FlatMapGroupsWithStateExec` is a unary physical operator that represents [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator at execution time.
+`FlatMapGroupsWithStateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode/)) that represents [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator at execution time.
 
-!!! note
-    A unary physical operator (`UnaryExecNode`) is a physical operator with a single [child](#child) physical operator.
-
-    Read up on [UnaryExecNode](https://jaceklaskowski.github.io/mastering-spark-sql-book/physical-operators/UnaryExecNode/) (and physical operators in general) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book) online book.
-
-`FlatMapGroupsWithStateExec` is an `ObjectProducerExec` physical operator and so produces a [single output object](#outputObjAttr).
-
-!!! tip
-    Read up on [ObjectProducerExec](https://jaceklaskowski.github.io/mastering-spark-sql-book/physical-operators/ObjectProducerExec/) physical operator in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book) online book.
+`FlatMapGroupsWithStateExec` is an `ObjectProducerExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/ObjectProducerExec/)) physical operator that produces a [single output object](#outputObjAttr).
 
 !!! tip
     Check out [Demo: Internals of FlatMapGroupsWithStateExec Physical Operator](../demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md).
@@ -93,7 +85,7 @@ The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorState
 !!! note
     The [preparations](../IncrementalExecution.md#preparations) rules are executed (applied to a physical query plan) at the `executedPlan` phase of Structured Query Execution Pipeline to generate an optimized physical query plan ready for execution).
 
-    Read up on [Structured Query Execution Pipeline](https://jaceklaskowski.github.io/mastering-spark-sql-book/QueryExecution/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
+    Read up on [Structured Query Execution Pipeline]({{ book.spark_sql }}/QueryExecution/) in [The Internals of Spark SQL]({{ book.spark_sql }}/) online book.
 
 `IncrementalExecution` is used as the [lastExecution](../StreamExecution.md#lastExecution) of the available [streaming query execution engines](../StreamExecution.md#extensions). It is created in the **queryPlanning** phase (of the [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) execution engines) based on the current [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata).
 

@@ -1,15 +1,10 @@
 # FlatMapGroupsWithState Unary Logical Operator
 
-`FlatMapGroupsWithState` is a unary logical operator that represents the following operators in a logical query plan of a streaming query:
+`FlatMapGroupsWithState` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that represents the following operators in a logical query plan of a streaming query:
 
 * [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState)
 
 * [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState)
-
-!!! note
-    A unary logical operator (`UnaryNode`) is a logical operator with a single <<child, child>> logical operator.
-
-    Read up on [UnaryNode](https://jaceklaskowski.github.io/mastering-spark-sql-book/logical-operators/LogicalPlan#UnaryNode) (and logical operators in general) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
 
 ## Execution Planning
 

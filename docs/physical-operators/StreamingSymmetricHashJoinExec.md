@@ -201,7 +201,7 @@ shouldRunAnotherBatch(
 doExecute(): RDD[InternalRow]
 ```
 
-`doExecute` is part of the `SparkPlan` abstraction ([Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/physical-operators/SparkPlan/)).
+`doExecute` is part of the `SparkPlan` abstraction ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan/)).
 
 `doExecute` first requests the `StreamingQueryManager` for the [StateStoreCoordinatorRef](../StreamingQueryManager.md#stateStoreCoordinator) to the `StateStoreCoordinator` RPC endpoint (for the driver).
 

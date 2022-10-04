@@ -143,10 +143,7 @@ sources: Seq[SparkDataStream]
 sparkSession: SparkSession
 ```
 
-`SparkSession` of the streaming query
-
-!!! tip
-    Find out more on [SparkSession](https://jaceklaskowski.github.io/mastering-spark-sql-book/SparkSession/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book) online book.
+`SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession/)) of the streaming query
 
 ### <span id="triggerClock"> triggerClock
 

@@ -50,7 +50,7 @@ assert(streamingQuery.isStreaming)
 ```
 
 !!! note
-    Read up on Spark SQL, Datasets and logical plans in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book/) online book.
+    Read up on Spark SQL, Datasets and logical plans in [The Internals of Spark SQL]({{ book.spark_sql }}/) online book.
 
 Structured Streaming models a stream of data as an infinite (and hence continuous) table that could be changed every streaming batch.
 

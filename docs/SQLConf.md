@@ -1,9 +1,9 @@
-# SQLConf &mdash; Internal Configuration Store
+# SQLConf
 
 `SQLConf` is an **internal configuration store** for parameters and hints used to configure a Spark Structured Streaming application (and Spark SQL applications in general).
 
 !!! tip
-    Find out more on [SQLConf](https://jaceklaskowski.github.io/mastering-spark-sql-book/SQLConf/) in [The Internals of Spark SQL](https://jaceklaskowski.github.io/mastering-spark-sql-book)
+    Find out more on [SQLConf]({{ book.spark_sql }}/SQLConf/) in [The Internals of Spark SQL]({{ book.spark_sql }}).
 
 ## <span id="FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION"> FLATMAPGROUPSWITHSTATE_STATE_FORMAT_VERSION
 
