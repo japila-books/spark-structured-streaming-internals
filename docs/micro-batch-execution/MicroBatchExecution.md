@@ -542,9 +542,6 @@ In *queryPlanning* [time-tracking section](../monitoring/ProgressReporter.md#rep
 
 In the end (of the `queryPlanning` phase), `runBatch` requests the `IncrementalExecution` to prepare the transformed logical plan for execution (i.e. execute the `executedPlan` query execution phase).
 
-!!! TIP
-    Read up on the `executedPlan` query execution phase in https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-QueryExecution.html[The Internals of Spark SQL].
-
 ### <span id="runBatch-nextBatch"> nextBatch Phase &mdash; Creating DataFrame (with IncrementalExecution for New Data)
 
 ![StreamExecution Creates DataFrame with New Data](../images/StreamExecution-runBatch-nextBatch.png)

@@ -305,14 +305,12 @@ nav:
     - writeStream: operators/writeStream.md
   - Data Sources:
     - datasources/index.md
-    - Rate Per Micro-Batch:
-      - datasources/rate-micro-batch/index.md
-      - Options: datasources/rate-micro-batch/options.md
-      - RatePerMicroBatchProvider: datasources/rate-micro-batch/RatePerMicroBatchProvider.md
-      - RatePerMicroBatchStream: datasources/rate-micro-batch/RatePerMicroBatchStream.md
-      - RatePerMicroBatchTable: datasources/rate-micro-batch/RatePerMicroBatchTable.md
+    - Console:
+      - datasources/console/index.md
+      - ConsoleSinkProvider: datasources/console/ConsoleSinkProvider.md
+      - ConsoleWriter: datasources/console/ConsoleWriter.md
     - File:
-      - File Data Source: datasources/file/index.md
+      - datasources/file/index.md
       - FileStreamSource: datasources/file/FileStreamSource.md
       - FileStreamSink: datasources/file/FileStreamSink.md
       - CompactibleFileStreamLog: datasources/file/CompactibleFileStreamLog.md
@@ -322,6 +320,13 @@ nav:
       - FileStreamSourceCleaner: datasources/file/FileStreamSourceCleaner.md
       - FileStreamSourceLog: datasources/file/FileStreamSourceLog.md
       - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
+    - Foreach:
+      - datasources/foreach/index.md
+      - ForeachWriterProvider: datasources/foreach/ForeachWriterProvider.md
+      - ForeachWriter: datasources/foreach/ForeachWriter.md
+      - ForeachSink: datasources/foreach/ForeachSink.md
+    - ForeachBatch:
+      - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Kafka:
       - datasources/kafka/index.md
       - Kafka Options: datasources/kafka/options.md
@@ -349,33 +354,30 @@ nav:
       - KafkaContinuousReader:
         - KafkaContinuousReader: datasources/kafka/KafkaContinuousReader.md
         - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
-    - Text Socket:
-      - Text Socket Data Source: datasources/socket/index.md
-      - TextSocketSourceProvider: datasources/socket/TextSocketSourceProvider.md
-      - TextSocketSource: datasources/socket/TextSocketSource.md
-    - Rate:
-      - RateStreamProvider: RateStreamProvider.md
-      - RateStreamContinuousReader: RateStreamContinuousReader.md
-    - Console Sink:
-      - ConsoleSinkProvider: spark-sql-streaming-ConsoleSinkProvider.md
-      - ConsoleWriter: spark-sql-streaming-ConsoleWriter.md
-    - Foreach Sink:
-      - ForeachWriterProvider: datasources/ForeachWriterProvider.md
-      - ForeachWriter: datasources/ForeachWriter.md
-      - ForeachSink: datasources/ForeachSink.md
-    - ForeachBatch Sink:
-      - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Memory:
-      - Memory Data Source: datasources/memory/index.md
+      - datasources/memory/index.md
       - MemoryStream: datasources/memory/MemoryStream.md
       - ContinuousMemoryStream: datasources/memory/ContinuousMemoryStream.md
       - MemorySink: datasources/memory/MemorySink.md
       - MemorySinkV2:
         - MemorySinkV2: datasources/memory/MemorySinkV2.md
-        - MemoryStreamWriter: spark-sql-streaming-MemoryStreamWriter.md
       - MemoryStreamBase: datasources/memory/MemoryStreamBase.md
       - MemorySinkBase: datasources/memory/MemorySinkBase.md
       - MemoryPlan: datasources/memory/MemoryPlan.md
+    - Rate:
+      - datasources/rate/index.md
+      - RateStreamProvider: datasources/rate/RateStreamProvider.md
+      - RateStreamContinuousReader: datasources/rate/RateStreamContinuousReader.md
+    - Rate Per Micro-Batch:
+      - datasources/rate-micro-batch/index.md
+      - Options: datasources/rate-micro-batch/options.md
+      - RatePerMicroBatchProvider: datasources/rate-micro-batch/RatePerMicroBatchProvider.md
+      - RatePerMicroBatchStream: datasources/rate-micro-batch/RatePerMicroBatchStream.md
+      - RatePerMicroBatchTable: datasources/rate-micro-batch/RatePerMicroBatchTable.md
+    - Text Socket:
+      - datasources/socket/index.md
+      - TextSocketSourceProvider: datasources/socket/TextSocketSourceProvider.md
+      - TextSocketSource: datasources/socket/TextSocketSource.md
   - Monitoring:
     - StreamingQueryListener: monitoring/StreamingQueryListener.md
     - ProgressReporter: monitoring/ProgressReporter.md

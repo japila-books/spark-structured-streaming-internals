@@ -1,18 +1,8 @@
-# WriteToContinuousDataSourceExec Unary Physical Operator
+# WriteToContinuousDataSourceExec Physical Operator
 
-[[children]]
-`WriteToContinuousDataSourceExec` is a unary physical operator that <<doExecute, creates a ContinuousWriteRDD for continuous write>>.
+`WriteToContinuousDataSourceExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that <<doExecute, creates a ContinuousWriteRDD for continuous write>>.
 
-[NOTE]
-====
-A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
-
-`WriteToContinuousDataSourceExec` is <<creating-instance, created>> exclusively when `DataSourceV2Strategy` execution planning strategy is requested to plan a [WriteToContinuousDataSource](../logical-operators/WriteToContinuousDataSource.md) unary logical operator.
-
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkStrategy-DataSourceV2Strategy.html[DataSourceV2Strategy Execution Planning Strategy] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+`WriteToContinuousDataSourceExec` is <<creating-instance, created>> exclusively when `DataSourceV2Strategy` ([Spark SQL]({{ book.spark_sql }}/execution-planning-strategies/DataSourceV2Strategy)) execution planning strategy is requested to plan a [WriteToContinuousDataSource](../logical-operators/WriteToContinuousDataSource.md) unary logical operator.
 
 [[creating-instance]]
 `WriteToContinuousDataSourceExec` takes the following to be created:

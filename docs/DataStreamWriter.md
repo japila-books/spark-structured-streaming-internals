@@ -24,7 +24,7 @@ foreach(
   writer: ForeachWriter[T]): DataStreamWriter[T]
 ```
 
-Sets [ForeachWriter](datasources/ForeachWriter.md) as responsible for streaming writes
+Sets [ForeachWriter](datasources/foreach/ForeachWriter.md) as responsible for streaming writes
 
 ## <span id="foreachBatch"> Writing Micro-Batches to ForeachBatchSink
 

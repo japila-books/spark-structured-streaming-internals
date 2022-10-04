@@ -121,36 +121,6 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a
 
 * [Checking out whether the last batch execution requires another non-data batch or not](#shouldRunAnotherBatch)
 
-=== [[requiredChildDistribution]] Required Partition Requirements -- `requiredChildDistribution` Method
-
-[source, scala]
-----
-requiredChildDistribution: Seq[Distribution]
-----
-
-[NOTE]
-====
-`requiredChildDistribution` is part of the `SparkPlan` Contract for the required partition requirements (aka _required child distribution_) of the input data, i.e. how the output of the children physical operators is split across partitions before this operator can be executed.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[SparkPlan Contract] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
-====
-
-`requiredChildDistribution` returns two `HashClusteredDistributions` for the <<leftKeys, left>> and <<rightKeys, right>> keys with the required [number of partitions](../StatefulOperatorStateInfo.md#numPartitions) based on the [StatefulOperatorStateInfo](#stateInfo).
-
-[NOTE]
-====
-`requiredChildDistribution` is used exclusively when `EnsureRequirements` physical query plan optimization is executed (and enforces partition requirements).
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-EnsureRequirements.html[EnsureRequirements Physical Query Optimization] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
-====
-
-[NOTE]
-====
-`HashClusteredDistribution` becomes `HashPartitioning` at execution that distributes rows across partitions (generates partition IDs of rows) based on `Murmur3Hash` of the join expressions (separately for the <<leftKeys, left>> and <<rightKeys, right>> keys) modulo the required number of partitions.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-Distribution-HashClusteredDistribution.html[HashClusteredDistribution] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
-====
-
 === [[metrics]] Performance Metrics (SQLMetrics)
 
 `StreamingSymmetricHashJoinExec` uses the performance metrics as [other stateful physical operators that write to a state store](StateStoreWriter.md#metrics).

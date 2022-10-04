@@ -233,7 +233,7 @@ When `DataStreamWriter` is requested to [start a streaming query](DataStreamWrit
 
 * **memory** with [MemorySinkV2](datasources/memory/MemorySinkV2.md) (with [ContinuousTrigger](Trigger.md#ContinuousTrigger)) or [MemorySink](datasources/memory/MemorySink.md)
 
-* **foreach** with [ForeachWriterProvider](datasources/ForeachWriterProvider.md) sink
+* **foreach** with [ForeachWriterProvider](datasources/foreach/ForeachWriterProvider.md) sink
 
 * **foreachBatch** with [ForeachBatchSink](datasources/ForeachBatchSink.md) sink (that does not support [ContinuousTrigger](Trigger.md#ContinuousTrigger))
 

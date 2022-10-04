@@ -1,9 +1,8 @@
 # KafkaRelation
 
-[[schema]]
-`KafkaRelation` represents a **collection of rows** with a [predefined schema](index.md#schema) (`BaseRelation`) that supports <<buildScan, column pruning>> (`TableScan`).
+`KafkaRelation` is a `BaseRelation` ([Spark SQL]({{ book.spark_sql }}/BaseRelation)).
 
-TIP: Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-BaseRelation.html[BaseRelation] and https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
+`KafkaRelation` is a `TableScan` ([Spark SQL]({{ book.spark_sql }}/TableScan)).
 
 `KafkaRelation` is <<creating-instance, created>> exclusively when `KafkaSourceProvider` is requested to [create a BaseRelation](KafkaSourceProvider.md#createRelation).
 
@@ -67,7 +66,7 @@ NOTE: `getPartitionOffsets` is used exclusively when `KafkaRelation` <<buildScan
 buildScan(): RDD[Row]
 ----
 
-NOTE: `buildScan` is part of the https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-TableScan.html[TableScan] contract to build a distributed data scan with column pruning.
+NOTE: `buildScan` is part of the `TableScan` ([Spark SQL]({{ book.spark_sql }}/TableScan/#buildScan)) contract to build a distributed data scan with column pruning.
 
 `buildScan` generates a unique group ID of the format *spark-kafka-relation-[randomUUID]* (to make sure that a streaming query creates a new consumer group).
 

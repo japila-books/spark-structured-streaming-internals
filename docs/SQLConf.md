@@ -112,11 +112,6 @@ a| [[fileSourceLogCleanupDelay]][[FILE_SOURCE_LOG_CLEANUP_DELAY]] Used exclusive
 
 a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exclusively when `FileStreamSourceLog` is requested for the [default compaction interval](datasources/file/FileStreamSourceLog.md#defaultCompactInterval)
 
-| `SHUFFLE_PARTITIONS`
-
-`spark.sql.shuffle.partitions`
-a| [[SHUFFLE_PARTITIONS]] See https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-properties.html#spark.sql.shuffle.partitions[spark.sql.shuffle.partitions] in The Internals of Spark SQL.
-
 | `stateStoreMinDeltasForSnapshot`
 
 [spark.sql.streaming.stateStore.minDeltasForSnapshot](configuration-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot)

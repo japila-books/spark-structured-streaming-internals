@@ -13,9 +13,7 @@ Stream-stream join without equality predicate is not supported
 [[logging]]
 [TIP]
 ====
-`StreamingJoinStrategy` does not print out any messages to the logs. `StreamingJoinStrategy` however uses `ExtractEquiJoinKeys` Scala extractor for destructuring `Join` logical operators that does print out DEBUG messages to the logs.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-ExtractEquiJoinKeys.html[ExtractEquiJoinKeys] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] online book.
+`StreamingJoinStrategy` does not print out any messages to the logs. `StreamingJoinStrategy` however uses `ExtractEquiJoinKeys` ([Spark SQL]({{ book.spark_sql }}/ExtractEquiJoinKeys)) Scala extractor for destructuring `Join` logical operators that does print out DEBUG messages to the logs.
 
 Enable `ALL` logging level for `org.apache.spark.sql.catalyst.planning.ExtractEquiJoinKeys` to see what happens inside.
 

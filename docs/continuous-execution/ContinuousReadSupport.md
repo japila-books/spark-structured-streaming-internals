@@ -31,7 +31,7 @@ ContinuousReader createContinuousReader(
 | [KafkaSourceProvider](../datasources/kafka/KafkaSourceProvider.md)
 | [[KafkaSourceProvider]] Data source provider for `kafka` format
 
-| [RateStreamProvider](../RateStreamProvider.md)
+| [RateStreamProvider](../datasources/rate/RateStreamProvider.md)
 | [[RateStreamProvider]] Data source provider for `rate` format
 
 | [TextSocketSourceProvider](../datasources/socket/TextSocketSourceProvider.md)

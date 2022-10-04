@@ -1,11 +1,6 @@
-# EventTimeWatermark Unary Logical Operator
+# EventTimeWatermark Logical Operator
 
-`EventTimeWatermark` is a unary logical operator that is <<creating-instance, created>> to represent [Dataset.withWatermark](../operators/withWatermark.md) operator in a logical query plan of a streaming query.
-
-!!! note
-    A unary logical operator (`UnaryNode`) is a logical operator with a single <<child, child>> logical operator.
-
-    Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan.html[UnaryNode] (and logical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+`EventTimeWatermark` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that is <<creating-instance, created>> to represent [Dataset.withWatermark](../operators/withWatermark.md) operator in a logical query plan of a streaming query.
 
 When requested for the <<output, output attributes>>, `EventTimeWatermark` logical operator goes over the output attributes of the <<child, child>> logical operator to find the matching attribute based on the <<eventTime, eventTime>> attribute and updates it to include `spark.watermarkDelayMs` metadata key with the <<delay, watermark delay>> interval (<<getDelayMs, converted to milliseconds>>).
 

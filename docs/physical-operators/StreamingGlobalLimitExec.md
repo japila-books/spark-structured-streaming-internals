@@ -1,13 +1,6 @@
-# StreamingGlobalLimitExec Unary Physical Operator
+# StreamingGlobalLimitExec Physical Operator
 
-`StreamingGlobalLimitExec` is a unary physical operator that represents a `Limit` logical operator of a streaming query at execution time.
-
-[NOTE]
-====
-`Limit` logical operator represents `Dataset.limit` operator in a logical query plan.
-
-Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-LogicalPlan-Limit.html[Limit Logical Operator] in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
-====
+`StreamingGlobalLimitExec` is a unary physical operator that represents a `Limit` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Limit)) logical operator of a streaming query at execution time.
 
 `StreamingGlobalLimitExec` is a <<StateStoreWriter, stateful physical operator that can write to a state store>>.
 
