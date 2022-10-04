@@ -1171,6 +1171,16 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/SessionWindowStateStoreRestoreExec/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/SessionWindowStateStoreSaveExec/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StateStoreReader/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
@@ -1187,6 +1197,11 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StateStoreWriter/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StatefulOpClusteredDistribution/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -1227,6 +1242,11 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/stateful-stream-processing/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/stateful-stream-processing/StatefulOperatorPartitioning/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
