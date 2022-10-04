@@ -196,16 +196,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/RateStreamContinuousReader/</loc>
-         <lastmod>2022-10-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/RateStreamProvider/</loc>
-         <lastmod>2022-10-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/ReportsSourceMetrics/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
@@ -411,16 +401,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-ConsoleSinkProvider/</loc>
-         <lastmod>2022-10-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-ConsoleWriter/</loc>
-         <lastmod>2022-10-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-FlatMapGroupsWithStateExecHelper/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
@@ -452,11 +432,6 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-KeyWithIndexToValueStore/</loc>
-         <lastmod>2022-10-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-MemoryStreamWriter/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -591,17 +566,17 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/ForeachSink/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/console/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/ForeachWriter/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/console/ConsoleSinkProvider/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/ForeachWriterProvider/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/console/ConsoleWriter/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -652,6 +627,26 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/SinkFileStatus/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/foreach/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/foreach/ForeachSink/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/foreach/ForeachWriter/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/foreach/ForeachWriterProvider/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -812,6 +807,21 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemoryStreamBase/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate/RateStreamContinuousReader/</loc>
+         <lastmod>2022-10-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate/RateStreamProvider/</loc>
          <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
