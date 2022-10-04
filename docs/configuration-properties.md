@@ -329,6 +329,18 @@ Use [SQLConf.stateStoreProviderClass](SQLConf.md#stateStoreProviderClass) to get
 
 **spark.sql.streaming.stateStore.rocksdb.formatVersion**
 
+## <span id="spark.sql.streaming.ui.enabled"><span id="STREAMING_UI_ENABLED"> ui.enabled
+
+**spark.sql.streaming.ui.enabled**
+
+Enables [Structured Streaming Web UI](webui/index.md) for a Spark application (with Spark Web UI enabled)
+
+Default: `true`
+
+Used when:
+
+* `SharedState` ([Spark SQL]({{ book.spark_sql }}/SharedState)) is created
+
 ## <span id="spark.sql.streaming.unsupportedOperationCheck"> unsupportedOperationCheck
 
 **spark.sql.streaming.unsupportedOperationCheck**

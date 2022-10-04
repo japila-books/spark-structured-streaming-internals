@@ -391,7 +391,12 @@ nav:
     - MetricsReporter: monitoring/MetricsReporter.md
     - Logging: spark-logging.md
   - Web UI:
-    - Web UI: webui.md
+    - webui/index.md
+    - StreamingQueryPage: webui/StreamingQueryPage.md
+    - StreamingQueryStatisticsPage: webui/StreamingQueryStatisticsPage.md
+    - StreamingQueryStatusListener: webui/StreamingQueryStatusListener.md
+    - StreamingQueryStatusStore: webui/StreamingQueryStatusStore.md
+    - StreamingQueryTab: webui/StreamingQueryTab.md
   - Demos:
     - Welcome: demo/index.md
     - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
