@@ -2,1242 +2,1242 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/AcceptsLatestSeenOffsetHandler/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/CheckpointFileManager/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/CommitLog/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/CommitMetadata/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/ContinuousDataSourceRDD/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/ContinuousQueuedDataReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/ContinuousStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/ContinuousWriteRDD/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/DataReaderThread/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/DataSource/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/DataStreamReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/DataStreamWriter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/EpochCoordinator/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/EpochCoordinatorRef/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/EpochMarkerGenerator/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/EpochTracker/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/EventTimeStats/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/EventTimeStatsAccum/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/FileContextBasedCheckpointFileManager/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/FileSystemBasedCheckpointFileManager/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/GroupState/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/GroupStateImpl/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/GroupStateTimeout/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/HDFSBackedStateStore/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/HDFSBackedStateStoreProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/HDFSMetadataLog/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/IncrementalExecution/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/InputProcessor/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/KeyValueGroupedDataset/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/MetadataLog/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/MicroBatchStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/Offset/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/OffsetSeq/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/OffsetSeqLog/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/OffsetSeqMetadata/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/OneSideHashJoiner/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/OutputMode/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/PartitionOffset/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/RateStreamContinuousReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/RateStreamProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/ReportsSourceMetrics/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SQLConf/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/Sink/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/Source/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SparkDataStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStore/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreAwareZipPartitionsRDD/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreConf/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreCoordinator/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreCoordinatorRef/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreOps/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreRDD/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StatefulOperatorStateInfo/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamExecution/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamMetadata/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamProgress/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamSinkProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamSourceProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManager/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManagerBaseImpl/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManagerImplV1/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManagerImplV2/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingJoinHelper/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingQuery/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingQueryListenerBus/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingQueryManager/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingQueryWrapper/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingSymmetricHashJoinHelper/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingWrite/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SupportsAdmissionControl/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SupportsTriggerAvailableNow/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SymmetricHashJoinStateManager/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/Trigger/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/TriggerExecutor/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/UnsupportedOperationChecker/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/WatermarkSupport/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/WatermarkTracker/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/configuration-properties/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/offsets-and-metadata-checkpointing/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/overview/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-logging/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-ConsoleSinkProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-ConsoleWriter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-FlatMapGroupsWithStateExecHelper/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-JoinStateWatermarkPredicate/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-JoinStateWatermarkPredicates/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-KeyToNumValuesStore/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-KeyWithIndexToValueStore/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-MemoryStreamWriter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateManager/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateManagerImplBase/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateManagerImplV1/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateManagerImplV2/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreAwareZipPartitionsHelper/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreCustomMetric/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreHandler/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreId/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreMetrics/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreProviderId/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreUpdater/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-deduplication/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-extending-new-data-sources/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-limit/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-structured-streaming-batch-processing-time/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-structured-streaming-internals/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-watermark/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/webui/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/arbitrary-stateful-streaming-aggregation/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/continuous-execution/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/continuous-execution/ContinuousExecution/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/continuous-execution/ContinuousReadSupport/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/continuous-execution/ContinuousReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/ForeachBatchSink/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/ForeachSink/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/ForeachWriter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/ForeachWriterProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/CompactibleFileStreamLog/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/FileStreamSink/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/FileStreamSinkLog/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/FileStreamSource/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/FileStreamSourceCleaner/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/FileStreamSourceLog/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/ManifestFileCommitProtocol/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/MetadataLogFileIndex/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/file/SinkFileStatus/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/CachedKafkaConsumer/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/ConsumerStrategy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaBatch/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaContinuousInputPartition/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaContinuousReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaDataConsumer/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaMicroBatchInputPartition/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaMicroBatchInputPartitionReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaMicroBatchReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaMicroBatchStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaOffsetRangeCalculator/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaOffsetRangeLimit/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaOffsetReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaRelation/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaScan/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaSink/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaSource/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaSourceInitialOffsetWriter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaSourceOffset/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaSourceProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaSourceRDD/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaTable/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/options/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/ContinuousMemoryStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemoryPlan/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemorySink/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemorySinkBase/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemorySinkV2/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemoryStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemoryStreamBase/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate-micro-batch/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate-micro-batch/RatePerMicroBatchProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate-micro-batch/RatePerMicroBatchStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate-micro-batch/RatePerMicroBatchTable/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/rate-micro-batch/options/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/socket/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/socket/TextSocketSource/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/socket/TextSocketSourceProvider/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/StateStoreSaveExec-Complete/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/StateStoreSaveExec-Update/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/StreamingQueryManager-awaitAnyTermination-resetTerminated/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/current_timestamp/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/custom-sink-webui/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/deep-dive-into-filestreamsink/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/exploring-checkpointed-state/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/groupBy-running-count-complete/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/groupByKey-count-Update/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/kafka-data-source/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/streaming-watermark/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/using-file-streaming-source/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/watermark-aggregation-append/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/execution-planning-strategies/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/execution-planning-strategies/FlatMapGroupsWithStateStrategy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/execution-planning-strategies/StatefulAggregationStrategy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/execution-planning-strategies/StreamingDeduplicationStrategy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/execution-planning-strategies/StreamingGlobalLimitStrategy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/execution-planning-strategies/StreamingJoinStrategy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/execution-planning-strategies/StreamingRelationStrategy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/features/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/ContinuousExecutionRelation/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/Deduplicate/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/EventTimeWatermark/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/FlatMapGroupsWithState/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/StreamingDataSourceV2Relation/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/StreamingExecutionRelation/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/StreamingRelation/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/StreamingRelationV2/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToContinuousDataSource/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToDataSourceV2/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToMicroBatchDataSource/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/MicroBatchExecution/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/micro-batch-execution/MicroBatchWrite/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/ExecutionStats/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/MetricsReporter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/ProgressReporter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/SinkProgress/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/SourceProgress/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/StateOperatorProgress/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/StreamingQueryListener/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/StreamingQueryProgress/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/StreamingQueryStatus/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/crossJoin/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/dropDuplicates/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/explain/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/flatMapGroupsWithState/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/groupBy/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/groupByKey/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/join/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/joinWith/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/window/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/withWatermark/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/operators/writeStream/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/EventTimeWatermarkExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/FlatMapGroupsWithStateExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/MicroBatchScanExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StateStoreReader/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StateStoreRestoreExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StateStoreSaveExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StateStoreWriter/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StatefulOperator/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StreamingDeduplicateExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StreamingGlobalLimitExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StreamingRelationExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/StreamingSymmetricHashJoinExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/WriteToContinuousDataSourceExec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/physical-operators/WriteToDataSourceV2Exec/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/stateful-stream-processing/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-aggregation/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/</loc>
-         <lastmod>2022-10-03</lastmod>
+         <lastmod>2022-10-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
