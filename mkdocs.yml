@@ -145,6 +145,9 @@ nav:
       - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
       - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
       - MicroBatchScanExec: physical-operators/MicroBatchScanExec.md
+      - SessionWindowStateStoreRestoreExec: physical-operators/SessionWindowStateStoreRestoreExec.md
+      - SessionWindowStateStoreSaveExec: physical-operators/SessionWindowStateStoreSaveExec.md
+      - StatefulOpClusteredDistribution: physical-operators/StatefulOpClusteredDistribution.md
       - StatefulOperator: physical-operators/StatefulOperator.md
       - StateStoreReader: physical-operators/StateStoreReader.md
       - StateStoreRestoreExec: physical-operators/StateStoreRestoreExec.md
@@ -254,6 +257,7 @@ nav:
         - StreamingJoinHelper: StreamingJoinHelper.md
     - Stateful Stream Processing:
       - stateful-stream-processing/index.md
+      - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
       - Streaming Watermark: streaming-watermark.md
       - Streaming Deduplication: spark-sql-streaming-deduplication.md
       - Streaming Limit: spark-sql-streaming-limit.md

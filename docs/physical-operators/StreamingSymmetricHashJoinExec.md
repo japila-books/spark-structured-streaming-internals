@@ -1,11 +1,20 @@
-# StreamingSymmetricHashJoinExec Binary Physical Operator
+# StreamingSymmetricHashJoinExec Physical Operator
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator for [stream-stream equi-join](../streaming-join/index.md) at execution time.
+`StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for [stream-stream equi-join](../streaming-join/index.md) at execution time.
 
-!!! note
-    A binary physical operator (`BinaryExecNode`) is a physical operator with <<left, left>> and <<right, right>> child physical operators.
+## <span id="requiredChildDistribution"> Required Child Output Distribution
 
-    Learn more about [BinaryExecNode]({{ book.spark_sql }}/physical-operators/SparkPlan) (and physical operators in general) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
+```scala
+requiredChildDistribution: Seq[Distribution]
+```
+
+`requiredChildDistribution` is part of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan/#requiredChildDistribution)) abstraction.
+
+---
+
+`requiredChildDistribution` is two [StatefulOpClusteredDistribution](StatefulOpClusteredDistribution.md)s for the [left](#leftKeys) and [right](#rightKeys) keys (with the [numPartitions](../StatefulOperatorStateInfo.md#numPartitions) of the [StatefulOperatorStateInfo](StatefulOperator.md#getStateInfo)).
+
+## Review Me
 
 [[supported-join-types]][[joinType]]
 `StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, and `RightOuter` join types (with the <<leftKeys, left>> and the <<rightKeys, right>> keys using the exact same data types).

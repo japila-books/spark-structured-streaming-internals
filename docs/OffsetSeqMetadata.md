@@ -40,9 +40,9 @@ apply(
 * `MicroBatchExecution` is requested to [populateStartOffsets](micro-batch-execution/MicroBatchExecution.md#populateStartOffsets) (while restarting a streaming query with a checkpointed [offsets](OffsetSeqLog.md))
 * `StreamExecution` is [created](StreamExecution.md#offsetSeqMetadata) and requested to [runStream](StreamExecution.md#runStream)
 
-## <span id="relevantSQLConfs"><span id="relevantSQLConfDefaultValues"> Relevant SQL Config Properties
+## <span id="relevantSQLConfs"><span id="relevantSQLConfDefaultValues"> Checkpointed Properties
 
-`OffsetSeqMetadata` considers the following configuration properties as _once-only settable_ that can only be set once and can never change after a streaming query is started.
+`OffsetSeqMetadata` allows the following configuration properties to be _once-only settable_ that can only be set once and can never change after a streaming query is started.
 
 * `spark.sql.shuffle.partitions` ([Spark SQL]({{ book.spark_sql }}/configuration-properties/#spark.sql.shuffle.partitions))
 * [spark.sql.streaming.aggregation.stateFormatVersion](configuration-properties.md#STREAMING_AGGREGATION_STATE_FORMAT_VERSION)

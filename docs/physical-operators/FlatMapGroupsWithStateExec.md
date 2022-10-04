@@ -1,4 +1,4 @@
-# FlatMapGroupsWithStateExec Unary Physical Operator
+# FlatMapGroupsWithStateExec Physical Operator
 
 `FlatMapGroupsWithStateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode/)) that represents [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator at execution time.
 
@@ -158,7 +158,21 @@ Used when:
 
 Flag that says whether the [child](#child) physical operator has a [watermark attribute](../logical-operators/EventTimeWatermark.md#delayKey) (among the output attributes).
 
-Used when `InputProcessor` is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState)
+Used when:
+
+* `InputProcessor` is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState)
+
+## <span id="requiredChildDistribution"> Required Child Output Distribution
+
+```scala
+requiredChildDistribution: Seq[Distribution]
+```
+
+`requiredChildDistribution` is part of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan/#requiredChildDistribution)) abstraction.
+
+---
+
+`requiredChildDistribution`...FIXME
 
 ## Logging
 

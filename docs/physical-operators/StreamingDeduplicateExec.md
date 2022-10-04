@@ -1,6 +1,20 @@
-# StreamingDeduplicateExec Unary Physical Operator
+# StreamingDeduplicateExec Physical Operator
 
-`StreamingDeduplicateExec` is a unary physical operator that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](../WatermarkSupport.md).
+`StreamingDeduplicateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](../WatermarkSupport.md).
+
+## <span id="requiredChildDistribution"> Required Child Output Distribution
+
+```scala
+requiredChildDistribution: Seq[Distribution]
+```
+
+`requiredChildDistribution` is part of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan/#requiredChildDistribution)) abstraction.
+
+---
+
+`requiredChildDistribution`...FIXME
+
+## Review Me
 
 `StreamingDeduplicateExec` is <<creating-instance, created>> exclusively when [StreamingDeduplicationStrategy](../execution-planning-strategies/StreamingDeduplicationStrategy.md) execution planning strategy is executed (to plan Deduplicate unary logical operators).
 

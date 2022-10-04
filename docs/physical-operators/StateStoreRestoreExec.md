@@ -1,5 +1,19 @@
 # StateStoreRestoreExec Unary Physical Operator
 
+## <span id="requiredChildDistribution"> Required Child Output Distribution
+
+```scala
+requiredChildDistribution: Seq[Distribution]
+```
+
+`requiredChildDistribution` is part of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan/#requiredChildDistribution)) abstraction.
+
+---
+
+`requiredChildDistribution`...FIXME
+
+## Review Me
+
 `StateStoreRestoreExec` is a unary physical operator that [restores (reads) a streaming state from a state store](StateStoreReader.md) (for the keys from the <<child, child>> physical operator).
 
 `StateStoreRestoreExec` is <<creating-instance, created>> exclusively when [StatefulAggregationStrategy](../execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is requested to plan a [streaming aggregation](../streaming-aggregation/index.md) for execution (`Aggregate` logical operators in the logical plan of a streaming query).

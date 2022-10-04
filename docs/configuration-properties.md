@@ -18,7 +18,7 @@ Supported values:
 * `1` (for the legacy [StreamingAggregationStateManagerImplV1](StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV1))
 * `2` (for the default [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV2))
 
-[Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs) that is not supposed to be overriden after a streaming query has been started (and could later recover from a checkpoint after being restarted)
+[Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs)
 
 Used when:
 
@@ -154,7 +154,7 @@ Supported values:
 * `1`
 * `2`
 
-[Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs) that is not supposed to be overriden after a streaming query has been started (and could later recover from a checkpoint after being restarted)
+[Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs)
 
 Used when:
 
@@ -281,6 +281,12 @@ This config will be set to `true` for new streaming queries to guarantee stable 
 Please refer [SPARK-38204]({{ spark.jira }}/SPARK-38204) for details.
 
 Default: `true`
+
+[Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs)
+
+Used when:
+
+* `StatefulOperatorPartitioning` is requested to [getCompatibleDistribution](stateful-stream-processing/StatefulOperatorPartitioning.md#getCompatibleDistribution)
 
 ## <span id="spark.sql.streaming.stateStore.compression.codec"><span id="STATE_STORE_COMPRESSION_CODEC"> stateStore.compression.codec
 

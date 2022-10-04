@@ -9,6 +9,10 @@
 
 [spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](configuration-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion)
 
+## <span id="STATEFUL_OPERATOR_USE_STRICT_DISTRIBUTION"> STATEFUL_OPERATOR_USE_STRICT_DISTRIBUTION
+
+[spark.sql.streaming.statefulOperator.useStrictDistribution](configuration-properties.md#spark.sql.streaming.statefulOperator.useStrictDistribution)
+
 ## <span id="streamingFileCommitProtocolClass"><span id="STREAMING_FILE_COMMIT_PROTOCOL_CLASS"> streamingFileCommitProtocolClass
 
 [spark.sql.streaming.commitProtocolClass](configuration-properties.md#spark.sql.streaming.commitProtocolClass) configuration property

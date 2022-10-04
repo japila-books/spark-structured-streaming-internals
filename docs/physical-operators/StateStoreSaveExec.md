@@ -1,11 +1,20 @@
-# StateStoreSaveExec Unary Physical Operator
+# StateStoreSaveExec Physical Operator
 
-`StateStoreSaveExec` is a unary physical operator that [saves a streaming state to a state store](StateStoreWriter.md) with [support for streaming watermark](../WatermarkSupport.md).
+`StateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [saves a streaming state to a state store](StateStoreWriter.md) with [support for streaming watermark](../WatermarkSupport.md).
 
-!!! note
-    A unary physical operator (`UnaryExecNode`) is a physical operator with a single <<child, child>> physical operator.
+## <span id="requiredChildDistribution"> Required Child Output Distribution
 
-    Read up on https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-SparkPlan.html[UnaryExecNode] (and physical operators in general) in https://bit.ly/spark-sql-internals[The Internals of Spark SQL] book.
+```scala
+requiredChildDistribution: Seq[Distribution]
+```
+
+`requiredChildDistribution` is part of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan/#requiredChildDistribution)) abstraction.
+
+---
+
+`requiredChildDistribution`...FIXME
+
+## Review Me
 
 `StateStoreSaveExec` is <<creating-instance, created>> when [StatefulAggregationStrategy](../execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is requested to plan a [streaming aggregation](../streaming-aggregation/index.md) for execution (`Aggregate` logical operators in the logical plan of a streaming query).
 
