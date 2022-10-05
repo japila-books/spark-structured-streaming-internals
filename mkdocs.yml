@@ -130,13 +130,13 @@ nav:
     - StreamingWrite: StreamingWrite.md
     - Logical Operators:
       - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
+      - Deduplicate: logical-operators/Deduplicate.md
       - EventTimeWatermark: logical-operators/EventTimeWatermark.md
       - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
-      - Deduplicate: logical-operators/Deduplicate.md
       - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md
+      - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
       - StreamingRelation: logical-operators/StreamingRelation.md
       - StreamingRelationV2: logical-operators/StreamingRelationV2.md
-      - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
       - WriteToContinuousDataSource: logical-operators/WriteToContinuousDataSource.md
       - WriteToDataSourceV2: logical-operators/WriteToDataSourceV2.md
       - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
