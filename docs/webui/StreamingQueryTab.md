@@ -7,6 +7,8 @@ When [created](#creating-instance), `StreamingQueryTab` attaches the following p
 * [StreamingQueryPage](StreamingQueryPage.md)
 * [StreamingQueryStatisticsPage](StreamingQueryStatisticsPage.md)
 
+`StreamingQueryTab` can be turned on/off using [spark.sql.streaming.ui.enabled](../configuration-properties.md#spark.sql.streaming.ui.enabled).
+
 ## Creating Instance
 
 `StreamingQueryTab` takes the following to be created:
