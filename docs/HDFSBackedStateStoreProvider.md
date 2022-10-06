@@ -339,9 +339,9 @@ getMetricsForProvider(): Map[String, Long]
 supportedCustomMetrics: Seq[StateStoreCustomMetric]
 ----
 
-NOTE: `supportedCustomMetrics` is part of the <<spark-sql-streaming-StateStoreProvider.md#supportedCustomMetrics, StateStoreProvider Contract>> for the <<spark-sql-streaming-StateStoreCustomMetric.md#, StateStoreCustomMetrics>> of a state store provider.
+NOTE: `supportedCustomMetrics` is part of the <<spark-sql-streaming-StateStoreProvider.md#supportedCustomMetrics, StateStoreProvider Contract>> for the <<StateStoreCustomMetric.md#, StateStoreCustomMetrics>> of a state store provider.
 
-`supportedCustomMetrics` includes the following <<spark-sql-streaming-StateStoreCustomMetric.md#, StateStoreCustomMetrics>>:
+`supportedCustomMetrics` includes the following <<StateStoreCustomMetric.md#, StateStoreCustomMetrics>>:
 
 * <<metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>>
 

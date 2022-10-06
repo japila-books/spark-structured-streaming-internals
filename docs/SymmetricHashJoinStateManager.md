@@ -54,7 +54,7 @@ They are both used exclusively when `StreamingSymmetricHashJoinExec` binary phys
 metrics: StateStoreMetrics
 ----
 
-`metrics` returns the combined <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>> of the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>> state store handlers.
+`metrics` returns the combined [StateStoreMetrics](StateStoreMetrics.md) of the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>> state store handlers.
 
 `metrics` is used when `OneSideHashJoiner` is requested to [commitStateAndGetMetrics](OneSideHashJoiner.md#commitStateAndGetMetrics).
 

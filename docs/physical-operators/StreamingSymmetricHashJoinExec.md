@@ -255,11 +255,11 @@ NOTE: `onOutputCompletion` triggers the [old state removal](../OneSideHashJoiner
 
 `onOutputCompletion` calculates the <<numUpdatedStateRows, number of updated state rows>> performance metric (as the [number of updated state rows](../OneSideHashJoiner.md#numUpdatedStateRows) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
 
-`onOutputCompletion` calculates the <<numTotalStateRows, number of total state rows>> performance metric (as the sum of the <<spark-sql-streaming-StateStoreMetrics.md#numKeys, number of keys>> in the [KeyWithIndexToValueStore](../SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
+`onOutputCompletion` calculates the <<numTotalStateRows, number of total state rows>> performance metric (as the sum of the [number of keys](../StateStoreMetrics.md#numKeys) in the [KeyWithIndexToValueStore](../SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
 
-`onOutputCompletion` calculates the <<stateMemory, memory used by state>> performance metric (as the sum of the <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, memory used>> by the [KeyToNumValuesStore](../SymmetricHashJoinStateManager.md#keyToNumValues) and [KeyWithIndexToValueStore](../SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streams).
+`onOutputCompletion` calculates the <<stateMemory, memory used by state>> performance metric (as the sum of the [memory used](../StateStoreMetrics.md#memoryUsedBytes) by the [KeyToNumValuesStore](../SymmetricHashJoinStateManager.md#keyToNumValues) and [KeyWithIndexToValueStore](../SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streams).
 
-In the end, `onOutputCompletion` calculates the <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, custom metrics>>.
+In the end, `onOutputCompletion` calculates the [custom metrics](../StateStoreMetrics.md#customMetrics).
 
 ## Internal Properties
 

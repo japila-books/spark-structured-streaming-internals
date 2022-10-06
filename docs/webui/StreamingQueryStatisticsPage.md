@@ -7,11 +7,23 @@
 * [Basic Info](#generateBasicInfo)
 * [Statistics](#generateStatTable)
 
+## Aggregated Number Of Total State Rows
+
+<figure markdown>
+  ![Aggregated Number Of Total State Rows](../images/webui-statistics-aggregated-number-of-total-state-rows.png)
+</figure>
+
+The number of total state rows (the sums of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators))
+
+`StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) to generate a timeline and a histogram for `aggregated-num-total-state-rows-timeline` and `aggregated-num-total-state-rows-histogram` HTML `div`s, respectively.
+
 ## Global Watermark Gap
 
 <figure markdown>
   ![Global Watermark Gap](../images/webui-statistics-global-watermark-gap.png)
 </figure>
+
+A time series of the gaps (_differences_) between the [batch timestamp](../monitoring/StreamingQueryProgress.md#timestamp) and the global watermark (in secs).
 
 Only displayed when there is a global watermark in a streaming query.
 
@@ -20,7 +32,7 @@ Only displayed when there is a global watermark in a streaming query.
 
     `watermark` entry will only be included in the [Event Time Statistics](../monitoring/StreamingQueryProgress.md#eventTime) for a streaming query with [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) logical operator.
 
-A time series of the gaps (_differences_) between the [batch timestamp](../monitoring/StreamingQueryProgress.md#timestamp) and the global watermark (in secs).
+`StreamingQueryStatisticsPage` uses [generateWatermark](#generateWatermark) to generate a timeline and a histogram for `watermark-gap-timeline` and `watermark-gap-histogram` HTML `div`s, respectively.
 
 ## <span id="render"> Rendering Page
 
@@ -72,6 +84,24 @@ Unless found, `generateWatermark` returns _nothing_ (an empty collection).
 * The gap (_difference_) between the batch timestamp and the global watermark (in secs)
 
 `generateWatermark` creates a `GraphUIData` to generate a timeline and a histogram for `watermark-gap-timeline` and `watermark-gap-histogram` HTML `div`s, respectively.
+
+### <span id="generateAggregatedStateOperators"> generateAggregatedStateOperators
+
+```scala
+generateAggregatedStateOperators(
+  query: StreamingQueryUIData,
+  minBatchTime: Long,
+  maxBatchTime: Long,
+  jsCollector: JsCollector): NodeBuffer
+```
+
+`generateAggregatedStateOperators` takes [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of the last [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md) of the given streaming query (as `StreamingQueryUIData`).
+
+Unless available, `generateAggregatedStateOperators` returns _nothing_ (an empty collection).
+
+`generateAggregatedStateOperators` generates data points for a timeline and a histogram for `aggregated-num-total-state-rows` as the sum of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators).
+
+`generateAggregatedStateOperators`...FIXME
 
 ## Logging
 

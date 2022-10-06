@@ -94,7 +94,7 @@ a| [[supportedCustomMetrics]]
 supportedCustomMetrics: Seq[StateStoreCustomMetric]
 ----
 
-<<spark-sql-streaming-StateStoreCustomMetric.md#, StateStoreCustomMetrics>> of the state store provider
+<<StateStoreCustomMetric.md#, StateStoreCustomMetrics>> of the state store provider
 
 Used when:
 

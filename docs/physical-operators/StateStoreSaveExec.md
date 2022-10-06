@@ -127,7 +127,7 @@ a| [[numUpdatedStateRows]] Number of the entries that [were stored as updates in
 Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
 
 | memory used by state
-a| [[stateMemory]] Estimated memory used by a [StateStore](../StateStore.md) (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the [StateStoreMetrics](../spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes) of the [StateStore](../StateStore.md#metrics))
+a| [[stateMemory]] Estimated memory used by a [StateStore](../StateStore.md) (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the [StateStoreMetrics](../StateStoreMetrics.md#memoryUsedBytes) of the [StateStore](../StateStore.md#metrics))
 |===
 
 ## Creating Instance

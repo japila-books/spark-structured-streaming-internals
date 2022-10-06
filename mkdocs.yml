@@ -126,6 +126,11 @@ nav:
       - TriggerExecutor: TriggerExecutor.md
       - StreamingQueryWrapper: StreamingQueryWrapper.md
     - ReportsSourceMetrics: ReportsSourceMetrics.md
+    - State Stores:
+      - StateStore: StateStore.md
+      - StateStoreId: spark-sql-streaming-StateStoreId.md
+      - HDFSBackedStateStore: HDFSBackedStateStore.md
+      - RocksDBStateStore: RocksDBStateStore.md
     - StreamMetadata: StreamMetadata.md
     - StreamingWrite: StreamingWrite.md
     - Logical Operators:
@@ -262,10 +267,6 @@ nav:
       - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
       - Streaming Deduplication: spark-sql-streaming-deduplication.md
       - Streaming Limit: spark-sql-streaming-limit.md
-      - StateStore:
-        - StateStore: StateStore.md
-        - StateStoreId: spark-sql-streaming-StateStoreId.md
-        - HDFSBackedStateStore: HDFSBackedStateStore.md
       - StateStoreProvider:
         - StateStoreProvider: spark-sql-streaming-StateStoreProvider.md
         - StateStoreProviderId: spark-sql-streaming-StateStoreProviderId.md
@@ -275,8 +276,8 @@ nav:
         - StateStoreCoordinatorRef: StateStoreCoordinatorRef.md
       - WatermarkSupport: WatermarkSupport.md
       - StatefulOperatorStateInfo: StatefulOperatorStateInfo.md
-      - StateStoreMetrics: spark-sql-streaming-StateStoreMetrics.md
-      - StateStoreCustomMetric: spark-sql-streaming-StateStoreCustomMetric.md
+      - StateStoreMetrics: StateStoreMetrics.md
+      - StateStoreCustomMetric: StateStoreCustomMetric.md
       - StateStoreUpdater: spark-sql-streaming-StateStoreUpdater.md
       - EventTimeStatsAccum: EventTimeStatsAccum.md
       - EventTimeStats: EventTimeStats.md

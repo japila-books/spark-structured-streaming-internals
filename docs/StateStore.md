@@ -156,7 +156,7 @@ a| [[metrics]]
 metrics: StateStoreMetrics
 ----
 
-[StateStoreMetrics](spark-sql-streaming-StateStoreMetrics.md) of the state store
+[StateStoreMetrics](StateStoreMetrics.md) of the state store
 
 Used when:
 

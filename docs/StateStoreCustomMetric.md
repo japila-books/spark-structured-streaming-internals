@@ -1,12 +1,12 @@
-== [[StateStoreCustomMetric]] StateStoreCustomMetric Contract
+# StateStoreCustomMetric
 
-`StateStoreCustomMetric` is the <<contract, abstraction>> of <<implementations, metrics>> that a state store may wish to expose (as <<spark-sql-streaming-StateStoreMetrics.md#, StateStoreMetrics>> or <<spark-sql-streaming-StateStoreProvider.md#supportedCustomMetrics, supportedCustomMetrics>>).
+`StateStoreCustomMetric` is the <<contract, abstraction>> of <<implementations, metrics>> that a state store may wish to expose (as [StateStoreMetrics](StateStoreMetrics.md) or <<spark-sql-streaming-StateStoreProvider.md#supportedCustomMetrics, supportedCustomMetrics>>).
 
 `StateStoreCustomMetric` is used when:
 
 * `StateStoreProvider` is requested for the <<spark-sql-streaming-StateStoreProvider.md#supportedCustomMetrics, custom metrics>>
 
-* `StateStoreMetrics` is <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, created>>
+* `StateStoreMetrics` is [created](StateStoreMetrics.md#customMetrics)
 
 [[contract]]
 .StateStoreCustomMetric Contract

@@ -15,12 +15,18 @@
 ID | Name
 ---------|----------
  numOutputRows | number of output rows
- numTotalStateRows | number of total state rows
+ [numTotalStateRows](#numTotalStateRows) | number of total state rows
  numUpdatedStateRows | number of updated state rows
  allUpdatesTimeMs | time to update
  allRemovalsTimeMs | time to remove
  commitTimeMs | time to commit changes
  stateMemory | memory used by state
+
+### <span id="numTotalStateRows"> numTotalStateRows
+
+The [number of keys](../StateStoreMetrics.md#numKeys) of a state store
+
+Updated in [setStoreMetrics](#setStoreMetrics)
 
 ## <span id="setStoreMetrics"> Setting StateStore-Specific Metrics for Stateful Physical Operator
 
@@ -31,11 +37,11 @@ setStoreMetrics(
 
 `setStoreMetrics` requests the specified [StateStore](../StateStore.md) for the [metrics](../StateStore.md#metrics) and records the following metrics of a physical operator:
 
-* [numTotalStateRows](#numTotalStateRows) as the [number of keys](../spark-sql-streaming-StateStoreMetrics.md#numKeys)
+* [numTotalStateRows](#numTotalStateRows) as the [number of keys](../StateStoreMetrics.md#numKeys)
 
-* [stateMemory](#stateMemory) as the [memory used (in bytes)](../spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes)
+* [stateMemory](#stateMemory) as the [memory used (in bytes)](../StateStoreMetrics.md#memoryUsedBytes)
 
-`setStoreMetrics` records the [custom metrics](../spark-sql-streaming-StateStoreMetrics.md#customMetrics).
+`setStoreMetrics` records the [custom metrics](../StateStoreMetrics.md#customMetrics).
 
 `setStoreMetrics` is used when the following physical operators are executed:
 
@@ -52,7 +58,11 @@ getProgress(): StateOperatorProgress
 
 `getProgress`...FIXME
 
-`getProgress` is used when `ProgressReporter` is requested to [extractStateOperatorMetrics](../monitoring/ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream)).
+---
+
+`getProgress` is used when:
+
+* `ProgressReporter` is requested to [extractStateOperatorMetrics](../monitoring/ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream))
 
 ## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
 

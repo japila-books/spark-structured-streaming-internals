@@ -148,13 +148,13 @@ metrics: StateStoreMetrics
 
 The performance metrics of the provider used are only the ones listed in [supportedCustomMetrics](HDFSBackedStateStoreProvider.md#supportedCustomMetrics).
 
-In the end, `metrics` returns a new [StateStoreMetrics](spark-sql-streaming-StateStoreMetrics.md) with the following:
+In the end, `metrics` returns a new [StateStoreMetrics](StateStoreMetrics.md) with the following:
 
-* [Total number of keys](spark-sql-streaming-StateStoreMetrics.md#numKeys) as the size of <<mapToUpdate, mapToUpdate>>
+* [Total number of keys](StateStoreMetrics.md#numKeys) as the size of <<mapToUpdate, mapToUpdate>>
 
-* <<spark-sql-streaming-StateStoreMetrics.md#memoryUsedBytes, Memory used (in bytes)>> as the [memoryUsedBytes](HDFSBackedStateStoreProvider.md#memoryUsedBytes) metric (of the parent provider)
+* [Memory used (in bytes)](StateStoreMetrics.md#memoryUsedBytes) as the [memoryUsedBytes](HDFSBackedStateStoreProvider.md#memoryUsedBytes) metric (of the parent provider)
 
-* <<spark-sql-streaming-StateStoreMetrics.md#customMetrics, StateStoreCustomMetrics>> as the [supportedCustomMetrics](HDFSBackedStateStoreProvider.md#supportedCustomMetrics) and the [metricStateOnCurrentVersionSizeBytes](HDFSBackedStateStoreProvider.md#metricStateOnCurrentVersionSizeBytes) metric of the parent provider
+* [StateStoreCustomMetrics](StateStoreMetrics.md#customMetrics) as the [supportedCustomMetrics](HDFSBackedStateStoreProvider.md#supportedCustomMetrics) and the [metricStateOnCurrentVersionSizeBytes](HDFSBackedStateStoreProvider.md#metricStateOnCurrentVersionSizeBytes) metric of the parent provider
 
 === [[hasCommitted]] Are State Changes Committed? -- `hasCommitted` Method
 
