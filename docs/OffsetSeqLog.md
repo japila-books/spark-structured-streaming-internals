@@ -5,7 +5,7 @@
 `OffsetSeqLog` is created as the [write-ahead log (WAL) of offsets](StreamExecution.md#offsetLog) of [streaming query execution engines](StreamExecution.md).
 
 [[OffsetSeq]][[offsets]][[metadata]]
-`OffsetSeqLog` uses [OffsetSeq](OffsetSeq.md) for metadata which holds an ordered collection of offsets and optional metadata (as [OffsetSeqMetadata](OffsetSeqMetadata.md) for [event-time watermark](streaming-watermark.md)).
+`OffsetSeqLog` uses [OffsetSeq](OffsetSeq.md) for metadata which holds an ordered collection of offsets and optional metadata (as [OffsetSeqMetadata](OffsetSeqMetadata.md) for [event-time watermark](streaming-watermark/index.md)).
 
 [[VERSION]]
 `OffsetSeqLog` uses `1` for the version when <<serialize, serializing>> and <<deserialize, deserializing>> metadata.

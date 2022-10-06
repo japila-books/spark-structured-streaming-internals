@@ -5,7 +5,7 @@ hide:
 
 # Demo: Streaming Watermark
 
-This demo shows the internals of [streaming watermark](../streaming-watermark.md) with [Kafka Data Source](../datasources/kafka/index.md).
+This demo shows the internals of [streaming watermark](../streaming-watermark/index.md) with [Kafka Data Source](../datasources/kafka/index.md).
 
 ## Start Kafka Cluster
 

@@ -77,4 +77,4 @@ For any other column (not the [event time attribute](#eventTime)) with the [spar
 
 ## Demo
 
-Check out [Demo: Streaming Watermark with Aggregation in Append Output Mode](../demo/watermark-aggregation-append.md) to deep dive into the internals of [Streaming Watermark](../streaming-watermark.md).
+Check out [Demo: Streaming Watermark with Aggregation in Append Output Mode](../demo/watermark-aggregation-append.md) to deep dive into the internals of [Streaming Watermark](../streaming-watermark/index.md).

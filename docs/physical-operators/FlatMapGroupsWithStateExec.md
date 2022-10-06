@@ -26,7 +26,7 @@
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
 * <span id="timeoutConf"> [GroupStateTimeout](../GroupStateTimeout.md)
 * <span id="batchTimestampMs"> Optional [Batch Processing Time](../spark-structured-streaming-batch-processing-time.md)
-* <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../streaming-watermark.md)
+* <span id="eventTimeWatermark"> Optional [Event-Time Watermark](../streaming-watermark/index.md)
 * <span id="child"> Child physical operator
 
 `FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).

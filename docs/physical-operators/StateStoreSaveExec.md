@@ -137,7 +137,7 @@ a| [[stateMemory]] Estimated memory used by a [StateStore](../StateStore.md) (ak
 * [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
 * [[stateInfo]] Execution-specific [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
 * [[outputMode]] Execution-specific [OutputMode](../OutputMode.md) (default: `None`)
-* [[eventTimeWatermark]] [Event-time watermark](../streaming-watermark.md) (default: `None`)
+* [[eventTimeWatermark]] [Event-time watermark](../streaming-watermark/index.md) (default: `None`)
 * [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
@@ -169,7 +169,7 @@ Invalid output mode: [outputMode]
 
 NOTE: [Append](../OutputMode.md#Append) is the default output mode when not specified explicitly.
 
-NOTE: `Append` output mode requires that a streaming query defines [event-time watermark](../streaming-watermark.md) (e.g. using [withWatermark](../operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using [window](../operators/window.md) standard function).
+NOTE: `Append` output mode requires that a streaming query defines [event-time watermark](../streaming-watermark/index.md) (e.g. using [withWatermark](../operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using [window](../operators/window.md) standard function).
 
 For [Append](../OutputMode.md#Append) output mode, `doExecute` does the following:
 

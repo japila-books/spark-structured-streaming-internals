@@ -255,10 +255,11 @@ nav:
         - StateStoreAwareZipPartitionsHelper: spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md
         - StreamingSymmetricHashJoinHelper: StreamingSymmetricHashJoinHelper.md
         - StreamingJoinHelper: StreamingJoinHelper.md
+    - Streaming Watermark:
+      - streaming-watermark/index.md
     - Stateful Stream Processing:
       - stateful-stream-processing/index.md
       - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
-      - Streaming Watermark: streaming-watermark.md
       - Streaming Deduplication: spark-sql-streaming-deduplication.md
       - Streaming Limit: spark-sql-streaming-limit.md
       - StateStore:
