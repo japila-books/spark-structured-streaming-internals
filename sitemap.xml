@@ -201,6 +201,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/RocksDBStateStore/</loc>
+         <lastmod>2022-10-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/SQLConf/</loc>
          <lastmod>2022-10-06</lastmod>
          <changefreq>daily</changefreq>
@@ -242,6 +247,16 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreCoordinatorRef/</loc>
+         <lastmod>2022-10-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreCustomMetric/</loc>
+         <lastmod>2022-10-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/StateStoreMetrics/</loc>
          <lastmod>2022-10-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -461,22 +476,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreCustomMetric/</loc>
-         <lastmod>2022-10-06</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreHandler/</loc>
          <lastmod>2022-10-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreId/</loc>
-         <lastmod>2022-10-06</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-StateStoreMetrics/</loc>
          <lastmod>2022-10-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
