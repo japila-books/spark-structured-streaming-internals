@@ -24,29 +24,31 @@ ID | Name
 
 ### <span id="numTotalStateRows"> numTotalStateRows
 
-The [number of keys](../StateStoreMetrics.md#numKeys) of a state store
+Sum of the [number of keys](../StateStoreMetrics.md#numKeys) of all state stores
 
-Updated in [setStoreMetrics](#setStoreMetrics)
+Updated in [setStoreMetrics](#setStoreMetrics) based on the [numKeys](../StateStoreMetrics.md#numKeys) metric of a [StateStore](../StateStore.md).
 
-## <span id="setStoreMetrics"> Setting StateStore-Specific Metrics for Stateful Physical Operator
+## <span id="setStoreMetrics"> Recording StateStore Metrics
 
 ```scala
 setStoreMetrics(
   store: StateStore): Unit
 ```
 
-`setStoreMetrics` requests the specified [StateStore](../StateStore.md) for the [metrics](../StateStore.md#metrics) and records the following metrics of a physical operator:
+`setStoreMetrics` requests the given [StateStore](../StateStore.md) for the [metrics](../StateStore.md#metrics) and records the following metrics:
 
-* [numTotalStateRows](#numTotalStateRows) as the [number of keys](../StateStoreMetrics.md#numKeys)
+* Adds the [number of keys](../StateStoreMetrics.md#numKeys) to [numTotalStateRows](#numTotalStateRows) metric
+* Adds the [memory used (in bytes)](../StateStoreMetrics.md#memoryUsedBytes) to [stateMemory](#stateMemory) metric
 
-* [stateMemory](#stateMemory) as the [memory used (in bytes)](../StateStoreMetrics.md#memoryUsedBytes)
+`setStoreMetrics` records (_adds_) the values of the [custom metrics](../StateStoreMetrics.md#customMetrics).
 
-`setStoreMetrics` records the [custom metrics](../StateStoreMetrics.md#customMetrics).
+---
 
 `setStoreMetrics` is used when the following physical operators are executed:
 
-* [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md)
+* [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md#processDataWithPartition)
 * [StateStoreSaveExec](StateStoreSaveExec.md)
+* [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md)
 * [StreamingDeduplicateExec](StreamingDeduplicateExec.md)
 * [StreamingGlobalLimitExec](StreamingGlobalLimitExec.md)
 

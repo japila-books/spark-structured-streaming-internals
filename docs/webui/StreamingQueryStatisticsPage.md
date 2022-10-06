@@ -17,6 +17,9 @@ The number of total state rows (the sums of [numRowsTotal](../monitoring/StateOp
 
 `StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) to generate a timeline and a histogram for `aggregated-num-total-state-rows-timeline` and `aggregated-num-total-state-rows-histogram` HTML `div`s, respectively.
 
+!!! tip "Demo: Streaming Aggregation"
+    Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more.
+
 ## Global Watermark Gap
 
 <figure markdown>
