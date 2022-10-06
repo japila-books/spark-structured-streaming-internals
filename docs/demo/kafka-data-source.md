@@ -3,32 +3,48 @@ hide:
   - navigation
 ---
 
-# Demo: Streaming Aggregation with Kafka Data Source
+# Demo: Kafka Data Source
 
-The following example code shows a [streaming aggregation](../streaming-aggregation/index.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) that reads records from Kafka (with [Kafka Data Source](../datasources/kafka/index.md)).
+This demo shows how to use [Kafka Data Source](../datasources/kafka/index.md) in a streaming query.
 
-IMPORTANT: Start up Kafka cluster and spark-shell with `spark-sql-kafka-0-10` package before running the demo.
+## Start Kafka Cluster
 
-TIP: You may want to consider copying the following code to `append.txt` and using `:load append.txt` command in spark-shell to load it (rather than copying and pasting it).
+```console
+./start-confluent.sh
+```
 
-```text
-// START: Only for easier debugging
-// The state is then only for one partition
-// which should make monitoring easier
-val numShufflePartitions = 1
-import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
-spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
+```console
+$ docker compose ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+broker              "/etc/confluent/dock…"   broker              running             0.0.0.0:9092->9092/tcp, 0.0.0.0:9101->9101/tcp
+connect             "/etc/confluent/dock…"   connect             running             0.0.0.0:8083->8083/tcp, 9092/tcp
+control-center      "/etc/confluent/dock…"   control-center      running             0.0.0.0:9021->9021/tcp
+rest-proxy          "/etc/confluent/dock…"   rest-proxy          running             0.0.0.0:8082->8082/tcp
+schema-registry     "/etc/confluent/dock…"   schema-registry     running             0.0.0.0:8081->8081/tcp
+zookeeper           "/etc/confluent/dock…"   zookeeper           running             2888/tcp, 0.0.0.0:2181->2181/tcp, 3888/tcp
+```
 
-assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
-// END: Only for easier debugging
+## Start Spark Shell
 
-val records = spark
+Run `spark-shell` with [spark-sql-kafka-0-10](../datasources/kafka/index.md) external module.
+
+```console
+./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
+```
+
+## Define Source
+
+```scala
+val events = spark
   .readStream
   .format("kafka")
-  .option("subscribePattern", """topic-\d{2}""") // topics with two digits at the end
+  .option("subscribe", "demo.kafka-data-source")
   .option("kafka.bootstrap.servers", ":9092")
   .load
-scala> records.printSchema
+```
+
+```text
+scala> events.printSchema
 root
  |-- key: binary (nullable = true)
  |-- value: binary (nullable = true)
@@ -37,123 +53,86 @@ root
  |-- offset: long (nullable = true)
  |-- timestamp: timestamp (nullable = true)
  |-- timestampType: integer (nullable = true)
+```
 
-// Since the streaming query uses Append output mode
-// it has to define a streaming event-time watermark (using Dataset.withWatermark operator)
-// UnsupportedOperationChecker makes sure that the requirement holds
-val ids = records
-  .withColumn("tokens", split($"value", ","))
-  .withColumn("seconds", 'tokens(0) cast "long")
-  .withColumn("event_time", to_timestamp(from_unixtime('seconds))) // <-- Event time has to be a timestamp
-  .withColumn("id", 'tokens(1))
-  .withColumn("batch", 'tokens(2) cast "int")
-  .withWatermark(eventTime = "event_time", delayThreshold = "10 seconds") // <-- define watermark (before groupBy!)
-  .groupBy($"event_time") // <-- use event_time for grouping
-  .agg(collect_list("batch") as "batches", collect_list("id") as "ids")
-  .withColumn("event_time", to_timestamp($"event_time")) // <-- convert to human-readable date
-scala> ids.printSchema
+```scala
+val kvs = events.
+  select(
+    $"key" cast "string",
+    $"value" cast "string")
+```
+
+```text
+scala> kvs.printSchema
 root
- |-- event_time: timestamp (nullable = true)
- |-- batches: array (nullable = true)
- |    |-- element: integer (containsNull = true)
- |-- ids: array (nullable = true)
- |    |-- element: string (containsNull = true)
+ |-- key: string (nullable = true)
+ |-- value: string (nullable = true)
+```
 
-assert(ids.isStreaming, "ids is a streaming query")
-
-// ids knows nothing about the output mode or the current streaming watermark yet
-// - Output mode is defined on writing side
-// - streaming watermark is read from rows at runtime
-// That's why StatefulOperatorStateInfo is generic (and uses the default Append for output mode)
-// and no batch-specific values are printed out
-// They will be available right after the first streaming batch
-// Use explain on a streaming query to know the trigger-specific values
-scala> ids.explain
+```text
+scala> kvs.explain
 == Physical Plan ==
-ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[collect_list(batch#141, 0, 0), collect_list(id#129, 0, 0)])
-+- StateStoreSave [event_time#118-T10000ms], state info [ checkpoint = <unknown>, runId = a870e6e2-b925-4104-9886-b211c0be1b73, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
-   +- ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[merge_collect_list(batch#141, 0, 0), merge_collect_list(id#129, 0, 0)])
-      +- StateStoreRestore [event_time#118-T10000ms], state info [ checkpoint = <unknown>, runId = a870e6e2-b925-4104-9886-b211c0be1b73, opId = 0, ver = 0, numPartitions = 1], 2
-         +- ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[merge_collect_list(batch#141, 0, 0), merge_collect_list(id#129, 0, 0)])
-            +- Exchange hashpartitioning(event_time#118-T10000ms, 1)
-               +- ObjectHashAggregate(keys=[event_time#118-T10000ms], functions=[partial_collect_list(batch#141, 0, 0), partial_collect_list(id#129, 0, 0)])
-                  +- EventTimeWatermark event_time#118: timestamp, interval 10 seconds
-                     +- *(1) Project [cast(from_unixtime(cast(split(cast(value#8 as string), ,)[0] as bigint), yyyy-MM-dd HH:mm:ss, Some(Europe/Warsaw)) as timestamp) AS event_time#118, split(cast(value#8 as string), ,)[1] AS id#129, cast(split(cast(value#8 as string), ,)[2] as int) AS batch#141]
-                        +- StreamingRelation kafka, [key#7, value#8, topic#9, partition#10, offset#11L, timestamp#12, timestampType#13]
+*(1) Project [cast(key#277 as string) AS key#295, cast(value#278 as string) AS value#296]
++- StreamingRelation kafka, [key#277, value#278, topic#279, partition#280, offset#281L, timestamp#282, timestampType#283]
+```
 
-val queryName = "ids-kafka"
-val checkpointLocation = s"/tmp/checkpoint-$queryName"
+## Start Streaming Query
 
-// Delete the checkpoint location from previous executions
-import java.nio.file.{Files, FileSystems}
-import java.util.Comparator
-import scala.collection.JavaConverters._
-val path = FileSystems.getDefault.getPath(checkpointLocation)
-if (Files.exists(path)) {
-  Files.walk(path)
-    .sorted(Comparator.reverseOrder())
-    .iterator
-    .asScala
-    .foreach(p => p.toFile.delete)
-}
+```scala
+import java.time.Clock
+val timeOffset = Clock.systemUTC.instant.getEpochSecond
+val queryName = s"Demo: Kafka Data Source ($timeOffset)"
+val checkpointLocation = s"/tmp/demo-checkpoint-$timeOffset"
+```
 
-// The following make for an easier demo
-// Kafka cluster is supposed to be up at this point
-// Make sure that a Kafka topic is available, e.g. topic-00
-// Use ./bin/kafka-console-producer.sh --broker-list :9092 --topic topic-00
-// And send a record, e.g. 1,1,1
-
-// Define the output mode
-// and start the query
+```scala
 import scala.concurrent.duration._
-import org.apache.spark.sql.streaming.OutputMode.Append
 import org.apache.spark.sql.streaming.Trigger
-val streamingQuery = ids
+val sq = kvs
   .writeStream
   .format("console")
-  .option("truncate", false)
   .option("checkpointLocation", checkpointLocation)
+  .option("truncate", false)
   .queryName(queryName)
-  .outputMode(Append)
+  .trigger(Trigger.ProcessingTime(1.seconds))
   .start
-
-val lastProgress = streamingQuery.lastProgress
-scala> :type lastProgress
-org.apache.spark.sql.streaming.StreamingQueryProgress
-
-assert(lastProgress.stateOperators.length == 1, "There should be one stateful operator")
-
-scala> println(lastProgress.stateOperators.head.prettyJson)
-{
-  "numRowsTotal" : 1,
-  "numRowsUpdated" : 0,
-  "memoryUsedBytes" : 742,
-  "customMetrics" : {
-    "loadedMapCacheHitCount" : 1,
-    "loadedMapCacheMissCount" : 1,
-    "stateOnCurrentVersionSizeBytes" : 374
-  }
-}
-
-assert(lastProgress.sources.length == 1, "There should be one streaming source only")
-scala> println(lastProgress.sources.head.prettyJson)
-{
-  "description" : "KafkaV2[SubscribePattern[topic-\\d{2}]]",
-  "startOffset" : {
-    "topic-00" : {
-      "0" : 1
-    }
-  },
-  "endOffset" : {
-    "topic-00" : {
-      "0" : 1
-    }
-  },
-  "numInputRows" : 0,
-  "inputRowsPerSecond" : 0.0,
-  "processedRowsPerSecond" : 0.0
-}
-
-// Eventually...
-streamingQuery.stop()
 ```
+
+The batch 0 is immediately printed out to the console.
+
+```text
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++---+-----+
+|key|value|
++---+-----+
++---+-----+
+```
+
+## Send Event
+
+```console
+echo "k1:v1" | kcat -P -b :9092 -K : -t demo.kafka-data-source
+```
+
+`spark-shell` should print out the event as Batch 1.
+
+```text
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++---+-----+
+|key|value|
++---+-----+
+|k1 |v1   |
++---+-----+
+```
+
+## Cleanup
+
+```scala
+sq.stop()
+```
+
+Exit `spark-shell` and stop the Kafka cluster (Confluent Platform).
