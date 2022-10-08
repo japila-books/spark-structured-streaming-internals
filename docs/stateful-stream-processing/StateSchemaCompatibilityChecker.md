@@ -1,0 +1,3 @@
+# StateSchemaCompatibilityChecker
+
+`StateSchemaCompatibilityChecker` is...FIXME

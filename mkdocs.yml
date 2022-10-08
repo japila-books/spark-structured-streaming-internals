@@ -264,8 +264,10 @@ nav:
       - streaming-limit/index.md
     - Stateful Stream Processing:
       - stateful-stream-processing/index.md
+      - RocksDBFileManager: stateful-stream-processing/RocksDBFileManager.md
       - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
       - StatefulOperatorStateInfo: stateful-stream-processing/StatefulOperatorStateInfo.md
+      - StateSchemaCompatibilityChecker: stateful-stream-processing/StateSchemaCompatibilityChecker.md
       - StateStore:
         - HDFSBackedStateStore: stateful-stream-processing/HDFSBackedStateStore.md
         - RocksDBStateStore: stateful-stream-processing/RocksDBStateStore.md
