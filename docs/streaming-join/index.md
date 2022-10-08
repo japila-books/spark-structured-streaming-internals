@@ -32,9 +32,9 @@ Stream-stream joins may optionally define **Join State Watermark** for state rem
 
 A join state watermark can be specified on the following:
 
-. <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate, Join keys>> (_key state_)
+. <<JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate, Join keys>> (_key state_)
 
-. <<spark-sql-streaming-JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate, Columns of the left and right sides>> (_value state_)
+. <<JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate, Columns of the left and right sides>> (_value state_)
 
 A join state watermark can be specified on key state, value state or both.
 

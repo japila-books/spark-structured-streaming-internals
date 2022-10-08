@@ -36,7 +36,7 @@ createForStreaming[S](
 
 `createForStreaming` simply creates a <<creating-instance, new GroupStateImpl>> with the given input arguments.
 
-NOTE: `createForStreaming` is used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](InputProcessor.md#callFunctionAndUpdateState) (when `InputProcessor` is requested to [processNewData](InputProcessor.md#processNewData) and [processTimedOutState](InputProcessor.md#processTimedOutState)).
+NOTE: `createForStreaming` is used exclusively when `InputProcessor` is requested to [callFunctionAndUpdateState](arbitrary-stateful-streaming-aggregation/InputProcessor.md#callFunctionAndUpdateState) (when `InputProcessor` is requested to [processNewData](arbitrary-stateful-streaming-aggregation/InputProcessor.md#processNewData) and [processTimedOutState](arbitrary-stateful-streaming-aggregation/InputProcessor.md#processTimedOutState)).
 
 === [[createForBatch]] Creating GroupStateImpl for Batch Query -- `createForBatch` Factory Method
 

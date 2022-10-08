@@ -127,7 +127,7 @@ state: Rule[SparkPlan]
 
 * [batchTimestampMs](OffsetSeqMetadata.md#batchTimestampMs) (through the [OffsetSeqMetadata](#offsetSeqMetadata)) for the current timestamp
 
-* [getStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the state watermark predicates (for [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
+* [getStateWatermarkPredicates](streaming-join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the state watermark predicates (for [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
 
 `state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) in **queryPlanning** phase).
 
@@ -140,7 +140,7 @@ state: Rule[SparkPlan]
 nextStatefulOperationStateInfo(): StatefulOperatorStateInfo
 ```
 
-`nextStatefulOperationStateInfo` simply creates a new [StatefulOperatorStateInfo](StatefulOperatorStateInfo.md) with the [state checkpoint location](#state-checkpoint-location), the [run ID](#runId) (of the streaming query), the next [statefulOperator ID](#statefulOperatorId), the [current batch ID](#currentBatchId), and the [number of state stores](#numStateStores).
+`nextStatefulOperationStateInfo` simply creates a new [StatefulOperatorStateInfo](stateful-stream-processing/StatefulOperatorStateInfo.md) with the [state checkpoint location](#state-checkpoint-location), the [run ID](#runId) (of the streaming query), the next [statefulOperator ID](#statefulOperatorId), the [current batch ID](#currentBatchId), and the [number of state stores](#numStateStores).
 
 !!! note
     The only changing part of `StatefulOperatorStateInfo` across calls of the `nextStatefulOperationStateInfo` method is the the next  [statefulOperator ID](#statefulOperatorId).

@@ -14,7 +14,7 @@ The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>> and t
 
 * [[streamLimit]] **Streaming Limit**
 * [[child]] Child physical operator (`SparkPlan`)
-* [[stateInfo]] [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
+* [[stateInfo]] [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) (default: `None`)
 * [[outputMode]] [OutputMode](../OutputMode.md) (default: `None`)
 
 `StreamingGlobalLimitExec` is created when [StreamingGlobalLimitStrategy](../execution-planning-strategies/StreamingGlobalLimitStrategy.md) execution planning strategy is requested to plan a `Limit` logical operator (in the logical plan of a streaming query) for execution.

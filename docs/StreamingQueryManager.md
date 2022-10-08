@@ -248,7 +248,7 @@ notifyQueryTermination(
 
 `notifyQueryTermination` notifies others that are blocked on [awaitTerminationLock](#awaitTerminationLock).
 
-In the end, `notifyQueryTermination` requests [StateStoreCoordinator](#stateStoreCoordinator) to [deactivate all active runs of the streaming query](StateStoreCoordinatorRef.md#deactivateInstances).
+In the end, `notifyQueryTermination` requests [StateStoreCoordinator](#stateStoreCoordinator) to [deactivate all active runs of the streaming query](stateful-stream-processing/StateStoreCoordinatorRef.md#deactivateInstances).
 
 ![StreamingQueryManager's Marking Streaming Query as Terminated](images/StreamingQueryManager-notifyQueryTermination.png)
 
@@ -272,9 +272,9 @@ Used when `StreamingQueryManager` is requested for [active streaming queries](#a
 
 ## <span id="stateStoreCoordinator"> StateStoreCoordinatorRef
 
-[StateStoreCoordinatorRef](StateStoreCoordinatorRef.md) to the `StateStoreCoordinator` RPC Endpoint
+[StateStoreCoordinatorRef](stateful-stream-processing/StateStoreCoordinatorRef.md) to the `StateStoreCoordinator` RPC Endpoint
 
-* [Created](StateStoreCoordinatorRef.md#forDriver) when `StreamingQueryManager` is [created](#creating-instance)
+* [Created](stateful-stream-processing/StateStoreCoordinatorRef.md#forDriver) when `StreamingQueryManager` is [created](#creating-instance)
 
 Used when:
 
@@ -282,4 +282,4 @@ Used when:
 
 * Stateful operators are executed ([FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md), [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md), [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md) and [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
 
-* [Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)](StateStoreOps.md#mapPartitionsWithStateStore)
+* [Creating StateStoreRDD (with storeUpdateFunction aborting StateStore when a task fails)](stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore)

@@ -2,7 +2,9 @@
 
 `StreamingQueryStatisticsPage` is a `WebUIPage` ([Spark Core]({{ book.spark_core }}/webui/WebUIPage)) with `statistics` URL prefix.
 
-`StreamingQueryStatisticsPage` [renders a Streaming Query Statistics page](render) of the statistics of a streaming query (by a given `runId` as `id` request parameter) with the following sections:
+`StreamingQueryStatisticsPage` uses `id` request parameter as the `runId` of a streaming query to [render a Streaming Query Statistics page](render).
+
+`StreamingQueryStatisticsPage` renders the following main sections:
 
 * [Basic Info](#generateBasicInfo)
 * [Statistics](#generateStatTable)

@@ -24,7 +24,7 @@ The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.
 
 ![StateStoreRestoreExec and IncrementalExecution](../images/StateStoreRestoreExec-IncrementalExecution.png)
 
-When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and [creates a StateStoreRDD to map over partitions](../StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that restores the state for the keys in the input rows if available.
+When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and [creates a StateStoreRDD to map over partitions](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that restores the state for the keys in the input rows if available.
 
 [[output]]
 The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s output schema.
@@ -53,7 +53,7 @@ image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 `StateStoreRestoreExec` takes the following to be created:
 
 * [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
-* [[stateInfo]] Optional [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) (default: `None`)
+* [[stateInfo]] Optional [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) (default: `None`)
 * [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
 * [[child]] Child physical operator (`SparkPlan`)
 
@@ -84,7 +84,7 @@ doExecute(): RDD[InternalRow]
 
 `doExecute` is part of the `SparkPlan` abstraction.
 
-Internally, `doExecute` executes <<child, child>> physical operator and [creates a StateStoreRDD](../StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that does the following per <<child, child>> operator's RDD partition:
+Internally, `doExecute` executes <<child, child>> physical operator and [creates a StateStoreRDD](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that does the following per <<child, child>> operator's RDD partition:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>> operator).
 
@@ -92,7 +92,7 @@ Internally, `doExecute` executes <<child, child>> physical operator and [creates
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* [Gets the saved state](../StateStore.md#get) in `StateStore` for the key if available (it might not be if the key appeared in the input the first time)
+* [Gets the saved state](../stateful-stream-processing/StateStore.md#get) in `StateStore` for the key if available (it might not be if the key appeared in the input the first time)
 
 * Increments <<numOutputRows, numOutputRows>> metric (that in the end is the number of rows from the <<child, child>> operator)
 

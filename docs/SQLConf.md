@@ -13,6 +13,10 @@
 
 [spark.sql.streaming.statefulOperator.useStrictDistribution](configuration-properties.md#spark.sql.streaming.statefulOperator.useStrictDistribution)
 
+## <span id="stateStoreProviderClass"><span id="STATE_STORE_PROVIDER_CLASS"> stateStoreProviderClass
+
+[spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass)
+
 ## <span id="streamingFileCommitProtocolClass"><span id="STREAMING_FILE_COMMIT_PROTOCOL_CLASS"> streamingFileCommitProtocolClass
 
 [spark.sql.streaming.commitProtocolClass](configuration-properties.md#spark.sql.streaming.commitProtocolClass) configuration property
@@ -63,7 +67,7 @@ Used when:
 
 * [StreamExecution](StreamExecution.md#minLogEntriesToMaintain) is created
 
-* `StateStoreConf` is [created](StateStoreConf.md#minVersionsToRetain)
+* `StateStoreConf` is [created](stateful-stream-processing/StateStoreConf.md#minVersionsToRetain)
 
 [[accessor-methods]]
 .SQLConf's Property Accessor Methods
@@ -116,17 +120,7 @@ a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exc
 
 [spark.sql.streaming.stateStore.minDeltasForSnapshot](configuration-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot)
 
-a| [[stateStoreMinDeltasForSnapshot]] Used (as [StateStoreConf.minDeltasForSnapshot](StateStoreConf.md#minDeltasForSnapshot)) exclusively when `HDFSBackedStateStoreProvider` is requested to [doSnapshot](HDFSBackedStateStoreProvider.md#doSnapshot)
-
-| `stateStoreProviderClass`
-
-[spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass)
-
-a| [[stateStoreProviderClass]] Used when:
-
-* `StateStoreWriter` is requested to [stateStoreCustomMetrics](physical-operators/StateStoreWriter.md#stateStoreCustomMetrics) (when `StateStoreWriter` is requested for the [metrics](physical-operators/StateStoreWriter.md#metrics) and [getProgress](physical-operators/StateStoreWriter.md#getProgress))
-
-* `StateStoreConf` is [created](StateStoreConf.md#providerClass)
+a| [[stateStoreMinDeltasForSnapshot]] Used (as [StateStoreConf.minDeltasForSnapshot](stateful-stream-processing/StateStoreConf.md#minDeltasForSnapshot)) exclusively when `HDFSBackedStateStoreProvider` is requested to [doSnapshot](stateful-stream-processing/HDFSBackedStateStoreProvider.md#doSnapshot)
 
 | `STREAMING_AGGREGATION_STATE_FORMAT_VERSION`
 

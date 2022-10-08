@@ -87,7 +87,7 @@ Use [explain](../operators/explain.md) operator on a streaming query to know the
 * [OutputMode](../OutputMode.md) is defined on write side
 * [Streaming watermark](../streaming-watermark/index.md) is read from rows at runtime
 
-That's why [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) is generic (and uses the default [Append](../OutputMode.md#Append) for output mode). And no batch-specific values are printed out. They will be available right after the first streaming batch.
+That's why [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) is generic (and uses the default [Append](../OutputMode.md#Append) for output mode). And no batch-specific values are printed out. They will be available right after the first streaming batch.
 
 ```scala
 windowed.explain

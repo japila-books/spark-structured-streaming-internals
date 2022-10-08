@@ -20,7 +20,7 @@
 * <span id="groupingAttributes"> Grouping attributes (as used for grouping in [KeyValueGroupedDataset](../KeyValueGroupedDataset.md#groupingAttributes) for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
 * <span id="dataAttributes"> Data attributes
 * <span id="outputObjAttr"> Output object attribute (that is the reference to the single object field this operator outputs)
-* <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md)
+* <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
 * <span id="stateEncoder"> State encoder (`ExpressionEncoder[Any]`)
 * <span id="stateFormatVersion"> State format version
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
@@ -41,19 +41,19 @@ doExecute(): RDD[InternalRow]
 
 `doExecute` then requests the [child](#child) physical operator to execute (and generate an `RDD[InternalRow]`).
 
-`doExecute` uses [StateStoreOps](../StateStoreOps.md) to [create a StateStoreRDD](../StateStoreOps.md#mapPartitionsWithStateStore) with a `storeUpdateFunction` that does the following (for a partition):
+`doExecute` uses [StateStoreOps](../stateful-stream-processing/StateStoreOps.md) to [create a StateStoreRDD](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) with a `storeUpdateFunction` that does the following (for a partition):
 
-1. Creates an [InputProcessor](../InputProcessor.md) for a given [StateStore](../StateStore.md)
+1. Creates an [InputProcessor](../arbitrary-stateful-streaming-aggregation/InputProcessor.md) for a given [StateStore](../stateful-stream-processing/StateStore.md)
 
-1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](../WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
+1. (only when the [GroupStateTimeout](#timeoutConf) is [EventTimeTimeout](../GroupStateTimeout.md#EventTimeTimeout)) Filters out late data based on the [event-time watermark](WatermarkSupport.md#watermarkPredicateForData), i.e. rows from a given `Iterator[InternalRow]` that are older than the [event-time watermark](WatermarkSupport.md#watermarkPredicateForData) are excluded from the steps that follow
 
-1. Requests the `InputProcessor` to [create an iterator of a new data processed](../InputProcessor.md#processNewData) from the (possibly filtered) iterator
+1. Requests the `InputProcessor` to [create an iterator of a new data processed](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#processNewData) from the (possibly filtered) iterator
 
-1. Requests the `InputProcessor` to [create an iterator of a timed-out state data](../InputProcessor.md#processTimedOutState)
+1. Requests the `InputProcessor` to [create an iterator of a timed-out state data](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#processTimedOutState)
 
 1. Creates an iterator by concatenating the above iterators (with the new data processed first)
 
-1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../StateStore.md#commit) followed by [setting the store-specific metrics](StateStoreWriter.md#setStoreMetrics)
+1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../stateful-stream-processing/StateStore.md#commit) followed by [setting the store-specific metrics](StateStoreWriter.md#setStoreMetrics)
 
 `doExecute` is part of Spark SQL's `SparkPlan` abstraction.
 
@@ -71,7 +71,7 @@ doExecute(): RDD[InternalRow]
 
 ## <span id="WatermarkSupport"> Streaming Event-Time Watermark Support
 
-`FlatMapGroupsWithStateExec` is a [physical operator that supports streaming event-time watermark](../WatermarkSupport.md).
+`FlatMapGroupsWithStateExec` is a [physical operator that supports streaming event-time watermark](WatermarkSupport.md).
 
 `FlatMapGroupsWithStateExec` is given the [optional event time watermark](#eventTimeWatermark) when created.
 
@@ -98,23 +98,23 @@ The [event-time watermark](#eventTimeWatermark) (with the [StatefulOperatorState
 stateManager: StateManager
 ```
 
-While being created, `FlatMapGroupsWithStateExec` creates a [StateManager](../spark-sql-streaming-StateManager.md) (with the [state encoder](#stateEncoder) and the [isTimeoutEnabled](#isTimeoutEnabled) flag).
+While being created, `FlatMapGroupsWithStateExec` creates a [StateManager](../arbitrary-stateful-streaming-aggregation/StateManager.md) (with the [state encoder](#stateEncoder) and the [isTimeoutEnabled](#isTimeoutEnabled) flag).
 
-A `StateManager` is [created](../spark-sql-streaming-FlatMapGroupsWithStateExecHelper.md#createStateManager) per [state format version](#stateFormatVersion) that is given while creating a `FlatMapGroupsWithStateExec` (to choose between the [available implementations](../spark-sql-streaming-StateManagerImplBase.md#implementations)).
+A `StateManager` is [created](../arbitrary-stateful-streaming-aggregation/FlatMapGroupsWithStateExecHelper.md#createStateManager) per [state format version](#stateFormatVersion) that is given while creating a `FlatMapGroupsWithStateExec` (to choose between the [available implementations](../arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md#implementations)).
 
 The [state format version](#stateFormatVersion) is controlled by [spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion) internal configuration property.
 
 The `StateManager` is used exclusively when `FlatMapGroupsWithStateExec` physical operator is [executed](#doExecute) for the following:
 
-* [State schema](../spark-sql-streaming-StateManager.md#stateSchema) (for the [value schema](../StateStoreRDD.md#valueSchema) of a [StateStoreRDD](../StateStoreRDD.md))
+* [State schema](../arbitrary-stateful-streaming-aggregation/StateManager.md#stateSchema) (for the [value schema](../stateful-stream-processing/StateStoreRDD.md#valueSchema) of a [StateStoreRDD](../stateful-stream-processing/StateStoreRDD.md))
 
-* [State data for a key in a StateStore](../spark-sql-streaming-StateManager.md#getState) while [processing new data](../InputProcessor.md#processNewData)
+* [State data for a key in a StateStore](../arbitrary-stateful-streaming-aggregation/StateManager.md#getState) while [processing new data](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#processNewData)
 
-* [All state data (for all keys) in a StateStore](../spark-sql-streaming-StateManager.md#getAllState) while [processing timed-out state data](../InputProcessor.md#processTimedOutState)
+* [All state data (for all keys) in a StateStore](../arbitrary-stateful-streaming-aggregation/StateManager.md#getAllState) while [processing timed-out state data](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#processTimedOutState)
 
-* [Removing the state for a key from a StateStore](../spark-sql-streaming-StateManager.md#removeState) when [all rows have been processed](../InputProcessor.md#onIteratorCompletion)
+* [Removing the state for a key from a StateStore](../arbitrary-stateful-streaming-aggregation/StateManager.md#removeState) when [all rows have been processed](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#onIteratorCompletion)
 
-* [Persisting the state for a key in a StateStore](../spark-sql-streaming-StateManager.md#putState) when [all rows have been processed](../InputProcessor.md#onIteratorCompletion)
+* [Persisting the state for a key in a StateStore](../arbitrary-stateful-streaming-aggregation/StateManager.md#putState) when [all rows have been processed](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#onIteratorCompletion)
 
 ## <span id="keyExpressions"> keyExpressions Method
 
@@ -124,7 +124,7 @@ keyExpressions: Seq[Attribute]
 
 `keyExpressions` simply returns the [grouping attributes](#groupingAttributes).
 
-`keyExpressions` is part of the [WatermarkSupport](../WatermarkSupport.md#keyExpressions) abstraction.
+`keyExpressions` is part of the [WatermarkSupport](WatermarkSupport.md#keyExpressions) abstraction.
 
 ## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not
 
@@ -152,7 +152,7 @@ Flag that says whether the [GroupStateTimeout](#timeoutConf) is not [NoTimeout](
 Used when:
 
 * `FlatMapGroupsWithStateExec` is created (and creates the internal [StateManager](#stateManager))
-* `InputProcessor` is requested to [processTimedOutState](../InputProcessor.md#processTimedOutState)
+* `InputProcessor` is requested to [processTimedOutState](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#processTimedOutState)
 
 ### <span id="watermarkPresent"> watermarkPresent Flag
 
@@ -160,7 +160,7 @@ Flag that says whether the [child](#child) physical operator has a [watermark at
 
 Used when:
 
-* `InputProcessor` is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState)
+* `InputProcessor` is requested to [callFunctionAndUpdateState](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#callFunctionAndUpdateState)
 
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 

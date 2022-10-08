@@ -4,7 +4,7 @@
 
 `CheckpointFileManager` is <<create, created>> per <<SQLConf.md#STREAMING_CHECKPOINT_FILE_MANAGER_CLASS, spark.sql.streaming.checkpointFileManagerClass>> configuration property if defined before reverting to the available <<implementations, checkpoint managers>>.
 
-`CheckpointFileManager` is used exclusively by [HDFSMetadataLog](HDFSMetadataLog.md), [StreamMetadata](StreamMetadata.md) and [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md).
+`CheckpointFileManager` is used exclusively by [HDFSMetadataLog](HDFSMetadataLog.md), [StreamMetadata](StreamMetadata.md) and [HDFSBackedStateStoreProvider](stateful-stream-processing/HDFSBackedStateStoreProvider.md).
 
 [[contract]]
 .CheckpointFileManager Contract
@@ -29,9 +29,9 @@ Used when:
 
 * `StreamMetadata` helper object is requested to [persist metadata](StreamMetadata.md#write)
 
-* `HDFSBackedStateStore` is requested for the [deltaFileStream](HDFSBackedStateStore.md#deltaFileStream)
+* `HDFSBackedStateStore` is requested for the [deltaFileStream](stateful-stream-processing/HDFSBackedStateStore.md#deltaFileStream)
 
-* `HDFSBackedStateStoreProvider` is requested to [writeSnapshotFile](HDFSBackedStateStoreProvider.md#writeSnapshotFile)
+* `HDFSBackedStateStoreProvider` is requested to [writeSnapshotFile](stateful-stream-processing/HDFSBackedStateStoreProvider.md#writeSnapshotFile)
 
 | delete
 a| [[delete]]
@@ -51,7 +51,7 @@ Used when:
 
 * `HDFSMetadataLog` is requested to [remove expired metadata](HDFSMetadataLog.md#purge) and [purgeAfter](HDFSMetadataLog.md#purgeAfter)
 
-* `HDFSBackedStateStoreProvider` is requested to [do maintenance](HDFSBackedStateStoreProvider.md#doMaintenance) (that [cleans up](HDFSBackedStateStoreProvider.md#cleanup))
+* `HDFSBackedStateStoreProvider` is requested to [do maintenance](stateful-stream-processing/HDFSBackedStateStoreProvider.md#doMaintenance) (that [cleans up](stateful-stream-processing/HDFSBackedStateStoreProvider.md#cleanup))
 
 | exists
 a| [[exists]]
@@ -90,7 +90,7 @@ Lists all files in the given path
 
 Used when:
 
-* `HDFSBackedStateStoreProvider` is requested for [all delta and snapshot files](HDFSBackedStateStoreProvider.md#fetchFiles)
+* `HDFSBackedStateStoreProvider` is requested for [all delta and snapshot files](stateful-stream-processing/HDFSBackedStateStoreProvider.md#fetchFiles)
 
 * `CompactibleFileStreamLog` is requested for the [compact interval](datasources/file/CompactibleFileStreamLog.md#compactInterval) and to [deleteExpiredLog](datasources/file/CompactibleFileStreamLog.md#deleteExpiredLog)
 
@@ -108,7 +108,7 @@ Used when:
 
 * `HDFSMetadataLog` is [created](HDFSMetadataLog.md)
 
-* `HDFSBackedStateStoreProvider` is requested to [initialize](HDFSBackedStateStoreProvider.md#init)
+* `HDFSBackedStateStoreProvider` is requested to [initialize](stateful-stream-processing/HDFSBackedStateStoreProvider.md#init)
 
 | open
 a| [[open]]
@@ -124,7 +124,7 @@ Used when:
 
 * `HDFSMetadataLog` is requested for [metadata of a batch](HDFSMetadataLog.md#get)
 
-* `HDFSBackedStateStoreProvider` is requested to [retrieve the state store for a specified version](HDFSBackedStateStoreProvider.md#getStore) (that [updateFromDeltaFile](HDFSBackedStateStoreProvider.md#updateFromDeltaFile)), and [readSnapshotFile](HDFSBackedStateStoreProvider.md#readSnapshotFile)
+* `HDFSBackedStateStoreProvider` is requested to [retrieve the state store for a specified version](stateful-stream-processing/HDFSBackedStateStoreProvider.md#getStore) (that [updateFromDeltaFile](stateful-stream-processing/HDFSBackedStateStoreProvider.md#updateFromDeltaFile)), and [readSnapshotFile](stateful-stream-processing/HDFSBackedStateStoreProvider.md#readSnapshotFile)
 
 |===
 
@@ -170,4 +170,4 @@ Could not use FileContext API for managing Structured Streaming checkpoint files
 
 * `StreamMetadata` utility is used to [write metadata to a file](StreamMetadata.md#write) (when [StreamExecution](StreamExecution.md) is created)
 
-* `HDFSBackedStateStoreProvider` is requested for a [CheckpointFileManager](HDFSBackedStateStoreProvider.md#fm)
+* `HDFSBackedStateStoreProvider` is requested for a [CheckpointFileManager](stateful-stream-processing/HDFSBackedStateStoreProvider.md#fm)

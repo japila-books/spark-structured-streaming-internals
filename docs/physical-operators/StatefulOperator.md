@@ -17,7 +17,7 @@ a| [[stateInfo]]
 stateInfo: Option[StatefulOperatorStateInfo]
 ----
 
-The [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md) of the physical operator
+The [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) of the physical operator
 |===
 
 [[extensions]]

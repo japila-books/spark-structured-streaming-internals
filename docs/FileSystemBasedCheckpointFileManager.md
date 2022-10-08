@@ -21,7 +21,7 @@
 
 * [isLocal](CheckpointFileManager.md#isLocal) is `true` for the <<fs, FileSystem>> being `LocalFileSystem` or `RawLocalFileSystem`
 
-`FileSystemBasedCheckpointFileManager` is <<creating-instance, created>> exclusively when `CheckpointFileManager` helper object is requested for a [CheckpointFileManager](CheckpointFileManager.md#create) (for [HDFSMetadataLog](HDFSMetadataLog.md), [StreamMetadata](StreamMetadata.md) and [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md)).
+`FileSystemBasedCheckpointFileManager` is <<creating-instance, created>> exclusively when `CheckpointFileManager` helper object is requested for a [CheckpointFileManager](CheckpointFileManager.md#create) (for [HDFSMetadataLog](HDFSMetadataLog.md), [StreamMetadata](StreamMetadata.md) and [HDFSBackedStateStoreProvider](stateful-stream-processing/HDFSBackedStateStoreProvider.md)).
 
 [[RenameHelperMethods]]
 `FileSystemBasedCheckpointFileManager` is a `RenameHelperMethods` for <<createAtomic, atomicity>> by "write-to-temp-file-and-rename".

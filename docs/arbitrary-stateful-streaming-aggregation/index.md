@@ -36,25 +36,25 @@ When executed, `FlatMapGroupsWithStateExec` first validates a selected [GroupSta
 
 * For [ProcessingTimeTimeout](../GroupStateTimeout.md#ProcessingTimeTimeout), [batch timeout threshold](../physical-operators/FlatMapGroupsWithStateExec.md#batchTimestampMs) has to be defined
 
-* For [EventTimeTimeout](../GroupStateTimeout.md#EventTimeTimeout), [event-time watermark](../physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) has to be defined and the [input schema has the watermark attribute](../WatermarkSupport.md#watermarkExpression)
+* For [EventTimeTimeout](../GroupStateTimeout.md#EventTimeTimeout), [event-time watermark](../physical-operators/FlatMapGroupsWithStateExec.md#eventTimeWatermark) has to be defined and the [input schema has the watermark attribute](../physical-operators/WatermarkSupport.md#watermarkExpression)
 
 !!! note
     FIXME When are the above requirements met?
 
-`FlatMapGroupsWithStateExec` physical operator then [mapPartitionsWithStateStore](../StateStoreOps.md#mapPartitionsWithStateStore) with a custom `storeUpdateFunction` of the following signature:
+`FlatMapGroupsWithStateExec` physical operator then [mapPartitionsWithStateStore](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) with a custom `storeUpdateFunction` of the following signature:
 
 ```scala
 (StateStore, Iterator[T]) => Iterator[U]
 ```
 
-While generating the recipe, `FlatMapGroupsWithStateExec` uses [StateStoreOps](../StateStoreOps.md) extension method object to register a listener that is executed on a task completion. The listener makes sure that a given [StateStore](../StateStore.md) has all state changes either [committed](../StateStore.md#hasCommitted) or [aborted](../StateStore.md#abort).
+While generating the recipe, `FlatMapGroupsWithStateExec` uses [StateStoreOps](../stateful-stream-processing/StateStoreOps.md) extension method object to register a listener that is executed on a task completion. The listener makes sure that a given [StateStore](../stateful-stream-processing/StateStore.md) has all state changes either [committed](../stateful-stream-processing/StateStore.md#hasCommitted) or [aborted](../stateful-stream-processing/StateStore.md#abort).
 
-In the end, `FlatMapGroupsWithStateExec` creates a new [StateStoreRDD](../StateStoreRDD.md) and adds it to the RDD lineage.
+In the end, `FlatMapGroupsWithStateExec` creates a new [StateStoreRDD](../stateful-stream-processing/StateStoreRDD.md) and adds it to the RDD lineage.
 
-`StateStoreRDD` is used to properly distribute tasks across executors (per [preferred locations](../StateStoreRDD.md#getPreferredLocations)) with help of [StateStoreCoordinator](../StateStoreCoordinator.md) (that runs on the driver).
+`StateStoreRDD` is used to properly distribute tasks across executors (per [preferred locations](../stateful-stream-processing/StateStoreRDD.md#getPreferredLocations)) with help of [StateStoreCoordinator](../stateful-stream-processing/StateStoreCoordinator.md) (that runs on the driver).
 
-`StateStoreRDD` uses `StateStore` helper to [look up a StateStore](../StateStore.md#get-StateStore) by [StateStoreProviderId](../spark-sql-streaming-StateStoreProviderId.md) and store version.
+`StateStoreRDD` uses `StateStore` helper to [look up a StateStore](../stateful-stream-processing/StateStore.md#get-StateStore) by [StateStoreProviderId](../stateful-stream-processing/StateStoreProviderId.md) and store version.
 
-`FlatMapGroupsWithStateExec` physical operator uses [state managers](../spark-sql-streaming-StateManager.md) that are different than [state managers](../StreamingAggregationStateManager.md) for [Streaming Aggregation](../streaming-aggregation/index.md). [StateStore](../StateStore.md) abstraction is the same as in [Streaming Aggregation](../streaming-aggregation/index.md).
+`FlatMapGroupsWithStateExec` physical operator uses [state managers](../arbitrary-stateful-streaming-aggregation/StateManager.md) that are different than [state managers](../StreamingAggregationStateManager.md) for [Streaming Aggregation](../streaming-aggregation/index.md). [StateStore](../stateful-stream-processing/StateStore.md) abstraction is the same as in [Streaming Aggregation](../streaming-aggregation/index.md).
 
-One of the important execution steps is when `InputProcessor` (of [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator) is requested to [callFunctionAndUpdateState](../InputProcessor.md#callFunctionAndUpdateState). That executes the **user-defined state function** on a per-group state key object, value objects, and a [GroupStateImpl](../GroupStateImpl.md).
+One of the important execution steps is when `InputProcessor` (of [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator) is requested to [callFunctionAndUpdateState](../arbitrary-stateful-streaming-aggregation/InputProcessor.md#callFunctionAndUpdateState). That executes the **user-defined state function** on a per-group state key object, value objects, and a [GroupStateImpl](../GroupStateImpl.md).

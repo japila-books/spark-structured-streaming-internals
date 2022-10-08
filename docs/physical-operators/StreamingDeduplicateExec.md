@@ -1,6 +1,6 @@
 # StreamingDeduplicateExec Physical Operator
 
-`StreamingDeduplicateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](../WatermarkSupport.md).
+`StreamingDeduplicateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](WatermarkSupport.md).
 
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 
@@ -191,7 +191,7 @@ NOTE: `doExecute` is part of `SparkPlan` Contract to generate the runtime repres
 
 Internally, `doExecute` initializes [metrics](StateStoreWriter.md#metrics).
 
-`doExecute` executes <<child, child>> physical operator and [creates a StateStoreRDD](../StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that:
+`doExecute` executes <<child, child>> physical operator and [creates a StateStoreRDD](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that:
 
 1. Generates an unsafe projection to access the key field (using <<keyExpressions, keyExpressions>> and the output schema of <<child, child>>).
 
@@ -201,7 +201,7 @@ Internally, `doExecute` initializes [metrics](StateStoreWriter.md#metrics).
 
 * Extracts the key from the row (using the unsafe projection above)
 
-* [Gets the saved state](../StateStore.md#get) in `StateStore` for the key
+* [Gets the saved state](../stateful-stream-processing/StateStore.md#get) in `StateStore` for the key
 
 * (when there was a state for the key in the row) Filters out (aka _drops_) the row
 
@@ -213,9 +213,9 @@ The completion function does the following:
 
 * Updates <<allUpdatesTimeMs, allUpdatesTimeMs>> metric (that is the total time to execute `storeUpdateFunction`)
 
-* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to [remove keys older than the watermark from the StateStore](../WatermarkSupport.md#removeKeysOlderThanWatermark)
+* Updates <<allRemovalsTimeMs, allRemovalsTimeMs>> metric with the time taken to [remove keys older than the watermark from the StateStore](WatermarkSupport.md#removeKeysOlderThanWatermark)
 
-* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to [commit the changes to the StateStore](../StateStore.md#commit)
+* Updates <<commitTimeMs, commitTimeMs>> metric with the time taken to [commit the changes to the StateStore](../stateful-stream-processing/StateStore.md#commit)
 
 * [Sets StateStore-specific metrics](StateStoreWriter.md#setStoreMetrics)
 
@@ -225,7 +225,7 @@ The completion function does the following:
 
 * [[keyExpressions]] Duplicate keys (as used in [dropDuplicates](../operators/dropDuplicates.md) operator)
 * [[child]] Child physical operator (`SparkPlan`)
-* [[stateInfo]] [StatefulOperatorStateInfo](../StatefulOperatorStateInfo.md)
+* [[stateInfo]] [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
 * [[eventTimeWatermark]] Event-time watermark
 
 ## <span id="shouldRunAnotherBatch"> Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not

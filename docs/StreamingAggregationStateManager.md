@@ -1,6 +1,6 @@
 # StreamingAggregationStateManager
 
-`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](StateStore.md) and the physical operators used in [Streaming Aggregation](streaming-aggregation/index.md) (e.g. [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) and [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md)).
+`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](stateful-stream-processing/StateStore.md) and the physical operators used in [Streaming Aggregation](streaming-aggregation/index.md) (e.g. [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) and [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md)).
 
 [[contract]]
 .StreamingAggregationStateManager Contract
@@ -18,7 +18,7 @@ commit(
   store: StateStore): Long
 ----
 
-Commits all updates (_changes_) to the given [StateStore](StateStore.md) and returns the new version
+Commits all updates (_changes_) to the given [StateStore](stateful-stream-processing/StateStore.md) and returns the new version
 
 Used when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed.
 
@@ -30,7 +30,7 @@ a| [[get]]
 get(store: StateStore, key: UnsafeRow): UnsafeRow
 ----
 
-Looks up the value of the key from the [StateStore](StateStore.md) (the key is non-``null``)
+Looks up the value of the key from the [StateStore](stateful-stream-processing/StateStore.md) (the key is non-``null``)
 
 Used exclusively when [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) physical operator is executed.
 
@@ -58,7 +58,7 @@ a| [[getStateValueSchema]]
 getStateValueSchema: StructType
 ----
 
-Gets the schema of the values in [StateStore](StateStore.md)s
+Gets the schema of the values in [StateStore](stateful-stream-processing/StateStore.md)s
 
 Used when [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) and [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operators are executed
 
@@ -71,7 +71,7 @@ iterator(
   store: StateStore): Iterator[UnsafeRowPair]
 ----
 
-Returns all `UnsafeRow` key-value pairs in the given [StateStore](StateStore.md)
+Returns all `UnsafeRow` key-value pairs in the given [StateStore](stateful-stream-processing/StateStore.md)
 
 Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed.
 
@@ -83,9 +83,9 @@ a| [[keys]]
 keys(store: StateStore): Iterator[UnsafeRow]
 ----
 
-Returns all the keys in the given [StateStore](StateStore.md)
+Returns all the keys in the given [StateStore](stateful-stream-processing/StateStore.md)
 
-Used exclusively when physical operators with `WatermarkSupport` are requested to [removeKeysOlderThanWatermark](WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store) (when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed).
+Used exclusively when physical operators with `WatermarkSupport` are requested to [removeKeysOlderThanWatermark](physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store) (when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed).
 
 | put
 a| [[put]]
@@ -97,7 +97,7 @@ put(
   row: UnsafeRow): Unit
 ----
 
-Stores (_puts_) the given row in the given [StateStore](StateStore.md)
+Stores (_puts_) the given row in the given [StateStore](stateful-stream-processing/StateStore.md)
 
 Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed.
 
@@ -111,9 +111,9 @@ remove(
   key: UnsafeRow): Unit
 ----
 
-Removes the key-value pair from the given [StateStore](StateStore.md) per key
+Removes the key-value pair from the given [StateStore](stateful-stream-processing/StateStore.md) per key
 
-Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed (directly or indirectly as a [WatermarkSupport](WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store))
+Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed (directly or indirectly as a [WatermarkSupport](physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store))
 
 | values
 a| [[values]]
@@ -124,7 +124,7 @@ values(
   store: StateStore): Iterator[UnsafeRow]
 ----
 
-All values in the given [StateStore](StateStore.md)
+All values in the given [StateStore](stateful-stream-processing/StateStore.md)
 
 Used exclusively when [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md) physical operator is executed.
 

@@ -1,4 +1,4 @@
-# EventTimeWatermarkExec Unary Physical Operator
+# EventTimeWatermarkExec Physical Operator
 
 `EventTimeWatermarkExec` is a unary physical operator that represents [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) logical operator at execution time.
 
@@ -7,7 +7,7 @@
 
     Learn more about [Unary Physical Operators]({{ book.spark_sql }}/physical-operators/UnaryExecNode) (and physical operators in general) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
-`EventTimeWatermarkExec` operator is used to extract (_project_) the values of the [event-time watermark column](#eventTime) and add them all to the [EventTimeStatsAccum](#eventTimeStats) accumulator (and produce a [EventTimeStats](../EventTimeStats.md)).
+`EventTimeWatermarkExec` operator is used to extract (_project_) the values of the [event-time watermark column](#eventTime) and add them all to the [EventTimeStatsAccum](#eventTimeStats) accumulator (and produce a [EventTimeStats](../streaming-watermark/EventTimeStats.md)).
 
 ## Creating Instance
 
@@ -27,7 +27,7 @@ When created, `EventTimeWatermarkExec` registers the [EventTimeStatsAccum](#even
 eventTimeStats: EventTimeStatsAccum
 ```
 
-`EventTimeWatermarkExec` creates an [EventTimeStatsAccum](../EventTimeStatsAccum.md) accumulator when [created](#creating-instance).
+`EventTimeWatermarkExec` creates an [EventTimeStatsAccum](../streaming-watermark/EventTimeStatsAccum.md) accumulator when [created](#creating-instance).
 
 When [executed](#doExecute), `EventTimeWatermarkExec` uses the `EventTimeStatsAccum` to extract and accumulate [eventTime](#eventTime) values (as `Long`s) from every row in a streaming batch.
 
@@ -56,7 +56,7 @@ doExecute(): RDD[InternalRow]
 
 `doExecute` creates an unsafe projection (per partition) for the [column with the event time](#eventTime) in the output schema of the [child](#child) physical operator. The unsafe projection is to extract event times from the (stream of) internal rows of the child physical operator.
 
-For every row in a partition, `doExecute` requests the [eventTimeStats](#eventTimeStats) accumulator to [accumulate the event time](../EventTimeStatsAccum.md#add).
+For every row in a partition, `doExecute` requests the [eventTimeStats](#eventTimeStats) accumulator to [accumulate the event time](../streaming-watermark/EventTimeStatsAccum.md#add).
 
 !!! note
     The event time value is in seconds (not millis as the value is divided by `1000` ).

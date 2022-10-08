@@ -145,7 +145,7 @@ Use [SQLConf.fileSourceLogDeletion](SQLConf.md#fileSourceLogDeletion) to get the
 
 **spark.sql.streaming.flatMapGroupsWithState.stateFormatVersion**
 
-**(internal)** State format version used to create a [StateManager](spark-sql-streaming-StateManager.md) for [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) physical operator
+**(internal)** State format version used to create a [StateManager](arbitrary-stateful-streaming-aggregation/StateManager.md) for [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md#stateManager) physical operator
 
 Default: `2`
 
@@ -189,7 +189,7 @@ The value adjusts a trade-off between memory usage vs cache miss:
 * `1` covers only success case
 * `0` or negative value disables cache to maximize memory size of executors
 
-Used when `HDFSBackedStateStoreProvider` is requested to [initialize](HDFSBackedStateStoreProvider.md#init).
+Used when `HDFSBackedStateStoreProvider` is requested to [initialize](stateful-stream-processing/HDFSBackedStateStoreProvider.md#init).
 
 ## <span id="spark.sql.streaming.metricsEnabled"> metricsEnabled
 
@@ -301,7 +301,7 @@ Default: `lz4`
 
 **spark.sql.streaming.stateStore.maintenanceInterval**
 
-The initial delay and how often to execute StateStore's [maintenance task](StateStore.md#MaintenanceTask).
+The initial delay and how often to execute StateStore's [maintenance task](stateful-stream-processing/StateStore.md#MaintenanceTask).
 
 Default: `60s`
 
@@ -319,11 +319,19 @@ Use [SQLConf.stateStoreMinDeltasForSnapshot](SQLConf.md#stateStoreMinDeltasForSn
 
 **spark.sql.streaming.stateStore.providerClass**
 
-**(internal)** The fully-qualified class name of the [StateStoreProvider](spark-sql-streaming-StateStoreProvider.md) implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
+**(internal)** The fully-qualified class name of the [StateStoreProvider](stateful-stream-processing/StateStoreProvider.md) implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
 
-Default: [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md)
+Default: [HDFSBackedStateStoreProvider](stateful-stream-processing/HDFSBackedStateStoreProvider.md)
 
 Use [SQLConf.stateStoreProviderClass](SQLConf.md#stateStoreProviderClass) to get the current value.
+
+[Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs)
+
+Used when:
+
+* `StateStoreConf` is requested for [providerClass](stateful-stream-processing/StateStoreConf.md#providerClass)
+* `StateStoreWriter` is requested to [stateStoreCustomMetrics](physical-operators/StateStoreWriter.md#stateStoreCustomMetrics)
+* `StreamingQueryStatisticsPage` is requested for the [supportedCustomMetrics](webui/StreamingQueryStatisticsPage.md#supportedCustomMetrics)
 
 ## <span id="spark.sql.streaming.stateStore.rocksdb.formatVersion"><span id="STATE_STORE_ROCKSDB_FORMAT_VERSION"> stateStore.rocksdb.formatVersion
 

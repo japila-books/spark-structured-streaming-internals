@@ -404,7 +404,7 @@ Internally, `extractExecutionStats` generate *watermark* metric (using the [even
 
 `extractExecutionStats` [extractSourceToNumInputRows](#extractSourceToNumInputRows).
 
-`extractExecutionStats` finds the [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) unary physical operator (with non-zero [EventTimeStats](../EventTimeStatsAccum.md)) and generates *max*, *min*, and *avg* statistics.
+`extractExecutionStats` finds the [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) unary physical operator (with non-zero [EventTimeStats](../streaming-watermark/EventTimeStatsAccum.md)) and generates *max*, *min*, and *avg* statistics.
 
 In the end, `extractExecutionStats` creates a [ExecutionStats](ExecutionStats.md) with the execution statistics.
 

@@ -36,7 +36,7 @@ get(
 
 `get` is part of the [StreamingAggregationStateManager](StreamingAggregationStateManager.md#get) abstraction.
 
-`get` requests the given [StateStore](StateStore.md) for the current state value for the given key.
+`get` requests the given [StateStore](stateful-stream-processing/StateStore.md) for the current state value for the given key.
 
 `get` returns `null` if the key could not be found in the state store. Otherwise, `get` [restoreOriginalRow](#restoreOriginalRow) (for the key and the saved state).
 
@@ -71,7 +71,7 @@ iterator(
 
 `iterator` is part of the [StreamingAggregationStateManager](StreamingAggregationStateManager.md#iterator) abstraction.
 
-`iterator` simply requests the input [state store](StateStore.md) for the [iterator](StateStore.md#iterator) that is mapped to an iterator of `UnsafeRowPairs` with the key (of the input `UnsafeRowPair`) and the value as a [restored original row](#restoreOriginalRow).
+`iterator` simply requests the input [state store](stateful-stream-processing/StateStore.md) for the [iterator](stateful-stream-processing/StateStore.md#iterator) that is mapped to an iterator of `UnsafeRowPairs` with the key (of the input `UnsafeRowPair`) and the value as a [restored original row](#restoreOriginalRow).
 
 !!! note
     [scala.collection.Iterator]({{ scala.api }}/scala/collection/Iterator.html) is a data structure that allows to iterate over a sequence of elements that are usually fetched lazily (i.e. no elements are fetched from the underlying store until processed).

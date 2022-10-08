@@ -26,7 +26,7 @@
 
 ### <span id="numRowsTotal"> numRowsTotal
 
-`numRowsTotal` is the value of [numTotalStateRows](../physical-operators/StateStoreWriter.md#numTotalStateRows) metric of [StateStoreWriter](../physical-operators/StateStoreWriter.md) physical operator (when requested to [get progress](../physical-operators/StateStoreWriter.md#getProgress)).
+`numRowsTotal` is the value of [numTotalStateRows](../physical-operators/StateStoreWriter.md#numTotalStateRows) metric of a [StateStoreWriter](../physical-operators/StateStoreWriter.md) physical operator (when requested to [get progress](../physical-operators/StateStoreWriter.md#getProgress)).
 
 ## <span id="copy"> copy
 
