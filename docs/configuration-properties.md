@@ -15,14 +15,14 @@ Default: `2`
 
 Supported values:
 
-* `1` (for the legacy [StreamingAggregationStateManagerImplV1](StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV1))
-* `2` (for the default [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV2))
+* `1` (for the legacy `StreamingAggregationStateManagerImplV1`)
+* `2` (for the default [StreamingAggregationStateManagerImplV2](streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV2))
 
 [Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs)
 
 Used when:
 
-* [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is executed (and plans a streaming query with an aggregate that simply boils down to creating a [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) with the proper _implementation version_ of [StreamingAggregationStateManager](StreamingAggregationStateManager.md))
+* [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is executed (and plans a streaming query with an aggregate that simply boils down to creating a [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) with the proper _implementation version_ of [StreamingAggregationStateManager](streaming-aggregation/StreamingAggregationStateManager.md))
 
 ## <span id="spark.sql.streaming.checkpointFileManagerClass"><span id="STREAMING_CHECKPOINT_FILE_MANAGER_CLASS"> checkpointFileManagerClass
 

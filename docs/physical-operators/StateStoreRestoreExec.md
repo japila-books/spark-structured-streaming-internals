@@ -64,17 +64,17 @@ image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
 stateManager: StreamingAggregationStateManager
 ----
 
-`stateManager` is a [StreamingAggregationStateManager](../StreamingAggregationStateManager.md) that is created together with `StateStoreRestoreExec`.
+`stateManager` is a [StreamingAggregationStateManager](../streaming-aggregation/StreamingAggregationStateManager.md) that is created together with `StateStoreRestoreExec`.
 
 The `StreamingAggregationStateManager` is created for the <<keyExpressions, keys>>, the output schema of the <<child, child>> physical operator and the <<stateFormatVersion, version of the state format>>.
 
 The `StreamingAggregationStateManager` is used when `StateStoreRestoreExec` is requested to <<doExecute, generate a recipe for a distributed computation (as a RDD[InternalRow])>> for the following:
 
-* [Schema of the values in a state store](../StreamingAggregationStateManager.md#getStateValueSchema)
+* [Schema of the values in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#getStateValueSchema)
 
-* [Extracting the columns for the key from the input row](../StreamingAggregationStateManager.md#getKey)
+* [Extracting the columns for the key from the input row](../streaming-aggregation/StreamingAggregationStateManager.md#getKey)
 
-* [Looking up the value of a key from a state store](../StreamingAggregationStateManager.md#get)
+* [Looking up the value of a key from a state store](../streaming-aggregation/StreamingAggregationStateManager.md#get)
 
 ## <span id="doExecute"> Executing Physical Operator (Generating RDD[InternalRow])
 

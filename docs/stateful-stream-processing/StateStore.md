@@ -23,7 +23,7 @@ Used when:
 * `SessionWindowStateStoreSaveExec` physical operator is [executed](../physical-operators/SessionWindowStateStoreSaveExec.md#doExecute)
 * `StreamingDeduplicateExec` physical operator is [executed](../physical-operators/StreamingDeduplicateExec.md#doExecute)
 * `StreamingGlobalLimitExec` physical operator is [executed](../physical-operators/StreamingGlobalLimitExec.md#doExecute)
-* `StreamingAggregationStateManagerBaseImpl` is requested to [commit](../StreamingAggregationStateManagerBaseImpl.md#commit)
+* `StreamingAggregationStateManagerBaseImpl` is requested to [commit](../streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md#commit)
 * `StreamingSessionWindowStateManagerImplV1` is requested to `commit`
 * `StateStoreHandler` is requested to [commit](../streaming-join/StateStoreHandler.md#commit)
 
@@ -55,8 +55,7 @@ Used when:
 * `StreamingDeduplicateExec` physical operator is [executed](../physical-operators/StreamingDeduplicateExec.md#doExecute)
 * `StreamingGlobalLimitExec` physical operator is [executed](../physical-operators/StreamingGlobalLimitExec.md#doExecute)
 * `StateManagerImplBase` is requested to [putState](../arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md#putState)
-* `StreamingAggregationStateManagerImplV1` is requested to [put a row](../StreamingAggregationStateManagerImplV1.md#put)
-* `StreamingAggregationStateManagerImplV2` is requested to [put a row](../StreamingAggregationStateManagerImplV2.md#put)
+* `StreamingAggregationStateManagerImplV2`(and `StreamingAggregationStateManagerImplV1`) is requested to [put a row](../streaming-aggregation/StreamingAggregationStateManagerImplV2.md#put)
 * `StreamingSessionWindowStateManagerImplV1` is requested to `putRows`
 * `KeyToNumValuesStore` is requested to [put the number of values of a key](../streaming-join/KeyToNumValuesStore.md#put)
 * `KeyWithIndexToValueStore` is requested to [put a new value of a key](../streaming-join/KeyWithIndexToValueStore.md#put)
@@ -74,7 +73,7 @@ Used when:
 
 * `WatermarkSupport` physical operator is requested to [removeKeysOlderThanWatermark](../physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark)
 * `StateManagerImplBase` is requested to [removeState](../arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md#removeState)
-* `StreamingAggregationStateManagerBaseImpl` is requested to [remove a key](../StreamingAggregationStateManagerBaseImpl.md#remove)
+* `StreamingAggregationStateManagerBaseImpl` is requested to [remove a key](../streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md#remove)
 * `StreamingSessionWindowStateManagerImplV1` is requested to `removeByValueCondition` and `putRows`
 * `KeyToNumValuesStore` is requested to [remove a key](../streaming-join/KeyToNumValuesStore.md#remove)
 * `KeyWithIndexToValueStore` is requested to [remove a key](../streaming-join/KeyWithIndexToValueStore.md#remove)

@@ -241,10 +241,9 @@ nav:
       - InputProcessor: arbitrary-stateful-streaming-aggregation/InputProcessor.md
     - Streaming Aggregation:
       - streaming-aggregation/index.md
-      - StreamingAggregationStateManager: StreamingAggregationStateManager.md
-      - StreamingAggregationStateManagerBaseImpl: StreamingAggregationStateManagerBaseImpl.md
-      - StreamingAggregationStateManagerImplV1: StreamingAggregationStateManagerImplV1.md
-      - StreamingAggregationStateManagerImplV2: StreamingAggregationStateManagerImplV2.md
+      - StreamingAggregationStateManager: streaming-aggregation/StreamingAggregationStateManager.md
+      - StreamingAggregationStateManagerBaseImpl: streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md
+      - StreamingAggregationStateManagerImplV2: streaming-aggregation/StreamingAggregationStateManagerImplV2.md
     - Streaming Join:
       - streaming-join/index.md
       - StateStoreAwareZipPartitionsRDD: streaming-join/StateStoreAwareZipPartitionsRDD.md
