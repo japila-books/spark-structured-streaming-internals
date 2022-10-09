@@ -1,233 +1,94 @@
 # StateStore
 
-`StateStore` is the <<contract, abstraction>> of <<implementations, key-value stores>> for managing state in [Stateful Stream Processing](index.md) (e.g. for persisting running aggregates in [Streaming Aggregation](../streaming-aggregation/index.md)).
+`StateStore` is an [extension](#contract) of the [ReadStateStore](ReadStateStore.md) abstraction for [versioned key-value stores](#implementations) for writing and reading state for [Stateful Stream Processing](index.md) (e.g., for persisting running aggregates in [Streaming Aggregation](../streaming-aggregation/index.md)).
+
+!!! note
+    `StateStore` was introduced in [\[SPARK-13809\]\[SQL\] State store for streaming aggregations]({{ spark.commit }}/8c826880f5eaa3221c4e9e7d3fece54e821a0b98).
+
+    Read the motivation and design in [State Store for Streaming Aggregations](https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit).
+
+## Contract
+
+### <span id="commit"> commit
+
+```scala
+commit(): Long
+```
+
+Commits all updates ([puts](#put) and [removes](#remove)) and returns a new version
+
+Used when:
+
+* `FlatMapGroupsWithStateExec` physical operator is requested to [processDataWithPartition](../physical-operators/FlatMapGroupsWithStateExec.md#processDataWithPartition)
+* `SessionWindowStateStoreSaveExec` physical operator is [executed](../physical-operators/SessionWindowStateStoreSaveExec.md#doExecute)
+* `StreamingDeduplicateExec` physical operator is [executed](../physical-operators/StreamingDeduplicateExec.md#doExecute)
+* `StreamingGlobalLimitExec` physical operator is [executed](../physical-operators/StreamingGlobalLimitExec.md#doExecute)
+* `StreamingAggregationStateManagerBaseImpl` is requested to [commit](../StreamingAggregationStateManagerBaseImpl.md#commit)
+* `StreamingSessionWindowStateManagerImplV1` is requested to `commit`
+* `StateStoreHandler` is requested to [commit](../streaming-join/StateStoreHandler.md#commit)
+
+### <span id="metrics"> metrics
+
+```scala
+metrics: StateStoreMetrics
+```
+
+[StateStoreMetrics](StateStoreMetrics.md) of this state store
+
+Used when:
+
+* `StateStoreWriter` physical operator is requested to [setStoreMetrics](../physical-operators/StateStoreWriter.md#setStoreMetrics)
+* `StateStoreHandler` is requested for the [metrics](../streaming-join/StateStoreHandler.md#metrics)
+
+### <span id="put"> put
+
+```scala
+put(
+  key: UnsafeRow,
+  value: UnsafeRow): Unit
+```
+
+Puts a new non-`null` value for a non-`null` key
+
+Used when:
+
+* `StreamingDeduplicateExec` physical operator is [executed](../physical-operators/StreamingDeduplicateExec.md#doExecute)
+* `StreamingGlobalLimitExec` physical operator is [executed](../physical-operators/StreamingGlobalLimitExec.md#doExecute)
+* `StateManagerImplBase` is requested to [putState](../arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md#putState)
+* `StreamingAggregationStateManagerImplV1` is requested to [put a row](../StreamingAggregationStateManagerImplV1.md#put)
+* `StreamingAggregationStateManagerImplV2` is requested to [put a row](../StreamingAggregationStateManagerImplV2.md#put)
+* `StreamingSessionWindowStateManagerImplV1` is requested to `putRows`
+* `KeyToNumValuesStore` is requested to [put the number of values of a key](../streaming-join/KeyToNumValuesStore.md#put)
+* `KeyWithIndexToValueStore` is requested to [put a new value of a key](../streaming-join/KeyWithIndexToValueStore.md#put)
+
+### <span id="remove"> remove
+
+```scala
+remove(
+  key: UnsafeRow): Unit
+```
+
+Removes a non-`null` key
+
+Used when:
+
+* `WatermarkSupport` physical operator is requested to [removeKeysOlderThanWatermark](../physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark)
+* `StateManagerImplBase` is requested to [removeState](../arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md#removeState)
+* `StreamingAggregationStateManagerBaseImpl` is requested to [remove a key](../StreamingAggregationStateManagerBaseImpl.md#remove)
+* `StreamingSessionWindowStateManagerImplV1` is requested to `removeByValueCondition` and `putRows`
+* `KeyToNumValuesStore` is requested to [remove a key](../streaming-join/KeyToNumValuesStore.md#remove)
+* `KeyWithIndexToValueStore` is requested to [remove a key](../streaming-join/KeyWithIndexToValueStore.md#remove)
+
+## Implementations
+
+* [HDFSBackedStateStore](HDFSBackedStateStore.md)
+* [RocksDBStateStore](RocksDBStateStore.md)
+
+## Review Me
 
 `StateStore` supports **incremental checkpointing** in which only the key-value "Row" pairs that changed are <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
 
 `StateStore` is identified with the <<id, aggregating operator id and the partition id>> (among other properties for identification).
-
-[[implementations]]
-NOTE: [HDFSBackedStateStore](HDFSBackedStateStore.md) is the default and only known implementation of the <<contract, StateStore Contract>> in Spark Structured Streaming.
-
-[[contract]]
-.StateStore Contract
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
-
-| abort
-a| [[abort]]
-
-[source, scala]
-----
-abort(): Unit
-----
-
-Aborts (_discards_) changes to the state store
-
-Used when:
-
-* `StateStoreOps` implicit class is requested to [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore) (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
-
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](../streaming-join/SymmetricHashJoinStateManager.md)) is requested to [abortIfNeeded](../streaming-join/StateStoreHandler.md#abortIfNeeded) (when the state store has not been <<hasCommitted, committed>> for a task that finishes, possibly with an error)
-
-| commit
-a| [[commit]]
-
-[source, scala]
-----
-commit(): Long
-----
-
-Commits the changes to the state store (and returns the current version)
-
-Used when:
-
-* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md), [StreamingDeduplicateExec](../physical-operators/StreamingDeduplicateExec.md) and [StreamingGlobalLimitExec](../physical-operators/StreamingGlobalLimitExec.md) physical operators are executed (right after all rows in a partition have been processed)
-
-* `StreamingAggregationStateManagerBaseImpl` is requested to [commit (changes to) a state store](../StreamingAggregationStateManagerBaseImpl.md#commit) (when [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator is executed)
-
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](../streaming-join/SymmetricHashJoinStateManager.md)) is requested to [commit changes to a state store](../streaming-join/StateStoreHandler.md#commit)
-
-| get
-a| [[get]]
-
-```scala
-get(
-  key: UnsafeRow): UnsafeRow
-```
-
-Looks up (_gets_) the value of the given non-`null` key
-
-Used when:
-
-* [StreamingDeduplicateExec](../physical-operators/StreamingDeduplicateExec.md) and [StreamingGlobalLimitExec](../physical-operators/StreamingGlobalLimitExec.md) physical operators are executed
-
-* `StateManagerImplBase` (of `FlatMapGroupsWithStateExecHelper`) is requested to `getState`
-
-* [StreamingAggregationStateManagerImplV1](../StreamingAggregationStateManagerImplV1.md#get) and [StreamingAggregationStateManagerImplV2](../StreamingAggregationStateManagerImplV2.md#get) are requested to get the value of a non-null key
-
-* `KeyToNumValuesStore` is requested to [get](../streaming-join/KeyToNumValuesStore.md#get)
-
-* KeyWithIndexToValueStore` is requested to [get](../streaming-join/KeyWithIndexToValueStore.md#get) and [getAll](../streaming-join/KeyWithIndexToValueStore.md#getAll)
-
-| getRange
-a| [[getRange]]
-
-[source, scala]
-----
-getRange(
-  start: Option[UnsafeRow],
-  end: Option[UnsafeRow]): Iterator[UnsafeRowPair]
-----
-
-Gets the key-value pairs of `UnsafeRows` for the specified range (with optional approximate `start` and `end` extents)
-
-Used when:
-
-* `WatermarkSupport` is requested to [removeKeysOlderThanWatermark](../physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark)
-
-* `StateManagerImplBase` is requested to `getAllState`
-
-* `StreamingAggregationStateManagerBaseImpl` is requested for [keys](../StreamingAggregationStateManagerBaseImpl.md#keys)
-
-* [KeyToNumValuesStore](../streaming-join/KeyToNumValuesStore.md#iterator) and [KeyWithIndexToValueStore](../streaming-join/KeyWithIndexToValueStore.md#iterator) are requested to `iterator`
-
-NOTE: All the uses above assume the `start` and `end` as `None` that basically is <<iterator, iterator>>.
-
-| hasCommitted
-a| [[hasCommitted]]
-
-[source, scala]
-----
-hasCommitted: Boolean
-----
-
-Flag to indicate whether state changes have been committed (`true`) or not (`false`)
-
-Used when:
-
-* `RDD` (via `StateStoreOps` implicit class) is requested to [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore) (and a task finishes and may need to <<abort, abort state updates>>)
-
-* `SymmetricHashJoinStateManager` is requested to [abortIfNeeded](../streaming-join/SymmetricHashJoinStateManager.md#abortIfNeeded) (when a task finishes and may need to <<abort, abort state updates>>))
-
-| id
-a| [[id]]
-
-[source, scala]
-----
-id: StateStoreId
-----
-
-The <<StateStoreId.md#, ID>> of the state store
-
-Used when:
-
-* `HDFSBackedStateStore` state store is requested for the [textual representation](HDFSBackedStateStore.md#toString)
-
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](../streaming-join/SymmetricHashJoinStateManager.md)) is requested to <<StateStoreHandler.md#abortIfNeeded, abortIfNeeded>> and <<StateStoreHandler.md#getStateStore, getStateStore>>
-
-| iterator
-a| [[iterator]]
-
-[source, scala]
-----
-iterator(): Iterator[UnsafeRowPair]
-----
-
-Returns an iterator with all the kay-value pairs in the state store
-
-Used when:
-
-* [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) physical operator is requested to execute
-
-* [HDFSBackedStateStore](HDFSBackedStateStore.md#getRange) state store in particular and any [StateStore](#getRange) in general are requested to `getRange`
-
-* `StreamingAggregationStateManagerImplV1` state manager is requested for the [iterator](../StreamingAggregationStateManagerImplV1.md#iterator) and [values](../StreamingAggregationStateManagerImplV1.md#values)
-
-* `StreamingAggregationStateManagerImplV2` state manager is requested to [iterator](../StreamingAggregationStateManagerImplV2.md#iterator) and [values](../StreamingAggregationStateManagerImplV2.md#values)
-
-| metrics
-a| [[metrics]]
-
-[source, scala]
-----
-metrics: StateStoreMetrics
-----
-
-[StateStoreMetrics](StateStoreMetrics.md) of the state store
-
-Used when:
-
-* `StateStoreWriter` stateful physical operator is requested to [setStoreMetrics](../physical-operators/StateStoreWriter.md#setStoreMetrics)
-
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](../streaming-join/SymmetricHashJoinStateManager.md)) is requested to [commit](../streaming-join/StateStoreHandler.md#commit) and for the [metrics](../streaming-join/StateStoreHandler.md#metrics)
-
-| put
-a| [[put]]
-
-[source, scala]
-----
-put(
-  key: UnsafeRow,
-  value: UnsafeRow): Unit
-----
-
-Stores (_puts_) the value for the (non-null) key
-
-Used when:
-
-* [StreamingDeduplicateExec](../physical-operators/StreamingDeduplicateExec.md) and [StreamingGlobalLimitExec](../physical-operators/StreamingGlobalLimitExec.md) physical operators are executed
-
-* `StateManagerImplBase` is requested to `putState`
-
-* [StreamingAggregationStateManagerImplV1](../StreamingAggregationStateManagerImplV1.md#put) and [StreamingAggregationStateManagerImplV2](../StreamingAggregationStateManagerImplV2.md#put) are requested to store a row in a state store
-
-* [KeyToNumValuesStore](../streaming-join/KeyToNumValuesStore.md#put) and [KeyWithIndexToValueStore](../streaming-join/KeyWithIndexToValueStore.md#put) are requested to store a new value for a given key
-
-| remove
-a| [[remove]]
-
-[source, scala]
-----
-remove(key: UnsafeRow): Unit
-----
-
-Removes the (non-null) key from the state store
-
-Used when:
-
-* Physical operators with `WatermarkSupport` are requested to [removeKeysOlderThanWatermark](../physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark)
-
-* `StateManagerImplBase` is requested to `removeState`
-
-* `StreamingAggregationStateManagerBaseImpl` is requested to [remove a key from a state store](../StreamingAggregationStateManagerBaseImpl.md#remove)
-
-* `KeyToNumValuesStore` is requested to [remove a key](../streaming-join/KeyToNumValuesStore.md#remove)
-
-* `KeyWithIndexToValueStore` is requested to <<KeyWithIndexToValueStore.md#remove, remove a key>> and <<KeyWithIndexToValueStore.md#removeAllValues, removeAllValues>>
-
-| version
-a| [[version]]
-
-[source, scala]
-----
-version: Long
-----
-
-Version of the state store
-
-Used exclusively when `HDFSBackedStateStore` state store is requested for a [new version](HDFSBackedStateStore.md#newVersion) (that simply the current version incremented)
-
-|===
-
-[NOTE]
-====
-`StateStore` was introduced in https://github.com/apache/spark/commit/8c826880f5eaa3221c4e9e7d3fece54e821a0b98[[SPARK-13809\][SQL\] State store for streaming aggregations].
-
-Read the motivation and design in https://docs.google.com/document/d/1-ncawFx8JS5Zyfq1HAEGBx56RDet9wfVp_hDM8ZL254/edit[State Store for Streaming Aggregations].
-====
 
 [[logging]]
 [TIP]
@@ -243,7 +104,7 @@ log4j.logger.org.apache.spark.sql.execution.streaming.state.StateStore$=ALL
 Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
 ====
 
-=== [[coordinatorRef]] Creating (and Caching) RPC Endpoint Reference to StateStoreCoordinator for Executors -- `coordinatorRef` Internal Object Method
+=== [[coordinatorRef]] Creating (and Caching) RPC Endpoint Reference to StateStoreCoordinator for Executors
 
 [source, scala]
 ----
@@ -266,29 +127,7 @@ Retrieved reference to StateStoreCoordinator: [_coordRef]
 
 NOTE: `coordinatorRef` is used when `StateStore` helper object is requested to <<reportActiveStoreInstance, reportActiveStoreInstance>> (when `StateStore` object helper is requested to <<get-StateStore, find the StateStore by StateStoreProviderId>>) and <<verifyIfStoreInstanceActive, verifyIfStoreInstanceActive>> (when `StateStore` object helper is requested to <<doMaintenance, doMaintenance>>).
 
-=== [[unload]] Unloading State Store Provider -- `unload` Method
-
-[source, scala]
-----
-unload(storeProviderId: StateStoreProviderId): Unit
-----
-
-`unload`...FIXME
-
-NOTE: `unload` is used when `StateStore` helper object is requested to <<stop, stop>> and <<doMaintenance, doMaintenance>>.
-
-=== [[stop]] `stop` Object Method
-
-[source, scala]
-----
-stop(): Unit
-----
-
-`stop`...FIXME
-
-NOTE: `stop` seems only be used in tests.
-
-=== [[reportActiveStoreInstance]] Announcing New StateStoreProvider -- `reportActiveStoreInstance` Internal Object Method
+=== [[reportActiveStoreInstance]] Announcing New StateStoreProvider
 
 [source, scala]
 ----
@@ -380,32 +219,3 @@ Unloaded [provider]
 ```
 
 NOTE: `doMaintenance` is used exclusively in <<MaintenanceTask, MaintenanceTask daemon thread>>.
-
-==== [[verifyIfStoreInstanceActive]] `verifyIfStoreInstanceActive` Internal Object Method
-
-[source, scala]
-----
-verifyIfStoreInstanceActive(storeProviderId: StateStoreProviderId): Boolean
-----
-
-`verifyIfStoreInstanceActive`...FIXME
-
-NOTE: `verifyIfStoreInstanceActive` is used exclusively when `StateStore` helper object is requested to <<doMaintenance, doMaintenance>> (from a running <<MaintenanceTask, MaintenanceTask daemon thread>>).
-
-=== [[internal-properties]] Internal Properties
-
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| loadedProviders
-| [[loadedProviders]] *Loaded providers* internal cache, i.e. <<StateStoreProvider.md#, StateStoreProviders>> per <<StateStoreProviderId.md#, StateStoreProviderId>>
-
-Used in...FIXME
-
-| _coordRef
-| [[_coordRef]] [StateStoreCoordinator RPC endpoint](StateStoreCoordinatorRef.md) (a `RpcEndpointRef` to [StateStoreCoordinator](StateStoreCoordinator.md))
-
-Used in...FIXME
-|===

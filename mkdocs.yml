@@ -275,6 +275,7 @@ nav:
       - StateSchemaCompatibilityChecker: stateful-stream-processing/StateSchemaCompatibilityChecker.md
       - StateStore:
         - HDFSBackedStateStore: stateful-stream-processing/HDFSBackedStateStore.md
+        - ReadStateStore: stateful-stream-processing/ReadStateStore.md
         - RocksDBStateStore: stateful-stream-processing/RocksDBStateStore.md
         - StateStore: stateful-stream-processing/StateStore.md
         - StateStoreId: stateful-stream-processing/StateStoreId.md
