@@ -216,26 +216,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManager/</loc>
-         <lastmod>2022-10-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManagerBaseImpl/</loc>
-         <lastmod>2022-10-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManagerImplV1/</loc>
-         <lastmod>2022-10-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingAggregationStateManagerImplV2/</loc>
-         <lastmod>2022-10-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/StreamingQuery/</loc>
          <lastmod>2022-10-09</lastmod>
          <changefreq>daily</changefreq>
@@ -1212,6 +1192,21 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-aggregation/</loc>
+         <lastmod>2022-10-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-aggregation/StreamingAggregationStateManager/</loc>
+         <lastmod>2022-10-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-aggregation/StreamingAggregationStateManagerBaseImpl/</loc>
+         <lastmod>2022-10-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-aggregation/StreamingAggregationStateManagerImplV2/</loc>
          <lastmod>2022-10-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
