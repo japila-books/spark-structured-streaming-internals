@@ -17,7 +17,7 @@
 !!! note "Abstract Class"
     `StreamingAggregationStateManagerBaseImpl` is an abstract class and cannot be created directly. It is created indirectly for the [concrete StreamingAggregationStateManagerBaseImpls](#implementations).
 
-## <span id="commit"> Committing (Changes to) State Store
+## <span id="commit"> Committing State Changes
 
 ```scala
 commit(
@@ -29,3 +29,30 @@ commit(
 ---
 
 `commit` requests the given [StateStore](../stateful-stream-processing/StateStore.md) to [commit state changes](../stateful-stream-processing/StateStore.md#commit).
+
+## <span id="getKey"> Extracting Key
+
+```scala
+getKey(
+  row: UnsafeRow): UnsafeRow
+```
+
+`getKey` is part of the [StreamingAggregationStateManager](StreamingAggregationStateManager.md#getKey) abstraction.
+
+---
+
+`getKey` uses the [keyProjector](#keyProjector) to extract a key from the given `row`.
+
+## <span id="remove"> Removing Key
+
+```scala
+remove(
+  store: StateStore,
+  key: UnsafeRow): Unit
+```
+
+`remove` is part of the [StreamingAggregationStateManager](StreamingAggregationStateManager.md#remove) abstraction.
+
+---
+
+`remove` requests the given [StateStore](../stateful-stream-processing/StateStore.md) to [remove](../stateful-stream-processing/StateStore.md#remove) the given `key`.

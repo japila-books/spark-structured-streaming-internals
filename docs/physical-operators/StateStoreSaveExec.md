@@ -1,6 +1,26 @@
 # StateStoreSaveExec Physical Operator
 
-`StateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [saves a streaming state to a state store](StateStoreWriter.md) with [support for streaming watermark](WatermarkSupport.md).
+`StateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [saves a streaming state (to a state store)](StateStoreWriter.md) with [support for streaming watermark](WatermarkSupport.md).
+
+`StateStoreSaveExec` is among the physical operators used for execute [streaming aggregations](../streaming-aggregation/index.md).
+
+![StateStoreSaveExec and StatefulAggregationStrategy](../images/StateStoreSaveExec-StatefulAggregationStrategy.png)
+
+## Creating Instance
+
+`StateStoreSaveExec` takes the following to be created:
+
+* <span id="keyExpressions"> Grouping Key `Attribute`s ([Spark SQL]({{ book.spark_sql }}/expressions/Attribute))
+* <span id="stateInfo"> [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
+* <span id="outputMode"> [OutputMode](../OutputMode.md)
+* <span id="eventTimeWatermark"> [Event-time Watermark](../streaming-watermark/index.md)
+* <span id="stateFormatVersion"> [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion)
+* <span id="child"> Child Physical Operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan))
+
+`StateStoreSaveExec` is created when:
+
+* `StatefulAggregationStrategy` execution planning strategy is requested to [plan a streaming aggregation](../execution-planning-strategies/StatefulAggregationStrategy.md#planStreamingAggregation)
+* `IncrementalExecution` is [created](../IncrementalExecution.md#state)
 
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 
@@ -15,10 +35,6 @@ requiredChildDistribution: Seq[Distribution]
 `requiredChildDistribution`...FIXME
 
 ## Review Me
-
-`StateStoreSaveExec` is <<creating-instance, created>> when [StatefulAggregationStrategy](../execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is requested to plan a [streaming aggregation](../streaming-aggregation/index.md) for execution (`Aggregate` logical operators in the logical plan of a streaming query).
-
-![StateStoreSaveExec and StatefulAggregationStrategy](../images/StateStoreSaveExec-StatefulAggregationStrategy.png)
 
 The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>>, the <<outputMode, output mode>>, and the <<eventTimeWatermark, event-time watermark>>, are initially undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to [prepare the logical plan (of a streaming query) for execution](../IncrementalExecution.md#preparing-for-execution) (when the [state preparation rule](../IncrementalExecution.md#state) is executed).
 
@@ -41,12 +57,6 @@ When <<doExecute, executed>>, `StateStoreSaveExec` [creates a StateStoreRDD to m
 NOTE: `StateStoreSaveExec` <<doExecute, behaves>> differently per output mode.
 
 When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>> physical operator and [creates a StateStoreRDD](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) (with `storeUpdateFunction` specific to the output mode).
-
-[[output]]
-The output schema of `StateStoreSaveExec` is exactly the <<child, child>>'s output schema.
-
-[[outputPartitioning]]
-The output partitioning of `StateStoreSaveExec` is exactly the <<child, child>>'s output partitioning.
 
 [[stateManager]]
 `StateStoreRestoreExec` uses a [StreamingAggregationStateManager](../streaming-aggregation/StreamingAggregationStateManager.md) (that is [created](../streaming-aggregation/StreamingAggregationStateManager.md#createStateManager) for the [keyExpressions](#keyExpressions), the output of the [child](#child) physical operator and the [stateFormatVersion](#stateFormatVersion)).
@@ -129,17 +139,6 @@ Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQuery
 | memory used by state
 a| [[stateMemory]] Estimated memory used by a [StateStore](../stateful-stream-processing/StateStore.md) (aka _stateMemory_) after `StateStoreSaveExec` finished <<doExecute, execution>> (per the [StateStoreMetrics](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) of the [StateStore](../stateful-stream-processing/StateStore.md#metrics))
 |===
-
-## Creating Instance
-
-`StateStoreSaveExec` takes the following to be created:
-
-* [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
-* [[stateInfo]] Execution-specific [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) (default: `None`)
-* [[outputMode]] Execution-specific [OutputMode](../OutputMode.md) (default: `None`)
-* [[eventTimeWatermark]] [Event-time watermark](../streaming-watermark/index.md) (default: `None`)
-* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
-* [[child]] Child physical operator (`SparkPlan`)
 
 ## <span id="doExecute"> Executing Physical Operator
 

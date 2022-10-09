@@ -13,6 +13,8 @@ commit(
 
 Commits all updates (_changes_) to the given [StateStore](../stateful-stream-processing/StateStore.md) and returns the new version
 
+See [StreamingAggregationStateManagerBaseImpl](StreamingAggregationStateManagerBaseImpl.md#commit)
+
 Used when:
 
 * `StateStoreSaveExec` physical operator is [executed](../physical-operators/StateStoreSaveExec.md#doExecute)
@@ -25,6 +27,8 @@ getKey(
 ```
 
 Extracts the columns of a key from the given `row`
+
+See [StreamingAggregationStateManagerBaseImpl](StreamingAggregationStateManagerBaseImpl.md#getKey)
 
 Used when:
 
@@ -42,6 +46,8 @@ Stores (_puts_) a new value for a non-`null` key to the [StateStore](../stateful
 The key and the value are part of the given `row`.
 The key is extracted using [getKey](#getKey).
 
+See [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerImplV2.md#put)
+
 Used when:
 
 * `StateStoreSaveExec` physical operator is [executed](../physical-operators/StateStoreSaveExec.md#doExecute)
@@ -55,6 +61,8 @@ remove(
 ```
 
 Removes a non-`null` key from the [StateStore](../stateful-stream-processing/StateStore.md)
+
+See [StreamingAggregationStateManagerBaseImpl](StreamingAggregationStateManagerBaseImpl.md#remove)
 
 Used when:
 

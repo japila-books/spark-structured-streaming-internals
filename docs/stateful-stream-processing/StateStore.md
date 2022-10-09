@@ -9,7 +9,7 @@
 
 ## Contract
 
-### <span id="commit"> commit
+### <span id="commit"> Commit State Changes
 
 ```scala
 commit(): Long
@@ -27,7 +27,7 @@ Used when:
 * `StreamingSessionWindowStateManagerImplV1` is requested to `commit`
 * `StateStoreHandler` is requested to [commit](../streaming-join/StateStoreHandler.md#commit)
 
-### <span id="metrics"> metrics
+### <span id="metrics"> StateStoreMetrics
 
 ```scala
 metrics: StateStoreMetrics
@@ -40,7 +40,7 @@ Used when:
 * `StateStoreWriter` physical operator is requested to [setStoreMetrics](../physical-operators/StateStoreWriter.md#setStoreMetrics)
 * `StateStoreHandler` is requested for the [metrics](../streaming-join/StateStoreHandler.md#metrics)
 
-### <span id="put"> put
+### <span id="put"> Storing Value for Key
 
 ```scala
 put(
@@ -48,7 +48,7 @@ put(
   value: UnsafeRow): Unit
 ```
 
-Puts a new non-`null` value for a non-`null` key
+Stores (_puts_) a new non-`null` value for a non-`null` key
 
 Used when:
 
@@ -60,7 +60,7 @@ Used when:
 * `KeyToNumValuesStore` is requested to [put the number of values of a key](../streaming-join/KeyToNumValuesStore.md#put)
 * `KeyWithIndexToValueStore` is requested to [put a new value of a key](../streaming-join/KeyWithIndexToValueStore.md#put)
 
-### <span id="remove"> remove
+### <span id="remove"> Removing Key
 
 ```scala
 remove(

@@ -1,4 +1,24 @@
-# StateStoreRestoreExec Unary Physical Operator
+# StateStoreRestoreExec Physical Operator
+
+`StateStoreRestoreExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) to [restore (read) a streaming state (from a state store)](StateStoreReader.md) (for the keys from the [child](#child) physical operator).
+
+`StateStoreRestoreExec` is among the physical operators used for execute [streaming aggregations](../streaming-aggregation/index.md).
+
+![StateStoreRestoreExec and StatefulAggregationStrategy](../images/StateStoreRestoreExec-StatefulAggregationStrategy.png)
+
+## Creating Instance
+
+`StateStoreRestoreExec` takes the following to be created:
+
+* <span id="keyExpressions"> Grouping Key `Attribute`s ([Spark SQL]({{ book.spark_sql }}/expressions/Attribute))
+* <span id="stateInfo"> [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
+* <span id="stateFormatVersion"> [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion)
+* <span id="child"> Child Physical Operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan))
+
+`StateStoreRestoreExec` is created when:
+
+* `StatefulAggregationStrategy` execution planning strategy is requested to [plan a streaming aggregation](../execution-planning-strategies/StatefulAggregationStrategy.md#planStreamingAggregation)
+* `IncrementalExecution` is [created](../IncrementalExecution.md#state)
 
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 
@@ -14,23 +34,11 @@ requiredChildDistribution: Seq[Distribution]
 
 ## Review Me
 
-`StateStoreRestoreExec` is a unary physical operator that [restores (reads) a streaming state from a state store](StateStoreReader.md) (for the keys from the <<child, child>> physical operator).
-
-`StateStoreRestoreExec` is <<creating-instance, created>> exclusively when [StatefulAggregationStrategy](../execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is requested to plan a [streaming aggregation](../streaming-aggregation/index.md) for execution (`Aggregate` logical operators in the logical plan of a streaming query).
-
-![StateStoreRestoreExec and StatefulAggregationStrategy](../images/StateStoreRestoreExec-StatefulAggregationStrategy.png)
-
 The optional <<stateInfo, StatefulOperatorStateInfo>> is initially undefined (i.e. when `StateStoreRestoreExec` is <<creating-instance, created>>). `StateStoreRestoreExec` is updated to hold the streaming batch-specific execution property when `IncrementalExecution` [prepares a streaming physical plan for execution](../IncrementalExecution.md#preparations) (and [state](../IncrementalExecution.md#state) preparation rule is executed when `StreamExecution` MicroBatchExecution.md#runBatch-queryPlanning[plans a streaming query] for a streaming batch).
 
 ![StateStoreRestoreExec and IncrementalExecution](../images/StateStoreRestoreExec-IncrementalExecution.png)
 
 When <<doExecute, executed>>, `StateStoreRestoreExec` executes the <<child, child>> physical operator and [creates a StateStoreRDD to map over partitions](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) with `storeUpdateFunction` that restores the state for the keys in the input rows if available.
-
-[[output]]
-The output schema of `StateStoreRestoreExec` is exactly the <<child, child>>'s output schema.
-
-[[outputPartitioning]]
-The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child>>'s output partitioning.
 
 === [[metrics]] Performance Metrics (SQLMetrics)
 
@@ -45,17 +53,7 @@ The output partitioning of `StateStoreRestoreExec` is exactly the <<child, child
 | [[numOutputRows]] The number of input rows from the <<child, child>> physical operator (for which `StateStoreRestoreExec` tried to find the state)
 |===
 
-.StateStoreRestoreExec in web UI (Details for Query)
-image::images/StateStoreRestoreExec-webui-query-details.png[align="center"]
-
-## Creating Instance
-
-`StateStoreRestoreExec` takes the following to be created:
-
-* [[keyExpressions]] **Key expressions** (Catalyst attributes for the grouping keys)
-* [[stateInfo]] Optional [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) (default: `None`)
-* [[stateFormatVersion]] Version of the state format (based on the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) configuration property)
-* [[child]] Child physical operator (`SparkPlan`)
+![StateStoreRestoreExec in web UI (Details for Query)](../images/StateStoreRestoreExec-webui-query-details.png)
 
 === [[stateManager]] StateStoreRestoreExec and StreamingAggregationStateManager -- `stateManager` Property
 
