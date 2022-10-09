@@ -39,7 +39,7 @@ In the end, `rocksDB` creates a [RocksDB](RocksDB.md) for the store identifier.
 * `RocksDBStateStore` is requested to [get the value for a key](RocksDBStateStore.md#get), [put](RocksDBStateStore.md#put), [remove](RocksDBStateStore.md#remove), [iterator](RocksDBStateStore.md#iterator), [prefixScan](RocksDBStateStore.md#prefixScan), [commit](RocksDBStateStore.md#commit), [abort](RocksDBStateStore.md#abort), [metrics](RocksDBStateStore.md#metrics)
 * `RocksDBStateStoreProvider` is requested to [getStore](#getStore), [doMaintenance](#doMaintenance), [close](#close), [latestVersion](#latestVersion)
 
-## <span id="init"> Initializing
+## <span id="init"> Initialization
 
 ```scala
 init(

@@ -325,7 +325,7 @@ Use [SQLConf.stateStoreMinDeltasForSnapshot](SQLConf.md#stateStoreMinDeltasForSn
 
 **spark.sql.streaming.stateStore.providerClass**
 
-**(internal)** The fully-qualified class name of the [StateStoreProvider](stateful-stream-processing/StateStoreProvider.md) implementation that manages state data in stateful streaming queries. This class must have a zero-arg constructor.
+**(internal)** The fully-qualified class name of a [StateStoreProvider](stateful-stream-processing/StateStoreProvider.md) implementation
 
 Default: [HDFSBackedStateStoreProvider](stateful-stream-processing/HDFSBackedStateStoreProvider.md)
 
