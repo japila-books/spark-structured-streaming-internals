@@ -1,167 +1,94 @@
 # StreamingAggregationStateManager
 
-`StreamingAggregationStateManager` is the <<contract, abstraction>> of <<implementations, state managers>> that act as _middlemen_ between [state stores](../stateful-stream-processing/StateStore.md) and the physical operators used in [Streaming Aggregation](index.md) (e.g. [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) and [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md)).
+`StreamingAggregationStateManager` is an [abstraction](#contract) of [state managers](#implementations) for the physical operators used in [Streaming Aggregation](index.md) (e.g., [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) and [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md)).
 
-[[contract]]
-.StreamingAggregationStateManager Contract
-[cols="1m,2",options="header",width="100%"]
-|===
-| Method
-| Description
+## Contract
 
-| commit
-a| [[commit]]
+### <span id="commit"> Committing State Changes
 
-[source, scala]
-----
+```scala
 commit(
   store: StateStore): Long
-----
+```
 
 Commits all updates (_changes_) to the given [StateStore](../stateful-stream-processing/StateStore.md) and returns the new version
 
-Used when [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator is executed.
+Used when:
 
-| get
-a| [[get]]
+* `StateStoreSaveExec` physical operator is [executed](../physical-operators/StateStoreSaveExec.md#doExecute)
 
-[source, scala]
-----
-get(store: StateStore, key: UnsafeRow): UnsafeRow
-----
+### <span id="getKey"> Extracting Key
 
-Looks up the value of the key from the [StateStore](../stateful-stream-processing/StateStore.md) (the key is non-``null``)
+```scala
+getKey(
+  row: UnsafeRow): UnsafeRow
+```
 
-Used exclusively when [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) physical operator is executed.
-
-| getKey
-a| [[getKey]]
-
-[source, scala]
-----
-getKey(row: UnsafeRow): UnsafeRow
-----
-
-Extracts the columns for the key from the input row
+Extracts the columns of a key from the given `row`
 
 Used when:
 
-* [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) physical operator is executed
+* `StateStoreRestoreExec` physical operator is [executed](../physical-operators/StateStoreRestoreExec.md#doExecute)
 
-* `StreamingAggregationStateManagerImplV1` legacy state manager is requested to `put` a row to a state store
+### <span id="put"> Storing New Value for Key
 
-| getStateValueSchema
-a| [[getStateValueSchema]]
-
-[source, scala]
-----
-getStateValueSchema: StructType
-----
-
-Gets the schema of the values in [StateStore](../stateful-stream-processing/StateStore.md)s
-
-Used when [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md) and [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operators are executed
-
-| iterator
-a| [[iterator]]
-
-[source, scala]
-----
-iterator(
-  store: StateStore): Iterator[UnsafeRowPair]
-----
-
-Returns all `UnsafeRow` key-value pairs in the given [StateStore](../stateful-stream-processing/StateStore.md)
-
-Used exclusively when [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator is executed.
-
-| keys
-a| [[keys]]
-
-[source, scala]
-----
-keys(store: StateStore): Iterator[UnsafeRow]
-----
-
-Returns all the keys in the given [StateStore](../stateful-stream-processing/StateStore.md)
-
-Used exclusively when physical operators with `WatermarkSupport` are requested to [removeKeysOlderThanWatermark](../physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store) (when [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator is executed).
-
-| put
-a| [[put]]
-
-[source, scala]
-----
+```scala
 put(
   store: StateStore,
   row: UnsafeRow): Unit
-----
+```
 
-Stores (_puts_) the given row in the given [StateStore](../stateful-stream-processing/StateStore.md)
+Stores (_puts_) a new value for a non-`null` key to the [StateStore](../stateful-stream-processing/StateStore.md).
+The key and the value are part of the given `row`.
+The key is extracted using [getKey](#getKey).
 
-Used exclusively when [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator is executed.
+Used when:
 
-| remove
-a| [[remove]]
+* `StateStoreSaveExec` physical operator is [executed](../physical-operators/StateStoreSaveExec.md#doExecute)
 
-[source, scala]
-----
+### <span id="remove"> Removing Key
+
+```scala
 remove(
   store: StateStore,
   key: UnsafeRow): Unit
-----
+```
 
-Removes the key-value pair from the given [StateStore](../stateful-stream-processing/StateStore.md) per key
+Removes a non-`null` key from the [StateStore](../stateful-stream-processing/StateStore.md)
 
-Used exclusively when [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator is executed (directly or indirectly as a [WatermarkSupport](../physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark-StreamingAggregationStateManager-store))
+Used when:
 
-| values
-a| [[values]]
+* `WatermarkSupport` physical operator is requested to [removeKeysOlderThanWatermark](../physical-operators/WatermarkSupport.md#removeKeysOlderThanWatermark)
+* `StateStoreSaveExec` physical operator is [executed](../physical-operators/StateStoreSaveExec.md#doExecute)
 
-[source, scala]
-----
-values(
-  store: StateStore): Iterator[UnsafeRow]
-----
+## Implementations
 
-All values in the given [StateStore](../stateful-stream-processing/StateStore.md)
+* [StreamingAggregationStateManagerBaseImpl](StreamingAggregationStateManagerBaseImpl.md)
 
-Used exclusively when [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md) physical operator is executed.
+??? note "Sealed Trait"
+    `StreamingAggregationStateManager` is a Scala **sealed trait** which means that all of the implementations are in the same compilation unit (a single file).
 
-|===
+    Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#sealed).
 
-[[supportedVersions]]
-`StreamingAggregationStateManager` supports <<createStateManager, two versions of state managers for streaming aggregations>> (per the [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion) internal configuration property):
+## <span id="createStateManager"> Creating StreamingAggregationStateManager
 
-* [[legacyVersion]] `1` (for the legacy `StreamingAggregationStateManagerImplV1`)
-
-* [[default]] `2` (for the default [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerBaseImpl.md#StreamingAggregationStateManagerImplV2))
-
-[[implementations]]
-NOTE: [StreamingAggregationStateManagerBaseImpl](StreamingAggregationStateManagerBaseImpl.md) is the one and only known direct implementation of the <<contract, StreamingAggregationStateManager Contract>> in Spark Structured Streaming.
-
-NOTE: `StreamingAggregationStateManager` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
-
-=== [[createStateManager]] Creating StreamingAggregationStateManager Instance -- `createStateManager` Factory Method
-
-[source, scala]
-----
+```scala
 createStateManager(
   keyExpressions: Seq[Attribute],
   inputRowAttributes: Seq[Attribute],
   stateFormatVersion: Int): StreamingAggregationStateManager
-----
-
-`createStateManager` creates a new `StreamingAggregationStateManager` for a given `stateFormatVersion`:
-
-* `StreamingAggregationStateManagerImplV1` for `stateFormatVersion` being `1`
-
-* [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerImplV2.md) for `stateFormatVersion` being `2`
-
-`createStateManager` throws a `IllegalArgumentException` for any other `stateFormatVersion`:
-
-```text
-Version [stateFormatVersion] is invalid
 ```
 
-`createStateManager` is used when [StateStoreRestoreExec](../physical-operators/StateStoreRestoreExec.md#stateManager) and [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md#stateManager) physical operators are created.
+`createStateManager` creates a `StreamingAggregationStateManager` based on the given `stateFormatVersion` (that is the value of [SQLConf.STREAMING_AGGREGATION_STATE_FORMAT_VERSION](../SQLConf.md#STREAMING_AGGREGATION_STATE_FORMAT_VERSION)).
+
+stateFormatVersion | StreamingAggregationStateManager
+-------------------|----------
+ 1 | `StreamingAggregationStateManagerImplV1`
+ 2 | [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerImplV2.md)
+
+---
+
+`createStateManager` is used when:
+
+* `StateStoreRestoreExec` physical operator is [created](../physical-operators/StateStoreRestoreExec.md#stateManager)
+* `StateStoreSaveExec` physical operator is [created](../physical-operators/StateStoreSaveExec.md#stateManager)

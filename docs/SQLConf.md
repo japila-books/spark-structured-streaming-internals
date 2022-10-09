@@ -17,6 +17,10 @@
 
 [spark.sql.streaming.stateStore.providerClass](configuration-properties.md#spark.sql.streaming.stateStore.providerClass)
 
+## <span id="STREAMING_AGGREGATION_STATE_FORMAT_VERSION"> STREAMING_AGGREGATION_STATE_FORMAT_VERSION
+
+[spark.sql.streaming.aggregation.stateFormatVersion](configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion)
+
 ## <span id="streamingFileCommitProtocolClass"><span id="STREAMING_FILE_COMMIT_PROTOCOL_CLASS"> streamingFileCommitProtocolClass
 
 [spark.sql.streaming.commitProtocolClass](configuration-properties.md#spark.sql.streaming.commitProtocolClass) configuration property
@@ -121,16 +125,6 @@ a| [[fileSourceLogCompactInterval]][[FILE_SOURCE_LOG_COMPACT_INTERVAL]] Used exc
 [spark.sql.streaming.stateStore.minDeltasForSnapshot](configuration-properties.md#spark.sql.streaming.stateStore.minDeltasForSnapshot)
 
 a| [[stateStoreMinDeltasForSnapshot]] Used (as [StateStoreConf.minDeltasForSnapshot](stateful-stream-processing/StateStoreConf.md#minDeltasForSnapshot)) exclusively when `HDFSBackedStateStoreProvider` is requested to [doSnapshot](stateful-stream-processing/HDFSBackedStateStoreProvider.md#doSnapshot)
-
-| `STREAMING_AGGREGATION_STATE_FORMAT_VERSION`
-
-[spark.sql.streaming.aggregation.stateFormatVersion](configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion)
-
-a| [[STREAMING_AGGREGATION_STATE_FORMAT_VERSION]] Used when:
-
-* [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is executed
-
-* `OffsetSeqMetadata` is requested for the [relevantSQLConfs](OffsetSeqMetadata.md#relevantSQLConfs) and the [relevantSQLConfDefaultValues](OffsetSeqMetadata.md#relevantSQLConfDefaultValues)
 
 | `STREAMING_CHECKPOINT_FILE_MANAGER_CLASS`
 
