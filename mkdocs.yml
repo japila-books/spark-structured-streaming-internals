@@ -94,6 +94,7 @@ extra:
   scala:
     api: https://www.scala-lang.org/api/2.12.15
     docs: https://docs.scala-lang.org/
+    spec: https://www.scala-lang.org/files/archive/spec/2.12
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/jaceklaskowski
@@ -216,6 +217,11 @@ nav:
     - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
   - Features:
     - features/index.md
+    - RocksDB:
+      - RocksDB: stateful-stream-processing/RocksDB.md
+      - RocksDBConf: stateful-stream-processing/RocksDBConf.md
+      - RocksDBFileManager: stateful-stream-processing/RocksDBFileManager.md
+      - RocksDBStateStoreProvider: stateful-stream-processing/RocksDBStateStoreProvider.md
     - Arbitrary Stateful Streaming Aggregation:
       - arbitrary-stateful-streaming-aggregation/index.md
       - KeyValueGroupedDataset:
@@ -264,7 +270,6 @@ nav:
       - streaming-limit/index.md
     - Stateful Stream Processing:
       - stateful-stream-processing/index.md
-      - RocksDBFileManager: stateful-stream-processing/RocksDBFileManager.md
       - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
       - StatefulOperatorStateInfo: stateful-stream-processing/StatefulOperatorStateInfo.md
       - StateSchemaCompatibilityChecker: stateful-stream-processing/StateSchemaCompatibilityChecker.md

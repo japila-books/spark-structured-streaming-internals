@@ -1,3 +1,3 @@
 # RocksDBStateStore
 
-`RocksDBStateStore` is...FIXME
+`RocksDBStateStore` is a [StateStore](StateStore.md).
