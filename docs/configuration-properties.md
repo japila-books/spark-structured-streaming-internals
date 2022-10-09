@@ -24,13 +24,19 @@ Used when:
 
 * [StatefulAggregationStrategy](execution-planning-strategies/StatefulAggregationStrategy.md) execution planning strategy is executed (and plans a streaming query with an aggregate that simply boils down to creating a [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md) with the proper _implementation version_ of [StreamingAggregationStateManager](StreamingAggregationStateManager.md))
 
-## <span id="spark.sql.streaming.checkpointFileManagerClass"> checkpointFileManagerClass
+## <span id="spark.sql.streaming.checkpointFileManagerClass"><span id="STREAMING_CHECKPOINT_FILE_MANAGER_CLASS"> checkpointFileManagerClass
 
 **spark.sql.streaming.checkpointFileManagerClass**
 
 **(internal)** [CheckpointFileManager](CheckpointFileManager.md) to use to write checkpoint files atomically
 
-Default: [FileContextBasedCheckpointFileManager](FileContextBasedCheckpointFileManager.md) (with [FileSystemBasedCheckpointFileManager](FileSystemBasedCheckpointFileManager.md) in case of unsupported file system used for storing metadata files)
+Default: (undefined)
+
+Unless defined, [FileContextBasedCheckpointFileManager](FileContextBasedCheckpointFileManager.md) is considered first, followed by [FileSystemBasedCheckpointFileManager](FileSystemBasedCheckpointFileManager.md) in case of unsupported file system used for storing metadata files
+
+Used when:
+
+* `CheckpointFileManager` is requested to [create a CheckpointFileManager](CheckpointFileManager.md#create)
 
 ## <span id="spark.sql.streaming.checkpointLocation"> checkpointLocation
 
