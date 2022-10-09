@@ -19,6 +19,22 @@ Used when:
 
 * `StateStoreSaveExec` physical operator is [executed](../physical-operators/StateStoreSaveExec.md#doExecute)
 
+### <span id="get"> Retrieving Value for Key (from ReadStateStore)
+
+```scala
+get(
+  store: ReadStateStore,
+  key: UnsafeRow): UnsafeRow
+```
+
+Retrieves (_gets_) the current value for a given non-`null` key from [ReadStateStore](../stateful-stream-processing/ReadStateStore.md)
+
+See [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerImplV2.md#get)
+
+Used when:
+
+* `StateStoreRestoreExec` physical operator is [executed](../physical-operators/StateStoreRestoreExec.md#doExecute)
+
 ### <span id="getKey"> Extracting Key
 
 ```scala
