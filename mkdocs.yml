@@ -91,6 +91,9 @@ extra:
     api: https://docs.oracle.com/en/java/javase/11/docs/api/java.base
   kafka:
     api: https://kafka.apache.org/28/javadoc
+  rocksdb:
+    version: 6.20.3
+    api: https://javadoc.io/static/org.rocksdb/rocksdbjni/6.20.3
   scala:
     api: https://www.scala-lang.org/api/2.12.15
     docs: https://docs.scala-lang.org/
@@ -221,6 +224,8 @@ nav:
       - RocksDB: stateful-stream-processing/RocksDB.md
       - RocksDBConf: stateful-stream-processing/RocksDBConf.md
       - RocksDBFileManager: stateful-stream-processing/RocksDBFileManager.md
+      - RocksDBMetrics: stateful-stream-processing/RocksDBMetrics.md
+      - RocksDBStateStore: stateful-stream-processing/RocksDBStateStore.md
       - RocksDBStateStoreProvider: stateful-stream-processing/RocksDBStateStoreProvider.md
     - Arbitrary Stateful Streaming Aggregation:
       - arbitrary-stateful-streaming-aggregation/index.md
@@ -269,13 +274,13 @@ nav:
       - streaming-limit/index.md
     - Stateful Stream Processing:
       - stateful-stream-processing/index.md
+      - ReadStateStoreRDD: stateful-stream-processing/ReadStateStoreRDD.md
       - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
       - StatefulOperatorStateInfo: stateful-stream-processing/StatefulOperatorStateInfo.md
       - StateSchemaCompatibilityChecker: stateful-stream-processing/StateSchemaCompatibilityChecker.md
       - StateStore:
         - HDFSBackedStateStore: stateful-stream-processing/HDFSBackedStateStore.md
         - ReadStateStore: stateful-stream-processing/ReadStateStore.md
-        - RocksDBStateStore: stateful-stream-processing/RocksDBStateStore.md
         - StateStore: stateful-stream-processing/StateStore.md
         - StateStoreId: stateful-stream-processing/StateStoreId.md
       - StateStoreConf: stateful-stream-processing/StateStoreConf.md

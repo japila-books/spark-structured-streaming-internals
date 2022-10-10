@@ -65,3 +65,18 @@ init(
 * [encoder](#encoder)
 
 In the end, `init` initializes the [RocksDB](#rocksDB) (lazy value).
+
+## <span id="getStore"> Looking Up StateStore by Version
+
+```scala
+getStore(
+  version: Long): StateStore
+```
+
+`getStore` is part of the [StateStoreProvider](StateStoreProvider.md#getStore) abstraction.
+
+---
+
+`getStore` requests the [RocksDB](#rocksDB) to [load data](RocksDB.md#load) for the given `version`.
+
+In the end, `getStore` creates a [RocksDBStateStore](RocksDBStateStore.md) for the given `version`.

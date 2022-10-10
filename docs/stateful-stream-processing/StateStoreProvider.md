@@ -6,6 +6,22 @@
 
 ## Contract
 
+### <span id="getStore"> Looking Up StateStore by Version
+
+```scala
+getStore(
+  version: Long): StateStore
+```
+
+[StateStore](StateStore.md) for the given `version`
+
+See [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md#getStore) and [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#getStore)
+
+Used when:
+
+* `StateStoreProvider` is requested for a [ReadStateStore by version](#getReadStore)
+* `StateStore` utility is used to [get a StateStore by provider id and version](StateStore.md#get)
+
 ### <span id="init"> Initialization
 
 ```scala
@@ -29,6 +45,23 @@ Used when:
 * [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md)
 * [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md)
 
+## <span id="create"> Creating StateStoreProvider
+
+```scala
+create(
+  providerClassName: String): StateStoreProvider
+```
+
+`create` creates a `StateStoreProvider` based on the fully-qualified class name (`providerClassName`).
+
+---
+
+`create` is used when:
+
+* `StateStoreWriter` physical operator is requested to [stateStoreCustomMetrics](../physical-operators/StateStoreWriter.md#stateStoreCustomMetrics)
+* `StateStoreProvider` utility is used to [create and initialize a StateStoreProvider](#createAndInit)
+* `StreamingQueryStatisticsPage` is requested for the [supportedCustomMetrics](../webui/StreamingQueryStatisticsPage.md#supportedCustomMetrics)
+
 ## <span id="createAndInit"> Creating and Initializing StateStoreProvider
 
 ```scala
@@ -49,4 +82,19 @@ In the end, `createAndInit` requests the `StateStoreProvider` to [initialize](#i
 
 `createAndInit` is used when:
 
-* `StateStore` utility is used to [look up a StateStore by StateStoreProviderId](StateStore.md#get-StateStore)
+* `StateStore` utility is used to [look up a StateStore by StateStoreProviderId](StateStore.md#getStateStoreProvider)
+
+## <span id="getReadStore"> Looking Up ReadStateStore by Version
+
+```scala
+getReadStore(
+  version: Long): ReadStateStore
+```
+
+`getReadStore` creates a `WrappedReadStateStore` for the [StateStore](#getStore) for the given `version`.
+
+---
+
+`getReadStore` is used when:
+
+* `StateStore` utility is used to [get a ReadStateStore](StateStore.md#getReadOnly)

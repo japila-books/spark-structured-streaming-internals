@@ -329,7 +329,7 @@ Use [SQLConf.stateStoreMinDeltasForSnapshot](SQLConf.md#stateStoreMinDeltasForSn
 
 Default: [HDFSBackedStateStoreProvider](stateful-stream-processing/HDFSBackedStateStoreProvider.md)
 
-Use [SQLConf.stateStoreProviderClass](SQLConf.md#stateStoreProviderClass) to get the current value.
+Use [SQLConf.stateStoreProviderClass](SQLConf.md#stateStoreProviderClass) to get the current value
 
 [Checkpointed property](OffsetSeqMetadata.md#relevantSQLConfs)
 

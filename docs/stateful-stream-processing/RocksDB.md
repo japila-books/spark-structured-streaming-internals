@@ -13,3 +13,75 @@
 `RocksDB` is created when:
 
 * `RocksDBStateStoreProvider` is requested for the [RocksDB](RocksDBStateStoreProvider.md#rocksDB)
+
+## <span id="metrics"> Performance Metrics
+
+```scala
+metrics: RocksDBMetrics
+```
+
+`metrics`...FIXME
+
+---
+
+`metrics` is used when:
+
+* `RocksDB` is requested to [commit](#commit)
+* `RocksDBStateStore` is requested for [metrics](RocksDBStateStore.md#metrics)
+
+## <span id="readOptions"> ReadOptions
+
+`RocksDB` creates a `ReadOptions` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/ReadOptions.html)) when [created](#creating-instance).
+
+Used when:
+
+* [get](#get)
+* [put](#put) (with [trackTotalNumberOfRows](RocksDBConf.md#trackTotalNumberOfRows) enabled)
+* [remove](#remove) (with [trackTotalNumberOfRows](RocksDBConf.md#trackTotalNumberOfRows) enabled)
+
+Closed in [close](#close)
+
+## <span id="writeBatch"> WriteBatchWithIndex
+
+`RocksDB` creates a `WriteBatchWithIndex` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/WriteBatchWithIndex.html)) (with `overwriteKey` enabled) when [created](#creating-instance).
+
+## <span id="get"> Retrieving Value for Key
+
+```scala
+get(
+  key: Array[Byte]): Array[Byte]
+```
+
+`get` requests the `WriteBatchWithIndex` to `getFromBatchAndDB` the given `key` from the [NativeRocksDB](#db) (with the [ReadOptions](#readOptions)).
+
+---
+
+`get` is used when:
+
+* `RocksDBStateStore` is requested to [get a value for a key](RocksDBStateStore.md#get)
+
+## <span id="commit"> commit
+
+```scala
+commit(): Long
+```
+
+`commit`...FIXME
+
+---
+
+`commit` is used when:
+
+* `RocksDBStateStore` is requested to [commit](RocksDBStateStore.md#commit)
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.state.RocksDB` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.state.RocksDB=ALL
+```
+
+Refer to [Logging](../spark-logging.md).

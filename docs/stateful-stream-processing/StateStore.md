@@ -83,6 +83,77 @@ Used when:
 * [HDFSBackedStateStore](HDFSBackedStateStore.md)
 * [RocksDBStateStore](RocksDBStateStore.md)
 
+## <span id="getReadOnly"> getReadOnly
+
+```scala
+getReadOnly(
+  storeProviderId: StateStoreProviderId,
+  keySchema: StructType,
+  valueSchema: StructType,
+  numColsPrefixKey: Int,
+  version: Long,
+  storeConf: StateStoreConf,
+  hadoopConf: Configuration): ReadStateStore
+```
+
+`getReadOnly` [looks up a StateStoreProvider](#getStateStoreProvider) (for the given [StateStoreProviderId](StateStoreProviderId.md)) to [getReadStore](StateStoreProvider.md#getReadStore) for the given `version`.
+
+---
+
+`getReadOnly` is used when:
+
+* `ReadStateStoreRDD` is requested to [compute a partition](ReadStateStoreRDD.md#compute)
+
+## <span id="get"> Looking Up StateStore by Provider ID and Version
+
+```scala
+get(
+  storeProviderId: StateStoreProviderId,
+  keySchema: StructType,
+  valueSchema: StructType,
+  numColsPrefixKey: Int,
+  version: Long,
+  storeConf: StateStoreConf,
+  hadoopConf: Configuration): StateStore
+```
+
+`get` [looks up a StateStoreProvider](#getStateStoreProvider) (for the given [StateStoreProviderId](StateStoreProviderId.md)) to [get a StateStore](StateStoreProvider.md#getStore) for the given `version`.
+
+---
+
+`get` is used when:
+
+* `ReadStateStoreRDD` is requested to [compute a partition](ReadStateStoreRDD.md#compute)
+
+## <span id="getStateStoreProvider"> Looking Up StateStore by Provider ID
+
+```scala
+getStateStoreProvider(
+  storeProviderId: StateStoreProviderId,
+  keySchema: StructType,
+  valueSchema: StructType,
+  numColsPrefixKey: Int,
+  storeConf: StateStoreConf,
+  hadoopConf: Configuration): StateStoreProvider
+```
+
+`getStateStoreProvider` [start the periodic maintenance task](#startMaintenanceIfNeeded).
+
+Only if the [partitionId](StateStoreId.md#partitionId) (of the [StateStoreId](StateStoreProviderId.md#storeId) of the given [StateStoreProviderId](StateStoreProviderId.md)) is `0`, `getStateStoreProvider`  validates the state schema.
+
+!!! note "FIXME Describe the validation"
+
+`getStateStoreProvider` looks up the [StateStoreProvider](StateStoreProvider.md) for the given [StateStoreProviderId](StateStoreProviderId.md) (in the [loadedProviders](#loadedProviders) registry) or [creates and initializes a new one](StateStoreProvider.md#createAndInit).
+
+`getStateStoreProvider` collects the other [StateStoreProvider](StateStoreProvider.md) (in the [loadedProviders](#loadedProviders) registry), [reportActiveStoreInstance](#reportActiveStoreInstance) and [unloads them](#unload).
+
+!!! note
+    There can be one active [StateStoreProvider](StateStoreProvider.md) in a Spark executor.
+
+---
+
+`getStateStoreProvider` is a helper method of [getReadOnly](#getReadOnly) and [get](#get).
+
 ## Review Me
 
 `StateStore` supports **incremental checkpointing** in which only the key-value "Row" pairs that changed are <<commit, committed>> or <<abort, aborted>> (without touching other key-value pairs).
@@ -153,35 +224,6 @@ NOTE: `reportActiveStoreInstance` is used exclusively when `StateStore` utility 
 When an error occurs, `MaintenanceTask` clears <<loadedProviders, loadedProviders>> internal registry.
 
 `MaintenanceTask` is scheduled on *state-store-maintenance-task* thread pool that runs periodically every [spark.sql.streaming.stateStore.maintenanceInterval](../configuration-properties.md#spark.sql.streaming.stateStore.maintenanceInterval).
-
-## <span id="get-StateStore"> Looking Up StateStore by Provider ID
-
-```scala
-get(
-  storeProviderId: StateStoreProviderId,
-  keySchema: StructType,
-  valueSchema: StructType,
-  indexOrdinal: Option[Int],
-  version: Long,
-  storeConf: StateStoreConf,
-  hadoopConf: Configuration): StateStore
-```
-
-`get` finds `StateStore` for the specified [StateStoreProviderId](StateStoreProviderId.md) and version.
-
-NOTE: The version is either the <<EpochTracker.md#getCurrentEpoch, current epoch>> (in [Continuous Stream Processing](../continuous-execution/index.md)) or the [current batch ID](StatefulOperatorStateInfo.md#storeVersion) (in [Micro-Batch Stream Processing](../micro-batch-execution/index.md)).
-
-Internally, `get` looks up the <<StateStoreProvider.md#, StateStoreProvider>> (by `storeProviderId`) in the <<loadedProviders, loadedProviders>> internal cache. If unavailable, `get` uses the `StateStoreProvider` utility to <<StateStoreProvider.md#createAndInit, create and initialize one>>.
-
-`get` will also <<startMaintenanceIfNeeded, start the periodic maintenance task>> (unless already started) and <<reportActiveStoreInstance, announce the new StateStoreProvider>>.
-
-In the end, `get` requests the `StateStoreProvider` to <<StateStoreProvider.md#getStore, look up the StateStore by the specified version>>.
-
-`get` is used when:
-
-* `StateStoreRDD` is requested to [compute a partition](StateStoreRDD.md#compute)
-
-* `StateStoreHandler` (of [SymmetricHashJoinStateManager](../streaming-join/SymmetricHashJoinStateManager.md)) is requested to <<StateStoreHandler.md#getStateStore, look up a StateStore (by key and value schemas)>>
 
 ==== [[startMaintenanceIfNeeded]] Starting Periodic Maintenance Task (Unless Already Started) -- `startMaintenanceIfNeeded` Internal Object Method
 
