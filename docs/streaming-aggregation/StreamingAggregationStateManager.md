@@ -103,7 +103,7 @@ createStateManager(
   stateFormatVersion: Int): StreamingAggregationStateManager
 ```
 
-`createStateManager` creates a `StreamingAggregationStateManager` based on the given `stateFormatVersion` (that is the value of [SQLConf.STREAMING_AGGREGATION_STATE_FORMAT_VERSION](../SQLConf.md#STREAMING_AGGREGATION_STATE_FORMAT_VERSION)).
+`createStateManager` creates a `StreamingAggregationStateManager` based on the given `stateFormatVersion` (based on [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion)).
 
 stateFormatVersion | StreamingAggregationStateManager
 -------------------|----------
