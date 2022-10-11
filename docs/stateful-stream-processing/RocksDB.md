@@ -20,7 +20,25 @@
 metrics: RocksDBMetrics
 ```
 
-`metrics`...FIXME
+`metrics` reads the following [RocksDB](#db) properties:
+
+* `rocksdb.total-sst-files-size`
+* `rocksdb.estimate-table-readers-mem`
+* `rocksdb.size-all-mem-tables`
+* `rocksdb.block-cache-usage`
+
+`metrics` computes `writeBatchMemUsage` by requesting the RocksDB [WriteBatchWithIndex](#writeBatch) for `WriteBatch` to `getDataSize`.
+
+`metrics` computes [nativeOpsHistograms](RocksDBMetrics.md#nativeOpsHistograms).
+
+`metrics` computes [nativeOpsMetrics](RocksDBMetrics.md#nativeOpsMetrics).
+
+In the end, `metrics` creates a [RocksDBMetrics](RocksDBMetrics.md) with the following:
+
+* [numKeysOnLoadedVersion](#numKeysOnLoadedVersion)
+* [numKeysOnWritingVersion](#numKeysOnWritingVersion)
+* [commitLatencyMs](#commitLatencyMs)
+* _others_
 
 ---
 
@@ -45,6 +63,19 @@ Closed in [close](#close)
 
 `RocksDB` creates a `WriteBatchWithIndex` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/WriteBatchWithIndex.html)) (with `overwriteKey` enabled) when [created](#creating-instance).
 
+## <span id="nativeStats"> Statistics
+
+```scala
+nativeStats: Statistics
+```
+
+`RocksDB` requests [Options](#dbOptions) for a `Statistics` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/Statistics.html)) to initialize `nativeStats` when [created](#creating-instance).
+
+`nativeStats` is used when:
+
+* [Load a version](#load) (that can reset the statistics when [resetStatsOnLoad](RocksDBConf.md#resetStatsOnLoad) is enabled)
+* Requested for the [metrics](#metrics) (for `getHistogramData` and `getTickerCount`)
+
 ## <span id="get"> Retrieving Value for Key
 
 ```scala
@@ -60,7 +91,7 @@ get(
 
 * `RocksDBStateStore` is requested to [get a value for a key](RocksDBStateStore.md#get)
 
-## <span id="commit"> commit
+## <span id="commit"> Committing Changes
 
 ```scala
 commit(): Long

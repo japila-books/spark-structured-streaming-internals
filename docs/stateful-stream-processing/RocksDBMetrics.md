@@ -1,6 +1,6 @@
 # RocksDBMetrics
 
-`RocksDBMetrics` represents RocksDB stats of a commit.
+`RocksDBMetrics` represents RocksDB stats of a [load](RocksDB.md#load) or a [commit](RocksDB.md#commit).
 
 ## Creating Instance
 
@@ -25,7 +25,11 @@
 
 ### <span id="nativeOpsHistograms"> nativeOpsHistograms
 
-`RocksDBMetrics` is given a `Map[String, RocksDBNativeHistogram]` when [created](#creating-instance).
+```scala
+nativeOpsHistograms: Map[String, RocksDBNativeHistogram]
+```
+
+`RocksDBMetrics` is given a lookup table of `RocksDBNativeHistogram`s by name when [created](#creating-instance).
 
 `nativeOpsHistograms` is created when `RocksDB` is requested for the [metrics](RocksDB.md#metrics) (based on the _nativeOpsLatencyMicros_ with RocksDB's `HistogramType` and the [nativeStats](RocksDB.md#nativeStats)).
 
@@ -34,3 +38,13 @@ Native Op | HistogramType
  get | DB_GET
  put | DB_WRITE
  compaction | COMPACTION_TIME
+
+Used when `RocksDBStateStore` is requested for the [metrics](RocksDBStateStore.md#metrics) for the following:
+
+* Latencies (`sum / 1000`)
+    * [RocksDB: total get call latency](RocksDBStateStore.md#CUSTOM_METRIC_GET_TIME)
+    * [RocksDB: total put call latency](RocksDBStateStore.md#CUSTOM_METRIC_PUT_TIME)
+    * [RocksDB: compaction - total compaction time including background](RocksDBStateStore.md#rocksdbTotalCompactionLatencyMs)
+* Counts
+    * [RocksDB: number of get calls](RocksDBStateStore.md#rocksdbGetCount)
+    * [RocksDB: number of put calls](RocksDBStateStore.md#rocksdbPutCount)
