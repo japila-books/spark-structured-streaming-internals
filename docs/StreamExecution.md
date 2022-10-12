@@ -43,11 +43,13 @@ org.apache.spark.sql.execution.streaming.StreamExecution
 logicalPlan: LogicalPlan
 ```
 
+`logicalPlan` is part of the [ProgressReporter](monitoring/ProgressReporter.md#logicalPlan) abstraction.
+
 Analyzed logical plan of the streaming query to [execute](#runActivatedStream)
 
-Used when `StreamExecution` is requested to [run stream processing](#runStream)
+Used when:
 
-`logicalPlan` is part of the [ProgressReporter](monitoring/ProgressReporter.md#logicalPlan) abstraction.
+* `StreamExecution` is requested to [run stream processing](#runStream)
 
 ### <span id="runActivatedStream"> Running Activated Streaming Query
 
@@ -58,7 +60,9 @@ runActivatedStream(
 
 Executes (_runs_) the activated [streaming query](StreamingQuery.md) (that is described by the [logical plan](#logicalPlan))
 
-Used when `StreamExecution` is requested to [run the streaming query](#runStream) (when transitioning from `INITIALIZING` to `ACTIVE` state)
+Used when:
+
+* `StreamExecution` is requested to [run the streaming query](#runStream) (when transitioning from `INITIALIZING` to `ACTIVE` state)
 
 ## Implementations
 
@@ -194,14 +198,18 @@ val sq = spark
 uniqueSources: Map[SparkDataStream, ReadLimit]
 ```
 
-`StreamExecution` tracks the unique streaming data sources of a streaming query in the `uniqueSources` internal registry.
+`StreamExecution` tracks the unique [SparkDataStream](SparkDataStream.md) of a streaming query (by their `ReadLimit`) in the `uniqueSources` internal registry.
 
 ![StreamExecution's uniqueSources Registry of Streaming Data Sources](images/StreamExecution-uniqueSources.png)
 
-Used when `StreamExecution`:
+`uniqueSources` registry is initialized when:
 
-* [Constructs the next streaming micro-batch](#constructNextBatch) (and gets new offsets for every streaming data source)
-* [Stops all streaming data sources](#stopSources)
+* `MicroBatchExecution` is requested for the [logicalPlan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (based on the [triggerExecutor](micro-batch-execution/MicroBatchExecution.md#triggerExecutor))
+* `ContinuousExecution` is requested for the [logicalPlan](continuous-execution/ContinuousExecution.md#logicalPlan)
+
+`uniqueSources` is used when `MicroBatchExecution` is requested to [construct the next micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) (to get new offsets for every streaming data source)
+
+Used when `StreamExecution` is requested to [stop all streaming data sources](#stopSources)
 
 ## Streaming Query Identifiers
 

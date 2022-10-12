@@ -26,7 +26,7 @@ Default: `true`
 
 Used when:
 
-* `KafkaSourceProvider` is requested for [failOnDataLoss](KafkaSourceProvider.md#failOnDataLoss) configuration property
+* `KafkaSourceProvider` is requested for [failOnDataLoss](KafkaSourceProvider.md#failOnDataLoss)
 
 ## <span id="fetchOffset.numRetries"><span id="FETCH_OFFSET_NUM_RETRY"> fetchOffset.numRetries
 
@@ -59,6 +59,15 @@ Default: `(undefined)`
 Unless defined, `KafkaSource` requests [KafkaOffsetReader](KafkaSource.md#kafkaReader) for the [latest offsets](KafkaOffsetReader.md#fetchLatestOffsets).
 
 ## <span id="maxTriggerDelay"><span id="MAX_TRIGGER_DELAY"> maxTriggerDelay
+
+Default: `15m`
+
+[Ignored in batch queries](KafkaSourceProvider.md#validateBatchOptions)
+
+Used when:
+
+* `KafkaMicroBatchStream` is requested for [maxTriggerDelayMs](KafkaMicroBatchStream.md#maxTriggerDelayMs)
+* `KafkaSource` is requested for [maxTriggerDelayMs](KafkaSource.md#maxTriggerDelayMs)
 
 ## <span id="minOffsetsPerTrigger"><span id="MIN_OFFSET_PER_TRIGGER"> minOffsetsPerTrigger
 

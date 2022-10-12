@@ -34,6 +34,12 @@
 * <span id="startingOffsets"> [Starting offsets](KafkaOffsetRangeLimit.md) (defined using [startingOffsets](index.md#startingOffsets) option)
 * <span id="failOnDataLoss"> `failOnDataLoss` flag to create [KafkaSourceRDD](KafkaSourceRDD.md)s every trigger and to [report an IllegalStateException on data loss](#reportDataLoss).
 
+## <span id="maxTriggerDelayMs"> maxTriggerDelayMs
+
+`KafkaSource` reads the value of [maxTriggerDelay](options.md#maxtriggerdelay) option (in the [sourceOptions](#sourceOptions)) when [created](#creating-instance).
+
+`maxTriggerDelayMs` is used in [getDefaultReadLimit](#getDefaultReadLimit) (when [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) is defined).
+
 ## <span id="getBatch"> Loading Kafka Records for Streaming Micro-Batch
 
 ```scala

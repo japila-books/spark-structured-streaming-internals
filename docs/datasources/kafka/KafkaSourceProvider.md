@@ -337,9 +337,7 @@ validateBatchOptions(
 
 * `KafkaSourceProvider` is requested to [createSource](#createSource)
 
-## Configuration Properties
-
-### <span id="failOnDataLoss"> failOnDataLoss
+## <span id="failOnDataLoss"> failOnDataLoss
 
 ```scala
 failOnDataLoss(

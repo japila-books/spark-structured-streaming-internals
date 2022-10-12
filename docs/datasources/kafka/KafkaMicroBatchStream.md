@@ -69,6 +69,12 @@ If you want your streaming query to fail on such cases, set the source option "f
 
 * `KafkaMicroBatchStream` is requested to [planInputPartitions](#planInputPartitions) and [getOrCreateInitialPartitionOffsets](#getOrCreateInitialPartitionOffsets)
 
+## <span id="maxTriggerDelayMs"> maxTriggerDelayMs
+
+`KafkaMicroBatchStream` reads the value of [maxTriggerDelay](options.md#maxtriggerdelay) option (in the [options](#options)) when [created](#creating-instance).
+
+`maxTriggerDelayMs` is used in [getDefaultReadLimit](#getDefaultReadLimit) (when [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) is defined).
+
 ## Logging
 
 Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaMicroBatchStream` logger to see what happens inside.
