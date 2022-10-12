@@ -344,31 +344,32 @@ nav:
       - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Kafka:
       - datasources/kafka/index.md
-      - Kafka Options: datasources/kafka/options.md
-      - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
-      - KafkaMicroBatchStream: datasources/kafka/KafkaMicroBatchStream.md
-      - KafkaTable: datasources/kafka/KafkaTable.md
-      - KafkaSource: datasources/kafka/KafkaSource.md
-      - KafkaRelation: datasources/kafka/KafkaRelation.md
-      - KafkaSourceRDD: datasources/kafka/KafkaSourceRDD.md
       - CachedKafkaConsumer: datasources/kafka/CachedKafkaConsumer.md
-      - KafkaSourceOffset: datasources/kafka/KafkaSourceOffset.md
-      - KafkaOffsetReader: datasources/kafka/KafkaOffsetReader.md
       - ConsumerStrategy: datasources/kafka/ConsumerStrategy.md
-      - KafkaSink: datasources/kafka/KafkaSink.md
       - KafkaBatch: datasources/kafka/KafkaBatch.md
-      - KafkaScan: datasources/kafka/KafkaScan.md
-      - KafkaOffsetRangeLimit: datasources/kafka/KafkaOffsetRangeLimit.md
+      - KafkaContinuousReader:
+        - KafkaContinuousReader: datasources/kafka/KafkaContinuousReader.md
+        - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
+      - KafkaContinuousStream: datasources/kafka/KafkaContinuousStream.md
       - KafkaDataConsumer: datasources/kafka/KafkaDataConsumer.md
+      - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
       - KafkaMicroBatchReader:
         - KafkaMicroBatchReader: datasources/kafka/KafkaMicroBatchReader.md
         - KafkaOffsetRangeCalculator: datasources/kafka/KafkaOffsetRangeCalculator.md
         - KafkaMicroBatchInputPartition: datasources/kafka/KafkaMicroBatchInputPartition.md
         - KafkaMicroBatchInputPartitionReader: datasources/kafka/KafkaMicroBatchInputPartitionReader.md
         - KafkaSourceInitialOffsetWriter: datasources/kafka/KafkaSourceInitialOffsetWriter.md
-      - KafkaContinuousReader:
-        - KafkaContinuousReader: datasources/kafka/KafkaContinuousReader.md
-        - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
+      - KafkaMicroBatchStream: datasources/kafka/KafkaMicroBatchStream.md
+      - KafkaTable: datasources/kafka/KafkaTable.md
+      - KafkaSource: datasources/kafka/KafkaSource.md
+      - KafkaRelation: datasources/kafka/KafkaRelation.md
+      - KafkaSourceRDD: datasources/kafka/KafkaSourceRDD.md
+      - KafkaSourceOffset: datasources/kafka/KafkaSourceOffset.md
+      - KafkaOffsetReader: datasources/kafka/KafkaOffsetReader.md
+      - KafkaOffsetRangeLimit: datasources/kafka/KafkaOffsetRangeLimit.md
+      - KafkaSink: datasources/kafka/KafkaSink.md
+      - KafkaScan: datasources/kafka/KafkaScan.md
+      - Options: datasources/kafka/options.md
     - Memory:
       - datasources/memory/index.md
       - MemoryStream: datasources/memory/MemoryStream.md

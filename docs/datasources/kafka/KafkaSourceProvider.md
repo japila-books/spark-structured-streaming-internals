@@ -254,7 +254,11 @@ validateBatchOptions(
 
 `validateBatchOptions`...FIXME
 
-`validateBatchOptions` is used when `KafkaSourceProvider` is requested to [createSource](#createSource).
+---
+
+`validateBatchOptions` is used when:
+
+* `KafkaSourceProvider` is requested to [createSource](#createSource)
 
 ## Configuration Properties
 
@@ -265,7 +269,19 @@ failOnDataLoss(
   caseInsensitiveParams: Map[String, String]): Boolean
 ```
 
-`failOnDataLoss` looks up the `failOnDataLoss` configuration property (in the `caseInsensitiveParams`) or defaults to `true`.
+`failOnDataLoss` looks up the [failOnDataLoss](options.md#failOnDataLoss) configuration property (in the given `caseInsensitiveParams`) or defaults to `true`.
+
+---
+
+`failOnDataLoss` is used when:
+
+* `KafkaSourceProvider` is requested for the following:
+    * [Source](#createSource) (and creates a [KafkaSource](KafkaSource.md#failOnDataLoss))
+    * [BaseRelation](#createRelation) (and creates a [KafkaRelation](KafkaRelation.md#failOnDataLoss))
+* `KafkaScan` is requested for the following:
+    * [Batch](KafkaScan.md#toBatch) (and creates a [KafkaBatch](KafkaBatch.md#failOnDataLoss))
+    * [MicroBatchStream](KafkaScan.md#toMicroBatchStream) (and creates a [KafkaMicroBatchStream](KafkaMicroBatchStream.md#failOnDataLoss))
+    * [ContinuousStream](KafkaScan.md#toContinuousStream) (and creates a [KafkaContinuousStream](KafkaContinuousStream.md#failOnDataLoss))
 
 ## Utilities
 

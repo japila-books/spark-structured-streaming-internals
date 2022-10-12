@@ -2,7 +2,9 @@
 
 Options with `kafka.` prefix (e.g. [kafka.bootstrap.servers](#kafka.bootstrap.servers)) are considered configuration properties for the Kafka consumers used on the [driver](KafkaSourceProvider.md#kafkaParamsForDriver) and [executors](KafkaSourceProvider.md#kafkaParamsForExecutors).
 
-## <span id="assign"> assign
+Kafka options are defined as part of [KafkaSourceProvider](KafkaSourceProvider.md).
+
+## <span id="assign"><span id="ASSIGN"> assign
 
 [Topic subscription strategy](ConsumerStrategy.md#AssignStrategy) that accepts a JSON with topic names and partitions, e.g.
 
@@ -12,13 +14,25 @@ Options with `kafka.` prefix (e.g. [kafka.bootstrap.servers](#kafka.bootstrap.se
 
 Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
-## <span id="failOnDataLoss"> failOnDataLoss
+## <span id="endingOffsets"><span id="ENDING_OFFSETS_OPTION_KEY"> endingOffsets
+
+## <span id="endingTimestamp"><span id="ENDING_TIMESTAMP_OPTION_KEY"> endingTimestamp
+
+## <span id="endingOffsetsByTimestamp"><span id="ENDING_OFFSETS_BY_TIMESTAMP_OPTION_KEY"> endingOffsetsByTimestamp
+
+## <span id="failOnDataLoss"><span id="FAIL_ON_DATA_LOSS_OPTION_KEY"> failOnDataLoss
 
 Default: `true`
 
 Used when:
 
 * `KafkaSourceProvider` is requested for [failOnDataLoss](KafkaSourceProvider.md#failOnDataLoss) configuration property
+
+## <span id="fetchOffset.numRetries"><span id="FETCH_OFFSET_NUM_RETRY"> fetchOffset.numRetries
+
+## <span id="fetchOffset.retryIntervalMs"><span id="FETCH_OFFSET_RETRY_INTERVAL_MS"> fetchOffset.retryIntervalMs
+
+## <span id="groupIdPrefix"><span id="GROUP_ID_PREFIX"> groupIdPrefix
 
 ## <span id="includeHeaders"><span id="INCLUDE_HEADERS"> includeHeaders
 
@@ -30,13 +44,13 @@ Default: `false`
 
 Default: `(empty)`
 
-## <span id="kafkaConsumer.pollTimeoutMs"><span id="pollTimeoutMs"> kafkaConsumer.pollTimeoutMs
+## <span id="kafkaConsumer.pollTimeoutMs"><span id="pollTimeoutMs"><span id="CONSUMER_POLL_TIMEOUT"> kafkaConsumer.pollTimeoutMs
 
 The time (in milliseconds) spent waiting in `Consumer.poll` if data is not available in the buffer.
 
 Default: `spark.network.timeout` or `120s`
 
-## <span id="maxOffsetsPerTrigger"> maxOffsetsPerTrigger
+## <span id="maxOffsetsPerTrigger"><span id="MAX_OFFSET_PER_TRIGGER"> maxOffsetsPerTrigger
 
 Number of records to fetch per trigger (to limit the number of records to fetch).
 
@@ -44,7 +58,11 @@ Default: `(undefined)`
 
 Unless defined, `KafkaSource` requests [KafkaOffsetReader](KafkaSource.md#kafkaReader) for the [latest offsets](KafkaOffsetReader.md#fetchLatestOffsets).
 
-## <span id="minPartitions"> minPartitions
+## <span id="maxTriggerDelay"><span id="MAX_TRIGGER_DELAY"> maxTriggerDelay
+
+## <span id="minOffsetsPerTrigger"><span id="MIN_OFFSET_PER_TRIGGER"> minOffsetsPerTrigger
+
+## <span id="minPartitions"><span id="MIN_PARTITIONS_OPTION_KEY"> minPartitions
 
 Minimum number of partitions per executor (given Kafka partitions)
 
@@ -54,7 +72,7 @@ Must be undefined (default) or greater than `0`
 
 When undefined (default) or smaller than the number of `TopicPartitions` with records to consume from, [KafkaMicroBatchReader](KafkaMicroBatchReader.md) uses [KafkaOffsetRangeCalculator](KafkaMicroBatchReader.md#rangeCalculator) to [find the preferred executor](KafkaOffsetRangeCalculator.md#getLocation) for every `TopicPartition` (and the [available executors](KafkaMicroBatchReader.md#getSortedExecutorList)).
 
-## <span id="startingOffsets"> startingOffsets
+## <span id="startingOffsets"><span id="STARTING_OFFSETS_OPTION_KEY"> startingOffsets
 
 Starting offsets
 
@@ -81,7 +99,11 @@ Possible values:
       """{"topic1":{"0":5,"4":-1},"topic2":{"0":-2}}""")
     ```
 
-## <span id="subscribe"> subscribe
+## <span id="startingOffsetsByTimestamp"><span id="STARTING_OFFSETS_BY_TIMESTAMP_OPTION_KEY"> startingOffsetsByTimestamp
+
+## <span id="startingTimestamp"><span id="STARTING_TIMESTAMP_OPTION_KEY"> startingTimestamp
+
+## <span id="subscribe"><span id="SUBSCRIBE"> subscribe
 
 [Topic subscription strategy](ConsumerStrategy.md#SubscribeStrategy) that accepts topic names as a comma-separated string, e.g.
 
@@ -91,7 +113,7 @@ topic1,topic2,topic3
 
 Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
-## <span id="subscribepattern"> subscribepattern
+## <span id="subscribePattern"><span id="SUBSCRIBE_PATTERN"> subscribePattern
 
 [Topic subscription strategy](ConsumerStrategy.md#SubscribePatternStrategy) that uses Java's [java.util.regex.Pattern]({{ java.api }}/java/util/regex/Pattern.html) for the topic subscription regex pattern of topics to subscribe to, e.g.
 
@@ -108,10 +130,10 @@ topic\d
 
 Exactly one topic subscription strategy is allowed (that `KafkaSourceProvider` [validates](KafkaSourceProvider.md#validateGeneralOptions) before creating `KafkaSource`).
 
-## <span id="topic"> topic
+## <span id="topic"><span id="TOPIC_OPTION_KEY"> topic
 
-Optional topic name to use for writing a streaming query
+Optional topic name to use for writing the result of a streaming query to
 
 Default: `(empty)`
 
-Unless defined, Kafka data source uses the topic names as defined in the `topic` field in the incoming data.
+Unless defined, Kafka data source uses the topic names as defined in the `topic` field in the dataset
