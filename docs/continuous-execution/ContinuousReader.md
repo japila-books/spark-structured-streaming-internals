@@ -92,9 +92,6 @@ Used exclusively when `ContinuousExecution` is requested to [run the streaming q
 | [ContinuousMemoryStream](../datasources/memory/ContinuousMemoryStream.md)
 | [[ContinuousMemoryStream]]
 
-| [KafkaContinuousReader](../datasources/kafka/KafkaContinuousReader.md)
-| [[KafkaContinuousReader]]
-
 | [RateStreamContinuousReader](../datasources/rate/RateStreamContinuousReader.md)
 | [[RateStreamContinuousReader]]
 

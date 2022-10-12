@@ -63,7 +63,7 @@ Used when [FileStreamSinkLog](datasources/file/FileStreamSinkLog.md#defaultCompa
 
 ## <span id="minBatchesToRetain"><span id="MIN_BATCHES_TO_RETAIN"> minBatchesToRetain
 
-[spark.sql.streaming.minBatchesToRetain](configuration-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property
+[spark.sql.streaming.minBatchesToRetain](configuration-properties.md#spark.sql.streaming.minBatchesToRetain)
 
 Used when:
 
@@ -72,6 +72,12 @@ Used when:
 * [StreamExecution](StreamExecution.md#minLogEntriesToMaintain) is created
 
 * `StateStoreConf` is [created](stateful-stream-processing/StateStoreConf.md#minVersionsToRetain)
+
+## <span id="useDeprecatedKafkaOffsetFetching"><span id="USE_DEPRECATED_KAFKA_OFFSET_FETCHING"> useDeprecatedKafkaOffsetFetching
+
+[spark.sql.streaming.kafka.useDeprecatedOffsetFetching](configuration-properties.md#spark.sql.streaming.kafka.useDeprecatedOffsetFetching)
+
+## Review Me
 
 [[accessor-methods]]
 .SQLConf's Property Accessor Methods

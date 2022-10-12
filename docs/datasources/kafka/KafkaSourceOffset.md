@@ -4,8 +4,6 @@
 
 `KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
 
-* `KafkaContinuousReader` is requested to [setStartOffset](KafkaContinuousReader.md#setStartOffset), [deserializeOffset](KafkaContinuousReader.md#deserializeOffset), and [mergeOffsets](KafkaContinuousReader.md#mergeOffsets)
-
 * `KafkaMicroBatchReader` is requested to [getStartOffset](KafkaMicroBatchReader.md#getStartOffset), [getEndOffset](KafkaMicroBatchReader.md#getEndOffset), [deserializeOffset](KafkaMicroBatchReader.md#deserializeOffset), and [getOrCreateInitialPartitionOffsets](KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets)
 
 * `KafkaOffsetReader` is requested to [fetchSpecificOffsets](KafkaOffsetReader.md#fetchSpecificOffsets)
@@ -35,13 +33,11 @@ If however `offset` is `SerializedOffset`, `getPartitionOffsets` deserializes th
 
 `getPartitionOffsets` reports an `IllegalArgumentException` when `offset` is neither `KafkaSourceOffset` or `SerializedOffset`.
 
-```
+```text
 Invalid conversion from offset of [class] to KafkaSourceOffset
 ```
 
 `getPartitionOffsets` is used when:
-
-* `KafkaContinuousReader` is requested to [planInputPartitions](KafkaContinuousReader.md#planInputPartitions)
 
 * `KafkaSource` is requested to [generate a streaming DataFrame with records from Kafka for a streaming micro-batch](KafkaSource.md#getBatch)
 

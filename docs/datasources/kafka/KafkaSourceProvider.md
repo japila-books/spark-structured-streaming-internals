@@ -1,22 +1,99 @@
 # KafkaSourceProvider
 
-`KafkaSourceProvider` is a `DataSourceRegister` that registers **kafka** data source alias.
+`KafkaSourceProvider` is the entry point (_provider_) to the built-in Kafka support in Spark Structured Streaming (and Spark SQL).
 
-!!! tip "The Internals of Spark SQL"
-    Read up on [DataSourceRegister]({{ book.spark_sql }}/DataSourceRegister) in [The Internals of Spark SQL]({{ book.spark_sql }}) book.
+`KafkaSourceProvider` is a `DataSourceRegister` ([Spark SQL]({{ book.spark_sql }}/DataSourceRegister)) that registers itself under the [kafka](#shortName) alias.
 
 `KafkaSourceProvider` supports [micro-batch stream processing](../../micro-batch-execution/index.md) (through [MicroBatchStream](../../MicroBatchStream.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
 
-## Properties of Kafka Consumers on Executors
+## <span id="shortName"> Short Name (Alias)
 
-ConsumerConfig's Key | Value
----------------------|----------
- KEY_DESERIALIZER_CLASS_CONFIG | ByteArrayDeserializer
- VALUE_DESERIALIZER_CLASS_CONFIG | ByteArrayDeserializer
- AUTO_OFFSET_RESET_CONFIG | none
- GROUP_ID_CONFIG | [uniqueGroupId](#uniqueGroupId)-executor
- ENABLE_AUTO_COMMIT_CONFIG | false
- RECEIVE_BUFFER_CONFIG | 65536
+```scala
+shortName(): String
+```
+
+`shortName` is part of the [DataSourceRegister]({{ book.spark_sql }}/DataSourceRegister#shortName) abstraction.
+
+---
+
+`shortName` is `kafka`.
+
+## <span id="kafkaParamsForExecutors"> Kafka Consumer Properties on Executors
+
+```scala
+kafkaParamsForExecutors(
+  specifiedKafkaParams: Map[String, String],
+  uniqueGroupId: String): Map[String, Object]
+```
+
+`kafkaParamsForExecutors` sets the Kafka properties for the Kafka `Consumers` on executors.
+
+---
+
+`kafkaParamsForExecutors` creates a `KafkaConfigUpdater` for `executor` module (with the given `specifiedKafkaParams`).
+
+`kafkaParamsForExecutors` sets (_overrides_) the following Kafka properties explicitly (in the `KafkaConfigUpdater`).
+
+ConsumerConfig's Key | Value | Note
+---------------------|-------|------
+ `key.deserializer` | `ByteArrayDeserializer` |
+ `value.deserializer` | `ByteArrayDeserializer` |
+ `auto.offset.reset` | `none` |
+ `group.id` | `[uniqueGroupId]-executor` | `setIfUnset`
+ `enable.auto.commit` | `false` |
+ `receive.buffer.bytes` | `65536` | `setIfUnset`
+
+In the end, `kafkaParamsForExecutors` requests the `KafkaConfigUpdater` to `build` a Kafka configuration.
+
+---
+
+`kafkaParamsForExecutors` is used when:
+
+* `KafkaSourceProvider` is requested to [createSource](#createSource) (for a [KafkaSource](KafkaSource.md))
+* `KafkaScan` is requested to [toMicroBatchStream](KafkaScan.md#toMicroBatchStream) (to create a [KafkaMicroBatchStream](KafkaMicroBatchStream.md)), and [toContinuousStream](KafkaScan.md#toContinuousStream) (for a [KafkaContinuousStream](KafkaContinuousStream.md))
+* `KafkaBatch` is requested to [planInputPartitions](KafkaBatch.md#planInputPartitions) (for [KafkaBatchInputPartition](KafkaBatchInputPartition.md)s)
+* `KafkaRelation` is requested to [buildScan](KafkaRelation.md#buildScan) (for a [KafkaSourceRDD](KafkaSourceRDD.md))
+
+## <span id="batchUniqueGroupId"> Unique Group ID for Batch Queries
+
+```scala
+batchUniqueGroupId(
+  params: CaseInsensitiveMap[String]): String
+```
+
+`batchUniqueGroupId` takes [GROUP_ID_PREFIX](options.md#GROUP_ID_PREFIX), if specified, or defaults to `spark-kafka-relation` prefix to build the following group ID:
+
+```text
+[groupIdPrefix]-[randomUUID]
+```
+
+---
+
+`batchUniqueGroupId` is used when:
+
+* `KafkaBatch` is requested to [planInputPartitions](KafkaBatch.md#planInputPartitions)
+* `KafkaRelation` is requested to [build a Scan](KafkaRelation.md#buildScan)
+
+## <span id="streamingUniqueGroupId"> Unique Group ID for Streaming Queries
+
+```scala
+streamingUniqueGroupId(
+  params: CaseInsensitiveMap[String],
+  metadataPath: String): String
+```
+
+`streamingUniqueGroupId` takes [GROUP_ID_PREFIX](options.md#GROUP_ID_PREFIX), if specified, or defaults to `spark-kafka-source` prefix to build the following group ID:
+
+```text
+[groupIdPrefix]-[randomUUID]-[metadataPath.hashCode]
+```
+
+---
+
+`streamingUniqueGroupId` is used when:
+
+* `KafkaSourceProvider` is requested to [create a Source](#createSource)
+* `KafkaScan` is requested to [toMicroBatchStream](KafkaScan.md#toMicroBatchStream), [toContinuousStream](KafkaScan.md#toContinuousStream)
 
 ## Required Options
 
@@ -301,27 +378,6 @@ kafkaParamsForDriver(
 * `KafkaSourceProvider` is requested for a [streaming source](#createSource)
 * `KafkaScan` is requested for a [MicroBatchStream](KafkaScan.md#toMicroBatchStream) and [ContinuousStream](KafkaScan.md#toContinuousStream)
 
-### <span id="kafkaParamsForExecutors"> kafkaParamsForExecutors
-
-```scala
-kafkaParamsForExecutors(
-  specifiedKafkaParams: Map[String, String],
-  uniqueGroupId: String): Map[String, Object]
-```
-
-`kafkaParamsForExecutors` sets the Kafka properties for executors.
-
-While setting the properties, `kafkaParamsForExecutors` prints out the following DEBUG message to the logs:
-
-```text
-executor: Set [key] to [value], earlier value: [value]
-```
-
-`kafkaParamsForExecutors` is used when:
-
-* `KafkaSourceProvider` is requested to [createSource](#createSource) (for a [KafkaSource](KafkaSource.md)), [createMicroBatchReader](#createMicroBatchReader) (for a [KafkaMicroBatchReader](KafkaMicroBatchReader.md)), and [createContinuousReader](#createContinuousReader) (for a [KafkaContinuousReader](KafkaContinuousReader.md))
-* `KafkaRelation` is requested to [buildScan](KafkaRelation.md#buildScan) (for a `KafkaSourceRDD`)
-
 ### <span id="kafkaParamsForProducer"> Kafka Producer Parameters
 
 ```scala
@@ -329,12 +385,49 @@ kafkaParamsForProducer(
   params: CaseInsensitiveMap[String]): ju.Map[String, Object]
 ```
 
-`kafkaParamsForProducer`...FIXME
+`kafkaParamsForProducer` [converts](#convertToSpecifiedParams) the given `params`.
+
+`kafkaParamsForProducer` creates a `KafkaConfigUpdater` for `executor` module (with the converted params) and defines the two serializer-specific options to use `ByteArraySerializer`:
+
+* `key.serializer`
+* `value.serializer`
+
+In the end, `kafkaParamsForProducer` requests the `KafkaConfigUpdater` to `build` a Kafka configuration (`Map[String, Object]`).
+
+---
+
+`kafkaParamsForProducer` ensures that neither `kafka.key.serializer` nor `kafka.value.serializer` are specified or throws an `IllegalArgumentException`.
+
+```text
+Kafka option 'key.serializer' is not supported as keys are serialized with ByteArraySerializer.
+```
+
+```text
+Kafka option 'value.serializer' is not supported as values are serialized with ByteArraySerializer.
+```
+
+---
 
 `kafkaParamsForProducer` is used when:
 
 * `KafkaSourceProvider` is requested for a [streaming sink](#createSink) or [relation](#createRelation)
 * `KafkaTable` is requested for a [WriteBuilder](KafkaTable.md#newWriteBuilder)
+
+## <span id="convertToSpecifiedParams"> convertToSpecifiedParams
+
+```scala
+convertToSpecifiedParams(
+  parameters: Map[String, String]): Map[String, String]
+```
+
+`convertToSpecifiedParams` finds `kafka.`-prefixed keys in the given `parameters` to drop the `kafka.` prefix and create a new parameters with a Kafka-specific configuration.
+
+---
+
+`convertToSpecifiedParams` is used when:
+
+* `KafkaSourceProvider` is requested to [createSource](#createSource), [createRelation](#createRelation), [kafkaParamsForProducer](#kafkaParamsForProducer)
+* `KafkaScan` is requested to [toBatch](KafkaScan.md#toBatch), [toMicroBatchStream](KafkaScan.md#toMicroBatchStream), [toContinuousStream](KafkaScan.md#toContinuousStream)
 
 ## Logging
 

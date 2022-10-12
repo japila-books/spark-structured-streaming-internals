@@ -31,8 +31,6 @@ NOTE: A JSON-formatted text is of the following format `{"topicName":{"partition
 
 `KafkaOffsetRangeLimit` is used when:
 
-* [KafkaContinuousReader](KafkaContinuousReader.md) is created (with the [initial offsets](KafkaContinuousReader.md#initialOffsets))
-
 * [KafkaMicroBatchReader](KafkaMicroBatchReader.md) is created (with the [starting offsets](KafkaMicroBatchReader.md#startingOffsets))
 
 * [KafkaRelation](KafkaRelation.md) is created (with the [starting](KafkaRelation.md#startingOffsets) and [ending](KafkaRelation.md#endingOffsets) offsets)

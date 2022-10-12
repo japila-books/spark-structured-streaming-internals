@@ -1,5 +1,119 @@
 # KafkaOffsetReader
 
+`KafkaOffsetReader` is an [abstraction](#contract) of [Kafka offset readers](#implementations).
+
+## Contract (Subset)
+
+### <span id="fetchEarliestOffsets"> fetchEarliestOffsets
+
+```scala
+fetchEarliestOffsets(): Map[TopicPartition, Long]
+fetchEarliestOffsets(
+  newPartitions: Seq[TopicPartition]): Map[TopicPartition, Long]
+```
+
+Used when:
+
+* `KafkaContinuousStream` is requested to [initialOffset](KafkaContinuousStream.md#initialOffset), [planInputPartitions](KafkaContinuousStream.md#planInputPartitions)
+* `KafkaMicroBatchStream` is requested to [getOrCreateInitialPartitionOffsets](KafkaMicroBatchStream.md#getOrCreateInitialPartitionOffsets), [rateLimit](KafkaMicroBatchStream.md#rateLimit)
+* `KafkaSource` is requested for [initialPartitionOffsets](KafkaSource.md#initialPartitionOffsets), [rateLimit](KafkaSource.md#rateLimit)
+
+### <span id="fetchGlobalTimestampBasedOffsets"> fetchGlobalTimestampBasedOffsets
+
+```scala
+fetchGlobalTimestampBasedOffsets(
+  timestamp: Long,
+  isStartingOffsets: Boolean,
+  strategyOnNoMatchingStartingOffset: StrategyOnNoMatchStartingOffset.Value): KafkaSourceOffset
+```
+
+Used when:
+
+* `KafkaContinuousStream` is requested to [initialOffset](KafkaContinuousStream.md#initialOffset)
+* `KafkaMicroBatchStream` is requested to [getOrCreateInitialPartitionOffsets](KafkaMicroBatchStream.md#getOrCreateInitialPartitionOffsets)
+* `KafkaSource` is requested for [initialPartitionOffsets](KafkaSource.md#initialPartitionOffsets)
+
+### <span id="fetchLatestOffsets"> fetchLatestOffsets
+
+```scala
+fetchLatestOffsets(
+  knownOffsets: Option[PartitionOffsetMap]): PartitionOffsetMap // (1)!
+```
+
+1. `type PartitionOffsetMap = Map[TopicPartition, Long]`
+
+Used when:
+
+* `KafkaContinuousStream` is requested to [initialOffset](KafkaContinuousStream.md#initialOffset), [needsReconfiguration](KafkaContinuousStream.md#needsReconfiguration)
+* `KafkaMicroBatchStream` is requested to [latestOffset](KafkaMicroBatchStream.md#latestOffset), [getOrCreateInitialPartitionOffsets](KafkaMicroBatchStream.md#getOrCreateInitialPartitionOffsets), [prepareForTriggerAvailableNow](KafkaMicroBatchStream.md#prepareForTriggerAvailableNow)
+* `KafkaSource` is requested for [initialPartitionOffsets](KafkaSource.md#initialPartitionOffsets), [latestOffset](KafkaSource.md#latestOffset), [prepareForTriggerAvailableNow](KafkaSource.md#prepareForTriggerAvailableNow)
+
+### <span id="fetchPartitionOffsets"> fetchPartitionOffsets
+
+```scala
+fetchPartitionOffsets(
+  offsetRangeLimit: KafkaOffsetRangeLimit,
+  isStartingOffsets: Boolean): Map[TopicPartition, Long]
+```
+
+Used when:
+
+* _never used_?!
+
+## Implementations
+
+* [KafkaOffsetReaderAdmin](KafkaOffsetReaderAdmin.md)
+* [KafkaOffsetReaderConsumer](KafkaOffsetReaderConsumer.md)
+
+## <span id="build"> Creating KafkaOffsetReader
+
+```scala
+build(
+  consumerStrategy: ConsumerStrategy,
+  driverKafkaParams: ju.Map[String, Object],
+  readerOptions: CaseInsensitiveMap[String],
+  driverGroupIdPrefix: String): KafkaOffsetReader
+```
+
+`build` branches off based on [spark.sql.streaming.kafka.useDeprecatedOffsetFetching](../../configuration-properties.md#spark.sql.streaming.kafka.useDeprecatedOffsetFetching) configuration property.
+
+With `useDeprecatedKafkaOffsetFetching` enabled, `build` prints out the following DEBUG message to the logs and creates a [KafkaOffsetReaderConsumer](KafkaOffsetReaderConsumer.md).
+
+```text
+Creating old and deprecated Consumer based offset reader
+```
+
+Otherwise, `build` prints out the following DEBUG message to the logs and creates a [KafkaOffsetReaderAdmin](KafkaOffsetReaderAdmin.md).
+
+```text
+Creating new Admin based offset reader
+```
+
+---
+
+`build` is used when:
+
+* `KafkaBatch` is requested to [planInputPartitions](KafkaBatch.md#planInputPartitions)
+* `KafkaRelation` is requested to [buildScan](KafkaRelation.md#buildScan)
+* `KafkaSourceProvider` is requested to [create a Source](KafkaSourceProvider.md#createSource)
+* `KafkaScan` is requested to create a [MicroBatchStream](KafkaScan.md#toMicroBatchStream) or a [ContinuousStream](KafkaScan.md#toContinuousStream)
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaOffsetReader` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=ALL
+```
+
+Refer to [Logging](../../spark-logging.md).
+
+<!---
+
+## Review Me
+
 `KafkaOffsetReader` relies on the [ConsumerStrategy](#consumerStrategy) to <<consumer, create a Kafka Consumer>>.
 
 `KafkaOffsetReader` <<consumer, creates a Kafka Consumer>> with *group.id* (`ConsumerConfig.GROUP_ID_CONFIG`) configuration explicitly set to <<nextGroupId, nextGroupId>> (i.e. the given <<driverGroupIdPrefix, driverGroupIdPrefix>> followed by <<nextId, nextId>>).
@@ -32,31 +146,6 @@ Default: `1000`
 [[kafkaSchema]]
 `KafkaOffsetReader` defines the [predefined fixed schema](index.md#schema).
 
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaOffsetReader` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
-
-=== [[creating-instance]] Creating KafkaOffsetReader Instance
-
-`KafkaOffsetReader` takes the following to be created:
-
-* [[consumerStrategy]] [ConsumerStrategy](ConsumerStrategy.md)
-* [[driverKafkaParams]] Kafka parameters (as name-value pairs that are used exclusively to <<createConsumer, create a Kafka consumer>>
-* [[readerOptions]] Options (as name-value pairs)
-* [[driverGroupIdPrefix]] Prefix of the group ID
-
-`KafkaOffsetReader` initializes the <<internal-properties, internal properties>>.
-
 === [[nextGroupId]] `nextGroupId` Internal Method
 
 [source, scala]
@@ -70,63 +159,6 @@ In the end, `nextGroupId` increments the <<nextId, nextId>> and returns the <<gr
 
 NOTE: `nextGroupId` is used exclusively when `KafkaOffsetReader` is requested for a <<consumer, Kafka Consumer>>.
 
-=== [[resetConsumer]] `resetConsumer` Internal Method
-
-[source, scala]
-----
-resetConsumer(): Unit
-----
-
-`resetConsumer`...FIXME
-
-NOTE: `resetConsumer` is used when...FIXME
-
-=== [[fetchTopicPartitions]] `fetchTopicPartitions` Method
-
-[source, scala]
-----
-fetchTopicPartitions(): Set[TopicPartition]
-----
-
-CAUTION: FIXME
-
-`fetchTopicPartitions` is used when `KafkaRelation` is requested for [getPartitionOffsets](KafkaRelation.md#getPartitionOffsets).
-
-=== [[fetchEarliestOffsets]] Fetching Earliest Offsets -- `fetchEarliestOffsets` Method
-
-[source, scala]
-----
-fetchEarliestOffsets(): Map[TopicPartition, Long]
-fetchEarliestOffsets(newPartitions: Seq[TopicPartition]): Map[TopicPartition, Long]
-----
-
-CAUTION: FIXME
-
-NOTE: `fetchEarliestOffsets` is used when `KafkaSource` [rateLimit](KafkaSource.md#rateLimit) and [generates a DataFrame for a batch](KafkaSource.md#getBatch) (when new partitions have been assigned).
-
-=== [[fetchLatestOffsets]] Fetching Latest Offsets -- `fetchLatestOffsets` Method
-
-[source, scala]
-----
-fetchLatestOffsets(): Map[TopicPartition, Long]
-----
-
-CAUTION: FIXME
-
-NOTE: `fetchLatestOffsets` is used when `KafkaSource` [gets offsets](KafkaSource.md#getOffset) or `initialPartitionOffsets` is [initialized](KafkaSource.md#initialPartitionOffsets).
-
-=== [[withRetriesWithoutInterrupt]] `withRetriesWithoutInterrupt` Internal Method
-
-[source, scala]
-----
-withRetriesWithoutInterrupt(
-  body: => Map[TopicPartition, Long]): Map[TopicPartition, Long]
-----
-
-`withRetriesWithoutInterrupt`...FIXME
-
-NOTE: `withRetriesWithoutInterrupt` is used when...FIXME
-
 === [[fetchSpecificOffsets]] Fetching Offsets for Selected TopicPartitions -- `fetchSpecificOffsets` Method
 
 [source, scala]
@@ -136,8 +168,7 @@ fetchSpecificOffsets(
   reportDataLoss: String => Unit): KafkaSourceOffset
 ----
 
-.KafkaOffsetReader's fetchSpecificOffsets
-image::images/KafkaOffsetReader-fetchSpecificOffsets.png[align="center"]
+![KafkaOffsetReader's fetchSpecificOffsets](../../images/KafkaOffsetReader-fetchSpecificOffsets.png)
 
 `fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> to `poll(0)`.
 
@@ -147,8 +178,8 @@ image::images/KafkaOffsetReader-fetchSpecificOffsets.png[align="center"]
 
 You should see the following DEBUG message in the logs:
 
-```
-DEBUG KafkaOffsetReader: Partitions assigned to consumer: [partitions]. Seeking to [partitionOffsets]
+```text
+Partitions assigned to consumer: [partitions]. Seeking to [partitionOffsets]
 ```
 
 For every partition offset in the input `partitionOffsets`, `fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> to:
@@ -200,49 +231,11 @@ close(): Unit
 
 `close` is used when:
 
-* [KafkaContinuousReader](KafkaContinuousReader.md#stop), [KafkaMicroBatchReader](KafkaMicroBatchReader.md#stop), and [KafkaSource](KafkaSource.md#stop) are requested to stop a streaming reader or source
+* [KafkaMicroBatchReader](KafkaMicroBatchReader.md#stop), and [KafkaSource](KafkaSource.md#stop) are requested to stop a streaming reader or source
 
 * `KafkaRelation` is requested to [build a distributed data scan with column pruning](KafkaRelation.md#buildScan)
 
-=== [[runUninterruptibly]] `runUninterruptibly` Internal Method
-
-[source, scala]
-----
-runUninterruptibly[T](body: => T): T
-----
-
-`runUninterruptibly`...FIXME
-
-NOTE: `runUninterruptibly` is used when...FIXME
-
-=== [[stopConsumer]] `stopConsumer` Internal Method
-
-[source, scala]
-----
-stopConsumer(): Unit
-----
-
-`stopConsumer`...FIXME
-
-NOTE: `stopConsumer` is used when...FIXME
-
-=== [[toString]] Textual Representation -- `toString` Method
-
-[source, scala]
-----
-toString: String
-----
-
-NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
-
-`toString`...FIXME
-
 === [[internal-properties]] Internal Properties
-
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
 
 | _consumer
 a| [[_consumer]] Kafka's https://kafka.apache.org/21/javadoc/org/apache/kafka/clients/consumer/Consumer.html[Consumer] (`Consumer[Array[Byte], Array[Byte]]`)
@@ -261,21 +254,7 @@ Used when `KafkaOffsetReader`:
 | execContext
 a| [[execContext]] https://www.scala-lang.org/api/2.12.8/scala/concurrent/ExecutionContextExecutorService.html[scala.concurrent.ExecutionContextExecutorService]
 
-| groupId
-a| [[groupId]]
-
 | kafkaReaderThread
 a| [[kafkaReaderThread]] https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html[java.util.concurrent.ExecutorService]
 
-| maxOffsetFetchAttempts
-a| [[maxOffsetFetchAttempts]]
-
-| nextId
-a| [[nextId]]
-
-Initially `0`
-
-| offsetFetchAttemptIntervalMs
-a| [[offsetFetchAttemptIntervalMs]]
-
-|===
+-->

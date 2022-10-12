@@ -1,0 +1,3 @@
+# KafkaBatchInputPartition
+
+`KafkaBatchInputPartition` is...FIXME

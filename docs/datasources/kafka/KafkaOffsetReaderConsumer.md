@@ -1,0 +1,3 @@
+# KafkaOffsetReaderConsumer
+
+`KafkaOffsetReaderConsumer` is...FIXME

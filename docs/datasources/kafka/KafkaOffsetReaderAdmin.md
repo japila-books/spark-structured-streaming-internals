@@ -1,0 +1,3 @@
+# KafkaOffsetReaderAdmin
+
+`KafkaOffsetReaderAdmin` is...FIXME

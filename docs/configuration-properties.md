@@ -5,6 +5,20 @@
 ??? tip "The Internals of Spark SQL"
     Learn more about [Configuration Properties]({{ book.spark_sql }}/configuration-properties/) in [The Internals of Spark SQL]({{ book.spark_sql }}).
 
+## <span id="spark.sql.streaming.kafka.useDeprecatedOffsetFetching"><span id="USE_DEPRECATED_KAFKA_OFFSET_FETCHING"> kafka.useDeprecatedOffsetFetching
+
+**spark.sql.streaming.kafka.useDeprecatedOffsetFetching**
+
+**(internal)** When enabled (`true`), the deprecated Kafka `Consumer`-based offset fetching is used (using [KafkaOffsetReaderConsumer](datasources/kafka/KafkaOffsetReaderConsumer.md)) which could cause infinite wait in Spark queries (leaving query restart as the only workaround). Otherwise, [KafkaOffsetReaderAdmin](datasources/kafka/KafkaOffsetReaderAdmin.md) is used.
+
+Default: `true`
+
+Use [SQLConf.useDeprecatedKafkaOffsetFetching](SQLConf.md#useDeprecatedKafkaOffsetFetching) to access the current value.
+
+Used when:
+
+* `KafkaOffsetReader` utility is used to [create a KafkaOffsetReader](datasources/kafka/KafkaOffsetReader.md#build)
+
 ## <span id="spark.sql.streaming.aggregation.stateFormatVersion"><span id="STREAMING_AGGREGATION_STATE_FORMAT_VERSION"> aggregation.stateFormatVersion
 
 **spark.sql.streaming.aggregation.stateFormatVersion**
