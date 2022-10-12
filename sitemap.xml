@@ -486,12 +486,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaContinuousInputPartition/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaBatchInputPartition/</loc>
          <lastmod>2022-10-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaContinuousReader/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaContinuousInputPartition/</loc>
          <lastmod>2022-10-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -537,6 +537,16 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaOffsetReader/</loc>
+         <lastmod>2022-10-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaOffsetReaderAdmin/</loc>
+         <lastmod>2022-10-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaOffsetReaderConsumer/</loc>
          <lastmod>2022-10-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
