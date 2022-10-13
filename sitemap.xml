@@ -11,6 +11,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/AvailableNowDataStreamWrapper/</loc>
+         <lastmod>2022-10-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/CheckpointFileManager/</loc>
          <lastmod>2022-10-13</lastmod>
          <changefreq>daily</changefreq>
