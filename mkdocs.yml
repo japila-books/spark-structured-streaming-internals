@@ -123,6 +123,7 @@ nav:
     - DataSource: DataSource.md
     - MicroBatchStream: MicroBatchStream.md
     - ContinuousStream: ContinuousStream.md
+    - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - Query Execution:
       - StreamExecution: StreamExecution.md

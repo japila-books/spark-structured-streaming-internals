@@ -362,9 +362,8 @@ In the end, `reportTimeTaken` prints out the following DEBUG message to the logs
 
 1. `MicroBatchExecution`
     1. [triggerExecution](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream-triggerExecution)
+    1. [latestOffset](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-latestOffset)
     1. [getOffset](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-getOffset)
-    1. [setOffsetRange](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-setOffsetRange)
-    1. [getEndOffset](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-getEndOffset)
     1. [walCommit](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch-walCommit)
     1. [getBatch](../micro-batch-execution/MicroBatchExecution.md#runBatch-getBatch)
     1. [queryPlanning](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning)
@@ -451,52 +450,58 @@ lastProgress: StreamingQueryProgress
 
 The last [StreamingQueryProgress](StreamingQueryProgress.md)
 
-## currentDurationsMs
+## <span id="currentDurationsMs"> currentDurationsMs
 
-[scala.collection.mutable.HashMap]({{ scala.api }}/index.html#scala.collection.mutable.HashMap) of action names (aka _triggerDetailKey_) and their cumulative times (in milliseconds).
+```scala
+currentDurationsMs: HashMap[String, Long]
+```
+
+`ProgressReporter` creates a `currentDurationsMs` registry (Scala's [collection.mutable.HashMap]({{ scala.api }}/index.html#scala.collection.mutable.HashMap)) with action names (aka _triggerDetailKey_) and their cumulative execution times (in millis).
 
 ![currentDurationsMs](../images/ProgressReporter-currentDurationsMs.png)
 
-Starts empty when `ProgressReporter` [sets the state for a new batch](#startTrigger) with new entries added or updated when [reporting execution time](#reportTimeTaken) (of an action).
+`currentDurationsMs` is initialized empty when `ProgressReporter` [sets the state for a new batch](#startTrigger) with new entries added or updated when [reporting execution time](#reportTimeTaken) (of an execution phase).
 
-`currentDurationsMs` is available as `durationMs` of a streaming query.
+`currentDurationsMs` is available as [durationMs](StreamingQueryProgress.md#durationMs) of a [StreamingQueryProgress](StreamingQueryProgress.md) of a [StreamingQuery](../StreamingQuery.md).
 
 ```text
-scala> :type q
-org.apache.spark.sql.streaming.StreamingQuery
+assert(stream.isInstanceOf[org.apache.spark.sql.streaming.StreamingQuery])
+assert(stream.lastProgress.isInstanceOf[org.apache.spark.sql.streaming.StreamingQueryProgress])
 
-scala> query.lastProgress.durationMs
-res1: java.util.Map[String,Long] = {triggerExecution=60, queryPlanning=1, getBatch=5, getOffset=0, addBatch=30, walCommit=23}
+scala> println(stream.lastProgress.durationMs)
+{triggerExecution=122, queryPlanning=3, getBatch=1, latestOffset=0, addBatch=36, walCommit=42}
 
-scala> println(q.lastProgress)
+scala> println(stream.lastProgress)
 {
-  "id" : "03fc78fc-fe19-408c-a1ae-812d0e28fcee",
-  "runId" : "8c247071-afba-40e5-aad2-0e6f45f22488",
+  "id" : "4976adb3-e8a6-4c4d-b895-912808013992",
+  "runId" : "9cdd9f2c-15bc-41c3-899b-42bcc1e994de",
   "name" : null,
-  "timestamp" : "2017-08-14T20:30:00.004Z",
-  "batchId" : 1,
-  "numInputRows" : 432,
-  "inputRowsPerSecond" : 0.9993568953312452,
-  "processedRowsPerSecond" : 1380.1916932907347,
+  "timestamp" : "2022-10-13T10:03:30.000Z",
+  "batchId" : 10,
+  "numInputRows" : 15,
+  "inputRowsPerSecond" : 1.000333444481494,
+  "processedRowsPerSecond" : 122.95081967213115,
   "durationMs" : {
-    "addBatch" : 237,
-    "getBatch" : 26,
-    "getOffset" : 0,
-    "queryPlanning" : 1,
-    "triggerExecution" : 313,
-    "walCommit" : 45
+    "addBatch" : 37,
+    "getBatch" : 0,
+    "latestOffset" : 0,
+    "queryPlanning" : 4,
+    "triggerExecution" : 122,
+    "walCommit" : 42
   },
   "stateOperators" : [ ],
   "sources" : [ {
-    "description" : "RateSource[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=8]",
-    "startOffset" : 0,
-    "endOffset" : 432,
-    "numInputRows" : 432,
-    "inputRowsPerSecond" : 0.9993568953312452,
-    "processedRowsPerSecond" : 1380.1916932907347
+    "description" : "RateStreamV2[rowsPerSecond=1, rampUpTimeSeconds=0, numPartitions=default",
+    "startOffset" : 127,
+    "endOffset" : 142,
+    "latestOffset" : 142,
+    "numInputRows" : 15,
+    "inputRowsPerSecond" : 1.000333444481494,
+    "processedRowsPerSecond" : 122.95081967213115
   } ],
   "sink" : {
-    "description" : "ConsoleSink[numRows=20, truncate=true]"
+    "description" : "org.apache.spark.sql.execution.streaming.ConsoleTable$@396a0033",
+    "numOutputRows" : 15
   }
 }
 ```
@@ -537,8 +542,4 @@ Default: `-1L`
 
 ## Logging
 
-Configure logging of the [concrete stream execution progress reporters](#implementations) to see what happens inside:
-
-* [ContinuousExecution](../continuous-execution/ContinuousExecution.md#logging)
-
-* [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#logging)
+`ProgressReporter` is an abstract class and logging is configured using the logger of the [implementations](#implementations).

@@ -22,6 +22,17 @@ Once [created](#creating-instance), `MicroBatchExecution` is requested to [start
 
 * `StreamingQueryManager` is requested to [create a streaming query](../StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start)) for all [trigger](#trigger)s but [ContinuousTrigger](../Trigger.md#ContinuousTrigger)
 
+## Execution Phases
+
+`MicroBatchExecution` splits execution of a single micro-batch into the following execution phases (and [tracks their duration](../monitoring/ProgressReporter.md#reportTimeTaken)):
+
+1. [triggerExecution](#runActivatedStream-triggerExecution)
+1. [latestOffset](#constructNextBatch-latestOffset) and [getOffset](#constructNextBatch-getOffset)
+1. [walCommit](#constructNextBatch-walCommit)
+1. [getBatch](#runBatch-getBatch)
+1. [queryPlanning](#runBatch-queryPlanning)
+1. [addBatch](#runBatch-addBatch)
+
 ## <span id="startTrigger"> Initializing Query Progress for New Trigger
 
 ```scala
@@ -284,7 +295,9 @@ constructNextBatch(
 
 `constructNextBatch` performs the following steps:
 
-1. [Requesting the latest offsets from every streaming source](#constructNextBatch-latestOffsets) (of the streaming query)
+1. [Requesting the next and recent offsets from the data streams](#constructNextBatch-nextOffsets-recentOffsets)
+
+1. [Requesting the latest offsets from the data streams](#constructNextBatch-latestOffsets)
 
 1. [Updating availableOffsets StreamProgress with the latest available offsets](#constructNextBatch-availableOffsets)
 
@@ -292,14 +305,57 @@ constructNextBatch(
 
 1. [Checking whether to construct the next micro-batch or not (skip it)](#constructNextBatch-shouldConstructNextBatch)
 
-In the end, `constructNextBatch` returns [whether the next streaming micro-batch was constructed or skipped](#constructNextBatch-shouldConstructNextBatch).
+In the end, `constructNextBatch` returns [whether the next streaming micro-batch was constructed or should be skipped](#constructNextBatch-shouldConstructNextBatch).
 
-### <span id="constructNextBatch-latestOffsets"> Requesting Latest Offsets from Streaming Sources (getOffset, setOffsetRange and getEndOffset Phases)
+### <span id="constructNextBatch-nextOffsets-recentOffsets"><span id="constructNextBatch-latestOffset"> Requesting Next and Recent Offsets from Data Streams
 
-`constructNextBatch` firstly requests every [streaming source](../StreamExecution.md#uniqueSources) for the latest offsets.
+`constructNextBatch` uses the [uniqueSources](../StreamExecution.md#uniqueSources) registry to request every [SparkDataStream](../SparkDataStream.md) for the next and recent offsets (based on the type of a `SparkDataStream`).
+
+For all types of data streams, `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+
+```text
+Getting offsets from [source]
+```
+
+#### <span id="constructNextBatch-nextOffsets-recentOffsets-AvailableNowDataStreamWrapper"> AvailableNowDataStreamWrappers
+
+For [AvailableNowDataStreamWrapper](../AvailableNowDataStreamWrapper.md)s, `constructNextBatch` does the following in **latestOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken):
+
+1. [Gets the start offset](#getStartOffset) of the [wrapped SparkDataStream](../AvailableNowDataStreamWrapper.md#delegate) (of this `AvailableNowDataStreamWrapper`)
+1. Requests the `AvailableNowDataStreamWrapper` for the [latest offset per ReadLimit](../AvailableNowDataStreamWrapper.md#latestOffset) (for the start offset and the [ReadLimit](../ReadLimit.md))
+1. Requests the `AvailableNowDataStreamWrapper` for the [latest offset available](../AvailableNowDataStreamWrapper.md#reportLatestOffset)
+
+In the end (of this phase), `constructNextBatch` gives the following pair (of pairs):
+
+* The [wrapped SparkDataStream](../AvailableNowDataStreamWrapper.md#delegate) (of this `AvailableNowDataStreamWrapper`) with the [latest offset](../AvailableNowDataStreamWrapper.md#latestOffset)
+* The [wrapped SparkDataStream](../AvailableNowDataStreamWrapper.md#delegate) (of this `AvailableNowDataStreamWrapper`) with the [latest offset reported](../AvailableNowDataStreamWrapper.md#reportLatestOffset)
+
+#### <span id="constructNextBatch-nextOffsets-recentOffsets-SupportsAdmissionControl"> SupportsAdmissionControls
+
+For [SupportsAdmissionControl](../SupportsAdmissionControl.md)s, `constructNextBatch` does the following in **latestOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken):
+
+1. [Gets the start offset](#getStartOffset) of the `SupportsAdmissionControl`
+1. Requests the `SupportsAdmissionControl` for the [latest offset per ReadLimit](../SupportsAdmissionControl.md#latestOffset) (for the start offset and the [ReadLimit](../ReadLimit.md))
+1. Requests the `SupportsAdmissionControl` for the [latest offset available](../SupportsAdmissionControl.md#reportLatestOffset)
+
+In the end (of this phase), `constructNextBatch` gives the following pair (of pairs):
+
+* The `SupportsAdmissionControl` with the [latest offset](../SupportsAdmissionControl.md#latestOffset)
+* The `SupportsAdmissionControl` with the [latest offset reported](../SupportsAdmissionControl.md#reportLatestOffset)
 
 !!! note
-    `constructNextBatch` checks out the latest offset in every streaming data source sequentially, i.e. one data source at a time.
+    The difference of how `constructNextBatch` handles [AvailableNowDataStreamWrappers](#constructNextBatch-nextOffsets-recentOffsets-AvailableNowDataStreamWrapper) and `SupportsAdmissionControl`s is only that the [AvailableNowDataStreamWrapper](../AvailableNowDataStreamWrapper.md) is requested for the [wrapped SparkDataStream](../AvailableNowDataStreamWrapper.md#delegate) while [SupportsAdmissionControl](../SupportsAdmissionControl.md) are used directly.
+
+#### <span id="constructNextBatch-nextOffsets-recentOffsets-others"> Others
+
+!!! note "FIXME Describe Sources and MicroBatchStreams"
+
+### <span id="constructNextBatch-latestOffsets"> Requesting Latest Offsets from Data Streams
+
+!!! note "FIXME"
+    Likely to be merged with the above section
+
+`constructNextBatch` requests every [SparkDataStream](../SparkDataStream.md) (from [uniqueSources](../StreamExecution.md#uniqueSources) registry) for a pair of the next and recent offsets. `constructNextBatch` checks out the offsets in every `SparkDataStream` sequentially (i.e. one data source at a time).
 
 ![MicroBatchExecution's Getting Offsets From Streaming Sources](../images/MicroBatchExecution-constructNextBatch.png)
 
@@ -311,6 +367,8 @@ Getting offsets from [source]
 
 ### <span id="constructNextBatch-getOffset"> getOffset Phase
 
+!!! note "FIXME This phase should be merged with the above one"
+
 In **getOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `Source` for the [latest offset](#getOffset).
 
 For every data source, `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
@@ -321,9 +379,13 @@ Getting offsets from [source]
 
 ### <span id="constructNextBatch-setOffsetRange"> setOffsetRange Phase
 
+!!! note "FIXME There is no setOffsetRange phase anymore"
+
 In **setOffsetRange** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the [available offset](#availableOffsets) internal registry) and, if found, requests the `MicroBatchReader` to...FIXME (from [JSON format](../Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to...FIXME
 
 ### <span id="constructNextBatch-getEndOffset"> getEndOffset Phase
+
+!!! note "FIXME There is no getEndOffset phase anymore"
 
 In **getEndOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for...FIXME
 
@@ -617,7 +679,9 @@ logicalPlan: LogicalPlan
 `logicalPlan` resolves (_replaces_) [StreamingRelation](../logical-operators/StreamingRelation.md), [StreamingRelationV2](../logical-operators/StreamingRelationV2.md) logical operators to [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) logical operators. `logicalPlan` uses the transformed logical plan to set the [uniqueSources](../StreamExecution.md#uniqueSources) and [sources](#sources) internal registries to be the [BaseStreamingSources](../logical-operators/StreamingExecutionRelation.md#source) of all the `StreamingExecutionRelations` unique and not, respectively.
 
 ??? note "Lazy Value"
-    `logicalPlan` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and cached afterwards.
+    `logicalPlan` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and the computed value never changes afterwards.
+
+    Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#lazy).
 
 Internally, `logicalPlan` transforms the [analyzed logical plan](#analyzedPlan).
 

@@ -192,24 +192,26 @@ val sq = spark
 17/06/18 21:21:10 DEBUG StreamExecution: Execution stats: ExecutionStats(Map(),List(),Map())
 ```
 
-## <span id="uniqueSources"> Unique Streaming Sources
+## <span id="uniqueSources"> Unique Data Streams
 
 ```scala
 uniqueSources: Map[SparkDataStream, ReadLimit]
 ```
 
-`StreamExecution` tracks the unique [SparkDataStream](SparkDataStream.md) of a streaming query (by their `ReadLimit`) in the `uniqueSources` internal registry.
+`StreamExecution` tracks the unique [SparkDataStream](SparkDataStream.md)s of a streaming query (by their [ReadLimit](ReadLimit.md)) in the `uniqueSources` internal registry.
 
 ![StreamExecution's uniqueSources Registry of Streaming Data Sources](images/StreamExecution-uniqueSources.png)
 
 `uniqueSources` registry is initialized when:
 
-* `MicroBatchExecution` is requested for the [logicalPlan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (based on the [triggerExecutor](micro-batch-execution/MicroBatchExecution.md#triggerExecutor))
-* `ContinuousExecution` is requested for the [logicalPlan](continuous-execution/ContinuousExecution.md#logicalPlan)
+* `MicroBatchExecution` is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (based on the [triggerExecutor](micro-batch-execution/MicroBatchExecution.md#triggerExecutor))
+* `ContinuousExecution` is requested for the [analyzed logical plan](continuous-execution/ContinuousExecution.md#logicalPlan)
 
-`uniqueSources` is used when `MicroBatchExecution` is requested to [construct the next micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) (to get new offsets for every streaming data source)
+`uniqueSources` is used when:
 
-Used when `StreamExecution` is requested to [stop all streaming data sources](#stopSources)
+* `MicroBatchExecution` is requested to [construct the next micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) (and gets offsets of data streams)
+
+Used when `StreamExecution` is requested to [stop all streaming data streams](#stopSources)
 
 ## Streaming Query Identifiers
 

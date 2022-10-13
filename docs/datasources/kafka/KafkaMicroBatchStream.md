@@ -40,6 +40,59 @@ failOnDataLoss: Boolean
 * [planInputPartitions](#planInputPartitions) (to create [KafkaBatchInputPartition](KafkaBatchInputPartition.md#failOnDataLoss))
 * [reportDataLoss](#reportDataLoss)
 
+## <span id="getDefaultReadLimit"> Default ReadLimit
+
+```scala
+getDefaultReadLimit: ReadLimit
+```
+
+`getDefaultReadLimit` is part of the [SupportsAdmissionControl](../../SupportsAdmissionControl.md#getDefaultReadLimit) abstraction.
+
+---
+
+With [minOffsetsPerTrigger](#minOffsetPerTrigger) and [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) defined, `getDefaultReadLimit` [creates a CompositeReadLimit](../../ReadLimit.md#compositeLimit) with the following:
+
+* [ReadMinRows](../../ReadLimit.md#minRows) with [minOffsetsPerTrigger](#minOffsetPerTrigger) (and [maxTriggerDelayMs](#maxTriggerDelayMs))
+* [ReadMaxRows](../../ReadLimit.md#maxRows) with [maxOffsetsPerTrigger](#maxOffsetsPerTrigger)
+
+With only [minOffsetPerTrigger](#minOffsetPerTrigger) defined (with no [maxOffsetsPerTrigger](#maxOffsetsPerTrigger)), `getDefaultReadLimit` [creates a ReadMinRows](../../ReadLimit.md#minRows) with [minOffsetsPerTrigger](#minOffsetPerTrigger) (and [maxTriggerDelayMs](#maxTriggerDelayMs)).
+
+Otherwise, `getDefaultReadLimit` takes the [maxOffsetsPerTrigger](#maxOffsetsPerTrigger), if defined, and creates a `ReadMaxRows` (with the approximate maximum rows to scan) or defaults to [ReadAllAvailable](../../ReadLimit.md#allAvailable).
+
+### <span id="maxOffsetsPerTrigger"> maxOffsetsPerTrigger
+
+```scala
+maxOffsetsPerTrigger: Option[Long]
+```
+
+`KafkaMicroBatchStream` takes the value of [maxOffsetsPerTrigger](options.md#maxOffsetsPerTrigger) option (in the [options](#options)), if available, when [created](#creating-instance).
+
+### <span id="minOffsetPerTrigger"> minOffsetPerTrigger
+
+```scala
+minOffsetPerTrigger: Option[Long]
+```
+
+`KafkaMicroBatchStream` takes the value of [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) option (in the [options](#options)), if available, when [created](#creating-instance).
+
+### <span id="maxTriggerDelayMs"> maxTriggerDelayMs
+
+`KafkaMicroBatchStream` reads the value of [maxTriggerDelay](options.md#maxTriggerDelay) option (in the [options](#options)) when [created](#creating-instance).
+
+## <span id="latestOffset"> latestOffset
+
+```scala
+latestOffset(
+  start: Offset,
+  readLimit: ReadLimit): Offset
+```
+
+`latestOffset` is part of the [SupportsAdmissionControl](../../SupportsAdmissionControl.md#latestOffset) abstraction.
+
+---
+
+`latestOffset`...FIXME
+
 ## <span id="reportDataLoss"> reportDataLoss
 
 ```scala
@@ -68,28 +121,6 @@ If you want your streaming query to fail on such cases, set the source option "f
 `reportDataLoss` is used when:
 
 * `KafkaMicroBatchStream` is requested to [planInputPartitions](#planInputPartitions) and [getOrCreateInitialPartitionOffsets](#getOrCreateInitialPartitionOffsets)
-
-## <span id="maxTriggerDelayMs"> maxTriggerDelayMs
-
-`KafkaMicroBatchStream` reads the value of [maxTriggerDelay](options.md#maxtriggerdelay) option (in the [options](#options)) when [created](#creating-instance).
-
-`maxTriggerDelayMs` is used in [getDefaultReadLimit](#getDefaultReadLimit) (and only when [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) is also defined).
-
-## <span id="getDefaultReadLimit"> Default ReadLimit
-
-```scala
-getDefaultReadLimit: ReadLimit
-```
-
-`getDefaultReadLimit` is part of the [SupportsAdmissionControl](../../SupportsAdmissionControl.md#getDefaultReadLimit) abstraction.
-
----
-
-With [minOffsetPerTrigger](#minOffsetPerTrigger) and [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) defined, `getDefaultReadLimit`...FIXME
-
-With only [minOffsetPerTrigger](#minOffsetPerTrigger) defined (with no [maxOffsetsPerTrigger](#maxOffsetsPerTrigger)), `getDefaultReadLimit`...FIXME
-
-Otherwise, `getDefaultReadLimit` takes the [maxOffsetsPerTrigger](#maxOffsetsPerTrigger), if defined, and creates a `ReadMaxRows` (with the approximate maximum rows to scan) or defaults to `ReadLimit.allAvailable`.
 
 ## Logging
 

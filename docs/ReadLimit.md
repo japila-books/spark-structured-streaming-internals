@@ -9,7 +9,7 @@
 
 ## Factory Methods (Subset)
 
-### <span id="allAvailable"> allAvailable
+### <span id="allAvailable"> ReadAllAvailable
 
 ```java
 ReadLimit allAvailable()
@@ -28,7 +28,7 @@ ReadLimit allAvailable()
 * `MicroBatchExecution` is requested for the [uniqueSources](micro-batch-execution/MicroBatchExecution.md#uniqueSources)
 * `ContinuousExecution` is requested for the [uniqueSources](continuous-execution/ContinuousExecution.md#uniqueSources)
 
-### <span id="compositeLimit"> compositeLimit
+### <span id="compositeLimit"> Creating CompositeReadLimit
 
 ```java
 ReadLimit compositeLimit(
@@ -44,7 +44,7 @@ ReadLimit compositeLimit(
 * `KafkaMicroBatchStream` is requested for the [default ReadLimit](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
 * `KafkaSource` is requested for the [default ReadLimit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
 
-### <span id="maxRows"> maxRows
+### <span id="maxRows"> Creating ReadMaxRows
 
 ```java
 ReadLimit maxRows(
@@ -61,7 +61,7 @@ ReadLimit maxRows(
 * `KafkaSource` is requested for the [default ReadLimit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
 * `RatePerMicroBatchStream` is requested for the [default ReadLimit](datasources/rate-micro-batch//RatePerMicroBatchStream.md#getDefaultReadLimit)
 
-### <span id="minRows"> minRows
+### <span id="minRows"> Creating ReadMinRows
 
 ```java
 ReadLimit minRows(
@@ -83,7 +83,7 @@ ReadLimit minRows(
 * [CompositeReadLimit](#CompositeReadLimit)
 * `ReadAllAvailable`
 * `ReadMaxFiles`
-* `ReadMaxRows`
+* [ReadMaxRows](#ReadMaxRows)
 * [ReadMinRows](#ReadMinRows)
 
 ### <span id="CompositeReadLimit"> CompositeReadLimit
@@ -93,6 +93,23 @@ ReadLimit minRows(
 Attribute | Description
 ----------|------------
  `readLimits` | `ReadLimit`s
+
+`CompositeReadLimit` is created using [ReadLimit.compositeLimit](#compositeLimit) utility.
+
+Used when:
+
+* `KafkaMicroBatchStream` is requested for the [latestOffset](datasources/kafka/KafkaMicroBatchStream.md#latestOffset)
+* `KafkaSource` is requested for the [latestOffset](datasources/kafka/KafkaSource.md#latestOffset)
+
+### <span id="ReadMaxRows"> ReadMaxRows
+
+`ReadMaxRows` is a `ReadLimit` that is described by the following:
+
+Attribute | Description
+----------|------------
+ `rows` | Approximate maximum rows to scan (_maxRows_)
+
+`ReadMaxRows` is created using [ReadLimit.maxRows](#maxRows) utility.
 
 Used when:
 
@@ -107,6 +124,8 @@ Attribute | Description
 ----------|------------
  `rows` | Approximate minimum rows to scan (_minRows_)
  `maxTriggerDelayMs` | Approximate maximum trigger delay
+
+`ReadMinRows` is created using [ReadLimit.minRows](#minRows) utility.
 
 Used when:
 
