@@ -299,6 +299,7 @@ nav:
     - DataStreamReader: DataStreamReader.md
     - DataStreamWriter: DataStreamWriter.md
     - OutputMode: OutputMode.md
+    - ReadLimit: ReadLimit.md
     - SparkDataStream: SparkDataStream.md
     - StreamingQuery: StreamingQuery.md
     - StreamingQueryManager: StreamingQueryManager.md

@@ -38,7 +38,7 @@
 
 `KafkaSource` reads the value of [maxTriggerDelay](options.md#maxtriggerdelay) option (in the [sourceOptions](#sourceOptions)) when [created](#creating-instance).
 
-`maxTriggerDelayMs` is used in [getDefaultReadLimit](#getDefaultReadLimit) (when [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) is defined).
+`maxTriggerDelayMs` is used in [getDefaultReadLimit](#getDefaultReadLimit) (and only when [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) is also defined).
 
 ## <span id="getBatch"> Loading Kafka Records for Streaming Micro-Batch
 

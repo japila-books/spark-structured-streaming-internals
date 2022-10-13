@@ -73,7 +73,23 @@ If you want your streaming query to fail on such cases, set the source option "f
 
 `KafkaMicroBatchStream` reads the value of [maxTriggerDelay](options.md#maxtriggerdelay) option (in the [options](#options)) when [created](#creating-instance).
 
-`maxTriggerDelayMs` is used in [getDefaultReadLimit](#getDefaultReadLimit) (when [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) is defined).
+`maxTriggerDelayMs` is used in [getDefaultReadLimit](#getDefaultReadLimit) (and only when [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) is also defined).
+
+## <span id="getDefaultReadLimit"> Default ReadLimit
+
+```scala
+getDefaultReadLimit: ReadLimit
+```
+
+`getDefaultReadLimit` is part of the [SupportsAdmissionControl](../../SupportsAdmissionControl.md#getDefaultReadLimit) abstraction.
+
+---
+
+With [minOffsetPerTrigger](#minOffsetPerTrigger) and [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) defined, `getDefaultReadLimit`...FIXME
+
+With only [minOffsetPerTrigger](#minOffsetPerTrigger) defined (with no [maxOffsetsPerTrigger](#maxOffsetsPerTrigger)), `getDefaultReadLimit`...FIXME
+
+Otherwise, `getDefaultReadLimit` takes the [maxOffsetsPerTrigger](#maxOffsetsPerTrigger), if defined, and creates a `ReadMaxRows` (with the approximate maximum rows to scan) or defaults to `ReadLimit.allAvailable`.
 
 ## Logging
 
