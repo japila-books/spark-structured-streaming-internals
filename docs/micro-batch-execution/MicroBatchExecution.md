@@ -668,49 +668,103 @@ isNewDataAvailable: Boolean
 
 * `MicroBatchExecution` is requested to [run an activated streaming query](#runActivatedStream) and [construct the next streaming micro-batch](#constructNextBatch)
 
-## <span id="logicalPlan"> Analyzed Logical Plan
+## <span id="logicalPlan"> (Transformed) Analyzed Logical Plan
 
 ```scala
 logicalPlan: LogicalPlan
 ```
 
-`logicalPlan` is part of the [StreamExecution](../StreamExecution.md#logicalPlan) abstraction.
+`logicalPlan` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#logicalPlan) abstraction.
 
-`logicalPlan` resolves (_replaces_) [StreamingRelation](../logical-operators/StreamingRelation.md), [StreamingRelationV2](../logical-operators/StreamingRelationV2.md) logical operators to [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) logical operators. `logicalPlan` uses the transformed logical plan to set the [uniqueSources](../StreamExecution.md#uniqueSources) and [sources](#sources) internal registries to be the [BaseStreamingSources](../logical-operators/StreamingExecutionRelation.md#source) of all the `StreamingExecutionRelations` unique and not, respectively.
-
-??? note "Lazy Value"
+??? note "Lazy Value and ProgressReporter"
     `logicalPlan` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and the computed value never changes afterwards.
 
     Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#lazy).
 
-Internally, `logicalPlan` transforms the [analyzed logical plan](#analyzedPlan).
+    ---
 
-For every [StreamingRelation](../logical-operators/StreamingRelation.md) logical operator, `logicalPlan` tries to replace it with the [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelation` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `DataSource` to [create a streaming Source](../DataSource.md#createSource) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](../StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
+    Note that `logicalPlan` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#logicalPlan) abstraction in which `logicalPlan` is a method (`def`).
+
+---
+
+Initialization of `logicalPlan` is done using the following four steps:
+
+1. [Transforming the analyzed logical plan](#logicalPlan-transform)
+1. [Initializing sources registry](#logicalPlan-sources)
+1. [Initializing uniqueSources registry](#logicalPlan-uniqueSources)
+1. [Rewriting the plan for SupportsWrite sink](#logicalPlan-sink)
+
+### <span id="logicalPlan-transform"> Transforming Analyzed Logical Plan
+
+`logicalPlan` transforms the [analyzed logical plan](../StreamExecution.md#analyzedPlan) focusing on the following logical operators:
+
+* [StreamingRelation](#logicalPlan-StreamingRelation)s
+* [StreamingRelationV2](#logicalPlan-StreamingRelationV2)s
+
+#### <span id="logicalPlan-StreamingRelation"> StreamingRelation
+
+For a [StreamingRelation](../logical-operators/StreamingRelation.md), `logicalPlan` finds a corresponding [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) (in the `toExecutionRelationMap`), if available.
+
+If not found, `logicalPlan` requests the [DataSource](../logical-operators/StreamingRelation.md#dataSource) (of this `StreamingRelation`) to [createSource](../DataSource.md#createSource) for the following metadata path (with [resolvedCheckpointRoot](../StreamExecution.md#resolvedCheckpointRoot) and the next consecutive source ID):
 
 ```text
-Using Source [source] from DataSourceV1 named '[sourceName]' [dataSourceV1]
+[resolvedCheckpointRoot]/sources/[nextSourceId]
 ```
 
-For every [StreamingRelationV2](../logical-operators/StreamingRelationV2.md) logical operator with a [MicroBatchStream](../MicroBatchStream.md) data source (which is not on the list of [spark.sql.streaming.disabledV2MicroBatchReaders](../configuration-properties.md#spark.sql.streaming.disabledV2MicroBatchReaders)), `logicalPlan` tries to replace it with the [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `MicroBatchStream` to [create a MicroBatchStream](../MicroBatchStream.md#createMicroBatchReader) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](../StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
+`logicalPlan` increments `nextSourceId` internal counter.
+
+`logicalPlan` prints out the following INFO message to the logs:
 
 ```text
-Using MicroBatchReader [reader] from DataSourceV2 named '[sourceName]' [dataSourceV2]
+Using Source [[source]] from DataSourceV1 named '[sourceName]' [[dataSourceV1]]
 ```
 
-For every other [StreamingRelationV2](../logical-operators/StreamingRelationV2.md) leaf logical operator, `logicalPlan` tries to replace it with the [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) that was used earlier for the same `StreamingRelationV2` (if used multiple times in the plan) or creates a new one. While creating a new `StreamingExecutionRelation`, `logicalPlan` requests the `StreamingRelation` for the underlying [DataSource](../logical-operators/StreamingRelation.md#dataSource) that is in turn requested to [create a streaming Source](../DataSource.md#createSource) with the metadata path as `sources/uniqueID` directory in the [checkpoint root directory](../StreamExecution.md#resolvedCheckpointRoot). `logicalPlan` prints out the following INFO message to the logs:
+In the end, `logicalPlan` creates a [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) (for the source and the [output schema](../logical-operators/StreamingRelation.md#output) of this `StreamingRelation`).
+
+#### <span id="logicalPlan-StreamingRelationV2"> StreamingRelationV2
+
+For a [StreamingRelationV2](../logical-operators/StreamingRelationV2.md), `logicalPlan` checks if the [Table](#table) is a `SupportsRead` and supports `MICRO_BATCH_READ` table capability. If so, `logicalPlan`...FIXME
+
+Otherwise, `logicalPlan` checks if the optional [v1Relation](../logical-operators/StreamingRelationV2.md#v1Relation) (of this `StreamingRelationV2`) is not defined. If so, `logicalPlan`...FIXME
+
+For all other cases, `logicalPlan` finds a corresponding [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) (in the `v2ToExecutionRelationMap`), if available.
+
+If not found, `logicalPlan` requests the the optional [v1Relation](../logical-operators/StreamingRelationV2.md#v1Relation) (of this `StreamingRelationV2`), that is supposed to be a [StreamingRelation](../logical-operators/StreamingRelation.md) for the [DataSource](../logical-operators/StreamingRelation.md#dataSource) to [createSource](../DataSource.md#createSource) for the following metadata path (with [resolvedCheckpointRoot](../StreamExecution.md#resolvedCheckpointRoot) and the next consecutive source ID):
 
 ```text
-Using Source [source] from DataSourceV2 named '[sourceName]' [dataSourceV2]
+[resolvedCheckpointRoot]/sources/[nextSourceId]
 ```
 
-`logicalPlan` requests the transformed analyzed logical plan for all `StreamingExecutionRelations` that are then requested for [BaseStreamingSources](../logical-operators/StreamingExecutionRelation.md#source), and saves them as the [sources](#sources) internal registry.
+`logicalPlan` increments `nextSourceId` internal counter.
 
-In the end, `logicalPlan` sets the [uniqueSources](../StreamExecution.md#uniqueSources) internal registry to be the unique `BaseStreamingSources` above.
-
-`logicalPlan` throws an `AssertionError` when not executed on the [stream execution thread](../StreamExecution.md#queryExecutionThread).
+`logicalPlan` prints out the following INFO message to the logs:
 
 ```text
-logicalPlan must be initialized in QueryExecutionThread but the current thread was [currentThread]
+Using Source [[source]] from DataSourceV2 named '[srcName]' [dsStr]
+```
+
+In the end, `logicalPlan` creates a [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md) (for the source and the [output schema](../logical-operators/StreamingRelationV2.md#output) of this `StreamingRelationV2`).
+
+### <span id="logicalPlan-sources"> Initializing Sources Registry
+
+`logicalPlan` initializes the [sources](#sources) registry. `logicalPlan` collects all the [SparkDataStream](../SparkDataStream.md)s (from [StreamingExecutionRelation](../logical-operators/StreamingExecutionRelation.md)s and [StreamingDataSourceV2Relation](../logical-operators/StreamingDataSourceV2Relation.md)s) in the transformed analyzed logical plan.
+
+### <span id="logicalPlan-uniqueSources"> Initializing uniqueSources Registry
+
+`logicalPlan` initializes the [uniqueSources](#uniqueSources) registry based on the [triggerExecutor](#triggerExecutor).
+
+### <span id="logicalPlan-sink"> Rewriting Plan For SupportsWrite Sink
+
+In the end, `logicalPlan` is the transformed analyzed logical plan unless the [sink](#sink) is `SupportsWrite` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsWrite)).
+
+For the [sink](#sink) to be a `SupportsWrite` (e.g. [KafkaTable](../datasources/kafka/KafkaTable.md), [ForeachWriterTable](../datasources/foreach/ForeachWriterTable.md)), `logicalPlan`...FIXME
+
+### <span id="logicalPlan-AssertionError"> AssertionError
+
+`logicalPlan` throws an `AssertionError` when not on the [stream execution thread](../StreamExecution.md#queryExecutionThread):
+
+```text
+logicalPlan must be initialized in QueryExecutionThread "but the current thread was [currentThread]
 ```
 
 ## <span id="BATCH_ID_KEY"><span id="streaming.sql.batchId"> streaming.sql.batchId Local Property

@@ -45,7 +45,14 @@ logicalPlan: LogicalPlan
 
 `logicalPlan` is part of the [ProgressReporter](monitoring/ProgressReporter.md#logicalPlan) abstraction.
 
+---
+
 Analyzed logical plan of the streaming query to [execute](#runActivatedStream)
+
+!!! note
+    No idea why `logicalPlan` is part of `StreamExecution` since there's (_almost_) no change from the parent [ProgressReporter](monitoring/ProgressReporter.md#logicalPlan) except the access qualifier (from `protected` to `public`).
+
+    Could this be the only reason?
 
 Used when:
 

@@ -339,9 +339,10 @@ nav:
       - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
     - Foreach:
       - datasources/foreach/index.md
-      - ForeachWriterProvider: datasources/foreach/ForeachWriterProvider.md
-      - ForeachWriter: datasources/foreach/ForeachWriter.md
       - ForeachSink: datasources/foreach/ForeachSink.md
+      - ForeachWriter: datasources/foreach/ForeachWriter.md
+      - ForeachWriterProvider: datasources/foreach/ForeachWriterProvider.md
+      - ForeachWriterTable: datasources/foreach/ForeachWriterTable.md
     - ForeachBatch:
       - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Kafka:
