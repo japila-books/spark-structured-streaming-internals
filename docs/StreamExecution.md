@@ -205,18 +205,18 @@ val sq = spark
 uniqueSources: Map[SparkDataStream, ReadLimit]
 ```
 
-`StreamExecution` tracks the unique [SparkDataStream](SparkDataStream.md)s of a streaming query (by their [ReadLimit](ReadLimit.md)) in the `uniqueSources` internal registry.
+`StreamExecution` defines `uniqueSources` internal registry for the unique [SparkDataStream](SparkDataStream.md)s of a streaming query with their [ReadLimit](ReadLimit.md)s.
 
 ![StreamExecution's uniqueSources Registry of Streaming Data Sources](images/StreamExecution-uniqueSources.png)
 
-`uniqueSources` registry is initialized when:
+`uniqueSources` registry is initialized when the [stream execution engines](#implementations) are requested for the analyzed logical plan:
 
-* `MicroBatchExecution` is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (based on the [triggerExecutor](micro-batch-execution/MicroBatchExecution.md#triggerExecutor))
-* `ContinuousExecution` is requested for the [analyzed logical plan](continuous-execution/ContinuousExecution.md#logicalPlan)
+* [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#logicalPlan-uniqueSources)
+* [ContinuousExecution](continuous-execution/ContinuousExecution.md#logicalPlan)
 
 `uniqueSources` is used when:
 
-* `MicroBatchExecution` is requested to [construct the next micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) (and gets offsets of data streams)
+* `MicroBatchExecution` is requested to [construct next micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) (and gets offsets of data streams)
 
 Used when `StreamExecution` is requested to [stop all streaming data streams](#stopSources)
 

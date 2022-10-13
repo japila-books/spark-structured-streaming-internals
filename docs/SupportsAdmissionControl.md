@@ -12,12 +12,13 @@ ReadLimit getDefaultReadLimit()
 
 Default [ReadLimit](ReadLimit.md) of this [SparkDataStream](SparkDataStream.md)
 
-Default: [ReadAllAvailable](ReadLimit.md#allAvailable)
+`getDefaultReadLimit` is [ReadAllAvailable](ReadLimit.md#allAvailable) by default (and is expected to be overriden by the [implementations](#implementations) if needed)
+
+See [FileStreamSource](datasources/file/FileStreamSource.md#getDefaultReadLimit), [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit), [KafkaSource](datasources/kafka/KafkaSource.md#getDefaultReadLimit), [RatePerMicroBatchStream](datasources/rate-micro-batch/RatePerMicroBatchStream.md#getDefaultReadLimit)
 
 Used when:
 
-* `AvailableNowDataStreamWrapper` is requested for the [default ReadLimit](AvailableNowDataStreamWrapper.md#getDefaultReadLimit)
-* `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (and initializes [uniqueSources](StreamExecution.md#uniqueSources) registry)
+* `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (and initializes [uniqueSources](StreamExecution.md#uniqueSources) registry, i.e. [SparkDataStream](SparkDataStream.md)s with their `ReadLimit`s)
 
 ### <span id="latestOffset"> Latest Offset per ReadLimit
 

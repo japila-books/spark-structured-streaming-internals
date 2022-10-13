@@ -121,8 +121,6 @@ nav:
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Internals of Streaming Queries: spark-structured-streaming-internals.md
     - DataSource: DataSource.md
-    - MicroBatchStream: MicroBatchStream.md
-    - ContinuousStream: ContinuousStream.md
     - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - Query Execution:
@@ -297,8 +295,10 @@ nav:
         - StateStoreProviderId: stateful-stream-processing/StateStoreProviderId.md
       - StateStoreRDD: stateful-stream-processing/StateStoreRDD.md
   - High-Level APIs:
+    - ContinuousStream: ContinuousStream.md
     - DataStreamReader: DataStreamReader.md
     - DataStreamWriter: DataStreamWriter.md
+    - MicroBatchStream: MicroBatchStream.md
     - OutputMode: OutputMode.md
     - ReadLimit: ReadLimit.md
     - SparkDataStream: SparkDataStream.md

@@ -31,9 +31,7 @@ Used when:
 
 ### <span id="ProcessingTimeExecutor"> ProcessingTimeExecutor
 
-Executes the [batch runner](#batchRunner) at regular intervals (as defined using [ProcessingTime](Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method)
-
-Processing terminates when `batchRunner` returns `false`.
+Executes the [batch runner](#batchRunner) at regular intervals (as defined using [ProcessingTime](Trigger.md#ProcessingTime) and [DataStreamWriter.trigger](DataStreamWriter.md#trigger) method) until it returns `false`
 
 ### <span id="SingleBatchExecutor"> SingleBatchExecutor
 

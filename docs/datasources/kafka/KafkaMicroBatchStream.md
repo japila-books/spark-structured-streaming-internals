@@ -50,7 +50,20 @@ getDefaultReadLimit: ReadLimit
 
 ---
 
-With [minOffsetsPerTrigger](#minOffsetPerTrigger) and [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) defined, `getDefaultReadLimit` [creates a CompositeReadLimit](../../ReadLimit.md#compositeLimit) with the following:
+`getDefaultReadLimit` uses [minOffsetsPerTrigger](#minOffsetPerTrigger) and [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) options to determine [ReadLimit](../../ReadLimit.md).
+
+`getDefaultReadLimit` uses [maxTriggerDelayMs](#maxTriggerDelayMs) option, too, but it has a default value so it is always available.
+
+ReadLimit | Condition
+----------|----------
+ [CompositeReadLimit](../../ReadLimit.md#CompositeReadLimit) | Both [minOffsetsPerTrigger](#minOffsetPerTrigger) and [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) defined
+ [ReadMinRows](../../ReadLimit.md#ReadMinRows) | Only [minOffsetPerTrigger](#minOffsetPerTrigger) defined
+ [ReadMaxRows](../../ReadLimit.md#ReadMaxRows) | Only [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) defined
+ [ReadAllAvailable](../../ReadLimit.md#allAvailable) |
+
+---
+
+In other words, with [minOffsetsPerTrigger](#minOffsetPerTrigger) and [maxOffsetsPerTrigger](#maxOffsetsPerTrigger) defined, `getDefaultReadLimit` [creates a CompositeReadLimit](../../ReadLimit.md#compositeLimit) with the following:
 
 * [ReadMinRows](../../ReadLimit.md#minRows) with [minOffsetsPerTrigger](#minOffsetPerTrigger) (and [maxTriggerDelayMs](#maxTriggerDelayMs))
 * [ReadMaxRows](../../ReadLimit.md#maxRows) with [maxOffsetsPerTrigger](#maxOffsetsPerTrigger)
@@ -65,7 +78,7 @@ Otherwise, `getDefaultReadLimit` takes the [maxOffsetsPerTrigger](#maxOffsetsPer
 maxOffsetsPerTrigger: Option[Long]
 ```
 
-`KafkaMicroBatchStream` takes the value of [maxOffsetsPerTrigger](options.md#maxOffsetsPerTrigger) option (in the [options](#options)), if available, when [created](#creating-instance).
+`KafkaMicroBatchStream` takes the value of [maxOffsetsPerTrigger](options.md#maxOffsetsPerTrigger) option (in the [options](#options)), if available, when [created](#creating-instance). Otherwise, `maxOffsetsPerTrigger` is `None` (undefined).
 
 ### <span id="minOffsetPerTrigger"> minOffsetPerTrigger
 
@@ -73,7 +86,7 @@ maxOffsetsPerTrigger: Option[Long]
 minOffsetPerTrigger: Option[Long]
 ```
 
-`KafkaMicroBatchStream` takes the value of [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) option (in the [options](#options)), if available, when [created](#creating-instance).
+`KafkaMicroBatchStream` takes the value of [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) option (in the [options](#options)), if available, when [created](#creating-instance). Otherwise, `minOffsetPerTrigger` is `None` (undefined).
 
 ### <span id="maxTriggerDelayMs"> maxTriggerDelayMs
 

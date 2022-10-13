@@ -281,7 +281,7 @@ Starting new streaming query.
 [[populateStartOffsets-currentBatchId-0]]
 `populateStartOffsets` sets the [current batch ID](../StreamExecution.md#currentBatchId) to `0` and creates a new [WatermarkTracker](#watermarkTracker).
 
-## <span id="constructNextBatch"> Constructing Or Skipping Next Streaming Micro-Batch
+## <span id="constructNextBatch"> Constructing Next Streaming Micro-Batch (Or Skipping It)
 
 ```scala
 constructNextBatch(
@@ -295,7 +295,7 @@ constructNextBatch(
 
 `constructNextBatch` performs the following steps:
 
-1. [Requesting the next and recent offsets from the data streams](#constructNextBatch-nextOffsets-recentOffsets)
+1. [Requesting next and recent offsets from the data streams](#constructNextBatch-nextOffsets-recentOffsets)
 
 1. [Requesting the latest offsets from the data streams](#constructNextBatch-latestOffsets)
 
@@ -751,7 +751,25 @@ In the end, `logicalPlan` creates a [StreamingExecutionRelation](../logical-oper
 
 ### <span id="logicalPlan-uniqueSources"> Initializing uniqueSources Registry
 
-`logicalPlan` initializes the [uniqueSources](#uniqueSources) registry based on the [triggerExecutor](#triggerExecutor).
+`logicalPlan` initializes the [uniqueSources](../StreamExecution.md#uniqueSources) registry based on the [TriggerExecutor](#triggerExecutor):
+
+* [MultiBatchExecutor](#logicalPlan-uniqueSources-MultiBatchExecutor)
+* [ProcessingTimeExecutor](#logicalPlan-uniqueSources-ProcessingTimeExecutor)
+* [SingleBatchExecutor](#logicalPlan-uniqueSources-SingleBatchExecutor)
+
+#### <span id="logicalPlan-uniqueSources-MultiBatchExecutor"> MultiBatchExecutor
+
+!!! note "FIXME"
+
+#### <span id="logicalPlan-uniqueSources-ProcessingTimeExecutor"> ProcessingTimeExecutor
+
+For [ProcessingTimeExecutor](../TriggerExecutor.md#ProcessingTimeExecutor), `logicalPlan` takes distinct (_unique_) [SparkDataStream](../SparkDataStream.md)s from [sources](#sources) registry (of all the data streams in a streaming query).
+
+For every unique [SparkDataStream](../SparkDataStream.md), `logicalPlan` creates a pair of this `SparkDataStream` and the [default ReadLimit](../SupportsAdmissionControl.md#getDefaultReadLimit) if it is [SupportsAdmissionControl](../SupportsAdmissionControl.md) (or defaults to [ReadAllAvailable](../ReadLimit.md#ReadAllAvailable)).
+
+#### <span id="logicalPlan-uniqueSources-SingleBatchExecutor"> SingleBatchExecutor
+
+!!! note "FIXME"
 
 ### <span id="logicalPlan-sink"> Rewriting Plan For SupportsWrite Sink
 

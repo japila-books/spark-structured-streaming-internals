@@ -62,7 +62,7 @@ Unless defined, `KafkaSource` requests [KafkaOffsetReader](KafkaSource.md#kafkaR
 
 Default: `15m`
 
-[Ignored in batch queries](KafkaSourceProvider.md#validateBatchOptions)
+[For streaming queries only](KafkaSourceProvider.md#validateBatchOptions)
 
 Used when:
 
