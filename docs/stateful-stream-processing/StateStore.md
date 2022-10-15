@@ -9,13 +9,18 @@
 
 ## Contract
 
-### <span id="commit"> Commit State Changes
+### <span id="commit"> Committing State Changes
 
 ```scala
 commit(): Long
 ```
 
 Commits all updates ([puts](#put) and [removes](#remove)) and returns a new version
+
+See:
+
+* [HDFSBackedStateStore](HDFSBackedStateStore.md#commit)
+* [RocksDBStateStore](RocksDBStateStore.md#commit)
 
 Used when:
 

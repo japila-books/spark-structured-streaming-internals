@@ -91,7 +91,7 @@ get(
 
 * `RocksDBStateStore` is requested to [get a value for a key](RocksDBStateStore.md#get)
 
-## <span id="commit"> Committing Changes
+## <span id="commit"> Committing State Changes
 
 ```scala
 commit(): Long
@@ -104,6 +104,25 @@ commit(): Long
 `commit` is used when:
 
 * `RocksDBStateStore` is requested to [commit](RocksDBStateStore.md#commit)
+
+## <span id="commitLatencyMs"> commitLatencyMs
+
+```scala
+commitLatencyMs: HashMap[String, Long]
+```
+
+`RocksDB` creates an empty `commitLatencyMs` collection when [created](#creating-instance).
+
+The following durations are added at the end of [committing state changes](#commit):
+
+* `checkpoint`
+* `compact`
+* `fileSync`
+* `flush`
+* `pause`
+* `writeBatch`
+
+`commitLatencyMs` is used in [metrics](#metrics) to create a [RocksDBMetrics](RocksDBMetrics.md#lastCommitLatencyMs).
 
 ## Logging
 

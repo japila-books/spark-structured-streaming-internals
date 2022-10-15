@@ -49,3 +49,25 @@ In the end, `metrics` creates a [StateStoreMetrics](StateStoreMetrics.md) with t
 ### <span id="rocksdbPutCount"><span id="CUSTOM_METRIC_PUT_COUNT"> RocksDB: number of put calls
 
 `rocksdbPutCount` is the **count** on `put` entry in the [nativeOpsHistograms](RocksDBMetrics.md#nativeOpsHistograms)
+
+## <span id="commit"> Committing State Changes
+
+```scala
+commit(): Long
+```
+
+`commit` is part of the [StateStore](StateStore.md#commit) abstraction.
+
+---
+
+`commit` requests the [RocksDB](RocksDBStateStoreProvider.md#rocksDB) to [commit state changes](RocksDB.md#commit) (that, in the end, gives a new version).
+
+`commit` sets the [state](#state) to `COMMITTED`.
+
+`commit` prints out the following INFO message to the logs:
+
+```text
+Committed [newVersion] for [id]
+```
+
+In the end, `commit` returns the new version (from [committing state changes](RocksDB.md#commit)).

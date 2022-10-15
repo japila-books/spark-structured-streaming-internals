@@ -5,6 +5,7 @@
 ## Implementations
 
 * [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md)
+* [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md)
 * [StateStoreSaveExec](StateStoreSaveExec.md)
 * [StreamingDeduplicateExec](StreamingDeduplicateExec.md)
 * [StreamingGlobalLimitExec](StreamingGlobalLimitExec.md)
@@ -22,11 +23,26 @@ ID | Name
  allUpdatesTimeMs | time to update
  numRemovedStateRows | number of removed state rows
  allRemovalsTimeMs | time to remove
- commitTimeMs | time to commit changes
+ [commitTimeMs](#commitTimeMs) | time to commit changes
  stateMemory | memory used by state
  numShufflePartitions | number of shuffle partitions
  [numStateStoreInstances](#numStateStoreInstances) | number of state store instances
  [stateStoreCustomMetrics](#stateStoreCustomMetrics) |
+
+### <span id="commitTimeMs"> time to commit changes
+
+Time for a [StateStore](../stateful-stream-processing/StateStore.md) to [commit state changes](../stateful-stream-processing/StateStore.md#commit)
+
+Measured when the following physical operators are executed:
+
+* [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md#processDataWithPartition)
+* [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md#doExecute)
+* [StateStoreSaveExec](StateStoreSaveExec.md#doExecute)
+* [StreamingDeduplicateExec](StreamingDeduplicateExec.md#doExecute)
+* [StreamingGlobalLimitExec](StreamingGlobalLimitExec.md#doExecute)
+* [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md#processPartitions)
+
+Reported as [commitTimeMs](../monitoring/StateOperatorProgress.md#commitTimeMs) when [reporting progress](#getProgress)
 
 ### <span id="numStateStoreInstances"> numStateStoreInstances
 
