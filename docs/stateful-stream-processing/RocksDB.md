@@ -14,6 +14,41 @@
 
 * `RocksDBStateStoreProvider` is requested for the [RocksDB](RocksDBStateStoreProvider.md#rocksDB)
 
+### <span id="commitLatencyMs"> commitLatencyMs
+
+```scala
+commitLatencyMs: HashMap[String, Long]
+```
+
+`RocksDB` creates an empty `commitLatencyMs` collection when [created](#creating-instance).
+
+The following durations are added at the end of [committing state changes](#commit):
+
+* `checkpoint`
+* `compact`
+* `fileSync`
+* `flush`
+* `pause`
+* `writeBatch`
+
+`commitLatencyMs` is used in [metrics](#metrics) to create a [RocksDBMetrics](RocksDBMetrics.md#lastCommitLatencyMs).
+
+### <span id="readOptions"> ReadOptions
+
+`RocksDB` creates a `ReadOptions` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/ReadOptions.html)) when [created](#creating-instance).
+
+Used when:
+
+* [get](#get)
+* [put](#put) (with [trackTotalNumberOfRows](RocksDBConf.md#trackTotalNumberOfRows) enabled)
+* [remove](#remove) (with [trackTotalNumberOfRows](RocksDBConf.md#trackTotalNumberOfRows) enabled)
+
+Closed in [close](#close)
+
+### <span id="writeBatch"> WriteBatchWithIndex
+
+`RocksDB` creates a `WriteBatchWithIndex` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/WriteBatchWithIndex.html)) (with `overwriteKey` enabled) when [created](#creating-instance).
+
 ## <span id="metrics"> Performance Metrics
 
 ```scala
@@ -46,22 +81,6 @@ In the end, `metrics` creates a [RocksDBMetrics](RocksDBMetrics.md) with the fol
 
 * `RocksDB` is requested to [commit](#commit)
 * `RocksDBStateStore` is requested for [metrics](RocksDBStateStore.md#metrics)
-
-## <span id="readOptions"> ReadOptions
-
-`RocksDB` creates a `ReadOptions` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/ReadOptions.html)) when [created](#creating-instance).
-
-Used when:
-
-* [get](#get)
-* [put](#put) (with [trackTotalNumberOfRows](RocksDBConf.md#trackTotalNumberOfRows) enabled)
-* [remove](#remove) (with [trackTotalNumberOfRows](RocksDBConf.md#trackTotalNumberOfRows) enabled)
-
-Closed in [close](#close)
-
-## <span id="writeBatch"> WriteBatchWithIndex
-
-`RocksDB` creates a `WriteBatchWithIndex` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/WriteBatchWithIndex.html)) (with `overwriteKey` enabled) when [created](#creating-instance).
 
 ## <span id="nativeStats"> Statistics
 
@@ -97,32 +116,65 @@ get(
 commit(): Long
 ```
 
-`commit`...FIXME
+`commit` builds a new version by incrementing the [loadedVersion](#loadedVersion).
+
+`commit` creates a new `checkpoint-`-prefixed directory under the [localRootDir](#localRootDir).
+
+`commit` prints out the following INFO message to the logs and records the duration of requesting the [db](#db) to write out the updates (`writeTimeMs`).
+
+```text
+Writing updates for [newVersion]
+```
+
+`commit` prints out the following INFO message to the logs and records the duration of requesting the [db](#db) to flush the changes (`flushTimeMs`).
+
+```text
+Flushing updates for [newVersion]
+```
+
+With [compactOnCommit](RocksDBConf.md#compactOnCommit) enabled, `commit` prints out the following INFO message to the logs and records the duration of requesting the [db](#db) to `compactRange` (`compactTimeMs`). Otherwise, the flush time is `0`.
+
+```text
+Compacting
+```
+
+`commit` prints out the following INFO message to the logs and records the duration of requesting the [db](#db) to `pauseBackgroundWork` (`pauseTimeMs`).
+
+```text
+Pausing background work
+```
+
+`commit` prints out the following INFO message to the logs and records the duration of requesting the [db](#db) to `createCheckpoint` in the checkpoint directory (`checkpointTimeMs`).
+
+```text
+Creating checkpoint for [newVersion] in [checkpointDir]
+```
+
+`commit` prints out the following INFO message to the logs and records the duration of requesting the [RocksDBFileManager](#fileManager) to [saveCheckpointToDfs](RocksDBFileManager.md#saveCheckpointToDfs) with the checkpoint directory and the [numKeysOnWritingVersion](#numKeysOnWritingVersion) (`fileSyncTimeMs`).
+
+```text
+Syncing checkpoint for [newVersion] to DFS
+```
+
+`commit` updates the internal registries.
+
+Internal Registry | New Value
+------------------|----------
+[numKeysOnLoadedVersion](#numKeysOnLoadedVersion) | [numKeysOnWritingVersion](#numKeysOnWritingVersion)
+[loadedVersion](#loadedVersion) | `newVersion`
+[fileManagerMetrics](#fileManagerMetrics) | [latestSaveCheckpointMetrics](RocksDBFileManager.md#latestSaveCheckpointMetrics) from the [RocksDBFileManager](#fileManager)
+
+In the end, `commit` updates the [commitLatencyMs](#commitLatencyMs) metrics and prints out the following INFO message to the logs:
+
+```text
+Committed [newVersion], stats = [metrics]
+```
 
 ---
 
 `commit` is used when:
 
-* `RocksDBStateStore` is requested to [commit](RocksDBStateStore.md#commit)
-
-## <span id="commitLatencyMs"> commitLatencyMs
-
-```scala
-commitLatencyMs: HashMap[String, Long]
-```
-
-`RocksDB` creates an empty `commitLatencyMs` collection when [created](#creating-instance).
-
-The following durations are added at the end of [committing state changes](#commit):
-
-* `checkpoint`
-* `compact`
-* `fileSync`
-* `flush`
-* `pause`
-* `writeBatch`
-
-`commitLatencyMs` is used in [metrics](#metrics) to create a [RocksDBMetrics](RocksDBMetrics.md#lastCommitLatencyMs).
+* `RocksDBStateStore` is requested to [commit state changes](RocksDBStateStore.md#commit)
 
 ## Logging
 
