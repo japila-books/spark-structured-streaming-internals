@@ -11,7 +11,7 @@ commit(
   store: StateStore): Long
 ```
 
-Commits all updates (_changes_) to the given [StateStore](../stateful-stream-processing/StateStore.md) and returns the new version
+Commits all state changes (_updates_) to the given [StateStore](../stateful-stream-processing/StateStore.md) and returns a new version
 
 See [StreamingAggregationStateManagerBaseImpl](StreamingAggregationStateManagerBaseImpl.md#commit)
 

@@ -1,6 +1,6 @@
 # RocksDBStateStore
 
-`RocksDBStateStore` is a [StateStore](StateStore.md).
+`RocksDBStateStore` is a [StateStore](StateStore.md) of [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md).
 
 ## Creating Instance
 

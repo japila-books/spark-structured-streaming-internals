@@ -93,6 +93,14 @@ The number of rows stored is the [number of updated state rows](#numUpdatedState
 
 [Time taken](StateStoreWriter.md#timeTakenMs) for the [StreamingAggregationStateManager](#stateManager) to [commit changes to a state store](../streaming-aggregation/StreamingAggregationStateManager.md#commit)
 
+---
+
+When requested to [commit changes to a state store](../streaming-aggregation/StreamingAggregationStateManager.md#commit), a [StreamingAggregationStateManager](#stateManager) (as [StreamingAggregationStateManagerBaseImpl](../streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md)) requests the given [StateStore](../stateful-stream-processing/StateStore.md) to [commit state changes](../stateful-stream-processing/StateStore.md#commit).
+
+For [RocksDBStateStore](../stateful-stream-processing/RocksDBStateStore.md), it means for [RocksDB](../stateful-stream-processing/RocksDBStateStoreProvider.md#rocksDB) to [commit state changes](../stateful-stream-processing/RocksDB.md#commit) which is made up of the time-tracked phases that are available using the [performance metrics](../stateful-stream-processing/RocksDBMetrics.md#lastCommitLatencyMs).
+
+In other words, the total of the [time-tracked phases](../stateful-stream-processing/RocksDBMetrics.md#lastCommitLatencyMs) is close approximation of this metric (there are some file-specific ops though that contribute to the metric but are not part of the phases).
+
 ### <span id="numOutputRows"> number of output rows
 
 * For [Append](#outputMode) output mode, the metric does not seem to be used
@@ -123,6 +131,19 @@ Corresponds to `numRowsUpdated` attribute in `stateOperators` in [StreamingQuery
 
 Estimated memory used by a [StateStore](../stateful-stream-processing/StateStore.md) (aka _stateMemory_) after `StateStoreSaveExec` finished [execution](#doExecute) (per the [StateStoreMetrics](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) of the [StateStore](../stateful-stream-processing/StateStore.md#metrics))
 
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.StateStoreSaveExec` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.StateStoreSaveExec=ALL
+```
+
+Refer to [Logging](../spark-logging.md).
+
+<!---
 ## Review Me
 
 The optional properties, i.e. the <<stateInfo, StatefulOperatorStateInfo>>, the <<outputMode, output mode>>, and the <<eventTimeWatermark, event-time watermark>>, are initially undefined when `StateStoreSaveExec` is <<creating-instance, created>>. `StateStoreSaveExec` is updated to hold execution-specific configuration when `IncrementalExecution` is requested to [prepare the logical plan (of a streaming query) for execution](../IncrementalExecution.md#preparing-for-execution) (when the [state preparation rule](../IncrementalExecution.md#state) is executed).
@@ -147,20 +168,6 @@ When <<doExecute, executed>>, `StateStoreSaveExec` executes the <<child, child>>
 
 [[stateManager]]
 `StateStoreRestoreExec` uses a [StreamingAggregationStateManager](../streaming-aggregation/StreamingAggregationStateManager.md) (that is [created](../streaming-aggregation/StreamingAggregationStateManager.md#createStateManager) for the [keyExpressions](#keyExpressions), the output of the [child](#child) physical operator and the [stateFormatVersion](#stateFormatVersion)).
-
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.StateStoreSaveExec` to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.StateStoreSaveExec=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
 
 ## <span id="doExecute"> Executing Physical Operator
 
@@ -292,3 +299,4 @@ shouldRunAnotherBatch(
 Otherwise, `shouldRunAnotherBatch` is negative (`false`).
 
 `shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
+-->

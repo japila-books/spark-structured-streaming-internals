@@ -1,8 +1,8 @@
 # StateStoreProvider
 
-`StateStoreProvider` is an [abstraction](#contract) of [StateStore providers](#implementations) that manage [state stores](#getStore) (_state data_) in [Stateful Stream Processing](index.md) (e.g., for persisting running aggregates in [Streaming Aggregation](../streaming-aggregation/index.md)).
+`StateStoreProvider` is an [abstraction](#contract) of [StateStore providers](#implementations) that manage [state stores](#getStore) (_state data_) in [Stateful Stream Processing](index.md).
 
-`StateStoreProvider` utility uses [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration property to choose the default [implementation](#implementations).
+`StateStoreProvider` utility uses [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration property to choose the system-wide [implementation](#implementations).
 
 ## Contract
 
