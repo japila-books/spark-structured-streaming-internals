@@ -21,7 +21,7 @@
 
 `StateOperatorProgress` is created when:
 
-* `StateStoreWriter` is requested for a [StateOperatorProgress](../physical-operators/StateStoreWriter.md#getProgress)
+* `StateStoreWriter` is requested to [report progress](../physical-operators/StateStoreWriter.md#getProgress)
 * `StateOperatorProgress` is requested for a [copy](#copy)
 
 ### <span id="numRowsTotal"> numRowsTotal

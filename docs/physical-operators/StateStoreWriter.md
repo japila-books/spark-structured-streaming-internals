@@ -20,7 +20,7 @@ ID | Name
  numRowsDroppedByWatermark | number of rows which are dropped by watermark
  [numTotalStateRows](#numTotalStateRows) | number of total state rows
  numUpdatedStateRows | number of updated state rows
- allUpdatesTimeMs | time to update
+ [allUpdatesTimeMs](#allUpdatesTimeMs) | time to update
  numRemovedStateRows | number of removed state rows
  allRemovalsTimeMs | time to remove
  [commitTimeMs](#commitTimeMs) | time to commit changes
@@ -28,6 +28,20 @@ ID | Name
  numShufflePartitions | number of shuffle partitions
  [numStateStoreInstances](#numStateStoreInstances) | number of state store instances
  [stateStoreCustomMetrics](#stateStoreCustomMetrics) |
+
+### <span id="numStateStoreInstances"> numStateStoreInstances
+
+Updated in [setOperatorMetrics](#setOperatorMetrics)
+
+Reported as [numStateStoreInstances](../monitoring/StateOperatorProgress.md#numStateStoreInstances) when [reporting progress](#getProgress)
+
+### <span id="numTotalStateRows"> numTotalStateRows
+
+Sum of the [number of keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) of all state stores
+
+Updated in [setStoreMetrics](#setStoreMetrics) based on the [numKeys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) metric of a [StateStore](../stateful-stream-processing/StateStore.md).
+
+Reported as [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) when [reporting progress](#getProgress)
 
 ### <span id="commitTimeMs"> time to commit changes
 
@@ -44,19 +58,20 @@ Measured when the following physical operators are executed:
 
 Reported as [commitTimeMs](../monitoring/StateOperatorProgress.md#commitTimeMs) when [reporting progress](#getProgress)
 
-### <span id="numStateStoreInstances"> numStateStoreInstances
+### <span id="allUpdatesTimeMs"> time to update
 
-Updated in [setOperatorMetrics](#setOperatorMetrics)
+Time to update state (in state stores)
 
-Reported as [numStateStoreInstances](../monitoring/StateOperatorProgress.md#numStateStoreInstances) when [reporting progress](#getProgress)
+Measured when the following physical operators are executed:
 
-### <span id="numTotalStateRows"> numTotalStateRows
+* [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md#processDataWithPartition)
+* [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md#doExecute)
+* [StateStoreSaveExec](StateStoreSaveExec.md#doExecute)
+* [StreamingDeduplicateExec](StreamingDeduplicateExec.md#doExecute)
+* [StreamingGlobalLimitExec](StreamingGlobalLimitExec.md#doExecute)
+* [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md#processPartitions)
 
-Sum of the [number of keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) of all state stores
-
-Updated in [setStoreMetrics](#setStoreMetrics) based on the [numKeys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) metric of a [StateStore](../stateful-stream-processing/StateStore.md).
-
-Reported as [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) when [reporting progress](#getProgress)
+Reported as [allUpdatesTimeMs](../monitoring/StateOperatorProgress.md#allUpdatesTimeMs) when [reporting progress](#getProgress)
 
 ## <span id="shortName"> Short Name
 
