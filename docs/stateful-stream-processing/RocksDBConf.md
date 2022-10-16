@@ -14,6 +14,8 @@ The configuration options belong to `spark.sql.streaming.stateStore.rocksdb` nam
 
 **spark.sql.streaming.stateStore.rocksdb.compactOnCommit**
 
+Whether to compact [RocksDB](RocksDB.md) data while [committing state changes](RocksDB.md#commit) (before checkpointing)
+
 Default: `false`
 
 ### <span id="blockSizeKB"><span id="BLOCK_SIZE_KB_CONF"> blockSizeKB

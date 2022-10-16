@@ -31,14 +31,14 @@ lastCommitLatencyMs: Map[String, Long]
 
 `RocksDBMetrics` is given durations (of each named commit phase of [RocksDB committing a state version](RocksDB.md#commitLatencyMs)) when [created](#creating-instance).
 
-Commit Phase | Metric Name | Metric Description
--------------|-------------|-------------
- `checkpoint` | `rocksdbCommitCheckpointLatency` | RocksDB: commit - checkpoint time
- `compact` | `rocksdbCommitCompactLatency` | RocksDB: commit - compact time
- `fileSync` | `rocksdbCommitFileSyncLatencyMs` | RocksDB: commit - file sync to external storage time
- `flush` | `rocksdbCommitFlushLatency` | RocksDB: commit - flush time
- `pauseBg` | `rocksdbCommitPauseLatency` | RocksDB: commit - pause bg time
- `writeBatch` | `rocksdbCommitWriteBatchLatency` | RocksDB: commit - write batch time
+Commit Phase | Metric
+-------------|-------
+ `checkpoint` | [RocksDB: commit - checkpoint time](RocksDBStateStore.md#rocksdbCommitCheckpointLatency)
+ `compact` | [RocksDB: commit - compact time](RocksDBStateStore.md#rocksdbCommitCompactLatency)
+ `fileSync` | [RocksDB: commit - file sync to external storage time](RocksDBStateStore.md#rocksdbCommitFileSyncLatencyMs)
+ `flush` | [RocksDB: commit - flush time](RocksDBStateStore.md#rocksdbCommitFlushLatency)
+ `pauseBg` | [RocksDB: commit - pause bg time](RocksDBStateStore.md#rocksdbCommitPauseLatency)
+ `writeBatch` | [RocksDB: commit - write batch time](RocksDBStateStore.md#rocksdbCommitWriteBatchLatency)
 
 !!! danger "SPARK-40807"
     [SPARK-40807 "RocksDB: commit - pause bg time total" metric always 0](https://issues.apache.org/jira/browse/SPARK-40807)

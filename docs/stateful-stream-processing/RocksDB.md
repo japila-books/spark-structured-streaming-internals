@@ -132,7 +132,7 @@ Writing updates for [newVersion]
 Flushing updates for [newVersion]
 ```
 
-With [compactOnCommit](RocksDBConf.md#compactOnCommit) enabled, `commit` prints out the following INFO message to the logs and records the duration of requesting the [db](#db) to `compactRange` (`compactTimeMs`). Otherwise, the flush time is `0`.
+With [spark.sql.streaming.stateStore.rocksdb.compactOnCommit](RocksDBConf.md#compactOnCommit) enabled, `commit` prints out the following INFO message to the logs and records the duration of requesting the [db](#db) to `compactRange` (`compactTimeMs`). Otherwise, the compact time is `0`.
 
 ```text
 Compacting

@@ -30,13 +30,13 @@ In the end, `metrics` creates a [StateStoreMetrics](StateStoreMetrics.md) with t
 * [totalMemUsageBytes](RocksDBMetrics.md#totalMemUsageBytes) of the [RocksDBMetrics](RocksDBMetrics.md)
 * The `StateStoreCustomMetric`s
 
-### <span id="rocksdbGetLatency"><span id="CUSTOM_METRIC_GET_TIME"> RocksDB: total get call latency
+### <span id="rocksdbCommitCompactLatency"><span id="CUSTOM_METRIC_COMMIT_COMPACT_TIME"> RocksDB: commit - compact time
 
-`rocksdbGetLatency` is the **sum** on `get` entry in the [nativeOpsHistograms](RocksDBMetrics.md#nativeOpsHistograms)
+`rocksdbCommitCompactLatency` is the `compact` entry in the [lastCommitLatencyMs](RocksDBMetrics.md#lastCommitLatencyMs)
 
-### <span id="rocksdbPutLatency"><span id="CUSTOM_METRIC_PUT_TIME"> RocksDB: total put call latency
+### <span id="rocksdbCommitFileSyncLatencyMs"><span id="CUSTOM_METRIC_FILESYNC_TIME"><span id="fileSync"> RocksDB: commit - file sync to external storage time
 
-`rocksdbPutLatency` is the **sum** on `put` entry in the [nativeOpsHistograms](RocksDBMetrics.md#nativeOpsHistograms)
+`rocksdbCommitFileSyncLatencyMs` is the `fileSync` entry in the [lastCommitLatencyMs](RocksDBMetrics.md#lastCommitLatencyMs)
 
 ### <span id="rocksdbTotalCompactionLatencyMs"><span id="CUSTOM_METRIC_TOTAL_COMPACT_TIME"> RocksDB: compaction - total compaction time including background
 
@@ -49,6 +49,14 @@ In the end, `metrics` creates a [StateStoreMetrics](StateStoreMetrics.md) with t
 ### <span id="rocksdbPutCount"><span id="CUSTOM_METRIC_PUT_COUNT"> RocksDB: number of put calls
 
 `rocksdbPutCount` is the **count** on `put` entry in the [nativeOpsHistograms](RocksDBMetrics.md#nativeOpsHistograms)
+
+### <span id="rocksdbGetLatency"><span id="CUSTOM_METRIC_GET_TIME"> RocksDB: total get call latency
+
+`rocksdbGetLatency` is the **sum** on `get` entry in the [nativeOpsHistograms](RocksDBMetrics.md#nativeOpsHistograms)
+
+### <span id="rocksdbPutLatency"><span id="CUSTOM_METRIC_PUT_TIME"> RocksDB: total put call latency
+
+`rocksdbPutLatency` is the **sum** on `put` entry in the [nativeOpsHistograms](RocksDBMetrics.md#nativeOpsHistograms)
 
 ## <span id="commit"> Committing State Changes
 
