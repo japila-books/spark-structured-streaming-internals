@@ -139,9 +139,12 @@ Unless [already constructed](#isCurrentBatchConstructed), the batch runner [cons
 
 The batch runner [records the trigger offset range for progress reporting](#recordTriggerOffsets) (with the [committed](../StreamExecution.md#committedOffsets), [available](../StreamExecution.md#availableOffsets) and [latestOffsets](../StreamExecution.md#latestOffsets) offsets).
 
-#### <span id="runActivatedStream-triggerExecution-isNewDataAvailable"> isNewDataAvailable
+#### <span id="runActivatedStream-triggerExecution-isNewDataAvailable"><span id="currentBatchHasNewData"> currentBatchHasNewData
 
-The batch runner remembers [whether the current batch has data or not](#isNewDataAvailable) and updates the [StreamingQueryStatus](../monitoring/ProgressReporter.md#currentStatus) (as `isDataAvailable` property).
+The batch runner uses
+`currentBatchHasNewData` to remember [whether the current batch has data or not](#isNewDataAvailable) (based on the offsets [available](../StreamExecution.md#availableOffsets) and [committed](../StreamExecution.md#committedOffsets) that can change over time).
+
+The batch runner updates [isDataAvailable](../monitoring/StreamingQueryStatus.md#isDataAvailable) of the [StreamingQueryStatus](../monitoring/ProgressReporter.md#currentStatus).
 
 #### <span id="runActivatedStream-triggerExecution-runBatch"> Running Micro-Batch
 
@@ -806,23 +809,23 @@ The `WatermarkTracker` is used then for the following:
     * [Running a single streaming micro-batch](#runBatch) (to [add a CommitMetadata](../HDFSMetadataLog.md#add) to the [Offset Commit Log](../StreamExecution.md#commitLog))
 * [Updating watermark](../WatermarkTracker.md#updateWatermark) while [running a single streaming micro-batch](#runBatch)
 
-## <span id="isCurrentBatchConstructed"> isCurrentBatchConstructed Flag
+## <span id="isCurrentBatchConstructed"> isCurrentBatchConstructed
 
 ```scala
 isCurrentBatchConstructed: Boolean
 ```
 
-`MicroBatchExecution` uses `isCurrentBatchConstructed` internal flag to control whether or not to [run a streaming micro-batch](#runBatch).
+`MicroBatchExecution` initializes `isCurrentBatchConstructed` internal flag to be `false` when [created](#creating-instance).
 
-Default: `false`
+When `false`, `isCurrentBatchConstructed` is set to whatever [constructNextBatch](#constructNextBatch) gives back while [running activated streaming query](#runActivatedStream).
 
-When `false`, changed to whatever [constructing the next streaming micro-batch](#constructNextBatch) gives back when [running activated streaming query](#runActivatedStream)
+In other words, `MicroBatchExecution` uses `isCurrentBatchConstructed` to guard (_skip_) execution of [constructNextBatch](#constructNextBatch) (since, as indicated by the name, next batch has already been constructed).
 
-Disabled (`false`) after [running a streaming micro-batch](#runBatch) (when enabled after [constructing the next streaming micro-batch](#constructNextBatch))
+At the end of a trigger (when [running activated streaming query](#runActivatedStream)) and with `isCurrentBatchConstructed` being `true`, `isCurrentBatchConstructed` is reset to `false` (alongside incrementing [currentBatchId](../StreamExecution.md#currentBatchId) counter).
 
-Enabled (`true`) when [populating start offsets](#populateStartOffsets) (when [running an activated streaming query](#runActivatedStream)) and [re-starting a streaming query from a checkpoint](../HDFSMetadataLog.md#getLatest) (using the [Offset Write-Ahead Log](../StreamExecution.md#offsetLog))
+Upon [re-starting a streaming query from a checkpoint](../HDFSMetadataLog.md#getLatest) (using the [Offset Write-Ahead Log](../StreamExecution.md#offsetLog)) while [populating start offsets](#populateStartOffsets) (while [running an activated streaming query](#runActivatedStream)), `isCurrentBatchConstructed` is `true` initially. `isCurrentBatchConstructed` can be set to `false` when the latest offset checkpointed has already been successfully processed and [committed](../HDFSMetadataLog.md#getLatest) (to the [Offset Commit Log](../StreamExecution.md#commitLog)).
 
-Disabled (`false`) when [populating start offsets](#populateStartOffsets) (when [running an activated streaming query](#runActivatedStream)) and [re-starting a streaming query from a checkpoint](../HDFSMetadataLog.md#getLatest) when the latest offset checkpointed (written) to the [offset write-ahead log](../StreamExecution.md#offsetLog) has been successfully processed and [committed](../HDFSMetadataLog.md#getLatest) to the [Offset Commit Log](../StreamExecution.md#commitLog)
+Used in [finishTrigger](#finishTrigger).
 
 ## Demo
 
