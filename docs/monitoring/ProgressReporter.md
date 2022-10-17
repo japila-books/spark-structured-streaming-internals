@@ -157,10 +157,6 @@ Clock of the streaming query
 
 * [StreamExecution](../StreamExecution.md)
 
-## <span id="noDataProgressEventInterval"> spark.sql.streaming.noDataProgressEventInterval
-
-`ProgressReporter` uses the [spark.sql.streaming.noDataProgressEventInterval](../configuration-properties.md#spark.sql.streaming.noDataProgressEventInterval) configuration property to control how long to wait between two progress events when there is no data (default: `10000L`) when [finishing a trigger](#finishTrigger).
-
 ## Demo
 
 ```text
@@ -304,44 +300,6 @@ Starting Trigger Calculation
 
 `StreamExecution` starts [running batches](../StreamExecution.md#runStream) (as part of [TriggerExecutor](../StreamExecution.md#triggerExecutor) executing a batch runner).
 
-## <span id="finishTrigger"> Finishing Up Streaming Batch (Trigger)
-
-```scala
-finishTrigger(
-  hasNewData: Boolean): Unit
-```
-
-`finishTrigger` sets [currentTriggerEndTimestamp](#currentTriggerEndTimestamp) to the current time (using [triggerClock](#triggerClock)).
-
-`finishTrigger` <<extractExecutionStats, extractExecutionStats>>.
-
-`finishTrigger` calculates the *processing time* (in seconds) as the difference between the <<currentTriggerEndTimestamp, end>> and <<currentTriggerStartTimestamp, start>> timestamps.
-
-`finishTrigger` calculates the *input time* (in seconds) as the difference between the start time of the <<currentTriggerStartTimestamp, current>> and <<lastTriggerStartTimestamp, last>> triggers.
-
-.ProgressReporter's finishTrigger and Timestamps
-image::images/ProgressReporter-finishTrigger-timestamps.png[align="center"]
-
-`finishTrigger` prints out the following DEBUG message to the logs:
-
-```text
-Execution stats: [executionStats]
-```
-
-`finishTrigger` creates a <<SourceProgress, SourceProgress>> (aka source statistics) for <<sources, every source used>>.
-
-`finishTrigger` creates a <<SinkProgress, SinkProgress>> (aka sink statistics) for the <<sink, sink>>.
-
-`finishTrigger` creates a [StreamingQueryProgress](StreamingQueryProgress.md).
-
-If there was any data (using the input `hasNewData` flag), `finishTrigger` resets <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> (i.e. becomes the minimum possible time) and <<updateProgress, updates query progress>>.
-
-Otherwise, when no data was available (using the input `hasNewData` flag), `finishTrigger` <<updateProgress, updates query progress>> only when <<lastNoDataProgressEventTime, lastNoDataProgressEventTime>> passed.
-
-In the end, `finishTrigger` disables `isTriggerActive` flag of <<currentStatus, StreamingQueryStatus>> (i.e. sets it to `false`).
-
-NOTE: `finishTrigger` is used exclusively when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runActivatedStream, run the activated streaming query>> (after <<MicroBatchExecution.md#runActivatedStream-triggerExecution, triggerExecution Phase>> at the end of a streaming batch).
-
 ## <span id="reportTimeTaken"> Time-Tracking Section (Recording Execution Time)
 
 ```scala
@@ -388,43 +346,148 @@ updateStatusMessage(
 
 * `MicroBatchExecution` is requested to [run an activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream) or [construct the next streaming micro-batch](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
-## <span id="extractExecutionStats"> Generating Execution Statistics
+## <span id="finishTrigger"> Finishing Up Batch (Trigger)
+
+```scala
+finishTrigger(
+  hasNewData: Boolean,
+  hasExecuted: Boolean): Unit
+```
+
+`finishTrigger` [updates progress](#updateProgress) with a new [StreamingQueryProgress](StreamingQueryProgress.md) and resets the [lastNoExecutionProgressEventTime](#lastNoExecutionProgressEventTime) (to the current time).
+
+If the given `hasExecuted` flag is disabled, `finishTrigger` does the above only when [lastNoDataProgressEventTime](#lastNoDataProgressEventTime) elapsed.
+
+---
+
+The given `hasNewData` and `hasExecuted` flags indicate the state of [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md).
+
+Input Flag | MicroBatchExecution
+-----------|--------------------
+ `hasNewData` | [currentBatchHasNewData](../micro-batch-execution/MicroBatchExecution.md#currentBatchHasNewData)
+ `hasExecuted` | [isCurrentBatchConstructed](../micro-batch-execution/MicroBatchExecution.md#isCurrentBatchConstructed)
+
+---
+
+`finishTrigger` expects that the following are initialized or throws an `AssertionError`:
+
+* [currentTriggerStartOffsets](#currentTriggerStartOffsets)
+* [currentTriggerEndOffsets](#currentTriggerEndOffsets)
+* [currentTriggerLatestOffsets](#currentTriggerLatestOffsets)
+
+---
+
+`finishTrigger` sets [currentTriggerEndTimestamp](#currentTriggerEndTimestamp) to the current time.
+
+`finishTrigger` [extractExecutionStats](#extractExecutionStats).
+
+`finishTrigger` prints out the following DEBUG message to the logs:
+
+```text
+Execution stats: [executionStats]
+```
+
+`finishTrigger` calculates the **processing time** (_batchDuration_) as the time difference between the [end](#currentTriggerEndTimestamp) and [start](#currentTriggerStartTimestamp) timestamps.
+
+`finishTrigger` calculates the **input time** (in seconds) as the time difference between the start time of the [current](#currentTriggerStartTimestamp) and [last](#lastTriggerStartTimestamp) triggers (if there were two batches already) or the infinity.
+
+![ProgressReporter's finishTrigger and Timestamps](../images/ProgressReporter-finishTrigger-timestamps.png)
+
+For every unique [SparkDataStream](../SparkDataStream.md) (in [sources](#sources)), `finishTrigger` creates a [SourceProgress](SourceProgress.md).
+
+SourceProgress| Value
+--------------|-------
+ description | A string representation of this [SparkDataStream](../SparkDataStream.md)
+ startOffset | Looks up this [SparkDataStream](../SparkDataStream.md) in [currentTriggerStartOffsets](#currentTriggerStartOffsets)
+ endOffset | Looks up this [SparkDataStream](../SparkDataStream.md) in [currentTriggerEndOffsets](#currentTriggerEndOffsets)
+ latestOffset | Looks up this [SparkDataStream](../SparkDataStream.md) in [currentTriggerLatestOffsets](#currentTriggerLatestOffsets)
+ numInputRows | Looks up this [SparkDataStream](../SparkDataStream.md) in the [inputRows](ExecutionStats.md#inputRows) of [ExecutionStats](ExecutionStats.md)
+ inputRowsPerSecond | `numInputRows` divided by the input time
+ processedRowsPerSecond | `numInputRows` divided by the processing time
+ metrics | [metrics](../ReportsSourceMetrics.md#metrics) for [ReportsSourceMetrics](../ReportsSourceMetrics.md) data streams or empty
+
+`finishTrigger` creates a [SinkProgress](#SinkProgress) (_sink statistics_) for the [sink Table](#sink).
+
+`finishTrigger` [extractObservedMetrics](#extractObservedMetrics).
+
+`finishTrigger` creates a [StreamingQueryProgress](StreamingQueryProgress.md).
+
+With the given `hasExecuted` flag enabled, `finishTrigger` resets the [lastNoExecutionProgressEventTime](#lastNoExecutionProgressEventTime) to the current time and [updates progress](#updateProgress) (with the new `StreamingQueryProgress`).
+
+Otherwise, with the given `hasExecuted` disabled, `finishTrigger` resets the [lastNoExecutionProgressEventTime](#lastNoExecutionProgressEventTime) to the current time and [updates progress](#updateProgress) (with the new `StreamingQueryProgress`) only when [lastNoDataProgressEventTime](#lastNoDataProgressEventTime) elapsed.
+
+In the end, `finishTrigger` turns `isTriggerActive` flag off of the [StreamingQueryStatus](#currentStatus).
+
+---
+
+`finishTrigger` is used when:
+
+* `MicroBatchExecution` is requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream)
+
+### <span id="extractExecutionStats"> Execution Statistics
 
 ```scala
 extractExecutionStats(
-  hasNewData: Boolean): ExecutionStats
+  hasNewData: Boolean,
+  hasExecuted: Boolean): ExecutionStats
 ```
 
-`extractExecutionStats` generates an [ExecutionStats](ExecutionStats.md) of the <<lastExecution, last execution>> of the streaming query.
+`extractExecutionStats` generates an [ExecutionStats](ExecutionStats.md) of the [last execution](#lastExecution) (of this streaming query).
 
-Internally, `extractExecutionStats` generate *watermark* metric (using the [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) of the <<offsetSeqMetadata, OffsetSeqMetadata>>) if there is a [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) unary logical operator in the <<logicalPlan, logical plan>> of the streaming query.
+---
 
-`extractExecutionStats` [extractStateOperatorMetrics](#extractStateOperatorMetrics).
+For the given `hasNewData` disabled, `extractExecutionStats` returns an [ExecutionStats](ExecutionStats.md) with the execution statistics:
 
-`extractExecutionStats` [extractSourceToNumInputRows](#extractSourceToNumInputRows).
+* Empty input rows per data source
+* [State operator metrics](#extractStateOperatorMetrics)
+* Event-time statistics with `watermark` only (and only if there is [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) in the query plan)
 
-`extractExecutionStats` finds the [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) unary physical operator (with non-zero [EventTimeStats](../streaming-watermark/EventTimeStatsAccum.md)) and generates *max*, *min*, and *avg* statistics.
+Otherwise, with the given `hasNewData` enabled, `extractExecutionStats` generates event-time statistics (with `max`, `min`, and `avg` statistics). `extractStateOperatorMetrics` collects all [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) operators with non-empty [EventTimeStats](../streaming-watermark/EventTimeStatsAccum.md) (from the optimized execution plan of the [last QueryExecution](#lastExecution)).
 
-In the end, `extractExecutionStats` creates a [ExecutionStats](ExecutionStats.md) with the execution statistics.
+In the end, `extractExecutionStats` creates an [ExecutionStats](ExecutionStats.md) with the execution statistics:
 
-If the input `hasNewData` flag is turned off (`false`), `extractExecutionStats` returns an [ExecutionStats](ExecutionStats.md) with no input rows and event-time statistics (that require data to be processed to have any sense).
+* [Input rows per data source](#extractSourceToNumInputRows)
+* [State operator metrics](#extractStateOperatorMetrics)
+* Event-time statistics (`max`, `min`, `avg`, `watermark`)
 
-NOTE: `extractExecutionStats` is used exclusively when `ProgressReporter` is requested to <<finishTrigger, finish up a streaming batch (trigger) and generate a StreamingQueryProgress>>.
-
-## <span id="extractStateOperatorMetrics"> Generating StateStoreWriter Metrics (StateOperatorProgress)
+### <span id="extractStateOperatorMetrics"> State Operators Metrics
 
 ```scala
 extractStateOperatorMetrics(
-  hasNewData: Boolean): Seq[StateOperatorProgress]
+  hasExecuted: Boolean): Seq[StateOperatorProgress]
 ```
 
-`extractStateOperatorMetrics` requests the <<lastExecution, QueryExecution>> for the optimized execution plan (`executedPlan`) and finds all [StateStoreWriter](../physical-operators/StateStoreWriter.md) physical operators and requests them for [StateOperatorProgress](../physical-operators/StateStoreWriter.md#getProgress).
+`extractStateOperatorMetrics` returns no [StateOperatorProgress](StateOperatorProgress.md)s when the [lastExecution](#lastExecution) is uninitialized.
 
-`extractStateOperatorMetrics` clears (_zeros_) the *numRowsUpdated* metric for the given `hasNewData` turned off (`false`).
+`extractStateOperatorMetrics` requests the [last QueryExecution](#lastExecution) for the optimized execution plan ([Spark SQL]({{ book.spark_sql }}/QueryExecution/#executedPlan)).
 
-`extractStateOperatorMetrics` returns an empty collection for the <<lastExecution, QueryExecution>> uninitialized (`null`).
+`extractStateOperatorMetrics` traverses the execution plan and collects all [StateStoreWriter](../physical-operators/StateStoreWriter.md) operators that are requested to [report progress](../physical-operators/StateStoreWriter.md#getProgress).
 
-`extractStateOperatorMetrics` is used when `ProgressReporter` is requested to [generate execution statistics](#extractExecutionStats).
+When the given `hasExecuted` flag is enabled, `extractStateOperatorMetrics` leaves all the [progress reports](../physical-operators/StateStoreWriter.md#getProgress) unchanged. Otherwise, `extractStateOperatorMetrics` clears (_zero'es_) the `newNumRowsUpdated` and `newNumRowsDroppedByWatermark` metrics.
+
+### <span id="extractObservedMetrics"> ObservedMetrics
+
+```scala
+extractObservedMetrics(
+  hasNewData: Boolean,
+  lastExecution: QueryExecution): Map[String, Row]
+```
+
+`extractObservedMetrics` returns the `observedMetrics` from the given `QueryExecution` when either the given `hasNewData` flag is enabled (`true`) or the given `QueryExecution` is initialized.
+
+### <span id="lastNoExecutionProgressEventTime"> lastNoExecutionProgressEventTime
+
+```scala
+lastNoExecutionProgressEventTime: Long
+```
+
+`ProgressReporter` initializes `lastNoExecutionProgressEventTime` internal time marker to the minimum timestamp when created.
+
+`lastNoExecutionProgressEventTime` is the time when [finishTrigger](#finishTrigger) happens and `hasExecuted` flag is enabled. Otherwise, `lastNoExecutionProgressEventTime` is reset only when [noDataProgressEventInterval](#noDataProgressEventInterval) threshold has been reached.
+
+### <span id="noDataProgressEventInterval"> noDataProgressEventInterval
+
+`ProgressReporter` uses [spark.sql.streaming.noDataProgressEventInterval](../configuration-properties.md#spark.sql.streaming.noDataProgressEventInterval) configuration property to control how long to wait between emitting a progress event when there is no data when [finishing a trigger](#finishTrigger).
 
 ## <span id="recordTriggerOffsets"> Recording Trigger Offsets (StreamProgress)
 
