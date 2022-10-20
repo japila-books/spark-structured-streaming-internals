@@ -228,21 +228,21 @@ nav:
       - RocksDBStateStoreProvider: stateful-stream-processing/RocksDBStateStoreProvider.md
     - Arbitrary Stateful Streaming Aggregation:
       - arbitrary-stateful-streaming-aggregation/index.md
-      - KeyValueGroupedDataset:
-        - KeyValueGroupedDataset: KeyValueGroupedDataset.md
-        - mapGroupsWithState: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
-        - flatMapGroupsWithState: spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md
+      - FlatMapGroupsWithStateExecHelper: arbitrary-stateful-streaming-aggregation/FlatMapGroupsWithStateExecHelper.md
       - GroupState:
         - GroupState: GroupState.md
         - GroupStateImpl: GroupStateImpl.md
       - GroupStateTimeout: GroupStateTimeout.md
+      - InputProcessor: arbitrary-stateful-streaming-aggregation/InputProcessor.md
+      - KeyValueGroupedDataset:
+        - KeyValueGroupedDataset: KeyValueGroupedDataset.md
+        - mapGroupsWithState: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
+        - flatMapGroupsWithState: spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md
       - StateManager:
         - StateManager: arbitrary-stateful-streaming-aggregation/StateManager.md
-        - StateManagerImplV2: arbitrary-stateful-streaming-aggregation/StateManagerImplV2.md
         - StateManagerImplBase: arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md
         - StateManagerImplV1: arbitrary-stateful-streaming-aggregation/StateManagerImplV1.md
-      - FlatMapGroupsWithStateExecHelper: arbitrary-stateful-streaming-aggregation/FlatMapGroupsWithStateExecHelper.md
-      - InputProcessor: arbitrary-stateful-streaming-aggregation/InputProcessor.md
+        - StateManagerImplV2: arbitrary-stateful-streaming-aggregation/StateManagerImplV2.md
     - Streaming Aggregation:
       - streaming-aggregation/index.md
       - StreamingAggregationStateManager: streaming-aggregation/StreamingAggregationStateManager.md
