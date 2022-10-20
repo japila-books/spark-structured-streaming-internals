@@ -1,6 +1,6 @@
 # StreamingSymmetricHashJoinExec Physical Operator
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for [stream-stream equi-join](../streaming-join/index.md) at execution time.
+`StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for executing [stream-stream equi-join](../streaming-join/index.md).
 
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 
@@ -14,6 +14,7 @@ requiredChildDistribution: Seq[Distribution]
 
 `requiredChildDistribution` is two [StatefulOpClusteredDistribution](StatefulOpClusteredDistribution.md)s for the [left](#leftKeys) and [right](#rightKeys) keys (with the [numPartitions](../stateful-stream-processing/StatefulOperatorStateInfo.md#numPartitions) of the [StatefulOperatorStateInfo](StatefulOperator.md#getStateInfo)).
 
+<!---
 ## Review Me
 
 [[supported-join-types]][[joinType]]
@@ -290,3 +291,4 @@ a| [[storeConf]] [StateStoreConf](../stateful-stream-processing/StateStoreConf.m
 Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
 
 |===
+-->

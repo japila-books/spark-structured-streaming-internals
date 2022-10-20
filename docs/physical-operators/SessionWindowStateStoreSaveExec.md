@@ -1,5 +1,7 @@
 # SessionWindowStateStoreSaveExec Physical Operator
 
+`SessionWindowStateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode/)).
+
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 
 ```scala

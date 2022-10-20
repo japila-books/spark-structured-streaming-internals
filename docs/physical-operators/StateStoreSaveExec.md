@@ -1,8 +1,8 @@
 # StateStoreSaveExec Physical Operator
 
-`StateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [saves (writes) a streaming state (to a state store)](StateStoreWriter.md) with [support for streaming watermark](WatermarkSupport.md).
+`StateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [saves (writes) a streaming state](StateStoreWriter.md) (to a [state store](../stateful-stream-processing/StateStore.md)) with [support for streaming watermark](WatermarkSupport.md).
 
-`StateStoreSaveExec` is among the physical operators used to execute [streaming aggregations](../streaming-aggregation/index.md).
+`StateStoreSaveExec` is one of the physical operators used for [streaming aggregation](../streaming-aggregation/index.md).
 
 ![StateStoreSaveExec and StatefulAggregationStrategy](../images/StateStoreSaveExec-StatefulAggregationStrategy.png)
 
@@ -111,9 +111,7 @@ In other words, the total of the [time-tracked phases](../stateful-stream-proces
 
 ### <span id="numTotalStateRows"> number of total state rows
 
-Number of entries in a [state store](../stateful-stream-processing/StateStore.md) at the very end of [executing the StateStoreSaveExec operator](#doExecute) (aka _numTotalStateRows_)
-
-Corresponds to `numRowsTotal` attribute in `stateOperators` in [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md) (and is available as `sq.lastProgress.stateOperators` for an operator).
+[number of total state rows](StateStoreWriter.md#numTotalStateRows)
 
 ### <span id="numUpdatedStateRows"> number of updated state rows
 

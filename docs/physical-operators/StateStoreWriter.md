@@ -14,7 +14,7 @@
 ## <span id="metrics"> Performance Metrics
 
 ID | Name
----------|----------
+---|----------
  [statefulOperatorCustomMetrics](#statefulOperatorCustomMetrics) |
  numOutputRows | number of output rows
  numRowsDroppedByWatermark | number of rows which are dropped by watermark
@@ -29,19 +29,22 @@ ID | Name
  [numStateStoreInstances](#numStateStoreInstances) | number of state store instances
  [stateStoreCustomMetrics](#stateStoreCustomMetrics) |
 
-### <span id="numStateStoreInstances"> numStateStoreInstances
+### <span id="numStateStoreInstances"> number of state store instances
 
 Updated in [setOperatorMetrics](#setOperatorMetrics)
 
 Reported as [numStateStoreInstances](../monitoring/StateOperatorProgress.md#numStateStoreInstances) when [reporting progress](#getProgress)
 
-### <span id="numTotalStateRows"> numTotalStateRows
+### <span id="numTotalStateRows"> number of total state rows
 
-Sum of the [number of keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) of all state stores
+Number (_sum_) of the [keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) across all [state stores](../stateful-stream-processing/StateStore.md):
 
-Updated in [setStoreMetrics](#setStoreMetrics) based on the [numKeys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) metric of a [StateStore](../stateful-stream-processing/StateStore.md).
+* For [unary stateful operators](#implementations), [updated](#setStoreMetrics) based on the [numKeys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) metric of a [StateStore](../stateful-stream-processing/StateStore.md)
+* For [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md), updated at [onOutputCompletion](StreamingSymmetricHashJoinExec.md#onOutputCompletion) (of [processPartitions](StreamingSymmetricHashJoinExec.md#processPartitions))
 
-Reported as [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) when [reporting progress](#getProgress)
+Reported as [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) (in `stateOperators` in [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)) when [reporting progress](#getProgress)
+
+Can be disabled (for performance reasons) using [spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows](../configuration-properties.md#spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows)
 
 ### <span id="commitTimeMs"> time to commit changes
 
