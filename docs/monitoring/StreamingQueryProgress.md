@@ -33,6 +33,21 @@ The time when a trigger has started (in ISO8601 format).
 
 `StreamingQueryProgress` is given an **Event Time Statistics** when [created](#creating-instance).
 
+## <span id="numInputRows"> Total Number of Input Rows
+
+```scala
+numInputRows: Long
+```
+
+`numInputRows` is a sum of the [numInputRows](SourceProgress.md#numInputRows) of all the [sources](#sources).
+
+---
+
+`numInputRows` is used when:
+
+* `StreamingQueryProgress` is requested for [jsonValue](#jsonValue)
+* `StreamingQueryStatisticsPage` is requested to [generateStatTable](../webui/StreamingQueryStatisticsPage.md#generateStatTable) (for `input-rows-histogram`)
+
 ## Last and Recent Progresses
 
 Use [lastProgress](../StreamingQuery.md#lastProgress) property of a `StreamingQuery` to access the most recent `StreamingQueryProgress` update.
@@ -52,3 +67,27 @@ sq.recentProgress
 ## StreamingQueryListener
 
 Use [StreamingQueryListener](StreamingQueryListener.md#QueryProgressEvent) to be notified about `StreamingQueryProgress` updates while a streaming query is executed.
+
+## <span id="prettyJson"> prettyJson
+
+```scala
+prettyJson: String
+```
+
+`prettyJson`...FIXME
+
+---
+
+`prettyJson` is used for [toString](#toString).
+
+## <span id="jsonValue"> jsonValue
+
+```scala
+jsonValue: JValue
+```
+
+`jsonValue`...FIXME
+
+---
+
+`jsonValue` is used in [json](#json) and [prettyJson](#prettyJson).

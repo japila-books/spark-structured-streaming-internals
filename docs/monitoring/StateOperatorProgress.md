@@ -44,3 +44,18 @@ copy(
 
 * `ProgressReporter` is requested to [extractStateOperatorMetrics](ProgressReporter.md#extractStateOperatorMetrics)
 * `SessionWindowStateStoreSaveExec` is requested for a [StateOperatorProgress](../physical-operators/SessionWindowStateStoreSaveExec.md#extractStateOperatorMetrics)
+
+## <span id="jsonValue"> jsonValue
+
+```scala
+jsonValue: JValue
+```
+
+`jsonValue`...FIXME
+
+---
+
+`jsonValue` is used when:
+
+* `StateOperatorProgress` is requested to [json](#json), [prettyJson](#prettyJson)
+* `StreamingQueryProgress` is requested to [jsonValue](StreamingQueryProgress.md#jsonValue)

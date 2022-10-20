@@ -15,7 +15,7 @@
 
 ID | Name
 ---|----------
- allRemovalsTimeMs | time to remove
+ [allRemovalsTimeMs](#allRemovalsTimeMs) | time to remove
  [allUpdatesTimeMs](#allUpdatesTimeMs) | time to update
  [commitTimeMs](#commitTimeMs) | time to commit changes
  numOutputRows | number of output rows
@@ -65,29 +65,20 @@ Reported as [numRowsUpdated](../monitoring/StateOperatorProgress.md#numRowsUpdat
 
 Time for a [StateStore](../stateful-stream-processing/StateStore.md) to [commit state changes](../stateful-stream-processing/StateStore.md#commit)
 
-Measured when the following physical operators are executed:
-
-* [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md#processDataWithPartition)
-* [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md#doExecute)
-* [StateStoreSaveExec](StateStoreSaveExec.md#doExecute)
-* [StreamingDeduplicateExec](StreamingDeduplicateExec.md#doExecute)
-* [StreamingGlobalLimitExec](StreamingGlobalLimitExec.md#doExecute)
-* [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md#processPartitions)
-
 Reported as [commitTimeMs](../monitoring/StateOperatorProgress.md#commitTimeMs) when [reporting progress](#getProgress)
+
+### <span id="allRemovalsTimeMs"> time to remove
+
+[Time taken](#timeTakenMs) to...FIXME
+
+Reported as [allRemovalsTimeMs](../monitoring/StateOperatorProgress.md#allRemovalsTimeMs) when [reporting progress](#getProgress)
 
 ### <span id="allUpdatesTimeMs"> time to update
 
-Time to update state (in state stores)
+[Time taken](#timeTakenMs) to read the input rows and [store them in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (possibly filtering out expired "watermarked" rows per [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate)
 
-Measured when the following physical operators are executed:
-
-* [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md#processDataWithPartition)
-* [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md#doExecute)
-* [StateStoreSaveExec](StateStoreSaveExec.md#doExecute)
-* [StreamingDeduplicateExec](StreamingDeduplicateExec.md#doExecute)
-* [StreamingGlobalLimitExec](StreamingGlobalLimitExec.md#doExecute)
-* [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md#processPartitions)
+!!! note "number of updated state rows"
+    The number of rows stored is the [number of updated state rows](#numUpdatedStateRows) metric
 
 Reported as [allUpdatesTimeMs](../monitoring/StateOperatorProgress.md#allUpdatesTimeMs) when [reporting progress](#getProgress)
 
