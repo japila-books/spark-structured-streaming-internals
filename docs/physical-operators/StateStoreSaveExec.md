@@ -83,60 +83,67 @@ In other words, the total of the [time-tracked phases](../stateful-stream-proces
 
 ### <span id="allRemovalsTimeMs"> time to remove
 
-!!! note "See Also"
-    `StateStoreSaveExec` is a [StateStoreWriter](StateStoreWriter.md) so consult [time to remove](StateStoreWriter.md#allRemovalsTimeMs), too.
+The metric is computed differently based on the given [OutputMode](#outputMode).
 
-The metric is computed differently based on the given [OutputMode](#outputMode):
+=== "Append"
+    For [Append](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) for the entire input row and state processing (except [time to commit changes](#commitTimeMs))
 
-* For [Append](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) for the entire input row and state processing (except [time to commit changes](#commitTimeMs))
+=== "Complete"
+    For [Complete](#outputMode), always `0`
 
-* For [Complete](#outputMode), always `0`
+=== "Update"
+    For [Update](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to [removeKeysOlderThanWatermark](WatermarkSupport.md#removeKeysOlderThanWatermark) (using the [StreamingAggregationStateManager](#stateManager))
 
-* For [Update](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to [removeKeysOlderThanWatermark](WatermarkSupport.md#removeKeysOlderThanWatermark) (using the [StreamingAggregationStateManager](#stateManager))
+`StateStoreSaveExec` is a [StateStoreWriter](StateStoreWriter.md) so consult [time to remove](StateStoreWriter.md#allRemovalsTimeMs), too.
 
 ### <span id="allUpdatesTimeMs"> time to update
 
-!!! note "See Also"
-    `StateStoreSaveExec` is a [StateStoreWriter](StateStoreWriter.md) so consult [time to update](StateStoreWriter.md#allUpdatesTimeMs), too.
+The metric is computed differently based on the given [OutputMode](#outputMode).
 
-The metric is computed differently based on the given [OutputMode](#outputMode):
+=== "Append"
+    For [Append](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to filter out expired rows (per the required [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) and [store them in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (using the [StreamingAggregationStateManager](#stateManager))
 
-* For [Append](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to filter out expired rows (per the required [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) and [store them in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (using the [StreamingAggregationStateManager](#stateManager))
+    Use [number of updated state rows](#numUpdatedStateRows) for the number of expired rows that were stored in a state store.
 
-    !!! note "number of updated state rows"
-        Use [number of updated state rows](#numUpdatedStateRows) for the number of expired rows that were stored in a state store.
+=== "Complete"
+    For [Complete](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to [store all input rows in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (using the [StreamingAggregationStateManager](#stateManager))
 
-* For [Complete](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to [store all input rows in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (using the [StreamingAggregationStateManager](#stateManager))
+=== "Update"
+    For [Update](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to filter out expired rows (per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) and [store them in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (using the [StreamingAggregationStateManager](#stateManager))
 
-* For [Update](#outputMode), [time taken](StateStoreWriter.md#timeTakenMs) to filter out expired rows (per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) and [store them in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (using the [StreamingAggregationStateManager](#stateManager))
+    [number of output rows](#numOutputRows) and [number of updated state rows](#numUpdatedStateRows) metrics are the same and exactly the number of rows that were stored in a state store.
 
-    !!! note "number of updated state and output rows"
-        In [Update](#outputMode), [number of output rows](#numOutputRows) and [number of updated state rows](#numUpdatedStateRows) metrics are the same and exactly the number of rows that were stored in a state store.
-
-### <span id="numOutputRows"> number of output rows
-
-* For [Append](#outputMode) output mode, the metric does not seem to be used
-
-* For [Complete](#outputMode) output mode, the number of rows in a [StateStore](../stateful-stream-processing/StateStore.md) (i.e. all [values](../streaming-aggregation/StreamingAggregationStateManager.md#values) in a [StateStore](../stateful-stream-processing/StateStore.md) in the [StreamingAggregationStateManager](#stateManager) that should be equivalent to the [number of total state rows](#numTotalStateRows) metric)
-
-* For [Update](#outputMode) output mode, the number of rows that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (that did not expire per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) that is equivalent to the [number of updated state rows](#numUpdatedStateRows) metric)
-
-### <span id="numUpdatedStateRows"> number of updated state rows
-
-!!! note "See Also"
-    `StateStoreSaveExec` is a [StateStoreWriter](StateStoreWriter.md) so consult [number of updated state rows](StateStoreWriter.md#numUpdatedStateRows), too.
-
-The metric is computed differently based on the given [OutputMode](#outputMode):
-
-* For [Append](#outputMode), the number of input rows that have not expired yet (per the required [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) and that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (the time taken is the [total time to update rows](#allUpdatesTimeMs) metric)
-
-* For [Complete](#outputMode), the number of input rows (which should be exactly the number of output rows from the [child operator](#child))
-
-* For [Update](#outputMode), the number of rows that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (that did not expire per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) that is equivalent to the [number of output rows](#numOutputRows) metric)
+`StateStoreSaveExec` is a [StateStoreWriter](StateStoreWriter.md) so consult [time to update](StateStoreWriter.md#allUpdatesTimeMs), too.
 
 ### <span id="stateMemory"> memory used by state
 
 Estimated memory used by a [StateStore](../stateful-stream-processing/StateStore.md) (aka _stateMemory_) after `StateStoreSaveExec` finished [execution](#doExecute) (per the [StateStoreMetrics](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) of the [StateStore](../stateful-stream-processing/StateStore.md#metrics))
+
+### <span id="numOutputRows"> number of output rows
+
+=== "Append"
+    For [Append](#outputMode) output mode, the metric does not seem to be used
+
+=== "Complete"
+    For [Complete](#outputMode) output mode, the number of rows in a [StateStore](../stateful-stream-processing/StateStore.md) (i.e. all [values](../streaming-aggregation/StreamingAggregationStateManager.md#values) in a [StateStore](../stateful-stream-processing/StateStore.md) in the [StreamingAggregationStateManager](#stateManager) that should be equivalent to the [number of total state rows](#numTotalStateRows) metric)
+
+=== "Update"
+    For [Update](#outputMode) output mode, the number of rows that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (that did not expire per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) that is equivalent to the [number of updated state rows](#numUpdatedStateRows) metric)
+
+### <span id="numUpdatedStateRows"> number of updated state rows
+
+The metric is computed differently based on the given [OutputMode](#outputMode).
+
+=== "Append"
+    For [Append](#outputMode), the number of input rows that have not expired yet (per the required [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) and that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (the time taken is the [total time to update rows](#allUpdatesTimeMs) metric)
+
+=== "Complete"
+    For [Complete](#outputMode), the number of input rows (which should be exactly the number of output rows from the [child operator](#child))
+
+=== "Update"
+    For [Update](#outputMode), the number of rows that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (that did not expire per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) that is equivalent to the [number of output rows](#numOutputRows) metric)
+
+`StateStoreSaveExec` is a [StateStoreWriter](StateStoreWriter.md) so consult [number of updated state rows](StateStoreWriter.md#numUpdatedStateRows), too.
 
 ## Logging
 
