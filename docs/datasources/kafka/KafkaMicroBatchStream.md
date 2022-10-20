@@ -40,6 +40,33 @@ failOnDataLoss: Boolean
 * [planInputPartitions](#planInputPartitions) (to create [KafkaBatchInputPartition](KafkaBatchInputPartition.md#failOnDataLoss))
 * [reportDataLoss](#reportDataLoss)
 
+## <span id="metrics"> Performance Metrics
+
+```scala
+metrics(
+  latestConsumedOffset: Optional[Offset]): Map[String, String]
+```
+
+`metrics` is part of the [ReportsSourceMetrics](../../ReportsSourceMetrics.md#metrics) abstraction.
+
+---
+
+`metrics` returns the [metrics](#metrics-util) for the given latest consumed offset (and with the [latestPartitionOffsets](#latestPartitionOffsets)).
+
+### <span id="metrics-util"> metrics
+
+```scala
+metrics(
+  latestConsumedOffset: Optional[Offset],
+  latestAvailablePartitionOffsets: PartitionOffsetMap): ju.Map[String, String]
+```
+
+`metrics` can return the following performance metrics for offsets behind the latest for all the partitions:
+
+* `minOffsetsBehindLatest`
+* `maxOffsetsBehindLatest`
+* `avgOffsetsBehindLatest`
+
 ## <span id="getDefaultReadLimit"> Default ReadLimit
 
 ```scala

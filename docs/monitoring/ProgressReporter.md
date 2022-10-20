@@ -229,31 +229,6 @@ status: StreamingQueryStatus
 
 `status` is used when `StreamingQueryWrapper` is requested for the [current status of a streaming query](../StreamingQuery.md#status).
 
-## <span id="updateProgress"> Updating Progress of Streaming Query
-
-```scala
-updateProgress(
-  newProgress: StreamingQueryProgress): Unit
-```
-
-`updateProgress` records the input `newProgress` and posts a [QueryProgressEvent](StreamingQueryListener.md#QueryProgressEvent) event.
-
-![ProgressReporter's Reporting Query Progress](../images/ProgressReporter-updateProgress.png)
-
-`updateProgress` adds the input `newProgress` to [progressBuffer](#progressBuffer).
-
-`updateProgress` removes elements from [progressBuffer](#progressBuffer) if their number is or exceeds the value of [spark.sql.streaming.numRecentProgressUpdates](../configuration-properties.md#spark.sql.streaming.numRecentProgressUpdates) configuration property.
-
-`updateProgress` [posts a QueryProgressEvent](#postEvent) (with the input `newProgress`).
-
-`updateProgress` prints out the following INFO message to the logs:
-
-```text
-Streaming query made progress: [newProgress]
-```
-
-`updateProgress` is used when `ProgressReporter` is requested to [finish up a trigger](#finishTrigger).
-
 ## <span id="startTrigger"> Initializing Query Progress for New Trigger
 
 ```scala
@@ -474,6 +449,29 @@ extractObservedMetrics(
 ```
 
 `extractObservedMetrics` returns the `observedMetrics` from the given `QueryExecution` when either the given `hasNewData` flag is enabled (`true`) or the given `QueryExecution` is initialized.
+
+### <span id="updateProgress"> Updating Stream Progress
+
+```scala
+updateProgress(
+  newProgress: StreamingQueryProgress): Unit
+```
+
+`updateProgress` records the input `newProgress` and posts a [QueryProgressEvent](StreamingQueryListener.md#QueryProgressEvent) event.
+
+![ProgressReporter's Reporting Query Progress](../images/ProgressReporter-updateProgress.png)
+
+`updateProgress` adds the input `newProgress` to [progressBuffer](#progressBuffer).
+
+`updateProgress` removes elements from [progressBuffer](#progressBuffer) if their number is or exceeds the value of [spark.sql.streaming.numRecentProgressUpdates](../configuration-properties.md#spark.sql.streaming.numRecentProgressUpdates) configuration property.
+
+`updateProgress` [posts a QueryProgressEvent](#postEvent) (with the input `newProgress`).
+
+`updateProgress` prints out the following INFO message to the logs:
+
+```text
+Streaming query made progress: [newProgress]
+```
 
 ### <span id="lastNoExecutionProgressEventTime"> lastNoExecutionProgressEventTime
 
