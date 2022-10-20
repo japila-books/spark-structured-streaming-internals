@@ -1231,6 +1231,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/stateful-stream-processing/StreamingSessionWindowStateManager/</loc>
+         <lastmod>2022-10-20</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-aggregation/</loc>
          <lastmod>2022-10-20</lastmod>
          <changefreq>daily</changefreq>
