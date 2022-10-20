@@ -15,29 +15,31 @@
 
 ID | Name
 ---|----------
- [statefulOperatorCustomMetrics](#statefulOperatorCustomMetrics) |
- numOutputRows | number of output rows
- numRowsDroppedByWatermark | number of rows which are dropped by watermark
- [numTotalStateRows](#numTotalStateRows) | number of total state rows
- numUpdatedStateRows | number of updated state rows
- [allUpdatesTimeMs](#allUpdatesTimeMs) | time to update
- numRemovedStateRows | number of removed state rows
  allRemovalsTimeMs | time to remove
+ [allUpdatesTimeMs](#allUpdatesTimeMs) | time to update
  [commitTimeMs](#commitTimeMs) | time to commit changes
- stateMemory | memory used by state
+ numOutputRows | number of output rows
+ numRemovedStateRows | number of removed state rows
+ numRowsDroppedByWatermark | number of rows which are dropped by watermark
  numShufflePartitions | number of shuffle partitions
  [numStateStoreInstances](#numStateStoreInstances) | number of state store instances
+ [numTotalStateRows](#numTotalStateRows) | number of total state rows
+ [numUpdatedStateRows](#numUpdatedStateRows) | number of updated state rows
+ [statefulOperatorCustomMetrics](#statefulOperatorCustomMetrics) |
+ stateMemory | memory used by state
  [stateStoreCustomMetrics](#stateStoreCustomMetrics) |
 
 ### <span id="numStateStoreInstances"> number of state store instances
 
-Updated in [setOperatorMetrics](#setOperatorMetrics)
+Default: `1` (and can only be greater for [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md))
+
+Updated using [setOperatorMetrics](#setOperatorMetrics)
 
 Reported as [numStateStoreInstances](../monitoring/StateOperatorProgress.md#numStateStoreInstances) when [reporting progress](#getProgress)
 
 ### <span id="numTotalStateRows"> number of total state rows
 
-Number (_sum_) of the [keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) across all [state stores](../stateful-stream-processing/StateStore.md):
+[Number of the keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) across all [state stores](../stateful-stream-processing/StateStore.md):
 
 * For [unary stateful operators](#implementations), [updated](#setStoreMetrics) based on the [numKeys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) metric of a [StateStore](../stateful-stream-processing/StateStore.md)
 * For [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md), updated at [onOutputCompletion](StreamingSymmetricHashJoinExec.md#onOutputCompletion) (of [processPartitions](StreamingSymmetricHashJoinExec.md#processPartitions))
@@ -45,6 +47,19 @@ Number (_sum_) of the [keys](../stateful-stream-processing/StateStoreMetrics.md#
 Reported as [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) (in `stateOperators` in [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)) when [reporting progress](#getProgress)
 
 Can be disabled (for performance reasons) using [spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows](../configuration-properties.md#spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows)
+
+### <span id="numUpdatedStateRows"> number of updated state rows
+
+Number of state rows (_entries_) that were updated or removed (and [StateManager](../arbitrary-stateful-streaming-aggregation/StateManager.md#putState), [StreamingAggregationStateManager](../streaming-aggregation/StreamingAggregationStateManager.md#put) or [StreamingSessionWindowStateManager](../stateful-stream-processing/StreamingSessionWindowStateManager.md#updateSessions) were requested to put or update a state value)
+
+State rows are stored or updated for the keys in the result rows of an upstream physical operator.
+
+Reported in web UI as [Aggregated Number Of Updated State Rows](../webui/StreamingQueryStatisticsPage.md#generateAggregatedStateOperators)
+
+Reported as [numRowsUpdated](../monitoring/StateOperatorProgress.md#numRowsUpdated) when [reporting progress](#getProgress)
+
+!!! note "StreamingSymmetricHashJoinExec"
+    For [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md), the metric is a sum of the left and right side's `numUpdatedStateRows`.
 
 ### <span id="commitTimeMs"> time to commit changes
 

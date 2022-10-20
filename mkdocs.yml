@@ -294,6 +294,7 @@ nav:
         - StateStoreProvider: stateful-stream-processing/StateStoreProvider.md
         - StateStoreProviderId: stateful-stream-processing/StateStoreProviderId.md
       - StateStoreRDD: stateful-stream-processing/StateStoreRDD.md
+      - StreamingSessionWindowStateManager: stateful-stream-processing/StreamingSessionWindowStateManager.md
   - High-Level APIs:
     - ContinuousStream: ContinuousStream.md
     - DataStreamReader: DataStreamReader.md

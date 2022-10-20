@@ -1,0 +1,3 @@
+# StreamingSessionWindowStateManager
+
+`StreamingSessionWindowStateManager` is...FIXME
