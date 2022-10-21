@@ -117,8 +117,6 @@ nav:
   - Home: index.md
   - Internals:
     - Overview: overview.md
-    - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
-    - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
     - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Configuration Properties: configuration-properties.md
     - DataSource: DataSource.md
@@ -181,20 +179,17 @@ nav:
       - WatermarkSupport: physical-operators/WatermarkSupport.md
       - WriteToContinuousDataSourceExec: physical-operators/WriteToContinuousDataSourceExec.md
       - WriteToDataSourceV2Exec: physical-operators/WriteToDataSourceV2Exec.md
-    - ReportsSourceMetrics: ReportsSourceMetrics.md
-    - Sink: Sink.md
-    - Source: Source.md
     - SQLConf: SQLConf.md
     - StreamExecution: StreamExecution.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
-    - StreamingQueryWrapper: StreamingQueryWrapper.md
-    - StreamingWrite: StreamingWrite.md
     - StreamMetadata: StreamMetadata.md
-    - StreamSourceProvider: StreamSourceProvider.md
-    - StreamSinkProvider: StreamSinkProvider.md
     - TriggerExecutor: TriggerExecutor.md
-    - UnsupportedOperationChecker: UnsupportedOperationChecker.md
     - WatermarkTracker: WatermarkTracker.md
+    - Misc:
+      - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
+      - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
+      - StreamingQueryWrapper: StreamingQueryWrapper.md
+      - UnsupportedOperationChecker: UnsupportedOperationChecker.md
   - Features:
     - features/index.md
     - Micro-Batch Execution:
@@ -294,15 +289,22 @@ nav:
       - ContinuousWriteRDD: ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
   - High-Level APIs:
+    - AcceptsLatestSeenOffset: AcceptsLatestSeenOffset.md
     - ContinuousStream: ContinuousStream.md
     - DataStreamReader: DataStreamReader.md
     - DataStreamWriter: DataStreamWriter.md
     - MicroBatchStream: MicroBatchStream.md
     - OutputMode: OutputMode.md
     - ReadLimit: ReadLimit.md
+    - ReportsSourceMetrics: ReportsSourceMetrics.md
+    - Sink: Sink.md
+    - Source: Source.md
     - SparkDataStream: SparkDataStream.md
     - StreamingQuery: StreamingQuery.md
     - StreamingQueryManager: StreamingQueryManager.md
+    - StreamingWrite: StreamingWrite.md
+    - StreamSinkProvider: StreamSinkProvider.md
+    - StreamSourceProvider: StreamSourceProvider.md
     - SupportsAdmissionControl: SupportsAdmissionControl.md
     - SupportsTriggerAvailableNow: SupportsTriggerAvailableNow.md
     - Trigger: Trigger.md
