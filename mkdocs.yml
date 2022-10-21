@@ -117,20 +117,21 @@ nav:
   - Home: index.md
   - Internals:
     - Overview: overview.md
-    - Configuration Properties: configuration-properties.md
-    - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
-    - Internals of Streaming Queries: spark-structured-streaming-internals.md
-    - DataSource: DataSource.md
+    - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
     - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
-    - StreamingQueryListenerBus: StreamingQueryListenerBus.md
-    - Query Execution:
-      - StreamExecution: StreamExecution.md
-      - IncrementalExecution: IncrementalExecution.md
-      - TriggerExecutor: TriggerExecutor.md
-      - StreamingQueryWrapper: StreamingQueryWrapper.md
-    - ReportsSourceMetrics: ReportsSourceMetrics.md
-    - StreamMetadata: StreamMetadata.md
-    - StreamingWrite: StreamingWrite.md
+    - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
+    - Configuration Properties: configuration-properties.md
+    - DataSource: DataSource.md
+    - Execution Planning Strategies:
+      - execution-planning-strategies/index.md
+      - FlatMapGroupsWithStateStrategy: execution-planning-strategies/FlatMapGroupsWithStateStrategy.md
+      - StatefulAggregationStrategy: execution-planning-strategies/StatefulAggregationStrategy.md
+      - StreamingDeduplicationStrategy: execution-planning-strategies/StreamingDeduplicationStrategy.md
+      - StreamingGlobalLimitStrategy: execution-planning-strategies/StreamingGlobalLimitStrategy.md
+      - StreamingJoinStrategy: execution-planning-strategies/StreamingJoinStrategy.md
+      - StreamingRelationStrategy: execution-planning-strategies/StreamingRelationStrategy.md
+    - IncrementalExecution: IncrementalExecution.md
+    - Internals of Streaming Queries: spark-structured-streaming-internals.md
     - Logical Operators:
       - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
       - Deduplicate: logical-operators/Deduplicate.md
@@ -144,6 +145,23 @@ nav:
       - WriteToDataSourceV2: logical-operators/WriteToDataSourceV2.md
       - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
       - WriteToStream: logical-operators/WriteToStream.md
+    - Offsets and Metadata Checkpointing:
+      - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
+      - MetadataLog: MetadataLog.md
+      - HDFSMetadataLog: HDFSMetadataLog.md
+      - CommitLog:
+        - CommitLog: CommitLog.md
+        - CommitMetadata: CommitMetadata.md
+      - OffsetSeqLog:
+        - OffsetSeqLog: OffsetSeqLog.md
+        - OffsetSeq: OffsetSeq.md
+      - OffsetSeqMetadata: OffsetSeqMetadata.md
+      - CheckpointFileManager:
+        - CheckpointFileManager: CheckpointFileManager.md
+        - FileContextBasedCheckpointFileManager: FileContextBasedCheckpointFileManager.md
+        - FileSystemBasedCheckpointFileManager: FileSystemBasedCheckpointFileManager.md
+        - Offset: Offset.md
+        - StreamProgress: StreamProgress.md
     - Physical Operators:
       - EventTimeWatermarkExec: physical-operators/EventTimeWatermarkExec.md
       - FlatMapGroupsWithStateExec: physical-operators/FlatMapGroupsWithStateExec.md
@@ -163,62 +181,26 @@ nav:
       - WatermarkSupport: physical-operators/WatermarkSupport.md
       - WriteToContinuousDataSourceExec: physical-operators/WriteToContinuousDataSourceExec.md
       - WriteToDataSourceV2Exec: physical-operators/WriteToDataSourceV2Exec.md
-    - Execution Planning Strategies:
-      - execution-planning-strategies/index.md
-      - FlatMapGroupsWithStateStrategy: execution-planning-strategies/FlatMapGroupsWithStateStrategy.md
-      - StatefulAggregationStrategy: execution-planning-strategies/StatefulAggregationStrategy.md
-      - StreamingDeduplicationStrategy: execution-planning-strategies/StreamingDeduplicationStrategy.md
-      - StreamingGlobalLimitStrategy: execution-planning-strategies/StreamingGlobalLimitStrategy.md
-      - StreamingJoinStrategy: execution-planning-strategies/StreamingJoinStrategy.md
-      - StreamingRelationStrategy: execution-planning-strategies/StreamingRelationStrategy.md
-    - Offsets and Metadata Checkpointing:
-      - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
-      - MetadataLog: MetadataLog.md
-      - HDFSMetadataLog: HDFSMetadataLog.md
-      - CommitLog:
-        - CommitLog: CommitLog.md
-        - CommitMetadata: CommitMetadata.md
-      - OffsetSeqLog:
-        - OffsetSeqLog: OffsetSeqLog.md
-        - OffsetSeq: OffsetSeq.md
-      - OffsetSeqMetadata: OffsetSeqMetadata.md
-      - CheckpointFileManager:
-        - CheckpointFileManager: CheckpointFileManager.md
-        - FileContextBasedCheckpointFileManager: FileContextBasedCheckpointFileManager.md
-        - FileSystemBasedCheckpointFileManager: FileSystemBasedCheckpointFileManager.md
-        - Offset: Offset.md
-        - StreamProgress: StreamProgress.md
+    - ReportsSourceMetrics: ReportsSourceMetrics.md
+    - Sink: Sink.md
+    - Source: Source.md
+    - SQLConf: SQLConf.md
+    - StreamExecution: StreamExecution.md
+    - StreamingQueryListenerBus: StreamingQueryListenerBus.md
+    - StreamingQueryWrapper: StreamingQueryWrapper.md
+    - StreamingWrite: StreamingWrite.md
+    - StreamMetadata: StreamMetadata.md
+    - StreamSourceProvider: StreamSourceProvider.md
+    - StreamSinkProvider: StreamSinkProvider.md
+    - TriggerExecutor: TriggerExecutor.md
+    - UnsupportedOperationChecker: UnsupportedOperationChecker.md
+    - WatermarkTracker: WatermarkTracker.md
+  - Features:
+    - features/index.md
     - Micro-Batch Execution:
       - micro-batch-execution/index.md
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
       - MicroBatchWrite: micro-batch-execution/MicroBatchWrite.md
-      - Source: Source.md
-      - StreamSourceProvider: StreamSourceProvider.md
-      - Sink: Sink.md
-      - StreamSinkProvider: StreamSinkProvider.md
-      - WatermarkTracker: WatermarkTracker.md
-    - Continuous Execution:
-      - continuous-execution/index.md
-      - ContinuousExecution: continuous-execution/ContinuousExecution.md
-      - ContinuousReadSupport: continuous-execution/ContinuousReadSupport.md
-      - ContinuousReader: continuous-execution/ContinuousReader.md
-      - EpochCoordinator:
-        - EpochCoordinator RPC Endpoint: EpochCoordinator.md
-        - EpochCoordinatorRef: EpochCoordinatorRef.md
-        - EpochTracker: EpochTracker.md
-      - ContinuousQueuedDataReader:
-        - ContinuousQueuedDataReader: ContinuousQueuedDataReader.md
-        - DataReaderThread: DataReaderThread.md
-        - EpochMarkerGenerator: EpochMarkerGenerator.md
-      - PartitionOffset: PartitionOffset.md
-      - ContinuousWriteRDD: ContinuousWriteRDD.md
-      - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
-    - UnsupportedOperationChecker: UnsupportedOperationChecker.md
-    - Extending Structured Streaming with New Data Sources: spark-sql-streaming-extending-new-data-sources.md
-    - SQLConf: SQLConf.md
-    - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
-  - Features:
-    - features/index.md
     - RocksDB:
       - RocksDB: stateful-stream-processing/RocksDB.md
       - RocksDBConf: stateful-stream-processing/RocksDBConf.md
@@ -295,6 +277,22 @@ nav:
         - StateStoreProviderId: stateful-stream-processing/StateStoreProviderId.md
       - StateStoreRDD: stateful-stream-processing/StateStoreRDD.md
       - StreamingSessionWindowStateManager: stateful-stream-processing/StreamingSessionWindowStateManager.md
+    - Continuous Execution:
+      - continuous-execution/index.md
+      - ContinuousExecution: continuous-execution/ContinuousExecution.md
+      - ContinuousReadSupport: continuous-execution/ContinuousReadSupport.md
+      - ContinuousReader: continuous-execution/ContinuousReader.md
+      - EpochCoordinator:
+        - EpochCoordinator RPC Endpoint: EpochCoordinator.md
+        - EpochCoordinatorRef: EpochCoordinatorRef.md
+        - EpochTracker: EpochTracker.md
+      - ContinuousQueuedDataReader:
+        - ContinuousQueuedDataReader: ContinuousQueuedDataReader.md
+        - DataReaderThread: DataReaderThread.md
+        - EpochMarkerGenerator: EpochMarkerGenerator.md
+      - PartitionOffset: PartitionOffset.md
+      - ContinuousWriteRDD: ContinuousWriteRDD.md
+      - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
   - High-Level APIs:
     - ContinuousStream: ContinuousStream.md
     - DataStreamReader: DataStreamReader.md
