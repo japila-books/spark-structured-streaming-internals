@@ -281,11 +281,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/WatermarkTracker/</loc>
-         <lastmod>2022-10-21</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/configuration-properties/</loc>
          <lastmod>2022-10-21</lastmod>
          <changefreq>daily</changefreq>
@@ -1326,17 +1321,22 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-watermark/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/watermark/</loc>
          <lastmod>2022-10-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-watermark/EventTimeStats/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/watermark/EventTimeStats/</loc>
          <lastmod>2022-10-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-watermark/EventTimeStatsAccum/</loc>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/watermark/EventTimeStatsAccum/</loc>
+         <lastmod>2022-10-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/watermark/WatermarkTracker/</loc>
          <lastmod>2022-10-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
