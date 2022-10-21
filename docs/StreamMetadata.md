@@ -1,59 +1,73 @@
 # StreamMetadata
 
-`StreamMetadata` is a metadata associated with a <<StreamingQuery.md#, StreamingQuery>> (indirectly through [StreamExecution](StreamExecution.md#streamMetadata)).
+`StreamMetadata` is a metadata associated with a [StreamExecution](StreamExecution.md#streamMetadata) (and thus with a [StreamingQuery](StreamingQuery.md)).
 
-[[creating-instance]]
-[[id]]
-`StreamMetadata` takes an ID to be created.
+`StreamMetadata` can be [loaded](#read) from a metadata file (e.g., when a [StreamExecution](StreamExecution.md) is restarted) or [created from scratch](#write) (e.g., when the streaming query is started for the first time).
 
-`StreamMetadata` is <<creating-instance, created>> exclusively when [StreamExecution](StreamExecution.md#streamMetadata) is created (with a randomly-generated 128-bit universally unique identifier (UUID)).
-
-`StreamMetadata` can be <<write, persisted>> to and <<read, unpersisted>> from a JSON file. `StreamMetadata` uses http://json4s.org/[json4s-jackson] library for JSON persistence.
+`StreamMetadata` uses [json4s-jackson](http://json4s.org/) library for JSON persistence.
 
 ```text
 import org.apache.spark.sql.execution.streaming.StreamMetadata
 import org.apache.hadoop.fs.Path
 val metadataPath = new Path("metadata")
 
-scala> :type spark
-org.apache.spark.sql.SparkSession
+assert(spark.isInstanceOf[org.apache.spark.sql.SparkSession])
 
 val hadoopConf = spark.sessionState.newHadoopConf()
 val sm = StreamMetadata.read(metadataPath, hadoopConf)
 
-scala> :type sm
-Option[org.apache.spark.sql.execution.streaming.StreamMetadata]
+assert(sm.isInstanceOf[Option[org.apache.spark.sql.execution.streaming.StreamMetadata]])
 ```
 
-=== [[read]] Unpersisting StreamMetadata (from JSON File) -- `read` Object Method
+## Creating Instance
 
-[source, scala]
-----
+`StreamMetadata` takes the following to be created:
+
+* <span id="id"> ID (default: a randomly generated UUID)
+
+`StreamMetadata` is created when:
+
+* `StreamExecution` is [created](StreamExecution.md#streamMetadata)
+
+## <span id="read"> Loading Stream Metadata
+
+```scala
 read(
   metadataFile: Path,
   hadoopConf: Configuration): Option[StreamMetadata]
-----
+```
 
-`read` unpersists `StreamMetadata` from the given `metadataFile` file if available.
+`read` [creates a CheckpointFileManager](CheckpointFileManager.md#create) (with the parent directory of the given `metadataFile`).
 
-`read` returns a `StreamMetadata` if the metadata file was available and the content could be read in JSON format. Otherwise, `read` returns `None`.
+`read` requests the `CheckpointFileManager` whether the given `metadataFile` [exists](CheckpointFileManager.md#exists) or not.
 
-NOTE: `read` uses `org.json4s.jackson.Serialization.read` for JSON deserialization.
+If the metadata file is available, `read` tries to unpersist a `StreamMetadata` from the given `metadataFile` file. Unless successful (the metadata file was available and the content was properly JSON-encoded), `read` returns `None`.
 
-NOTE: `read` is used exclusively when [StreamExecution](StreamExecution.md#streamMetadata) is created> (and tries to read the `metadata` checkpoint file).
+!!! note "json4s-jackson"
+    `read` uses `org.json4s.jackson.Serialization.read` for JSON deserialization.
 
-=== [[write]] Persisting Metadata -- `write` Object Method
+---
 
-[source, scala]
-----
+`read` is used when:
+
+* `StreamExecution` is [created](StreamExecution.md#streamMetadata) (and the `metadata` checkpoint file is available)
+
+## <span id="write"> Persisting Metadata
+
+```scala
 write(
   metadata: StreamMetadata,
   metadataFile: Path,
   hadoopConf: Configuration): Unit
-----
+```
 
-`write` persists the given `StreamMetadata` to the given `metadataFile` file in JSON format.
+`write` persists (_saves_) the given `StreamMetadata` to the given `metadataFile` file in JSON format.
 
-NOTE: `write` uses `org.json4s.jackson.Serialization.write` for JSON serialization.
+!!! note "json4s-jackson"
+    `write` uses `org.json4s.jackson.Serialization.write` for JSON serialization.
 
-`write` is used when [StreamExecution](StreamExecution.md#streamMetadata) is created (and the `metadata` checkpoint file is not available).
+---
+
+`write` is used when:
+
+* `StreamExecution` is [created](StreamExecution.md#streamMetadata) (and the `metadata` checkpoint file is not available)

@@ -1,6 +1,6 @@
 # StreamExecution
 
-`StreamExecution` is an [abstraction](#contract) of [stream execution engines](#implementations) (_streaming query processing engines_) that can [run](#runStream) a [structured query](#logicalPlan) (on a [stream execution thread](#queryExecutionThread)).
+`StreamExecution` is an [abstraction](#contract) of [stream execution engines](#implementations) (_streaming query processing engines_) that [run](#runStream) a [structured query](#logicalPlan) (on a [stream execution thread](#queryExecutionThread)).
 
 ![Creating Instance of StreamExecution](images/StreamExecution-creating-instance.png)
 
@@ -244,9 +244,15 @@ Since the [StreamMetadata](#streamMetadata) is persisted (to the `metadata` file
 
 ## <span id="streamMetadata"> StreamMetadata
 
-`StreamExecution` uses a [StreamMetadata](StreamMetadata.md) that is [persisted](StreamMetadata.md#write) in the `metadata` file in the [checkpoint directory](#checkpointFile).
+```scala
+streamMetadata: StreamMetadata
+```
 
-If the `metadata` file is available it is [read](StreamMetadata.md#read) and is the way to recover the [id](#id) of a streaming query when resumed (i.e. restarted after a failure or a planned stop).
+`StreamExecution` creates a [StreamMetadata](StreamMetadata.md) when [created](#creating-instance).
+
+`StreamExecution` uses `metadata` as the filename of the metadata file that is [stored](StreamMetadata.md#write) (in JSON format) in the [checkpoint directory](#checkpointFile).
+
+The `metadata` file is used to restore (_recover_) the [id](#id) (e.g., when a streaming query is resumed after a failure or a planned stop).
 
 ## Metadata Logs
 
