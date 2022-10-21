@@ -6,6 +6,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/AcceptsLatestSeenOffset/</loc>
+         <lastmod>2022-10-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/AcceptsLatestSeenOffsetHandler/</loc>
          <lastmod>2022-10-21</lastmod>
          <changefreq>daily</changefreq>
