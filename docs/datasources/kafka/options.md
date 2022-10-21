@@ -79,7 +79,8 @@ Default: `(undefined)`
 
 Must be undefined (default) or greater than `0`
 
-When undefined (default) or smaller than the number of `TopicPartitions` with records to consume from, [KafkaMicroBatchReader](KafkaMicroBatchReader.md) uses [KafkaOffsetRangeCalculator](KafkaMicroBatchReader.md#rangeCalculator) to [find the preferred executor](KafkaOffsetRangeCalculator.md#getLocation) for every `TopicPartition` (and the [available executors](KafkaMicroBatchReader.md#getSortedExecutorList)).
+!!! note "Review"
+    When undefined (default) or smaller than the number of `TopicPartitions` with records to consume from, `KafkaMicroBatchReader` uses `KafkaOffsetRangeCalculator` to [find the preferred executor](KafkaOffsetRangeCalculator.md#getLocation) for every `TopicPartition` (and the available executors).
 
 ## <span id="startingOffsets"><span id="STARTING_OFFSETS_OPTION_KEY"> startingOffsets
 

@@ -2,8 +2,6 @@
 
 `KafkaSourceInitialOffsetWriter` is a [Hadoop DFS-based metadata storage](../../HDFSMetadataLog.md) for [KafkaSourceOffsets](KafkaSourceOffset.md).
 
-`KafkaSourceInitialOffsetWriter` is <<creating-instance, created>> exclusively when `KafkaMicroBatchReader` is requested to [getOrCreateInitialPartitionOffsets](KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets).
-
 [[VERSION]]
 `KafkaSourceInitialOffsetWriter` uses `1` for the version.
 

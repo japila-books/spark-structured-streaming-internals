@@ -1,6 +1,6 @@
 # KafkaMicroBatchInputPartition
 
-`KafkaMicroBatchInputPartition` is an `InputPartition` (of `InternalRows`) that is used (<<creating-instance, created>>) exclusively when `KafkaMicroBatchReader` is requested for [input partitions](KafkaMicroBatchReader.md#planInputPartitions) (when `DataSourceV2ScanExec` physical operator is requested for the partitions of the input RDD).
+`KafkaMicroBatchInputPartition` is an `InputPartition` (of `InternalRows`) that is used (<<creating-instance, created>>) exclusively when `KafkaMicroBatchReader` is requested for input partitions (when `DataSourceV2ScanExec` physical operator is requested for the partitions of the input RDD).
 
 [[creating-instance]]
 `KafkaMicroBatchInputPartition` takes the following to be created:

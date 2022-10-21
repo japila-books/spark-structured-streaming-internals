@@ -15,7 +15,9 @@
   ![Aggregated Number Of Total State Rows](../images/webui-statistics-aggregated-number-of-total-state-rows.png)
 </figure>
 
-The number of total state rows (the sums of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators))
+The number of state rows across all stateful operators (i.e., a sum of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md))
+
+Displayed only when there is one or more [stateful operators](../monitoring/StreamingQueryProgress.md#stateOperators) in a streaming query.
 
 `StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) to generate a timeline and a histogram for `aggregated-num-total-state-rows-timeline` and `aggregated-num-total-state-rows-histogram` HTML `div`s, respectively.
 

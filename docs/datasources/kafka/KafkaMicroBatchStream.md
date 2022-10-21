@@ -1,6 +1,8 @@
 # KafkaMicroBatchStream
 
-`KafkaMicroBatchStream` is a [MicroBatchStream](../../MicroBatchStream.md) that [SupportsTriggerAvailableNow](../../SupportsTriggerAvailableNow.md).
+`KafkaMicroBatchStream` is a [MicroBatchStream](../../MicroBatchStream.md) for [kafka data source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
+
+`KafkaMicroBatchStream` is [SupportsTriggerAvailableNow](../../SupportsTriggerAvailableNow.md).
 
 `KafkaMicroBatchStream` is a [ReportsSourceMetrics](../../ReportsSourceMetrics.md).
 

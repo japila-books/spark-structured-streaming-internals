@@ -100,7 +100,7 @@ Internally, the **kafka** data source format for writing is available through [K
 
 ## Micro-Batch Stream Processing
 
-Kafka Data Source supports [Micro-Batch Stream Processing](../../micro-batch-execution/index.md) using [KafkaMicroBatchReader](KafkaMicroBatchReader.md).
+Kafka Data Source supports [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
@@ -126,7 +126,7 @@ sq.stop
 
 Kafka Data Source can assign a single task per Kafka partition (using [KafkaOffsetRangeCalculator](KafkaOffsetRangeCalculator.md) in [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)).
 
-Kafka Data Source can reuse a Kafka consumer (using [KafkaMicroBatchReader](KafkaMicroBatchReader.md) in [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)).
+Kafka Data Source can reuse a Kafka consumer in [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)).
 
 ## Continuous Stream Processing
 

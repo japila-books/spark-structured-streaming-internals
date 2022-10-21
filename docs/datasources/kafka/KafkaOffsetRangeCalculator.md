@@ -1,7 +1,5 @@
 # KafkaOffsetRangeCalculator
 
-`KafkaOffsetRangeCalculator` is <<apply, created>> for [KafkaMicroBatchReader](KafkaMicroBatchReader.md#rangeCalculator) to <<getRanges, calculate offset ranges>> (when `KafkaMicroBatchReader` is requested to [planInputPartitions](KafkaMicroBatchReader.md#planInputPartitions)).
-
 [[minPartitions]][[creating-instance]]
 `KafkaOffsetRangeCalculator` takes an optional *minimum number of partitions per executor* (`minPartitions`) to be created (that can either be undefined or greater than `0`).
 
@@ -29,8 +27,6 @@ At this point, `getRanges` knows the `TopicPartitions` with records to consume.
 For the <<minPartitions, minimum number of partitions per executor>> undefined or smaller than the number of `KafkaOffsetRanges` (`TopicPartitions` to consume records from), `getRanges` updates every `KafkaOffsetRange` with the <<getLocation, preferred executor>> based on the `TopicPartition` and the `executorLocations`).
 
 Otherwise (with the <<minPartitions, minimum number of partitions per executor>> defined and greater than the number of `KafkaOffsetRanges`), `getRanges` splits `KafkaOffsetRanges` into smaller ones.
-
-NOTE: `getRanges` is used exclusively when `KafkaMicroBatchReader` is requested to [planInputPartitions](KafkaMicroBatchReader.md#planInputPartitions).
 
 === [[KafkaOffsetRange]] KafkaOffsetRange -- TopicPartition with From and Until Offsets and Optional Preferred Location
 

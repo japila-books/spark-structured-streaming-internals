@@ -231,7 +231,7 @@ close(): Unit
 
 `close` is used when:
 
-* [KafkaMicroBatchReader](KafkaMicroBatchReader.md#stop), and [KafkaSource](KafkaSource.md#stop) are requested to stop a streaming reader or source
+* [KafkaSource](KafkaSource.md#stop) is requested to stop a streaming reader or source
 
 * `KafkaRelation` is requested to [build a distributed data scan with column pruning](KafkaRelation.md#buildScan)
 

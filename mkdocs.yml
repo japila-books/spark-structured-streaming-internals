@@ -355,13 +355,10 @@ nav:
       - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
       - KafkaContinuousStream: datasources/kafka/KafkaContinuousStream.md
       - KafkaDataConsumer: datasources/kafka/KafkaDataConsumer.md
-      - KafkaMicroBatchReader:
-        - KafkaMicroBatchReader: datasources/kafka/KafkaMicroBatchReader.md
-        - KafkaOffsetRangeCalculator: datasources/kafka/KafkaOffsetRangeCalculator.md
-        - KafkaMicroBatchInputPartition: datasources/kafka/KafkaMicroBatchInputPartition.md
-        - KafkaMicroBatchInputPartitionReader: datasources/kafka/KafkaMicroBatchInputPartitionReader.md
-        - KafkaSourceInitialOffsetWriter: datasources/kafka/KafkaSourceInitialOffsetWriter.md
+      - KafkaMicroBatchInputPartition: datasources/kafka/KafkaMicroBatchInputPartition.md
+      - KafkaMicroBatchInputPartitionReader: datasources/kafka/KafkaMicroBatchInputPartitionReader.md
       - KafkaMicroBatchStream: datasources/kafka/KafkaMicroBatchStream.md
+      - KafkaOffsetRangeCalculator: datasources/kafka/KafkaOffsetRangeCalculator.md
       - KafkaOffsetRangeLimit: datasources/kafka/KafkaOffsetRangeLimit.md
       - KafkaOffsetReaders:
         - KafkaOffsetReader: datasources/kafka/KafkaOffsetReader.md
@@ -371,6 +368,7 @@ nav:
       - KafkaScan: datasources/kafka/KafkaScan.md
       - KafkaSink: datasources/kafka/KafkaSink.md
       - KafkaSource: datasources/kafka/KafkaSource.md
+      - KafkaSourceInitialOffsetWriter: datasources/kafka/KafkaSourceInitialOffsetWriter.md
       - KafkaSourceOffset: datasources/kafka/KafkaSourceOffset.md
       - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
       - KafkaSourceRDD: datasources/kafka/KafkaSourceRDD.md

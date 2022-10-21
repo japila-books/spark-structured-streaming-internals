@@ -4,8 +4,6 @@
 
 `KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
 
-* `KafkaMicroBatchReader` is requested to [getStartOffset](KafkaMicroBatchReader.md#getStartOffset), [getEndOffset](KafkaMicroBatchReader.md#getEndOffset), [deserializeOffset](KafkaMicroBatchReader.md#deserializeOffset), and [getOrCreateInitialPartitionOffsets](KafkaMicroBatchReader.md#getOrCreateInitialPartitionOffsets)
-
 * `KafkaOffsetReader` is requested to [fetchSpecificOffsets](KafkaOffsetReader.md#fetchSpecificOffsets)
 
 * `KafkaSource` is requested for the [initial partition offsets (of 0th batch)](KafkaSource.md#initialPartitionOffsets) and [getOffset](KafkaSource.md#getOffset)
