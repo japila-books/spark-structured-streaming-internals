@@ -526,11 +526,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaMicroBatchReader/</loc>
-         <lastmod>2022-10-21</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/kafka/KafkaMicroBatchStream/</loc>
          <lastmod>2022-10-21</lastmod>
          <changefreq>daily</changefreq>
