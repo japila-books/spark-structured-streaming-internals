@@ -417,7 +417,7 @@ For the given `hasNewData` disabled, `extractExecutionStats` returns an [Executi
 * [State operator metrics](#extractStateOperatorMetrics)
 * Event-time statistics with `watermark` only (and only if there is [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) in the query plan)
 
-Otherwise, with the given `hasNewData` enabled, `extractExecutionStats` generates event-time statistics (with `max`, `min`, and `avg` statistics). `extractStateOperatorMetrics` collects all [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) operators with non-empty [EventTimeStats](../streaming-watermark/EventTimeStatsAccum.md) (from the optimized execution plan of the [last QueryExecution](#lastExecution)).
+Otherwise, with the given `hasNewData` enabled, `extractExecutionStats` generates event-time statistics (with `max`, `min`, and `avg` statistics). `extractStateOperatorMetrics` collects all [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) operators with non-empty [EventTimeStats](../watermark/EventTimeStatsAccum.md) (from the optimized execution plan of the [last QueryExecution](#lastExecution)).
 
 In the end, `extractExecutionStats` creates an [ExecutionStats](ExecutionStats.md) with the execution statistics:
 

@@ -22,7 +22,7 @@ The goal of Spark Structured Streaming is to unify streaming, interactive, and b
 
 * [Streaming Join](streaming-join/index.md)
 
-* [Streaming Watermark](streaming-watermark/index.md)
+* [Streaming Watermark](watermark/index.md)
 
 * [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation/index.md)
 

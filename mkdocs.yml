@@ -184,7 +184,6 @@ nav:
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - StreamMetadata: StreamMetadata.md
     - TriggerExecutor: TriggerExecutor.md
-    - WatermarkTracker: WatermarkTracker.md
     - Misc:
       - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
       - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
@@ -241,9 +240,10 @@ nav:
         - StreamingSymmetricHashJoinHelper: streaming-join/StreamingSymmetricHashJoinHelper.md
         - StreamingJoinHelper: streaming-join/StreamingJoinHelper.md
     - Streaming Watermark:
-      - streaming-watermark/index.md
-      - EventTimeStatsAccum: streaming-watermark/EventTimeStatsAccum.md
-      - EventTimeStats: streaming-watermark/EventTimeStats.md
+      - watermark/index.md
+      - EventTimeStatsAccum: watermark/EventTimeStatsAccum.md
+      - EventTimeStats: watermark/EventTimeStats.md
+      - WatermarkTracker: watermark/WatermarkTracker.md
     - Streaming Deduplication:
       - streaming-deduplication/index.md
     - Streaming Limit:

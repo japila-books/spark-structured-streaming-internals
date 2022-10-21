@@ -47,7 +47,7 @@ val events = spark
 
 Define a streaming aggregation query (using [groupBy](../operators/groupBy.md) high-level operator).
 
-The streaming query uses [Append](../OutputMode.md#Append) output mode and defines a [streaming watermark](../streaming-watermark/index.md) (using [Dataset.withWatermark](../operators/withWatermark.md) operator). Otherwise, [UnsupportedOperationChecker](../UnsupportedOperationChecker.md) would fail the query.
+The streaming query uses [Append](../OutputMode.md#Append) output mode and defines a [streaming watermark](../watermark/index.md) (using [Dataset.withWatermark](../operators/withWatermark.md) operator). Otherwise, [UnsupportedOperationChecker](../UnsupportedOperationChecker.md) would fail the query.
 
 ```scala
 val windowed = events
@@ -82,10 +82,10 @@ root
 
 Use [explain](../operators/explain.md) operator on a streaming query to know the trigger-specific values.
 
-`ids` streaming query knows nothing about the [OutputMode](../OutputMode.md) or the current [streaming watermark](../streaming-watermark/index.md) yet:
+`ids` streaming query knows nothing about the [OutputMode](../OutputMode.md) or the current [streaming watermark](../watermark/index.md) yet:
 
 * [OutputMode](../OutputMode.md) is defined on write side
-* [Streaming watermark](../streaming-watermark/index.md) is read from rows at runtime
+* [Streaming watermark](../watermark/index.md) is read from rows at runtime
 
 That's why [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) is generic (and uses the default [Append](../OutputMode.md#Append) for output mode). And no batch-specific values are printed out. They will be available right after the first streaming batch.
 

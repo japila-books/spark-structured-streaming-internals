@@ -398,7 +398,7 @@ In **getEndOffset** [time-tracking section](../monitoring/ProgressReporter.md#re
 
 ### <span id="constructNextBatch-offsetSeqMetadata"> Updating Batch Metadata with Current Event-Time Watermark and Batch Timestamp
 
-`constructNextBatch` updates the [batch metadata](../StreamExecution.md#offsetSeqMetadata) with the current [event-time watermark](../WatermarkTracker.md#currentWatermark) (from the [WatermarkTracker](#watermarkTracker)) and the batch timestamp.
+`constructNextBatch` updates the [batch metadata](../StreamExecution.md#offsetSeqMetadata) with the current [event-time watermark](../watermark/WatermarkTracker.md#currentWatermark) (from the [WatermarkTracker](#watermarkTracker)) and the batch timestamp.
 
 ### <span id="constructNextBatch-shouldConstructNextBatch"> Checking Whether to Construct Next Micro-Batch or Not (Skip It)
 
@@ -633,9 +633,9 @@ For a [Sink](../Sink.md) (Data Source API V1), `runBatch` simply requests the `S
 
 ### <span id="runBatch-updateWatermark-commitLog"> Updating Watermark and Committing Offsets to Offset Commit Log
 
-`runBatch` requests the [WatermarkTracker](#watermarkTracker) to [update event-time watermark](../WatermarkTracker.md#updateWatermark) (with the `executedPlan` of the [IncrementalExecution](#runBatch-queryPlanning)).
+`runBatch` requests the [WatermarkTracker](#watermarkTracker) to [update event-time watermark](../watermark/WatermarkTracker.md#updateWatermark) (with the `executedPlan` of the [IncrementalExecution](#runBatch-queryPlanning)).
 
-`runBatch` requests the [Offset Commit Log](../StreamExecution.md#commitLog) to [persisting metadata of the streaming micro-batch](../HDFSMetadataLog.md#add) (with the current [batch ID](../StreamExecution.md#currentBatchId) and [event-time watermark](../WatermarkTracker.md#currentWatermark) of the [WatermarkTracker](#watermarkTracker)).
+`runBatch` requests the [Offset Commit Log](../StreamExecution.md#commitLog) to [persisting metadata of the streaming micro-batch](../HDFSMetadataLog.md#add) (with the current [batch ID](../StreamExecution.md#currentBatchId) and [event-time watermark](../watermark/WatermarkTracker.md#currentWatermark) of the [WatermarkTracker](#watermarkTracker)).
 
 In the end, `runBatch` [adds](../StreamProgress.md#plusplus) the [available offsets](../StreamExecution.md#availableOffsets) to the [committed offsets](../StreamExecution.md#committedOffsets) (and updates the [offset](../Offset.md)s of every source with new data in the current micro-batch).
 
@@ -799,15 +799,15 @@ logicalPlan must be initialized in QueryExecutionThread "but the current thread 
 
 ## <span id="watermarkTracker"> WatermarkTracker
 
-`MicroBatchExecution` creates a [WatermarkTracker](../WatermarkTracker.md) while [populating start offsets](#populateStartOffsets) (when requested to [run an activated streaming query](#runActivatedStream)).
+`MicroBatchExecution` creates a [WatermarkTracker](../watermark/WatermarkTracker.md) while [populating start offsets](#populateStartOffsets) (when requested to [run an activated streaming query](#runActivatedStream)).
 
 The `WatermarkTracker` is used then for the following:
 
-* [Setting watermark](../WatermarkTracker.md#setWatermark) while [populating start offsets](#populateStartOffsets)
-* [Reading the current watermark](../WatermarkTracker.md#currentWatermark) while the following:
+* [Setting watermark](../watermark/WatermarkTracker.md#setWatermark) while [populating start offsets](#populateStartOffsets)
+* [Reading the current watermark](../watermark/WatermarkTracker.md#currentWatermark) while the following:
     * [Constructing or skipping next streaming micro-batch](#constructNextBatch) (to update the [OffsetSeqMetadata](../StreamExecution.md#offsetSeqMetadata))
     * [Running a single streaming micro-batch](#runBatch) (to [add a CommitMetadata](../HDFSMetadataLog.md#add) to the [Offset Commit Log](../StreamExecution.md#commitLog))
-* [Updating watermark](../WatermarkTracker.md#updateWatermark) while [running a single streaming micro-batch](#runBatch)
+* [Updating watermark](../watermark/WatermarkTracker.md#updateWatermark) while [running a single streaming micro-batch](#runBatch)
 
 ## <span id="isCurrentBatchConstructed"> isCurrentBatchConstructed
 

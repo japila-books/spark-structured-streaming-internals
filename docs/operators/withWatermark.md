@@ -6,7 +6,7 @@ withWatermark(
   delayThreshold: String): Dataset[T]
 ```
 
-`withWatermark` specifies a [streaming watermark](../streaming-watermark/index.md) (on the given `eventTime` column with a delay threshold).
+`withWatermark` specifies a [streaming watermark](../watermark/index.md) (on the given `eventTime` column with a delay threshold).
 
 `withWatermark` specifies the `eventTime` column for **event time watermark** and `delayThreshold` for **event lateness**.
 

@@ -13,7 +13,7 @@
 * <span id="keyExpressions"> Grouping Key `Attribute`s ([Spark SQL]({{ book.spark_sql }}/expressions/Attribute))
 * <span id="stateInfo"> [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
-* <span id="eventTimeWatermark"> [Event-time Watermark](../streaming-watermark/index.md)
+* <span id="eventTimeWatermark"> [Event-time Watermark](../watermark/index.md)
 * <span id="stateFormatVersion"> [spark.sql.streaming.aggregation.stateFormatVersion](../configuration-properties.md#spark.sql.streaming.aggregation.stateFormatVersion)
 * <span id="child"> Child Physical Operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan))
 
@@ -211,7 +211,7 @@ Invalid output mode: [outputMode]
 
 NOTE: [Append](../OutputMode.md#Append) is the default output mode when not specified explicitly.
 
-NOTE: `Append` output mode requires that a streaming query defines [event-time watermark](../streaming-watermark/index.md) (e.g. using [withWatermark](../operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using [window](../operators/window.md) standard function).
+NOTE: `Append` output mode requires that a streaming query defines [event-time watermark](../watermark/index.md) (e.g. using [withWatermark](../operators/withWatermark.md) operator) on the event-time column that is used in aggregation (directly or using [window](../operators/window.md) standard function).
 
 For [Append](../OutputMode.md#Append) output mode, `doExecute` does the following:
 

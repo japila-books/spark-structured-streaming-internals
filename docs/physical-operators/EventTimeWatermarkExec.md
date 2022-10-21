@@ -7,7 +7,7 @@
 
     Learn more about [Unary Physical Operators]({{ book.spark_sql }}/physical-operators/UnaryExecNode) (and physical operators in general) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
-`EventTimeWatermarkExec` operator is used to extract (_project_) the values of the [event-time watermark column](#eventTime) and add them all to the [EventTimeStatsAccum](#eventTimeStats) accumulator (and produce a [EventTimeStats](../streaming-watermark/EventTimeStats.md)).
+`EventTimeWatermarkExec` operator is used to extract (_project_) the values of the [event-time watermark column](#eventTime) and add them all to the [EventTimeStatsAccum](#eventTimeStats) accumulator (and produce a [EventTimeStats](../watermark/EventTimeStats.md)).
 
 ## Creating Instance
 
@@ -27,7 +27,7 @@ When created, `EventTimeWatermarkExec` registers the [EventTimeStatsAccum](#even
 eventTimeStats: EventTimeStatsAccum
 ```
 
-`EventTimeWatermarkExec` creates an [EventTimeStatsAccum](../streaming-watermark/EventTimeStatsAccum.md) accumulator when [created](#creating-instance).
+`EventTimeWatermarkExec` creates an [EventTimeStatsAccum](../watermark/EventTimeStatsAccum.md) accumulator when [created](#creating-instance).
 
 When [executed](#doExecute), `EventTimeWatermarkExec` uses the `EventTimeStatsAccum` to extract and accumulate [eventTime](#eventTime) values (as `Long`s) from every row in a streaming batch.
 
@@ -42,7 +42,7 @@ When [executed](#doExecute), `EventTimeWatermarkExec` uses the `EventTimeStatsAc
 
 * `ProgressReporter` is requested for the most recent [execution statistics](../monitoring/ProgressReporter.md#extractExecutionStats) (for `max`, `min`, `avg`, and `watermark` event-time watermark statistics)
 
-* `WatermarkTracker` is requested to [updateWatermark](../WatermarkTracker.md#updateWatermark)
+* `WatermarkTracker` is requested to [updateWatermark](../watermark/WatermarkTracker.md#updateWatermark)
 
 ## <span id="doExecute"> Executing Physical Operator
 
@@ -56,7 +56,7 @@ doExecute(): RDD[InternalRow]
 
 `doExecute` creates an unsafe projection (per partition) for the [column with the event time](#eventTime) in the output schema of the [child](#child) physical operator. The unsafe projection is to extract event times from the (stream of) internal rows of the child physical operator.
 
-For every row in a partition, `doExecute` requests the [eventTimeStats](#eventTimeStats) accumulator to [accumulate the event time](../streaming-watermark/EventTimeStatsAccum.md#add).
+For every row in a partition, `doExecute` requests the [eventTimeStats](#eventTimeStats) accumulator to [accumulate the event time](../watermark/EventTimeStatsAccum.md#add).
 
 !!! note
     The event time value is in seconds (not millis as the value is divided by `1000` ).
@@ -77,4 +77,4 @@ For any other column (not the [event time attribute](#eventTime)) with the [spar
 
 ## Demo
 
-Check out [Demo: Streaming Watermark with Aggregation in Append Output Mode](../demo/watermark-aggregation-append.md) to deep dive into the internals of [Streaming Watermark](../streaming-watermark/index.md).
+Check out [Demo: Streaming Watermark with Aggregation in Append Output Mode](../demo/watermark-aggregation-append.md) to deep dive into the internals of [Streaming Watermark](../watermark/index.md).

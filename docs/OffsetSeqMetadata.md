@@ -16,7 +16,7 @@
 
 ### <span id="batchWatermarkMs"> Batch Watermark
 
-`OffsetSeqMetadata` is given the current batch's [event-time watermark](streaming-watermark/index.md) when [created](#creating-instance). Unless given, it is assumed `0`.
+`OffsetSeqMetadata` is given the current batch's [event-time watermark](watermark/index.md) when [created](#creating-instance). Unless given, it is assumed `0`.
 
 ### <span id="batchTimestampMs"> Batch Timestamp
 
