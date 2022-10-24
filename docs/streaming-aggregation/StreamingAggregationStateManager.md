@@ -50,6 +50,23 @@ Used when:
 
 * `StateStoreRestoreExec` physical operator is [executed](../physical-operators/StateStoreRestoreExec.md#doExecute)
 
+### <span id="iterator"> All Aggregates by Grouping Keys
+
+```scala
+iterator(
+  store: ReadStateStore): Iterator[UnsafeRowPair] // (1)!
+```
+
+1. `UnsafeRowPair(var key: UnsafeRow = null, var value: UnsafeRow = null)`
+
+Lazy collection (`Iterator`) of all the aggregates by grouping keys (state pairs) in the given [ReadStateStore](../stateful-stream-processing/ReadStateStore.md)
+
+See [StreamingAggregationStateManagerImplV2](StreamingAggregationStateManagerImplV2.md#iterator)
+
+Used when:
+
+* `StateStoreSaveExec` physical operator is [executed](../physical-operators/StateStoreSaveExec.md#doExecute) (for [Append](../physical-operators/StateStoreSaveExec.md#doExecute-Append) output mode)
+
 ### <span id="put"> Storing New Value for Key
 
 ```scala

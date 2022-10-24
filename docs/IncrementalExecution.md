@@ -25,15 +25,27 @@
 
 `IncrementalExecution` uses the `statefulOperatorId` internal counter for the IDs of the stateful operators in the [optimized logical plan](#optimizedPlan) (while applying the [preparations](#preparations) rules) when requested to prepare the plan for execution (in [executedPlan](#executedPlan) phase).
 
-## <span id="preparing-for-execution"><span id="optimizedPlan"><span id="executedPlan"><span id="preparations"> Preparing Logical Plan (of Streaming Query) for Execution
+## <span id="preparing-for-execution"><span id="optimizedPlan"><span id="executedPlan"> Preparing Logical Plan (of Streaming Query) for Execution
 
-When requested for the optimized logical plan (of the [logical plan](#logicalPlan)), `IncrementalExecution` transforms `CurrentBatchTimestamp` and `ExpressionWithRandomSeed` expressions with the timestamp literal and new random seeds, respectively. When transforming `CurrentBatchTimestamp` expressions, `IncrementalExecution` prints out the following INFO message to the logs:
+When requested for an optimized logical plan (of the [analyzed logical plan](#logicalPlan)), `IncrementalExecution` transforms `CurrentBatchTimestamp` and `ExpressionWithRandomSeed` expressions with the timestamp literal and new random seeds, respectively. When transforming `CurrentBatchTimestamp` expressions, `IncrementalExecution` prints out the following INFO message to the logs:
 
 ```text
 Current batch timestamp = [timestamp]
 ```
 
 Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
+
+### <span id="preparations"> Preparations Optimization Rules
+
+```scala
+preparations: Seq[Rule[SparkPlan]]
+```
+
+`preparations` is part of the `QueryExecution` ([Spark SQL]({{ book.spark_sql }}/QueryExecution#preparations)) abstraction.
+
+---
+
+`preparations` is the [state](#state) optimization rules before the parent's ones.
 
 ## State Checkpoint Location
 
@@ -129,7 +141,7 @@ state: Rule[SparkPlan]
 
 * [getStateWatermarkPredicates](streaming-join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the state watermark predicates (for [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
 
-`state` rule is used (as part of the physical query optimizations) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) in **queryPlanning** phase).
+`state` rule is used (as part of the [physical query optimizations](#preparations)) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) in **queryPlanning** phase).
 
 !!! tip
     Learn more about [Physical Query Optimizations]({{ book.spark_sql }}/QueryExecution#preparations) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
