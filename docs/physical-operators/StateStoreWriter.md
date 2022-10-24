@@ -20,7 +20,7 @@ ID | Name
  [commitTimeMs](#commitTimeMs) | time to commit changes
  numOutputRows | number of output rows
  numRemovedStateRows | number of removed state rows
- numRowsDroppedByWatermark | number of rows which are dropped by watermark
+ [numRowsDroppedByWatermark](#numRowsDroppedByWatermark) | number of rows which are dropped by watermark
  numShufflePartitions | number of shuffle partitions
  [numStateStoreInstances](#numStateStoreInstances) | number of state store instances
  [numTotalStateRows](#numTotalStateRows) | number of total state rows
@@ -28,6 +28,14 @@ ID | Name
  [statefulOperatorCustomMetrics](#statefulOperatorCustomMetrics) |
  stateMemory | memory used by state
  [stateStoreCustomMetrics](#stateStoreCustomMetrics) |
+
+### <span id="numRowsDroppedByWatermark"> number of rows which are dropped by watermark
+
+Incremented in [applyRemovingRowsOlderThanWatermark](#applyRemovingRowsOlderThanWatermark) (to drop late rows based on a watermark)
+
+Reported in web UI as [Aggregated Number Of Rows Dropped By Watermark](../webui/StreamingQueryStatisticsPage.md#generateAggregatedStateOperators)
+
+Reported as [numRowsDroppedByWatermark](../monitoring/StateOperatorProgress.md#numRowsDroppedByWatermark) when [reporting progress](#getProgress)
 
 ### <span id="numStateStoreInstances"> number of state store instances
 
@@ -44,7 +52,7 @@ Reported as [numStateStoreInstances](../monitoring/StateOperatorProgress.md#numS
 * For [unary stateful operators](#implementations), [updated](#setStoreMetrics) based on the [numKeys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) metric of a [StateStore](../stateful-stream-processing/StateStore.md)
 * For [StreamingSymmetricHashJoinExec](StreamingSymmetricHashJoinExec.md), updated at [onOutputCompletion](StreamingSymmetricHashJoinExec.md#onOutputCompletion) (of [processPartitions](StreamingSymmetricHashJoinExec.md#processPartitions))
 
-Reported as [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) (in `stateOperators` in [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)) when [reporting progress](#getProgress)
+Reported as [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) when [reporting progress](#getProgress)
 
 Can be disabled (for performance reasons) using [spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows](../configuration-properties.md#spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows)
 
@@ -75,12 +83,15 @@ Reported as [allRemovalsTimeMs](../monitoring/StateOperatorProgress.md#allRemova
 
 ### <span id="allUpdatesTimeMs"> time to update
 
-[Time taken](#timeTakenMs) to read the input rows and [store them in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (possibly filtering out expired "watermarked" rows per [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate)
-
-!!! note "number of updated state rows"
-    The number of rows stored is the [number of updated state rows](#numUpdatedStateRows) metric
+[Time taken](#timeTakenMs) to read the input rows and [store them in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (possibly dropping expired rows per [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate)
 
 Reported as [allUpdatesTimeMs](../monitoring/StateOperatorProgress.md#allUpdatesTimeMs) when [reporting progress](#getProgress)
+
+!!! note "number of rows which are dropped by watermark"
+    Use [number of rows which are dropped by watermark](#numRowsDroppedByWatermark) for the number of rows dropped (per the [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData)).
+
+!!! note "number of updated state rows"
+    Use [number of updated state rows](#numUpdatedStateRows) for the number of rows stored in a state store.
 
 ## <span id="shortName"> Short Name
 
@@ -234,3 +245,24 @@ setStoreMetrics(
 * [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md)
 * [StreamingDeduplicateExec](StreamingDeduplicateExec.md)
 * [StreamingGlobalLimitExec](StreamingGlobalLimitExec.md)
+
+## <span id="applyRemovingRowsOlderThanWatermark"> Dropping Late Rows (Older Than Watermark)
+
+```scala
+applyRemovingRowsOlderThanWatermark(
+  iter: Iterator[InternalRow],
+  predicateDropRowByWatermark: BasePredicate): Iterator[InternalRow]
+```
+
+`applyRemovingRowsOlderThanWatermark` filters out (_drops_) late rows based on the given `predicateDropRowByWatermark` (i.e., when holds `true`).
+
+Every time a row is dropped [number of rows which are dropped by watermark](#numRowsDroppedByWatermark) metric is incremented.
+
+---
+
+`applyRemovingRowsOlderThanWatermark` is used when:
+
+* `FlatMapGroupsWithStateExec` is requested to [processDataWithPartition](FlatMapGroupsWithStateExec.md#processDataWithPartition)
+* `StateStoreSaveExec` is [executed](StateStoreSaveExec.md#doExecute) (for `Append` and `Update` output modes)
+* `StreamingDeduplicateExec` is [executed](StreamingDeduplicateExec.md#doExecute)
+* `StreamingSymmetricHashJoinExec.OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../streaming-join/OneSideHashJoiner.md#storeAndJoinWithOtherSide)
