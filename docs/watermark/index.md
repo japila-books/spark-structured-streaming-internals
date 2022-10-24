@@ -1,6 +1,6 @@
 # Streaming Watermark
 
-**Streaming Watermark** of a [stateful streaming query](../stateful-stream-processing/index.md) is how long to wait for late and possibly out-of-order events until a streaming state can be considered final and not to change.
+**Streaming Watermark** (_allowed lateness_) of a [stateful streaming query](../stateful-stream-processing/index.md) is a moving threshold of _event time_ and specifies how long to wait for late and possibly out-of-order events until a streaming state can be considered final and not to change ever (so the engine can automatically drop incoming late data given event time and clean up old state accordingly).
 
 Streaming watermark is used to mark events (modeled as rows in a streaming query) that are older than the watermark threshold as "too late", and not "interesting" to update partial non-final streaming state (of an aggregation or a join).
 
@@ -55,6 +55,7 @@ Since the execution (data processing) happens on Spark executors, using the accu
 
 During the query planning phase (in [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) and [ContinuousExecution](../continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning)) that also happens on the driver, `IncrementalExecution` is given the current [OffsetSeqMetadata](../OffsetSeqMetadata.md) with the current event-time watermark.
 
-## Further Reading Or Watching
+## Learning Resources
 
 * [SPARK-18124 Observed delay based event time watermarks]({{ spark.jira }}/SPARK-18124)
+* [Official documentation of Apache Spark]({{ spark.docs }}/structured-streaming-programming-guide.html#handling-late-data-and-watermarking)

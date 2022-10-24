@@ -1,104 +1,139 @@
-# WatermarkSupport Unary Physical Operators
+# WatermarkSupport Physical Operators
 
-`WatermarkSupport` is the <<contract, abstraction>> of unary physical operators (`UnaryExecNode`) with support for streaming event-time watermark.
+`WatermarkSupport` is an [extension](#contract) of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan)) abstraction for [physical operators](#implementations) with support for [streaming watermark](../watermark/index.md).
 
-[NOTE]
-====
-*Watermark* (aka *"allowed lateness"*) is a moving threshold of *event time* and specifies what data to consider for aggregations, i.e. the threshold of late data so the engine can automatically drop incoming late data given event time and clean up old state accordingly.
+## Contract
 
-Read the official documentation of Spark in http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#handling-late-data-and-watermarking[Handling Late Data and Watermarking].
-====
+### <span id="child"> Child Physical Operator
 
-[[properties]]
-.WatermarkSupport's (Lazily-Initialized) Properties
-[cols="1,3",options="header",width="100%"]
-|===
-| Property
-| Description
+```scala
+child: SparkPlan
+```
 
-| [[watermarkExpression]] `watermarkExpression`
-a| Optional Catalyst expression that matches rows older than the event time watermark.
+Used when:
 
-!!! note
-    Use [withWatermark](../operators/withWatermark.md) operator to specify streaming watermark.
+* `WatermarkSupport` is requested for the [watermark expression](#watermarkExpression) and [watermark predicate for data](#watermarkPredicateForData)
+
+### <span id="eventTimeWatermark"> Event-Time Watermark
+
+```scala
+eventTimeWatermark: Option[Long]
+```
+
+Current value of watermark
+
+Used when:
+
+* `WatermarkSupport` is requested for the [watermark expression](#watermarkExpression)
+
+### <span id="keyExpressions"> Key Expressions
+
+```scala
+keyExpressions: Seq[Attribute]
+```
+
+Grouping keys (in [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md#keyExpressions)), duplicate keys (in [StreamingDeduplicateExec](StreamingDeduplicateExec.md#keyExpressions)) or key attributes (in [StateStoreSaveExec](StateStoreSaveExec.md#keyExpressions)) with at most one that may have [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#watermarkDelayMs) watermark attribute in metadata
+
+Used when:
+
+* `WatermarkSupport` is requested for the [watermark predicate for keys](#watermarkPredicateForKeys) (to match rows older than the event time watermark)
+
+## Implementations
+
+* [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md)
+* [SessionWindowStateStoreRestoreExec](SessionWindowStateStoreRestoreExec.md)
+* [SessionWindowStateStoreSaveExec](SessionWindowStateStoreSaveExec.md)
+* [StateStoreSaveExec](StateStoreSaveExec.md)
+* [StreamingDeduplicateExec](StreamingDeduplicateExec.md)
+
+## Watermark Predicates
+
+### <span id="watermarkPredicateForKeys"> For Keys
+
+```scala
+watermarkPredicateForKeys: Option[BasePredicate]
+```
+
+??? note "Lazy Value"
+    `watermarkPredicateForKeys` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and the computed value never changes afterwards.
+
+    Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#lazy).
+
+`watermarkPredicateForKeys` is a `Predicate` (Spark SQL) based on the [watermarkExpression](#watermarkExpression) for the [key expressions](#keyExpressions) if there is at least one key expression with [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#delayKey) metadata key.
 
 ---
 
-When initialized, `watermarkExpression` finds [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#watermarkDelayMs) watermark attribute in the child output's metadata.
+`watermarkPredicateForKeys` is used when:
 
-If found, `watermarkExpression` creates `evictionExpression` with the watermark attribute that is less than or equal <<eventTimeWatermark, eventTimeWatermark>>.
+* `WatermarkSupport` is requested to [removeKeysOlderThanWatermark](#removeKeysOlderThanWatermark)
+* `StateStoreSaveExec` is [executed](StateStoreSaveExec.md#doExecute) (with [Append](StateStoreSaveExec.md#doExecute-Append) output mode)
 
-The watermark attribute may be of type `StructType`. If it is, `watermarkExpression` uses the first field as the watermark.
+### <span id="watermarkPredicateForData"> For Data
 
-`watermarkExpression` prints out the following INFO message to the logs when [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#watermarkDelayMs) watermark attribute is found.
-
-```text
-INFO [physicalOperator]Exec: Filtering state store on: [evictionExpression]
+```scala
+watermarkPredicateForData: Option[BasePredicate]
 ```
 
-NOTE: `physicalOperator` can be [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md), StateStoreSaveExec.md[StateStoreSaveExec] or [StreamingDeduplicateExec](StreamingDeduplicateExec.md).
+??? note "Lazy Value"
+    `watermarkPredicateForData` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and the computed value never changes afterwards.
 
-TIP: Enable INFO logging level for one of the stateful physical operators to see the INFO message in the logs.
+    Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#lazy).
 
-| [[watermarkPredicateForData]] `watermarkPredicateForData`
-| Optional `Predicate` that uses <<watermarkExpression, watermarkExpression>> and the child output to match rows older than the event-time watermark
+`watermarkPredicateForData` is a `Predicate` (Spark SQL) based on the [watermarkExpression](#watermarkExpression) and the output schema of the [child operator](#child) (to match rows older than the event-time watermark).
 
-| [[watermarkPredicateForKeys]] `watermarkPredicateForKeys`
-| Optional `Predicate` that uses <<keyExpressions, keyExpressions>> to match rows older than the event time watermark.
-|===
+---
 
-=== [[contract]] WatermarkSupport Contract
+`watermarkPredicateForData` is used when:
 
-[source, scala]
-----
-package org.apache.spark.sql.execution.streaming
+* `FlatMapGroupsWithStateExec` is requested to [processDataWithPartition](FlatMapGroupsWithStateExec.md#processDataWithPartition)
+* `StateStoreSaveExec` is [executed](StateStoreSaveExec.md#doExecute)
+* `SessionWindowStateStoreRestoreExec` is [executed](SessionWindowStateStoreRestoreExec.md#doExecute)
+* `SessionWindowStateStoreSaveExec` is [executed](SessionWindowStateStoreSaveExec.md#doExecute)
+* `StreamingDeduplicateExec` is [executed](StreamingDeduplicateExec.md#doExecute)
 
-trait WatermarkSupport extends UnaryExecNode {
-  // only required methods that have no implementation
-  def eventTimeWatermark: Option[Long]
-  def keyExpressions: Seq[Attribute]
-}
-----
+## <span id="removeKeysOlderThanWatermark"> removeKeysOlderThanWatermark
 
-.WatermarkSupport Contract
-[cols="1,2",options="header",width="100%"]
-|===
-| Method
-| Description
-
-| [[eventTimeWatermark]] `eventTimeWatermark`
-| Used mainly in <<watermarkExpression, watermarkExpression>> to create a `LessThanOrEqual` Catalyst binary expression that matches rows older than the watermark.
-
-| [[keyExpressions]] `keyExpressions`
-| Grouping keys (in [FlatMapGroupsWithStateExec](FlatMapGroupsWithStateExec.md#keyExpressions)), duplicate keys (in [StreamingDeduplicateExec](StreamingDeduplicateExec.md#keyExpressions)) or key attributes (in [StateStoreSaveExec](StateStoreSaveExec.md#keyExpressions)) with at most one that may have [spark.watermarkDelayMs](../logical-operators/EventTimeWatermark.md#watermarkDelayMs) watermark attribute in metadata
-
-Used in <<watermarkPredicateForKeys, watermarkPredicateForKeys>> to create a `Predicate` to match rows older than the event time watermark.
-
-Used also when [StateStoreSaveExec](StateStoreSaveExec.md#doExecute) and [StreamingDeduplicateExec](StreamingDeduplicateExec.md#doExecute) physical operators are executed.
-|===
-
-=== [[removeKeysOlderThanWatermark]][[removeKeysOlderThanWatermark-StateStore]] Removing Keys From StateStore Older Than Watermark -- `removeKeysOlderThanWatermark` Method
-
-[source, scala]
-----
-removeKeysOlderThanWatermark(store: StateStore): Unit
-----
-
-`removeKeysOlderThanWatermark` requests the input `store` for [all rows](../stateful-stream-processing/StateStore.md#getRange).
-
-`removeKeysOlderThanWatermark` then uses [watermarkPredicateForKeys](#watermarkPredicateForKeys) to [remove matching rows from the store](../stateful-stream-processing/StateStore.md#remove).
-
-`removeKeysOlderThanWatermark` is used when [StreamingDeduplicateExec](StreamingDeduplicateExec.md) physical operator is requested to execute.
-
-=== [[removeKeysOlderThanWatermark-StreamingAggregationStateManager-store]] `removeKeysOlderThanWatermark` Method
-
-[source, scala]
-----
+```scala
+removeKeysOlderThanWatermark(
+  store: StateStore): Unit
 removeKeysOlderThanWatermark(
   storeManager: StreamingAggregationStateManager,
   store: StateStore): Unit
-----
+```
 
 `removeKeysOlderThanWatermark`...FIXME
 
-NOTE: `removeKeysOlderThanWatermark` is used exclusively when `StateStoreSaveExec` physical operator is requested to <<StateStoreSaveExec.md#doExecute, execute and generate a recipe for a distributed computation (as an RDD[InternalRow])>>.
+---
+
+`removeKeysOlderThanWatermark` is used when:
+
+* `StreamingDeduplicateExec` is [executed](StreamingDeduplicateExec.md#doExecute) (just before finishing up)
+* `StateStoreSaveExec` is [executed](StateStoreSaveExec.md#doExecute) (just before finishing up in [Update](StateStoreSaveExec.md#doExecute-Update) output mode)
+
+## <span id="watermarkExpression"> Watermark Expression
+
+```scala
+watermarkExpression: Option[Expression]
+```
+
+??? note "Lazy Value"
+    `watermarkExpression` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and the computed value never changes afterwards.
+
+    Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#lazy).
+
+`watermarkExpression` is a Catalyst `Expression` ([Spark SQL]({{ book.spark_sql }}/expressions/Expression)) to find rows older than the [event-time watermark](../watermark/index.md).
+
+!!! note
+    Use [withWatermark](../operators/withWatermark.md) operator to specify a watermark expression.
+
+`watermarkExpression` [creates a watermark expression](#watermarkExpression-helper) for the following:
+
+* [child operator](#child)'s output expressions (in the output schema of the [child operator](#child)) with [EventTimeWatermark.delayKey](../logical-operators/EventTimeWatermark.md#delayKey) metadata key
+* [eventTimeWatermark](#eventTimeWatermark)
+
+---
+
+`watermarkExpression` is used when:
+
+* `FlatMapGroupsWithStateExec` is [executed](FlatMapGroupsWithStateExec.md#doExecute) (with `EventTimeTimeout`)
+* `WatermarkSupport` is requested for [watermarkPredicateForKeys](#watermarkPredicateForKeys), [watermarkPredicateForData](#watermarkPredicateForData)
