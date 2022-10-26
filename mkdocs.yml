@@ -90,11 +90,13 @@ extra:
     docs: https://docs.oracle.com/en/java/javase/11/docs
     api: https://docs.oracle.com/en/java/javase/11/docs/api/java.base
   kafka:
+    version: 2.8.1
     api: https://kafka.apache.org/28/javadoc
   rocksdb:
     version: 6.20.3
     api: https://javadoc.io/static/org.rocksdb/rocksdbjni/6.20.3
   scala:
+    version: 2.12.15
     api: https://www.scala-lang.org/api/2.12.15
     docs: https://docs.scala-lang.org/
     spec: https://www.scala-lang.org/files/archive/spec/2.12
@@ -108,10 +110,10 @@ extra:
     - icon: fontawesome/brands/medium
       link: https://jaceklaskowski.medium.com
   spark:
-    version: 3.3.0
+    version: 3.3.1
     commit: https://github.com/apache/spark/commit
-    docs: https://spark.apache.org/docs/3.3.0
-    github: https://github.com/apache/spark/tree/v3.3.0
+    docs: https://spark.apache.org/docs/3.3.1
+    github: https://github.com/apache/spark/tree/v3.3.1
     jira: https://issues.apache.org/jira/browse
 
 nav:
