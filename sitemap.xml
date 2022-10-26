@@ -281,6 +281,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/batch-processing-time/</loc>
+         <lastmod>2022-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/configuration-properties/</loc>
          <lastmod>2022-10-26</lastmod>
          <changefreq>daily</changefreq>
@@ -307,11 +312,6 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState/</loc>
-         <lastmod>2022-10-26</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/spark-structured-streaming-batch-processing-time/</loc>
          <lastmod>2022-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
