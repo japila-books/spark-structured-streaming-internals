@@ -120,7 +120,6 @@ nav:
   - Home: index.md
   - Internals:
     - Overview: overview.md
-    - Batch Processing Time: spark-structured-streaming-batch-processing-time.md
     - Configuration Properties: configuration-properties.md
     - DataSource: DataSource.md
     - Execution Planning Strategies:
@@ -222,6 +221,7 @@ nav:
         - StateManagerImplBase: arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md
         - StateManagerImplV1: arbitrary-stateful-streaming-aggregation/StateManagerImplV1.md
         - StateManagerImplV2: arbitrary-stateful-streaming-aggregation/StateManagerImplV2.md
+    - Batch Processing Time: batch-processing-time.md
     - Streaming Aggregation:
       - streaming-aggregation/index.md
       - StreamingAggregationStateManager: streaming-aggregation/StreamingAggregationStateManager.md

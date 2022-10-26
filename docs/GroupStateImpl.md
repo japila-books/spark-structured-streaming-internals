@@ -15,7 +15,7 @@
 `GroupStateImpl` takes the following to be created:
 
 * [[optionalValue]] State value (of type `S`)
-* [[batchProcessingTimeMs]] [Batch processing time](spark-structured-streaming-batch-processing-time.md)
+* [[batchProcessingTimeMs]] [Batch processing time](batch-processing-time.md)
 * [[eventTimeWatermarkMs]] `eventTimeWatermarkMs`
 * [[timeoutConf]] [GroupStateTimeout](GroupStateTimeout.md)
 * [[hasTimedOut]] `hasTimedOut` flag

@@ -20,7 +20,7 @@
 
 ### <span id="batchTimestampMs"> Batch Timestamp
 
-`OffsetSeqMetadata` is given the current batch's [batch timestamp](spark-structured-streaming-batch-processing-time.md) when [created](#creating-instance). Unless given, it is assumed `0`.
+`OffsetSeqMetadata` is given the current batch's [batch timestamp](batch-processing-time.md) when [created](#creating-instance). Unless given, it is assumed `0`.
 
 ## <span id="apply"> Creating OffsetSeqMetadata
 
