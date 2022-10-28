@@ -379,14 +379,11 @@ nav:
       - Options: datasources/kafka/options.md
     - Memory:
       - datasources/memory/index.md
-      - MemoryStream: datasources/memory/MemoryStream.md
       - ContinuousMemoryStream: datasources/memory/ContinuousMemoryStream.md
-      - MemorySink: datasources/memory/MemorySink.md
-      - MemorySinkV2:
-        - MemorySinkV2: datasources/memory/MemorySinkV2.md
-      - MemoryStreamBase: datasources/memory/MemoryStreamBase.md
-      - MemorySinkBase: datasources/memory/MemorySinkBase.md
       - MemoryPlan: datasources/memory/MemoryPlan.md
+      - MemorySink: datasources/memory/MemorySink.md
+      - MemoryStream: datasources/memory/MemoryStream.md
+      - MemoryStreamBase: datasources/memory/MemoryStreamBase.md
     - Rate:
       - datasources/rate/index.md
       - RateStreamProvider: datasources/rate/RateStreamProvider.md

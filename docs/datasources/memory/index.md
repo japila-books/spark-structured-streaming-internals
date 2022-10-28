@@ -1,12 +1,12 @@
 # Memory Data Source
 
-*Memory Data Source* is made up of the following two base implementations to support the older DataSource API V1 and the modern DataSource API V2:
+**Memory Data Source** supports [Micro-Batch](../../micro-batch-execution/index.md) and [Continuous](../../continuous-execution/index.md) stream processing modes using [MemoryStreamBase](MemoryStreamBase.md) abstraction.
 
-* [MemoryStreamBase](MemoryStreamBase.md)
+!!! note "Not for Production Deployments"
+    Memory Data Source is designed primarily for unit tests, tutorials and debugging.
 
-* [MemorySinkBase](MemorySinkBase.md)
-
-Memory data source supports [Micro-Batch](../../micro-batch-execution/index.md) and [Continuous](../../continuous-execution/index.md) stream processing modes.
+<!---
+## Review Me
 
 [cols="30,35,35",options="header",width="100%"]
 |===
@@ -20,16 +20,9 @@ Memory data source supports [Micro-Batch](../../micro-batch-execution/index.md) 
 
 | [Continuous](../../continuous-execution/index.md)
 | [ContinuousMemoryStream](ContinuousMemoryStream.md)
-| [MemorySinkV2](MemorySinkV2.md)
+| [MemorySink](MemorySink.md)
 
 |===
-
-[CAUTION]
-====
-Memory Data Source is *not* for production use due to design contraints, e.g. infinite in-memory collection of lines read and no fault recovery.
-
-`MemoryStream` is designed primarily for unit tests, tutorials and debugging.
-====
 
 === [[memory-sink]] Memory Sink
 
@@ -124,3 +117,4 @@ assert(sink.toString == "MemorySink")
 
 sink.clear()
 ----
+-->

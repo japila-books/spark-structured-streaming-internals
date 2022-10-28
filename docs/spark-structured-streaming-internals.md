@@ -231,7 +231,7 @@ assert(sq.isInstanceOf[StreamingQuery])
 
 When `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#start), it allows for the following data source formats:
 
-* **memory** with [MemorySinkV2](datasources/memory/MemorySinkV2.md) (with [ContinuousTrigger](Trigger.md#ContinuousTrigger)) or [MemorySink](datasources/memory/MemorySink.md)
+* **memory** with [MemorySink](datasources/memory/MemorySink.md)
 
 * **foreach** with [ForeachWriterProvider](datasources/foreach/ForeachWriterProvider.md) sink
 

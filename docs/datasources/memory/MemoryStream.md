@@ -8,10 +8,10 @@
 import org.apache.spark.sql.execution.streaming.MemoryStream
 
 implicit val sqlContext = spark.sqlContext
-val input1 = MemoryStream[String](numPartitions = 8)
+val input = MemoryStream[String](numPartitions = 8)
 val input2 = MemoryStream[String]
 
-val df1 = input1.toDF()
+val df1 = input.toDF()
   .select($"value", $"value")
 
 val stateFunc: (K, Iterator[V], GroupState[S]) => U): Dataset[U] = ???
@@ -19,6 +19,24 @@ val df2 = input2.toDS()
   .groupByKey(identity)
   .mapGroupsWithState(stateFunc)
   .toDF()
+```
+
+```scala
+input.addData("1", "2", "3", "4", "5")
+```
+
+```scala
+import org.apache.spark.sql.streaming.Trigger
+val sq = input
+  .toDF()
+  .writeStream
+  .format("console")
+  .trigger(Trigger.AvailableNow)
+  .start
+```
+
+```scala
+assert(sq.isActive == false)
 ```
 
 ## Creating Instance
@@ -63,6 +81,29 @@ planInputPartitions(
 
 `planInputPartitions`...FIXME
 
+## <span id="addData"> Adding Data
+
+```scala
+addData(
+  data: TraversableOnce[A]): Offset
+```
+
+`addData` is part of the [MemoryStreamBase](MemoryStreamBase.md#addData) abstraction.
+
+---
+
+`addData` creates `UnsafeRow`s (using `toRow` serializer).
+
+`addData` prints out the following DEBUG message to the logs:
+
+```text
+Adding: [data]
+```
+
+`addData` increments [currentOffset](#currentOffset) counter and adds the rows to the [batches](#batches) registry.
+
+In the end, `addData` returns the [currentOffset](#currentOffset).
+
 ## Logging
 
 Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MemoryStream` logger to see what happens inside.
@@ -77,24 +118,6 @@ Refer to [Logging](../../spark-logging.md).
 
 <!---
 ## Review Me
-
-=== [[addData]] Adding Data to Source -- `addData` Method
-
-[source, scala]
-----
-addData(
-  data: TraversableOnce[A]): Offset
-----
-
-`addData` adds the given `data` to the <<batches, batches>> internal registry.
-
-Internally, `addData` prints out the following DEBUG message to the logs:
-
-```
-Adding: [data]
-```
-
-In the end, `addData` increments the <<currentOffset, current offset>> and adds the data to the <<batches, batches>> internal registry.
 
 === [[getBatch]] Generating Next Streaming Batch -- `getBatch` Method
 

@@ -1,86 +1,32 @@
-# MemoryStreamBase -- Base Contract for Memory Sources
+# MemoryStreamBase
 
-`MemoryStreamBase` is the <<contract, base>> of...FIXME
+`MemoryStreamBase` is an [extension](#contract) of the [SparkDataStream](../../SparkDataStream.md) abstraction for [data streams](#implementations) that [keep data](#addData) in memory.
 
-[[contract]]
-.MemoryStreamBase Contract
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
+## Contract
 
-| addData
-a| [[addData]]
+### <span id="addData"> Adding Data
 
-[source, scala]
-----
+```scala
+addData(
+  data: A*): Offset
 addData(
   data: TraversableOnce[A]): Offset
-----
+```
 
-| logicalPlan
-a| [[logicalPlan]]
+Adds new data to this memory stream (and advances the current [Offset](../../Offset.md))
 
-[source, scala]
-----
-logicalPlan: LogicalPlan
-----
+See [MemoryStream](MemoryStream.md#addData)
 
-|===
+## Implementations
 
-[[implementations]]
-.MemoryStreamBases
-[cols="30,70",options="header",width="100%"]
-|===
-| MemoryStreamBase
-| Description
+* [ContinuousMemoryStream](ContinuousMemoryStream.md)
+* [MemoryStream](MemoryStream.md)
 
-| [ContinuousMemoryStream](ContinuousMemoryStream.md)
-| [[ContinuousMemoryStream]]
-
-|===
-
-=== [[creating-instance]] Creating MemoryStreamBase Instance
+## Creating Instance
 
 `MemoryStreamBase` takes the following to be created:
 
-* [[sqlContext]] `SQLContext`
+* <span id="sqlContext"> `SQLContext` ([Spark SQL]({{ book.spark_sql }}/SQLContext))
 
-NOTE: `MemoryStreamBase` is a Scala abstract class and cannot be <<creating-instance, created>> directly. It is created indirectly for the <<implementations, concrete MemoryStreamBases>>.
-
-=== [[toDS]] Creating Streaming Dataset -- `toDS` Method
-
-[source, scala]
-----
-toDS(): Dataset[A]
-----
-
-`toDS` simply creates a `Dataset` (for the <<sqlContext, sqlContext>> and the <<logicalPlan, logicalPlan>>)
-
-=== [[toDF]] Creating Streaming DataFrame -- `toDF` Method
-
-[source, scala]
-----
-toDF(): DataFrame
-----
-
-`toDF` simply creates a `Dataset` of rows (for the <<sqlContext, sqlContext>> and the <<logicalPlan, logicalPlan>>)
-
-=== [[internal-properties]] Internal Properties
-
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| attributes
-a| [[attributes]] Schema attributes of the <<encoder, encoder>> (`Seq[AttributeReference]`)
-
-Used when...FIXME
-
-| encoder
-a| [[encoder]] Spark SQL's `ExpressionEncoder` for the data
-
-Used when...FIXME
-
-|===
+!!! note "Abstract Class"
+    `MemoryStreamBase` is an abstract class and cannot be created directly. It is created indirectly for the [concrete MemoryStreamBases](#implementations).
