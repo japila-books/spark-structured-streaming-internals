@@ -1,6 +1,6 @@
 # MicroBatchStream
 
-`MicroBatchStream` is an [extension](#contract) of the [SparkDataStream](SparkDataStream.md) abstraction for [streaming sources](#implementations) for [Micro-Batch Stream Processing](micro-batch-execution/index.md).
+`MicroBatchStream` is an [extension](#contract) of the [SparkDataStream](SparkDataStream.md) abstraction for [data streams](#implementations) for [Micro-Batch Stream Processing](micro-batch-execution/index.md).
 
 ## Contract
 

@@ -1,39 +1,82 @@
-# MemoryStream -- Streaming Reader for Micro-Batch Stream Processing
+# MemoryStream
 
-`MemoryStream` is...FIXME
+`MemoryStream` is a [MemoryStreamBase](MemoryStreamBase.md) and a [MicroBatchStream](../../MicroBatchStream.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
 
-[[logging]]
-[TIP]
-====
+## Demo
+
+```scala
+import org.apache.spark.sql.execution.streaming.MemoryStream
+
+implicit val sqlContext = spark.sqlContext
+val input1 = MemoryStream[String](numPartitions = 8)
+val input2 = MemoryStream[String]
+
+val df1 = input1.toDF()
+  .select($"value", $"value")
+
+val stateFunc: (K, Iterator[V], GroupState[S]) => U): Dataset[U] = ???
+val df2 = input2.toDS()
+  .groupByKey(identity)
+  .mapGroupsWithState(stateFunc)
+  .toDF()
+```
+
+## Creating Instance
+
+`MemoryStream` takes the following to be created:
+
+* <span id="id"> ID
+* <span id="sqlContext"> `SQLContext` ([Spark SQL]({{ book.spark_sql }}/SQLContext))
+* [Number of partitions](#numPartitions)
+
+`MemoryStream` is created using [apply](#apply) factory.
+
+### <span id="numPartitions"> Number of Partitions
+
+`MemoryStream` can be given the number of partitions when [created](#creating-instance). It is undefined (`None`) by default.
+
+When specified, `MemoryStream` uses the number of partition in [planInputPartitions](#planInputPartitions) to redistribute rows into the given number of partition, via round-robin manner.
+
+## <span id="apply"> Creating MemoryStream
+
+```scala
+apply[A : Encoder](
+  numPartitions: Int)(
+  implicit sqlContext: SQLContext): MemoryStream[A]
+apply[A : Encoder](
+  implicit sqlContext: SQLContext): MemoryStream[A]
+```
+
+`apply` creates a [MemoryStream](#creating-instance) with a unique [id](#id) (using an internal `AtomicInteger` counter).
+
+## <span id="planInputPartitions"> Input Partitions
+
+```scala
+planInputPartitions(
+  start: OffsetV2,
+  end: OffsetV2): Array[InputPartition]
+```
+
+`planInputPartitions` is part of the [MicroBatchStream](../../MicroBatchStream.md#planInputPartitions) abstraction.
+
+---
+
+`planInputPartitions`...FIXME
+
+## Logging
+
 Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MemoryStream` logger to see what happens inside.
 
 Add the following line to `conf/log4j.properties`:
 
-```
+```text
 log4j.logger.org.apache.spark.sql.execution.streaming.MemoryStream=ALL
 ```
 
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
+Refer to [Logging](../../spark-logging.md).
 
-=== [[creating-instance]] Creating MemoryStream Instance
-
-`MemoryStream` takes the following to be created:
-
-* [[id]] ID
-* [[sqlContext]] `SQLContext`
-
-`MemoryStream` initializes the <<internal-properties, internal properties>>.
-
-=== [[apply]] Creating MemoryStream Instance -- `apply` Object Factory
-
-[source, scala]
-----
-apply[A : Encoder](
-  implicit sqlContext: SQLContext): MemoryStream[A]
-----
-
-`apply` uses an `memoryStreamId` internal counter to <<creating-instance, create a new MemoryStream>> with a unique <<id, ID>> and the implicit `SQLContext`.
+<!---
+## Review Me
 
 === [[addData]] Adding Data to Source -- `addData` Method
 
@@ -89,10 +132,6 @@ scala> ints.toDS.queryExecution.logical
 res15: org.apache.spark.sql.catalyst.plans.logical.LogicalPlan = MemoryStream[value#13]
 ```
 
-=== [[schema]] Schema (schema method)
-
-`MemoryStream` works with the data of the spark-sql-schema.md[schema] as described by the spark-sql-Encoder.md[Encoder] (of the `Dataset`).
-
 === [[toString]] Textual Representation -- `toString` Method
 
 [source, scala]
@@ -107,21 +146,6 @@ NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java
 ```
 MemoryStream[[output]]
 ```
-
-=== [[planInputPartitions]] Plan Input Partitions -- `planInputPartitions` Method
-
-[source, scala]
-----
-planInputPartitions(): java.util.List[InputPartition[InternalRow]]
-----
-
-NOTE: `planInputPartitions` is part of the `DataSourceReader` contract in Spark SQL for the number of `InputPartitions` to use as RDD partitions (when `DataSourceV2ScanExec` physical operator is requested for the partitions of the input RDD).
-
-`planInputPartitions`...FIXME
-
-`planInputPartitions` prints out a DEBUG message to the logs with the <<generateDebugString, generateDebugString>> (with the batches after the <<lastOffsetCommitted, last committed offset>>).
-
-`planInputPartitions`...FIXME
 
 === [[generateDebugString]] `generateDebugString` Internal Method
 
@@ -165,3 +189,4 @@ a| [[output]] Output schema (`Seq[Attribute]`) of the [logical query plan](#logi
 Used exclusively for <<toString, toString>>
 
 |===
+-->
