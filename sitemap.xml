@@ -626,16 +626,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemorySinkBase/</loc>
-         <lastmod>2022-10-28</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemorySinkV2/</loc>
-         <lastmod>2022-10-28</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemoryStream/</loc>
          <lastmod>2022-10-28</lastmod>
          <changefreq>daily</changefreq>
