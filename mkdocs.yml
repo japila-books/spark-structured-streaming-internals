@@ -119,7 +119,9 @@ extra:
 nav:
   - Home: index.md
   - Internals:
-    - Overview: overview.md
+    - Overview:
+      - Overview: overview.md
+      - Internals of Streaming Queries: internals.md
     - Configuration Properties: configuration-properties.md
     - DataSource: DataSource.md
     - Execution Planning Strategies:
@@ -131,7 +133,6 @@ nav:
       - StreamingJoinStrategy: execution-planning-strategies/StreamingJoinStrategy.md
       - StreamingRelationStrategy: execution-planning-strategies/StreamingRelationStrategy.md
     - IncrementalExecution: IncrementalExecution.md
-    - Internals of Streaming Queries: spark-structured-streaming-internals.md
     - Logical Operators:
       - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
       - Deduplicate: logical-operators/Deduplicate.md

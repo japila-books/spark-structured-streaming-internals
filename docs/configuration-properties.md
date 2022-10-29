@@ -2,7 +2,7 @@
 
 **Configuration properties** (aka **settings**) allow you to fine-tune a Spark Structured Streaming application.
 
-??? tip "The Internals of Spark SQL"
+!!! tip "The Internals of Spark SQL"
     Learn more about [Configuration Properties]({{ book.spark_sql }}/configuration-properties/) in [The Internals of Spark SQL]({{ book.spark_sql }}).
 
 ## <span id="spark.sql.streaming.kafka.useDeprecatedOffsetFetching"><span id="USE_DEPRECATED_KAFKA_OFFSET_FETCHING"> kafka.useDeprecatedOffsetFetching

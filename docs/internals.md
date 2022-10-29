@@ -1,13 +1,7 @@
 # Internals of Streaming Queries
 
-The page is to keep notes about how to guide readers through the codebase and may disappear if merged with the other pages or become an intro page.
-
-* [DataStreamReader and Streaming Data Source](#DataStreamReader)
-* [Data Source Resolution, Streaming Dataset and Logical Query Plan](#data-source-resolution)
-* [Dataset API &mdash; High-Level DSL to Build Logical Query Plan](#dataset)
-* [DataStreamWriter and Streaming Data Sink](#DataStreamWriter)
-* [StreamingQuery](#StreamingQuery)
-* [StreamingQueryManager](#StreamingQueryManager)
+!!! note
+    The page is to keep notes about how to guide readers through the codebase and may disappear if merged with the other pages or become an intro page.
 
 ## <span id="DataStreamReader"> DataStreamReader and Streaming Data Source
 
