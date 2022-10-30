@@ -138,6 +138,44 @@ Unless available, `generateAggregatedStateOperators` returns _nothing_ (an empty
 
 `generateAggregatedStateOperators`...FIXME
 
+In the end, `generateAggregatedStateOperators` [generateAggregatedCustomMetrics](#generateAggregatedCustomMetrics) based on [spark.sql.streaming.ui.enabledCustomMetricList](#enabledCustomMetrics).
+
+### <span id="generateAggregatedCustomMetrics"> generateAggregatedCustomMetrics
+
+```scala
+generateAggregatedCustomMetrics(
+  query: StreamingQueryUIData,
+  minBatchTime: Long,
+  maxBatchTime: Long,
+  jsCollector: JsCollector): NodeBuffer
+```
+
+`generateAggregatedCustomMetrics` takes the names of the [custom metrics](../monitoring/StateOperatorProgress.md#customMetrics) from the (head) [StateOperatorProgress](../monitoring/StreamingQueryProgress.md#stateOperators) of the latest [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md).
+
+For every custom metric that is included in [spark.sql.streaming.ui.enabledCustomMetricList](#enabledCustomMetrics), `generateAggregatedCustomMetrics`...FIXME
+
+## <span id="enabledCustomMetrics"> Enabled Custom Metric
+
+`StreamingQueryStatisticsPage` uses [spark.sql.streaming.ui.enabledCustomMetricList](../configuration-properties.md#spark.sql.streaming.ui.enabledCustomMetricList) configuration property for the names of the [Supported Custom Metrics](#supportedCustomMetrics) to [generateAggregatedCustomMetrics](#generateAggregatedCustomMetrics) (in addition to [generateAggregatedStateOperators](#generateAggregatedStateOperators)).
+
+`StreamingQueryStatisticsPage` prints out the following `DEBUG` message to the logs with the custom metrics when created:
+
+```text
+Enabled custom metrics: [enabledCustomMetrics]
+```
+
+## <span id="supportedCustomMetrics"> Supported Custom Metrics
+
+`StreamingQueryStatisticsPage` requests the system [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md) (based on [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration property) for the [supported custom metrics](../stateful-stream-processing/StateStoreProvider.md#supportedCustomMetrics) when created.
+
+Only the supported custom metrics can be [enabled](#enabledCustomMetrics) to be displayed in the web UI.
+
+`StreamingQueryStatisticsPage` prints out the following `DEBUG` message to the logs with the supported custom metrics when created:
+
+```text
+Supported custom metrics: [supportedCustomMetrics]
+```
+
 ## Logging
 
 Enable `ALL` logging level for `org.apache.spark.sql.streaming.ui.StreamingQueryStatisticsPage` logger to see what happens inside.

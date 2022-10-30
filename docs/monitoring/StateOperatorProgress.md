@@ -1,6 +1,6 @@
 # StateOperatorProgress
 
-`StateOperatorProgress` is metadata about updates made to stateful operators of a single micro-batch (_progress_) of a [StreamingQuery](../StreamingQuery.md).
+`StateOperatorProgress` is a progress of (_updates made to_) all the stateful operators in a micro-batch of a [StreamingQuery](../StreamingQuery.md).
 
 ## Creating Instance
 
@@ -17,7 +17,7 @@
 * <span id="numRowsDroppedByWatermark"> numRowsDroppedByWatermark
 * <span id="numShufflePartitions"> numShufflePartitions
 * <span id="numStateStoreInstances"> numStateStoreInstances
-* <span id="customMetrics"> Custom Metrics (default: empty)
+* [Custom Metrics](#customMetrics)
 
 `StateOperatorProgress` is created when:
 
@@ -27,6 +27,20 @@
 ### <span id="numRowsTotal"> numRowsTotal
 
 `numRowsTotal` is the value of [numTotalStateRows](../physical-operators/StateStoreWriter.md#numTotalStateRows) metric of a [StateStoreWriter](../physical-operators/StateStoreWriter.md) physical operator (when requested to [get progress](../physical-operators/StateStoreWriter.md#getProgress)).
+
+### <span id="customMetrics"> Custom Metrics
+
+```scala
+customMetrics: Map[String, Long]
+```
+
+`StateOperatorProgress` can be given a collection of custom metrics (of the stateful operator it reports progress of). There are no metrics defined by default.
+
+The custom metrics are [stateStoreCustomMetrics](../physical-operators/StateStoreWriter.md#stateStoreCustomMetrics) and [statefulOperatorCustomMetrics](../physical-operators/StateStoreWriter.md#statefulOperatorCustomMetrics)
+
+Any custom metric included in [spark.sql.streaming.ui.enabledCustomMetricList](../configuration-properties.md#spark.sql.streaming.ui.enabledCustomMetricList) is displayed in [Structured Streaming UI](../webui/StreamingQueryStatisticsPage.md#generateAggregatedCustomMetrics).
+
+Included in [jsonValue](#jsonValue)
 
 ## <span id="copy"> copy
 

@@ -40,6 +40,25 @@ Used when:
 
 * `StateStoreProvider` utility is used to [create and initialize a StateStoreProvider](#createAndInit)
 
+### <span id="supportedCustomMetrics"> Supported Custom Metrics
+
+```scala
+supportedCustomMetrics: Seq[StateStoreCustomMetric]
+```
+
+[StateStoreCustomMetric](StateStoreCustomMetric.md)s (e.g., to report in [web UI](../webui/StreamingQueryStatisticsPage.md#supportedCustomMetrics) or [StateOperatorProgress](../monitoring/StateOperatorProgress.md#customMetrics))
+
+Default: empty
+
+See:
+
+* [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md#supportedCustomMetrics)
+* [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#supportedCustomMetrics)
+
+Used when:
+
+* `StateStoreWriter` is requested for the [stateStoreCustomMetrics](../physical-operators/StateStoreWriter.md#stateStoreCustomMetrics)
+
 ## Implementations
 
 * [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md)

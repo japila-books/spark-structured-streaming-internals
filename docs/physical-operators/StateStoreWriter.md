@@ -1,6 +1,8 @@
 # StateStoreWriter Physical Operators
 
-`StateStoreWriter` is an [extension](#contract) of the [StatefulOperator](StatefulOperator.md) abstraction for [stateful physical operators](#implementations) that write to a state store and collect the [write metrics](#metrics) for [execution progress reporting](#getProgress).
+`StateStoreWriter` is an [extension](#contract) of the [StatefulOperator](StatefulOperator.md) abstraction for [stateful physical operators](#implementations) that write to a state store.
+
+`StateStoreWriter` operators collect [performance metrics](#metrics) for [execution progress reporting](#getProgress).
 
 ## Implementations
 
@@ -124,13 +126,11 @@ customStatefulOperatorMetrics: Seq[StatefulOperatorCustomMetric]
 
 * `StateStoreWriter` is requested for the [custom metrics of this stateful operator](#statefulOperatorCustomMetrics)
 
-## <span id="getProgress"> Reporting Progress
+## <span id="getProgress"> Reporting Operator Progress
 
 ```scala
 getProgress(): StateOperatorProgress
 ```
-
-`getProgress` collects the current values of the custom metrics ([stateStoreCustomMetrics](#stateStoreCustomMetrics) and [statefulOperatorCustomMetrics](#statefulOperatorCustomMetrics)).
 
 `getProgress` creates a [StateOperatorProgress](../monitoring/StateOperatorProgress.md) with the [shortName](#shortName) and the following metrics:
 
@@ -146,7 +146,7 @@ Property | Metric
  numRowsDroppedByWatermark | [numRowsDroppedByWatermark](#numRowsDroppedByWatermark)
  numShufflePartitions | [numShufflePartitions](#numShufflePartitions)
  numStateStoreInstances | [numStateStoreInstances](#numStateStoreInstances)
- customMetrics | [stateStoreCustomMetrics](#stateStoreCustomMetrics) and [statefulOperatorCustomMetrics](#statefulOperatorCustomMetrics)
+ customMetrics | Current values of the custom metrics ([stateStoreCustomMetrics](#stateStoreCustomMetrics) and [statefulOperatorCustomMetrics](#statefulOperatorCustomMetrics))
 
 ---
 
@@ -173,13 +173,13 @@ shouldRunAnotherBatch(
 statefulOperatorCustomMetrics: Map[String, SQLMetric]
 ```
 
-`statefulOperatorCustomMetrics` is the [customStatefulOperatorMetrics](#customStatefulOperatorMetrics).
+`statefulOperatorCustomMetrics` converts the [customStatefulOperatorMetrics](#customStatefulOperatorMetrics) to pairs of `name`s and `SQLMetric`s ([Spark SQL]({{ book.spark_sql }}/physical-operators/SQLMetric)).
 
 ---
 
 `statefulOperatorCustomMetrics` is used when:
 
-* `StateStoreWriter` is requested for the [metrics](#metrics) and a [progress](#getProgress)
+* `StateStoreWriter` is requested for the [performance metrics](#metrics) and a [progress](#getProgress)
 
 ### <span id="stateStoreCustomMetrics"> StateStore
 
