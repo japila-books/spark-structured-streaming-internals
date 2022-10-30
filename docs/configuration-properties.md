@@ -377,13 +377,14 @@ Used when:
 
 **spark.sql.streaming.ui.enabledCustomMetricList**
 
-**(internal)** A comma-separated list of the names of the [Supported Custom Metrics](webui/StreamingQueryStatisticsPage.md#supportedCustomMetrics) of stateful operators to enable on [Structured Streaming UI](webui/index.md) (in addition to the regular metrics in [StreamingQueryStatisticsPage](webui/StreamingQueryStatisticsPage.md#enabledCustomMetrics))
+**(internal)** A comma-separated list of the names of the [Supported Custom Metrics](webui/StreamingQueryStatisticsPage.md#supportedCustomMetrics) of stateful operators to render the timeline and histogram of in [Structured Streaming UI](webui/index.md) (in addition to the regular metrics in [Streaming Query Statistics](webui/StreamingQueryStatisticsPage.md#enabledCustomMetrics))
 
 Default: (empty)
 
-In [aggregation](streaming-aggregation/index.md), only sum used
-
 Supported custom metrics are [StateStoreProvider](stateful-stream-processing/StateStoreProvider.md#supportedCustomMetrics)-specific (and can be found and monitored using [StateOperatorProgress](monitoring/StateOperatorProgress.md#customMetrics))
+
+!!! note "statefulOperatorCustomMetrics"
+    [statefulOperatorCustomMetrics](physical-operators/StateStoreWriter.md#statefulOperatorCustomMetrics) should be included, too, but it seems that they might've been overlooked. To be verified.
 
 ## <span id="spark.sql.streaming.unsupportedOperationCheck"> unsupportedOperationCheck
 
