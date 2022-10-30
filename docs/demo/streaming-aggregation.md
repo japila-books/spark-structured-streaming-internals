@@ -388,6 +388,32 @@ println(lastProgress.sources.head.prettyJson)
 }
 ```
 
+## Send Late Events
+
+At this point in (streaming) time, the window `{1970-01-01 01:00:00, 1970-01-01 01:00:05}` has already been closed since the streaming watermark advanced to `6` seconds (`1970-01-01T00:00:06.000Z` precisely).
+
+Any events with an event time within `[0, 5]` second range are considered late and will simply be discarded (_dropped_).
+
+```console
+echo "1,4,1" | kcat -P -b :9092 -t demo.streaming-aggregation
+```
+
+```console
+echo "1,5,2" | kcat -P -b :9092 -t demo.streaming-aggregation
+```
+
+```console
+echo "1,5,3" | kcat -P -b :9092 -t demo.streaming-aggregation
+```
+
+```console
+echo "1,5,4" | kcat -P -b :9092 -t demo.streaming-aggregation
+```
+
+```console
+echo "1,5,5" | kcat -P -b :9092 -t demo.streaming-aggregation
+```
+
 ## Cleanup
 
 ```scala

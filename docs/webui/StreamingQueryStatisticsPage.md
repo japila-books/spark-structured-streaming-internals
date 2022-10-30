@@ -9,20 +9,36 @@
 * [Basic Info](#generateBasicInfo)
 * [Statistics](#generateStatTable)
 
+!!! tip "Demo: Streaming Aggregation"
+    Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more and monitor the statistics.
+
+## Aggregated Number Of Rows Dropped By Watermark
+
+<figure markdown>
+  ![Aggregated Number Of Rows Dropped By Watermark](../images/webui-statistics-aggregated-number-of-rows-dropped-by-watermark.png)
+</figure>
+
+Number of all input rows in stateful operators that were late and hence dropped by watermark
+
+Sum of [numRowsDroppedByWatermark](../monitoring/StateOperatorProgress.md#numRowsDroppedByWatermark) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)
+
+Displayed only when there are [stateful operators](../monitoring/StreamingQueryProgress.md#stateOperators) in a streaming query.
+
+`StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) to generate a timeline and a histogram for `aggregated-num-rows-dropped-by-watermark-timeline` and `aggregated-num-rows-dropped-by-watermark-histogram` HTML `div`s, respectively.
+
 ## Aggregated Number Of Total State Rows
 
 <figure markdown>
   ![Aggregated Number Of Total State Rows](../images/webui-statistics-aggregated-number-of-total-state-rows.png)
 </figure>
 
-The number of state rows across all stateful operators (i.e., a sum of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md))
+The number of state rows across all stateful operators
+
+Sum of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)
 
 Displayed only when there are [stateful operators](../monitoring/StreamingQueryProgress.md#stateOperators) in a streaming query.
 
 `StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) to generate a timeline and a histogram for `aggregated-num-total-state-rows-timeline` and `aggregated-num-total-state-rows-histogram` HTML `div`s, respectively.
-
-!!! tip "Demo: Streaming Aggregation"
-    Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more.
 
 ## Aggregated Number Of Updated State Rows
 
@@ -30,8 +46,11 @@ Displayed only when there are [stateful operators](../monitoring/StreamingQueryP
   ![Aggregated Number Of Updated State Rows](../images/webui-statistics-aggregated-number-of-updated-state-rows.png)
 </figure>
 
-!!! tip "Demo: Streaming Aggregation"
-    Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more.
+## Aggregated State Memory Used In Bytes
+
+<figure markdown>
+  ![Aggregated State Memory Used In Bytes](../images/webui-statistics-aggregated-state-memory-used-in-bytes.png)
+</figure>
 
 ## Global Watermark Gap
 
