@@ -24,6 +24,15 @@ Displayed only when there are [stateful operators](../monitoring/StreamingQueryP
 !!! tip "Demo: Streaming Aggregation"
     Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more.
 
+## Aggregated Number Of Updated State Rows
+
+<figure markdown>
+  ![Aggregated Number Of Updated State Rows](../images/webui-statistics-aggregated-number-of-updated-state-rows.png)
+</figure>
+
+!!! tip "Demo: Streaming Aggregation"
+    Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more.
+
 ## Global Watermark Gap
 
 <figure markdown>

@@ -26,11 +26,7 @@ zookeeper           "/etc/confluent/dock…"   zookeeper           running      
 
 ## Start Spark Shell
 
-Run `spark-shell` with [spark-sql-kafka-0-10](../datasources/kafka/index.md) external module.
-
-```console
-./bin/spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
-```
+Run `spark-shell` with [spark-sql-kafka-0-10](../datasources/kafka/index.md#spark-submit) external module.
 
 ## Define Source
 

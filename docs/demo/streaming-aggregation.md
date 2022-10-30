@@ -8,7 +8,7 @@ hide:
 This demo shows a streaming query with a [streaming aggregation](../streaming-aggregation/index.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) that processes data from Kafka (using [Kafka Data Source](../datasources/kafka/index.md)).
 
 !!! note
-    Please start a Kafka cluster and `spark-shell` as described in [Demo: Kafka Data Source](kafka-data-source.md).
+    Please start a [Kafka cluster](kafka-data-source.md#start-kafka-cluster) and [spark-shell](kafka-data-source.md#start-spark-shell) as described in [Demo: Kafka Data Source](kafka-data-source.md).
 
 ## Reset numShufflePartitions
 
@@ -40,14 +40,14 @@ val events = spark
   .select("id", "v", "second", "event_time")
 ```
 
-!!! note "FIXME Consider JSON format for values"
+??? note "FIXME Consider JSON format for values"
     JSONified values would make more sense. It'd certainly make the demo more verbose (extra JSON-specific "things") but perhaps would ease building a connection between events on the command line and their DataFrame representation.
 
 ## Define Windowed Streaming Aggregation
 
 Define a streaming aggregation query (using [groupBy](../operators/groupBy.md) high-level operator).
 
-The streaming query uses [Append](../OutputMode.md#Append) output mode and defines a [streaming watermark](../watermark/index.md) (using [Dataset.withWatermark](../operators/withWatermark.md) operator). Otherwise, [UnsupportedOperationChecker](../UnsupportedOperationChecker.md) would fail the query.
+The streaming query uses [Append](../OutputMode.md#Append) output mode and defines a [streaming watermark](../watermark/index.md) (using [Dataset.withWatermark](../operators/withWatermark.md) operator). Otherwise, [UnsupportedOperationChecker](../UnsupportedOperationChecker.md) would fail the query (since a watermark is required for `Append` output mode in a streaming aggregation).
 
 ```scala
 val windowed = events
@@ -96,11 +96,11 @@ windowed.explain
 ```text
 == Physical Plan ==
 ObjectHashAggregate(keys=[id#26, window#66-T10000ms], functions=[collect_list(v#30, 0, 0), collect_list(second#35L, 0, 0)])
-+- StateStoreSave [id#26, window#66-T10000ms], state info [ checkpoint = <unknown>, runId = f48be620-90b4-4103-a959-def26a434ea8, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
++- StateStoreSave [id#26, window#66-T10000ms], state info [ checkpoint = <unknown>, runId = 63955563-74d7-4385-86a8-6e13a5c2ae03, opId = 0, ver = 0, numPartitions = 1], Append, 0, 2
    +- ObjectHashAggregate(keys=[id#26, window#66-T10000ms], functions=[merge_collect_list(v#30, 0, 0), merge_collect_list(second#35L, 0, 0)])
-      +- StateStoreRestore [id#26, window#66-T10000ms], state info [ checkpoint = <unknown>, runId = f48be620-90b4-4103-a959-def26a434ea8, opId = 0, ver = 0, numPartitions = 1], 2
+      +- StateStoreRestore [id#26, window#66-T10000ms], state info [ checkpoint = <unknown>, runId = 63955563-74d7-4385-86a8-6e13a5c2ae03, opId = 0, ver = 0, numPartitions = 1], 2
          +- ObjectHashAggregate(keys=[id#26, window#66-T10000ms], functions=[merge_collect_list(v#30, 0, 0), merge_collect_list(second#35L, 0, 0)])
-            +- Exchange hashpartitioning(id#26, window#66-T10000ms, 1), ENSURE_REQUIREMENTS, [id=#75]
+            +- Exchange hashpartitioning(id#26, window#66-T10000ms, 1), ENSURE_REQUIREMENTS, [plan_id=75]
                +- ObjectHashAggregate(keys=[id#26, window#66-T10000ms], functions=[partial_collect_list(v#30, 0, 0), partial_collect_list(second#35L, 0, 0)])
                   +- *(2) Project [named_struct(start, precisetimestampconversion(((precisetimestampconversion(event_time#41-T10000ms, TimestampType, LongType) - (((precisetimestampconversion(event_time#41-T10000ms, TimestampType, LongType) - 0) + 5000000) % 5000000)) - 0), LongType, TimestampType), end, precisetimestampconversion((((precisetimestampconversion(event_time#41-T10000ms, TimestampType, LongType) - (((precisetimestampconversion(event_time#41-T10000ms, TimestampType, LongType) - 0) + 5000000) % 5000000)) - 0) + 5000000), LongType, TimestampType)) AS window#66-T10000ms, id#26, v#30, second#35L]
                      +- *(2) Filter isnotnull(event_time#41-T10000ms)
@@ -180,7 +180,7 @@ Batch: 0
 
 ## Send Events
 
-The window duration is `5 seconds` with a delay of `10 seconds` so it really takes 15 seconds to start getting final results (_materialization_).
+The streaming query works in [Append](../OutputMode.md#Append) output mode and the window duration is `5 seconds` with a `10 seconds` delay so it really takes 15 seconds to start getting results (_materialization_).
 
 ```console
 echo "1,1,1" | kcat -P -b :9092 -t demo.streaming-aggregation
@@ -243,7 +243,7 @@ Batch: 4
 +---+------------------------------------------+---+-------+
 ```
 
-## Monitor Query
+## Monitor Stream Progress
 
 ```scala
 val lastProgress = sq.lastProgress
@@ -253,12 +253,12 @@ val lastProgress = sq.lastProgress
 println(lastProgress)
 ```
 
-```text
+```json
 {
-  "id" : "8b27e38c-a73c-49db-8bfd-2d213d11b8a2",
-  "runId" : "4d3887d9-33e8-43f5-b0f9-d815d06bf039",
-  "name" : "Demo: Streaming Aggregation (1665063267)",
-  "timestamp" : "2022-10-06T13:37:39.005Z",
+  "id" : "25015c4c-d60e-4ad5-92d1-b9c396be7276",
+  "runId" : "04ba90b5-4342-4d23-a8d1-2cec3cdf64f3",
+  "name" : "Demo: Streaming Aggregation (1667048652)",
+  "timestamp" : "2022-10-29T13:08:06.005Z",
   "batchId" : 5,
   "numInputRows" : 0,
   "inputRowsPerSecond" : 0.0,
@@ -274,10 +274,10 @@ println(lastProgress)
     "operatorName" : "stateStoreSave",
     "numRowsTotal" : 2,
     "numRowsUpdated" : 0,
-    "allUpdatesTimeMs" : 6,
+    "allUpdatesTimeMs" : 10,
     "numRowsRemoved" : 1,
-    "allRemovalsTimeMs" : 21,
-    "commitTimeMs" : 26,
+    "allRemovalsTimeMs" : 24,
+    "commitTimeMs" : 34,
     "memoryUsedBytes" : 1504,
     "numRowsDroppedByWatermark" : 0,
     "numShufflePartitions" : 1,
@@ -292,17 +292,17 @@ println(lastProgress)
     "description" : "KafkaV2[Subscribe[demo.streaming-aggregation]]",
     "startOffset" : {
       "demo.streaming-aggregation" : {
-        "0" : 30
+        "0" : 3
       }
     },
     "endOffset" : {
       "demo.streaming-aggregation" : {
-        "0" : 30
+        "0" : 3
       }
     },
     "latestOffset" : {
       "demo.streaming-aggregation" : {
-        "0" : 30
+        "0" : 3
       }
     },
     "numInputRows" : 0,
@@ -315,7 +315,7 @@ println(lastProgress)
     }
   } ],
   "sink" : {
-    "description" : "org.apache.spark.sql.execution.streaming.ConsoleTable$@606d6243",
+    "description" : "org.apache.spark.sql.execution.streaming.ConsoleTable$@242a1511",
     "numOutputRows" : 0
   }
 }
@@ -330,15 +330,15 @@ assert(lastProgress.stateOperators.length == 1, "There should be one stateful op
 println(lastProgress.stateOperators.head.prettyJson)
 ```
 
-```text
+```json
 {
   "operatorName" : "stateStoreSave",
   "numRowsTotal" : 2,
   "numRowsUpdated" : 0,
-  "allUpdatesTimeMs" : 6,
+  "allUpdatesTimeMs" : 10,
   "numRowsRemoved" : 1,
-  "allRemovalsTimeMs" : 21,
-  "commitTimeMs" : 26,
+  "allRemovalsTimeMs" : 24,
+  "commitTimeMs" : 34,
   "memoryUsedBytes" : 1504,
   "numRowsDroppedByWatermark" : 0,
   "numShufflePartitions" : 1,
@@ -359,22 +359,22 @@ assert(lastProgress.sources.length == 1, "There should be one streaming source o
 println(lastProgress.sources.head.prettyJson)
 ```
 
-```text
+```json
 {
   "description" : "KafkaV2[Subscribe[demo.streaming-aggregation]]",
   "startOffset" : {
     "demo.streaming-aggregation" : {
-      "0" : 30
+      "0" : 3
     }
   },
   "endOffset" : {
     "demo.streaming-aggregation" : {
-      "0" : 30
+      "0" : 3
     }
   },
   "latestOffset" : {
     "demo.streaming-aggregation" : {
-      "0" : 30
+      "0" : 3
     }
   },
   "numInputRows" : 0,

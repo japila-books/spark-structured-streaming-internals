@@ -96,10 +96,11 @@ extra:
     version: 6.20.3
     api: https://javadoc.io/static/org.rocksdb/rocksdbjni/6.20.3
   scala:
-    version: 2.12.15
-    api: https://www.scala-lang.org/api/2.12.15
+    version: 2.13.8
+    binary_version: 2.13
+    api: https://www.scala-lang.org/api/2.13.8
     docs: https://docs.scala-lang.org/
-    spec: https://www.scala-lang.org/files/archive/spec/2.12
+    spec: https://www.scala-lang.org/files/archive/spec/2.13
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/jaceklaskowski

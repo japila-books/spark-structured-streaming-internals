@@ -14,15 +14,17 @@ You should define `spark-sql-kafka-0-10` module as part of the build definition 
 libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "{{ spark.version }}"
 ```
 
-For Spark environments like `spark-submit` (and "derivatives" like `spark-shell`), you should use `--packages` command-line option:
+### spark-submit
 
-```text
+For Spark environments like `spark-submit` (and "derivatives" like `spark-shell`), you should use `--packages` command-line option to "install" the package.
+
+```shell
 ./bin/spark-shell \
-  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:{{ spark.version }}
+  --packages org.apache.spark:spark-sql-kafka-0-10_{{ scala.binary_version }}:{{ spark.version }}
 ```
 
 !!! NOTE
-    Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ spark.version }}` above) with one of the available versions found at [The Central Repository's Search](https://search.maven.org/search?q=a:spark-sql-kafka-0-10_2.12) that matches your version of Apache Spark.
+    Replace the version of `spark-sql-kafka-0-10` module (e.g. `{{ spark.version }}` above) with one of the available versions found at [The Central Repository's Search](https://search.maven.org/search?q=a:spark-sql-kafka-0-10_{{ scala.binary_version }}) that matches your version of Apache Spark.
 
 ## Streaming Source
 
