@@ -42,6 +42,22 @@ For `Append` and `Update` output modes with [event-time watermark](#eventTimeWat
 
 `OutputMode` is required for [executing StateStoreSaveExec](#doExecute). It is specified to be the [OutputMode](../IncrementalExecution.md#outputMode) of the [IncrementalExecution](../IncrementalExecution.md) (when [state preparation rule](../IncrementalExecution.md#state) is executed and fills in the execution-specific configuration).
 
+## <span id="shortName"> Short Name
+
+```scala
+shortName: String
+```
+
+`shortName` is part of the [StateStoreWriter](StateStoreWriter.md#shortName) abstraction.
+
+---
+
+`shortName` is the following text:
+
+```text
+stateStoreSave
+```
+
 ## <span id="doExecute"> Executing Physical Operator
 
 ```scala

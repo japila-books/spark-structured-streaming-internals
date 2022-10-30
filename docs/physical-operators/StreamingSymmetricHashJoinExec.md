@@ -2,6 +2,22 @@
 
 `StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for executing [stream-stream equi-join](../streaming-join/index.md).
 
+## <span id="shortName"> Short Name
+
+```scala
+shortName: String
+```
+
+`shortName` is part of the [StateStoreWriter](StateStoreWriter.md#shortName) abstraction.
+
+---
+
+`shortName` is the following text:
+
+```text
+symmetricHashJoin
+```
+
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 
 ```scala

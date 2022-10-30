@@ -29,7 +29,25 @@
 * <span id="eventTimeWatermark"> [Event-Time Watermark](../watermark/index.md)
 * <span id="child"> Child physical operator
 
-`FlatMapGroupsWithStateExec` is created when [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution).
+`FlatMapGroupsWithStateExec` is created when:
+
+* [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution)
+
+## <span id="shortName"> Short Name
+
+```scala
+shortName: String
+```
+
+`shortName` is part of the [StateStoreWriter](StateStoreWriter.md#shortName) abstraction.
+
+---
+
+`shortName` is the following text:
+
+```text
+flatMapGroupsWithState
+```
 
 ## <span id="doExecute"> Executing Physical Operator
 

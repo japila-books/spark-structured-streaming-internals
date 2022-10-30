@@ -2,6 +2,22 @@
 
 `StreamingDeduplicateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](WatermarkSupport.md).
 
+## <span id="shortName"> Short Name
+
+```scala
+shortName: String
+```
+
+`shortName` is part of the [StateStoreWriter](StateStoreWriter.md#shortName) abstraction.
+
+---
+
+`shortName` is the following text:
+
+```text
+dedupe
+```
+
 ## <span id="requiredChildDistribution"> Required Child Output Distribution
 
 ```scala
