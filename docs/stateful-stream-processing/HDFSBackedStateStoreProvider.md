@@ -4,28 +4,93 @@
 
 `HDFSBackedStateStoreProvider` is the default `StateStoreProvider` per the [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) internal configuration property.
 
+## Creating Instance
+
+`HDFSBackedStateStoreProvider` takes no arguments to be created.
+
+`HDFSBackedStateStoreProvider` is created when:
+
+* `StateStoreProvider` is requested to [createAndInit](StateStoreProvider.md#createAndInit)
+
+## <span id="getMetricsForProvider"> getMetricsForProvider
+
+```scala
+getMetricsForProvider(): Map[String, Long]
+```
+
+`getMetricsForProvider` returns the following [performance metrics](#metrics):
+
+* [memoryUsedBytes](#memoryUsedBytes)
+* [loadedMapCacheHitCount](#loadedMapCacheHitCount)
+* [loadedMapCacheMissCount](#loadedMapCacheMissCount)
+
+---
+
+`getMetricsForProvider` is used when:
+
+* `HDFSBackedStateStore` is requested for [performance metrics](HDFSBackedStateStore.md#metrics).
+
+## <span id="getStore"> Loading Specified Version of State (Store) For Update
+
+```scala
+getStore(
+  version: Long): StateStore
+```
+
+`getStore` is part of the [StateStoreProvider](StateStoreProvider.md#getStore) abstraction.
+
+---
+
+`getStore` [getLoadedMapForStore](#getLoadedMapForStore) for the given `version`.
+
+`getStore` prints out the following INFO message to the logs:
+
+```text
+Retrieved version [version] of [this] for update
+```
+
+In the end, `getStore` creates a new [HDFSBackedStateStore](HDFSBackedStateStore.md) for the given version and the new state.
+
+## <span id="supportedCustomMetrics"> Supported Custom Metrics
+
+```scala
+supportedCustomMetrics: Seq[StateStoreCustomMetric]
+```
+
+`supportedCustomMetrics` is part of the [StateStoreProvider](StateStoreProvider.md#supportedCustomMetrics) abstraction.
+
+### <span id="metricLoadedMapCacheHit"><span id="loadedMapCacheHitCount"> loadedMapCacheHitCount
+
+count of cache hit on states cache in provider
+
+### <span id="metricLoadedMapCacheMiss"><span id="loadedMapCacheMissCount"> loadedMapCacheMissCount
+
+count of cache miss on states cache in provider
+
+### <span id="metricStateOnCurrentVersionSizeBytes"><span id="stateOnCurrentVersionSizeBytes"> stateOnCurrentVersionSizeBytes
+
+estimated size of state only on current version
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider=ALL
+```
+
+Refer to [Logging](../spark-logging.md).
+
+<!---
+## Review Me
+
 `HDFSBackedStateStoreProvider` is <<creating-instance, created>> and immediately requested to <<init, initialize>> when `StateStoreProvider` utility is requested to <<StateStoreProvider.md#createAndInit, create and initialize a StateStoreProvider>>. That is when `HDFSBackedStateStoreProvider` is given the <<stateStoreId, StateStoreId>> that uniquely identifies the [state store](StateStore.md) to use for a stateful operator and a partition.
 
 `HDFSStateStoreProvider` uses [HDFSBackedStateStores](HDFSBackedStateStore.md) to manage state (<<getStore, one per version>>).
 
 `HDFSBackedStateStoreProvider` manages versioned state in delta and snapshot files (and uses a <<loadedMaps, cache>> internally for faster access to state versions).
-
-[[creating-instance]]
-`HDFSBackedStateStoreProvider` takes no arguments to be created.
-
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider` logger to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
 
 ## Performance Metrics
 
@@ -86,30 +151,6 @@ NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java
 
 ```
 HDFSStateStoreProvider[id = (op=[operatorId],part=[partitionId]),dir = [baseDir]]
-```
-
-=== [[getStore]] Loading Specified Version of State (Store) For Update -- `getStore` Method
-
-[source, scala]
-----
-getStore(
-  version: Long): StateStore
-----
-
-`getStore` is part of the [StateStoreProvider](StateStoreProvider.md#getStore) abstraction.
-
-`getStore` creates a new empty state (`ConcurrentHashMap[UnsafeRow, UnsafeRow]`) and <<loadMap, loads the specified version of state (from internal cache or snapshot and delta files)>> for versions greater than `0`.
-
-In the end, `getStore` creates a new [HDFSBackedStateStore](HDFSBackedStateStore.md) for the specified version with the new state and prints out the following INFO message to the logs:
-
-```
-Retrieved version [version] of [this] for update
-```
-
-`getStore` throws an `IllegalArgumentException` when the specified version is less than `0` (negative):
-
-```
-Version cannot be less than 0
 ```
 
 === [[deltaFile]] `deltaFile` Internal Method
@@ -315,40 +356,6 @@ NOTE: `close` is part of the <<StateStoreProvider.md#close, StateStoreProvider C
 
 `close`...FIXME
 
-=== [[getMetricsForProvider]] `getMetricsForProvider` Method
-
-[source, scala]
-----
-getMetricsForProvider(): Map[String, Long]
-----
-
-`getMetricsForProvider` returns the following <<metrics, performance metrics>>:
-
-* <<memoryUsedBytes, memoryUsedBytes>>
-
-* <<metricLoadedMapCacheHit, metricLoadedMapCacheHit>>
-
-* <<metricLoadedMapCacheMiss, metricLoadedMapCacheMiss>>
-
-`getMetricsForProvider` is used when `HDFSBackedStateStore` is requested for [performance metrics](HDFSBackedStateStore.md#metrics).
-
-=== [[supportedCustomMetrics]] Supported StateStoreCustomMetrics -- `supportedCustomMetrics` Method
-
-[source, scala]
-----
-supportedCustomMetrics: Seq[StateStoreCustomMetric]
-----
-
-NOTE: `supportedCustomMetrics` is part of the <<StateStoreProvider.md#supportedCustomMetrics, StateStoreProvider Contract>> for the <<StateStoreCustomMetric.md#, StateStoreCustomMetrics>> of a state store provider.
-
-`supportedCustomMetrics` includes the following <<StateStoreCustomMetric.md#, StateStoreCustomMetrics>>:
-
-* <<metricStateOnCurrentVersionSizeBytes, metricStateOnCurrentVersionSizeBytes>>
-
-* <<metricLoadedMapCacheHit, metricLoadedMapCacheHit>>
-
-* <<metricLoadedMapCacheMiss, metricLoadedMapCacheMiss>>
-
 === [[commitUpdates]] Committing State Changes (As New Version of State) -- `commitUpdates` Internal Method
 
 [source, scala]
@@ -538,19 +545,6 @@ In the end, `compressStream` creates a new `DataOutputStream` with the `LZ4Block
 
 NOTE: `compressStream` is used when...FIXME
 
-=== [[cancelDeltaFile]] `cancelDeltaFile` Internal Method
-
-[source, scala]
-----
-cancelDeltaFile(
-  compressedStream: DataOutputStream,
-  rawStream: CancellableFSDataOutputStream): Unit
-----
-
-`cancelDeltaFile`...FIXME
-
-NOTE: `cancelDeltaFile` is used when...FIXME
-
 === [[finalizeDeltaFile]] `finalizeDeltaFile` Internal Method
 
 [source, scala]
@@ -647,7 +641,5 @@ numberOfVersionsToRetainInMemory: Int
 
 `numberOfVersionsToRetainInMemory` is a threshold when `HDFSBackedStateStoreProvider` removes the last key from the <<loadedMaps, loadedMaps>> internal registry (per reverse ordering of state versions) when requested to <<putStateIntoStateCacheMap, putStateIntoStateCacheMap>>.
 
-| sparkConf
-a| [[sparkConf]] `SparkConf`
-
 |===
+-->
