@@ -1,16 +1,25 @@
 # StreamingQueryStatisticsPage
 
-`StreamingQueryStatisticsPage` is a `WebUIPage` ([Spark Core]({{ book.spark_core }}/webui/WebUIPage)) with `statistics` URL prefix.
-
-`StreamingQueryStatisticsPage` uses `id` request parameter as the `runId` of a streaming query to [render a Streaming Query Statistics page](render).
-
-`StreamingQueryStatisticsPage` renders the following main sections:
+`StreamingQueryStatisticsPage` is a `WebUIPage` ([Spark Core]({{ book.spark_core }}/webui/WebUIPage)) that [renders](#render) the following sections as **Streaming Query Statistics**:
 
 * [Basic Info](#generateBasicInfo)
 * [Statistics](#generateStatTable)
 
+`StreamingQueryStatisticsPage` is available under `statistics` URL prefix.
+
+`StreamingQueryStatisticsPage` uses `id` request parameter as the `runId` of a streaming query to [render a page](#render) of.
 !!! tip "Demo: Streaming Aggregation"
     Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more and monitor the statistics.
+
+## Creating Instance
+
+`StreamingQueryStatisticsPage` takes the following to be created:
+
+* <span id="parent"> Parent [StreamingQueryTab](StreamingQueryTab.md)
+
+`StreamingQueryStatisticsPage` is created when:
+
+* `StreamingQueryTab` is [created](StreamingQueryTab.md) (and attaches this and [StreamingQueryPage](StreamingQueryPage.md) pages)
 
 ## Aggregated Number Of Rows Dropped By Watermark
 
@@ -90,16 +99,37 @@ render(
 * [generateBasicInfo](#generateBasicInfo)
 * [generateStatTable](#generateStatTable)
 
-### <span id="generateStatTable"> generateStatTable
+### <span id="generateBasicInfo"> Generating Basic Info
+
+```scala
+generateBasicInfo(
+  uiData: StreamingQueryUIData): Seq[Node]
+```
+
+`generateBasicInfo`...FIXME
+
+<figure markdown>
+  ![Basic Info](../images/webui-statistics-basic-info.png)
+</figure>
+
+### <span id="generateStatTable"> Generating Statistics Table
 
 ```scala
 generateStatTable(
   query: StreamingQueryUIData): Seq[Node]
 ```
 
-`generateStatTable`...FIXME
+`generateStatTable` renders the timelines and histograms of the following:
 
-### <span id="generateWatermark"> generateWatermark
+* Input Rate
+* Process Rate
+* Input Rows
+* Batch Duration
+* Operation Duration
+* [Global Watermark Gap](#generateWatermark)
+* [generateAggregatedStateOperators](#generateAggregatedStateOperators)
+
+### <span id="generateWatermark"> Generating Global Watermark Gap
 
 ```scala
 generateWatermark(
@@ -158,7 +188,7 @@ For every custom metric that is included in [spark.sql.streaming.ui.enabledCusto
 
 `StreamingQueryStatisticsPage` uses [spark.sql.streaming.ui.enabledCustomMetricList](../configuration-properties.md#spark.sql.streaming.ui.enabledCustomMetricList) configuration property for the names of the [Supported Custom Metrics](#supportedCustomMetrics) to [generateAggregatedCustomMetrics](#generateAggregatedCustomMetrics) (in addition to [generateAggregatedStateOperators](#generateAggregatedStateOperators)).
 
-`StreamingQueryStatisticsPage` prints out the following `DEBUG` message to the logs with the custom metrics when created:
+`StreamingQueryStatisticsPage` prints out the following `DEBUG` message to the logs with the custom metrics when [created](#creating-instance):
 
 ```text
 Enabled custom metrics: [enabledCustomMetrics]
@@ -166,11 +196,11 @@ Enabled custom metrics: [enabledCustomMetrics]
 
 ## <span id="supportedCustomMetrics"> Supported Custom Metrics
 
-`StreamingQueryStatisticsPage` requests the system [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md) (based on [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration property) for the [supported custom metrics](../stateful-stream-processing/StateStoreProvider.md#supportedCustomMetrics) when created.
+`StreamingQueryStatisticsPage` requests the system [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md) (based on [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration property) for the [supported custom metrics](../stateful-stream-processing/StateStoreProvider.md#supportedCustomMetrics) when [created](#creating-instance).
 
-Only the supported custom metrics can be [enabled](#enabledCustomMetrics) to be displayed in the web UI.
+Only supported custom metrics can be [enabled](#enabledCustomMetrics) to be displayed in the web UI.
 
-`StreamingQueryStatisticsPage` prints out the following `DEBUG` message to the logs with the supported custom metrics when created:
+`StreamingQueryStatisticsPage` prints out the following `DEBUG` message to the logs with the supported custom metrics when [created](#creating-instance):
 
 ```text
 Supported custom metrics: [supportedCustomMetrics]

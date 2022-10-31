@@ -14,6 +14,10 @@
 * `StreamingQueryHistoryServerPlugin` is requested to `createListeners`
 * `SharedState` ([Spark SQL]({{ book.spark_sql }}/SharedState)) is created (with [spark.sql.streaming.ui.enabled](../configuration-properties.md#spark.sql.streaming.ui.enabled) enabled)
 
+## <span id="streamingProgressRetention"> spark.sql.streaming.ui.retainedProgressUpdates
+
+`StreamingQueryStatusListener` uses [spark.sql.streaming.ui.retainedProgressUpdates](../configuration-properties.md#spark.sql.streaming.ui.retainedProgressUpdates) configuration property in [onQueryProgress](#onQueryProgress) to control when to delete excessive [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)s (in the [ElementTrackingStore](#store)).
+
 ## <span id="onQueryStarted"> onQueryStarted
 
 ```scala

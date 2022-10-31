@@ -386,6 +386,18 @@ Supported custom metrics are [StateStoreProvider](stateful-stream-processing/Sta
 !!! note "statefulOperatorCustomMetrics"
     [statefulOperatorCustomMetrics](physical-operators/StateStoreWriter.md#statefulOperatorCustomMetrics) should be included, too, but it seems that they might've been overlooked. To be verified.
 
+## <span id="spark.sql.streaming.ui.retainedProgressUpdates"><span id="STREAMING_UI_RETAINED_PROGRESS_UPDATES"> ui.retainedProgressUpdates
+
+**spark.sql.streaming.ui.retainedProgressUpdates**
+
+Number of [progress updates](monitoring/StreamingQueryProgress.md) of a streaming query to retain for [Structured Streaming UI](webui/index.md)
+
+Default: `100`
+
+Used when:
+
+* `StreamingQueryStatusListener` is requested to [handle a query progress](webui/StreamingQueryStatusListener.md#onQueryProgress)
+
 ## <span id="spark.sql.streaming.unsupportedOperationCheck"> unsupportedOperationCheck
 
 **spark.sql.streaming.unsupportedOperationCheck**

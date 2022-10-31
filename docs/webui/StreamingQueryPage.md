@@ -1,6 +1,6 @@
 # StreamingQueryPage
 
-`StreamingQueryPage` is a `WebUIPage` ([Spark Core]({{ book.spark_core }}/webui/WebUIPage)) that renders the following sections under the title **Streaming Query**:
+`StreamingQueryPage` is a `WebUIPage` ([Spark Core]({{ book.spark_core }}/webui/WebUIPage)) that [renders](#render) the following sections as **Streaming Query**:
 
 * [Active Streaming Queries](#active-streaming-queries)
 * [Completed Streaming Queries](#completed-streaming-queries)

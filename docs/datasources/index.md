@@ -1,12 +1,3 @@
 # Data Sources
 
-Spark Structured Streaming comes with the following streaming sources and sinks:
-
-* [File](file/index.md)
-* [Kafka](kafka/index.md)
-* [Text Socket](socket/index.md)
-* Rate
-* Console
-* Foreach
-* [ForeachBatchSink](ForeachBatchSink.md)
-* Memory
+Spark Structured Streaming comes with a variety of built-in streaming data sources.

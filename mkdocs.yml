@@ -195,6 +195,7 @@ nav:
       - UnsupportedOperationChecker: UnsupportedOperationChecker.md
   - Features:
     - features/index.md
+    - Data Sources: datasources/index.md
     - Micro-Batch Execution:
       - micro-batch-execution/index.md
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
@@ -293,6 +294,7 @@ nav:
       - PartitionOffset: PartitionOffset.md
       - ContinuousWriteRDD: ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
+    - Web UI: webui/index.md
   - High-Level APIs:
     - AcceptsLatestSeenOffset: AcceptsLatestSeenOffset.md
     - ContinuousStream: ContinuousStream.md
