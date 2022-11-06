@@ -816,6 +816,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-analysis-rules/ResolveWriteToStream/</loc>
+         <lastmod>2022-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/ContinuousExecutionRelation/</loc>
          <lastmod>2022-11-06</lastmod>
          <changefreq>daily</changefreq>
@@ -872,6 +877,11 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToStream/</loc>
+         <lastmod>2022-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/logical-operators/WriteToStreamStatement/</loc>
          <lastmod>2022-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
