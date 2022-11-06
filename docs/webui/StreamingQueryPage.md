@@ -31,10 +31,14 @@ Column Name | Description
  Run ID |
  Start Time |
  Duration |
- Avg Input /sec | Total of [inputRowsPerSecond](../monitoring/StreamingQueryProgress.md#inputRowsPerSecond)s of all [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)es by the number of the [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)es
+ [Avg Input /sec](#Avg-Input) | Total of [inputRowsPerSecond](../monitoring/StreamingQueryProgress.md#inputRowsPerSecond)s of all [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)es by the number of the [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)es
  Avg Process /sec | Total of [processedRowsPerSecond](../monitoring/StreamingQueryProgress.md#processedRowsPerSecond)s of all [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)es by the number of the [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)es
  Latest Batch | [batchId](../monitoring/StreamingQueryProgress.md#batchId) of the last [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)
  Error |
+
+### <span id="Avg-Input"> Avg Input /sec
+
+Total of [inputRowsPerSecond](../monitoring/StreamingQueryProgress.md#inputRowsPerSecond)s of all [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)es by their number
 
 ## <span id="render"> Rendering Page
 

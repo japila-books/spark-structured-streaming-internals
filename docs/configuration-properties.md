@@ -215,11 +215,15 @@ Used when `HDFSBackedStateStoreProvider` is requested to [initialize](stateful-s
 
 **spark.sql.streaming.metricsEnabled**
 
-Enables streaming metrics
+Enables [streaming metrics](monitoring/MetricsReporter.md)
 
 Default: `false`
 
-Use [SQLConf.streamingMetricsEnabled](SQLConf.md#streamingMetricsEnabled) to access the current value.
+Use [SQLConf.streamingMetricsEnabled](SQLConf.md#streamingMetricsEnabled) to access the current value
+
+Used when:
+
+* `StreamExecution` is requested to [run](StreamExecution.md#runStream) (and registers a [MetricsReporter](monitoring/MetricsReporter.md))
 
 ## <span id="spark.sql.streaming.minBatchesToRetain"> minBatchesToRetain
 

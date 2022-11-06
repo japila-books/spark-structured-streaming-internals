@@ -33,6 +33,28 @@ The time when a trigger has started (in ISO8601 format).
 
 `StreamingQueryProgress` is given an **Event Time Statistics** when [created](#creating-instance).
 
+## <span id="inputRowsPerSecond"> inputRowsPerSecond
+
+```scala
+inputRowsPerSecond: Double
+```
+
+`inputRowsPerSecond` is the total (_sum_) of the [inputRowsPerSecond](SourceProgress.md#inputRowsPerSecond)s of all the [SourceProgress](#sources)es (of this single `StreamingQueryProgress`).
+
+!!! note "Streaming Query UI"
+    `inputRowsPerSecond` is displayed as **Avg Input /sec** column in [Streaming Query UI](../webui/StreamingQueryPage.md#Avg-Input).
+
+!!! note "Streaming Query Statistics UI"
+    `inputRowsPerSecond` is displayed in **Input Rate** timeline and histogram in [Streaming Query Statistics UI](../webui/StreamingQueryStatisticsPage.md).
+
+---
+
+`inputRowsPerSecond` is used when:
+
+* `MetricsReporter` is requested to register the [inputRate-total](MetricsReporter.md#inputRate-total) metric
+* `StreamingQueryProgress` is requested for [jsonValue](#jsonValue) (for the `inputRowsPerSecond` field)
+* `StreamingQueryStatisticsPage` is requested to [display Input Rate timeline and histogram](../webui/StreamingQueryStatisticsPage.md#generateStatTable)
+
 ## <span id="numInputRows"> Total Number of Input Rows
 
 ```scala

@@ -31,10 +31,6 @@ Used when `FileStreamSink` is requested to ["add" a batch of data](datasources/f
 
 [spark.sql.streaming.metricsEnabled](configuration-properties.md#spark.sql.streaming.metricsEnabled) configuration property
 
-Used when:
-
-* `StreamExecution` is requested to [runStream](StreamExecution.md#runStream)
-
 ## <span id="streamingNoDataMicroBatchesEnabled"><span id="STREAMING_NO_DATA_MICRO_BATCHES_ENABLED"> streamingNoDataMicroBatchesEnabled
 
 [spark.sql.streaming.noDataMicroBatches.enabled](configuration-properties.md#spark.sql.streaming.noDataMicroBatches.enabled)
@@ -136,12 +132,6 @@ a| [[stateStoreMinDeltasForSnapshot]] Used (as [StateStoreConf.minDeltasForSnaps
 
 [spark.sql.streaming.checkpointFileManagerClass](configuration-properties.md#spark.sql.streaming.checkpointFileManagerClass)
 a| [[STREAMING_CHECKPOINT_FILE_MANAGER_CLASS]] Used exclusively when `CheckpointFileManager` helper object is requested to [create a CheckpointFileManager](CheckpointFileManager.md#create)
-
-| `streamingMetricsEnabled`
-
-[spark.sql.streaming.metricsEnabled](configuration-properties.md#spark.sql.streaming.metricsEnabled)
-
-a| [[streamingMetricsEnabled]] Used exclusively when `StreamExecution` is requested for [runStream](StreamExecution.md#runStream) (to control whether to register a [metrics reporter](StreamExecution.md#streamMetrics) for a streaming query)
 
 | `STREAMING_MULTIPLE_WATERMARK_POLICY`
 

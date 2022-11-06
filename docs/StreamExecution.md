@@ -818,9 +818,9 @@ Registry of the streaming sources (in the [logical query plan](#logicalPlan)) th
 
 Set when `StreamExecution` is requested to [requests unprocessed data from streaming sources](micro-batch-execution/MicroBatchExecution.md#runBatch-getBatch) (while [running a single streaming batch](#runBatch))
 
-## <span id="streamMetrics"> Streaming Metrics
+## <span id="streamMetrics"> MetricsReporter
 
-`StreamExecution` uses [MetricsReporter](monitoring/MetricsReporter.md) for reporting streaming metrics.
+`StreamExecution` defines a [MetricsReporter](monitoring/MetricsReporter.md) to report streaming metrics.
 
 `MetricsReporter` is created with the following source name (with [name](#name) if defined or [id](#id)):
 
@@ -828,7 +828,7 @@ Set when `StreamExecution` is requested to [requests unprocessed data from strea
 spark.streaming.[name or id]
 ```
 
-`MetricsReporter` is registered only when [spark.sql.streaming.metricsEnabled](configuration-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled (when `StreamExecution` is requested to [runStream](#runStream)).
+`MetricsReporter` is registered only when [spark.sql.streaming.metricsEnabled](configuration-properties.md#spark.sql.streaming.metricsEnabled) configuration property is enabled (when `StreamExecution` is requested to [run](#runStream)).
 
 `MetricsReporter` is deactivated (_removed_) when a streaming query is stopped (when `StreamExecution` is requested to [runStream](#runStream)).
 
