@@ -134,6 +134,8 @@ nav:
       - StreamingJoinStrategy: execution-planning-strategies/StreamingJoinStrategy.md
       - StreamingRelationStrategy: execution-planning-strategies/StreamingRelationStrategy.md
     - IncrementalExecution: IncrementalExecution.md
+    - Logical Analysis Rules:
+      - ResolveWriteToStream: logical-analysis-rules/ResolveWriteToStream.md
     - Logical Operators:
       - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
       - Deduplicate: logical-operators/Deduplicate.md
@@ -147,6 +149,7 @@ nav:
       - WriteToDataSourceV2: logical-operators/WriteToDataSourceV2.md
       - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
       - WriteToStream: logical-operators/WriteToStream.md
+      - WriteToStreamStatement: logical-operators/WriteToStreamStatement.md
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
       - MetadataLog: MetadataLog.md

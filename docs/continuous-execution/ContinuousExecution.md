@@ -2,6 +2,9 @@
 
 `ContinuousExecution` is the [stream execution engine](../StreamExecution.md) of [Continuous Stream Processing](index.md).
 
+<!---
+## Review Me
+
 `ContinuousExecution` can only run streaming queries with [StreamingRelationV2](../logical-operators/StreamingRelationV2.md) leaf logical operators with [ContinuousReadSupport](ContinuousReadSupport.md) data source.
 
 When [created](#creating-instance) (for a streaming query), `ContinuousExecution` is given the <<analyzedPlan, analyzed logical plan>>. The analyzed logical plan is immediately transformed to include a [ContinuousExecutionRelation](../logical-operators/ContinuousExecutionRelation.md) for every [StreamingRelationV2](../logical-operators/StreamingRelationV2.md) leaf logical operator with [ContinuousReadSupport](ContinuousReadSupport.md) data source (and is the [logical plan](#logicalPlan) internally).
@@ -295,3 +298,4 @@ log4j.logger.org.apache.spark.sql.execution.streaming.continuous.ContinuousExecu
 ```
 
 Refer to [Logging](../spark-logging.md).
+-->

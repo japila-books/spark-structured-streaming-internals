@@ -16,7 +16,7 @@ Once [created](#creating-instance), `MicroBatchExecution` is requested to [start
 * <span id="trigger"> [Trigger](../Trigger.md)
 * <span id="triggerClock"> `Clock`
 * <span id="extraOptions"> Extra Options (`Map[String, String]`)
-* <span id="plan"> [WriteToStream](../logical-operators/WriteToStream.md) unary logical plan
+* <span id="plan"> [WriteToStream](../logical-operators/WriteToStream.md) logical operator
 
 `MicroBatchExecution` is created when:
 
@@ -40,6 +40,8 @@ startTrigger(): Unit
 ```
 
 `startTrigger` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#startTrigger) abstraction.
+
+---
 
 `startTrigger`...FIXME
 
