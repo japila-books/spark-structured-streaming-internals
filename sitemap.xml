@@ -751,6 +751,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/rocksdb-state-store-for-streaming-aggregation/</loc>
+         <lastmod>2022-11-07</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec/</loc>
          <lastmod>2022-11-07</lastmod>
          <changefreq>daily</changefreq>
