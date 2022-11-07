@@ -1136,6 +1136,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/stateful-stream-processing/BaseStateStoreRDD/</loc>
+         <lastmod>2022-11-07</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/stateful-stream-processing/HDFSBackedStateStore/</loc>
          <lastmod>2022-11-07</lastmod>
          <changefreq>daily</changefreq>
