@@ -204,12 +204,13 @@ nav:
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
       - MicroBatchWrite: micro-batch-execution/MicroBatchWrite.md
     - RocksDB:
-      - RocksDB: stateful-stream-processing/RocksDB.md
-      - RocksDBConf: stateful-stream-processing/RocksDBConf.md
-      - RocksDBFileManager: stateful-stream-processing/RocksDBFileManager.md
-      - RocksDBMetrics: stateful-stream-processing/RocksDBMetrics.md
-      - RocksDBStateStore: stateful-stream-processing/RocksDBStateStore.md
-      - RocksDBStateStoreProvider: stateful-stream-processing/RocksDBStateStoreProvider.md
+      - rocksdb/index.md
+      - RocksDB: rocksdb/RocksDB.md
+      - RocksDBConf: rocksdb/RocksDBConf.md
+      - RocksDBFileManager: rocksdb/RocksDBFileManager.md
+      - RocksDBMetrics: rocksdb/RocksDBMetrics.md
+      - RocksDBStateStore: rocksdb/RocksDBStateStore.md
+      - RocksDBStateStoreProvider: rocksdb/RocksDBStateStoreProvider.md
     - Arbitrary Stateful Streaming Aggregation:
       - arbitrary-stateful-streaming-aggregation/index.md
       - FlatMapGroupsWithStateExecHelper: arbitrary-stateful-streaming-aggregation/FlatMapGroupsWithStateExecHelper.md

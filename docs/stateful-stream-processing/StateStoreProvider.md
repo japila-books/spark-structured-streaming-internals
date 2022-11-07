@@ -2,7 +2,7 @@
 
 `StateStoreProvider` is an [abstraction](#contract) of [StateStore providers](#implementations) that manage [state stores](#getStore) (_state data_) in [Stateful Stream Processing](index.md).
 
-`StateStoreProvider` utility uses [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration property to choose the system-wide [implementation](#implementations).
+A concrete [StateStoreProvider](#implementations) is selected based on [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) configuration property.
 
 ## Contract
 
@@ -15,7 +15,7 @@ getStore(
 
 [StateStore](StateStore.md) for the given `version`
 
-See [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md#getStore) and [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#getStore)
+See [RocksDBStateStoreProvider](../rocksdb/RocksDBStateStoreProvider.md#getStore) and [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#getStore)
 
 Used when:
 
@@ -52,7 +52,7 @@ Default: empty
 
 See:
 
-* [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md#supportedCustomMetrics)
+* [RocksDBStateStoreProvider](../rocksdb/RocksDBStateStoreProvider.md#supportedCustomMetrics)
 * [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#supportedCustomMetrics)
 
 Used when:
@@ -62,7 +62,7 @@ Used when:
 ## Implementations
 
 * [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md)
-* [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md)
+* [RocksDBStateStoreProvider](../rocksdb/RocksDBStateStoreProvider.md)
 
 ## <span id="create"> Creating StateStoreProvider
 

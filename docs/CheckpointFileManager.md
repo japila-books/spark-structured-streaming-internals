@@ -19,7 +19,7 @@ Used when:
 * `HDFSMetadataLog` is requested to [addNewBatchByStream](HDFSMetadataLog.md#addNewBatchByStream)
 * `StreamMetadata` is requested to [write a metadata to a file](StreamMetadata.md#write)
 * `HDFSBackedStateStoreProvider` is requested for the [deltaFileStream](stateful-stream-processing/HDFSBackedStateStoreProvider.md#deltaFileStream) and [writeSnapshotFile](stateful-stream-processing/HDFSBackedStateStoreProvider.md#writeSnapshotFile)
-* `RocksDBFileManager` is requested for the [zipToDfsFile](stateful-stream-processing/RocksDBFileManager.md#zipToDfsFile)
+* `RocksDBFileManager` is requested for the [zipToDfsFile](rocksdb/RocksDBFileManager.md#zipToDfsFile)
 * `StateSchemaCompatibilityChecker` is requested for the [createSchemaFile](stateful-stream-processing/StateSchemaCompatibilityChecker.md#createSchemaFile)
 
 ### <span id="createCheckpointDirectory"> createCheckpointDirectory
@@ -68,5 +68,5 @@ If the implementation of FileSystem.rename() is not atomic, then the correctness
 * `ResolveWriteToStream` is requested to `resolveCheckpointLocation`
 * `StreamMetadata` is requested to [read the metadata from a file](StreamMetadata.md#read) and [write a metadata to a file](StreamMetadata.md#write)
 * `HDFSBackedStateStoreProvider` is requested for the [fm](stateful-stream-processing/HDFSBackedStateStoreProvider.md#fm)
-* `RocksDBFileManager` is requested for the [fm](stateful-stream-processing/RocksDBFileManager.md#fm)
+* `RocksDBFileManager` is requested for the [fm](rocksdb/RocksDBFileManager.md#fm)
 * `StateSchemaCompatibilityChecker` is requested for the [fm](stateful-stream-processing/StateSchemaCompatibilityChecker.md#fm)

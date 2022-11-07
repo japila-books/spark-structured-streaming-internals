@@ -13,7 +13,7 @@
 `StateStoreMetrics` is created when:
 
 * `HDFSBackedStateStore` is requested for [metrics](HDFSBackedStateStore.md#metrics)
-* `RocksDBStateStore` is requested for [metrics](RocksDBStateStore.md#metrics)
+* `RocksDBStateStore` is requested for [metrics](../rocksdb/RocksDBStateStore.md#metrics)
 * `StateStoreMetrics` is requested to [combine metrics](#combine)
 * `SymmetricHashJoinStateManager` is requested for [metrics](../streaming-join/SymmetricHashJoinStateManager.md#metrics)
 

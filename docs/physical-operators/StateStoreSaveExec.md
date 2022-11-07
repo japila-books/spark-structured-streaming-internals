@@ -251,9 +251,9 @@ The metric is computed differently based on the given [OutputMode](#outputMode).
 
 When requested to [commit changes to a state store](../streaming-aggregation/StreamingAggregationStateManager.md#commit), a [StreamingAggregationStateManager](#stateManager) (as [StreamingAggregationStateManagerBaseImpl](../streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md)) requests the given [StateStore](../stateful-stream-processing/StateStore.md) to [commit state changes](../stateful-stream-processing/StateStore.md#commit).
 
-For [RocksDBStateStore](../stateful-stream-processing/RocksDBStateStore.md), it means for [RocksDB](../stateful-stream-processing/RocksDBStateStoreProvider.md#rocksDB) to [commit state changes](../stateful-stream-processing/RocksDB.md#commit) which is made up of the time-tracked phases that are available using the [performance metrics](../stateful-stream-processing/RocksDBMetrics.md#lastCommitLatencyMs).
+For [RocksDBStateStore](../rocksdb/RocksDBStateStore.md), it means for [RocksDB](../rocksdb/RocksDBStateStoreProvider.md#rocksDB) to [commit state changes](../rocksdb/RocksDB.md#commit) which is made up of the time-tracked phases that are available using the [performance metrics](../rocksdb/RocksDBMetrics.md#lastCommitLatencyMs).
 
-In other words, the total of the [time-tracked phases](../stateful-stream-processing/RocksDBMetrics.md#lastCommitLatencyMs) is close approximation of this metric (there are some file-specific ops though that contribute to the metric but are not part of the phases).
+In other words, the total of the [time-tracked phases](../rocksdb/RocksDBMetrics.md#lastCommitLatencyMs) is close approximation of this metric (there are some file-specific ops though that contribute to the metric but are not part of the phases).
 
 ### <span id="allRemovalsTimeMs"> time to remove
 

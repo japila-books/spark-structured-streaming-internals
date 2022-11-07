@@ -40,7 +40,7 @@ Default: `60000`
 
 ### <span id="minVersionsToRetain"> minVersionsToRetain
 
-[minVersionsToRetain](StateStoreConf.md#minVersionsToRetain)
+[minVersionsToRetain](../stateful-stream-processing/StateStoreConf.md#minVersionsToRetain)
 
 ### <span id="resetStatsOnLoad"><span id="RESET_STATS_ON_LOAD"><span id="spark.sql.streaming.stateStore.rocksdb.resetStatsOnLoad"> resetStatsOnLoad
 
@@ -75,7 +75,7 @@ apply(
 
 1. Used in tests only
 
-`apply` requests the given [StateStoreConf](StateStoreConf.md) for the [state store configuration options](StateStoreConf.md#confs) and creates a `RocksDBConf`.
+`apply` requests the given [StateStoreConf](../stateful-stream-processing/StateStoreConf.md) for the [state store configuration options](../stateful-stream-processing/StateStoreConf.md#confs) and creates a `RocksDBConf`.
 
 ---
 

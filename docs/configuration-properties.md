@@ -359,11 +359,11 @@ Used when:
 
 ## <span id="spark.sql.streaming.stateStore.rocksdb.formatVersion"><span id="STATE_STORE_ROCKSDB_FORMAT_VERSION"> stateStore.rocksdb.formatVersion
 
-[spark.sql.streaming.stateStore.rocksdb.formatVersion](stateful-stream-processing/RocksDBConf.md#spark.sql.streaming.stateStore.rocksdb.formatVersion)
+[spark.sql.streaming.stateStore.rocksdb.formatVersion](rocksdb/RocksDBConf.md#spark.sql.streaming.stateStore.rocksdb.formatVersion)
 
 ## <span id="spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows"> stateStore.rocksdb.trackTotalNumberOfRows
 
-[spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows](stateful-stream-processing/RocksDBConf.md#spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows)
+[spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows](rocksdb/RocksDBConf.md#spark.sql.streaming.stateStore.rocksdb.trackTotalNumberOfRows)
 
 ## <span id="spark.sql.streaming.ui.enabled"><span id="STREAMING_UI_ENABLED"> ui.enabled
 

@@ -1,6 +1,6 @@
 # RocksDBStateStoreProvider
 
-`RocksDBStateStoreProvider` is a [StateStoreProvider](StateStoreProvider.md).
+`RocksDBStateStoreProvider` is a [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md).
 
 ## <span id="rocksDB"> RocksDB
 
@@ -13,7 +13,7 @@ rocksDB: RocksDB
 
     Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#lazy).
 
-`rocksDB` requests the [StateStoreId](#stateStoreId) for [storeCheckpointLocation](StateStoreId.md#storeCheckpointLocation).
+`rocksDB` requests the [StateStoreId](#stateStoreId) for [storeCheckpointLocation](../stateful-stream-processing/StateStoreId.md#storeCheckpointLocation).
 
 `rocksDB` builds a store identifier (using the [StateStoreId](#stateStoreId)):
 
@@ -51,7 +51,7 @@ init(
   hadoopConf: Configuration): Unit
 ```
 
-`init` is part of the [StateStoreProvider](StateStoreProvider.md#init) abstraction.
+`init` is part of the [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md#init) abstraction.
 
 ---
 
@@ -73,7 +73,7 @@ getStore(
   version: Long): StateStore
 ```
 
-`getStore` is part of the [StateStoreProvider](StateStoreProvider.md#getStore) abstraction.
+`getStore` is part of the [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md#getStore) abstraction.
 
 ---
 
@@ -87,7 +87,7 @@ In the end, `getStore` creates a [RocksDBStateStore](RocksDBStateStore.md) for t
 supportedCustomMetrics: Seq[StateStoreCustomMetric]
 ```
 
-`supportedCustomMetrics` is part of the [StateStoreProvider](StateStoreProvider.md#supportedCustomMetrics) abstraction.
+`supportedCustomMetrics` is part of the [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md#supportedCustomMetrics) abstraction.
 
 !!! note
     The following is a subset of the supported custom metrics.

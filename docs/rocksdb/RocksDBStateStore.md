@@ -1,6 +1,6 @@
 # RocksDBStateStore
 
-`RocksDBStateStore` is a [StateStore](StateStore.md) of [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md).
+`RocksDBStateStore` is a [StateStore](../stateful-stream-processing/StateStore.md) of [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md).
 
 ## Creating Instance
 
@@ -18,13 +18,13 @@
 metrics: StateStoreMetrics
 ```
 
-`metrics` is part of the [StateStore](StateStore.md#metrics) abstraction.
+`metrics` is part of the [StateStore](../stateful-stream-processing/StateStore.md#metrics) abstraction.
 
 ---
 
 `metrics` requests the [RocksDB](RocksDBStateStoreProvider.md#rocksDB) for the [metrics](RocksDB.md#metrics) and defines `StateStoreCustomMetric`s.
 
-In the end, `metrics` creates a [StateStoreMetrics](StateStoreMetrics.md) with the following:
+In the end, `metrics` creates a [StateStoreMetrics](../stateful-stream-processing/StateStoreMetrics.md) with the following:
 
 * [numUncommittedKeys](RocksDBMetrics.md#numUncommittedKeys) of the [RocksDBMetrics](RocksDBMetrics.md)
 * [totalMemUsageBytes](RocksDBMetrics.md#totalMemUsageBytes) of the [RocksDBMetrics](RocksDBMetrics.md)
@@ -64,7 +64,7 @@ In the end, `metrics` creates a [StateStoreMetrics](StateStoreMetrics.md) with t
 commit(): Long
 ```
 
-`commit` is part of the [StateStore](StateStore.md#commit) abstraction.
+`commit` is part of the [StateStore](../stateful-stream-processing/StateStore.md#commit) abstraction.
 
 ---
 

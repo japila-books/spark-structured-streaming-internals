@@ -20,7 +20,7 @@ Commits all updates ([puts](#put) and [removes](#remove)) and returns a new vers
 See:
 
 * [HDFSBackedStateStore](HDFSBackedStateStore.md#commit)
-* [RocksDBStateStore](RocksDBStateStore.md#commit)
+* [RocksDBStateStore](../rocksdb/RocksDBStateStore.md#commit)
 
 Used when:
 
@@ -86,7 +86,7 @@ Used when:
 ## Implementations
 
 * [HDFSBackedStateStore](HDFSBackedStateStore.md)
-* [RocksDBStateStore](RocksDBStateStore.md)
+* [RocksDBStateStore](../rocksdb/RocksDBStateStore.md)
 
 ## <span id="getReadOnly"> getReadOnly
 
