@@ -49,6 +49,24 @@ Closed in [close](#close)
 
 `RocksDB` creates a `WriteBatchWithIndex` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/WriteBatchWithIndex.html)) (with `overwriteKey` enabled) when [created](#creating-instance).
 
+### <span id="tableFormatConfig"> BlockBasedTableConfig
+
+`RocksDB` creates a `BlockBasedTableConfig` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/BlockBasedTableConfig.html)) when [created](#creating-instance).
+
+??? quote "BlockBasedTableConfig"
+    `BlockBasedTableConfig` is the config for plain table sst format. `BlockBasedTable` is a RocksDB's default SST file format.
+
+The `BlockBasedTableConfig` is used to create an [Options](#dbOptions).
+
+### <span id="dbOptions"> Options
+
+`RocksDB` creates an `Options` ([RocksDB]({{ rocksdb.api }}/org/rocksdb/Options.html)) when [created](#creating-instance).
+
+The `Options` is used in the following:
+
+* [Opening a RocksDB database](#openDB)
+* [Creating a native logger](#createLogger)
+
 ## <span id="metrics"> Performance Metrics
 
 ```scala

@@ -15,3 +15,11 @@
 ## stateStore.providerClass
 
 [spark.sql.streaming.stateStore.providerClass](../configuration-properties.md#spark.sql.streaming.stateStore.providerClass) with `org.apache.spark.sql.execution.streaming.state.RocksDBStateStoreProvider` enables [RocksDBStateStoreProvider](RocksDBStateStoreProvider.md) as the default [StateStoreProvider](../stateful-stream-processing/StateStoreProvider.md).
+
+## Logging
+
+`RocksDB` is used to [create a native logger](RocksDB.md#createLogger) and configure a logging level accordingly.
+
+## Demo
+
+* [Demo: RocksDB State Store for Streaming Aggregation](../demo/rocksdb-state-store-for-streaming-aggregation.md)

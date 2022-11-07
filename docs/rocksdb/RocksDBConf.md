@@ -16,6 +16,8 @@ Default: `8`
 
 **spark.sql.streaming.stateStore.rocksdb.blockSizeKB**
 
+Block size (in kB) (that `RocksDB` sets on a [BlockBasedTableConfig](RocksDB.md#tableFormatConfig))
+
 Default: `4`
 
 ### <span id="compactOnCommit"><span id="COMPACT_ON_COMMIT_CONF"><span id="spark.sql.streaming.stateStore.rocksdb.compactOnCommit"> compactOnCommit

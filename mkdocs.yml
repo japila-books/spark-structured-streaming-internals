@@ -426,7 +426,7 @@ nav:
     - StreamingQueryStatusListener: webui/StreamingQueryStatusListener.md
     - StreamingQueryStatusStore: webui/StreamingQueryStatusStore.md
     - StreamingQueryTab: webui/StreamingQueryTab.md
-  - Demos:
+  - Demo:
     - demo/index.md
     - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md
     - current_timestamp Function For Processing Time in Streaming Queries: demo/current_timestamp.md
@@ -437,6 +437,7 @@ nav:
     - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
     - Kafka Data Source: demo/kafka-data-source.md
     - Streaming Aggregation: demo/streaming-aggregation.md
+    - RocksDB State Store for Streaming Aggregation: demo/rocksdb-state-store-for-streaming-aggregation.md
     - Streaming Query for Running Counts (Socket Source and Complete Output Mode): demo/groupBy-running-count-complete.md
     - Streaming Watermark: demo/streaming-watermark.md
     - Streaming Watermark with Aggregation in Append Output Mode: demo/watermark-aggregation-append.md

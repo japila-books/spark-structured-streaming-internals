@@ -1,9 +1,10 @@
 ---
 hide:
   - toc
+  - navigation
 ---
 
-# Demos
+# Demo
 
 * [Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator](arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md)
 * [current_timestamp Function For Processing Time in Streaming Queries](current_timestamp.md)
@@ -14,6 +15,7 @@ hide:
 * [Internals of FlatMapGroupsWithStateExec Physical Operator](spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md)
 * [Kafka Data Source](kafka-data-source.md)
 * [Streaming Aggregation](streaming-aggregation.md)
+* [RocksDB State Store for Streaming Aggregation](rocksdb-state-store-for-streaming-aggregation.md)
 * [Streaming Query for Running Counts (Socket Source and Complete Output Mode)](groupBy-running-count-complete.md)
 * [Streaming Watermark](streaming-watermark.md)
 * [Streaming Watermark with Aggregation in Append Output Mode](watermark-aggregation-append.md)
