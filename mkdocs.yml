@@ -203,7 +203,7 @@ nav:
       - micro-batch-execution/index.md
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
       - MicroBatchWrite: micro-batch-execution/MicroBatchWrite.md
-    - RocksDB:
+    - RocksDB State Store:
       - rocksdb/index.md
       - RocksDB: rocksdb/RocksDB.md
       - RocksDBConf: rocksdb/RocksDBConf.md
@@ -260,6 +260,7 @@ nav:
       - streaming-limit/index.md
     - Stateful Stream Processing:
       - stateful-stream-processing/index.md
+      - BaseStateStoreRDD: stateful-stream-processing/BaseStateStoreRDD.md
       - ReadStateStoreRDD: stateful-stream-processing/ReadStateStoreRDD.md
       - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
       - StatefulOperatorStateInfo: stateful-stream-processing/StatefulOperatorStateInfo.md

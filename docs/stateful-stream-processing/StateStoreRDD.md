@@ -1,5 +1,39 @@
 # StateStoreRDD
 
+`StateStoreRDD` is a [BaseStateStoreRDD](BaseStateStoreRDD.md).
+
+![StateStoreRDD, Physical and Logical Plans, and operators](../images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png)
+
+## Creating Instance
+
+`StateStoreRDD` takes the following to be created:
+
+* <span id="dataRDD"> Data RDD (`RDD[T]` to update the aggregates in a state store)
+* <span id="storeUpdateFunction"> Store update function (`(StateStore, Iterator[T]) => Iterator[U]` where `T` is the type of rows in the [data RDD](#dataRDD))
+* <span id="checkpointLocation"> Checkpoint directory
+* <span id="queryRunId"> Run ID of the streaming query
+* <span id="operatorId"> Operator ID
+* <span id="storeVersion"> Store Version
+* <span id="keySchema"> Key Schema
+* <span id="valueSchema"> Value Schema
+* [numColsPrefixKey](#numColsPrefixKey)
+* <span id="sessionState"> `SessionState`
+* <span id="storeCoordinator"> [StateStoreCoordinatorRef](StateStoreCoordinatorRef.md)
+* <span id="extraOptions"> Extra Options
+
+`StateStoreRDD` is created when:
+
+* `StateStoreOps` is requested to [mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore)
+
+### <span id="numColsPrefixKey"> numColsPrefixKey
+
+`StateStoreRDD` is given `numColsPrefixKey` when [created](#creating-instance) (that is passed in directly from [StateStoreOps.mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore)).
+
+`numColsPrefixKey` is used to [look up a StateStore](StateStore.md#get) while [computing a partition](#compute).
+
+<!---
+## Review Me
+
 `StateStoreRDD` is an `RDD` for <<compute, executing storeUpdateFunction>> with [StateStore](StateStore.md) (and data from partitions of the <<dataRDD, data RDD>>).
 
 `StateStoreRDD` is <<creating-instance, created>> for the following stateful physical operators (using [StateStoreOps.mapPartitionsWithStateStore](StateStoreOps.md#mapPartitionsWithStateStore)):
@@ -9,8 +43,6 @@
 * [StateStoreSaveExec](../physical-operators/StateStoreSaveExec.md)
 * [StreamingDeduplicateExec](../physical-operators/StreamingDeduplicateExec.md)
 * [StreamingGlobalLimitExec](../physical-operators/StreamingGlobalLimitExec.md)
-
-![StateStoreRDD, Physical and Logical Plans, and operators](../images/StateStoreRDD-SparkPlans-LogicalPlans-operators.png)
 
 `StateStoreRDD` uses `StateStoreCoordinator` for the <<getPreferredLocations, preferred locations of a partition>> for job scheduling.
 
@@ -51,33 +83,4 @@ NOTE: `getPreferredLocations` is a part of the RDD Contract to specify placement
 NOTE: <<checkpointLocation, checkpointLocation>> and <<operatorId, operatorId>> are shared across different partitions and so the only difference in <<StateStoreProviderId.md#, StateStoreProviderIds>> is the partition index.
 
 In the end, `getPreferredLocations` requests <<storeCoordinator, StateStoreCoordinatorRef>> for the [location of the state store](StateStoreCoordinatorRef.md#getLocation) for the [StateStoreProviderId](StateStoreProviderId.md).
-
-## Creating Instance
-
-`StateStoreRDD` takes the following to be created:
-
-* [[dataRDD]] Data RDD (`RDD[T]` to update the aggregates in a state store)
-* [[storeUpdateFunction]] Store update function (`(StateStore, Iterator[T]) => Iterator[U]` where `T` is the type of rows in the <<dataRDD, data RDD>>)
-* [[checkpointLocation]] Checkpoint directory
-* [[queryRunId]] Run ID of the streaming query
-* [[operatorId]] Operator ID
-* [[storeVersion]] Version of the store
-* [[keySchema]] *Key schema* - schema of the keys
-* [[valueSchema]] *Value schema* - schema of the values
-* [[indexOrdinal]] Index
-* [[sessionState]] `SessionState`
-* [[storeCoordinator]] Optional [StateStoreCoordinatorRef](StateStoreCoordinatorRef.md)
-
-=== [[internal-properties]] Internal Properties
-
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| hadoopConfBroadcast
-| [[hadoopConfBroadcast]]
-
-| storeConf
-| [[storeConf]] Configuration parameters (as `StateStoreConf`) using the current `SQLConf` (from `SessionState`)
-|===
+-->

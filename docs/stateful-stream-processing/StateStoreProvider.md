@@ -15,7 +15,10 @@ getStore(
 
 [StateStore](StateStore.md) for the given `version`
 
-See [RocksDBStateStoreProvider](../rocksdb/RocksDBStateStoreProvider.md#getStore) and [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#getStore)
+See:
+
+* [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#getStore)
+* [RocksDBStateStoreProvider](../rocksdb/RocksDBStateStoreProvider.md#getStore)
 
 Used when:
 
@@ -34,7 +37,25 @@ init(
   hadoopConf: Configuration): Unit
 ```
 
-Initializes a [StateStoreProvider](StateStoreProvider.md) for the given [StateStoreId](StateStoreId.md)
+Initializes a [StateStoreProvider](StateStoreProvider.md) with the following:
+
+* [StateStoreId](StateStoreId.md)
+* Key and value schema
+* [StateStoreConf](StateStoreConf.md)
+
+??? note "numColsPrefixKey"
+    The input `numColsPrefixKey` is different based on a stateful operator:
+
+    Stateful Operator | numColsPrefixKey
+    ------------------|-----------------
+    [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md#doExecute) | 0
+    [StateStoreRDD](StateStoreRDD.md#compute) | [numColsPrefixKey](StateStoreRDD.md#numColsPrefixKey)
+    [SymmetricHashJoinStateManager.StateStoreHandler](../streaming-join/StateStoreHandler.md#getStateStore) | 0
+
+See:
+
+* [HDFSBackedStateStoreProvider](HDFSBackedStateStoreProvider.md#init)
+* [RocksDBStateStoreProvider](../rocksdb/RocksDBStateStoreProvider.md#init)
 
 Used when:
 

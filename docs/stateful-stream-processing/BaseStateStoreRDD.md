@@ -1,0 +1,3 @@
+# BaseStateStoreRDD
+
+`BaseStateStoreRDD` is...FIXME

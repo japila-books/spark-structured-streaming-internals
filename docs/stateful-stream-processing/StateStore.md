@@ -128,7 +128,9 @@ get(
 
 `get` is used when:
 
-* `ReadStateStoreRDD` is requested to [compute a partition](ReadStateStoreRDD.md#compute)
+* `FlatMapGroupsWithStateExec` is [executed](../physical-operators/FlatMapGroupsWithStateExec.md#doExecute)
+* `StateStoreRDD` is requested to [compute a partition](StateStoreRDD.md#compute)
+* `SymmetricHashJoinStateManager.StateStoreHandler` is requested to [look up a StateStore](../streaming-join/StateStoreHandler.md#getStateStore)
 
 ## <span id="getStateStoreProvider"> Looking Up StateStore by Provider ID
 
