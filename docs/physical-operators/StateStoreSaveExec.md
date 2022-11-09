@@ -235,11 +235,18 @@ The metric is computed differently based on the given [OutputMode](#outputMode).
 === "Append"
     Number of input rows that have not expired yet (per the required [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) and that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (the time taken is the [total time to update rows](#allUpdatesTimeMs) metric)
 
+    Equivalent to the number of input rows (which should be exactly the number of output rows from the [child operator](#child)) with [late rows removed](#applyRemovingRowsOlderThanWatermark) that is [number of rows which are dropped by watermark](#numRowsDroppedByWatermark) metric
+
 === "Complete"
     Number of input rows (which should be exactly the number of output rows from the [child operator](#child))
 
 === "Update"
-    Number of rows that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (that did not expire per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate) that is equivalent to the [number of output rows](#numOutputRows) metric)
+    Number of rows that the [StreamingAggregationStateManager](#stateManager) was requested to [store in a state store](../streaming-aggregation/StreamingAggregationStateManager.md#put) (that did not expire per the optional [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) predicate)
+
+    !!! note "Optional watermark"
+        If defined, [watermarkPredicateForData](WatermarkSupport.md#watermarkPredicateForData) is used to [applyRemovingRowsOlderThanWatermark](#applyRemovingRowsOlderThanWatermark).
+    
+    Equivalent to the [number of output rows](#numOutputRows) metric
 
 `StateStoreSaveExec` is a [StateStoreWriter](StateStoreWriter.md) so consult [number of updated state rows](StateStoreWriter.md#numUpdatedStateRows), too.
 

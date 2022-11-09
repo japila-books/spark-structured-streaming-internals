@@ -60,7 +60,7 @@ watermarkExpression: Option[Expression]
 `watermarkExpression` is a `LessThanOrEqual` ([Spark SQL]({{ book.spark_sql }}/expressions/LessThanOrEqual)) expression.
 
 !!! note
-    Use [withWatermark](../operators/withWatermark.md) operator to specify a watermark expression.
+    Use [Dataset.withWatermark](../operators/withWatermark.md) operator to specify a watermark expression.
 
 `watermarkExpression` [creates a watermark expression](#watermarkExpression-utility) for the following:
 
@@ -106,7 +106,10 @@ watermarkPredicateForData: Option[BasePredicate]
 
     Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#lazy).
 
-`watermarkPredicateForData` is a `BasePredicate` ([Spark SQL]({{ book.spark_sql }}/expressions/BasePredicate)) for the [watermark expression](#watermarkExpression) (if defined) and the output schema of the [child operator](#child).
+`watermarkPredicateForData` is a `BasePredicate` ([Spark SQL]({{ book.spark_sql }}/expressions/BasePredicate)) for the [watermark expression](#watermarkExpression) (if defined).
+
+!!! note
+    `watermarkPredicateForData` is created only when the [watermark expression](#watermarkExpression) is defined.
 
 ---
 

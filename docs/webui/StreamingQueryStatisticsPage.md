@@ -1,6 +1,6 @@
 # StreamingQueryStatisticsPage
 
-`StreamingQueryStatisticsPage` is a `WebUIPage` ([Spark Core]({{ book.spark_core }}/webui/WebUIPage)) that [renders](#render) the following sections as **Streaming Query Statistics**:
+`StreamingQueryStatisticsPage` is a `WebUIPage` ([Spark Core]({{ book.spark_core }}/webui/WebUIPage)) that [renders a page](#render) with the following sections as **Streaming Query Statistics**:
 
 * [Basic Info](#generateBasicInfo)
 * [Statistics](#generateStatTable)
@@ -21,7 +21,11 @@
 
 * `StreamingQueryTab` is [created](StreamingQueryTab.md) (and attaches this and [StreamingQueryPage](StreamingQueryPage.md) pages)
 
-## Aggregated Number Of Rows Dropped By Watermark
+## Timelines and Histograms
+
+Displayed only when there are [stateful operators](../monitoring/StreamingQueryProgress.md#stateOperators) in a streaming query.
+
+### Aggregated Number Of Rows Dropped By Watermark
 
 <figure markdown>
   ![Aggregated Number Of Rows Dropped By Watermark](../images/webui-statistics-aggregated-number-of-rows-dropped-by-watermark.png)
@@ -31,11 +35,9 @@ Number of all input rows in stateful operators that were late and hence dropped 
 
 Sum of [numRowsDroppedByWatermark](../monitoring/StateOperatorProgress.md#numRowsDroppedByWatermark) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)
 
-Displayed only when there are [stateful operators](../monitoring/StreamingQueryProgress.md#stateOperators) in a streaming query.
-
 `StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) to generate a timeline and a histogram for `aggregated-num-rows-dropped-by-watermark-timeline` and `aggregated-num-rows-dropped-by-watermark-histogram` HTML `div`s, respectively.
 
-## Aggregated Number Of Total State Rows
+### Aggregated Number Of Total State Rows
 
 <figure markdown>
   ![Aggregated Number Of Total State Rows](../images/webui-statistics-aggregated-number-of-total-state-rows.png)
@@ -43,25 +45,30 @@ Displayed only when there are [stateful operators](../monitoring/StreamingQueryP
 
 The number of state rows across all stateful operators
 
-Sum of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)
-
-Displayed only when there are [stateful operators](../monitoring/StreamingQueryProgress.md#stateOperators) in a streaming query.
+Total (_sum_) of [numRowsTotal](../monitoring/StateOperatorProgress.md#numRowsTotal) metrics of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)
 
 `StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) to generate a timeline and a histogram for `aggregated-num-total-state-rows-timeline` and `aggregated-num-total-state-rows-histogram` HTML `div`s, respectively.
 
-## Aggregated Number Of Updated State Rows
+### Aggregated Number Of Updated State Rows
 
 <figure markdown>
   ![Aggregated Number Of Updated State Rows](../images/webui-statistics-aggregated-number-of-updated-state-rows.png)
 </figure>
 
-## Aggregated State Memory Used In Bytes
+Total (a sum in `records` unit) of [numRowsUpdated](../monitoring/StateOperatorProgress.md#numRowsUpdated) metric of [stateOperators](../monitoring/StreamingQueryProgress.md#stateOperators) of every [StreamingQueryProgress](../monitoring/StreamingQueryProgress.md)
+
+* The X axis is from `minBatchTime` to `maxBatchTime`
+* The Y axis is from 0 to `maxNumRowsUpdated`
+
+`StreamingQueryStatisticsPage` uses [generateAggregatedStateOperators](#generateAggregatedStateOperators) (`graphUIDataForNumberUpdatedRows`) to generate a timeline and a histogram for `aggregated-num-updated-state-rows-timeline` and `aggregated-num-updated-state-rows-histogram` HTML `div`s, respectively.
+
+### Aggregated State Memory Used In Bytes
 
 <figure markdown>
   ![Aggregated State Memory Used In Bytes](../images/webui-statistics-aggregated-state-memory-used-in-bytes.png)
 </figure>
 
-## Global Watermark Gap
+### Global Watermark Gap
 
 <figure markdown>
   ![Global Watermark Gap](../images/webui-statistics-global-watermark-gap.png)

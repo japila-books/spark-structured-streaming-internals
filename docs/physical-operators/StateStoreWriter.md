@@ -60,11 +60,11 @@ Can be disabled (for performance reasons) using [spark.sql.streaming.stateStore.
 
 ### <span id="numUpdatedStateRows"> number of updated state rows
 
-Number of state rows (_entries_) that were updated or removed (and [StateManager](../arbitrary-stateful-streaming-aggregation/StateManager.md#putState), [StreamingAggregationStateManager](../streaming-aggregation/StreamingAggregationStateManager.md#put) or [StreamingSessionWindowStateManager](../stateful-stream-processing/StreamingSessionWindowStateManager.md#updateSessions) were requested to put or update a state value)
+Number of state rows (_entries_) that were updated or removed (for which [StateManager](../arbitrary-stateful-streaming-aggregation/StateManager.md#putState), [StreamingAggregationStateManager](../streaming-aggregation/StreamingAggregationStateManager.md#put) or [StreamingSessionWindowStateManager](../stateful-stream-processing/StreamingSessionWindowStateManager.md#updateSessions) were requested to put or update a state value)
 
 State rows are stored or updated for the keys in the result rows of an upstream physical operator.
 
-Reported in web UI as [Aggregated Number Of Updated State Rows](../webui/StreamingQueryStatisticsPage.md#generateAggregatedStateOperators)
+Displayed in [Structured Streaming UI](../webui/index.md) as [Aggregated Number Of Updated State Rows](../webui/StreamingQueryStatisticsPage.md#aggregated-number-of-updated-state-rows)
 
 Reported as [numRowsUpdated](../monitoring/StateOperatorProgress.md#numRowsUpdated) when [reporting progress](#getProgress)
 

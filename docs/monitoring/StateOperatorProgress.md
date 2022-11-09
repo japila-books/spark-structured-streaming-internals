@@ -2,13 +2,15 @@
 
 `StateOperatorProgress` is a progress of (_updates made to_) all the stateful operators in a micro-batch of a [StreamingQuery](../StreamingQuery.md).
 
+`StateOperatorProgress` can be read in JSON format using [jsonValue](#jsonValue).
+
 ## Creating Instance
 
 `StateOperatorProgress` takes the following to be created:
 
 * <span id="operatorName"> Operator Name
 * [numRowsTotal](#numRowsTotal)
-* <span id="numRowsUpdated"> numRowsUpdated
+* [numRowsUpdated](#numRowsUpdated)
 * <span id="allUpdatesTimeMs"> allUpdatesTimeMs
 * <span id="numRowsRemoved"> numRowsRemoved
 * <span id="allRemovalsTimeMs"> allRemovalsTimeMs
@@ -27,6 +29,14 @@
 ### <span id="numRowsTotal"> numRowsTotal
 
 `numRowsTotal` is the value of [numTotalStateRows](../physical-operators/StateStoreWriter.md#numTotalStateRows) metric of a [StateStoreWriter](../physical-operators/StateStoreWriter.md) physical operator (when requested to [get progress](../physical-operators/StateStoreWriter.md#getProgress)).
+
+### <span id="numRowsUpdated"> numRowsUpdated
+
+`numRowsUpdated` is the value of [numUpdatedStateRows](../physical-operators/StateStoreWriter.md#numUpdatedStateRows) metric of a [StateStoreWriter](../physical-operators/StateStoreWriter.md) physical operator (when requested to [get progress](../physical-operators/StateStoreWriter.md#getProgress)).
+
+`numRowsUpdated` is [updated](#copy) when `SessionWindowStateStoreSaveExec` operator is requested for a [StateOperatorProgress](../physical-operators/SessionWindowStateStoreSaveExec.md#getProgress).
+
+`numRowsUpdated` is displayed in [Structured Streaming UI](../webui/index.md) as [Aggregated Number Of Updated State Rows](../webui/StreamingQueryStatisticsPage.md#aggregated-number-of-updated-state-rows).
 
 ### <span id="customMetrics"> Custom Metrics
 
