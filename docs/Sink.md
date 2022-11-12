@@ -23,4 +23,4 @@ Used when `MicroBatchExecution` stream execution engine is requested to [add a b
 
 * [FileStreamSink](datasources/file/FileStreamSink.md)
 * [ForeachBatchSink](datasources/ForeachBatchSink.md)
-* [KafkaSink](datasources/kafka/KafkaSink.md)
+* [KafkaSink](kafka/KafkaSink.md)

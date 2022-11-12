@@ -28,4 +28,4 @@ Used when `DataSource` is requested for a [streaming sink](DataSource.md#createS
 |===
 
 [[implementations]]
-NOTE: [KafkaSourceProvider](datasources/kafka/KafkaSourceProvider.md) is the only known `StreamSinkProvider` in Spark Structured Streaming.
+NOTE: [KafkaSourceProvider](kafka/KafkaSourceProvider.md) is the only known `StreamSinkProvider` in Spark Structured Streaming.

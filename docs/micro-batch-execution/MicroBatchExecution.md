@@ -780,7 +780,7 @@ For every unique [SparkDataStream](../SparkDataStream.md), `logicalPlan` creates
 
 In the end, `logicalPlan` is the transformed analyzed logical plan unless the [sink](#sink) is `SupportsWrite` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsWrite)).
 
-For the [sink](#sink) to be a `SupportsWrite` (e.g. [KafkaTable](../datasources/kafka/KafkaTable.md), [ForeachWriterTable](../datasources/foreach/ForeachWriterTable.md)), `logicalPlan`...FIXME
+For the [sink](#sink) to be a `SupportsWrite` (e.g. [KafkaTable](../kafka/KafkaTable.md), [ForeachWriterTable](../datasources/foreach/ForeachWriterTable.md)), `logicalPlan`...FIXME
 
 ### <span id="logicalPlan-AssertionError"> AssertionError
 

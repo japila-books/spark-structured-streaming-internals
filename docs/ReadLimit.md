@@ -22,8 +22,8 @@ ReadLimit allAvailable()
 `allAvailable` is used when:
 
 * `SupportsAdmissionControl` is requested for the [default ReadLimit](SupportsAdmissionControl.md#getDefaultReadLimit)
-* `KafkaMicroBatchStream` is requested for the [default ReadLimit](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
-* `KafkaSource` is requested for the [default ReadLimit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
+* `KafkaMicroBatchStream` is requested for the [default ReadLimit](kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
+* `KafkaSource` is requested for the [default ReadLimit](kafka/KafkaSource.md#getDefaultReadLimit)
 * `AvailableNowDataStreamWrapper` is requested to `prepareForTriggerAvailableNow`, `getDefaultReadLimit`
 * `MicroBatchExecution` is requested for the [uniqueSources](micro-batch-execution/MicroBatchExecution.md#uniqueSources)
 * `ContinuousExecution` is requested for the [uniqueSources](continuous-execution/ContinuousExecution.md#uniqueSources)
@@ -38,14 +38,14 @@ ReadLimit compositeLimit(
 `compositeLimit` creates a [CompositeReadLimit](#CompositeReadLimit) with the given [ReadLimit](ReadLimit.md)s.
 
 !!! note
-    `compositeLimit` is used only in [Kafka Data Source](datasources/kafka/index.md) when [minOffsetPerTrigger](datasources/kafka/options.md#minOffsetPerTrigger) and [maxOffsetsPerTrigger](datasources/kafka/options.md#maxOffsetsPerTrigger) options are specified.
+    `compositeLimit` is used only in [Kafka Data Source](kafka/index.md) when [minOffsetPerTrigger](kafka/options.md#minOffsetPerTrigger) and [maxOffsetsPerTrigger](kafka/options.md#maxOffsetsPerTrigger) options are specified.
 
 ---
 
 `compositeLimit` is used when:
 
-* `KafkaMicroBatchStream` is requested for the [default read limit](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
-* `KafkaSource` is requested for the [default read limit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
+* `KafkaMicroBatchStream` is requested for the [default read limit](kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
+* `KafkaSource` is requested for the [default read limit](kafka/KafkaSource.md#getDefaultReadLimit)
 
 ### <span id="maxRows"> Creating ReadMaxRows
 
@@ -60,8 +60,8 @@ ReadLimit maxRows(
 
 `maxRows` is used when:
 
-* `KafkaMicroBatchStream` is requested for the [default ReadLimit](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
-* `KafkaSource` is requested for the [default ReadLimit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
+* `KafkaMicroBatchStream` is requested for the [default ReadLimit](kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
+* `KafkaSource` is requested for the [default ReadLimit](kafka/KafkaSource.md#getDefaultReadLimit)
 * `RatePerMicroBatchStream` is requested for the [default ReadLimit](datasources/rate-micro-batch//RatePerMicroBatchStream.md#getDefaultReadLimit)
 
 ### <span id="minRows"> Creating ReadMinRows
@@ -78,8 +78,8 @@ ReadLimit minRows(
 
 `minRows` is used when:
 
-* `KafkaMicroBatchStream` is requested for the [default ReadLimit](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
-* `KafkaSource` is requested for the [default ReadLimit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
+* `KafkaMicroBatchStream` is requested for the [default ReadLimit](kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
+* `KafkaSource` is requested for the [default ReadLimit](kafka/KafkaSource.md#getDefaultReadLimit)
 
 ## Implementations
 
@@ -97,8 +97,8 @@ ReadLimit minRows(
 
 Used when:
 
-* `KafkaMicroBatchStream` is requested for the [latestOffset](datasources/kafka/KafkaMicroBatchStream.md#latestOffset)
-* `KafkaSource` is requested for the [latestOffset](datasources/kafka/KafkaSource.md#latestOffset)
+* `KafkaMicroBatchStream` is requested for the [latestOffset](kafka/KafkaMicroBatchStream.md#latestOffset)
+* `KafkaSource` is requested for the [latestOffset](kafka/KafkaSource.md#latestOffset)
 
 ### <span id="ReadMaxRows"> ReadMaxRows
 
@@ -112,8 +112,8 @@ Attribute | Description
 
 Used when:
 
-* `KafkaMicroBatchStream` is requested for the [latestOffset](datasources/kafka/KafkaMicroBatchStream.md#latestOffset)
-* `KafkaSource` is requested for the [latestOffset](datasources/kafka/KafkaSource.md#latestOffset)
+* `KafkaMicroBatchStream` is requested for the [latestOffset](kafka/KafkaMicroBatchStream.md#latestOffset)
+* `KafkaSource` is requested for the [latestOffset](kafka/KafkaSource.md#latestOffset)
 
 ### <span id="ReadMinRows"> ReadMinRows
 
@@ -128,5 +128,5 @@ Attribute | Description
 
 Used when:
 
-* `KafkaMicroBatchStream` is requested for the [latestOffset](datasources/kafka/KafkaMicroBatchStream.md#latestOffset)
-* `KafkaSource` is requested for the [latestOffset](datasources/kafka/KafkaSource.md#latestOffset)
+* `KafkaMicroBatchStream` is requested for the [latestOffset](kafka/KafkaMicroBatchStream.md#latestOffset)
+* `KafkaSource` is requested for the [latestOffset](kafka/KafkaSource.md#latestOffset)

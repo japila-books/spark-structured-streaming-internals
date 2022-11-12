@@ -45,7 +45,7 @@ Used when:
 ## Implementations
 
 * `AvailableNowMicroBatchStreamWrapper`
-* [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md)
+* [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md)
 * [MemoryStream](datasources/memory/MemoryStream.md)
 * `RatePerMicroBatchStream`
 * `RateStreamMicroBatchStream`

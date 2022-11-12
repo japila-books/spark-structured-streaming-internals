@@ -41,7 +41,7 @@ val records = spark
 
 Kafka data source supports many options for reading.
 
-Kafka data source for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchStream](../../MicroBatchStream.md) and [ContinuousReadSupport](../../continuous-execution/ContinuousReadSupport.md) for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
+Kafka data source for reading is available through [KafkaSourceProvider](KafkaSourceProvider.md) that is a [MicroBatchStream](../MicroBatchStream.md) and [ContinuousReadSupport](../continuous-execution/ContinuousReadSupport.md) for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing, respectively.
 
 ## <span id="schema"> Predefined (Fixed) Schema
 
@@ -102,7 +102,7 @@ Internally, the **kafka** data source format for writing is available through [K
 
 ## Micro-Batch Stream Processing
 
-Kafka Data Source supports [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
+Kafka Data Source supports [Micro-Batch Stream Processing](../micro-batch-execution/index.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
@@ -126,13 +126,13 @@ val sq = spark
 sq.stop
 ```
 
-Kafka Data Source can assign a single task per Kafka partition (using [KafkaOffsetRangeCalculator](KafkaOffsetRangeCalculator.md) in [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)).
+Kafka Data Source can assign a single task per Kafka partition (using [KafkaOffsetRangeCalculator](KafkaOffsetRangeCalculator.md) in [Micro-Batch Stream Processing](../micro-batch-execution/index.md)).
 
-Kafka Data Source can reuse a Kafka consumer in [Micro-Batch Stream Processing](../../micro-batch-execution/index.md)).
+Kafka Data Source can reuse a Kafka consumer in [Micro-Batch Stream Processing](../micro-batch-execution/index.md)).
 
 ## Continuous Stream Processing
 
-Kafka Data Source supports [Continuous Stream Processing](../../continuous-execution/index.md).
+Kafka Data Source supports [Continuous Stream Processing](../continuous-execution/index.md).
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
@@ -162,11 +162,11 @@ Kafka data source supports [options](options.md).
 
 ## <span id="AvailableNow"><span id="AvailableNowTrigger"> Trigger.AvailableNow
 
-Kafka data source supports [Trigger.AvailableNow](../../Trigger.md#AvailableNow) mode (as [KafkaMicroBatchStream](KafkaMicroBatchStream.md) is a [SupportsTriggerAvailableNow](../../SupportsTriggerAvailableNow.md)).
+Kafka data source supports [Trigger.AvailableNow](../Trigger.md#AvailableNow) mode (as [KafkaMicroBatchStream](KafkaMicroBatchStream.md) is a [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md)).
 
 ## Logical Query Plan for Reading
 
-When `DataStreamReader` is requested to load a dataset with *kafka* data source format, it creates a DataFrame with a [StreamingRelationV2](../../logical-operators/StreamingRelationV2.md) leaf logical operator.
+When `DataStreamReader` is requested to load a dataset with *kafka* data source format, it creates a DataFrame with a [StreamingRelationV2](../logical-operators/StreamingRelationV2.md) leaf logical operator.
 
 ```text
 scala> records.explain(extended = true)
@@ -177,7 +177,7 @@ StreamingRelationV2 org.apache.spark.sql.kafka010.KafkaSourceProvider@1a366d0, k
 
 ## Logical Query Plan for Writing
 
-When `DataStreamWriter` is requested to start a streaming query with *kafka* data source format for writing, it requests the `StreamingQueryManager` to [create a streaming query](../../StreamingQueryManager.md#createQuery) that in turn creates (a [StreamingQueryWrapper](../../StreamingQueryWrapper.md) with) a [ContinuousExecution](../../continuous-execution/ContinuousExecution.md) or a [MicroBatchExecution](../../micro-batch-execution/MicroBatchExecution.md) for [continuous](#continuous-stream-processing) and [micro-batch](#micro-batch-stream-processing) stream processing, respectively.
+When `DataStreamWriter` is requested to start a streaming query with *kafka* data source format for writing, it requests the `StreamingQueryManager` to [create a streaming query](../StreamingQueryManager.md#createQuery) that in turn creates (a [StreamingQueryWrapper](../StreamingQueryWrapper.md) with) a [ContinuousExecution](../continuous-execution/ContinuousExecution.md) or a [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) for [continuous](#continuous-stream-processing) and [micro-batch](#micro-batch-stream-processing) stream processing, respectively.
 
 ```text
 scala> sq.explain(extended = true)
@@ -189,7 +189,7 @@ WriteToDataSourceV2 org.apache.spark.sql.execution.streaming.sources.MicroBatchW
 
 ## <span id="demo"> Demo: Streaming Aggregation with Kafka Data Source
 
-Check out [Demo: Streaming Aggregation with Kafka Data Source](../../demo/kafka-data-source.md).
+Check out [Demo: Streaming Aggregation with Kafka Data Source](../demo/kafka-data-source.md).
 
 Use the following to publish events to Kafka.
 

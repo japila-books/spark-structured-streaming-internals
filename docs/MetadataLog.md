@@ -19,7 +19,7 @@ Stores (_adds_) metadata of a streaming batch
 
 Used when:
 
-* `KafkaSource` is requested for the [initialPartitionOffsets](datasources/kafka/KafkaSource.md#initialPartitionOffsets)
+* `KafkaSource` is requested for the [initialPartitionOffsets](kafka/KafkaSource.md#initialPartitionOffsets)
 
 * `CompactibleFileStreamLog` is requested for the [store metadata of a streaming batch](datasources/file/CompactibleFileStreamLog.md#add) and to [compact](datasources/file/CompactibleFileStreamLog.md#compact)
 

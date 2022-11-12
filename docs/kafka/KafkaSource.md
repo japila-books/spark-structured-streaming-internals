@@ -1,21 +1,21 @@
 # KafkaSource
 
-`KafkaSource` is a [streaming source](../../Source.md) that [loads data from Apache Kafka](#getBatch).
+`KafkaSource` is a [streaming source](../Source.md) that [loads data from Apache Kafka](#getBatch).
 
 !!! note
-    Kafka topics are checked for new records every [trigger](../../Trigger.md) and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
+    Kafka topics are checked for new records every [trigger](../Trigger.md) and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
 
-`KafkaSource` uses the [metadata log directory](#metadataPath) to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](../../StreamExecution.md#checkpointRoot) (of the [StreamExecution](../../StreamExecution.md)).
+`KafkaSource` uses the [metadata log directory](#metadataPath) to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](../StreamExecution.md#checkpointRoot) (of the [StreamExecution](../StreamExecution.md)).
 
 !!! note
-    The [checkpointRoot](../../StreamExecution.md#checkpointRoot) directory is one of the following:
+    The [checkpointRoot](../StreamExecution.md#checkpointRoot) directory is one of the following:
 
     * `checkpointLocation` option
-    * [spark.sql.streaming.checkpointLocation](../../configuration-properties.md#spark.sql.streaming.checkpointLocation) configuration property
+    * [spark.sql.streaming.checkpointLocation](../configuration-properties.md#spark.sql.streaming.checkpointLocation) configuration property
 
 `KafkaSource` <<creating-instance, is created>> for **kafka** format (that is registered by [KafkaSourceProvider](KafkaSourceProvider.md#shortName)).
 
-![KafkaSource and KafkaSourceProvider](../../images/KafkaSource-creating-instance.png)
+![KafkaSource and KafkaSourceProvider](../images/KafkaSource-creating-instance.png)
 
 [[schema]]
 `KafkaSource` uses a [predefined (fixed) schema](index.md#schema) (that [cannot be changed](KafkaSourceProvider.md#sourceSchema)).
@@ -48,7 +48,7 @@ getBatch(
   end: Offset): DataFrame
 ```
 
-`getBatch` is part of the [Source](../../Source.md#getBatch) abstraction.
+`getBatch` is part of the [Source](../Source.md#getBatch) abstraction.
 
 `getBatch` creates a streaming `DataFrame` with a query plan with `LogicalRDD` logical operator to scan data from a [KafkaSourceRDD](KafkaSourceRDD.md).
 
@@ -135,7 +135,7 @@ In the end, `getBatch` creates a streaming `DataFrame` for the `KafkaSourceRDD` 
 getOffset: Option[Offset]
 ----
 
-NOTE: `getOffset` is a part of the ../../Source.md#getOffset[Source Contract].
+NOTE: `getOffset` is a part of the ../Source.md#getOffset[Source Contract].
 
 Internally, `getOffset` fetches the <<initialPartitionOffsets, initial partition offsets>> (from the metadata log or Kafka directly).
 
@@ -343,9 +343,9 @@ initialPartitionOffsets: Map[TopicPartition, Long]
 
 `initialPartitionOffsets` is the *initial partition offsets* for the batch `0` that were already persisted in the <<metadataPath, streaming metadata log directory>> or persisted on demand.
 
-As the very first step, `initialPartitionOffsets` creates a custom [HDFSMetadataLog](../../HDFSMetadataLog.md) (of [KafkaSourceOffsets](KafkaSourceOffset.md) metadata) in the <<metadataPath, streaming metadata log directory>>.
+As the very first step, `initialPartitionOffsets` creates a custom [HDFSMetadataLog](../HDFSMetadataLog.md) (of [KafkaSourceOffsets](KafkaSourceOffset.md) metadata) in the <<metadataPath, streaming metadata log directory>>.
 
-`initialPartitionOffsets` requests the `HDFSMetadataLog` for the [metadata](../../HDFSMetadataLog.md#get) of the ``0``th batch (as `KafkaSourceOffset`).
+`initialPartitionOffsets` requests the `HDFSMetadataLog` for the [metadata](../HDFSMetadataLog.md#get) of the ``0``th batch (as `KafkaSourceOffset`).
 
 If the metadata is available, `initialPartitionOffsets` requests the metadata for the [collection of TopicPartitions and their offsets](KafkaSourceOffset.md#partitionToOffsets).
 
@@ -357,7 +357,7 @@ If the metadata could not be found, `initialPartitionOffsets` creates a new `Kaf
 
 * For `SpecificOffsetRangeLimit`, `initialPartitionOffsets` requests the <<kafkaReader, KafkaOffsetReader>> to [fetchSpecificOffsets](KafkaOffsetReader.md#fetchSpecificOffsets) (and report a data loss per the <<failOnDataLoss, failOnDataLoss>> flag)
 
-`initialPartitionOffsets` requests the custom `HDFSMetadataLog` to [add the offsets to the metadata log](../../HDFSMetadataLog.md#add) (as the metadata of the ``0``th batch).
+`initialPartitionOffsets` requests the custom `HDFSMetadataLog` to [add the offsets to the metadata log](../HDFSMetadataLog.md#add) (as the metadata of the ``0``th batch).
 
 `initialPartitionOffsets` prints out the following INFO message to the logs:
 
@@ -370,7 +370,7 @@ Initial offsets: [offsets]
 
     * <<getOffset, Fetch offsets (from metadata log or Kafka directly)>>
 
-    * <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` [commits the first streaming batch](../../StreamExecution.md#runStream) and so nothing is in [committedOffsets](../../StreamExecution.md#committedOffsets) registry for a `KafkaSource` data source yet)
+    * <<getBatch, Generate a DataFrame with records from Kafka for a streaming batch>> (when the start offsets are not defined, i.e. before `StreamExecution` [commits the first streaming batch](../StreamExecution.md#runStream) and so nothing is in [committedOffsets](../StreamExecution.md#committedOffsets) registry for a `KafkaSource` data source yet)
 
 ==== [[initialPartitionOffsets-HDFSMetadataLog-serialize]] `HDFSMetadataLog.serialize`
 
@@ -391,7 +391,7 @@ serialize(
 
 In the end, `serialize` requests the `BufferedWriter` to flush (the underlying stream).
 
-`serialize` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#serialize) abstraction.
+`serialize` is part of the [HDFSMetadataLog](../HDFSMetadataLog.md#serialize) abstraction.
 
 === [[rateLimit]] `rateLimit` Internal Method
 
@@ -461,4 +461,4 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
 ```
 
-Refer to [Logging](../../spark-logging.md).
+Refer to [Logging](../spark-logging.md).

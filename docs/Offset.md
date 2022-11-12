@@ -27,7 +27,7 @@ Used when:
 
 * ContinuousMemoryStreamOffset
 * FileStreamSourceOffset
-* [KafkaSourceOffset](datasources/kafka/KafkaSourceOffset.md)
+* [KafkaSourceOffset](kafka/KafkaSourceOffset.md)
 * LongOffset
 * SerializedOffset
 * TextSocketOffset

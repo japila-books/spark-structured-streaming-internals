@@ -1,6 +1,6 @@
 # KafkaSourceInitialOffsetWriter
 
-`KafkaSourceInitialOffsetWriter` is a [Hadoop DFS-based metadata storage](../../HDFSMetadataLog.md) for [KafkaSourceOffsets](KafkaSourceOffset.md).
+`KafkaSourceInitialOffsetWriter` is a [Hadoop DFS-based metadata storage](../HDFSMetadataLog.md) for [KafkaSourceOffsets](KafkaSourceOffset.md).
 
 [[VERSION]]
 `KafkaSourceInitialOffsetWriter` uses `1` for the version.
@@ -22,4 +22,4 @@ deserialize(
 
 `deserialize`...FIXME
 
-`deserialize` is part of the [HDFSMetadataLog](../../HDFSMetadataLog.md#deserialize) abstraction.
+`deserialize` is part of the [HDFSMetadataLog](../HDFSMetadataLog.md#deserialize) abstraction.

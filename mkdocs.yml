@@ -359,33 +359,33 @@ nav:
     - ForeachBatch:
       - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Kafka:
-      - datasources/kafka/index.md
-      - CachedKafkaConsumer: datasources/kafka/CachedKafkaConsumer.md
-      - ConsumerStrategy: datasources/kafka/ConsumerStrategy.md
-      - KafkaBatch: datasources/kafka/KafkaBatch.md
-      - KafkaBatchInputPartition: datasources/kafka/KafkaBatchInputPartition.md
-      - KafkaContinuousInputPartition: datasources/kafka/KafkaContinuousInputPartition.md
-      - KafkaContinuousStream: datasources/kafka/KafkaContinuousStream.md
-      - KafkaDataConsumer: datasources/kafka/KafkaDataConsumer.md
-      - KafkaMicroBatchInputPartition: datasources/kafka/KafkaMicroBatchInputPartition.md
-      - KafkaMicroBatchInputPartitionReader: datasources/kafka/KafkaMicroBatchInputPartitionReader.md
-      - KafkaMicroBatchStream: datasources/kafka/KafkaMicroBatchStream.md
-      - KafkaOffsetRangeCalculator: datasources/kafka/KafkaOffsetRangeCalculator.md
-      - KafkaOffsetRangeLimit: datasources/kafka/KafkaOffsetRangeLimit.md
+      - kafka/index.md
+      - CachedKafkaConsumer: kafka/CachedKafkaConsumer.md
+      - ConsumerStrategy: kafka/ConsumerStrategy.md
+      - KafkaBatch: kafka/KafkaBatch.md
+      - KafkaBatchInputPartition: kafka/KafkaBatchInputPartition.md
+      - KafkaContinuousInputPartition: kafka/KafkaContinuousInputPartition.md
+      - KafkaContinuousStream: kafka/KafkaContinuousStream.md
+      - KafkaDataConsumer: kafka/KafkaDataConsumer.md
+      - KafkaMicroBatchInputPartition: kafka/KafkaMicroBatchInputPartition.md
+      - KafkaMicroBatchInputPartitionReader: kafka/KafkaMicroBatchInputPartitionReader.md
+      - KafkaMicroBatchStream: kafka/KafkaMicroBatchStream.md
+      - KafkaOffsetRangeCalculator: kafka/KafkaOffsetRangeCalculator.md
+      - KafkaOffsetRangeLimit: kafka/KafkaOffsetRangeLimit.md
       - KafkaOffsetReaders:
-        - KafkaOffsetReader: datasources/kafka/KafkaOffsetReader.md
-        - KafkaOffsetReaderAdmin: datasources/kafka/KafkaOffsetReaderAdmin.md
-        - KafkaOffsetReaderConsumer: datasources/kafka/KafkaOffsetReaderConsumer.md
-      - KafkaRelation: datasources/kafka/KafkaRelation.md
-      - KafkaScan: datasources/kafka/KafkaScan.md
-      - KafkaSink: datasources/kafka/KafkaSink.md
-      - KafkaSource: datasources/kafka/KafkaSource.md
-      - KafkaSourceInitialOffsetWriter: datasources/kafka/KafkaSourceInitialOffsetWriter.md
-      - KafkaSourceOffset: datasources/kafka/KafkaSourceOffset.md
-      - KafkaSourceProvider: datasources/kafka/KafkaSourceProvider.md
-      - KafkaSourceRDD: datasources/kafka/KafkaSourceRDD.md
-      - KafkaTable: datasources/kafka/KafkaTable.md
-      - Options: datasources/kafka/options.md
+        - KafkaOffsetReader: kafka/KafkaOffsetReader.md
+        - KafkaOffsetReaderAdmin: kafka/KafkaOffsetReaderAdmin.md
+        - KafkaOffsetReaderConsumer: kafka/KafkaOffsetReaderConsumer.md
+      - KafkaRelation: kafka/KafkaRelation.md
+      - KafkaScan: kafka/KafkaScan.md
+      - KafkaSink: kafka/KafkaSink.md
+      - KafkaSource: kafka/KafkaSource.md
+      - KafkaSourceInitialOffsetWriter: kafka/KafkaSourceInitialOffsetWriter.md
+      - KafkaSourceOffset: kafka/KafkaSourceOffset.md
+      - KafkaSourceProvider: kafka/KafkaSourceProvider.md
+      - KafkaSourceRDD: kafka/KafkaSourceRDD.md
+      - KafkaTable: kafka/KafkaTable.md
+      - Options: kafka/options.md
     - Memory:
       - datasources/memory/index.md
       - ContinuousMemoryStream: datasources/memory/ContinuousMemoryStream.md

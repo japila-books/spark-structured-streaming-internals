@@ -28,7 +28,7 @@ ContinuousReader createContinuousReader(
 | [ContinuousMemoryStream](../datasources/memory/ContinuousMemoryStream.md)
 | [[ContinuousMemoryStream]] Data source provider for `memory` format
 
-| [KafkaSourceProvider](../datasources/kafka/KafkaSourceProvider.md)
+| [KafkaSourceProvider](../kafka/KafkaSourceProvider.md)
 | [[KafkaSourceProvider]] Data source provider for `kafka` format
 
 | [RateStreamProvider](../datasources/rate/RateStreamProvider.md)

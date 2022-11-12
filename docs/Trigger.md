@@ -48,7 +48,7 @@ Trigger AvailableNow()
 
 Creates an [AvailableNowTrigger](#AvailableNowTrigger)
 
-Supported by [SupportsTriggerAvailableNow](SupportsTriggerAvailableNow.md#implementations) data sources (e.g., [files](datasources/file/index.md#AvailableNow), [kafka](datasources/kafka/index.md#AvailableNow) and [rate-micro-batch](datasources/rate-micro-batch/index.md#AvailableNow))
+Supported by [SupportsTriggerAvailableNow](SupportsTriggerAvailableNow.md#implementations) data sources (e.g., [files](datasources/file/index.md#AvailableNow), [kafka](kafka/index.md#AvailableNow) and [rate-micro-batch](datasources/rate-micro-batch/index.md#AvailableNow))
 
 ### <span id="Continuous"> Continuous
 

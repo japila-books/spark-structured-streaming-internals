@@ -13,7 +13,7 @@ Map<String, String> metrics(
 
 Metrics of this [SparkDataStream](SparkDataStream.md) for the latest consumed offset (to create a [SourceProgress](monitoring/SourceProgress.md#metrics) for a [StreamingQueryProgress](monitoring/StreamingQueryProgress.md#sources))
 
-See [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md#metrics)
+See [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md#metrics)
 
 Used when:
 
@@ -21,4 +21,4 @@ Used when:
 
 ## Implementations
 
-* [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md)
+* [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md)

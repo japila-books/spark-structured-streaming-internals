@@ -5,7 +5,7 @@ hide:
 
 # Demo: Kafka Data Source
 
-This demo shows how to use [Kafka Data Source](../datasources/kafka/index.md) in a streaming query.
+This demo shows how to use [Kafka Data Source](../kafka/index.md) in a streaming query.
 
 ## Start Kafka Cluster
 
@@ -26,7 +26,7 @@ zookeeper           "/etc/confluent/dock…"   zookeeper           running      
 
 ## Start Spark Shell
 
-Run `spark-shell` with [spark-sql-kafka-0-10](../datasources/kafka/index.md#spark-submit) external module.
+Run `spark-shell` with [spark-sql-kafka-0-10](../kafka/index.md#spark-submit) external module.
 
 ## Define Source
 

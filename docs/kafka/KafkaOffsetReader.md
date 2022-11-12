@@ -75,7 +75,7 @@ build(
   driverGroupIdPrefix: String): KafkaOffsetReader
 ```
 
-`build` branches off based on [spark.sql.streaming.kafka.useDeprecatedOffsetFetching](../../configuration-properties.md#spark.sql.streaming.kafka.useDeprecatedOffsetFetching) configuration property.
+`build` branches off based on [spark.sql.streaming.kafka.useDeprecatedOffsetFetching](../configuration-properties.md#spark.sql.streaming.kafka.useDeprecatedOffsetFetching) configuration property.
 
 With `useDeprecatedKafkaOffsetFetching` enabled, `build` prints out the following DEBUG message to the logs and creates a [KafkaOffsetReaderConsumer](KafkaOffsetReaderConsumer.md).
 
@@ -108,7 +108,7 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaOffsetReader=ALL
 ```
 
-Refer to [Logging](../../spark-logging.md).
+Refer to [Logging](../spark-logging.md).
 
 <!---
 
@@ -168,7 +168,7 @@ fetchSpecificOffsets(
   reportDataLoss: String => Unit): KafkaSourceOffset
 ----
 
-![KafkaOffsetReader's fetchSpecificOffsets](../../images/KafkaOffsetReader-fetchSpecificOffsets.png)
+![KafkaOffsetReader's fetchSpecificOffsets](../images/KafkaOffsetReader-fetchSpecificOffsets.png)
 
 `fetchSpecificOffsets` requests the <<consumer, Kafka Consumer>> to `poll(0)`.
 

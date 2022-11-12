@@ -1,6 +1,6 @@
 # KafkaSink
 
-`KafkaSink` is a [streaming sink](../../Sink.md) that [KafkaSourceProvider](KafkaSourceProvider.md) registers as the `kafka` format.
+`KafkaSink` is a [streaming sink](../Sink.md) that [KafkaSourceProvider](KafkaSourceProvider.md) registers as the `kafka` format.
 
 ```text
 // start spark-shell or a Spark application with spark-sql-kafka-0-10 module
@@ -43,4 +43,4 @@ addBatch(batchId: Long, data: DataFrame): Unit
 
 Internally, `addBatch` requests `KafkaWriter` to write the input `data` to the <<topic, topic>> (if defined) or a topic in <<executorKafkaParams, executorKafkaParams>>.
 
-`addBatch` is a part of [Sink](../../Sink.md#addBatch) abstraction.
+`addBatch` is a part of [Sink](../Sink.md#addBatch) abstraction.

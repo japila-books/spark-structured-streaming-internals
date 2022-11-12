@@ -43,4 +43,4 @@ Used when:
 
 ## Implementations
 
-* [KafkaSourceProvider](datasources/kafka/KafkaSourceProvider.md)
+* [KafkaSourceProvider](kafka/KafkaSourceProvider.md)

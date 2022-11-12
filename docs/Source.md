@@ -64,7 +64,7 @@ Schema of the data from this source
 ## Implementations
 
 * [FileStreamSource](datasources/file/FileStreamSource.md)
-* [KafkaSource](datasources/kafka/KafkaSource.md)
+* [KafkaSource](kafka/KafkaSource.md)
 
 ## <span id="initialOffset"> initialOffset Method
 

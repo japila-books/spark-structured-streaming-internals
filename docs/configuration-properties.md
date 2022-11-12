@@ -183,7 +183,7 @@ Supported values:
 
 **spark.sql.streaming.kafka.useDeprecatedOffsetFetching**
 
-**(internal)** When enabled (`true`), the deprecated Kafka `Consumer`-based offset fetching is used (using [KafkaOffsetReaderConsumer](datasources/kafka/KafkaOffsetReaderConsumer.md)) which could cause infinite wait in Spark queries (leaving query restart as the only workaround). Otherwise, [KafkaOffsetReaderAdmin](datasources/kafka/KafkaOffsetReaderAdmin.md) is used.
+**(internal)** When enabled (`true`), the deprecated Kafka `Consumer`-based offset fetching is used (using [KafkaOffsetReaderConsumer](kafka/KafkaOffsetReaderConsumer.md)) which could cause infinite wait in Spark queries (leaving query restart as the only workaround). Otherwise, [KafkaOffsetReaderAdmin](kafka/KafkaOffsetReaderAdmin.md) is used.
 
 Default: `true`
 
@@ -191,7 +191,7 @@ Use [SQLConf.useDeprecatedKafkaOffsetFetching](SQLConf.md#useDeprecatedKafkaOffs
 
 Used when:
 
-* `KafkaOffsetReader` utility is used to [create a KafkaOffsetReader](datasources/kafka/KafkaOffsetReader.md#build)
+* `KafkaOffsetReader` utility is used to [create a KafkaOffsetReader](kafka/KafkaOffsetReader.md#build)
 
 ## <span id="spark.sql.streaming.maxBatchesToRetainInMemory"> maxBatchesToRetainInMemory
 

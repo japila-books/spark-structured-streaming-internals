@@ -6,7 +6,7 @@
 
 * [CommitLog](CommitLog.md)
 * [CompactibleFileStreamLog](datasources/file/CompactibleFileStreamLog.md)
-* [KafkaSourceInitialOffsetWriter](datasources/kafka/KafkaSourceInitialOffsetWriter.md)
+* [KafkaSourceInitialOffsetWriter](kafka/KafkaSourceInitialOffsetWriter.md)
 * [OffsetSeqLog](OffsetSeqLog.md)
 
 ## Creating Instance

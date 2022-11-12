@@ -20,6 +20,6 @@ Used when:
 
 * `AvailableNowDataStreamWrapper`
 * [FileStreamSource](datasources/file/FileStreamSource.md)
-* [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md)
-* [KafkaSource](datasources/kafka/KafkaSource.md)
+* [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md)
+* [KafkaSource](kafka/KafkaSource.md)
 * [RatePerMicroBatchStream](datasources/rate-micro-batch/RatePerMicroBatchStream.md)

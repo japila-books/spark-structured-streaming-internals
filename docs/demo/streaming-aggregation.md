@@ -5,7 +5,7 @@ hide:
 
 # Demo: Streaming Aggregation
 
-This demo shows a streaming query with a [streaming aggregation](../streaming-aggregation/index.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) that processes data from Kafka (using [Kafka Data Source](../datasources/kafka/index.md)).
+This demo shows a streaming query with a [streaming aggregation](../streaming-aggregation/index.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) that processes data from Kafka (using [Kafka Data Source](../kafka/index.md)).
 
 !!! note
     Please start a [Kafka cluster](kafka-data-source.md#start-kafka-cluster) and [spark-shell](kafka-data-source.md#start-spark-shell) as described in [Demo: Kafka Data Source](kafka-data-source.md).

@@ -14,7 +14,7 @@ Default [ReadLimit](ReadLimit.md) of this [SparkDataStream](SparkDataStream.md)
 
 `getDefaultReadLimit` is [ReadAllAvailable](ReadLimit.md#allAvailable) by default (and is expected to be overriden by the [implementations](#implementations) if needed)
 
-See [FileStreamSource](datasources/file/FileStreamSource.md#getDefaultReadLimit), [KafkaMicroBatchStream](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit), [KafkaSource](datasources/kafka/KafkaSource.md#getDefaultReadLimit), [RatePerMicroBatchStream](datasources/rate-micro-batch/RatePerMicroBatchStream.md#getDefaultReadLimit)
+See [FileStreamSource](datasources/file/FileStreamSource.md#getDefaultReadLimit), [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md#getDefaultReadLimit), [KafkaSource](kafka/KafkaSource.md#getDefaultReadLimit), [RatePerMicroBatchStream](datasources/rate-micro-batch/RatePerMicroBatchStream.md#getDefaultReadLimit)
 
 Used when:
 

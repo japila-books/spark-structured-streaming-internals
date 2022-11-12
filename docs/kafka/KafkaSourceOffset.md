@@ -1,6 +1,6 @@
 # KafkaSourceOffset
 
-`KafkaSourceOffset` is an [Offset](../../Offset.md) for [kafka data source](index.md).
+`KafkaSourceOffset` is an [Offset](../Offset.md) for [kafka data source](index.md).
 
 `KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
 
@@ -46,7 +46,7 @@ Invalid conversion from offset of [class] to KafkaSourceOffset
 json: String
 ----
 
-`json` is part of the [Offset](../../Offset.md#json) abstraction.
+`json` is part of the [Offset](../Offset.md#json) abstraction.
 
 `json`...FIXME
 

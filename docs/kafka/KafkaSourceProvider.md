@@ -4,7 +4,7 @@
 
 `KafkaSourceProvider` is a `DataSourceRegister` ([Spark SQL]({{ book.spark_sql }}/DataSourceRegister)) that registers itself under the [kafka](#shortName) alias.
 
-`KafkaSourceProvider` supports [micro-batch stream processing](../../micro-batch-execution/index.md) (through [MicroBatchStream](../../MicroBatchStream.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
+`KafkaSourceProvider` supports [micro-batch stream processing](../micro-batch-execution/index.md) (through [MicroBatchStream](../MicroBatchStream.md)) and uses a [specialized KafkaMicroBatchReader](#createMicroBatchReader).
 
 ## <span id="shortName"> Short Name (Alias)
 
@@ -97,7 +97,7 @@ streamingUniqueGroupId(
 
 ## Required Options
 
-`KafkaSourceProvider` requires the following options (that you can set using `option` method of [DataStreamReader](../../DataStreamReader.md) or [DataStreamWriter](../../DataStreamWriter.md)):
+`KafkaSourceProvider` requires the following options (that you can set using `option` method of [DataStreamReader](../DataStreamReader.md) or [DataStreamWriter](../DataStreamWriter.md)):
 
 * Exactly one of the following options: [subscribe](index.md#subscribe), [subscribePattern](index.md#subscribePattern) or [assign](index.md#assign)
 
@@ -129,7 +129,7 @@ createSink(
 
 `createSink` creates a [KafkaSink](KafkaSink.md) for `topic` option (if defined) and [Kafka Producer parameters](#kafkaParamsForProducer).
 
-`createSink` is part of the [StreamSinkProvider](../../StreamSinkProvider.md) abstraction.
+`createSink` is part of the [StreamSinkProvider](../StreamSinkProvider.md) abstraction.
 
 ## <span id="createSource"> Creating Streaming Source
 
@@ -146,7 +146,7 @@ createSource(
 
 `createSource`...FIXME
 
-`createSource` is part of the [StreamSourceProvider](../../StreamSourceProvider.md#createSource) abstraction.
+`createSource` is part of the [StreamSourceProvider](../StreamSourceProvider.md#createSource) abstraction.
 
 ## <span id="validateGeneralOptions"> Validating Options For Batch And Streaming Queries
 
@@ -268,7 +268,7 @@ When the input `schema` is defined, `sourceSchema` reports a `IllegalArgumentExc
 Kafka source has a fixed schema and cannot be set with a custom one
 ```
 
-`sourceSchema` is part of the [StreamSourceProvider](../../StreamSourceProvider.md#sourceSchema) abstraction.
+`sourceSchema` is part of the [StreamSourceProvider](../StreamSourceProvider.md#sourceSchema) abstraction.
 
 ## <span id="validateStreamOptions"> Validating Kafka Options for Streaming Queries
 
@@ -437,4 +437,4 @@ Add the following line to `conf/log4j.properties`:
 log4j.logger.org.apache.spark.sql.kafka010.KafkaSourceProvider=ALL
 ```
 
-Refer to [Logging](../../spark-logging.md).
+Refer to [Logging](../spark-logging.md).

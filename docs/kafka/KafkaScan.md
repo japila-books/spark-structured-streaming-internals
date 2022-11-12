@@ -1,7 +1,7 @@
 # KafkaScan
 
 !!! note "The Internals of Spark SQL"
-    Head over to [The Internals of Spark SQL]({{ book.spark_sql }}/datasources/kafka/KafkaScan) to learn more.
+    Head over to [The Internals of Spark SQL]({{ book.spark_sql }}/kafka/KafkaScan) to learn more.
 
 `KafkaScan` is a logical `Scan` ([Spark SQL]({{ book.spark_sql }}/connector/Scan)).
 
@@ -13,7 +13,7 @@
 
 `KafkaScan` is created when:
 
-* `KafkaTable` ([Spark SQL]({{ book.spark_sql }}/datasources/kafka/KafkaTable)) is requested for a `ScanBuilder` ([Spark SQL]({{ book.spark_sql }}/datasources/kafka/KafkaTable#newScanBuilder))
+* `KafkaTable` ([Spark SQL]({{ book.spark_sql }}/kafka/KafkaTable)) is requested for a `ScanBuilder` ([Spark SQL]({{ book.spark_sql }}/kafka/KafkaTable#newScanBuilder))
 
 ## <span id="toMicroBatchStream"> MicroBatchStream
 
