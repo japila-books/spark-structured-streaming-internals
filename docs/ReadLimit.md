@@ -35,14 +35,17 @@ ReadLimit compositeLimit(
   ReadLimit[] readLimits)
 ```
 
-`compositeLimit` creates a [CompositeReadLimit](#CompositeReadLimit) with the given `ReadLimit`s.
+`compositeLimit` creates a [CompositeReadLimit](#CompositeReadLimit) with the given [ReadLimit](ReadLimit.md)s.
+
+!!! note
+    `compositeLimit` is used only in [Kafka Data Source](datasources/kafka/index.md) when [minOffsetPerTrigger](datasources/kafka/options.md#minOffsetPerTrigger) and [maxOffsetsPerTrigger](datasources/kafka/options.md#maxOffsetsPerTrigger) options are specified.
 
 ---
 
 `compositeLimit` is used when:
 
-* `KafkaMicroBatchStream` is requested for the [default ReadLimit](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
-* `KafkaSource` is requested for the [default ReadLimit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
+* `KafkaMicroBatchStream` is requested for the [default read limit](datasources/kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
+* `KafkaSource` is requested for the [default read limit](datasources/kafka/KafkaSource.md#getDefaultReadLimit)
 
 ### <span id="maxRows"> Creating ReadMaxRows
 
@@ -88,11 +91,7 @@ ReadLimit minRows(
 
 ### <span id="CompositeReadLimit"> CompositeReadLimit
 
-`CompositeReadLimit` is a `ReadLimit` that is described by the following:
-
-Attribute | Description
-----------|------------
- `readLimits` | `ReadLimit`s
+`CompositeReadLimit` is a [ReadLimit](ReadLimit.md) that holds other [ReadLimit](ReadLimit.md)s.
 
 `CompositeReadLimit` is created using [ReadLimit.compositeLimit](#compositeLimit) utility.
 
@@ -103,7 +102,7 @@ Used when:
 
 ### <span id="ReadMaxRows"> ReadMaxRows
 
-`ReadMaxRows` is a `ReadLimit` that is described by the following:
+`ReadMaxRows` is a [ReadLimit](ReadLimit.md) that is described by the following:
 
 Attribute | Description
 ----------|------------
@@ -118,7 +117,7 @@ Used when:
 
 ### <span id="ReadMinRows"> ReadMinRows
 
-`ReadMinRows` is a `ReadLimit` that is described by the following:
+`ReadMinRows` is a [ReadLimit](ReadLimit.md) that is described by the following:
 
 Attribute | Description
 ----------|------------

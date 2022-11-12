@@ -1,6 +1,6 @@
 # KafkaMicroBatchStream
 
-`KafkaMicroBatchStream` is a [MicroBatchStream](../../MicroBatchStream.md) for [kafka data source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
+`KafkaMicroBatchStream` is a [MicroBatchStream](../../MicroBatchStream.md) for [Kafka Data Source](index.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
 
 `KafkaMicroBatchStream` is [SupportsTriggerAvailableNow](../../SupportsTriggerAvailableNow.md).
 
@@ -121,7 +121,7 @@ minOffsetPerTrigger: Option[Long]
 
 `KafkaMicroBatchStream` reads the value of [maxTriggerDelay](options.md#maxTriggerDelay) option (in the [options](#options)) when [created](#creating-instance).
 
-## <span id="latestOffset"> latestOffset
+## <span id="latestOffset"> Latest Offset
 
 ```scala
 latestOffset(
@@ -133,7 +133,45 @@ latestOffset(
 
 ---
 
-`latestOffset`...FIXME
+`latestOffset` requests the given [KafkaSourceOffset](KafkaSourceOffset.md) for [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets).
+
+`latestOffset` sets the [latestPartitionOffsets](#latestPartitionOffsets) internal registry to be as follows:
+
+* [allDataForTriggerAvailableNow](#allDataForTriggerAvailableNow), if available
+* [fetchLatestOffsets](KafkaOffsetReader.md#fetchLatestOffsets) of the [KafkaOffsetReader](#kafkaOffsetReader) (for the [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets) of the given [KafkaSourceOffset](KafkaSourceOffset.md)), otherwise
+
+!!! note "FIXME"
+    When is [allDataForTriggerAvailableNow](#allDataForTriggerAvailableNow) available?
+
+`latestOffset` requests the given [ReadLimit](../../ReadLimit.md) for read limits if it is a [CompositeReadLimit](../../ReadLimit.md#CompositeReadLimit). Otherwise, `latestOffset` uses the given [ReadLimit](../../ReadLimit.md) as the only read limit.
+
+`latestOffset` determines the offsets to read based on the read limits.
+
+* With [ReadAllAvailable](../../ReadLimit.md#ReadAllAvailable) among the read limits, `latestOffset` uses the [latestPartitionOffsets](#latestPartitionOffsets) registry.
+
+    `ReadAllAvailable` has the highest priority as it is necessary for `Trigger.Once` to work properly.
+
+* With [ReadMinRows](../../ReadLimit.md#ReadMinRows) among the read limits, `latestOffset` [checks whether to skip this trigger or not](#delayBatch) (using the `minRows` and `maxTriggerDelayMs` of this `ReadMinRows` as well as the [latestPartitionOffsets](#latestPartitionOffsets) and the [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets) of the given [KafkaSourceOffset](KafkaSourceOffset.md)).
+
+    If there is not enough rows available (based on `minRows`) or `maxTriggerDelayMs` has not elapsed yet, `latestOffset` prints out the following DEBUG message to the logs:
+
+    ```text
+    Delaying batch as number of records available is less than minOffsetsPerTrigger
+    ```
+
+* With [ReadMaxRows](../../ReadLimit.md#ReadMaxRows) among the read limits, `latestOffset` [rateLimit](#rateLimit) (with the `maxRows` as well as the [latestPartitionOffsets](#latestPartitionOffsets) and the [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets) of the given [KafkaSourceOffset](KafkaSourceOffset.md)).
+
+* With neither [ReadMinRows](../../ReadLimit.md#ReadMinRows) nor [ReadMaxRows](../../ReadLimit.md#ReadMaxRows) among the read limits, `latestOffset` uses the [latestPartitionOffsets](#latestPartitionOffsets) registry (as if [ReadAllAvailable](../../ReadLimit.md#ReadAllAvailable) were among the read limits).
+
+In the end, `latestOffset` records the offsets in the [endPartitionOffsets](#endPartitionOffsets) registry.
+
+!!! note "Summary"
+    [endPartitionOffsets](#endPartitionOffsets) can be as follows based on the read limits:
+
+    * [latestPartitionOffsets](#latestPartitionOffsets) for `ReadAllAvailable`
+    * [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets) of the given [KafkaSourceOffset](KafkaSourceOffset.md) for `ReadMinRows` and a [batch delayed](#delayBatch)
+    * [rateLimit](#rateLimit) for `ReadMaxRows`
+    * [latestPartitionOffsets](#latestPartitionOffsets)
 
 ## <span id="reportDataLoss"> reportDataLoss
 
