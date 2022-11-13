@@ -69,17 +69,19 @@ metrics(
 
 ---
 
-`metrics` returns the [metrics](#metrics-util) for the given `latestConsumedOffset` (and the [latestPartitionOffsets](#latestPartitionOffsets)).
+`metrics` returns the [metrics](#metrics-util) for the given `latestConsumedOffset` and the [latestPartitionOffsets](#latestPartitionOffsets).
 
-### <span id="metrics-util"> metrics
+#### <span id="metrics-util"> metrics
 
 ```scala
 metrics(
   latestConsumedOffset: Optional[Offset],
-  latestAvailablePartitionOffsets: PartitionOffsetMap): ju.Map[String, String]
+  latestAvailablePartitionOffsets: Map[TopicPartition, Long]): Map[String, String]
 ```
 
-`metrics` can return the following performance metrics for offsets behind the latest for all the partitions:
+`metrics` converts the given `latestConsumedOffset` to a [KafkaSourceOffset](KafkaSourceOffset.md) when defined.
+
+`metrics` returns the following performance metrics for the offsets in the given `latestAvailablePartitionOffsets` behind the latest [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets) (of the given `latestConsumedOffset`):
 
 * `minOffsetsBehindLatest`
 * `maxOffsetsBehindLatest`
