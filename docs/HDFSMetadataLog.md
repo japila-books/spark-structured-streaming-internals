@@ -13,7 +13,7 @@
 
 `HDFSMetadataLog` takes the following to be created:
 
-* <span id="sparkSession"> `SparkSession`
+* <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
 * <span id="path"> Path of the [metadata log directory](#metadataPath)
 
 While being created, `HDFSMetadataLog` makes sure that the [path](#path) exists (and creates it if not).
@@ -49,7 +49,7 @@ getLatest(): Option[(Long, T)]
 !!! note
     It is possible that the batch id could be in the metadata storage, but not available for retrieval.
 
-## <span id="get"><span id="get-batchId"> Retrieving Metadata of Streaming Batch (if Available)
+## <span id="get"><span id="get-batchId"> Retrieving Metadata of Streaming Batch
 
 ```scala
 get(
@@ -57,6 +57,8 @@ get(
 ```
 
 `get` is part of the [MetadataLog](MetadataLog.md#get) abstraction.
+
+---
 
 `get`...FIXME
 
@@ -68,8 +70,6 @@ deserialize(
 ```
 
 `deserialize` deserializes a metadata (of type `T`) from a given `InputStream`.
-
-`deserialize` is used to [retrieve metadata of a batch](#get).
 
 ## <span id="get-range"> Retrieving Metadata of Streaming Batches (if Available)
 

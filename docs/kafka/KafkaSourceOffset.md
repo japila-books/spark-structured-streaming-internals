@@ -1,72 +1,54 @@
 # KafkaSourceOffset
 
-`KafkaSourceOffset` is an [Offset](../Offset.md) for [kafka data source](index.md).
+`KafkaSourceOffset` is an [Offset](../Offset.md) in [Kafka Data Source](index.md).
 
-`KafkaSourceOffset` is <<creating-instance, created>> (directly or indirectly using <<apply, apply>>) when:
+## Creating Instance
 
-* `KafkaOffsetReader` is requested to [fetchSpecificOffsets](KafkaOffsetReader.md#fetchSpecificOffsets)
+`KafkaSourceOffset` takes the following to be created:
 
-* `KafkaSource` is requested for the [initial partition offsets (of 0th batch)](KafkaSource.md#initialPartitionOffsets) and [getOffset](KafkaSource.md#getOffset)
+* <span id="partitionToOffsets"> Offsets by Partitions (`Map[TopicPartition, Long]`)
 
-* `KafkaSourceInitialOffsetWriter` is requested to [deserialize a KafkaSourceOffset (from an InputStream)](KafkaSourceInitialOffsetWriter.md#deserialize)
+`KafkaSourceOffset` is created when:
 
-* `KafkaSourceOffset` is requested for <<getPartitionOffsets, partition offsets>>
+* `KafkaContinuousStream` is requested for the [initial offset](KafkaContinuousStream.md#initialOffset), [deserializeOffset](KafkaContinuousStream.md#deserializeOffset), [mergeOffsets](KafkaContinuousStream.md#mergeOffsets)
+* `KafkaMicroBatchStream` is requested for the [initial offset](KafkaMicroBatchStream.md#initialOffset), [reportLatestOffset](KafkaMicroBatchStream.md#reportLatestOffset), [latestOffset](KafkaMicroBatchStream.md#latestOffset), [deserializeOffset](KafkaMicroBatchStream.md#deserializeOffset), [getOrCreateInitialPartitionOffsets](KafkaMicroBatchStream.md#getOrCreateInitialPartitionOffsets)
+* `KafkaOffsetReaderAdmin` is requested to [fetchSpecificOffsets0](KafkaOffsetReaderAdmin.md#fetchSpecificOffsets0)
+* `KafkaOffsetReaderConsumer` is requested to [fetchSpecificOffsets0](KafkaOffsetReaderConsumer.md#fetchSpecificOffsets0)
+* `KafkaSource` is requested for the [initialPartitionOffsets](KafkaSource.md#initialPartitionOffsets), [reportLatestOffset](KafkaSource.md#reportLatestOffset), [latestOffset](KafkaSource.md#latestOffset)
+* `KafkaSourceOffset` utility is used to [create a KafkaSourceOffset](#apply)
 
-[[creating-instance]][[partitionToOffsets]]
-`KafkaSourceOffset` takes a collection of Kafka `TopicPartitions` with offsets to be created.
+## <span id="apply"> Creating KafkaSourceOffset Instance
 
-=== [[getPartitionOffsets]] Partition Offsets -- `getPartitionOffsets` Method
-
-[source, scala]
-----
-getPartitionOffsets(
-  offset: Offset): Map[TopicPartition, Long]
-----
-
-`getPartitionOffsets` takes <<partitionToOffsets, KafkaSourceOffset.partitionToOffsets>> from `offset`.
-
-If `offset` is `KafkaSourceOffset`, `getPartitionOffsets` takes the partitions and offsets straight from it.
-
-If however `offset` is `SerializedOffset`, `getPartitionOffsets` deserializes the offsets from JSON.
-
-`getPartitionOffsets` reports an `IllegalArgumentException` when `offset` is neither `KafkaSourceOffset` or `SerializedOffset`.
-
-```text
-Invalid conversion from offset of [class] to KafkaSourceOffset
-```
-
-`getPartitionOffsets` is used when:
-
-* `KafkaSource` is requested to [generate a streaming DataFrame with records from Kafka for a streaming micro-batch](KafkaSource.md#getBatch)
-
-=== [[json]] JSON-Encoded Offset -- `json` Method
-
-[source, scala]
-----
-json: String
-----
-
-`json` is part of the [Offset](../Offset.md#json) abstraction.
-
-`json`...FIXME
-
-=== [[apply]] Creating KafkaSourceOffset Instance -- `apply` Utility Method
-
-[source, scala]
-----
+```scala
 apply(
-  offsetTuples: (String, Int, Long)*): KafkaSourceOffset // <1>
+  offsetTuples: (String, Int, Long)*): KafkaSourceOffset
 apply(
   offset: SerializedOffset): KafkaSourceOffset
-----
-<1> Used in tests only
+apply(
+  offset: Offset): KafkaSourceOffset
+```
 
-`apply`...FIXME
+`apply` creates a [KafkaSourceOffset](#creating-instance).
+
+---
 
 `apply` is used when:
 
-* `KafkaSourceInitialOffsetWriter` is requested to [deserialize a KafkaSourceOffset (from an InputStream)](KafkaSourceInitialOffsetWriter.md#deserialize)
+* `KafkaMicroBatchStream` is requested for the [performance metrics](KafkaMicroBatchStream.md#metrics)
+* `KafkaSourceInitialOffsetWriter` is requested to [deserialize a KafkaSourceOffset](KafkaSourceInitialOffsetWriter.md#deserialize)
+* `KafkaSourceOffset` is requested for the [partition offsets](#getPartitionOffsets)
 
-* `KafkaSource` is requested for the [initial partition offsets (of 0th batch)](KafkaSource.md#initialPartitionOffsets)
+## <span id="getPartitionOffsets"> Partition Offsets
 
-* `KafkaSourceOffset` is requested to [getPartitionOffsets](#getPartitionOffsets)
+```scala
+getPartitionOffsets(
+  offset: Offset): Map[TopicPartition, Long]
+```
+
+`getPartitionOffsets` requests the given [KafkaSourceOffset](KafkaSourceOffset.md) or `SerializedOffset` (from the given [Offset](../Offset.md)) for the [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets).
+
+---
+
+`getPartitionOffsets` is used when:
+
+* `KafkaSource` is requested to [getBatch](KafkaSource.md#getBatch)

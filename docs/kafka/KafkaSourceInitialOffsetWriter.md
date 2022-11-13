@@ -1,25 +1,28 @@
 # KafkaSourceInitialOffsetWriter
 
-`KafkaSourceInitialOffsetWriter` is a [Hadoop DFS-based metadata storage](../HDFSMetadataLog.md) for [KafkaSourceOffsets](KafkaSourceOffset.md).
-
-[[VERSION]]
-`KafkaSourceInitialOffsetWriter` uses `1` for the version.
+`KafkaSourceInitialOffsetWriter` is a [HDFSMetadataLog](../HDFSMetadataLog.md) of [KafkaSourceOffset](KafkaSourceOffset.md)s.
 
 ## Creating Instance
 
 `KafkaSourceInitialOffsetWriter` takes the following to be created:
 
-* [[sparkSession]] `SparkSession`
-* [[metadataPath]] Path of the metadata log directory
+* <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
+* <span id="metadataPath"> Path of the metadata log directory
 
-=== [[deserialize]] Deserializing Metadata (Reading Metadata from Serialized Format) -- `deserialize` Method
+`KafkaSourceInitialOffsetWriter` is created when:
 
-[source, scala]
-----
+* `KafkaMicroBatchStream` is requested to [getOrCreateInitialPartitionOffsets](KafkaMicroBatchStream.md#getOrCreateInitialPartitionOffsets)
+* `KafkaSource` is requested to [getOrCreateInitialPartitionOffsets](KafkaSource.md#getOrCreateInitialPartitionOffsets)
+
+## <span id="deserialize"> deserialize
+
+```scala
 deserialize(
   in: InputStream): KafkaSourceOffset
-----
-
-`deserialize`...FIXME
+```
 
 `deserialize` is part of the [HDFSMetadataLog](../HDFSMetadataLog.md#deserialize) abstraction.
+
+---
+
+`deserialize` creates a [KafkaSourceOffset](KafkaSourceOffset.md) (from a `SerializedOffset`).
