@@ -2,8 +2,23 @@
 
 `KafkaSource` is a [streaming source](../Source.md) that [loads data from Apache Kafka](#getBatch).
 
-!!! note
-    Kafka topics are checked for new records every [trigger](../Trigger.md) and so there is some noticeable delay between when the records have arrived to Kafka topics and when a Spark application processes them.
+## Creating Instance
+
+`KafkaSource` takes the following to be created:
+
+* <span id="sqlContext"> `SQLContext`
+* <span id="kafkaReader"> [KafkaOffsetReader](KafkaOffsetReader.md)
+* <span id="executorKafkaParams"> Executor Parameters for Kafka
+* <span id="sourceOptions"> Source Options
+* [Metadata Log Directory](#metadataPath)
+* <span id="startingOffsets"> [KafkaOffsetRangeLimit](KafkaOffsetRangeLimit.md) for Starting Offsets
+* <span id="failOnDataLoss"> `failOnDataLoss` flag
+
+`KafkaSource` is created when:
+
+* `KafkaSourceProvider` is requested to [create a streaming source](KafkaSourceProvider.md#createSource)
+
+### <span id="metadataPath"> Metadata Log Directory
 
 `KafkaSource` uses the [metadata log directory](#metadataPath) to persist offsets. The directory is the source ID under the `sources` directory in the [checkpointRoot](../StreamExecution.md#checkpointRoot) (of the [StreamExecution](../StreamExecution.md)).
 
@@ -12,6 +27,21 @@
 
     * `checkpointLocation` option
     * [spark.sql.streaming.checkpointLocation](../configuration-properties.md#spark.sql.streaming.checkpointLocation) configuration property
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaSource` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
+```
+
+Refer to [Logging](../spark-logging.md).
+
+<!---
+## Review Me
 
 `KafkaSource` <<creating-instance, is created>> for **kafka** format (that is registered by [KafkaSourceProvider](KafkaSourceProvider.md#shortName)).
 
@@ -450,15 +480,4 @@ Used when:
 * Initializing the [pollTimeoutMs](#pollTimeoutMs) internal property
 
 |===
-
-## Logging
-
-Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaSource` logger to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```text
-log4j.logger.org.apache.spark.sql.kafka010.KafkaSource=ALL
-```
-
-Refer to [Logging](../spark-logging.md).
+-->

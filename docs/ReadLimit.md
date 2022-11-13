@@ -97,8 +97,8 @@ ReadLimit minRows(
 
 Used when:
 
-* `KafkaMicroBatchStream` is requested for the [latestOffset](kafka/KafkaMicroBatchStream.md#latestOffset)
-* `KafkaSource` is requested for the [latestOffset](kafka/KafkaSource.md#latestOffset)
+* `KafkaMicroBatchStream` is requested for the [latest offset](kafka/KafkaMicroBatchStream.md#latestOffset)
+* `KafkaSource` is requested for the [latest offset](kafka/KafkaSource.md#latestOffset)
 
 ### <span id="ReadMaxRows"> ReadMaxRows
 

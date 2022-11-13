@@ -4,21 +4,32 @@
 
 ## Contract
 
-### <span id="getDefaultReadLimit"> Default ReadLimit
+### <span id="getDefaultReadLimit"> Default Read Limit
 
 ```java
 ReadLimit getDefaultReadLimit()
 ```
 
+!!! note
+    [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) stream execution engine uses `getDefaultReadLimit` for [SparkDataStream](SparkDataStream.md)s in streaming queries with the following [Trigger](Trigger.md)s:
+
+    * [AvailableNowTrigger](Trigger.md#AvailableNowTrigger)
+    * [ProcessingTimeTrigger](Trigger.md#ProcessingTimeTrigger)
+
 Default [ReadLimit](ReadLimit.md) of this [SparkDataStream](SparkDataStream.md)
 
-`getDefaultReadLimit` is [ReadAllAvailable](ReadLimit.md#allAvailable) by default (and is expected to be overriden by the [implementations](#implementations) if needed)
+Default: [ReadAllAvailable](ReadLimit.md#allAvailable) (and is expected to be overriden by the [implementations](#implementations), if needed)
 
-See [FileStreamSource](datasources/file/FileStreamSource.md#getDefaultReadLimit), [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md#getDefaultReadLimit), [KafkaSource](kafka/KafkaSource.md#getDefaultReadLimit), [RatePerMicroBatchStream](datasources/rate-micro-batch/RatePerMicroBatchStream.md#getDefaultReadLimit)
+See:
+
+* [FileStreamSource](datasources/file/FileStreamSource.md#getDefaultReadLimit)
+* [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md#getDefaultReadLimit)
+* [KafkaSource](kafka/KafkaSource.md#getDefaultReadLimit)
+* [RatePerMicroBatchStream](datasources/rate-micro-batch/RatePerMicroBatchStream.md#getDefaultReadLimit)
 
 Used when:
 
-* `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (and initializes [uniqueSources](StreamExecution.md#uniqueSources) registry, i.e. [SparkDataStream](SparkDataStream.md)s with their `ReadLimit`s)
+* `MicroBatchExecution` stream execution engine is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan) (and initializes [uniqueSources](StreamExecution.md#uniqueSources) registry based on [TriggerExecutor](micro-batch-execution/MicroBatchExecution.md#triggerExecutor))
 
 ### <span id="latestOffset"> Latest Offset per ReadLimit
 

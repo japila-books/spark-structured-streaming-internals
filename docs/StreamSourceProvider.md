@@ -17,13 +17,13 @@ createSource(
   parameters: Map[String, String]): Source
 ```
 
-Creates a [Streaming Source](Source.md)
+Creates a [streaming Source](Source.md)
 
 `metadataPath` is the value of the optional user-specified `checkpointLocation` option or resolved by [StreamingQueryManager](StreamingQueryManager.md#createQuery).
 
 Used when:
 
-* `DataSource` is requested to [create a streaming source](DataSource.md#createSource) (when `MicroBatchExecution` is requested to [initialize the analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan))
+* `DataSource` is requested to [create a streaming source](DataSource.md#createSource) (for a [StreamSourceProvider](StreamSourceProvider.md))
 
 ### <span id="sourceSchema"> Source Schema
 

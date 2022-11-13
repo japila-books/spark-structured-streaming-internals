@@ -62,7 +62,7 @@ Unless defined, `KafkaSource` requests [KafkaOffsetReader](KafkaSource.md#kafkaR
 
 Default: `15m`
 
-[For streaming queries only](KafkaSourceProvider.md#validateBatchOptions)
+For streaming queries only ([ignored in batch queries](KafkaSourceProvider.md#validateBatchOptions))
 
 Used when:
 
@@ -70,6 +70,22 @@ Used when:
 * `KafkaSource` is requested for [maxTriggerDelayMs](KafkaSource.md#maxTriggerDelayMs)
 
 ## <span id="minOffsetsPerTrigger"><span id="MIN_OFFSET_PER_TRIGGER"> minOffsetsPerTrigger
+
+Minimum number of records to read in a micro-batch (in [KafkaMicroBatchStream](KafkaMicroBatchStream.md#getDefaultReadLimit))
+
+Default: `(undefined)`
+
+For streaming queries only ([ignored in batch queries](KafkaSourceProvider.md#validateBatchOptions))
+
+Validated in [validateGeneralOptions](KafkaSourceProvider.md#validateGeneralOptions)
+
+!!! note "minOffsetsPerTrigger vs minOffsetPerTrigger"
+    The option's name is `minOffsetsPerTrigger` (with `s`) while in the code itself they refer to it by `minOffsetPerTrigger` (a singular `offset`).
+
+Used when:
+
+* `KafkaMicroBatchStream` is [created](KafkaMicroBatchStream.md#minOffsetPerTrigger)
+* `KafkaSource` is [created](KafkaSource.md#minOffsetPerTrigger)
 
 ## <span id="minPartitions"><span id="MIN_PARTITIONS_OPTION_KEY"> minPartitions
 

@@ -4,6 +4,8 @@
 
 Kafka Data Source provides a [streaming source](#streaming-source) and a [streaming sink](#streaming-sink) for [micro-batch](#micro-batch-stream-processing) and [continuous](#continuous-stream-processing) stream processing.
 
+Kafka Data Source supports [options](options.md).
+
 ## <span id="spark-sql-kafka-0-10"> spark-sql-kafka-0-10 External Module
 
 Kafka Data Source is part of the **spark-sql-kafka-0-10** external module that is distributed with the official distribution of Apache Spark, but it is not on the CLASSPATH by default.
@@ -155,10 +157,6 @@ val sq = spark
 // In the end, stop the streaming query
 sq.stop
 ```
-
-## <span id="options"> Configuration Options
-
-Kafka data source supports [options](options.md).
 
 ## <span id="AvailableNow"><span id="AvailableNowTrigger"> Trigger.AvailableNow
 

@@ -142,11 +142,13 @@ createSource(
   parameters: Map[String, String]): Source
 ```
 
+`createSource` is part of the [StreamSourceProvider](../StreamSourceProvider.md#createSource) abstraction.
+
+---
+
 `createSource` [validates stream options](#validateStreamOptions).
 
 `createSource`...FIXME
-
-`createSource` is part of the [StreamSourceProvider](../StreamSourceProvider.md#createSource) abstraction.
 
 ## <span id="validateGeneralOptions"> Validating Options For Batch And Streaming Queries
 

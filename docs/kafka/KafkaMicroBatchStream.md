@@ -85,7 +85,7 @@ metrics(
 * `maxOffsetsBehindLatest`
 * `avgOffsetsBehindLatest`
 
-## <span id="getDefaultReadLimit"> Default ReadLimit
+## <span id="getDefaultReadLimit"> Default Read Limit
 
 ```scala
 getDefaultReadLimit: ReadLimit
@@ -131,7 +131,9 @@ maxOffsetsPerTrigger: Option[Long]
 minOffsetPerTrigger: Option[Long]
 ```
 
-`KafkaMicroBatchStream` takes the value of [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) option (in the [options](#options)), if available, when [created](#creating-instance). Otherwise, `minOffsetPerTrigger` is `None` (undefined).
+When [created](#creating-instance), `KafkaMicroBatchStream` takes the value of [minOffsetsPerTrigger](options.md#minOffsetsPerTrigger) option (in the [options](#options)), if available, or defaults to `None` (undefined).
+
+`minOffsetPerTrigger` is used to determine the [default limit on the number of records to read](#getDefaultReadLimit).
 
 ### <span id="maxTriggerDelayMs"> maxTriggerDelayMs
 
@@ -149,7 +151,7 @@ latestOffset(
 
 ---
 
-`latestOffset` requests the given [KafkaSourceOffset](KafkaSourceOffset.md) for [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets).
+`latestOffset` converts the given `start` offset to a [KafkaSourceOffset](KafkaSourceOffset.md) to request for the [partitionToOffsets](KafkaSourceOffset.md#partitionToOffsets).
 
 `latestOffset` sets the [latestPartitionOffsets](#latestPartitionOffsets) internal registry to be as follows:
 

@@ -3,22 +3,30 @@
 !!! tip "The Internals of Spark SQL"
     Learn more about [DataSource]({{ book.spark_sql }}/DataSource) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
 
-## <span id="createSource"> Creating Streaming Source (Data Source V1)
+## <span id="createSource"> Creating Streaming Source (Legacy Data Sources)
 
 ```scala
 createSource(
   metadataPath: String): Source
 ```
 
-`createSource` creates a new instance of the data source class and branches off per the type:
+!!! note "Legacy Code Path"
+    `createSource` is used for streaming queries with legacy data sources (that has not fully migrated to the modern Connector API in [Spark SQL]({{ book.spark_sql }}/connector) yet):
+
+    * [StreamingRelation](logical-operators/StreamingRelation.md) operators for legacy data sources (that use the DataSource V1 API)
+    * [StreamingRelationV2](logical-operators/StreamingRelationV2.md) operators for modern data sources yet disabled `TableProvider`s ([Spark SQL]({{ book.spark_sql }}/connector/TableProvider))
+
+`createSource` creates a new instance of the data source class and branches off per the implementation type:
 
 * [StreamSourceProvider](#createSource-StreamSourceProvider)
 * [FileFormat](#createSource-FileFormat)
 * [other types](#createSource-other)
 
+---
+
 `createSource` is used when:
 
-* `MicroBatchExecution` is requested for an [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan)
+* `MicroBatchExecution` is requested for the [analyzed logical plan](micro-batch-execution/MicroBatchExecution.md#logicalPlan)
 
 ### <span id="createSource-StreamSourceProvider"> StreamSourceProvider
 

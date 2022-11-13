@@ -32,6 +32,10 @@ Processes all available data in one batch then terminates the query
 
 ### <span id="ProcessingTimeTrigger"> ProcessingTimeTrigger
 
+Created by [Trigger.ProcessingTime](#ProcessingTime) (or directly using `ProcessingTimeTrigger.apply`)
+
+The only supported `Trigger` in [Continuous Stream Processing](continuous-execution/index.md)
+
 ## Static Methods
 
 `Trigger` is also a factory object with static methods to create the [policies](#implementations).
