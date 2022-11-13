@@ -18,7 +18,7 @@ Used when:
 
 ## Implementations
 
-* `AvailableNowDataStreamWrapper`
+* [AvailableNowDataStreamWrapper](AvailableNowDataStreamWrapper.md)
 * [FileStreamSource](datasources/file/FileStreamSource.md)
 * [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md)
 * [KafkaSource](kafka/KafkaSource.md)

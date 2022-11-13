@@ -37,10 +37,8 @@ Used when:
 
 ```scala
 fetchLatestOffsets(
-  knownOffsets: Option[PartitionOffsetMap]): PartitionOffsetMap // (1)!
+  knownOffsets: Option[Map[TopicPartition, Long]]): Map[TopicPartition, Long]
 ```
-
-1. `type PartitionOffsetMap = Map[TopicPartition, Long]`
 
 Used when:
 
@@ -75,19 +73,19 @@ build(
   driverGroupIdPrefix: String): KafkaOffsetReader
 ```
 
-`build` branches off based on [spark.sql.streaming.kafka.useDeprecatedOffsetFetching](../configuration-properties.md#spark.sql.streaming.kafka.useDeprecatedOffsetFetching) configuration property.
+`build` branches off based on [spark.sql.streaming.kafka.useDeprecatedOffsetFetching](../configuration-properties.md#spark.sql.streaming.kafka.useDeprecatedOffsetFetching) configuration property:
 
-With `useDeprecatedKafkaOffsetFetching` enabled, `build` prints out the following DEBUG message to the logs and creates a [KafkaOffsetReaderConsumer](KafkaOffsetReaderConsumer.md).
+* When enabled, `build` prints out the following DEBUG message to the logs and creates a [KafkaOffsetReaderConsumer](KafkaOffsetReaderConsumer.md).
 
-```text
-Creating old and deprecated Consumer based offset reader
-```
+    ```text
+    Creating old and deprecated Consumer based offset reader
+    ```
 
-Otherwise, `build` prints out the following DEBUG message to the logs and creates a [KafkaOffsetReaderAdmin](KafkaOffsetReaderAdmin.md).
+* Otherwise, `build` prints out the following DEBUG message to the logs and creates a [KafkaOffsetReaderAdmin](KafkaOffsetReaderAdmin.md).
 
-```text
-Creating new Admin based offset reader
-```
+    ```text
+    Creating new Admin based offset reader
+    ```
 
 ---
 

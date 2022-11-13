@@ -2,10 +2,6 @@
 
 `KafkaMicroBatchStream` is a [MicroBatchStream](../MicroBatchStream.md) for [Kafka Data Source](index.md) for [Micro-Batch Stream Processing](../micro-batch-execution/index.md).
 
-`KafkaMicroBatchStream` is [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md).
-
-`KafkaMicroBatchStream` is a [ReportsSourceMetrics](../ReportsSourceMetrics.md).
-
 ## Creating Instance
 
 `KafkaMicroBatchStream` takes the following to be created:
@@ -42,7 +38,27 @@ failOnDataLoss: Boolean
 * [planInputPartitions](#planInputPartitions) (to create [KafkaBatchInputPartition](KafkaBatchInputPartition.md#failOnDataLoss))
 * [reportDataLoss](#reportDataLoss)
 
-## <span id="metrics"> Performance Metrics
+## <span id="SupportsTriggerAvailableNow"> SupportsTriggerAvailableNow
+
+`KafkaMicroBatchStream` is a [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md).
+
+### <span id="prepareForTriggerAvailableNow"> prepareForTriggerAvailableNow
+
+```scala
+prepareForTriggerAvailableNow(): Unit
+```
+
+`prepareForTriggerAvailableNow` is part of the [SupportsTriggerAvailableNow](../SupportsTriggerAvailableNow.md#prepareForTriggerAvailableNow) abstraction.
+
+---
+
+`prepareForTriggerAvailableNow` sets the [allDataForTriggerAvailableNow](#allDataForTriggerAvailableNow) internal registry to [fetchLatestOffsets](KafkaOffsetReader.md#fetchLatestOffsets) (of the [KafkaOffsetReader](#kafkaOffsetReader)) for [getOrCreateInitialPartitionOffsets](#getOrCreateInitialPartitionOffsets).
+
+## <span id="ReportsSourceMetrics"> ReportsSourceMetrics
+
+`KafkaMicroBatchStream` is a [ReportsSourceMetrics](../ReportsSourceMetrics.md).
+
+### <span id="metrics"> Performance Metrics
 
 ```scala
 metrics(
@@ -53,7 +69,7 @@ metrics(
 
 ---
 
-`metrics` returns the [metrics](#metrics-util) for the given latest consumed offset (and with the [latestPartitionOffsets](#latestPartitionOffsets)).
+`metrics` returns the [metrics](#metrics-util) for the given `latestConsumedOffset` (and the [latestPartitionOffsets](#latestPartitionOffsets)).
 
 ### <span id="metrics-util"> metrics
 

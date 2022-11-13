@@ -187,7 +187,7 @@ Supported values:
 
 Default: `true`
 
-Use [SQLConf.useDeprecatedKafkaOffsetFetching](SQLConf.md#useDeprecatedKafkaOffsetFetching) to access the current value.
+Use [SQLConf.useDeprecatedKafkaOffsetFetching](SQLConf.md#useDeprecatedKafkaOffsetFetching) for the current value
 
 Used when:
 
