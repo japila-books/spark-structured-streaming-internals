@@ -22,6 +22,33 @@ Once [created](#creating-instance), `MicroBatchExecution` is requested to [start
 
 * `StreamingQueryManager` is requested to [create a streaming query](../StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start)) for all [trigger](#trigger)s but [ContinuousTrigger](../Trigger.md#ContinuousTrigger)
 
+### <span id="triggerExecutor"> TriggerExecutor
+
+```scala
+triggerExecutor: TriggerExecutor
+```
+
+`MicroBatchExecution` creates a [TriggerExecutor](../TriggerExecutor.md) when [created](#creating-instance) (based on the given [Trigger](#trigger)):
+
+Trigger | TriggerExecutor
+--------|----------------
+ [MultiBatchExecutor](../TriggerExecutor.md#MultiBatchExecutor) | [AvailableNowTrigger](../Trigger.md#AvailableNowTrigger)
+ [ProcessingTimeExecutor](../ProcessingTimeExecutor.md) | [ProcessingTimeTrigger](../Trigger.md#ProcessingTimeTrigger)
+ [SingleBatchExecutor](../TriggerExecutor.md#SingleBatchExecutor) | [OneTimeTrigger](../Trigger.md#OneTimeTrigger)
+
+`MicroBatchExecution` uses the `TriggerExecutor` for the following:
+
+* [runActivatedStream](#runActivatedStream)
+* Determine the [unique streaming sources](#uniqueSources)
+
+---
+
+`triggerExecutor` throws an `IllegalStateException` when the [Trigger](#trigger) is not one of the [built-in implementations](../Trigger.md#implementations).
+
+```text
+Unknown type of trigger: [trigger]
+```
+
 ## Execution Phases
 
 `MicroBatchExecution` splits execution of a single micro-batch into the following execution phases (and [tracks their duration](../monitoring/ProgressReporter.md#reportTimeTaken)):
@@ -65,28 +92,6 @@ Used when:
 
 * [Populating start offsets](#populateStartOffsets) (for the [available](../StreamExecution.md#availableOffsets) and [committed](../StreamExecution.md#committedOffsets) offsets)
 * [Constructing or skipping next streaming micro-batch](#constructNextBatch) (and persisting offsets to write-ahead log)
-
-## <span id="triggerExecutor"> TriggerExecutor
-
-```scala
-triggerExecutor: TriggerExecutor
-```
-
-`MicroBatchExecution` uses a [TriggerExecutor](../TriggerExecutor.md) to [execute micro-batches](#runActivatedStream) and to determine the [unique streaming sources](#uniqueSources).
-
-`triggerExecutor` is initialized when `MicroBatchExecution` is [created](#creating-instance) (based on the given [Trigger](#trigger)):
-
-* [ProcessingTimeExecutor](../TriggerExecutor.md#ProcessingTimeExecutor) for [ProcessingTimeTrigger](../Trigger.md#ProcessingTimeTrigger)
-* [SingleBatchExecutor](../TriggerExecutor.md#SingleBatchExecutor) for [OneTimeTrigger](../Trigger.md#OneTimeTrigger)
-* [MultiBatchExecutor](../TriggerExecutor.md#MultiBatchExecutor) for [AvailableNowTrigger](../Trigger.md#AvailableNowTrigger)
-
----
-
-`triggerExecutor` throws an `IllegalStateException` when the [Trigger](#trigger) is not one of the [built-in implementations](../Trigger.md#implementations).
-
-```text
-Unknown type of trigger: [trigger]
-```
 
 ## <span id="runActivatedStream"> Running Activated Streaming Query
 
@@ -178,9 +183,9 @@ The batch runner [finalizes query progress for the trigger](../monitoring/Progre
 
 At the final step of [runActivatedStream](#runActivatedStream) when the [isActive](#isActive) was enabled, the batch runner does some _closing-up_ work.
 
-#### <span id="runActivatedStream-closing-up-isCurrentBatchConstructed"> isCurrentBatchConstructed
+#### <span id="runActivatedStream-batchRunner-isCurrentBatchConstructed"> isCurrentBatchConstructed
 
-When the [isCurrentBatchConstructed](#isCurrentBatchConstructed) is turned on (`true`), the batch runner increments the [currentBatchId](../StreamExecution.md#currentBatchId) and turns the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag off (`false`).
+With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag enabled, the batch runner increments the [currentBatchId](../StreamExecution.md#currentBatchId) and turns the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag off.
 
 #### <span id="runActivatedStream-closing-up-MultiBatchExecutor"> MultiBatchExecutor
 
@@ -286,7 +291,7 @@ Starting new streaming query.
 [[populateStartOffsets-currentBatchId-0]]
 `populateStartOffsets` sets the [current batch ID](../StreamExecution.md#currentBatchId) to `0` and creates a new [WatermarkTracker](#watermarkTracker).
 
-## <span id="constructNextBatch"> Constructing Next Streaming Micro-Batch (Or Skipping It)
+## <span id="constructNextBatch"> Constructing Next Micro-Batch (Or Skipping It)
 
 ```scala
 constructNextBatch(
@@ -296,7 +301,9 @@ constructNextBatch(
 `constructNextBatch` is used when `MicroBatchExecution` is requested to [run the activated streaming query](#runActivatedStream).
 
 !!! note
-    `constructNextBatch` is only executed when the [isCurrentBatchConstructed](#isCurrentBatchConstructed) internal flag is enabled (`true`).
+    `constructNextBatch` is only executed when the [isCurrentBatchConstructed](#isCurrentBatchConstructed) internal flag is disabled (`false`).
+
+    As a matter of fact, [isCurrentBatchConstructed](#isCurrentBatchConstructed) guards execution of `constructNextBatch` in [runActivatedStream](#runActivatedStream) so it should not be called.
 
 `constructNextBatch` performs the following steps:
 
@@ -768,7 +775,7 @@ In the end, `logicalPlan` creates a [StreamingExecutionRelation](../logical-oper
 
 #### <span id="logicalPlan-uniqueSources-ProcessingTimeExecutor"> ProcessingTimeExecutor
 
-For [ProcessingTimeExecutor](../TriggerExecutor.md#ProcessingTimeExecutor), `logicalPlan` takes distinct (_unique_) [SparkDataStream](../SparkDataStream.md)s from [sources](#sources) registry (of all the data streams in a streaming query).
+For [ProcessingTimeExecutor](../ProcessingTimeExecutor.md), `logicalPlan` takes distinct (_unique_) [SparkDataStream](../SparkDataStream.md)s from [sources](#sources) registry (of all the data streams in a streaming query).
 
 For every unique [SparkDataStream](../SparkDataStream.md), `logicalPlan` creates a pair of this `SparkDataStream` and the [default ReadLimit](../SupportsAdmissionControl.md#getDefaultReadLimit) if it is [SupportsAdmissionControl](../SupportsAdmissionControl.md) (or defaults to [ReadAllAvailable](../ReadLimit.md#ReadAllAvailable)).
 
@@ -817,15 +824,21 @@ The `WatermarkTracker` is used then for the following:
 isCurrentBatchConstructed: Boolean
 ```
 
-`MicroBatchExecution` initializes `isCurrentBatchConstructed` internal flag to be `false` when [created](#creating-instance).
+`MicroBatchExecution` uses `isCurrentBatchConstructed` flag to guard (_skip_) execution of [constructNextBatch](#constructNextBatch) altogether (since, as the name says, a next batch has already been constructed).
 
-When `false`, `isCurrentBatchConstructed` is set to whatever [constructNextBatch](#constructNextBatch) gives back while [running activated streaming query](#runActivatedStream).
+---
 
-In other words, `MicroBatchExecution` uses `isCurrentBatchConstructed` to guard (_skip_) execution of [constructNextBatch](#constructNextBatch) (since, as indicated by the name, next batch has already been constructed).
+`isCurrentBatchConstructed` is `false` initially (when `MicroBatchExecution` is [created](#creating-instance)).
 
-At the end of a trigger (when [running activated streaming query](#runActivatedStream)) and with `isCurrentBatchConstructed` being `true`, `isCurrentBatchConstructed` is reset to `false` (alongside incrementing [currentBatchId](../StreamExecution.md#currentBatchId) counter).
+`isCurrentBatchConstructed` can change when `MicroBatchExecution` is requested for the following:
 
-Upon [re-starting a streaming query from a checkpoint](../HDFSMetadataLog.md#getLatest) (using the [Offset Write-Ahead Log](../StreamExecution.md#offsetLog)) while [populating start offsets](#populateStartOffsets) (while [running an activated streaming query](#runActivatedStream)), `isCurrentBatchConstructed` is `true` initially. `isCurrentBatchConstructed` can be set to `false` when the latest offset checkpointed has already been successfully processed and [committed](../HDFSMetadataLog.md#getLatest) (to the [Offset Commit Log](../StreamExecution.md#commitLog)).
+* [populateStartOffsets](#populateStartOffsets) while restarting the streaming query (and there is the [latest batch](../HDFSMetadataLog.md#getLatest) in the [offset log](../StreamExecution.md#offsetLog)). If however the latest batch (in the offset log) was successfully processed (and committed to the [commit log](../StreamExecution.md#commitLog)), `isCurrentBatchConstructed` is changed to `false`
+
+While [running the activated streaming query](#runActivatedStream), when `false`, `isCurrentBatchConstructed` lets [constructing a next batch](#constructNextBatch) (that returns whether a next batch was constructed or not and that response becomes `isCurrentBatchConstructed`).
+
+At the [end of a trigger](#runActivatedStream-batchRunner-isCurrentBatchConstructed) and with `isCurrentBatchConstructed` enabled, `isCurrentBatchConstructed` is reset to `false`.
+
+Upon [re-starting a streaming query from a checkpoint](../HDFSMetadataLog.md#getLatest) (using the [Offset Write-Ahead Log](../StreamExecution.md#offsetLog)) while [populating start offsets](#populateStartOffsets) (while [running an activated streaming query](#runActivatedStream)), `isCurrentBatchConstructed` is `true` initially. `isCurrentBatchConstructed` can be set to `false` when the latest offset has already been successfully processed and [committed](../HDFSMetadataLog.md#getLatest) (to the [Offset Commit Log](../StreamExecution.md#commitLog)).
 
 Used in [finishTrigger](#finishTrigger).
 

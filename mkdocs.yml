@@ -190,7 +190,9 @@ nav:
     - StreamExecution: StreamExecution.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
     - StreamMetadata: StreamMetadata.md
-    - TriggerExecutor: TriggerExecutor.md
+    - TriggerExecutors:
+      - ProcessingTimeExecutor: ProcessingTimeExecutor.md
+      - TriggerExecutor: TriggerExecutor.md
     - Misc:
       - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
       - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md

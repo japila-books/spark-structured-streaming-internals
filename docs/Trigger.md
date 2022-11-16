@@ -7,9 +7,9 @@
 Trigger  | TriggerExecutor | Factory Method
 ---------|-----------------|---------------
  [AvailableNowTrigger](#AvailableNowTrigger) | [MultiBatchExecutor](TriggerExecutor.md#MultiBatchExecutor) | [Trigger.AvailableNow](#AvailableNow)
- [ContinuousTrigger](#ContinuousTrigger) | [ProcessingTimeExecutor](TriggerExecutor.md#ProcessingTimeExecutor) | [Trigger.Continuous](#Continuous)
+ [ContinuousTrigger](#ContinuousTrigger) | [ProcessingTimeExecutor](ProcessingTimeExecutor.md) | [Trigger.Continuous](#Continuous)
  [OneTimeTrigger](#OneTimeTrigger) | [SingleBatchExecutor](TriggerExecutor.md#SingleBatchExecutor) | [Trigger.Once](#Once)
- [ProcessingTimeTrigger](#ProcessingTimeTrigger) | [ProcessingTimeExecutor](TriggerExecutor.md#ProcessingTimeExecutor) | [Trigger.ProcessingTime](#ProcessingTime)
+ [ProcessingTimeTrigger](#ProcessingTimeTrigger) | [ProcessingTimeExecutor](ProcessingTimeExecutor.md) | [Trigger.ProcessingTime](#ProcessingTime)
 
 ## Implementations
 

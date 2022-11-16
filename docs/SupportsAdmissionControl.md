@@ -47,7 +47,7 @@ The most recent [Offset](Offset.md) available given a [ReadLimit](ReadLimit.md).
 
 Used when:
 
-* `AvailableNowDataStreamWrapper` is requested to `prepareForTriggerAvailableNow`
+* `AvailableNowDataStreamWrapper` is requested to [prepareForTriggerAvailableNow](AvailableNowDataStreamWrapper.md#prepareForTriggerAvailableNow)
 * `MicroBatchExecution` stream execution engine is requested to [construct the next micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch)
 
 ### <span id="reportLatestOffset"> Latest Offset Available
