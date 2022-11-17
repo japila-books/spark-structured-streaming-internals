@@ -329,25 +329,23 @@ createStreamingWrite(
 
 `createStreamingWrite` creates a `LogicalWriteInfoImpl` (with the [query ID](#id), the schema of the input `LogicalPlan` and the given options).
 
-`createStreamingWrite` requests the given `SupportsWrite` table for a `WriteBuilder` (for the `LogicalWriteInfoImpl`).
-
-!!! tip
-    Learn more about [SupportsWrite]({{ book.spark_sql }}/connector/SupportsWrite/) and [WriteBuilder]({{ book.spark_sql }}/connector/WriteBuilder/) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
+`createStreamingWrite` requests the given `SupportsWrite` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsWrite/)) table for a `WriteBuilder` (for the `LogicalWriteInfoImpl`).
 
 `createStreamingWrite` branches based on the [OutputMode](#outputMode):
 
 * For [Append](OutputMode.md#Append) output mode, `createStreamingWrite` requests the `WriteBuilder` to build a `StreamingWrite`.
 
-* For [Complete](OutputMode.md#Complete) output mode, `createStreamingWrite` assumes that the `WriteBuilder` is a `SupportsTruncate` and requests it to `truncate` followed by `buildForStreaming`
+* For [Complete](OutputMode.md#Complete) output mode, `createStreamingWrite` assumes that the `WriteBuilder` is a `SupportsTruncate` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsTruncate/)) and requests it to `truncate` followed by `buildForStreaming`
 
 * For [Update](OutputMode.md#Update) output mode, `createStreamingWrite` assumes that the `WriteBuilder` is a `SupportsStreamingUpdate` and requests it to `update` followed by `buildForStreaming`
 
-!!! tip
-    Learn more about [SupportsTruncate]({{ book.spark_sql }}/connector/SupportsTruncate/) and [SupportsStreamingUpdate]({{ book.spark_sql }}/connector/SupportsStreamingUpdate/) in [The Internals of Spark SQL]({{ book.spark_sql }}) online book.
+`createStreamingWrite` is used when:
 
-`createStreamingWrite` is used when [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans.
+* [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#logicalPlan) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#logicalPlan) stream execution engines are requested for analyzed logical plans
 
-## <span id="availableOffsets"> Available Offsets (StreamProgress)
+## Offsets by SparkDataStream
+
+### <span id="availableOffsets"> Available
 
 ```scala
 availableOffsets: StreamProgress
@@ -359,29 +357,32 @@ availableOffsets: StreamProgress
 
 `availableOffsets` is [empty](StreamProgress.md#creating-instance) when `StreamExecution` is [created](#creating-instance) (i.e. no offsets are reported for any streaming source in the streaming query).
 
-`availableOffsets` is used when:
-
-* `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#populateStartOffsets, resume and fetch the start offsets from checkpoint>>, <<MicroBatchExecution.md#isNewDataAvailable, check whether new data is available>>, <<MicroBatchExecution.md#constructNextBatch, construct the next streaming micro-batch>> and <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>>
-
-* `ContinuousExecution` stream execution engine is requested to [commit an epoch](continuous-execution/ContinuousExecution.md#commit)
-
-* `StreamExecution` is requested for the [internal string representation](#toDebugString)
-
-## <span id="committedOffsets"> Committed Offsets (StreamProgress)
+### <span id="committedOffsets"> Committed (Processed)
 
 ```scala
 committedOffsets: StreamProgress
 ```
 
-`committedOffsets` is a [registry of offsets per streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) has already been processed and committed (to the sink or state stores) for every [streaming source](monitoring/ProgressReporter.md#sources) in the [streaming query](#analyzedPlan).
+`committedOffsets` is a [registry of offsets by streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) has already been processed and committed (to the sink or state stores) for every [streaming source](monitoring/ProgressReporter.md#sources) in the [streaming query](#analyzedPlan).
 
 `committedOffsets` works in tandem with the [availableOffsets](#availableOffsets) internal registry.
 
-`committedOffsets` is used when:
+### <span id="latestOffsets"> Latest
 
-* `MicroBatchExecution` stream execution engine is requested for the <<MicroBatchExecution.md#populateStartOffsets, start offsets (from checkpoint)>>, to <<MicroBatchExecution.md#isNewDataAvailable, check whether new data is available>> and <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>>
-* `ContinuousExecution` stream execution engine is requested for the <<ContinuousExecution.md#getStartOffsets, start offsets (from checkpoint)>> and to <<ContinuousExecution.md#commit, commit an epoch>>
-* `StreamExecution` is requested for the [internal string representation](#toDebugString)
+```scala
+latestOffsets: StreamProgress
+```
+
+`StreamExecution` creates a [StreamProgress](StreamProgress.md) to track the latest available [offset](Offset.md)s (by [SparkDataStream](SparkDataStream.md)) when [created](#creating-instance).
+
+`latestOffsets` is updated when:
+
+* `MicroBatchExecution` is requested to [constructNextBatch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) (after getting the latest available offsets from [unique sources](#uniqueSources))
+
+`latestOffsets` is used when:
+
+* `MicroBatchExecution` is requested to [runActivatedStream](micro-batch-execution/MicroBatchExecution.md#runActivatedStream) (and [recordTriggerOffsets](monitoring/ProgressReporter.md#recordTriggerOffsets))
+* `ContinuousExecution` is requested to [commit an epoch](continuous-execution/ContinuousExecution.md#commit) (and [recordTriggerOffsets](monitoring/ProgressReporter.md#recordTriggerOffsets))
 
 ## <span id="resolvedCheckpointRoot"> Fully-Qualified (Resolved) Path to Checkpoint Root Directory
 
