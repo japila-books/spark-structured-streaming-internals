@@ -181,6 +181,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/ProgressReporter/</loc>
+         <lastmod>2022-11-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/ReadLimit/</loc>
          <lastmod>2022-11-17</lastmod>
          <changefreq>daily</changefreq>
@@ -922,11 +927,6 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/MetricsReporter/</loc>
-         <lastmod>2022-11-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/monitoring/ProgressReporter/</loc>
          <lastmod>2022-11-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
