@@ -52,9 +52,9 @@ sq.lastProgress.durationMs.get("walCommit")
 
 ## Monitoring
 
-`MicroBatchExecution` [posts events](../monitoring/ProgressReporter.md#postEvent) to announce when a streaming query is started and stopped as well as after every micro-batch. [StreamingQueryListener](../monitoring/StreamingQueryListener.md) interface can be used to intercept the events and act accordingly.
+`MicroBatchExecution` [posts events](../ProgressReporter.md#postEvent) to announce when a streaming query is started and stopped as well as after every micro-batch. [StreamingQueryListener](../monitoring/StreamingQueryListener.md) interface can be used to intercept the events and act accordingly.
 
-After `triggerExecution` phase `MicroBatchExecution` is requested to [finish up a streaming batch (trigger) and generate a StreamingQueryProgress](../monitoring/ProgressReporter.md#finishTrigger) (with execution statistics).
+After `triggerExecution` phase `MicroBatchExecution` is requested to [finish up a streaming batch (trigger) and generate a StreamingQueryProgress](../ProgressReporter.md#finishTrigger) (with execution statistics).
 
 `MicroBatchExecution` prints out the following DEBUG message to the logs:
 
@@ -62,7 +62,7 @@ After `triggerExecution` phase `MicroBatchExecution` is requested to [finish up 
 Execution stats: [executionStats]
 ```
 
-`MicroBatchExecution` [posts a QueryProgressEvent with the StreamingQueryProgress](../monitoring/ProgressReporter.md#updateProgress) and prints out the following INFO message to the logs:
+`MicroBatchExecution` [posts a QueryProgressEvent with the StreamingQueryProgress](../ProgressReporter.md#updateProgress) and prints out the following INFO message to the logs:
 
 ```text
 Streaming query made progress: [newProgress]

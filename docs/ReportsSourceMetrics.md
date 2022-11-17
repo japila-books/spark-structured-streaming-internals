@@ -17,7 +17,7 @@ See [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md#metrics)
 
 Used when:
 
-* `ProgressReporter` is requested to [finish up a micro-batch](monitoring/ProgressReporter.md#finishTrigger)
+* `ProgressReporter` is requested to [finish up a micro-batch](ProgressReporter.md#finishTrigger)
 
 ## Implementations
 

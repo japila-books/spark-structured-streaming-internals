@@ -17,7 +17,7 @@
 
 `SourceProgress` is created when:
 
-* `ProgressReporter` is requested to [finishTrigger](ProgressReporter.md#finishTrigger) (and [update stream progress](ProgressReporter.md#updateProgress) with a new [StreamingQueryProgress](StreamingQueryProgress.md#sources))
+* `ProgressReporter` is requested to [finishTrigger](../ProgressReporter.md#finishTrigger) (and [update stream progress](../ProgressReporter.md#updateProgress) with a new [StreamingQueryProgress](StreamingQueryProgress.md#sources))
 
 ### <span id="metrics"> Metrics
 

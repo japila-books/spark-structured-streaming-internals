@@ -76,7 +76,7 @@ runContinuous(
 
 ### <span id="runContinuous-queryPlanning"> queryPlanning Phase
 
-In **queryPlanning** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `runContinuous` creates an [IncrementalExecution](../IncrementalExecution.md) (that becomes the [lastExecution](../StreamExecution.md#lastExecution)) that is immediately executed (the entire query execution pipeline is executed up to and including _executedPlan_).
+In **queryPlanning** [time-tracking section](../ProgressReporter.md#reportTimeTaken), `runContinuous` creates an [IncrementalExecution](../IncrementalExecution.md) (that becomes the [lastExecution](../StreamExecution.md#lastExecution)) that is immediately executed (the entire query execution pipeline is executed up to and including _executedPlan_).
 
 `runContinuous` sets the following local properties:
 
@@ -94,7 +94,7 @@ In **queryPlanning** [time-tracking section](../monitoring/ProgressReporter.md#r
 
 ### <span id="runContinuous-runContinuous"> runContinuous Phase
 
-In **runContinuous** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `runContinuous` requests the physical query plan (of the [IncrementalExecution](../StreamExecution.md#lastExecution)) to execute (that simply requests the physical operator to `doExecute` and generate an `RDD[InternalRow]`).
+In **runContinuous** [time-tracking section](../ProgressReporter.md#reportTimeTaken), `runContinuous` requests the physical query plan (of the [IncrementalExecution](../StreamExecution.md#lastExecution)) to execute (that simply requests the physical operator to `doExecute` and generate an `RDD[InternalRow]`).
 
 `runContinuous` is used when `ContinuousExecution` is requested to [run an activated streaming query](#runActivatedStream).
 
@@ -122,7 +122,7 @@ commit(
 
 In essence, `commit` [adds](../HDFSMetadataLog.md#add) the given epoch to [commit log](../StreamExecution.md#commitLog) and the [committedOffsets](../StreamExecution.md#committedOffsets), and requests the <<continuousSources, ContinuousReader>> to [commit the corresponding offset](ContinuousReader.md#commit). In the end, `commit` [removes old log entries](../HDFSMetadataLog.md#purge) from the [offset](../StreamExecution.md#offsetLog) and [commit](../StreamExecution.md#commitLog) logs (to keep [spark.sql.streaming.minBatchesToRetain](../StreamExecution.md#minLogEntriesToMaintain) entries only).
 
-Internally, `commit` [recordTriggerOffsets](../monitoring/ProgressReporter.md#recordTriggerOffsets) (with the from and to offsets as the [committedOffsets](../StreamExecution.md#committedOffsets) and [availableOffsets](../StreamExecution.md#availableOffsets), respectively).
+Internally, `commit` [recordTriggerOffsets](../ProgressReporter.md#recordTriggerOffsets) (with the from and to offsets as the [committedOffsets](../StreamExecution.md#committedOffsets) and [availableOffsets](../StreamExecution.md#availableOffsets), respectively).
 
 At this point, `commit` may simply return when the [stream execution thread](../StreamExecution.md#queryExecutionThread) is no longer alive (died).
 
@@ -256,7 +256,7 @@ Use <<sources, sources>> to access the current value
 
 ## <span id="sources"> sources
 
-`ContinuousExecution` supports one <<continuousSources, ContinuousReader>> only in a <<logicalPlan, streaming query>> (and asserts it when <<addOffset, addOffset>> and <<commit, committing an epoch>>). When requested for available [streaming sources](../monitoring/ProgressReporter.md#sources), `ContinuousExecution` simply gives the <<continuousSources, single ContinuousReader>>.
+`ContinuousExecution` supports one <<continuousSources, ContinuousReader>> only in a <<logicalPlan, streaming query>> (and asserts it when <<addOffset, addOffset>> and <<commit, committing an epoch>>). When requested for available [streaming sources](../ProgressReporter.md#sources), `ContinuousExecution` simply gives the <<continuousSources, single ContinuousReader>>.
 
 ```text
 import org.apache.spark.sql.streaming.Trigger

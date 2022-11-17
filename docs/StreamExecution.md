@@ -43,14 +43,14 @@ org.apache.spark.sql.execution.streaming.StreamExecution
 logicalPlan: LogicalPlan
 ```
 
-`logicalPlan` is part of the [ProgressReporter](monitoring/ProgressReporter.md#logicalPlan) abstraction.
+`logicalPlan` is part of the [ProgressReporter](ProgressReporter.md#logicalPlan) abstraction.
 
 ---
 
 Analyzed logical plan of the streaming query to [execute](#runActivatedStream)
 
 !!! note
-    No idea why `logicalPlan` is part of `StreamExecution` since there's (_almost_) no change from the parent [ProgressReporter](monitoring/ProgressReporter.md#logicalPlan) except the access qualifier (from `protected` to `public`).
+    No idea why `logicalPlan` is part of `StreamExecution` since there's (_almost_) no change from the parent [ProgressReporter](ProgressReporter.md#logicalPlan) except the access qualifier (from `protected` to `public`).
 
     Could this be the only reason?
 
@@ -81,7 +81,7 @@ Used when:
 `StreamExecution` takes the following to be created:
 
 * <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
-* <span id="name"> [Name](monitoring/ProgressReporter.md#name) of the streaming query (can be `null`)
+* <span id="name"> [Name](ProgressReporter.md#name) of the streaming query (can be `null`)
 * <span id="checkpointRoot"> Path of the checkpoint directory (_metadata directory_)
 * <span id="analyzedPlan"> Streaming query (not used due to [logicalPlan](#logicalPlan))
 * [Sink](#sink)
@@ -103,7 +103,7 @@ sink: Table
 
 The `Table` represents the sink this streaming query writes to.
 
-`sink` is part of the [ProgressReporter](monitoring/ProgressReporter.md#sink) abstraction.
+`sink` is part of the [ProgressReporter](ProgressReporter.md#sink) abstraction.
 
 ## <span id="start"> Starting Streaming Query
 
@@ -148,7 +148,7 @@ In the end, `start` pauses the main thread (using the [latch](#startLatch)) unti
 
 ## ProgressReporter
 
-`StreamExecution` is a [ProgressReporter](monitoring/ProgressReporter.md) and [reports status of the streaming query](#postEvent) (when it starts, progresses and terminates) by posting `StreamingQueryListener` events.
+`StreamExecution` is a [ProgressReporter](ProgressReporter.md) and [reports status of the streaming query](#postEvent) (when it starts, progresses and terminates) by posting `StreamingQueryListener` events.
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
@@ -351,7 +351,7 @@ createStreamingWrite(
 availableOffsets: StreamProgress
 ```
 
-`availableOffsets` is a [registry of offsets per streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) is available for processing for every [streaming source](monitoring/ProgressReporter.md#sources) in the [streaming query](#analyzedPlan) (and have not yet been [committed](#committedOffsets)).
+`availableOffsets` is a [registry of offsets per streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) is available for processing for every [streaming source](ProgressReporter.md#sources) in the [streaming query](#analyzedPlan) (and have not yet been [committed](#committedOffsets)).
 
 `availableOffsets` works in tandem with the [committedOffsets](#committedOffsets) internal registry.
 
@@ -363,7 +363,7 @@ availableOffsets: StreamProgress
 committedOffsets: StreamProgress
 ```
 
-`committedOffsets` is a [registry of offsets by streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) has already been processed and committed (to the sink or state stores) for every [streaming source](monitoring/ProgressReporter.md#sources) in the [streaming query](#analyzedPlan).
+`committedOffsets` is a [registry of offsets by streaming source](StreamProgress.md) to track what data (by [offset](Offset.md)) has already been processed and committed (to the sink or state stores) for every [streaming source](ProgressReporter.md#sources) in the [streaming query](#analyzedPlan).
 
 `committedOffsets` works in tandem with the [availableOffsets](#availableOffsets) internal registry.
 
@@ -381,8 +381,8 @@ latestOffsets: StreamProgress
 
 `latestOffsets` is used when:
 
-* `MicroBatchExecution` is requested to [runActivatedStream](micro-batch-execution/MicroBatchExecution.md#runActivatedStream) (and [recordTriggerOffsets](monitoring/ProgressReporter.md#recordTriggerOffsets))
-* `ContinuousExecution` is requested to [commit an epoch](continuous-execution/ContinuousExecution.md#commit) (and [recordTriggerOffsets](monitoring/ProgressReporter.md#recordTriggerOffsets))
+* `MicroBatchExecution` is requested to [runActivatedStream](micro-batch-execution/MicroBatchExecution.md#runActivatedStream) (and [recordTriggerOffsets](ProgressReporter.md#recordTriggerOffsets))
+* `ContinuousExecution` is requested to [commit an epoch](continuous-execution/ContinuousExecution.md#commit) (and [recordTriggerOffsets](ProgressReporter.md#recordTriggerOffsets))
 
 ## <span id="resolvedCheckpointRoot"> Fully-Qualified (Resolved) Path to Checkpoint Root Directory
 
@@ -418,7 +418,7 @@ Starting [prettyIdString]. Use [resolvedCheckpointRoot] to store the query check
 sinkCommitProgress: Option[StreamWriterCommitProgress]
 ```
 
-`sinkCommitProgress` is part of the [ProgressReporter](monitoring/ProgressReporter.md#sinkCommitProgress) abstraction.
+`sinkCommitProgress` is part of the [ProgressReporter](ProgressReporter.md#sinkCommitProgress) abstraction.
 
 `StreamExecution` initializes `sinkCommitProgress` registry to be `None` when [created](#creating-instance).
 
@@ -428,7 +428,7 @@ sinkCommitProgress: Option[StreamWriterCommitProgress]
 lastExecution: IncrementalExecution
 ```
 
-`lastExecution` is part of the [ProgressReporter](monitoring/ProgressReporter.md#lastExecution) abstraction.
+`lastExecution` is part of the [ProgressReporter](ProgressReporter.md#lastExecution) abstraction.
 
 `lastExecution` is a [IncrementalExecution](IncrementalExecution.md) (a `QueryExecution` of a streaming query) of the most recent (_last_) execution.
 
@@ -442,7 +442,7 @@ lastExecution: IncrementalExecution
 
 * `StreamExecution` is requested to <<explain, explain a streaming query>> (via <<explainInternal, explainInternal>>)
 
-* `ProgressReporter` is requested to [extractStateOperatorMetrics](monitoring/ProgressReporter.md#extractStateOperatorMetrics), [extractExecutionStats](monitoring/ProgressReporter.md#extractExecutionStats), and [extractSourceToNumInputRows](monitoring/ProgressReporter.md#extractSourceToNumInputRows)
+* `ProgressReporter` is requested to [extractStateOperatorMetrics](ProgressReporter.md#extractStateOperatorMetrics), [extractExecutionStats](ProgressReporter.md#extractExecutionStats), and [extractSourceToNumInputRows](ProgressReporter.md#extractSourceToNumInputRows)
 
 * `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch-shouldConstructNextBatch, construct or skip the next streaming micro-batch>> (based on [StateStoreWriters in a streaming query](IncrementalExecution.md#shouldRunAnotherBatch)), <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>> (when in <<MicroBatchExecution.md#runBatch-addBatch, addBatch Phase>> and <<MicroBatchExecution.md#runBatch-updateWatermark-commitLog, updating watermark and committing offsets to offset commit log>>)
 
@@ -514,7 +514,7 @@ Internally, `runStream` sets the job group (to all the Spark jobs started by thi
 
 `runStream` unblocks the [main starting thread](#start) (by decrementing the count of the [startLatch](#startLatch) that when `0` lets the starting thread continue).
 
-`runStream` [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to be **Initializing sources**.
+`runStream` [updates the status message](ProgressReporter.md#updateStatusMessage) to be **Initializing sources**.
 
 <span id="runStream-initializing-sources"/>
 `runStream` initializes the [analyzed logical plan](#logicalPlan).
@@ -538,7 +538,7 @@ Internally, `runStream` sets the job group (to all the Spark jobs started by thi
 <span id="runStream-stopped"/>
 `runStream`...FIXME (describe the failed and stop states)
 
-Once [TriggerExecutor](#triggerExecutor) has finished executing batches, `runBatches` [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to **Stopped**.
+Once [TriggerExecutor](#triggerExecutor) has finished executing batches, `runBatches` [updates the status message](ProgressReporter.md#updateStatusMessage) to **Stopped**.
 
 NOTE: [TriggerExecutor](#triggerExecutor) finishes executing batches when the [batch runner](#runBatches-batch-runner) returns whether the streaming query is stopped or not (while [active](#isActive)).
 
@@ -550,7 +550,7 @@ NOTE: [TriggerExecutor](#triggerExecutor) finishes executing batches when the [b
 
 `runStream` enters [TERMINATED](#TERMINATED) state.
 
-`runStream` sets the [StreamingQueryStatus](monitoring/ProgressReporter.md#currentStatus) with the `isTriggerActive` and `isDataAvailable` flags off (`false`).
+`runStream` sets the [StreamingQueryStatus](ProgressReporter.md#currentStatus) with the `isTriggerActive` and `isDataAvailable` flags off (`false`).
 
 `runStream` removes the [stream metrics reporter](#streamMetrics) from the application's `MetricsSystem`.
 
@@ -571,7 +571,7 @@ In the end, `runStream` releases the [terminationLatch](#terminationLatch) latch
 
 As long as the query is not stopped (i.e. [state](#state) is not [TERMINATED](#terminated)), `batchRunner` executes the streaming batch for the trigger.
 
-In **triggerExecution** [time-tracking section](monitoring/ProgressReporter.md#reportTimeTaken), `runBatches` branches off per [currentBatchId](#currentBatchId):
+In **triggerExecution** [time-tracking section](ProgressReporter.md#reportTimeTaken), `runBatches` branches off per [currentBatchId](#currentBatchId):
 
 * For `currentBatchId < 0`:
 
@@ -601,12 +601,12 @@ If there is [data available](#dataAvailable) in the sources, `batchRunner` marks
     }
     ```
 
-`batchRunner` then [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to **Processing new data** and [runs the current streaming batch](#runBatch).
+`batchRunner` then [updates the status message](ProgressReporter.md#updateStatusMessage) to **Processing new data** and [runs the current streaming batch](#runBatch).
 
 ![StreamExecution's Running Batches (on Execution Thread)](images/StreamExecution-runBatches.png)
 
 <span id="runBatches-batch-runner-finishTrigger"/>
-After **triggerExecution** section has finished, `batchRunner` [finishes the streaming batch for the trigger](monitoring/ProgressReporter.md#finishTrigger) (and collects query execution statistics).
+After **triggerExecution** section has finished, `batchRunner` [finishes the streaming batch for the trigger](ProgressReporter.md#finishTrigger) (and collects query execution statistics).
 
 When there was <<dataAvailable, data available>> in the sources, `batchRunner` updates committed offsets (by [adding](CommitLog.md#add) the <<currentBatchId, current batch id>> to [BatchCommitLog](#batchCommitLog) and adding [availableOffsets](#availableOffsets) to [committedOffsets](#committedOffsets)).
 
@@ -623,11 +623,11 @@ When no [data was available](#dataAvailable) in the sources to process, `batchRu
 
 1. Marks [currentStatus](#currentStatus) with `isDataAvailable` disabled
 
-1. [Updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to **Waiting for data to arrive**
+1. [Updates the status message](ProgressReporter.md#updateStatusMessage) to **Waiting for data to arrive**
 
 1. Sleeps the current thread for [pollingDelayMs](#pollingDelayMs) milliseconds.
 
-`batchRunner` [updates the status message](monitoring/ProgressReporter.md#updateStatusMessage) to **Waiting for next trigger** and returns whether the query is currently active or not (so [TriggerExecutor](#triggerExecutor) can decide whether to finish executing the batches or not)
+`batchRunner` [updates the status message](ProgressReporter.md#updateStatusMessage) to **Waiting for next trigger** and returns whether the query is currently active or not (so [TriggerExecutor](#triggerExecutor) can decide whether to finish executing the batches or not)
 
 ## <span id="checkpointFile"> Path to Checkpoint Directory
 
@@ -647,7 +647,7 @@ postEvent(
   event: StreamingQueryListener.Event): Unit
 ```
 
-`postEvent` is a part of the [ProgressReporter](monitoring/ProgressReporter.md#postEvent) abstraction.
+`postEvent` is a part of the [ProgressReporter](ProgressReporter.md#postEvent) abstraction.
 
 `postEvent` simply requests the `StreamingQueryManager` to [post](StreamingQueryManager.md#postListenerEvent) the input event (to the [StreamingQueryListenerBus](StreamingQueryListenerBus.md) in the current `SparkSession`).
 
@@ -656,7 +656,7 @@ postEvent(
 
 `postEvent` is used when:
 
-* `ProgressReporter` is requested to [report update progress](monitoring/ProgressReporter.md#updateProgress) (while [finishing a trigger](monitoring/ProgressReporter.md#finishTrigger))
+* `ProgressReporter` is requested to [report update progress](ProgressReporter.md#updateProgress) (while [finishing a trigger](ProgressReporter.md#finishTrigger))
 
 * `StreamExecution` [runs streaming batches](#runBatches) (and announces starting a streaming query by posting a [QueryStartedEvent](monitoring/StreamingQueryListener.md#QueryStartedEvent) and query termination by posting a [QueryTerminatedEvent](monitoring/StreamingQueryListener.md#QueryTerminatedEvent))
 
@@ -722,7 +722,7 @@ When started, `queryExecutionThread` sets the <<callSite, call site>> and <<runS
 offsetSeqMetadata: OffsetSeqMetadata
 ```
 
-`offsetSeqMetadata` is part of the [ProgressReporter](monitoring/ProgressReporter.md#offsetSeqMetadata) abstraction.
+`offsetSeqMetadata` is part of the [ProgressReporter](ProgressReporter.md#offsetSeqMetadata) abstraction.
 
 ---
 
@@ -740,7 +740,7 @@ NOTE: `MicroBatchExecution` uses the <<MicroBatchExecution.md#watermarkTracker, 
 
 `offsetSeqMetadata` is restored (_re-created_) from a checkpointed state when `MicroBatchExecution` is requested to <<MicroBatchExecution.md#populateStartOffsets, populate start offsets>>.
 
-`offsetSeqMetadata` is part of the [ProgressReporter](monitoring/ProgressReporter.md#offsetSeqMetadata) abstraction.
+`offsetSeqMetadata` is part of the [ProgressReporter](ProgressReporter.md#offsetSeqMetadata) abstraction.
 
 ## <span id="isActive"> isActive
 
@@ -815,7 +815,7 @@ newData: Map[BaseStreamingSource, LogicalPlan]
 
 Registry of the streaming sources (in the [logical query plan](#logicalPlan)) that have new data available in the current batch. The new data is a streaming `DataFrame`.
 
-`newData` is part of the [ProgressReporter](monitoring/ProgressReporter.md#newData) abstraction.
+`newData` is part of the [ProgressReporter](ProgressReporter.md#newData) abstraction.
 
 Set when `StreamExecution` is requested to [requests unprocessed data from streaming sources](micro-batch-execution/MicroBatchExecution.md#runBatch-getBatch) (while [running a single streaming batch](#runBatch))
 

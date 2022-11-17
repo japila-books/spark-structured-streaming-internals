@@ -45,7 +45,7 @@ Used when:
 
 Used when:
 
-* `ProgressReporter` is [created](monitoring/ProgressReporter.md#noDataProgressEventInterval)
+* `ProgressReporter` is [created](ProgressReporter.md#noDataProgressEventInterval)
 
 ## <span id="fileSinkLogCleanupDelay"><span id="FILE_SINK_LOG_CLEANUP_DELAY"> fileSinkLogCleanupDelay
 
@@ -157,6 +157,6 @@ a| [[streamingPollingDelay]][[STREAMING_POLLING_DELAY]] Used exclusively when [S
 
 [spark.sql.streaming.numRecentProgressUpdates](configuration-properties.md#spark.sql.streaming.numRecentProgressUpdates)
 
-a| [[streamingProgressRetention]][[STREAMING_PROGRESS_RETENTION]] Used exclusively when `ProgressReporter` is requested to [update progress of streaming query](monitoring/ProgressReporter.md#updateProgress) (and possibly remove an excess)
+a| [[streamingProgressRetention]][[STREAMING_PROGRESS_RETENTION]] Used exclusively when `ProgressReporter` is requested to [update progress of streaming query](ProgressReporter.md#updateProgress) (and possibly remove an excess)
 
 |===

@@ -20,7 +20,7 @@ Used when:
 * `MicroBatchExecution` stream execution engine is requested to [construct the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch) and [run a streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch)
 * `OffsetSeq` is requested for the [textual representation](OffsetSeq.md#toString)
 * `OffsetSeqLog` is requested to [serialize metadata (write metadata in serialized format)](OffsetSeqLog.md#serialize)
-* `ProgressReporter` is requested to [record trigger offsets](monitoring/ProgressReporter.md#recordTriggerOffsets)
+* `ProgressReporter` is requested to [record trigger offsets](ProgressReporter.md#recordTriggerOffsets)
 * `ContinuousExecution` stream execution engine is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) and [commit an epoch](continuous-execution/ContinuousExecution.md#commit)
 
 ## Implementations

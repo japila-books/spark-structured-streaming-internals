@@ -152,7 +152,7 @@ Property | Metric
 
 `getProgress` is used when:
 
-* `ProgressReporter` is requested to [extractStateOperatorMetrics](../monitoring/ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream))
+* `ProgressReporter` is requested to [extractStateOperatorMetrics](../ProgressReporter.md#extractStateOperatorMetrics) (when `MicroBatchExecution` is requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream))
 
 ## <span id="shouldRunAnotherBatch"> Does Last Batch Execution Require Extra Non-Data Batch
 

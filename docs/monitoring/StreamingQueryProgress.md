@@ -21,7 +21,7 @@
 
 `StreamingQueryProgress` is created when:
 
-* `StreamExecution` is requested to [finish a trigger](ProgressReporter.md#finishTrigger)
+* `StreamExecution` is requested to [finish a trigger](../ProgressReporter.md#finishTrigger)
 
 ### <span id="timestamp"> Batch Timestamp
 

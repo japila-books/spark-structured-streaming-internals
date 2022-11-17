@@ -29,7 +29,7 @@ The event time column has to be defined on a window or a timestamp and so the da
 
 `EventTimeWatermark` is used when:
 
-* `ProgressReporter` is requested to [extract execution statistics](../monitoring/ProgressReporter.md#extractExecutionStats) (that adds `watermark` entry with the [batchWatermarkMs](../OffsetSeqMetadata.md#batchWatermarkMs) of the [OffsetSeqMetadata](../monitoring/ProgressReporter.md#offsetSeqMetadata) of a micro-batch)
+* `ProgressReporter` is requested to [extract execution statistics](../ProgressReporter.md#extractExecutionStats) (that adds `watermark` entry with the [batchWatermarkMs](../OffsetSeqMetadata.md#batchWatermarkMs) of the [OffsetSeqMetadata](../ProgressReporter.md#offsetSeqMetadata) of a micro-batch)
 
 ## Logical Optimizations
 

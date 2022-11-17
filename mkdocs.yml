@@ -186,6 +186,7 @@ nav:
       - WatermarkSupport: physical-operators/WatermarkSupport.md
       - WriteToContinuousDataSourceExec: physical-operators/WriteToContinuousDataSourceExec.md
       - WriteToDataSourceV2Exec: physical-operators/WriteToDataSourceV2Exec.md
+    - ProgressReporter: ProgressReporter.md
     - SQLConf: SQLConf.md
     - StreamExecution: StreamExecution.md
     - StreamingQueryListenerBus: StreamingQueryListenerBus.md
@@ -413,7 +414,6 @@ nav:
       - TextSocketSource: datasources/socket/TextSocketSource.md
   - Monitoring:
     - StreamingQueryListener: monitoring/StreamingQueryListener.md
-    - ProgressReporter: monitoring/ProgressReporter.md
     - StreamingQueryProgress:
       - StreamingQueryProgress: monitoring/StreamingQueryProgress.md
       - StateOperatorProgress: monitoring/StateOperatorProgress.md

@@ -51,7 +51,7 @@ Unknown type of trigger: [trigger]
 
 ## Execution Phases
 
-`MicroBatchExecution` splits execution of a single micro-batch into the following execution phases (and [tracks their duration](../monitoring/ProgressReporter.md#reportTimeTaken)):
+`MicroBatchExecution` splits execution of a single micro-batch into the following execution phases (and [tracks their duration](../ProgressReporter.md#reportTimeTaken)):
 
 1. [triggerExecution](#runActivatedStream-triggerExecution)
 1. [latestOffset](#constructNextBatch-latestOffset) and [getOffset](#constructNextBatch-getOffset)
@@ -66,7 +66,7 @@ Unknown type of trigger: [trigger]
 startTrigger(): Unit
 ```
 
-`startTrigger` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#startTrigger) abstraction.
+`startTrigger` is part of the [ProgressReporter](../ProgressReporter.md#startTrigger) abstraction.
 
 ---
 
@@ -78,7 +78,7 @@ startTrigger(): Unit
 sources: Seq[SparkDataStream]
 ```
 
-`sources` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#sources) abstraction.
+`sources` is part of the [ProgressReporter](../ProgressReporter.md#sources) abstraction.
 
 ---
 
@@ -104,21 +104,24 @@ runActivatedStream(
 
 ---
 
-`runActivatedStream` requests the [TriggerExecutor](#triggerExecutor) to execute micro-batches using the [batch runner](#batchRunner).
+`runActivatedStream` requests the [TriggerExecutor](#triggerExecutor) to [execute](../TriggerExecutor.md#execute) (the [batch runner](#runActivatedStream-batchRunner)).
 
-### <span id="batchRunner"><span id="batch-runner"> Batch Runner
+!!! note
+    As long as the [TriggerExecutor](#triggerExecutor) is [executing the batch running](../TriggerExecutor.md#execute) as long `runActivatedStream` keeps running.
 
-The batch runner checks [whether the streaming query is active or not](../StreamExecution.md#isActive) (and hence terminated).
+### <span id="batchRunner"><span id="batch-runner"><span id="runActivatedStream-batchRunner"> Batch Runner
 
-When terminated, the batch runner is [waiting for next trigger](#runActivatedStream-waiting-for-next-trigger).
+The batch runner checks [whether the streaming query is active](../StreamExecution.md#isActive) (as, in the meantime, it could be terminated).
+
+When terminated, the batch runner [waits for the next trigger](#runActivatedStream-waiting-for-next-trigger). Otherwise, the batch runner [initializes the trigger](#runActivatedStream-startTrigger).
 
 ### <span id="runActivatedStream-startTrigger"> startTrigger
 
-When [active](../StreamExecution.md#isActive), the batch runner [initializes query progress for the new trigger](../monitoring/ProgressReporter.md#startTrigger) (aka _startTrigger_).
+When [active](../StreamExecution.md#isActive), the batch runner [initializes query progress for the new trigger](../ProgressReporter.md#startTrigger) (aka _startTrigger_).
 
 ### <span id="runActivatedStream-triggerExecution"> triggerExecution Execution Phase
 
-The batch runner starts **triggerExecution** [execution phase](../monitoring/ProgressReporter.md#reportTimeTaken).
+The batch runner starts **triggerExecution** [execution phase](../ProgressReporter.md#reportTimeTaken).
 
 #### <span id="runActivatedStream-triggerExecution-populateStartOffsets"> populateStartOffsets
 
@@ -151,11 +154,11 @@ The batch runner [records the trigger offset range for progress reporting](#reco
 The batch runner uses
 `currentBatchHasNewData` to remember [whether the current batch has data or not](#isNewDataAvailable) (based on the offsets [available](../StreamExecution.md#availableOffsets) and [committed](../StreamExecution.md#committedOffsets) that can change over time).
 
-The batch runner updates [isDataAvailable](../monitoring/StreamingQueryStatus.md#isDataAvailable) of the [StreamingQueryStatus](../monitoring/ProgressReporter.md#currentStatus).
+The batch runner updates [isDataAvailable](../monitoring/StreamingQueryStatus.md#isDataAvailable) of the [StreamingQueryStatus](../ProgressReporter.md#currentStatus).
 
 #### <span id="runActivatedStream-triggerExecution-runBatch"> Running Micro-Batch
 
-With the [streaming micro-batch constructed](#isCurrentBatchConstructed), the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to one of the following (based on [whether the current batch has data or not](#isNewDataAvailable)):
+With the [streaming micro-batch constructed](#isCurrentBatchConstructed), the batch runner [updates the status message](../ProgressReporter.md#updateStatusMessage) to one of the following (based on [whether the current batch has data or not](#isNewDataAvailable)):
 
 ```text
 Processing new data
@@ -169,7 +172,7 @@ The batch runner [runs the streaming micro-batch](#runBatch).
 
 #### <span id="runActivatedStream-triggerExecution-waiting-for-data-to-arrive"> Waiting for data to arrive
 
-Otherwise, the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+Otherwise, the batch runner [updates the status message](../ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Waiting for data to arrive
@@ -177,7 +180,7 @@ Waiting for data to arrive
 
 ### <span id="runActivatedStream-finishTrigger"> finishTrigger
 
-The batch runner [finalizes query progress for the trigger](../monitoring/ProgressReporter.md#finishTrigger) (with the flags that indicate [whether the current batch had new data](#isNewDataAvailable) and the [isCurrentBatchConstructed](#isCurrentBatchConstructed)).
+The batch runner [finalizes query progress for the trigger](../ProgressReporter.md#finishTrigger) (with the flags that indicate [whether the current batch had new data](#isNewDataAvailable) and the [isCurrentBatchConstructed](#isCurrentBatchConstructed)).
 
 ### <span id="runActivatedStream-closing-up"> Closing Up
 
@@ -204,7 +207,7 @@ With the [isCurrentBatchConstructed](#isCurrentBatchConstructed) flag disabled (
 
 ### <span id="runActivatedStream-waiting-for-next-trigger"> Waiting for next trigger
 
-When [inactive](../StreamExecution.md#isActive), the batch runner [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+When [inactive](../StreamExecution.md#isActive), the batch runner [updates the status message](../ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Waiting for next trigger
@@ -323,7 +326,7 @@ In the end, `constructNextBatch` returns [whether the next streaming micro-batch
 
 `constructNextBatch` uses the [uniqueSources](../StreamExecution.md#uniqueSources) registry to request every [SparkDataStream](../SparkDataStream.md) for the next and recent offsets (based on the type of a `SparkDataStream`).
 
-For all types of data streams, `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+For all types of data streams, `constructNextBatch` [updates the status message](../ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Getting offsets from [source]
@@ -331,7 +334,7 @@ Getting offsets from [source]
 
 #### <span id="constructNextBatch-nextOffsets-recentOffsets-AvailableNowDataStreamWrapper"> AvailableNowDataStreamWrappers
 
-For [AvailableNowDataStreamWrapper](../AvailableNowDataStreamWrapper.md)s, `constructNextBatch` does the following in **latestOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken):
+For [AvailableNowDataStreamWrapper](../AvailableNowDataStreamWrapper.md)s, `constructNextBatch` does the following in **latestOffset** [time-tracking section](../ProgressReporter.md#reportTimeTaken):
 
 1. [Gets the start offset](#getStartOffset) of the [wrapped SparkDataStream](../AvailableNowDataStreamWrapper.md#delegate) (of this `AvailableNowDataStreamWrapper`)
 1. Requests the `AvailableNowDataStreamWrapper` for the [latest offset per ReadLimit](../AvailableNowDataStreamWrapper.md#latestOffset) (for the start offset and the [ReadLimit](../ReadLimit.md))
@@ -344,7 +347,7 @@ In the end (of this phase), `constructNextBatch` gives the following pair (of pa
 
 #### <span id="constructNextBatch-nextOffsets-recentOffsets-SupportsAdmissionControl"> SupportsAdmissionControls
 
-For [SupportsAdmissionControl](../SupportsAdmissionControl.md)s, `constructNextBatch` does the following in **latestOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken):
+For [SupportsAdmissionControl](../SupportsAdmissionControl.md)s, `constructNextBatch` does the following in **latestOffset** [time-tracking section](../ProgressReporter.md#reportTimeTaken):
 
 1. [Gets the start offset](#getStartOffset) of the `SupportsAdmissionControl`
 1. Requests the `SupportsAdmissionControl` for the [latest offset per ReadLimit](../SupportsAdmissionControl.md#latestOffset) (for the start offset and the [ReadLimit](../ReadLimit.md))
@@ -371,7 +374,7 @@ In the end (of this phase), `constructNextBatch` gives the following pair (of pa
 
 ![MicroBatchExecution's Getting Offsets From Streaming Sources](../images/MicroBatchExecution-constructNextBatch.png)
 
-For every [streaming source](../Source.md) (Data Source API V1), `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+For every [streaming source](../Source.md) (Data Source API V1), `constructNextBatch` [updates the status message](../ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Getting offsets from [source]
@@ -381,9 +384,9 @@ Getting offsets from [source]
 
 !!! note "FIXME This phase should be merged with the above one"
 
-In **getOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `Source` for the [latest offset](#getOffset).
+In **getOffset** [time-tracking section](../ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `Source` for the [latest offset](#getOffset).
 
-For every data source, `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+For every data source, `constructNextBatch` [updates the status message](../ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Getting offsets from [source]
@@ -393,13 +396,13 @@ Getting offsets from [source]
 
 !!! note "FIXME There is no setOffsetRange phase anymore"
 
-In **setOffsetRange** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the [available offset](#availableOffsets) internal registry) and, if found, requests the `MicroBatchReader` to...FIXME (from [JSON format](../Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to...FIXME
+In **setOffsetRange** [time-tracking section](../ProgressReporter.md#reportTimeTaken), `constructNextBatch` finds the available offsets of the source (in the [available offset](#availableOffsets) internal registry) and, if found, requests the `MicroBatchReader` to...FIXME (from [JSON format](../Offset.md#json)). `constructNextBatch` requests the `MicroBatchReader` to...FIXME
 
 ### <span id="constructNextBatch-getEndOffset"> getEndOffset Phase
 
 !!! note "FIXME There is no getEndOffset phase anymore"
 
-In **getEndOffset** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for...FIXME
+In **getEndOffset** [time-tracking section](../ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the `MicroBatchReader` for...FIXME
 
 ### <span id="constructNextBatch-availableOffsets"> Updating availableOffsets StreamProgress with Latest Available Offsets
 
@@ -430,14 +433,14 @@ noDataBatchesEnabled = [noDataBatchesEnabled], lastExecutionRequiresAnotherBatch
 
 ### <span id="constructNextBatch-shouldConstructNextBatch-enabled"> Constructing Next Micro-Batch
 
-With the [shouldConstructNextBatch](#constructNextBatch-shouldConstructNextBatch) flag enabled (`true`), `constructNextBatch` [updates the status message](../monitoring/ProgressReporter.md#updateStatusMessage) to the following:
+With the [shouldConstructNextBatch](#constructNextBatch-shouldConstructNextBatch) flag enabled (`true`), `constructNextBatch` [updates the status message](../ProgressReporter.md#updateStatusMessage) to the following:
 
 ```text
 Writing offsets to log
 ```
 
 [[constructNextBatch-walCommit]]
-In *walCommit* [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the [availableOffsets StreamProgress](../StreamExecution.md#availableOffsets) to [convert to OffsetSeq](../StreamProgress.md#toOffsetSeq) (with the [BaseStreamingSources](#sources) and the [current batch metadata (event-time watermark and timestamp)](../StreamExecution.md#offsetSeqMetadata)) that is in turn [added](../HDFSMetadataLog.md#add) to the [write-ahead log](../StreamExecution.md#offsetLog) for the [current batch ID](../StreamExecution.md#currentBatchId).
+In *walCommit* [time-tracking section](../ProgressReporter.md#reportTimeTaken), `constructNextBatch` requests the [availableOffsets StreamProgress](../StreamExecution.md#availableOffsets) to [convert to OffsetSeq](../StreamProgress.md#toOffsetSeq) (with the [BaseStreamingSources](#sources) and the [current batch metadata (event-time watermark and timestamp)](../StreamExecution.md#offsetSeqMetadata)) that is in turn [added](../HDFSMetadataLog.md#add) to the [write-ahead log](../StreamExecution.md#offsetLog) for the [current batch ID](../StreamExecution.md#currentBatchId).
 
 `constructNextBatch` prints out the following INFO message to the logs:
 
@@ -499,7 +502,7 @@ Completed batch [currentBatchId]
 
 ### <span id="runBatch-getBatch"> getBatch Phase -- Creating Logical Query Plans For Unprocessed Data From Sources and MicroBatchReaders
 
-In *getBatch* [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `runBatch` goes over the [available offsets](../StreamExecution.md#availableOffsets) and processes every [Source](#runBatch-getBatch-Source) and [MicroBatchReader](#runBatch-getBatch-MicroBatchReader) (associated with the available offsets) to create logical query plans (`newData`) for data processing (per offset ranges).
+In *getBatch* [time-tracking section](../ProgressReporter.md#reportTimeTaken), `runBatch` goes over the [available offsets](../StreamExecution.md#availableOffsets) and processes every [Source](#runBatch-getBatch-Source) and [MicroBatchReader](#runBatch-getBatch-MicroBatchReader) (associated with the available offsets) to create logical query plans (`newData`) for data processing (per offset ranges).
 
 !!! NOTE
     `runBatch` requests sources and readers for data per offset range sequentially, one by one.
@@ -600,7 +603,7 @@ Local Property | Value
 
 ![StreamExecution's Query Planning (queryPlanning Phase)](../images/StreamExecution-runBatch-queryPlanning.png)
 
-In *queryPlanning* [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `runBatch` creates a new [IncrementalExecution](../StreamExecution.md#lastExecution) with the following:
+In *queryPlanning* [time-tracking section](../ProgressReporter.md#reportTimeTaken), `runBatch` creates a new [IncrementalExecution](../StreamExecution.md#lastExecution) with the following:
 
 * [Transformed logical plan](#runBatch-triggerLogicalPlan)
 
@@ -628,7 +631,7 @@ The `DataFrame` represents the result of executing the current micro-batch of th
 
 ![StreamExecution Adds DataFrame With New Data to Sink](../images/StreamExecution-runBatch-addBatch.png)
 
-In **addBatch** [time-tracking section](../monitoring/ProgressReporter.md#reportTimeTaken), `runBatch` adds the `DataFrame` with new data to the [BaseStreamingSink](#sink).
+In **addBatch** [time-tracking section](../ProgressReporter.md#reportTimeTaken), `runBatch` adds the `DataFrame` with new data to the [BaseStreamingSink](#sink).
 
 For a [Sink](../Sink.md) (Data Source API V1), `runBatch` simply requests the `Sink` to [add the DataFrame](../Sink.md#addBatch) (with the [batch ID](../StreamExecution.md#currentBatchId)).
 
@@ -686,7 +689,7 @@ isNewDataAvailable: Boolean
 logicalPlan: LogicalPlan
 ```
 
-`logicalPlan` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#logicalPlan) abstraction.
+`logicalPlan` is part of the [ProgressReporter](../ProgressReporter.md#logicalPlan) abstraction.
 
 ??? note "Lazy Value and ProgressReporter"
     `logicalPlan` is a Scala **lazy value** to guarantee that the code to initialize it is executed once only (when accessed for the first time) and the computed value never changes afterwards.
@@ -695,7 +698,7 @@ logicalPlan: LogicalPlan
 
     ---
 
-    Note that `logicalPlan` is part of the [ProgressReporter](../monitoring/ProgressReporter.md#logicalPlan) abstraction in which `logicalPlan` is a method (`def`).
+    Note that `logicalPlan` is part of the [ProgressReporter](../ProgressReporter.md#logicalPlan) abstraction in which `logicalPlan` is a method (`def`).
 
 ---
 

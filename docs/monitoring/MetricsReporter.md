@@ -2,7 +2,7 @@
 
 `MetricsReporter` is a metrics `Source` ([Spark Core]({{ book.spark_core }}/metrics/Source/)) to report [metrics](#gauges) of a [streaming query](../StreamExecution.md#streamMetrics).
 
-`MetricsReporter` uses the [last StreamingQueryProgress](ProgressReporter.md#lastProgress) (of the [StreamExecution](#stream)) if available or simply defaults to a "zero" value.
+`MetricsReporter` uses the [last StreamingQueryProgress](../ProgressReporter.md#lastProgress) (of the [StreamExecution](#stream)) if available or simply defaults to a "zero" value.
 
 !!! note "spark.sql.streaming.metricsEnabled"
     `MetricsReporter` is registered when [spark.sql.streaming.metricsEnabled](../configuration-properties.md#spark.sql.streaming.metricsEnabled) is enabled.

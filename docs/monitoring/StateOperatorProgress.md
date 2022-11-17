@@ -66,7 +66,7 @@ copy(
 
 `copy` is used when:
 
-* `ProgressReporter` is requested to [extractStateOperatorMetrics](ProgressReporter.md#extractStateOperatorMetrics)
+* `ProgressReporter` is requested to [extractStateOperatorMetrics](../ProgressReporter.md#extractStateOperatorMetrics)
 * `SessionWindowStateStoreSaveExec` is requested for a [StateOperatorProgress](../physical-operators/SessionWindowStateStoreSaveExec.md#extractStateOperatorMetrics)
 
 ## <span id="jsonValue"> jsonValue

@@ -266,7 +266,7 @@ Use [SQLConf.streamingNoDataMicroBatchesEnabled](SQLConf.md#streamingNoDataMicro
 
 **spark.sql.streaming.noDataProgressEventInterval**
 
-**(internal)** How long to wait (in millis) between two [progress events](monitoring/ProgressReporter.md#updateProgress) when there is no data when `ProgressReporter` is requested to [finish a trigger](monitoring/ProgressReporter.md#finishTrigger)
+**(internal)** How long to wait (in millis) between two [progress events](ProgressReporter.md#updateProgress) when there is no data when `ProgressReporter` is requested to [finish a trigger](ProgressReporter.md#finishTrigger)
 
 Default: `10000L` (`10s`)
 
@@ -276,7 +276,7 @@ Use [SQLConf.streamingNoDataProgressEventInterval](SQLConf.md#streamingNoDataPro
 
 **spark.sql.streaming.numRecentProgressUpdates**
 
-Number of [StreamingQueryProgresses](monitoring/StreamingQueryProgress.md) to retain in [progressBuffer](monitoring/ProgressReporter.md#progressBuffer) internal registry when `ProgressReporter` is requested to [update progress of streaming query](monitoring/ProgressReporter.md#updateProgress)
+Number of [StreamingQueryProgresses](monitoring/StreamingQueryProgress.md) to retain in [progressBuffer](ProgressReporter.md#progressBuffer) internal registry when `ProgressReporter` is requested to [update progress of streaming query](ProgressReporter.md#updateProgress)
 
 Default: `100`
 

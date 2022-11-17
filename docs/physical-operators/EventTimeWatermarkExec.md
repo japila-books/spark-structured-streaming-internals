@@ -40,7 +40,7 @@ When [executed](#doExecute), `EventTimeWatermarkExec` uses the `EventTimeStatsAc
 
 `eventTimeStats` is used to transfer the statistics (maximum, minimum, average and update count) of the long values in the [event-time watermark column](#eventTime) to be used for the following:
 
-* `ProgressReporter` is requested for the most recent [execution statistics](../monitoring/ProgressReporter.md#extractExecutionStats) (for `max`, `min`, `avg`, and `watermark` event-time watermark statistics)
+* `ProgressReporter` is requested for the most recent [execution statistics](../ProgressReporter.md#extractExecutionStats) (for `max`, `min`, `avg`, and `watermark` event-time watermark statistics)
 
 * `WatermarkTracker` is requested to [updateWatermark](../watermark/WatermarkTracker.md#updateWatermark)
 

@@ -145,7 +145,7 @@ Used when...FIXME
 status: StreamingQueryStatus
 ```
 
-[StreamingQueryStatus](monitoring/StreamingQueryStatus.md) of the streaming query (as `StreamExecution` [has accumulated](monitoring/ProgressReporter.md#currentStatus) being a `ProgressReporter` while running the streaming query)
+[StreamingQueryStatus](monitoring/StreamingQueryStatus.md) of the streaming query (as `StreamExecution` [has accumulated](ProgressReporter.md#currentStatus) being a `ProgressReporter` while running the streaming query)
 
 Used when...FIXME
 

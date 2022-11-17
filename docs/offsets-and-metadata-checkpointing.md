@@ -58,6 +58,6 @@ Completed batch [currentBatchId]
 
 ## Limitations (Assumptions)
 
-It is assumed that the order of [streaming sources](monitoring/ProgressReporter.md#sources) in a [streaming query](StreamExecution.md#analyzedPlan) matches the order of the [offsets](OffsetSeq.md#offsets) of [OffsetSeq](OffsetSeq.md) (in [offsetLog](StreamExecution.md#offsetLog)) and [availableOffsets](StreamExecution.md#availableOffsets).
+It is assumed that the order of [streaming sources](ProgressReporter.md#sources) in a [streaming query](StreamExecution.md#analyzedPlan) matches the order of the [offsets](OffsetSeq.md#offsets) of [OffsetSeq](OffsetSeq.md) (in [offsetLog](StreamExecution.md#offsetLog)) and [availableOffsets](StreamExecution.md#availableOffsets).
 
 In other words, a streaming query can be modified and then restarted from a checkpoint (to maintain stream processing state) only when the number of streaming sources and their order are preserved across restarts.
