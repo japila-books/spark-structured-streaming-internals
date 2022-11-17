@@ -363,7 +363,9 @@ nav:
     - Kafka:
       - kafka/index.md
       - CachedKafkaConsumer: kafka/CachedKafkaConsumer.md
-      - ConsumerStrategy: kafka/ConsumerStrategy.md
+      - Consumer Strategies:
+        - ConsumerStrategy: kafka/ConsumerStrategy.md
+        - SubscribeStrategy: kafka/SubscribeStrategy.md
       - KafkaBatch: kafka/KafkaBatch.md
       - KafkaBatchInputPartition: kafka/KafkaBatchInputPartition.md
       - KafkaContinuousInputPartition: kafka/KafkaContinuousInputPartition.md

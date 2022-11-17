@@ -1,29 +1,42 @@
-== [[ConsumerStrategy]] ConsumerStrategy Contract for KafkaConsumer Providers
+# ConsumerStrategy
 
-`ConsumerStrategy` is the <<contract, contract>> for components that can <<createConsumer, create a KafkaConsumer>> using the given Kafka parameters.
+`ConsumerStrategy` is an [abstraction](#contract) of [consumer strategies](#implementations) of which partitions to read records from.
 
-[[contract]]
-[[createConsumer]]
-[source, scala]
-----
-createConsumer(kafkaParams: java.util.Map[String, Object]): Consumer[Array[Byte], Array[Byte]]
-----
+## Contract
 
-[[available-consumerstrategies]]
-.Available ConsumerStrategies
-[cols="1,2",options="header",width="100%"]
-|===
-| ConsumerStrategy
-| createConsumer
+### <span id="assignedTopicPartitions"> Assigned TopicPartitions
 
-| [[AssignStrategy]] `AssignStrategy`
-| Uses ++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#assign(java.util.Collection)++[KafkaConsumer.assign(Collection<TopicPartition> partitions)]
+```scala
+assignedTopicPartitions(
+  admin: Admin): Set[TopicPartition]
+```
 
-| [[SubscribeStrategy]] `SubscribeStrategy`
-| Uses ++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe(java.util.Collection)++[KafkaConsumer.subscribe(Collection<String> topics)]
+Assigned `TopicPartition`s ([Apache Kafka]({{ kafka.api }}/org/apache/kafka/common/TopicPartition.html))
 
-| [[SubscribePatternStrategy]] `SubscribePatternStrategy`
-a| Uses ++http://kafka.apache.org/0110/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe(java.util.regex.Pattern,%20org.apache.kafka.clients.consumer.ConsumerRebalanceListener)++[KafkaConsumer.subscribe(Pattern pattern, ConsumerRebalanceListener listener)] with `NoOpConsumerRebalanceListener`.
+Used when:
 
-TIP: Refer to http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[java.util.regex.Pattern] for the format of supported topic subscription regex patterns.
-|===
+* `KafkaOffsetReaderAdmin` is requested to [fetchPartitionOffsets](KafkaOffsetReaderAdmin.md#fetchPartitionOffsets), [partitionsAssignedToAdmin](KafkaOffsetReaderAdmin.md#partitionsAssignedToAdmin)
+
+### <span id="createConsumer"> Creating Kafka Consumer
+
+```scala
+createConsumer(
+  kafkaParams: ju.Map[String, Object]): Consumer[Array[Byte], Array[Byte]]
+```
+
+Creates a `Consumer` ([Apache Kafka]({{ kafka.api }}/org/apache/kafka/clients/consumer/Consumer.html))
+
+Used when:
+
+* `KafkaOffsetReaderConsumer` is requested for a [Kafka Consumer](KafkaOffsetReaderConsumer.md#consumer)
+
+## Implementations
+
+??? note "Sealed Trait"
+    `ConsumerStrategy` is a Scala **sealed trait** which means that all of the implementations are in the same compilation unit (a single file).
+
+    Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#sealed).
+
+* `AssignStrategy`
+* `SubscribePatternStrategy`
+* [SubscribeStrategy](SubscribeStrategy.md)

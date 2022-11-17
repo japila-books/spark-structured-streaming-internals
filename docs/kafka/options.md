@@ -131,7 +131,7 @@ Possible values:
 
 ## <span id="subscribe"><span id="SUBSCRIBE"> subscribe
 
-[Topic subscription strategy](ConsumerStrategy.md#SubscribeStrategy) that accepts topic names as a comma-separated string, e.g.
+[SubscribeStrategy](SubscribeStrategy.md) to use that accepts topic names as a comma-separated string, e.g.
 
 ```text
 topic1,topic2,topic3

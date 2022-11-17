@@ -222,6 +222,22 @@ If you want your streaming query to fail on such cases, set the source option "f
 
 * `KafkaMicroBatchStream` is requested to [planInputPartitions](#planInputPartitions) and [getOrCreateInitialPartitionOffsets](#getOrCreateInitialPartitionOffsets)
 
+## <span id="toString"> String Representation
+
+```scala
+toString(): String
+```
+
+`toString` is part of the `Object` ([Java]({{ java.api }}/java/lang/Object.html#toString())) abstraction.
+
+---
+
+`toString` is the following (with the string representation of the [KafkaOffsetReader](#kafkaOffsetReader)):
+
+```text
+KafkaV2[[kafkaOffsetReader]]
+```
+
 ## Logging
 
 Enable `ALL` logging level for `org.apache.spark.sql.kafka010.KafkaMicroBatchStream` logger to see what happens inside.
