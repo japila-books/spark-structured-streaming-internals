@@ -485,7 +485,9 @@ lastNoExecutionProgressEventTime: Long
 
 ### <span id="noDataProgressEventInterval"> noDataProgressEventInterval
 
-`ProgressReporter` uses [spark.sql.streaming.noDataProgressEventInterval](../configuration-properties.md#spark.sql.streaming.noDataProgressEventInterval) configuration property to control how long to wait between emitting a progress event when there is no data when [finishing a trigger](#finishTrigger).
+`ProgressReporter` uses [spark.sql.streaming.noDataProgressEventInterval](../configuration-properties.md#spark.sql.streaming.noDataProgressEventInterval) configuration property to control whether to [updateProgress](#updateProgress) or not when requested to [finish up a trigger](#finishTrigger).
+
+Whether to [updateProgress](#updateProgress) or not is driven by whether a batch was executed based on [isCurrentBatchConstructed](#isCurrentBatchConstructed) and how much time passed since the last [updateProgress](#updateProgress).
 
 ## <span id="recordTriggerOffsets"> Recording Trigger Offsets (StreamProgress)
 

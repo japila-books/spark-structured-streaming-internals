@@ -193,6 +193,18 @@ In the end, `latestOffset` records the offsets in the [endPartitionOffsets](#end
     * [rateLimit](#rateLimit) for `ReadMaxRows`
     * [latestPartitionOffsets](#latestPartitionOffsets)
 
+### <span id="delayBatch"> delayBatch
+
+```scala
+delayBatch(
+  minLimit: Long,
+  latestOffsets: Map[TopicPartition, Long],
+  currentOffsets: Map[TopicPartition, Long],
+  maxTriggerDelayMs: Long): Boolean
+```
+
+If the time since [lastTriggerMillis](#lastTriggerMillis) is at least `maxTriggerDelayMs` (based on the [maxTriggerDelayMs](#maxTriggerDelayMs) option), `delayBatch`...FIXME
+
 ## <span id="reportDataLoss"> reportDataLoss
 
 ```scala

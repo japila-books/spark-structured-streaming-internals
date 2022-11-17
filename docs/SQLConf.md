@@ -39,6 +39,14 @@ Used when:
 
 * `MicroBatchExecution` stream execution engine is requested to [run an activated streaming query](micro-batch-execution/MicroBatchExecution.md#runActivatedStream)
 
+## <span id="streamingNoDataProgressEventInterval"><span id="STREAMING_NO_DATA_PROGRESS_EVENT_INTERVAL"> streamingNoDataProgressEventInterval
+
+[spark.sql.streaming.noDataProgressEventInterval](configuration-properties.md#spark.sql.streaming.noDataProgressEventInterval)
+
+Used when:
+
+* `ProgressReporter` is [created](monitoring/ProgressReporter.md#noDataProgressEventInterval)
+
 ## <span id="fileSinkLogCleanupDelay"><span id="FILE_SINK_LOG_CLEANUP_DELAY"> fileSinkLogCleanupDelay
 
 [spark.sql.streaming.fileSink.log.cleanupDelay](configuration-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property
@@ -138,12 +146,6 @@ a| [[STREAMING_CHECKPOINT_FILE_MANAGER_CLASS]] Used exclusively when `Checkpoint
 [spark.sql.streaming.multipleWatermarkPolicy](configuration-properties.md#spark.sql.streaming.multipleWatermarkPolicy)
 
 a| [[STREAMING_MULTIPLE_WATERMARK_POLICY]]
-
-| `streamingNoDataProgressEventInterval`
-
-[spark.sql.streaming.noDataProgressEventInterval](configuration-properties.md#spark.sql.streaming.noDataProgressEventInterval)
-
-a| [[streamingNoDataProgressEventInterval]] Used exclusively for [ProgressReporter](monitoring/ProgressReporter.md#noDataProgressEventInterval)
 
 | `streamingPollingDelay`
 

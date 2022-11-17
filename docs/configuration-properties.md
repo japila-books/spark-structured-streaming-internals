@@ -266,11 +266,11 @@ Use [SQLConf.streamingNoDataMicroBatchesEnabled](SQLConf.md#streamingNoDataMicro
 
 **spark.sql.streaming.noDataProgressEventInterval**
 
-**(internal)** How long to wait between two progress events when there is no data (in millis) when `ProgressReporter` is requested to [finish a trigger](monitoring/ProgressReporter.md#finishTrigger)
+**(internal)** How long to wait (in millis) between two [progress events](monitoring/ProgressReporter.md#updateProgress) when there is no data when `ProgressReporter` is requested to [finish a trigger](monitoring/ProgressReporter.md#finishTrigger)
 
-Default: `10000L`
+Default: `10000L` (`10s`)
 
-Use [SQLConf.streamingNoDataProgressEventInterval](SQLConf.md#streamingNoDataProgressEventInterval) to get the current value
+Use [SQLConf.streamingNoDataProgressEventInterval](SQLConf.md#streamingNoDataProgressEventInterval) for the current value
 
 ## <span id="spark.sql.streaming.numRecentProgressUpdates"> numRecentProgressUpdates
 
