@@ -206,6 +206,7 @@ nav:
       - micro-batch-execution/index.md
       - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
       - MicroBatchWrite: micro-batch-execution/MicroBatchWrite.md
+      - MicroBatchWriterFactory: micro-batch-execution/MicroBatchWriterFactory.md
     - RocksDB State Store:
       - rocksdb/index.md
       - RocksDB: rocksdb/RocksDB.md
@@ -389,6 +390,7 @@ nav:
       - KafkaSourceOffset: kafka/KafkaSourceOffset.md
       - KafkaSourceProvider: kafka/KafkaSourceProvider.md
       - KafkaSourceRDD: kafka/KafkaSourceRDD.md
+      - KafkaStreamingWrite: kafka/KafkaStreamingWrite.md
       - KafkaTable: kafka/KafkaTable.md
       - Options: kafka/options.md
     - Memory:
