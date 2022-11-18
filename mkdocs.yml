@@ -391,6 +391,7 @@ nav:
       - KafkaSourceProvider: kafka/KafkaSourceProvider.md
       - KafkaSourceRDD: kafka/KafkaSourceRDD.md
       - KafkaStreamingWrite: kafka/KafkaStreamingWrite.md
+      - KafkaStreamWriterFactory: kafka/KafkaStreamWriterFactory.md
       - KafkaTable: kafka/KafkaTable.md
       - Options: kafka/options.md
     - Memory:
