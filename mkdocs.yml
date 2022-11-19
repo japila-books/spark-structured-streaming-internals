@@ -197,6 +197,7 @@ nav:
     - Misc:
       - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
       - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
+      - StreamingDataWriterFactory: StreamingDataWriterFactory.md
       - StreamingQueryWrapper: StreamingQueryWrapper.md
       - UnsupportedOperationChecker: UnsupportedOperationChecker.md
   - Features:

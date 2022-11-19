@@ -1,3 +1,3 @@
 # KafkaStreamWriterFactory
 
-`KafkaStreamWriterFactory` is...FIXME
+`KafkaStreamWriterFactory` is a [StreamingDataWriterFactory](../StreamingDataWriterFactory.md).
