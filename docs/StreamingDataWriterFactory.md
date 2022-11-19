@@ -1,6 +1,6 @@
 # StreamingDataWriterFactory
 
-`StreamingDataWriterFactory` is an [abstraction](#contract) of [factories](#implementations) that [create a DataWriter](#createWriter).
+`StreamingDataWriterFactory` is an [abstraction](#contract) of [factories](#implementations) to [create a DataWriter](#createWriter).
 
 ## Contract
 

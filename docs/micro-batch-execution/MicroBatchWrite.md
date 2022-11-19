@@ -31,7 +31,7 @@ commit(
 
 `commit` requests the [StreamingWrite](#writeSupport) to [commit](../StreamingWrite.md#commit).
 
-## <span id="createBatchWriterFactory"> Creating Batch DataWriterFactory
+## <span id="createBatchWriterFactory"> Creating DataWriterFactory for Batch Write
 
 ```scala
 createBatchWriterFactory(
