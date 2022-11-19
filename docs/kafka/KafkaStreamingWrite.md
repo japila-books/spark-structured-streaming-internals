@@ -12,9 +12,9 @@
 
 `KafkaStreamingWrite` is created when:
 
-* `KafkaWrite` ([Spark SQL]({{ book.spark_sql }}/kafka/KafkaWrite)) is requested to `toStreaming`
+* `KafkaWrite` ([Spark SQL]({{ book.spark_sql }}/kafka/KafkaWrite)) is requested for a [StreamingWrite](../StreamingWrite.md)
 
-## <span id="createStreamingWriterFactory"> createStreamingWriterFactory
+## <span id="createStreamingWriterFactory"> Creating StreamingDataWriterFactory
 
 ```scala
 createStreamingWriterFactory(
