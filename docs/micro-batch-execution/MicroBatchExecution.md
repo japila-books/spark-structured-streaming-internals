@@ -627,21 +627,25 @@ In the end (of the `queryPlanning` phase), `runBatch` requests the `IncrementalE
 
 The `DataFrame` represents the result of executing the current micro-batch of the streaming query.
 
-### <span id="runBatch-addBatch"> addBatch Phase &mdash; Adding DataFrame With New Data to Sink
+### <span id="runBatch-addBatch"><span id="addBatch"> addBatch Phase
 
 ![StreamExecution Adds DataFrame With New Data to Sink](../images/StreamExecution-runBatch-addBatch.png)
 
-In **addBatch** [time-tracking section](../ProgressReporter.md#reportTimeTaken), `runBatch` adds the `DataFrame` with new data to the [BaseStreamingSink](#sink).
+`runBatch` starts **addBatch** phase ([time-tracking section](../ProgressReporter.md#reportTimeTaken)).
 
-For a [Sink](../Sink.md) (Data Source API V1), `runBatch` simply requests the `Sink` to [add the DataFrame](../Sink.md#addBatch) (with the [batch ID](../StreamExecution.md#currentBatchId)).
+`runBatch` uses `SQLExecution.withNewExecutionId` ([Spark SQL]({{ book.spark_sql }}/SQLExecution#withNewExecutionId)) (with the [Last Incremental QueryExecution](../StreamExecution.md#lastExecution)) to execute and track all the Spark jobs under one execution id (so it is reported as one single multi-job execution, e.g. in web UI).
 
-`runBatch` uses `SQLExecution.withNewExecutionId` to execute and track all the Spark jobs under one execution id (so it is reported as one single multi-job execution, e.g. in web UI).
+!!! note "SQLExecution.withNewExecutionId, SparkListenerSQLExecutionStart and SparkListenerSQLExecutionEnd"
+    `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before query execution and a `SparkListenerSQLExecutionEnd` event right afterwards.
 
-!!! note
-    `SQLExecution.withNewExecutionId` posts a `SparkListenerSQLExecutionStart` event before execution and a `SparkListenerSQLExecutionEnd` event right afterwards.
+    Register `SparkListener` to get notified about these two SQL execution events (`SparkListenerSQLExecutionStart` and `SparkListenerSQLExecutionEnd`).
 
-!!! tip
-    Register `SparkListener` to get notified about the SQL execution events (`SparkListenerSQLExecutionStart` and `SparkListenerSQLExecutionEnd`).
+`runBatch` branches off based on the `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table)) to write the microbatch to:
+
+* For a [Sink](../Sink.md) (Data Source API V1), `runBatch` requests it to [add the DataFrame](../Sink.md#addBatch)
+* For a `SupportsWrite` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsWrite)), `runBatch` requests it to `collect` the rows (that, although looks as a performance "nightmare", pulls no data to the driver and just forces execution of the microbatch writer)
+
+In the end (of the `addBatch` phase), `runBatch` requests the underlying [WriteToDataSourceV2Exec](../physical-operators/WriteToDataSourceV2Exec.md) physical operator for the `StreamWriterCommitProgress` (with `numOutputRows` metric).
 
 ### <span id="runBatch-updateWatermark-commitLog"> Updating Watermark and Committing Offsets to Offset Commit Log
 

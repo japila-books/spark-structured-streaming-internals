@@ -422,7 +422,7 @@ sinkCommitProgress: Option[StreamWriterCommitProgress]
 
 `StreamExecution` initializes `sinkCommitProgress` registry to be `None` when [created](#creating-instance).
 
-## <span id="lastExecution"> Last Query Execution Of Streaming Query (IncrementalExecution)
+## <span id="lastExecution"> Last Incremental QueryExecution
 
 ```scala
 lastExecution: IncrementalExecution
@@ -430,7 +430,9 @@ lastExecution: IncrementalExecution
 
 `lastExecution` is part of the [ProgressReporter](ProgressReporter.md#lastExecution) abstraction.
 
-`lastExecution` is a [IncrementalExecution](IncrementalExecution.md) (a `QueryExecution` of a streaming query) of the most recent (_last_) execution.
+---
+
+`lastExecution` is an [IncrementalExecution](IncrementalExecution.md) (a `QueryExecution` of a streaming query) of the most recent (_last_) execution.
 
 `lastExecution` is created when the <<extensions, stream execution engines>> are requested for the following:
 
