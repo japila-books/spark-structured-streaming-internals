@@ -1,6 +1,12 @@
 # IncrementalExecution
 
-`IncrementalExecution` is the `QueryExecution` ([Spark SQL]({{ book.spark_sql }}/QueryExecution)) of streaming queries.
+`IncrementalExecution` is a `QueryExecution` ([Spark SQL]({{ book.spark_sql }}/QueryExecution)) made for streaming queries with the following customizations:
+
+* Extra handling of `CurrentBatchTimestamp` and `ExpressionWithRandomSeed` expressions for the [optimizedPlan](#optimizedPlan)
+* [Extra Planning Strategies](#planner)
+* [Extra Physical Optimizations](#preparations)
+
+`IncrementalExecution` is part of [StreamExecution](StreamExecution.md#lastExecution)s (e.g. [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#lastExecution) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#lastExecution)).
 
 ## Creating Instance
 
@@ -8,59 +14,64 @@
 
 * <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
 * <span id="logicalPlan"> `LogicalPlan` ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan))
-* <span id="outputMode"> [OutputMode](OutputMode.md)
-* <span id="checkpointLocation"> [State checkpoint location](#state-checkpoint-location)
+* [OutputMode](#outputMode)
+* [State Checkpoint Location](#checkpointLocation)
 * <span id="queryId"> Query ID
 * <span id="runId"> Run ID
 * <span id="currentBatchId"> Current Batch ID
 * <span id="offsetSeqMetadata"> [OffsetSeqMetadata](OffsetSeqMetadata.md)
 
-`IncrementalExecution` is created (and becomes the [StreamExecution.lastExecution](StreamExecution.md#lastExecution)) when:
+`IncrementalExecution` is created when:
 
 * `MicroBatchExecution` is requested to [run a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (in [queryPlanning](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning) phase)
 * `ContinuousExecution` is requested to [run a streaming query in continuous mode](continuous-execution/ContinuousExecution.md#runContinuous) (in [queryPlanning](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning) phase)
 * [Dataset.explain](operators/explain.md) operator is executed (on a streaming query)
 
-## <span id="statefulOperatorId"> statefulOperatorId
+### <span id="outputMode"> OutputMode
 
-`IncrementalExecution` uses the `statefulOperatorId` internal counter for the IDs of the stateful operators in the [optimized logical plan](#optimizedPlan) (while applying the [preparations](#preparations) rules) when requested to prepare the plan for execution (in [executedPlan](#executedPlan) phase).
+`IncrementalExecution` is given an [OutputMode](OutputMode.md) when [created](#creating-instance).
 
-## <span id="preparing-for-execution"><span id="optimizedPlan"><span id="executedPlan"> Preparing Logical Plan (of Streaming Query) for Execution
+The `OutputMode` is used for the following:
 
-When requested for an optimized logical plan (of the [analyzed logical plan](#logicalPlan)), `IncrementalExecution` transforms `CurrentBatchTimestamp` and `ExpressionWithRandomSeed` expressions with the timestamp literal and new random seeds, respectively. When transforming `CurrentBatchTimestamp` expressions, `IncrementalExecution` prints out the following INFO message to the logs:
+* [planner](#planner) (to create [StreamingGlobalLimitStrategy](execution-planning-strategies/StreamingGlobalLimitStrategy.md#outputMode))
+* [state](#state) (to fill in [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md#outputMode), [SessionWindowStateStoreSaveExec](physical-operators/SessionWindowStateStoreSaveExec.md#outputMode), [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md#outputMode) with the state of a current microbatch)
 
-```text
-Current batch timestamp = [timestamp]
-```
+### <span id="checkpointLocation"> State Checkpoint Location
 
-Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
+`IncrementalExecution` is given a directory (_location_) for state checkpointing when [created](#creating-instance).
 
-### <span id="preparations"> Preparations Optimization Rules
+The directory is as follows:
+
+* `state` directory in the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot) in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md)
+* `<unknown>` when `QueryExecution` is requested to `explainString` ([Spark SQL]({{ book.spark_sql }}/QueryExecution#explainString)) on a streaming query (since there is no output specified yet)
 
 ```scala
-preparations: Seq[Rule[SparkPlan]]
-```
-
-`preparations` is part of the `QueryExecution` ([Spark SQL]({{ book.spark_sql }}/QueryExecution#preparations)) abstraction.
-
----
-
-`preparations` is the [state](#state) optimization rules before the parent's ones.
-
-## State Checkpoint Location
-
-`IncrementalExecution` is given the [checkpoint location](#checkpointLocation) when [created](#creating-instance).
-
-For the two available execution engines ([MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md)), the checkpoint location is actually **state** directory under the [checkpoint root directory](StreamExecution.md#resolvedCheckpointRoot).
-
-```text
 val queryName = "rate2memory"
 val checkpointLocation = s"file:/tmp/checkpoint-$queryName"
 val query = spark
   .readStream
   .format("rate")
   .load
-  .writeStream
+  .groupBy($"value" % 2 as "gid")
+  .count
+```
+
+```text
+scala> query.explain
+== Physical Plan ==
+*(4) HashAggregate(keys=[_groupingexpression#22L], functions=[count(1)])
++- StateStoreSave [_groupingexpression#22L], state info [ checkpoint = <unknown>, runId = 0ec02b7b-ada5-4a71-970e-145453417319, opId = 0, ver = 0, numPartitions = 200], Append, 0, 2
+   +- *(3) HashAggregate(keys=[_groupingexpression#22L], functions=[merge_count(1)])
+      +- StateStoreRestore [_groupingexpression#22L], state info [ checkpoint = <unknown>, runId = 0ec02b7b-ada5-4a71-970e-145453417319, opId = 0, ver = 0, numPartitions = 200], 2
+         +- *(2) HashAggregate(keys=[_groupingexpression#22L], functions=[merge_count(1)])
+            +- Exchange hashpartitioning(_groupingexpression#22L, 200), ENSURE_REQUIREMENTS, [plan_id=138]
+               +- *(1) HashAggregate(keys=[_groupingexpression#22L], functions=[partial_count(1)])
+                  +- *(1) Project [(value#9L % 2) AS _groupingexpression#22L]
+                     +- StreamingRelation rate, [timestamp#8, value#9L]
+```
+
+```scala
+query.writeStream
   .format("memory")
   .queryName(queryName)
   .option("checkpointLocation", checkpointLocation)
@@ -81,7 +92,39 @@ val stateDir = s"$checkpointLocation/state"
 assert(stateCheckpointDir equals stateDir)
 ```
 
-State checkpoint location is used when `IncrementalExecution` is requested for the [state info of the next stateful operator](#nextStatefulOperationStateInfo) (when requested to optimize a streaming physical plan using the [state preparation rule](#state) that creates the stateful physical operators: [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md), [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md), [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md), [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md), and [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md)).
+The State Checkpoint Location is used when:
+
+* `IncrementalExecution` is requested for the [state info of the next stateful operator](#nextStatefulOperationStateInfo) (when requested to optimize a streaming physical plan using the [state preparation rule](#state) that creates a stateful physical operator).
+
+## <span id="StreamingExplainCommand"> StreamingExplainCommand
+
+`IncrementalExecution` is used to create a `StreamingExplainCommand`.
+
+## <span id="statefulOperatorId"> statefulOperatorId
+
+`IncrementalExecution` uses the `statefulOperatorId` internal counter for the IDs of the stateful operators in the [optimized logical plan](#optimizedPlan) (while applying the [preparations](#preparations) rules) when requested to prepare the plan for execution (in [executedPlan](#executedPlan) phase).
+
+## <span id="preparing-for-execution"><span id="optimizedPlan"><span id="executedPlan"> Preparing Logical Plan (of Streaming Query) for Execution
+
+When requested for an optimized logical plan (of the [analyzed logical plan](#logicalPlan)), `IncrementalExecution` transforms `CurrentBatchTimestamp` and `ExpressionWithRandomSeed` expressions with the timestamp literal and new random seeds, respectively. When transforming `CurrentBatchTimestamp` expressions, `IncrementalExecution` prints out the following INFO message to the logs:
+
+```text
+Current batch timestamp = [timestamp]
+```
+
+Right after [being created](#creating-instance), `IncrementalExecution` is executed (in the **queryPlanning** phase by the [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) and [ContinuousExecution](continuous-execution/ContinuousExecution.md) stream execution engines) and so the entire query execution pipeline is executed up to and including _executedPlan_. That means that the [extra planning strategies](#extraPlanningStrategies) and the [state preparation rule](#state) have been applied at this point and the [streaming query](#logicalPlan) is ready for execution.
+
+### <span id="preparations"> Physical Optimization (Preparations Rules)
+
+```scala
+preparations: Seq[Rule[SparkPlan]]
+```
+
+`preparations` is part of the `QueryExecution` ([Spark SQL]({{ book.spark_sql }}/QueryExecution#preparations)) abstraction.
+
+---
+
+`preparations` is the [state](#state) optimization rules before the parent's ones.
 
 ## <span id="numStateStores"> Number of State Stores (spark.sql.shuffle.partitions)
 
@@ -100,7 +143,7 @@ Internally, `numStateStores` requests the [OffsetSeqMetadata](#offsetSeqMetadata
 
 `numStateStores` is used when `IncrementalExecution` is requested for the [state info of the next stateful operator](#nextStatefulOperationStateInfo) (when requested to optimize a streaming physical plan using the [state preparation rule](#state) that creates the stateful physical operators: [StateStoreSaveExec](physical-operators/StateStoreSaveExec.md), [StateStoreRestoreExec](physical-operators/StateStoreRestoreExec.md), [StreamingDeduplicateExec](physical-operators/StreamingDeduplicateExec.md), [FlatMapGroupsWithStateExec](physical-operators/FlatMapGroupsWithStateExec.md), [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md), and [StreamingGlobalLimitExec](physical-operators/StreamingGlobalLimitExec.md)).
 
-## <span id="planner"><span id="extraPlanningStrategies"> Extra Planning Strategies for Streaming Queries
+## <span id="planner"><span id="extraPlanningStrategies"> Extra Planning Strategies
 
 `IncrementalExecution` uses a custom `SparkPlanner` ([Spark SQL]({{ book.spark_sql }}/SparkPlanner)) with the following **extra planning strategies** to plan the [streaming query](#logicalPlan) for execution:
 
