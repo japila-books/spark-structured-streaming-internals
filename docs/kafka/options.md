@@ -71,7 +71,7 @@ Used when:
 
 ## <span id="minOffsetsPerTrigger"><span id="MIN_OFFSET_PER_TRIGGER"> minOffsetsPerTrigger
 
-Minimum number of records to read in a micro-batch (in [KafkaMicroBatchStream](KafkaMicroBatchStream.md#getDefaultReadLimit))
+Minimum number of records to read in a [micro-batch](KafkaMicroBatchStream.md#minOffsetPerTrigger)
 
 Default: `(undefined)`
 

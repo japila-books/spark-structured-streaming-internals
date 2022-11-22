@@ -203,7 +203,32 @@ delayBatch(
   maxTriggerDelayMs: Long): Boolean
 ```
 
-If the time since [lastTriggerMillis](#lastTriggerMillis) is at least `maxTriggerDelayMs` (based on the [maxTriggerDelayMs](#maxTriggerDelayMs) option), `delayBatch`...FIXME
+!!! note "Summary"
+    `delayBatch` is `false` (_no delay_) when either holds:
+
+    * The given `maxTriggerDelayMs` has passed since [lastTriggerMillis](#lastTriggerMillis)
+    * The total of new records (across all topics and partitions given `latestOffsets` and `currentOffsets`) is at least the given `minLimit`
+
+    Otherwise, `delayBatch` is `true` (_delay_).
+
+Input Parameter | Value
+----------------|------
+ `minLimit` | [minOffsetPerTrigger](#minOffsetPerTrigger)
+ `latestOffsets` | [latestPartitionOffsets](#latestPartitionOffsets)
+ `currentOffsets` | [Offsets by Partitions](KafkaSourceOffset.md#partitionToOffsets) of the [start offset](KafkaSourceOffset.md) (as given to [latestOffset](#latestOffset))
+ `maxTriggerDelayMs` | [maxTriggerDelayMs](#maxTriggerDelayMs)
+
+---
+
+If the given `maxTriggerDelayMs` has passed (since [lastTriggerMillis](#lastTriggerMillis)), `delayBatch` prints out the following DEBUG message to the logs, records the current timestamp in [lastTriggerMillis](#lastTriggerMillis) registry and returns `false` (_no delay_).
+
+```text
+Maximum wait time is passed, triggering batch
+```
+
+Otherwise, `delayBatch` calculates the number of new records (based on the given `latestOffsets` and `currentOffsets`).
+
+If the number of new records is below the given `minLimit`, `delayBatch` returns `true` (_delay_). Otherwise, `delayBatch` records the current timestamp in [lastTriggerMillis](#lastTriggerMillis) registry and returns `false` (_no delay_).
 
 ## <span id="reportDataLoss"> reportDataLoss
 

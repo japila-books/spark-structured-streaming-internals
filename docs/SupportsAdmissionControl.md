@@ -42,6 +42,8 @@ Offset latestOffset(
 The most recent [Offset](Offset.md) available given a [ReadLimit](ReadLimit.md).
 `null` to "announce" no data to process.
 
+See [KafkaMicroBatchStream](kafka/KafkaMicroBatchStream.md#latestOffset)
+
 !!! note "MicroBatchExecution and latestOffset Phase"
     `MicroBatchExecution` stream execution engine uses [latestOffset](micro-batch-execution/MicroBatchExecution.md#latestOffset) execution phase to track the duration to request a [SparkDataStream](SparkDataStream.md) (indirectly via [AvailableNowDataStreamWrapper](AvailableNowDataStreamWrapper.md)) or [SupportsAdmissionControl](SupportsAdmissionControl.md) for [latestOffset](#latestOffset) and [reportLatestOffset](#reportLatestOffset)
 
