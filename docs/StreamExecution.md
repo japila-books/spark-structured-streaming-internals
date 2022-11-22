@@ -434,33 +434,30 @@ lastExecution: IncrementalExecution
 
 `lastExecution` is an [IncrementalExecution](IncrementalExecution.md) (a `QueryExecution` of a streaming query) of the most recent (_last_) execution.
 
-`lastExecution` is created when the <<extensions, stream execution engines>> are requested for the following:
+`lastExecution` is created (and requested for the "executable" `SparkPlan`) when the [stream execution engines](#extensions) are requested for the following:
 
-* `MicroBatchExecution` is requested to <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>> (when in <<MicroBatchExecution.md#runBatch-queryPlanning, queryPlanning Phase>>)
+* `MicroBatchExecution` is requested to [run a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (when in [queryPlanning Phase](micro-batch-execution/MicroBatchExecution.md#runBatch-queryPlanning))
+* `ContinuousExecution` is requested to [run a streaming query](continuous-execution/ContinuousExecution.md#runContinuous) (when in [queryPlanning Phase](continuous-execution/ContinuousExecution.md#runContinuous-queryPlanning))
 
-* `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#runContinuous, run a streaming query>> (when in <<ContinuousExecution.md#runContinuous-queryPlanning, queryPlanning Phase>>)
+`lastExecution` is the `QueryExecution` of the `DataFrame` with new data for every microbatch in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#runBatch-nextBatch).
 
 `lastExecution` is used when:
 
-* `StreamExecution` is requested to <<explain, explain a streaming query>> (via <<explainInternal, explainInternal>>)
-
-* `ProgressReporter` is requested to [extractStateOperatorMetrics](ProgressReporter.md#extractStateOperatorMetrics), [extractExecutionStats](ProgressReporter.md#extractExecutionStats), and [extractSourceToNumInputRows](ProgressReporter.md#extractSourceToNumInputRows)
-
-* `MicroBatchExecution` stream execution engine is requested to <<MicroBatchExecution.md#constructNextBatch-shouldConstructNextBatch, construct or skip the next streaming micro-batch>> (based on [StateStoreWriters in a streaming query](IncrementalExecution.md#shouldRunAnotherBatch)), <<MicroBatchExecution.md#runBatch, run a single streaming micro-batch>> (when in <<MicroBatchExecution.md#runBatch-addBatch, addBatch Phase>> and <<MicroBatchExecution.md#runBatch-updateWatermark-commitLog, updating watermark and committing offsets to offset commit log>>)
-
-* `ContinuousExecution` stream execution engine is requested to <<ContinuousExecution.md#runContinuous, run a streaming query>> (when in <<ContinuousExecution.md#runContinuous-runContinuous, runContinuous Phase>>)
-
-* For debugging query execution of streaming queries (using `debugCodegen`)
+* `MicroBatchExecution` is requested to [construct or skip the next streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#constructNextBatch-shouldConstructNextBatch) (if there are [StateStoreWriters in a streaming query](IncrementalExecution.md#shouldRunAnotherBatch)), [run a single streaming micro-batch](micro-batch-execution/MicroBatchExecution.md#runBatch) (when in [addBatch Phase](micro-batch-execution/MicroBatchExecution.md#runBatch-addBatch) and [updating watermark and committing offsets to offset commit log](micro-batch-execution/MicroBatchExecution.md#runBatch-updateWatermark-commitLog))
+* `StreamExecution` is requested to [explain a streaming query](#explain) (using [explainInternal](#explainInternal))
+* `ContinuousExecution` is requested to [run a streaming query](continuous-execution/ContinuousExecution.md#runContinuous) (when in [runContinuous Phase](continuous-execution/ContinuousExecution.md#runContinuous-runContinuous))
+* For debugging query execution of a streaming query (`codegenString`, `codegenStringSeq`)
 
 ## <span id="explain"> Explaining Streaming Query
 
 ```scala
-explain(): Unit // <1>
+explain(): Unit // (1)!
 explain(extended: Boolean): Unit
 ```
-<1> Turns the `extended` flag off (`false`)
 
-`explain` simply prints out <<explainInternal, explainInternal>> to the standard output.
+1. Turns the `extended` flag off (`false`)
+
+`explain` simply prints out [explainInternal](#explainInternal) to the standard output.
 
 ## <span id="stopSources"> Stopping Streaming Sources and Readers
 
