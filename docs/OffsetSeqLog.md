@@ -1,8 +1,48 @@
 # OffsetSeqLog
 
-`OffsetSeqLog` is a [Hadoop DFS-based metadata storage](HDFSMetadataLog.md) for [OffsetSeq](#OffsetSeq) metadata.
+`OffsetSeqLog` is a [HDFSMetadataLog](HDFSMetadataLog.md) of [OffsetSeq](OffsetSeq.md).
 
-`OffsetSeqLog` is created as the [write-ahead log (WAL) of offsets](StreamExecution.md#offsetLog) of [streaming query execution engines](StreamExecution.md).
+`OffsetSeqLog` is used as the [write-ahead log (WAL) of offsets](StreamExecution.md#offsetLog) of the [streaming query execution engines](StreamExecution.md#implementations).
+
+## Creating Instance
+
+`OffsetSeqLog` takes the following to be created:
+
+* <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
+* <span id="path"> Metadata log directory
+
+`OffsetSeqLog` is created when:
+
+* `StreamExecution` is [created](StreamExecution.md#offsetLog)
+
+## <span id="get"> get
+
+```scala
+get(
+  batchId: Long): Option[OffsetSeq]
+```
+
+`get` is part of the [HDFSMetadataLog](HDFSMetadataLog.md#get) abstraction.
+
+---
+
+`get` looks up the `batchId` in the [cachedMetadata](#cachedMetadata), if available, or uses the parent `HDFSMetadataLog` to [find it](HDFSMetadataLog.md#get).
+
+## <span id="add"> add
+
+```scala
+add(
+  batchId: Long,
+  metadata: OffsetSeq): Boolean
+```
+
+`add` is part of the [HDFSMetadataLog](HDFSMetadataLog.md#add) abstraction.
+
+---
+
+`add` requests the parent `HDFSMetadataLog` to [add](HDFSMetadataLog.md#add) the given `batchId` and `metadata`.
+
+When successful, `add` adds it to the [cachedMetadata](#cachedMetadata) and removes all previous batch metadata but the last two.
 
 <!---
 ## Review Me
@@ -12,13 +52,6 @@
 
 [[VERSION]]
 `OffsetSeqLog` uses `1` for the version when <<serialize, serializing>> and <<deserialize, deserializing>> metadata.
-
-## Creating Instance
-
-`OffsetSeqLog` takes the following to be created:
-
-* [[sparkSession]] `SparkSession`
-* [[path]] Path of the metadata log directory
 
 === [[serialize]] Serializing Metadata (Writing Metadata in Serialized Format) -- `serialize` Method
 

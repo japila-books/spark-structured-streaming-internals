@@ -1,6 +1,6 @@
 # HDFSMetadataLog
 
-`HDFSMetadataLog` is an extension of the [MetadataLog](MetadataLog.md) abstraction for [metadata storage](#extensions) to store [batch files](#batch-files) in a [metadata log directory](#metadataPath) on Hadoop DFS (for fault-tolerance and reliability).
+`HDFSMetadataLog` is an extension of the [MetadataLog](MetadataLog.md) abstraction for [metadata storage](#extensions) to store [batch files](#batch-files) in a [metadata log directory](#metadataPath) on Hadoop DFS-compatible file systems (for fault-tolerance and reliability).
 
 ## Extensions
 

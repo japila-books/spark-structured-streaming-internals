@@ -262,12 +262,11 @@ The `metadata` file is used to restore (_recover_) the [id](#id) (e.g., when a s
 offsetLog: OffsetSeqLog
 ```
 
-`offsetLog` is a [Hadoop DFS-based metadata storage](OffsetSeqLog.md) (of [OffsetSeq](OffsetSeq.md)s) with `offsets` [metadata directory](#checkpointFile).
+`StreamExecution` creates an [OffsetSeqLog](OffsetSeqLog.md) when [created](#creating-instance).
 
-`offsetLog` is used as a **Write-Ahead Log of Offsets** to [persist offsets](HDFSMetadataLog.md#add) of the data about to be processed in every trigger.
+`offsetLog` stores offsets in `offsets` subdirectory of the [metadata directory](#checkpointFile).
 
-!!! tip
-    Monitor `offsets` and `commits` metadata logs to know the progress of a streaming query.
+`offsetLog` is used as a **Write-Ahead Log of Offsets** to [persist offsets](HDFSMetadataLog.md#add) of the data about to be processed.
 
 The number of entries in the `OffsetSeqLog` is controlled using [spark.sql.streaming.minBatchesToRetain](configuration-properties.md#spark.sql.streaming.minBatchesToRetain) configuration property.
 
