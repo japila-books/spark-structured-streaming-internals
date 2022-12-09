@@ -1,5 +1,41 @@
 # OffsetSeq
 
+## Creating Instance
+
+`OffsetSeq` takes the following to be created:
+
+* <span id="offsets"> [Offset](Offset.md)s (`Seq[Option[OffsetV2]]`)
+* <span id="metadata"> [OffsetSeqMetadata](OffsetSeqMetadata.md)
+
+`OffsetSeq` is created when:
+
+* `OffsetSeq` is requested to [fill](#fill)
+* `StreamProgress` is requested to [toOffsetSeq](StreamProgress.md#toOffsetSeq)
+
+## <span id="fill"> fill
+
+```scala
+fill(
+  offsets: Offset*): OffsetSeq // (1)!
+fill(
+  metadata: Option[String],
+  offsets: Offset*): OffsetSeq
+```
+
+1. Uses no `metadata`
+
+`fill`...FIXME
+
+---
+
+`fill` is used when:
+
+* `OffsetSeqLog` is requested to [deserialize an OffsetSeq](OffsetSeqLog.md#deserialize)
+* `ContinuousExecution` is requested to [getStartOffsets](continuous-execution/ContinuousExecution.md#getStartOffsets), [addOffset](continuous-execution/ContinuousExecution.md#addOffset)
+
+<!---
+## Review Me
+
 `OffsetSeq` is the metadata managed by [Hadoop DFS-based metadata storage](OffsetSeqLog.md).
 
 `OffsetSeq` is <<creating-instance, created>> (possibly using the <<fill, fill>> factory methods) when:
@@ -51,23 +87,4 @@ toString: String
 NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
 
 `toString` simply converts the <<offsets, Offsets>> to JSON (if an offset is available) or `-` (a dash if an offset is not available for a streaming source at that position).
-
-=== [[fill]] Creating OffsetSeq Instance -- `fill` Factory Methods
-
-[source, scala]
-----
-fill(
-  offsets: Offset*): OffsetSeq // <1>
-fill(
-  metadata: Option[String],
-  offsets: Offset*): OffsetSeq
-----
-<1> Uses no metadata (`None`)
-
-`fill` simply creates an <<creating-instance, OffsetSeq>> for the given variable sequence of [Offset](Offset.md)s and the optional [OffsetSeqMetadata](OffsetSeqMetadata.md) (in JSON format).
-
-`fill` is used when:
-
-* `OffsetSeqLog` is requested to [deserialize metadata](OffsetSeqLog.md#deserialize)
-
-* `ContinuousExecution` stream execution engine is requested to [get start offsets](continuous-execution/ContinuousExecution.md#getStartOffsets) and [addOffset](continuous-execution/ContinuousExecution.md#addOffset)
+-->

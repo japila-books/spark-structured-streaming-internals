@@ -20,3 +20,19 @@ In other words, `StreamProgress` represents [source data stream](SparkDataStream
 * `OffsetSeq` is requested to [toStreamProgress](OffsetSeq.md#toStreamProgress)
 * [StreamExecution](StreamExecution.md) is created (and creates [committed](StreamExecution.md#committedOffsets), [available](StreamExecution.md#availableOffsets), [latest](StreamExecution.md#latestOffsets) offset trackers)
 * `StreamProgress` is requested to [++](#concat)
+
+## <span id="toOffsetSeq"> toOffsetSeq
+
+```scala
+toOffsetSeq(
+  source: Seq[SparkDataStream],
+  metadata: OffsetSeqMetadata): OffsetSeq
+```
+
+`toOffsetSeq` creates an [OffsetSeq](OffsetSeq.md).
+
+---
+
+`toOffsetSeq` is used when:
+
+* `StreamExecution` is requested to [runStream](StreamExecution.md#runStream) (to create a `StreamingQueryException` when a streaming query fails)

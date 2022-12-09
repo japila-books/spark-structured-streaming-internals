@@ -1,8 +1,11 @@
-# OffsetSeqLog &mdash; Hadoop DFS-based Metadata Storage of OffsetSeqs
+# OffsetSeqLog
 
 `OffsetSeqLog` is a [Hadoop DFS-based metadata storage](HDFSMetadataLog.md) for [OffsetSeq](#OffsetSeq) metadata.
 
 `OffsetSeqLog` is created as the [write-ahead log (WAL) of offsets](StreamExecution.md#offsetLog) of [streaming query execution engines](StreamExecution.md).
+
+<!---
+## Review Me
 
 [[OffsetSeq]][[offsets]][[metadata]]
 `OffsetSeqLog` uses [OffsetSeq](OffsetSeq.md) for metadata which holds an ordered collection of offsets and optional metadata (as [OffsetSeqMetadata](OffsetSeqMetadata.md) for [event-time watermark](watermark/index.md)).
@@ -66,3 +69,4 @@ Incomplete log file
 ```
 
 `deserialize` is part of [HDFSMetadataLog](HDFSMetadataLog.md#deserialize) abstraction.
+-->
