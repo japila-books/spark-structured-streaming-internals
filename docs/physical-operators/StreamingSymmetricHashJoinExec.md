@@ -2,6 +2,77 @@
 
 `StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for executing [stream-stream equi-join](../streaming-join/index.md).
 
+## Creating Instance
+
+`StreamingSymmetricHashJoinExec` takes the following to be created:
+
+* <span id="leftKeys"> Left Keys
+* <span id="rightKeys"> Right Keys
+* [JoinType](#joinType)
+* <span id="condition"> `JoinConditionSplitPredicates`
+* <span id="stateInfo"> [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
+* <span id="eventTimeWatermark"> [Event-Time Watermark](../watermark/index.md)
+* <span id="stateWatermarkPredicates"> [JoinStateWatermarkPredicates](../streaming-join/JoinStateWatermarkPredicates.md)
+* <span id="stateFormatVersion"> State Format Version
+* <span id="left"> Left Child Physical Operator
+* <span id="right"> Right Child Physical Operator
+
+`StreamingSymmetricHashJoinExec` is created when:
+
+* [StreamingJoinStrategy](../execution-planning-strategies/StreamingJoinStrategy.md) execution planning strategy is executed (to plan an equi-join `Join` logical operator of two streaming logical query plans)
+
+!!! note "Equi-Join"
+    An **Equi-Join** is a join with a join condition containing the following equality operators:
+
+    * `EqualTo` ([Spark SQL]({{ book.spark_sql }}/expressions/EqualTo))
+    * `EqualNullSafe` ([Spark SQL]({{ book.spark_sql }}/expressions/EqualNullSafe))
+
+### <span id="joinType"> Join Type
+
+`StreamingSymmetricHashJoinExec` is given a `JoinType` ([Spark SQL]({{ book.spark_sql }}/JoinType)) that can be one of the following:
+
+* `FullOuter`
+* `Inner`
+* `LeftOuter`
+* `LeftSemi`
+* `RightOuter`
+
+## <span id="StateStoreWriter"> StateStoreWriter
+
+`StreamingSymmetricHashJoinExec` is a [StateStoreWriter](StateStoreWriter.md).
+
+## <span id="doExecute"> Executing Operator
+
+```scala
+doExecute(): RDD[InternalRow]
+```
+
+`doExecute` is part of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan#doExecute)) abstraction.
+
+---
+
+`doExecute` requests the [left](#left) child physical operator to execute (that produces an `RDD[InternalRow]`) that is then [stateStoreAwareZipPartitions](../streaming-join/StateStoreAwareZipPartitionsHelper.md#stateStoreAwareZipPartitions) with the following:
+
+* [right](#right) child physical operator's `RDD[InternalRow]`
+* [StatefulOperatorStateInfo](#stateInfo) (that at this point is supposed to be defined)
+* [Names of the state stores](../streaming-join/SymmetricHashJoinStateManager.md#allStateStoreNames) of the left and right side of the join
+* [StateStoreCoordinator endpoint](../stateful-stream-processing/StateStoreCoordinatorRef.md#forDriver)
+* [processPartitions](#processPartitions) function
+
+### <span id="processPartitions"> Computing Partition
+
+```scala
+processPartitions(
+  partitionId: Int,
+  leftInputIter: Iterator[InternalRow],
+  rightInputIter: Iterator[InternalRow]): Iterator[InternalRow]
+```
+
+!!! note "processPartitions"
+    `processPartitions` is used as the function to compute a partition of [StateStoreAwareZipPartitionsRDD](../streaming-join/StateStoreAwareZipPartitionsRDD.md).
+
+`processPartitions`...FIXME
+
 ## <span id="shortName"> Short Name
 
 ```scala
@@ -30,35 +101,37 @@ requiredChildDistribution: Seq[Distribution]
 
 `requiredChildDistribution` is two [StatefulOpClusteredDistribution](StatefulOpClusteredDistribution.md)s for the [left](#leftKeys) and [right](#rightKeys) keys (with the [numPartitions](../stateful-stream-processing/StatefulOperatorStateInfo.md#numPartitions) of the [StatefulOperatorStateInfo](StatefulOperator.md#getStateInfo)).
 
+## <span id="shouldRunAnotherBatch"> Should Run Another Non-Data Batch
+
+```scala
+shouldRunAnotherBatch(
+  newMetadata: OffsetSeqMetadata): Boolean
+```
+
+`shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
+
+---
+
+`shouldRunAnotherBatch` is positive (`true`) when all of the following are positive:
+
+* Either the [left](../streaming-join/JoinStateWatermarkPredicates.md#left) or [right](../streaming-join/JoinStateWatermarkPredicates.md#right) join state watermark predicate is defined (in the [JoinStateWatermarkPredicates](#stateWatermarkPredicates))
+
+* This `StreamingSymmetricHashJoinExec` operator has [event-time watermark](#eventTimeWatermark) defined and the current [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
+
+`shouldRunAnotherBatch` is negative (`false`) otherwise.
+
+## <span id="metrics"> Performance Metrics
+
+`StreamingSymmetricHashJoinExec` uses the same performance metrics as the other [stateful physical operators that write to a state store](StateStoreWriter.md#metrics).
+
+![StreamingSymmetricHashJoinExec in web UI (Details for Query)](../images/StreamingSymmetricHashJoinExec-webui-query-details.png)
+
 <!---
 ## Review Me
-
-[[supported-join-types]][[joinType]]
-`StreamingSymmetricHashJoinExec` supports `Inner`, `LeftOuter`, and `RightOuter` join types (with the <<leftKeys, left>> and the <<rightKeys, right>> keys using the exact same data types).
-
-`StreamingSymmetricHashJoinExec` is <<creating-instance, created>> exclusively when [StreamingJoinStrategy](../execution-planning-strategies/StreamingJoinStrategy.md) execution planning strategy is requested to plan a logical query plan with a `Join` logical operator of two streaming queries with equality predicates (`EqualTo` and `EqualNullSafe`).
 
 `StreamingSymmetricHashJoinExec` is given execution-specific configuration (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>) when `IncrementalExecution` is requested to plan a streaming query for execution (and uses the [state preparation rule](../IncrementalExecution.md#state)).
 
 `StreamingSymmetricHashJoinExec` uses two [OneSideHashJoiners](../streaming-join/OneSideHashJoiner.md) (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state when <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>.
-
-`StreamingSymmetricHashJoinExec` is a [stateful physical operator that writes to a state store](StateStoreWriter.md).
-
-## Creating Instance
-
-`StreamingSymmetricHashJoinExec` takes the following to be created:
-
-* [[leftKeys]] Left keys (Catalyst expressions of the keys on the left side)
-* [[rightKeys]] Right keys (Catalyst expressions of the keys on the right side)
-* [Join type](#joinType)
-* [[condition]] Join condition (`JoinConditionSplitPredicates`)
-* [[stateInfo]] [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
-* [Event-Time Watermark](#eventTimeWatermark)
-* [Watermark Predicates for State Removal](#stateWatermarkPredicates)
-* [[left]] Physical operator on the left side (`SparkPlan`)
-* [[right]] Physical operator on the right side (`SparkPlan`)
-
-`StreamingSymmetricHashJoinExec` initializes the <<internal-properties, internal properties>>.
 
 === [[output]] Output Schema -- `output` Method
 
@@ -137,59 +210,6 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a
 * [Process partitions of the left and right sides of the stream-stream join](#processPartitions) (and creating [OneSideHashJoiner](../streaming-join/OneSideHashJoiner.md)s)
 
 * [Checking out whether the last batch execution requires another non-data batch or not](#shouldRunAnotherBatch)
-
-=== [[metrics]] Performance Metrics (SQLMetrics)
-
-`StreamingSymmetricHashJoinExec` uses the performance metrics as [other stateful physical operators that write to a state store](StateStoreWriter.md#metrics).
-
-![StreamingSymmetricHashJoinExec in web UI (Details for Query)](../images/StreamingSymmetricHashJoinExec-webui-query-details.png)
-
-The following table shows how the performance metrics are computed (and so their exact meaning).
-
-[cols="30,70",options="header",width="100%"]
-|===
-| Name (in web UI)
-| Description
-
-| total time to update rows
-a| [[allUpdatesTimeMs]] Processing time of all rows
-
-| total time to remove rows
-a| [[allRemovalsTimeMs]]
-
-| time to commit changes
-a| [[commitTimeMs]]
-
-| number of output rows
-a| [[numOutputRows]] Total number of output rows
-
-| number of total state rows
-a| [[numTotalStateRows]]
-
-| number of updated state rows
-a| [[numUpdatedStateRows]] [Number of updated state rows](../streaming-join/OneSideHashJoiner.md#updatedStateRowsCount) of the [left](#processPartitions-leftSideJoiner) and [right](#processPartitions-rightSideJoiner) `OneSideHashJoiners`
-
-| memory used by state
-a| [[stateMemory]]
-|===
-
-=== [[shouldRunAnotherBatch]] Checking Out Whether Last Batch Execution Requires Another Non-Data Batch or Not -- `shouldRunAnotherBatch` Method
-
-[source, scala]
-----
-shouldRunAnotherBatch(
-  newMetadata: OffsetSeqMetadata): Boolean
-----
-
-`shouldRunAnotherBatch` is positive (`true`) when all of the following are positive:
-
-* Either the <<JoinStateWatermarkPredicates.md#left, left>> or <<JoinStateWatermarkPredicates.md#right, right>> join state watermark predicates are defined (in the <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>)
-
-* <<eventTimeWatermark, Event-time watermark>> threshold (of the `StreamingSymmetricHashJoinExec` operator) is defined and the current [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
-
-`shouldRunAnotherBatch` is negative (`false`) otherwise.
-
-`shouldRunAnotherBatch` is part of the [StateStoreWriter](StateStoreWriter.md#shouldRunAnotherBatch) abstraction.
 
 ## <span id="doExecute"> Executing Physical Operator
 
@@ -277,34 +297,4 @@ NOTE: `onOutputCompletion` triggers the [old state removal](../streaming-join/On
 `onOutputCompletion` calculates the <<stateMemory, memory used by state>> performance metric (as the sum of the [memory used](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) by the [KeyToNumValuesStore](../streaming-join/SymmetricHashJoinStateManager.md#keyToNumValues) and [KeyWithIndexToValueStore](../streaming-join/SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streams).
 
 In the end, `onOutputCompletion` calculates the [custom metrics](../stateful-stream-processing/StateStoreMetrics.md#customMetrics).
-
-## Internal Properties
-
-[cols="30m,70",options="header",width="100%"]
-|===
-| Name
-| Description
-
-| hadoopConfBcast
-a| [[hadoopConfBcast]] Hadoop Configuration broadcast (to the Spark cluster)
-
-Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
-
-| joinStateManager
-a| [[joinStateManager]] [SymmetricHashJoinStateManager](../streaming-join/SymmetricHashJoinStateManager.md)
-
-Used when `OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../streaming-join/OneSideHashJoiner.md#storeAndJoinWithOtherSide), [removeOldState](../streaming-join/OneSideHashJoiner.md#removeOldState), [commitStateAndGetMetrics](../streaming-join/OneSideHashJoiner.md#commitStateAndGetMetrics), and for the [values for a given key](../streaming-join/OneSideHashJoiner.md#get)
-
-| nullLeft
-a| [[nullLeft]] `GenericInternalRow` of the size of the output schema of the <<left, left physical operator>>
-
-| nullRight
-a| [[nullRight]] `GenericInternalRow` of the size of the output schema of the <<right, right physical operator>>
-
-| storeConf
-a| [[storeConf]] [StateStoreConf](../stateful-stream-processing/StateStoreConf.md)
-
-Used exclusively to <<joinStateManager, create a SymmetricHashJoinStateManager>>
-
-|===
 -->
