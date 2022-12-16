@@ -229,7 +229,6 @@ nav:
       - KeyValueGroupedDataset:
         - KeyValueGroupedDataset: KeyValueGroupedDataset.md
         - mapGroupsWithState: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
-        - flatMapGroupsWithState: spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md
       - StateManager:
         - StateManager: arbitrary-stateful-streaming-aggregation/StateManager.md
         - StateManagerImplBase: arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md

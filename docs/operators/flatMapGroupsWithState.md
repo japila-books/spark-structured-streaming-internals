@@ -1,6 +1,6 @@
 # flatMapGroupsWithState
 
-`flatMapGroupsWithState` is part of [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) API for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md).
+`flatMapGroupsWithState` is part of [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) API for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md) with an explicit state logic.
 
 ```scala
 flatMapGroupsWithState[S: Encoder, U: Encoder](
@@ -42,3 +42,6 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
 ```text
 The output mode of function should be append or update
 ```
+
+!!! note
+    An `OutputMode` is a required argument, but does not seem to be used at all. Check out the question [What's the purpose of OutputMode in flatMapGroupsWithState? How/where is it used?](https://stackoverflow.com/q/56921772/1305344) on StackOverflow.

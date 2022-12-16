@@ -141,7 +141,7 @@ a| [[flatMapGroups]]
 flatMapGroups[U : Encoder](f: (K, Iterator[V]) => TraversableOnce[U]): Dataset[U]
 ----
 
-| [flatMapGroupsWithState](spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md)
+| [flatMapGroupsWithState](operators/flatMapGroupsWithState.md)
 a| [[flatMapGroupsWithState]]
 
 ```scala

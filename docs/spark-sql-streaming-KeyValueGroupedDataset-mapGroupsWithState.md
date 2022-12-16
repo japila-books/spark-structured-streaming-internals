@@ -13,7 +13,7 @@ mapGroupsWithState[S: Encoder, U: Encoder](
 `mapGroupsWithState` operator...FIXME
 
 !!! note
-    `mapGroupsWithState` is a special case of [flatMapGroupsWithState](spark-sql-streaming-KeyValueGroupedDataset-flatMapGroupsWithState.md) operator with the following:
+    `mapGroupsWithState` is a special case of [flatMapGroupsWithState](operators/flatMapGroupsWithState.md) operator with the following:
 
     * `func` being transformed to return a single-element `Iterator`
 
