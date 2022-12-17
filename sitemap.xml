@@ -701,6 +701,66 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/JoinStateWatermarkPredicate/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/JoinStateWatermarkPredicates/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/KeyToNumValuesStore/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/KeyWithIndexToValueStore/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/OneSideHashJoiner/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/StateStoreAwareZipPartitionsHelper/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/StateStoreAwareZipPartitionsRDD/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/StateStoreHandler/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/StreamingJoinHelper/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/StreamingSymmetricHashJoinHelper/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/join/SymmetricHashJoinStateManager/</loc>
+         <lastmod>2022-12-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/kafka/</loc>
          <lastmod>2022-12-17</lastmod>
          <changefreq>daily</changefreq>
@@ -1287,66 +1347,6 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-deduplication/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/JoinStateWatermarkPredicate/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/JoinStateWatermarkPredicates/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/KeyToNumValuesStore/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/KeyWithIndexToValueStore/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/OneSideHashJoiner/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/StateStoreAwareZipPartitionsHelper/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/StateStoreAwareZipPartitionsRDD/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/StateStoreHandler/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/StreamingJoinHelper/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/StreamingSymmetricHashJoinHelper/</loc>
-         <lastmod>2022-12-17</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/streaming-join/SymmetricHashJoinStateManager/</loc>
          <lastmod>2022-12-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
