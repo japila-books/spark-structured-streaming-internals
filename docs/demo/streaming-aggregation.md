@@ -12,7 +12,7 @@ This demo shows a streaming query with a [streaming aggregation](../streaming-ag
 
 ## Reset numShufflePartitions
 
-This step makes debugging easier since the state is only for one partition (and so it should make monitoring easier).
+This step makes debugging easier since there is a state (store) for just one partition.
 
 ```scala
 val numShufflePartitions = 1

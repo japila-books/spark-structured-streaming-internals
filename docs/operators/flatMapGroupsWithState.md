@@ -1,4 +1,4 @@
-# flatMapGroupsWithState
+# flatMapGroupsWithState Operator
 
 `flatMapGroupsWithState` is part of [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) API for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md) with an explicit state logic.
 

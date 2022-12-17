@@ -1,4 +1,6 @@
-# join Operator &mdash; Streaming Join
+# join Operator
+
+`join` is part of `Dataset` API for [Streaming Join](../join/index.md).
 
 ```scala
 join(
@@ -22,4 +24,4 @@ join(
   usingColumn: String): DataFrame
 ```
 
-[Streaming Join](../join/index.md)
+`join` creates a `Dataset` with a `Join` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Join)) logical operator.

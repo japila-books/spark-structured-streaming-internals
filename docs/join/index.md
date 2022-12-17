@@ -1,6 +1,6 @@
 # Streaming Join
 
-In Spark Structured Streaming, a **streaming join** is an operator in a streaming query that is described (_built_) using the [high-level streaming operators](../operators/):
+In Spark Structured Streaming, a **streaming join** is a structured query that is described (_built_) using the [high-level streaming operators](../operators/):
 
 * [Dataset.crossJoin](../operators/crossJoin.md)
 
@@ -22,33 +22,33 @@ Spark Structured Streaming supports **stream-stream joins** with the following:
 
 * [Equality predicate](../execution-planning-strategies/StreamingJoinStrategy.md) ([equi-joins](https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join) that use only equality comparisons in the join predicate)
 
-* `Inner`, `LeftOuter`, and `RightOuter` <<physical-operators/StreamingSymmetricHashJoinExec.md#supported-join-types, join types only>>
+* `Inner`, `LeftOuter`, and `RightOuter` [join types only](../physical-operators/StreamingSymmetricHashJoinExec.md#supported-join-types)
 
-Stream-stream equi-joins are planned as <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operators of two `ShuffleExchangeExec` physical operators (per <<physical-operators/StreamingSymmetricHashJoinExec.md#requiredChildDistribution, Required Partition Requirements>>).
+Stream-stream equi-joins are planned as [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operators of two `ShuffleExchangeExec` physical operators (per [Required Partition Requirements](../physical-operators/StreamingSymmetricHashJoinExec.md#requiredChildDistribution)).
 
 ## Join State Watermark
 
-Stream-stream joins may optionally define **Join State Watermark** for state removal (cf. <<physical-operators/StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates, Watermark Predicates for State Removal>>).
+Stream-stream joins may have an optional **Join State Watermark** defined for state removal (cf. [Watermark Predicates for State Removal](../physical-operators/StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates)).
 
 A join state watermark can be specified on the following:
 
-. <<JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate, Join keys>> (_key state_)
+1. [Join keys](JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate) (_key state_)
 
-. <<JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate, Columns of the left and right sides>> (_value state_)
+1. [Columns of the left and right sides](JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate) (_value state_)
 
 A join state watermark can be specified on key state, value state or both.
 
 ## IncrementalExecution
 
-Under the covers, the <<operators, high-level operators>> create a logical query plan with one or more `Join` logical operators.
+Under the covers, the [high-level operators](../operators/index.md) create a logical query plan with one or more `Join` logical operators.
 
 Spark Structured Streaming uses [IncrementalExecution](../IncrementalExecution.md) for planning streaming queries for execution.
 
 At [query planning](../IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StreamingJoinStrategy](../execution-planning-strategies/StreamingJoinStrategy.md) execution planning strategy for planning [stream-stream joins](#stream-stream-joins) as [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operators.
 
-## Demos
+## Demo
 
-* [StreamStreamJoinApp](https://github.com/japila-books/spark-structured-streaming-book/tree/v{{spark.version}}/examples/src/main/scala/pl/japila/spark/StreamStreamJoinApp.scala)
+* [StreamStreamJoinApp](https://github.com/jaceklaskowski/spark-examples/#streamstreamjoindemo)
 
 ## Further Reading Or Watching
 
