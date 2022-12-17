@@ -1,18 +1,9 @@
-# FlatMapGroupsWithState Unary Logical Operator
+# FlatMapGroupsWithState Logical Operator
 
-`FlatMapGroupsWithState` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that represents the following operators in a logical query plan of a streaming query:
+`FlatMapGroupsWithState` is a binary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#BinaryNode)) that represents the following high-level operators in (a logical query plan of) a structured query:
 
 * [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState)
-
-* [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState)
-
-## Execution Planning
-
-`FlatMapGroupsWithState` is resolved (_planned_) to:
-
-* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) unary physical operator for streaming datasets (in [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy)
-
-* `MapGroupsExec` physical operator for batch datasets (in `BasicOperators` execution planning strategy)
+* [KeyValueGroupedDataset.flatMapGroupsWithState](../operators/flatMapGroupsWithState.md)
 
 ## Creating Instance
 
@@ -28,11 +19,14 @@
 * <span id="outputMode"> [OutputMode](../OutputMode.md)
 * <span id="isMapGroupsWithState"> `isMapGroupsWithState` flag (default: `false`)
 * <span id="timeout"> [GroupStateTimeout](../GroupStateTimeout.md)
+* <span id="hasInitialState"> `hasInitialState` flag (default: `false`)
+* <span id="initialStateGroupAttrs"> Initial State Group Attributes
+* <span id="initialStateDataAttrs"> Initial State Data Attributes
+* <span id="initialStateDeserializer"> Initial State Deserializer
+* <span id="initialState"> `LogicalPlan` of the initial state
 * <span id="child"> Child logical operator
 
-`FlatMapGroupsWithState` is created (using [apply](#apply) factory method) for [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
-
-## <span id="apply"> Creating SerializeFromObject with FlatMapGroupsWithState
+## <span id="apply"> Creating FlatMapGroupsWithState (under SerializeFromObject)
 
 ```scala
 apply[K: Encoder, V: Encoder, S: Encoder, U: Encoder](
@@ -43,9 +37,22 @@ apply[K: Encoder, V: Encoder, S: Encoder, U: Encoder](
   isMapGroupsWithState: Boolean,
   timeout: GroupStateTimeout,
   child: LogicalPlan): LogicalPlan
+apply[K: Encoder, V: Encoder, S: Encoder, U: Encoder](
+  func: (Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any],
+  groupingAttributes: Seq[Attribute],
+  dataAttributes: Seq[Attribute],
+  outputMode: OutputMode,
+  isMapGroupsWithState: Boolean,
+  timeout: GroupStateTimeout,
+  child: LogicalPlan,
+  initialStateGroupAttrs: Seq[Attribute],
+  initialStateDataAttrs: Seq[Attribute],
+  initialState: LogicalPlan): LogicalPlan
 ```
 
 `apply` creates a `SerializeFromObject` logical operator with a `FlatMapGroupsWithState` as its child logical operator.
+
+---
 
 Internally, `apply` creates `SerializeFromObject` object consumer (aka unary logical operator) with `FlatMapGroupsWithState` logical plan.
 
@@ -53,4 +60,14 @@ Internally, `apply` finds `ExpressionEncoder` for the type `S` and creates a `Fl
 
 In the end, `apply` creates a `SerializeFromObject` object consumer with the `FlatMapGroupsWithState`.
 
-`apply` is used for [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState) and [KeyValueGroupedDataset.flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState) operators.
+## Execution Planning
+
+`FlatMapGroupsWithState` is resolved (_planned_) to:
+
+* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator for streaming queries (by [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy)
+
+* `CoGroupExec` or `MapGroupsExec` physical operators for batch queries (by `BasicOperators` execution planning strategy)
+
+## <span id="ObjectProducer"> ObjectProducer
+
+`FlatMapGroupsWithState` is an `ObjectProducer` ([Spark SQL]({{ book.spark_sql }}/logical-operators/ObjectProducer)).

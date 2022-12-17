@@ -10,7 +10,7 @@
 
 `InputProcessor` is created when [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator is executed (for [storeUpdateFunction](../stateful-stream-processing/StateStoreOps.md#storeUpdateFunction) while processing rows per partition with a corresponding per-partition state store).
 
-## <span id="store"> StateStore
+### <span id="store"> StateStore
 
 `InputProcessor` is given a [StateStore](../stateful-stream-processing/StateStore.md) when [created](#creating-instance).
 

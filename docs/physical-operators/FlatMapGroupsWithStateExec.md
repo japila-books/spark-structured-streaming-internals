@@ -1,14 +1,8 @@
 # FlatMapGroupsWithStateExec Physical Operator
 
-`FlatMapGroupsWithStateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode/)) that represents [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator at execution time.
+`FlatMapGroupsWithStateExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators#BinaryExecNode)) that represents [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator at execution time.
 
 `FlatMapGroupsWithStateExec` is an `ObjectProducerExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/ObjectProducerExec/)) physical operator that produces a [single output object](#outputObjAttr).
-
-!!! tip
-    Check out [Demo: Internals of FlatMapGroupsWithStateExec Physical Operator](../demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md).
-
-!!! note
-    `FlatMapGroupsWithStateExec` is given an [OutputMode](#outputMode) when created, but it does not seem to be used at all. Check out the question [What's the purpose of OutputMode in flatMapGroupsWithState? How/where is it used?](https://stackoverflow.com/q/56921772/1305344) on StackOverflow.
 
 ## Creating Instance
 
@@ -17,21 +11,35 @@
 * <span id="func"> **User-defined state function** that is applied to every group (of type `(Any, Iterator[Any], LogicalGroupState[Any]) => Iterator[Any]`)
 * <span id="keyDeserializer"> Deserializer expression for keys
 * <span id="valueDeserializer"> Deserializer expression for values
+* <span id="initialStateDeserializer"> Initial State Deserializer Expression
 * <span id="groupingAttributes"> Grouping attributes (as used for grouping in [KeyValueGroupedDataset](../KeyValueGroupedDataset.md#groupingAttributes) for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
+* <span id="initialStateGroupAttrs"> Initial State Group Attributes
 * <span id="dataAttributes"> Data attributes
+* <span id="initialStateDataAttrs"> Initial State Data Attributes
 * <span id="outputObjAttr"> Output object attribute (that is the reference to the single object field this operator outputs)
 * <span id="stateInfo"> Optional [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
 * <span id="stateEncoder"> State encoder (`ExpressionEncoder[Any]`)
 * <span id="stateFormatVersion"> State format version
-* <span id="outputMode"> [OutputMode](../OutputMode.md)
+* [OutputMode](#outputMode)
 * <span id="timeoutConf"> [GroupStateTimeout](../GroupStateTimeout.md)
 * <span id="batchTimestampMs"> [Batch Processing Time](../batch-processing-time.md)
 * <span id="eventTimeWatermark"> [Event-Time Watermark](../watermark/index.md)
+* <span id="initialState"> `SparkPlan` of the initial state
+* <span id="hasInitialState"> `hasInitialState` flag
 * <span id="child"> Child physical operator
 
 `FlatMapGroupsWithStateExec` is created when:
 
 * [FlatMapGroupsWithStateStrategy](../execution-planning-strategies/FlatMapGroupsWithStateStrategy.md) execution planning strategy is executed (and plans a [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator for execution)
+
+### <span id="outputMode"> OutputMode
+
+`FlatMapGroupsWithStateExec` is given an [OutputMode](../OutputMode.md) when created.
+
+The `OutputMode` does not seem to be used at all (yet according to the scaladoc) is supposed to be the output mode of the [func](#func) that knows nothing about the output mode. _Interesting._
+
+!!! note "StackOverflow"
+    Check out the question [What's the purpose of OutputMode in flatMapGroupsWithState? How/where is it used?](https://stackoverflow.com/q/56921772/1305344) on StackOverflow.
 
 ## <span id="shortName"> Short Name
 
@@ -49,13 +57,38 @@ shortName: String
 flatMapGroupsWithState
 ```
 
+## <span id="metrics"> Performance Metrics
+
+`FlatMapGroupsWithStateExec` uses the performance metrics of [StateStoreWriter](StateStoreWriter.md#metrics).
+
+![FlatMapGroupsWithStateExec in web UI (Details for Query)](../images/FlatMapGroupsWithStateExec-webui-query-details.png)
+
 ## <span id="doExecute"> Executing Physical Operator
 
 ```scala
 doExecute(): RDD[InternalRow]
 ```
 
-`doExecute` first initializes the [metrics](StateStoreWriter.md#metrics) (which happens on the driver).
+`doExecute` is part of `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan)) abstraction.
+
+### <span id="doExecute-metrics"> Initializing Metrics
+
+`doExecute` first initializes the [metrics](StateStoreWriter.md#metrics) (that are accumulators under the covers so it is supposed to happen on the driver first before updates from tasks can have any effect).
+
+### <span id="doExecute-requirements"> Requirements
+
+`doExecute` makes sure that the parameters are as expected based on the [GroupStateTimeout](#timeoutConf) (and throws an `IllegalArgumentException` otherwise):
+
+GroupStateTimeout | Requirements
+------------------|-------------
+ [ProcessingTimeTimeout](../GroupStateTimeout.md#ProcessingTimeTimeout) | [Batch Processing Time](#batchTimestampMs) must be non-empty
+ [EventTimeTimeout](../GroupStateTimeout.md#EventTimeTimeout) | [Event-Time Watermark](#eventTimeWatermark) and [Watermark Expression](WatermarkSupport.md#watermarkExpression) must be non-empty
+
+### <span id="doExecute-processing-partition"> Processing Partition
+
+#### <span id="doExecute-processing-partition-stateStoreAwareZipPartitions"> With Initial State
+
+!!! note "Review Me"
 
 `doExecute` then requests the [child](#child) physical operator to execute (and generate an `RDD[InternalRow]`).
 
@@ -73,13 +106,68 @@ doExecute(): RDD[InternalRow]
 
 1. In the end, creates a `CompletionIterator` that executes a completion function (`completionFunction`) after it has successfully iterated through all the elements (i.e. when a client has consumed all the rows). The completion method requests the given `StateStore` to [commit changes](../stateful-stream-processing/StateStore.md#commit) followed by [setting the store-specific metrics](StateStoreWriter.md#setStoreMetrics)
 
-`doExecute` is part of Spark SQL's `SparkPlan` abstraction.
+#### <span id="doExecute-doExecute-processing-partition-mapPartitionsWithStateStore"> No Initial State
 
-## <span id="metrics"> Performance Metrics
+With no [hasInitialState](#hasInitialState), `doExecute` requests the [child](#child) physical operator to execute (and generate an `RDD[InternalRow]`) and [mapPartitionsWithStateStore](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore) with the following:
 
-`FlatMapGroupsWithStateExec` uses the performance metrics of [StateStoreWriter](StateStoreWriter.md#metrics).
+* [StatefulOperatorStateInfo](StatefulOperator.md#getStateInfo)
+* [groupingAttributes](#groupingAttributes)
+* [State Schema](../arbitrary-stateful-streaming-aggregation/StateManager.md#stateSchema) of the [StateManager](#stateManager)
+* `0` for the [numColsPrefixKey](../stateful-stream-processing/StateStoreOps.md#mapPartitionsWithStateStore)
+* `storeUpdateFunction` (as below)
 
-![FlatMapGroupsWithStateExec in web UI (Details for Query)](../images/FlatMapGroupsWithStateExec-webui-query-details.png)
+---
+
+```scala
+storeUpdateFunction: (StateStore, Iterator[T]) => Iterator[U]
+```
+
+`storeUpdateFunction` creates a new [InputProcessor](../arbitrary-stateful-streaming-aggregation/InputProcessor.md) with the current partition's [StateStore](../stateful-stream-processing/StateStore.md) and [processes the partition](#processDataWithPartition).
+
+### <span id="processDataWithPartition"> Processing Partition
+
+```scala
+processDataWithPartition(
+  iter: Iterator[InternalRow],
+  store: StateStore,
+  processor: InputProcessor,
+  initialStateIterOption: Option[Iterator[InternalRow]] = None
+): CompletionIterator[InternalRow, Iterator[InternalRow]]
+```
+
+#### <span id="processDataWithPartition-metrics"> Performance Metrics
+
+`processDataWithPartition` uses the following metrics:
+
+* [allRemovalsTimeMs](#allRemovalsTimeMs)
+* [allUpdatesTimeMs](#allUpdatesTimeMs)
+* [commitTimeMs](#commitTimeMs)
+
+#### <span id="processDataWithPartition-filteredIter"> filteredIter
+
+With the timeout based on event time (when the [GroupStateTimeout](#timeoutConf) is `EventTimeTimeout`), `processDataWithPartition` [drops late rows](StateStoreWriter.md#applyRemovingRowsOlderThanWatermark).
+
+#### <span id="processDataWithPartition-processedOutputIterator"> processedOutputIterator
+
+With the initial state specified, `processDataWithPartition`...FIXME
+
+#### <span id="processDataWithPartition-newDataProcessorIter"> newDataProcessorIter
+
+`processDataWithPartition`...FIXME
+
+#### <span id="processDataWithPartition-timeoutProcessorIter"> timeoutProcessorIter
+
+With [GroupStateTimeout enabled](#isTimeoutEnabled), `processDataWithPartition`...FIXME
+
+#### <span id="processDataWithPartition-outputIterator"> Output Rows
+
+In the end, `processDataWithPartition` creates an iterator that returns the rows from [newDataProcessorIter](#processDataWithPartition-newDataProcessorIter) followed by [timeoutProcessorIter](#processDataWithPartition-timeoutProcessorIter).
+
+`processDataWithPartition` creates a (completion) iterator that does the following after all rows have been fully consumed (_processed_):
+
+1. Requests the given [StateStore](../stateful-stream-processing/StateStore.md) to [commit all the state changes](../stateful-stream-processing/StateStore.md#commit) (and measures the time for the [time to commit changes](StateStoreWriter.md#commitTimeMs) metrics)
+1. [Sets the StateStore metrics](StateStoreWriter.md#setStoreMetrics) (e.g. [number of total state rows](StateStoreWriter.md#numTotalStateRows), [stateMemory](StateStoreWriter.md#stateMemory) and the [custom metrics](../stateful-stream-processing/StateStoreMetrics.md#customMetrics))
+1. [Sets operator metrics](StateStoreWriter.md#setOperatorMetrics) (e.g. [numShufflePartitions](StateStoreWriter.md#numShufflePartitions) and [number of state store instances](StateStoreWriter.md#numStateStoreInstances))
 
 ## <span id="StateStoreWriter"> StateStoreWriter
 
@@ -87,7 +175,7 @@ doExecute(): RDD[InternalRow]
 
 `FlatMapGroupsWithStateExec` uses the [GroupStateTimeout](#timeoutConf) (and possibly the updated [metadata](../OffsetSeqMetadata.md)) when asked [whether to run another batch or not](#shouldRunAnotherBatch) (when `MicroBatchExecution` is requested to [construct the next streaming micro-batch](../micro-batch-execution/MicroBatchExecution.md#constructNextBatch) when requested to [run the activated streaming query](../micro-batch-execution/MicroBatchExecution.md#runActivatedStream)).
 
-## <span id="WatermarkSupport"> Streaming Event-Time Watermark Support
+## <span id="WatermarkSupport"> WatermarkSupport
 
 `FlatMapGroupsWithStateExec` is a [physical operator that supports streaming event-time watermark](WatermarkSupport.md).
 
@@ -191,6 +279,10 @@ requiredChildDistribution: Seq[Distribution]
 ---
 
 `requiredChildDistribution`...FIXME
+
+## Demo
+
+[Demo: Internals of FlatMapGroupsWithStateExec Physical Operator](../demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md)
 
 ## Logging
 
