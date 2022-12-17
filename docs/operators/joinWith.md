@@ -10,4 +10,4 @@ joinWith[U](
   joinType: String): Dataset[(T, U)]
 ```
 
-[Streaming Join](../streaming-join/index.md)
+[Streaming Join](../join/index.md)

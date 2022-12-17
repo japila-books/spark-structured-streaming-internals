@@ -1,6 +1,6 @@
 # StreamingSymmetricHashJoinExec Physical Operator
 
-`StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for executing [stream-stream equi-join](../streaming-join/index.md).
+`StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for executing [stream-stream equi-join](../join/index.md).
 
 ## Creating Instance
 
@@ -12,7 +12,7 @@
 * <span id="condition"> `JoinConditionSplitPredicates`
 * <span id="stateInfo"> [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
 * <span id="eventTimeWatermark"> [Event-Time Watermark](../watermark/index.md)
-* <span id="stateWatermarkPredicates"> [JoinStateWatermarkPredicates](../streaming-join/JoinStateWatermarkPredicates.md)
+* <span id="stateWatermarkPredicates"> [JoinStateWatermarkPredicates](../join/JoinStateWatermarkPredicates.md)
 * <span id="stateFormatVersion"> State Format Version
 * <span id="left"> Left Child Physical Operator
 * <span id="right"> Right Child Physical Operator
@@ -51,11 +51,11 @@ doExecute(): RDD[InternalRow]
 
 ---
 
-`doExecute` requests the [left](#left) child physical operator to execute (that produces an `RDD[InternalRow]`) that is then [stateStoreAwareZipPartitions](../streaming-join/StateStoreAwareZipPartitionsHelper.md#stateStoreAwareZipPartitions) with the following:
+`doExecute` requests the [left](#left) child physical operator to execute (that produces an `RDD[InternalRow]`) that is then [stateStoreAwareZipPartitions](../join/StateStoreAwareZipPartitionsHelper.md#stateStoreAwareZipPartitions) with the following:
 
 * [right](#right) child physical operator's `RDD[InternalRow]`
 * [StatefulOperatorStateInfo](#stateInfo) (that at this point is supposed to be defined)
-* [Names of the state stores](../streaming-join/SymmetricHashJoinStateManager.md#allStateStoreNames) of the left and right side of the join
+* [Names of the state stores](../join/SymmetricHashJoinStateManager.md#allStateStoreNames) of the left and right side of the join
 * [StateStoreCoordinator endpoint](../stateful-stream-processing/StateStoreCoordinatorRef.md#forDriver)
 * [processPartitions](#processPartitions) function
 
@@ -69,7 +69,7 @@ processPartitions(
 ```
 
 !!! note "processPartitions"
-    `processPartitions` is used as the function to compute a partition of [StateStoreAwareZipPartitionsRDD](../streaming-join/StateStoreAwareZipPartitionsRDD.md).
+    `processPartitions` is used as the function to compute a partition of [StateStoreAwareZipPartitionsRDD](../join/StateStoreAwareZipPartitionsRDD.md).
 
 `processPartitions`...FIXME
 
@@ -114,7 +114,7 @@ shouldRunAnotherBatch(
 
 `shouldRunAnotherBatch` is positive (`true`) when all of the following are positive:
 
-* Either the [left](../streaming-join/JoinStateWatermarkPredicates.md#left) or [right](../streaming-join/JoinStateWatermarkPredicates.md#right) join state watermark predicate is defined (in the [JoinStateWatermarkPredicates](#stateWatermarkPredicates))
+* Either the [left](../join/JoinStateWatermarkPredicates.md#left) or [right](../join/JoinStateWatermarkPredicates.md#right) join state watermark predicate is defined (in the [JoinStateWatermarkPredicates](#stateWatermarkPredicates))
 
 * This `StreamingSymmetricHashJoinExec` operator has [event-time watermark](#eventTimeWatermark) defined and the current [event-time watermark](../OffsetSeqMetadata.md#batchWatermarkMs) threshold of the given `OffsetSeqMetadata` is above (_greater than_) it, i.e. moved above
 
@@ -131,7 +131,7 @@ shouldRunAnotherBatch(
 
 `StreamingSymmetricHashJoinExec` is given execution-specific configuration (i.e. <<stateInfo, StatefulOperatorStateInfo>>, <<eventTimeWatermark, event-time watermark>>, and <<stateWatermarkPredicates, JoinStateWatermarkPredicates>>) when `IncrementalExecution` is requested to plan a streaming query for execution (and uses the [state preparation rule](../IncrementalExecution.md#state)).
 
-`StreamingSymmetricHashJoinExec` uses two [OneSideHashJoiners](../streaming-join/OneSideHashJoiner.md) (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state when <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>.
+`StreamingSymmetricHashJoinExec` uses two [OneSideHashJoiners](../join/OneSideHashJoiner.md) (for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> sides of the join) to manage join state when <<processPartitions, processing partitions of the left and right sides of a stream-stream join>>.
 
 === [[output]] Output Schema -- `output` Method
 
@@ -193,7 +193,7 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 `eventTimeWatermark` is used when:
 
 * `StreamingSymmetricHashJoinExec` is requested to [check out whether the last batch execution requires another non-data batch or not](#shouldRunAnotherBatch)
-* `OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../streaming-join/OneSideHashJoiner.md#storeAndJoinWithOtherSide)
+* `OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../join/OneSideHashJoiner.md#storeAndJoinWithOtherSide)
 
 ## <span id="stateWatermarkPredicates"> Watermark Predicates for State Removal
 
@@ -201,13 +201,13 @@ When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` can be giv
 stateWatermarkPredicates: JoinStateWatermarkPredicates
 ```
 
-When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the [StreamingSymmetricHashJoinHelper](../streaming-join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) utility).
+When <<creating-instance, created>>, `StreamingSymmetricHashJoinExec` is given a <<JoinStateWatermarkPredicates.md#, JoinStateWatermarkPredicates>> for the <<left, left>> and <<right, right>> join sides (using the [StreamingSymmetricHashJoinHelper](../join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) utility).
 
 `stateWatermarkPredicates` contains the left and right predicates only when [IncrementalExecution](../IncrementalExecution.md) is requested to apply the [state preparation rule](../IncrementalExecution.md#state) to a physical query plan of a streaming query (to [optimize (prepare) the physical plan of the streaming query](../IncrementalExecution.md#executedPlan) once for [ContinuousExecution](../continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md) in the **queryPlanning** phase).
 
 `stateWatermarkPredicates` is used when `StreamingSymmetricHashJoinExec` is requested for the following:
 
-* [Process partitions of the left and right sides of the stream-stream join](#processPartitions) (and creating [OneSideHashJoiner](../streaming-join/OneSideHashJoiner.md)s)
+* [Process partitions of the left and right sides of the stream-stream join](#processPartitions) (and creating [OneSideHashJoiner](../join/OneSideHashJoiner.md)s)
 
 * [Checking out whether the last batch execution requires another non-data batch or not](#shouldRunAnotherBatch)
 
@@ -221,7 +221,7 @@ doExecute(): RDD[InternalRow]
 
 `doExecute` first requests the `StreamingQueryManager` for the [StateStoreCoordinatorRef](../StreamingQueryManager.md#stateStoreCoordinator) to the `StateStoreCoordinator` RPC endpoint (for the driver).
 
-`doExecute` then uses `SymmetricHashJoinStateManager` utility to [get the names of the state stores](../streaming-join/SymmetricHashJoinStateManager.md#allStateStoreNames) for the [left](../streaming-join/SymmetricHashJoinStateManager.md#LeftSide) and [right](../streaming-join/SymmetricHashJoinStateManager.md#RightSide) sides of the streaming join.
+`doExecute` then uses `SymmetricHashJoinStateManager` utility to [get the names of the state stores](../join/SymmetricHashJoinStateManager.md#allStateStoreNames) for the [left](../join/SymmetricHashJoinStateManager.md#LeftSide) and [right](../join/SymmetricHashJoinStateManager.md#RightSide) sides of the streaming join.
 
 In the end, `doExecute` requests the <<left, left>> and <<right, right>> child physical operators to execute (generate an RDD) and then <<spark-sql-streaming-StateStoreAwareZipPartitionsHelper.md#stateStoreAwareZipPartitions, stateStoreAwareZipPartitions>> with <<processPartitions, processPartitions>> (and with the `StateStoreCoordinatorRef` and the state stores).
 
@@ -241,13 +241,13 @@ processPartitions(
 `processPartitions` creates a new predicate (_postJoinFilter_) based on the `bothSides` of the <<condition, JoinConditionSplitPredicates>> if defined or `true` literal.
 
 [[processPartitions-leftSideJoiner]]
-`processPartitions` creates a [OneSideHashJoiner](../streaming-join/OneSideHashJoiner.md) for the [LeftSide](../streaming-join/SymmetricHashJoinStateManager.md#LeftSide) and all other properties for the left-hand join side (`leftSideJoiner`).
+`processPartitions` creates a [OneSideHashJoiner](../join/OneSideHashJoiner.md) for the [LeftSide](../join/SymmetricHashJoinStateManager.md#LeftSide) and all other properties for the left-hand join side (`leftSideJoiner`).
 
 [[processPartitions-rightSideJoiner]]
-`processPartitions` creates a [OneSideHashJoiner](../streaming-join/OneSideHashJoiner.md) for the [RightSide](../streaming-join/SymmetricHashJoinStateManager.md#RightSide) and all other properties for the right-hand join side (`rightSideJoiner`).
+`processPartitions` creates a [OneSideHashJoiner](../join/OneSideHashJoiner.md) for the [RightSide](../join/SymmetricHashJoinStateManager.md#RightSide) and all other properties for the right-hand join side (`rightSideJoiner`).
 
 [[processPartitions-leftOutputIter]][[processPartitions-rightOutputIter]]
-`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to [storeAndJoinWithOtherSide](../streaming-join/OneSideHashJoiner.md#storeAndJoinWithOtherSide) with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
+`processPartitions` requests the `OneSideHashJoiner` for the left-hand join side to [storeAndJoinWithOtherSide](../join/OneSideHashJoiner.md#storeAndJoinWithOtherSide) with the right-hand side one (that creates a `leftOutputIter` row iterator) and the `OneSideHashJoiner` for the right-hand join side to do the same with the left-hand side one (and creates a `rightOutputIter` row iterator).
 
 [[processPartitions-innerOutputCompletionTimeNs]]
 `processPartitions` records the current time (as _innerOutputCompletionTimeNs_ for the <<allRemovalsTimeMs, total time to remove rows>> performance metric in <<onOutputCompletion, onOutputCompletion>>).
@@ -284,17 +284,17 @@ onOutputCompletion: Unit
 
 `onOutputCompletion` adds the time for the inner join to complete (since <<processPartitions-innerOutputCompletionTimeNs, innerOutputCompletionTimeNs>> time marker) to the <<allRemovalsTimeMs, total time to remove rows>> performance metric.
 
-`onOutputCompletion` records the time to [remove old state](../streaming-join/OneSideHashJoiner.md#removeOldState) (per the [join state watermark predicate](../streaming-join/OneSideHashJoiner.md#stateWatermarkPredicate) for the <<left, left>> and the <<right, right>> streaming queries) and adds it to the <<allRemovalsTimeMs, total time to remove rows>> performance metric.
+`onOutputCompletion` records the time to [remove old state](../join/OneSideHashJoiner.md#removeOldState) (per the [join state watermark predicate](../join/OneSideHashJoiner.md#stateWatermarkPredicate) for the <<left, left>> and the <<right, right>> streaming queries) and adds it to the <<allRemovalsTimeMs, total time to remove rows>> performance metric.
 
-NOTE: `onOutputCompletion` triggers the [old state removal](../streaming-join/OneSideHashJoiner.md#removeOldState) eagerly by iterating over the state rows to be deleted.
+NOTE: `onOutputCompletion` triggers the [old state removal](../join/OneSideHashJoiner.md#removeOldState) eagerly by iterating over the state rows to be deleted.
 
-`onOutputCompletion` records the time for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> `OneSideHashJoiners` to [commit any state changes](../streaming-join/OneSideHashJoiner.md#commitStateAndGetMetrics) that becomes the <<commitTimeMs, time to commit changes>> performance metric.
+`onOutputCompletion` records the time for the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> `OneSideHashJoiners` to [commit any state changes](../join/OneSideHashJoiner.md#commitStateAndGetMetrics) that becomes the <<commitTimeMs, time to commit changes>> performance metric.
 
-`onOutputCompletion` calculates the <<numUpdatedStateRows, number of updated state rows>> performance metric (as the [number of updated state rows](../streaming-join/OneSideHashJoiner.md#numUpdatedStateRows) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
+`onOutputCompletion` calculates the <<numUpdatedStateRows, number of updated state rows>> performance metric (as the [number of updated state rows](../join/OneSideHashJoiner.md#numUpdatedStateRows) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
 
-`onOutputCompletion` calculates the <<numTotalStateRows, number of total state rows>> performance metric (as the sum of the [number of keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) in the [KeyWithIndexToValueStore](../streaming-join/SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
+`onOutputCompletion` calculates the <<numTotalStateRows, number of total state rows>> performance metric (as the sum of the [number of keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) in the [KeyWithIndexToValueStore](../join/SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streaming queries).
 
-`onOutputCompletion` calculates the <<stateMemory, memory used by state>> performance metric (as the sum of the [memory used](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) by the [KeyToNumValuesStore](../streaming-join/SymmetricHashJoinStateManager.md#keyToNumValues) and [KeyWithIndexToValueStore](../streaming-join/SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streams).
+`onOutputCompletion` calculates the <<stateMemory, memory used by state>> performance metric (as the sum of the [memory used](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) by the [KeyToNumValuesStore](../join/SymmetricHashJoinStateManager.md#keyToNumValues) and [KeyWithIndexToValueStore](../join/SymmetricHashJoinStateManager.md#keyWithIndexToValue) of the <<processPartitions-leftSideJoiner, left>> and <<processPartitions-rightSideJoiner, right>> streams).
 
 In the end, `onOutputCompletion` calculates the [custom metrics](../stateful-stream-processing/StateStoreMetrics.md#customMetrics).
 -->

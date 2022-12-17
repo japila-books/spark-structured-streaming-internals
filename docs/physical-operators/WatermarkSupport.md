@@ -185,5 +185,5 @@ For the watermark attribute of non-`StructType`, `watermarkExpression` uses it t
 `watermarkExpression` is used when:
 
 * `WatermarkSupport` is requested for the [watermark expression](#watermarkExpression)
-* `StreamingSymmetricHashJoinExec.OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../streaming-join/OneSideHashJoiner.md#storeAndJoinWithOtherSide)
-* `StreamingSymmetricHashJoinHelper` is requested to [getStateWatermarkPredicates](../streaming-join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates)
+* `StreamingSymmetricHashJoinExec.OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../join/OneSideHashJoiner.md#storeAndJoinWithOtherSide)
+* `StreamingSymmetricHashJoinHelper` is requested to [getStateWatermarkPredicates](../join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates)

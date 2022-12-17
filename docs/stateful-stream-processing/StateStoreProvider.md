@@ -50,7 +50,7 @@ Initializes a [StateStoreProvider](StateStoreProvider.md) with the following:
     ------------------|-----------------
     [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md#doExecute) | 0
     [StateStoreRDD](StateStoreRDD.md#compute) | [numColsPrefixKey](StateStoreRDD.md#numColsPrefixKey)
-    [SymmetricHashJoinStateManager.StateStoreHandler](../streaming-join/StateStoreHandler.md#getStateStore) | 0
+    [SymmetricHashJoinStateManager.StateStoreHandler](../join/StateStoreHandler.md#getStateStore) | 0
 
 See:
 

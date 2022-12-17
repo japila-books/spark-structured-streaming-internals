@@ -22,4 +22,4 @@ join(
   usingColumn: String): DataFrame
 ```
 
-[Streaming Join](../streaming-join/index.md)
+[Streaming Join](../join/index.md)

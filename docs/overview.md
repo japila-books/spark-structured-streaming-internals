@@ -19,7 +19,7 @@ Spark Structured Streaming comes with two [stream execution engines](StreamExecu
 ## Features
 
 * [Streaming Aggregation](streaming-aggregation/index.md)
-* [Streaming Join](streaming-join/index.md)
+* [Streaming Join](join/index.md)
 * [Streaming Watermark](watermark/index.md)
 * [Arbitrary Stateful Streaming Aggregation](arbitrary-stateful-streaming-aggregation/index.md)
 * [Stateful Stream Processing](stateful-stream-processing/index.md)

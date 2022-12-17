@@ -37,7 +37,7 @@ In [streaming aggregation](../streaming-aggregation/index.md), a streaming water
 
 ## Streaming Join
 
-In [streaming join](../streaming-join/index.md), a streaming watermark can be defined on [join keys or any of the join sides](../streaming-join/index.md#join-state-watermark).
+In [streaming join](../join/index.md), a streaming watermark can be defined on [join keys or any of the join sides](../join/index.md#join-state-watermark).
 
 ## Demos
 

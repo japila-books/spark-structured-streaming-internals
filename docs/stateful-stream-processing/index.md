@@ -8,7 +8,7 @@ In Spark Structured Streaming, a streaming query is stateful when is one of the 
 
 * [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md)
 
-* [Stream-Stream Join](../streaming-join/index.md)
+* [Stream-Stream Join](../join/index.md)
 
 * [Streaming Deduplication](../streaming-deduplication/index.md)
 

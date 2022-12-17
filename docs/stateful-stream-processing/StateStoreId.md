@@ -12,7 +12,7 @@
 
 * `StateStoreRDD` is requested for the [preferred locations of a partition](StateStoreRDD.md#getPreferredLocations) (executed on the driver) and to [compute it](StateStoreRDD.md#compute) (later on an executor)
 
-* `StateStoreProviderId` helper object is requested to create a <<StateStoreProviderId.md#, StateStoreProviderId>> (with a <<StateStoreId, StateStoreId>> and the run ID of a streaming query) that is then used for the [preferred locations of a partition](../streaming-join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations) of a `StateStoreAwareZipPartitionsRDD` (executed on the driver) and to...FIXME
+* `StateStoreProviderId` helper object is requested to create a <<StateStoreProviderId.md#, StateStoreProviderId>> (with a <<StateStoreId, StateStoreId>> and the run ID of a streaming query) that is then used for the [preferred locations of a partition](../join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations) of a `StateStoreAwareZipPartitionsRDD` (executed on the driver) and to...FIXME
 
 [[DEFAULT_STORE_NAME]]
 The name of the *default state store* (for reading state store data that was generated before store names were used, i.e. in Spark 2.2 and earlier) is *default*.

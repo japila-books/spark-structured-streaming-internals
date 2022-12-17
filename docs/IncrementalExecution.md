@@ -182,7 +182,7 @@ state: Rule[SparkPlan]
 
 * [batchTimestampMs](OffsetSeqMetadata.md#batchTimestampMs) (through the [OffsetSeqMetadata](#offsetSeqMetadata)) for the current timestamp
 
-* [getStateWatermarkPredicates](streaming-join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the state watermark predicates (for [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
+* [getStateWatermarkPredicates](join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the state watermark predicates (for [StreamingSymmetricHashJoinExec](physical-operators/StreamingSymmetricHashJoinExec.md))
 
 `state` rule is used (as part of the [physical query optimizations](#preparations)) when `IncrementalExecution` is requested to [optimize (prepare) the physical plan of the streaming query](#executedPlan) (once for [ContinuousExecution](continuous-execution/ContinuousExecution.md) and every trigger for [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md) in **queryPlanning** phase).
 

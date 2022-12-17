@@ -18,9 +18,9 @@ In other words, `StateStoreProviderId` is a <<storeId, StateStoreId>> with the <
 
 * `StateStoreRDD` is requested for the [placement preferences of a partition](StateStoreRDD.md#getPreferredLocations) and to [compute a partition](StateStoreRDD.md#compute)
 
-* `StateStoreAwareZipPartitionsRDD` is requested for the [preferred locations of a partition](../streaming-join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations)
+* `StateStoreAwareZipPartitionsRDD` is requested for the [preferred locations of a partition](../join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations)
 
-* `StateStoreHandler` is requested to [look up a state store](../streaming-join/StateStoreHandler.md#getStateStore)
+* `StateStoreHandler` is requested to [look up a state store](../join/StateStoreHandler.md#getStateStore)
 
 ## <span id="apply"> Creating StateStoreProviderId
 
@@ -39,6 +39,6 @@ In the end, `apply` requests the `StatefulOperatorStateInfo` for the [run ID of 
 
 `apply` is used when:
 
-* `StateStoreAwareZipPartitionsRDD` is requested for the [preferred locations of a partition](../streaming-join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations)
+* `StateStoreAwareZipPartitionsRDD` is requested for the [preferred locations of a partition](../join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations)
 
-* `StateStoreHandler` is requested to [look up a state store](../streaming-join/StateStoreHandler.md#getStateStore)
+* `StateStoreHandler` is requested to [look up a state store](../join/StateStoreHandler.md#getStateStore)

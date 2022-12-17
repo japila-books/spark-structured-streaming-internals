@@ -265,4 +265,4 @@ Every time a row is dropped [number of rows which are dropped by watermark](#num
 * `FlatMapGroupsWithStateExec` is requested to [processDataWithPartition](FlatMapGroupsWithStateExec.md#processDataWithPartition)
 * `StateStoreSaveExec` is [executed](StateStoreSaveExec.md#doExecute) (for `Append` and `Update` output modes)
 * `StreamingDeduplicateExec` is [executed](StreamingDeduplicateExec.md#doExecute)
-* `StreamingSymmetricHashJoinExec.OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../streaming-join/OneSideHashJoiner.md#storeAndJoinWithOtherSide)
+* `StreamingSymmetricHashJoinExec.OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](../join/OneSideHashJoiner.md#storeAndJoinWithOtherSide)

@@ -40,7 +40,7 @@ Requests the [RpcEndpointRef](#rpcEndpointRef) to send a [GetLocation](StateStor
 
 Used when:
 
-* `StateStoreAwareZipPartitionsRDD` is requested for the [preferred locations of a partition](../streaming-join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations) (when [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator is executed
+* `StateStoreAwareZipPartitionsRDD` is requested for the [preferred locations of a partition](../join/StateStoreAwareZipPartitionsRDD.md#getPreferredLocations) (when [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator is executed
 
 * `StateStoreRDD` is requested for [preferred locations for a task for a partition](StateStoreRDD.md#getPreferredLocations)
 

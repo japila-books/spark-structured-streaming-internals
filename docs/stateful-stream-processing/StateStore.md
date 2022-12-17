@@ -30,7 +30,7 @@ Used when:
 * `StreamingGlobalLimitExec` physical operator is [executed](../physical-operators/StreamingGlobalLimitExec.md#doExecute)
 * `StreamingAggregationStateManagerBaseImpl` is requested to [commit](../streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md#commit)
 * `StreamingSessionWindowStateManagerImplV1` is requested to `commit`
-* `StateStoreHandler` is requested to [commit](../streaming-join/StateStoreHandler.md#commit)
+* `StateStoreHandler` is requested to [commit](../join/StateStoreHandler.md#commit)
 
 ### <span id="metrics"> StateStoreMetrics
 
@@ -43,7 +43,7 @@ metrics: StateStoreMetrics
 Used when:
 
 * `StateStoreWriter` physical operator is requested to [setStoreMetrics](../physical-operators/StateStoreWriter.md#setStoreMetrics)
-* `StateStoreHandler` is requested for the [metrics](../streaming-join/StateStoreHandler.md#metrics)
+* `StateStoreHandler` is requested for the [metrics](../join/StateStoreHandler.md#metrics)
 
 ### <span id="put"> Storing Value for Key
 
@@ -62,8 +62,8 @@ Used when:
 * `StateManagerImplBase` is requested to [putState](../arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md#putState)
 * `StreamingAggregationStateManagerImplV2`(and `StreamingAggregationStateManagerImplV1`) is requested to [put a row](../streaming-aggregation/StreamingAggregationStateManagerImplV2.md#put)
 * `StreamingSessionWindowStateManagerImplV1` is requested to `putRows`
-* `KeyToNumValuesStore` is requested to [put the number of values of a key](../streaming-join/KeyToNumValuesStore.md#put)
-* `KeyWithIndexToValueStore` is requested to [put a new value of a key](../streaming-join/KeyWithIndexToValueStore.md#put)
+* `KeyToNumValuesStore` is requested to [put the number of values of a key](../join/KeyToNumValuesStore.md#put)
+* `KeyWithIndexToValueStore` is requested to [put a new value of a key](../join/KeyWithIndexToValueStore.md#put)
 
 ### <span id="remove"> Removing Key
 
@@ -80,8 +80,8 @@ Used when:
 * `StateManagerImplBase` is requested to [removeState](../arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md#removeState)
 * `StreamingAggregationStateManagerBaseImpl` is requested to [remove a key](../streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md#remove)
 * `StreamingSessionWindowStateManagerImplV1` is requested to `removeByValueCondition` and `putRows`
-* `KeyToNumValuesStore` is requested to [remove a key](../streaming-join/KeyToNumValuesStore.md#remove)
-* `KeyWithIndexToValueStore` is requested to [remove a key](../streaming-join/KeyWithIndexToValueStore.md#remove)
+* `KeyToNumValuesStore` is requested to [remove a key](../join/KeyToNumValuesStore.md#remove)
+* `KeyWithIndexToValueStore` is requested to [remove a key](../join/KeyWithIndexToValueStore.md#remove)
 
 ## Implementations
 
@@ -130,7 +130,7 @@ get(
 
 * `FlatMapGroupsWithStateExec` is [executed](../physical-operators/FlatMapGroupsWithStateExec.md#doExecute)
 * `StateStoreRDD` is requested to [compute a partition](StateStoreRDD.md#compute)
-* `SymmetricHashJoinStateManager.StateStoreHandler` is requested to [look up a StateStore](../streaming-join/StateStoreHandler.md#getStateStore)
+* `SymmetricHashJoinStateManager.StateStoreHandler` is requested to [look up a StateStore](../join/StateStoreHandler.md#getStateStore)
 
 ## <span id="getStateStoreProvider"> Looking Up StateStore by Provider ID
 

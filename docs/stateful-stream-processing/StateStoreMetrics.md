@@ -1,6 +1,6 @@
 # StateStoreMetrics
 
-`StateStoreMetrics` holds the performance metrics of [StateStore](StateStore.md#metrics)s and [SymmetricHashJoinStateManager](../streaming-join/SymmetricHashJoinStateManager.md).
+`StateStoreMetrics` holds the performance metrics of [StateStore](StateStore.md#metrics)s and [SymmetricHashJoinStateManager](../join/SymmetricHashJoinStateManager.md).
 
 ## Creating Instance
 
@@ -15,7 +15,7 @@
 * `HDFSBackedStateStore` is requested for [metrics](HDFSBackedStateStore.md#metrics)
 * `RocksDBStateStore` is requested for [metrics](../rocksdb/RocksDBStateStore.md#metrics)
 * `StateStoreMetrics` is requested to [combine metrics](#combine)
-* `SymmetricHashJoinStateManager` is requested for [metrics](../streaming-join/SymmetricHashJoinStateManager.md#metrics)
+* `SymmetricHashJoinStateManager` is requested for [metrics](../join/SymmetricHashJoinStateManager.md#metrics)
 
 ### <span id="customMetrics"> Custom Metrics
 

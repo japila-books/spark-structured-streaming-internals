@@ -241,20 +241,20 @@ nav:
       - StreamingAggregationStateManagerBaseImpl: streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md
       - StreamingAggregationStateManagerImplV2: streaming-aggregation/StreamingAggregationStateManagerImplV2.md
     - Streaming Join:
-      - streaming-join/index.md
-      - StateStoreAwareZipPartitionsRDD: streaming-join/StateStoreAwareZipPartitionsRDD.md
-      - SymmetricHashJoinStateManager:
-        - SymmetricHashJoinStateManager: streaming-join/SymmetricHashJoinStateManager.md
-        - StateStoreHandler: streaming-join/StateStoreHandler.md
-        - KeyToNumValuesStore: streaming-join/KeyToNumValuesStore.md
-        - KeyWithIndexToValueStore: streaming-join/KeyWithIndexToValueStore.md
-      - OneSideHashJoiner: streaming-join/OneSideHashJoiner.md
-      - JoinStateWatermarkPredicates: streaming-join/JoinStateWatermarkPredicates.md
-      - JoinStateWatermarkPredicate: streaming-join/JoinStateWatermarkPredicate.md
+      - join/index.md
+      - JoinStateWatermarkPredicate: join/JoinStateWatermarkPredicate.md
+      - JoinStateWatermarkPredicates: join/JoinStateWatermarkPredicates.md
+      - OneSideHashJoiner: join/OneSideHashJoiner.md
       - StateStoreAwareZipPartitionsHelper:
-        - StateStoreAwareZipPartitionsHelper: streaming-join/StateStoreAwareZipPartitionsHelper.md
-        - StreamingSymmetricHashJoinHelper: streaming-join/StreamingSymmetricHashJoinHelper.md
-        - StreamingJoinHelper: streaming-join/StreamingJoinHelper.md
+        - StateStoreAwareZipPartitionsHelper: join/StateStoreAwareZipPartitionsHelper.md
+        - StreamingJoinHelper: join/StreamingJoinHelper.md
+        - StreamingSymmetricHashJoinHelper: join/StreamingSymmetricHashJoinHelper.md
+      - StateStoreAwareZipPartitionsRDD: join/StateStoreAwareZipPartitionsRDD.md
+      - SymmetricHashJoinStateManager:
+        - SymmetricHashJoinStateManager: join/SymmetricHashJoinStateManager.md
+        - StateStoreHandler: join/StateStoreHandler.md
+        - KeyToNumValuesStore: join/KeyToNumValuesStore.md
+        - KeyWithIndexToValueStore: join/KeyWithIndexToValueStore.md
     - Streaming Watermark:
       - watermark/index.md
       - EventTimeStatsAccum: watermark/EventTimeStatsAccum.md
