@@ -1,3 +1,7 @@
+---
+title: StreamingJoinHelper
+---
+
 # StreamingJoinHelper Utility
 
 `StreamingJoinHelper` is a Scala object with the following utility methods:

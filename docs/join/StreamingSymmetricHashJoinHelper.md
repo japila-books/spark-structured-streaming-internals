@@ -1,3 +1,7 @@
+---
+title: StreamingSymmetricHashJoinHelper
+---
+
 # StreamingSymmetricHashJoinHelper Utility
 
 `StreamingSymmetricHashJoinHelper` is a Scala object with the following utility methods:

@@ -1,3 +1,7 @@
+---
+subtitle: Streaming queries using crossJoin, join or joinWith
+---
+
 # Streaming Join
 
 In Spark Structured Streaming, a **streaming join** is a structured query that is described (_built_) using the [high-level streaming operators](../operators/):

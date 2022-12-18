@@ -240,21 +240,9 @@ nav:
       - StreamingAggregationStateManager: streaming-aggregation/StreamingAggregationStateManager.md
       - StreamingAggregationStateManagerBaseImpl: streaming-aggregation/StreamingAggregationStateManagerBaseImpl.md
       - StreamingAggregationStateManagerImplV2: streaming-aggregation/StreamingAggregationStateManagerImplV2.md
-    - Streaming Join:
-      - join/index.md
-      - JoinStateWatermarkPredicate: join/JoinStateWatermarkPredicate.md
-      - JoinStateWatermarkPredicates: join/JoinStateWatermarkPredicates.md
-      - OneSideHashJoiner: join/OneSideHashJoiner.md
-      - StateStoreAwareZipPartitionsHelper:
-        - StateStoreAwareZipPartitionsHelper: join/StateStoreAwareZipPartitionsHelper.md
-        - StreamingJoinHelper: join/StreamingJoinHelper.md
-        - StreamingSymmetricHashJoinHelper: join/StreamingSymmetricHashJoinHelper.md
-      - StateStoreAwareZipPartitionsRDD: join/StateStoreAwareZipPartitionsRDD.md
-      - SymmetricHashJoinStateManager:
-        - SymmetricHashJoinStateManager: join/SymmetricHashJoinStateManager.md
-        - StateStoreHandler: join/StateStoreHandler.md
-        - KeyToNumValuesStore: join/KeyToNumValuesStore.md
-        - KeyWithIndexToValueStore: join/KeyWithIndexToValueStore.md
+    # Streaming Join using awesome-pages plugin
+    # https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
+    - ...
     - Streaming Watermark:
       - watermark/index.md
       - EventTimeStatsAccum: watermark/EventTimeStatsAccum.md
