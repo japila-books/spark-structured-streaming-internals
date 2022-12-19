@@ -1,4 +1,4 @@
 # Logging
 
 !!! tip
-    Find out more on [Logging]({{ book.spark_sql }}/spark-logging/) in [The Internals of Spark SQL]({{ book.spark_sql }}/) online book.
+    Find out more on logging in Apache Spark in [The Internals of Apache Spark]({{ book.spark_core }}/spark-logging) online book.
