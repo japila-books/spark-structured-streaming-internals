@@ -9,7 +9,7 @@
 
 `StreamingQueryStatisticsPage` uses `id` request parameter as the `runId` of a streaming query to [render a page](#render) of.
 !!! tip "Demo: Streaming Aggregation"
-    Use [Demo: Streaming Aggregation](../demo/streaming-aggregation.md) to learn more and monitor the statistics.
+    Use [Demo: Streaming Aggregation](../demo/streaming-windowed-aggregation.md) to learn more and monitor the statistics.
 
 ## Creating Instance
 

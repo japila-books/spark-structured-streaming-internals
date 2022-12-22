@@ -431,7 +431,7 @@ nav:
     - groupByKey Streaming Aggregation in Update Mode: demo/groupByKey-count-Update.md
     - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
     - Kafka Data Source: demo/kafka-data-source.md
-    - Streaming Aggregation: demo/streaming-aggregation.md
+    - Streaming Windowed Aggregation: demo/streaming-windowed-aggregation.md
     - RocksDB State Store for Streaming Aggregation: demo/rocksdb-state-store-for-streaming-aggregation.md
     - Streaming Query for Running Counts (Socket Source and Complete Output Mode): demo/groupBy-running-count-complete.md
     - Streaming Watermark: demo/streaming-watermark.md

@@ -14,7 +14,7 @@ hide:
 * [groupByKey Streaming Aggregation in Update Mode](groupByKey-count-Update.md)
 * [Internals of FlatMapGroupsWithStateExec Physical Operator](spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md)
 * [Kafka Data Source](kafka-data-source.md)
-* [Streaming Aggregation](streaming-aggregation.md)
+* [Streaming Windowed Aggregation](streaming-windowed-aggregation.md)
 * [RocksDB State Store for Streaming Aggregation](rocksdb-state-store-for-streaming-aggregation.md)
 * [Streaming Query for Running Counts (Socket Source and Complete Output Mode)](groupBy-running-count-complete.md)
 * [Streaming Watermark](streaming-watermark.md)

@@ -3,47 +3,19 @@ hide:
   - navigation
 ---
 
-# Demo: Streaming Aggregation
+# Demo: Streaming Windowed Aggregation
 
 This demo shows a streaming query with a [streaming aggregation](../streaming-aggregation/index.md) (with [Dataset.groupBy](../operators/groupBy.md) operator) that processes data from Kafka (using [Kafka Data Source](../kafka/index.md)).
 
-!!! note
+The source code of this demo is in [spark-examples](https://github.com/jaceklaskowski/spark-examples) repository.
+
+!!! note "Demo: Kafka Data Source"
     Please start a [Kafka cluster](kafka-data-source.md#start-kafka-cluster) and [spark-shell](kafka-data-source.md#start-spark-shell) as described in [Demo: Kafka Data Source](kafka-data-source.md).
 
-## Reset numShufflePartitions
-
-This step makes debugging easier since there is a state (store) for just one partition.
-
-```scala
-val numShufflePartitions = 1
-import org.apache.spark.sql.internal.SQLConf.SHUFFLE_PARTITIONS
-spark.sessionState.conf.setConf(SHUFFLE_PARTITIONS, numShufflePartitions)
-
-assert(spark.sessionState.conf.numShufflePartitions == numShufflePartitions)
-```
-
-## Load Events from Kafka
-
-```scala
-val events = spark
-  .readStream
-  .format("kafka")
-  .option("subscribe", "demo.streaming-aggregation")
-  .option("kafka.bootstrap.servers", ":9092")
-  .load
-  .select($"value" cast "string")
-  .withColumn("tokens", split($"value", ","))
-  .withColumn("id", 'tokens(0))
-  .withColumn("v", 'tokens(1) cast "int")
-  .withColumn("second", 'tokens(2) cast "long")
-  .withColumn("event_time", 'second cast "timestamp") // <-- Event time has to be a timestamp
-  .select("id", "v", "second", "event_time")
-```
-
-??? note "FIXME Consider JSON format for values"
-    JSONified values would make more sense. It'd certainly make the demo more verbose (extra JSON-specific "things") but perhaps would ease building a connection between events on the command line and their DataFrame representation.
-
 ## Define Windowed Streaming Aggregation
+
+!!! note "Windowed Aggregation"
+    This is different from the source code in spark-examples repo as it uses windowed aggregation.
 
 Define a streaming aggregation query (using [groupBy](../operators/groupBy.md) high-level operator).
 
@@ -113,6 +85,9 @@ ObjectHashAggregate(keys=[id#26, window#66-T10000ms], functions=[collect_list(v#
 
 ## Start Streaming Query
 
+!!! note "Append Output Mode"
+    This is different from the source code in spark-examples repo as it uses [Append](../OutputMode.md#Append) output mode.
+
 ```scala
 import java.time.Clock
 val timeOffset = Clock.systemUTC.instant.getEpochSecond
@@ -133,19 +108,7 @@ val sq = windowed
   .start
 ```
 
-The streaming query gets executed and prints out Batch 0 to the console.
-
-```text
--------------------------------------------
-Batch: 0
--------------------------------------------
-+---+------+---+-------+
-|id |window|vs |seconds|
-+---+------+---+-------+
-+---+------+---+-------+
-```
-
-### Start Diagnostic Query
+### (Optional) Start Diagnostic Query
 
 ```scala
 import java.time.Clock
