@@ -1,6 +1,6 @@
 # flatMapGroupsWithState Operator
 
-`flatMapGroupsWithState` is part of [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) API for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md) with an explicit state logic.
+`flatMapGroupsWithState` is part of `KeyValueGroupedDataset` ([Spark SQL]({{ book.spark_sql }}/basic-aggregation/KeyValueGroupedDataset)) API for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md) with an explicit state logic.
 
 ```scala
 flatMapGroupsWithState[S: Encoder, U: Encoder](
@@ -23,17 +23,17 @@ flatMapGroupsWithState[S: Encoder, U: Encoder](
 * [OutputMode](../OutputMode.md)
 * [GroupStateTimeout](../GroupStateTimeout.md)
 * A function with the `K` key and the `V` values and the current [GroupState](../GroupState.md) for the given `K` key
-* (optionally) [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) for an user-defined initial state
+* (optionally) `KeyValueGroupedDataset` for an user-defined initial state
 
 ## FlatMapGroupsWithState Logical Operator
 
 `flatMapGroupsWithState` creates a `Dataset` with [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator with the following:
 
 * `LogicalGroupState`
-* [groupingAttributes](../KeyValueGroupedDataset.md#groupingAttributes) of the `KeyValueGroupedDataset`
-* [dataAttributes](../KeyValueGroupedDataset.md#dataAttributes) of the `KeyValueGroupedDataset`
+* `groupingAttributes` of the `KeyValueGroupedDataset`
+* `dataAttributes` of the `KeyValueGroupedDataset`
 * `isMapGroupsWithState` flag disabled (`false`)
-* [logicalPlan](../KeyValueGroupedDataset.md#logicalPlan) of the `KeyValueGroupedDataset` as the [child](../logical-operators/FlatMapGroupsWithState.md#child) operator
+* `logicalPlan` of the `KeyValueGroupedDataset` as the [child](../logical-operators/FlatMapGroupsWithState.md#child) operator
 
 ## Output Modes
 

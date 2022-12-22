@@ -1,28 +1,28 @@
-== [[mapGroupsWithState]] mapGroupsWithState Operator -- Stateful Streaming Aggregation (with Explicit State Logic)
+# mapGroupsWithState Operator
 
-[source, scala]
-----
+`flatMapGroupsWithState` is part of `KeyValueGroupedDataset` ([Spark SQL]({{ book.spark_sql }}/basic-aggregation/KeyValueGroupedDataset)) API for [stateful streaming aggregation](../streaming-aggregation/index.md) with an explicit state logic.
+
+```scala
 mapGroupsWithState[S: Encoder, U: Encoder](
-  func: (K, Iterator[V], GroupState[S]) => U): Dataset[U] // <1>
+  func: (K, Iterator[V], GroupState[S]) => U): Dataset[U] // (1)!
 mapGroupsWithState[S: Encoder, U: Encoder](
   timeoutConf: GroupStateTimeout)(
   func: (K, Iterator[V], GroupState[S]) => U): Dataset[U]
-----
-<1> Uses `GroupStateTimeout.NoTimeout` for `timeoutConf`
+```
 
-`mapGroupsWithState` operator...FIXME
+1. Uses `GroupStateTimeout.NoTimeout` for `timeoutConf`
 
 !!! note
-    `mapGroupsWithState` is a special case of [flatMapGroupsWithState](operators/flatMapGroupsWithState.md) operator with the following:
+    `mapGroupsWithState` is a special case of [flatMapGroupsWithState](flatMapGroupsWithState.md) operator with the following:
 
     * `func` being transformed to return a single-element `Iterator`
+    * [Update](../OutputMode.md#Update) output mode
 
-    * [Update](OutputMode.md#Update) output mode
+    `mapGroupsWithState` also creates a `FlatMapGroupsWithState` with [isMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md#isMapGroupsWithState) internal flag enabled.
 
-    `mapGroupsWithState` also creates a `FlatMapGroupsWithState` with [isMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md#isMapGroupsWithState) internal flag enabled.
+## Demo
 
 ```text
-// numGroups defined at the beginning
 scala> :type numGroups
 org.apache.spark.sql.KeyValueGroupedDataset[Long,(java.sql.Timestamp, Long)]
 

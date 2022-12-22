@@ -2,9 +2,8 @@
 
 **Arbitrary Stateful Streaming Aggregation** is a [streaming aggregation query](../streaming-aggregation/index.md) that uses the following high-level operators of `KeyValueGroupedDataset` ([Spark SQL]({{ book.spark_sql }}/basic-aggregation/KeyValueGroupedDataset)):
 
-* [mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState) for implicit state logic
-
-* [flatMapGroupsWithState](../KeyValueGroupedDataset.md#flatMapGroupsWithState) for explicit state logic
+* [flatMapGroupsWithState](../operators/flatMapGroupsWithState.md) for explicit state logic
+* [mapGroupsWithState](../operators/mapGroupsWithState.md) for implicit state logic
 
 `KeyValueGroupedDataset` represents a grouped dataset as a result of [Dataset.groupByKey](../operators/groupByKey.md) operator.
 

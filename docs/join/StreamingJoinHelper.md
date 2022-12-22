@@ -58,7 +58,34 @@ getStateWatermarkFromLessThenPredicate(
   eventWatermark: Option[Long]): Option[Long]
 ```
 
-`getStateWatermarkFromLessThenPredicate`...FIXME
+`getStateWatermarkFromLessThenPredicate` prints out the following DEBUG message to the logs:
+
+```text
+All on Left:
+[allOnLeftExpr.tree]
+[allOnLeftExpr.asCode]
+```
+
+`getStateWatermarkFromLessThenPredicate` prints out the following DEBUG message to the logs:
+
+```text
+Terms extracted from join condition:
+  [terms]
+```
+
+`getStateWatermarkFromLessThenPredicate` prints out the following DEBUG message to the logs:
+
+```text
+Constraint term from join condition:  [constraintTerm]
+```
+
+`getStateWatermarkFromLessThenPredicate` prints out the following DEBUG message to the logs:
+
+```text
+Final expression to evaluate constraint:  [exprWithWatermarkSubstituted]
+```
+
+`getStateWatermarkFromLessThenPredicate` requests the `exprWithWatermarkSubstituted` to produce a value (_evaluate_) that is then converted to seconds.
 
 ## Logging
 

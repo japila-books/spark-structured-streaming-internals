@@ -226,9 +226,6 @@ nav:
         - GroupStateImpl: GroupStateImpl.md
       - GroupStateTimeout: GroupStateTimeout.md
       - InputProcessor: arbitrary-stateful-streaming-aggregation/InputProcessor.md
-      - KeyValueGroupedDataset:
-        - KeyValueGroupedDataset: KeyValueGroupedDataset.md
-        - mapGroupsWithState: spark-sql-streaming-KeyValueGroupedDataset-mapGroupsWithState.md
       - StateManager:
         - StateManager: arbitrary-stateful-streaming-aggregation/StateManager.md
         - StateManagerImplBase: arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md
@@ -324,6 +321,7 @@ nav:
     - groupByKey: operators/groupByKey.md
     - join: operators/join.md
     - joinWith: operators/joinWith.md
+    - mapGroupsWithState: operators/mapGroupsWithState.md
     - window: operators/window.md
     - withWatermark: operators/withWatermark.md
     - writeStream: operators/writeStream.md

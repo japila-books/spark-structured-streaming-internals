@@ -7,7 +7,7 @@ groupByKey(
 
 `groupByKey` operator aggregates rows by a typed grouping function for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md).
 
-`groupByKey` creates a [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) (with keys of type `K` and rows of type `T`) to apply aggregation functions over groups of rows (of type `T`) by key (of type `K`) per the given `func` key-generating function.
+`groupByKey` creates a `KeyValueGroupedDataset` ([Spark SQL]({{ book.spark_sql }}/basic-aggregration/KeyValueGroupedDataset)) (with keys of type `K` and rows of type `T`) to apply aggregation functions over groups of rows (of type `T`) by key (of type `K`) per the given `func` key-generating function.
 
 !!! note
     The type of the input argument of `func` is the type of rows in the Dataset (i.e. `Dataset[T]`).
@@ -20,7 +20,7 @@ func: T => K
 
 Internally, `groupByKey` creates a structured query with the `AppendColumns` unary logical operator (with the given `func` and the analyzed logical plan of the target `Dataset` that `groupByKey` was executed on) and creates a new `QueryExecution`.
 
-In the end, `groupByKey` creates a [KeyValueGroupedDataset](../KeyValueGroupedDataset.md) with the following:
+In the end, `groupByKey` creates a `KeyValueGroupedDataset` with the following:
 
 * Encoders for `K` keys and `T` rows
 

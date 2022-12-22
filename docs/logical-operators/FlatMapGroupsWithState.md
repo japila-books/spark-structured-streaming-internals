@@ -2,8 +2,8 @@
 
 `FlatMapGroupsWithState` is a binary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#BinaryNode)) that represents the following high-level operators in (a logical query plan of) a structured query:
 
-* [KeyValueGroupedDataset.mapGroupsWithState](../KeyValueGroupedDataset.md#mapGroupsWithState)
 * [KeyValueGroupedDataset.flatMapGroupsWithState](../operators/flatMapGroupsWithState.md)
+* [KeyValueGroupedDataset.mapGroupsWithState](../operators/mapGroupsWithState.md)
 
 ## Creating Instance
 

@@ -12,7 +12,7 @@
 * <span id="keyDeserializer"> Deserializer expression for keys
 * <span id="valueDeserializer"> Deserializer expression for values
 * <span id="initialStateDeserializer"> Initial State Deserializer Expression
-* <span id="groupingAttributes"> Grouping attributes (as used for grouping in [KeyValueGroupedDataset](../KeyValueGroupedDataset.md#groupingAttributes) for `mapGroupsWithState` or `flatMapGroupsWithState` operators)
+* <span id="groupingAttributes"> Grouping attributes
 * <span id="initialStateGroupAttrs"> Initial State Group Attributes
 * <span id="dataAttributes"> Data attributes
 * <span id="initialStateDataAttrs"> Initial State Data Attributes
