@@ -1,9 +1,15 @@
-# StateStoreAwareZipPartitionsHelper
+---
+title: StateStoreAwareZipPartitionsHelper
+---
 
-<span id="dataRDD">
-`StateStoreAwareZipPartitionsHelper` is a **Scala implicit class** of a data RDD (of type `RDD[T]`) to [create a StateStoreAwareZipPartitionsRDD](#stateStoreAwareZipPartitions) for [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator.
+# StateStoreAwareZipPartitionsHelper Implicit Class
 
-!!! note
+`StateStoreAwareZipPartitionsHelper` is a Scala implicit class of a data RDD (of type `RDD[T]`) to [create a StateStoreAwareZipPartitionsRDD](#stateStoreAwareZipPartitions) to execute the following physical operators:
+
+* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) (with [hasInitialState](../physical-operators/FlatMapGroupsWithStateExec.md#hasInitialState) enabled)
+* [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md)
+
+??? note "Implicit Class"
     [Implicit Classes](http://docs.scala-lang.org/overviews/core/implicit-classes.html) are a language feature in Scala for **implicit conversions** with **extension methods** for existing types.
 
 ## <span id="stateStoreAwareZipPartitions"> Creating StateStoreAwareZipPartitionsRDD
@@ -17,6 +23,11 @@ stateStoreAwareZipPartitions[U: ClassTag, V: ClassTag](
   f: (Iterator[T], Iterator[U]) => Iterator[V]): RDD[V]
 ```
 
-`stateStoreAwareZipPartitions` simply creates a new [StateStoreAwareZipPartitionsRDD](StateStoreAwareZipPartitionsRDD.md).
+`stateStoreAwareZipPartitions` creates a new [StateStoreAwareZipPartitionsRDD](StateStoreAwareZipPartitionsRDD.md).
 
-`stateStoreAwareZipPartitions` is used when [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator is executed.
+---
+
+`stateStoreAwareZipPartitions` is used when the following physical operators are executed:
+
+* [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) (with [hasInitialState](../physical-operators/FlatMapGroupsWithStateExec.md#hasInitialState) enabled)
+* [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md)
