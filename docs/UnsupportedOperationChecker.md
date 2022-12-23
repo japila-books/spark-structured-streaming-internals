@@ -65,7 +65,7 @@ Otherwise, `checkForStreaming` reports a `AnalysisException`:
 Multiple flatMapGroupsWithStates are not supported when they are not all in append mode or the output mode is not append on a streaming DataFrames/Datasets
 ```
 
-## <span id="checkForStreamStreamJoinWatermark"> checkForStreamStreamJoinWatermark
+### <span id="checkForStreamStreamJoinWatermark"> checkForStreamStreamJoinWatermark
 
 ```scala
 checkForStreamStreamJoinWatermark(
@@ -73,3 +73,75 @@ checkForStreamStreamJoinWatermark(
 ```
 
 `checkForStreamStreamJoinWatermark`...FIXME
+
+## <span id="checkStreamingQueryGlobalWatermarkLimit"> checkStreamingQueryGlobalWatermarkLimit
+
+```scala
+checkStreamingQueryGlobalWatermarkLimit(
+  plan: LogicalPlan,
+  outputMode: OutputMode): Unit
+```
+
+`checkStreamingQueryGlobalWatermarkLimit` [finds stateful operators](#isStatefulOperation) in the given logical query plan with another [stateful operation that can possibly emit late rows](#isStatefulOperationPossiblyEmitLateRows) and throws an `AnalysisException`.
+
+`checkStreamingQueryGlobalWatermarkLimit` propagates it (up the call chain) with [spark.sql.streaming.statefulOperator.checkCorrectness.enabled](configuration-properties.md#spark.sql.streaming.statefulOperator.checkCorrectness.enabled) enabled or prints out the following WARN message:
+
+```text
+Detected pattern of possible 'correctness' issue due to global watermark.
+The query contains stateful operation which can emit rows older than the current watermark plus allowed late record delay,
+which are "late rows" in downstream stateful operations and these rows can be discarded.
+Please refer the programming guide doc for more details.
+If you understand the possible risk of correctness issue and still need to run the query, you can disable this check by setting the config `spark.sql.streaming.statefulOperator.checkCorrectness.enabled` to false.
+```
+
+### <span id="isStatefulOperation"> isStatefulOperation
+
+```scala
+isStatefulOperation(
+  p: LogicalPlan): Boolean
+```
+
+`isStatefulOperation` is positive (`true`) for the following logical operators:
+
+* `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) over a streaming data source
+* `Join` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Join)) with left and right streaming data sources
+* [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) over a streaming data source
+* [Deduplicate](logical-operators/Deduplicate.md) over a streaming data source
+
+Otherwise, `isStatefulOperation` is negative (`false`).
+
+### <span id="isStatefulOperationPossiblyEmitLateRows"> isStatefulOperationPossiblyEmitLateRows
+
+```scala
+isStatefulOperationPossiblyEmitLateRows(
+  p: LogicalPlan): Boolean
+```
+
+`isStatefulOperationPossiblyEmitLateRows` is positive (`true`) for the following logical operators:
+
+* `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) over a streaming data source with [Append](OutputMode.md#Append) output mode
+* `Join` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Join)) with left and right streaming data sources for all but `Inner` join types
+* [FlatMapGroupsWithState](logical-operators/FlatMapGroupsWithState.md) over a streaming data source with the [outputMode](logical-operators/FlatMapGroupsWithState.md#outputMode) as [Append](OutputMode.md#Append)
+
+Otherwise, `isStatefulOperationPossiblyEmitLateRows` is negative (`false`).
+
+### <span id="checkStreamingQueryGlobalWatermarkLimit-demo"> Demo
+
+!!! tip
+    Review `org.apache.spark.sql.catalyst.analysis.UnsupportedOperationsSuite.testGlobalWatermarkLimit`
+
+    ```console
+    SBT_MAVEN_PROFILES="-Pyarn,kubernetes,hive,hive-thriftserver,scala-2.13,hadoop-cloud" \
+      sbt sql/testOnly org.apache.spark.sql.catalyst.analysis.UnsupportedOperationsSuite
+    ```
+
+```scala
+import org.apache.spark.sql.catalyst.analysis.UnsupportedOperationChecker
+
+// Streaming Aggregate with Append output mode over streaming join with non-Inner join type
+val plan = ???
+
+import org.apache.spark.sql.streaming.OutputMode
+val outputMode = OutputMode.Append
+UnsupportedOperationChecker.checkForStreaming(plan, outputMode)
+```
