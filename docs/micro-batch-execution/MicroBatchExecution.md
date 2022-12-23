@@ -16,11 +16,26 @@ Once [created](#creating-instance), `MicroBatchExecution` is requested to [start
 * <span id="trigger"> [Trigger](../Trigger.md)
 * <span id="triggerClock"> `Clock`
 * <span id="extraOptions"> Extra Options (`Map[String, String]`)
-* <span id="plan"> [WriteToStream](../logical-operators/WriteToStream.md) logical operator
+* [WriteToStream Logical Operator](#plan)
 
 `MicroBatchExecution` is created when:
 
 * `StreamingQueryManager` is requested to [create a streaming query](../StreamingQueryManager.md#createQuery) (when `DataStreamWriter` is requested to [start execution of the streaming query](../DataStreamWriter.md#start)) for all [trigger](#trigger)s but [ContinuousTrigger](../Trigger.md#ContinuousTrigger)
+
+### <span id="plan"> WriteToStream Logical Operator
+
+`MicroBatchExecution` is given a [WriteToStream](../logical-operators/WriteToStream.md) logical operator when [created](#creating-instance).
+
+The `WriteToStream` is used to initialize the parent [StreamExecution](../StreamExecution.md) attributes:
+
+* [Name](../StreamExecution.md#name)
+* [resolvedCheckpointRoot](../StreamExecution.md#resolvedCheckpointRoot)
+* [Analyzed Logical Plan](../StreamExecution.md#analyzedPlan)
+* [Sink Table](../StreamExecution.md#sink)
+* [OutputMode](../StreamExecution.md#outputMode)
+* [deleteCheckpointOnStop](../StreamExecution.md#deleteCheckpointOnStop)
+
+The `WriteToStream` can be used to create a [WriteToMicroBatchDataSource](../logical-operators/WriteToMicroBatchDataSource.md) as the [logical write operator](#logicalPlan) when the [sink table](#sink) is `SupportsWrite` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsWrite)).
 
 ### <span id="triggerExecutor"> TriggerExecutor
 

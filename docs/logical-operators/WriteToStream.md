@@ -1,6 +1,11 @@
 # WriteToStream Logical Operator
 
-`WriteToStream` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that represents [WriteToStreamStatement](WriteToStreamStatement.md) operator at execution time (of a streaming query) in [micro-batch](../micro-batch-execution/MicroBatchExecution.md#plan) and [continuous](../continuous-execution/ContinuousExecution.md#plan) execution modes.
+`WriteToStream` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that represents [WriteToStreamStatement](WriteToStreamStatement.md) operator at execution time (of a streaming query).
+
+`WriteToStream` is used to create the stream execution engines:
+
+* [MicroBatchExecution](../micro-batch-execution/MicroBatchExecution.md#plan)
+* [ContinuousExecution](../continuous-execution/ContinuousExecution.md#plan)
 
 ## Creating Instance
 

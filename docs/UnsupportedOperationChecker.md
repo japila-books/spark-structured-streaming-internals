@@ -2,9 +2,9 @@
 
 `UnsupportedOperationChecker` checks whether the [logical plan of a streaming query uses supported operations only](#checkForStreaming).
 
-`UnsupportedOperationChecker` is used when the internal [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.md#spark.sql.streaming.unsupportedOperationCheck) Spark property is enabled.
+`UnsupportedOperationChecker` is used only when [spark.sql.streaming.unsupportedOperationCheck](configuration-properties.md#spark.sql.streaming.unsupportedOperationCheck) configuration property is enabled.
 
-## <span id="checkForStreaming"> checkForStreaming Method
+## <span id="checkForStreaming"> Streaming Query Verification
 
 ```scala
 checkForStreaming(
