@@ -1,11 +1,13 @@
 # OneSideHashJoiner
 
+![OneSideHashJoiner and StreamingSymmetricHashJoinExec](../images/OneSideHashJoiner.png)
+
+<!---
+## Review Me
+
 `OneSideHashJoiner` manages join state of one side of a <<join/index.md#stream-stream-joins, stream-stream join>> (using <<joinStateManager, SymmetricHashJoinStateManager>>).
 
 `OneSideHashJoiner` is <<creating-instance, created>> exclusively for <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (when requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
-
-.OneSideHashJoiner and StreamingSymmetricHashJoinExec
-image::images/OneSideHashJoiner.png[align="center"]
 
 `StreamingSymmetricHashJoinExec` physical operator uses two `OneSideHashJoiners` per side of the stream-stream join (<<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions-leftSideJoiner, left>> and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions-rightSideJoiner, right>> sides).
 
@@ -211,3 +213,4 @@ Used for the following:
 * <<removeOldState, removeOldState>>
 
 |===
+-->

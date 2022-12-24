@@ -34,7 +34,7 @@ extends ZippedPartitionsBaseRDD[V]
 f: (Int, Iterator[A], Iterator[B]) => Iterator[V]
 ```
 
-`StateStoreAwareZipPartitionsRDD` is given a function when [created](#creating-instance).
+`StateStoreAwareZipPartitionsRDD` is given a function when [created](#creating-instance) that is used to process (_join_) rows of two partitions of the [left](#rdd1) and [right](#rdd2) RDDs.
 
 Physical Operator | Function
 ------------------|---------

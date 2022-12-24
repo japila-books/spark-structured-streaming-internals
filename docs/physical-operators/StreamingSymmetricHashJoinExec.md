@@ -71,7 +71,51 @@ processPartitions(
 !!! note "processPartitions"
     `processPartitions` is used as the function to compute a partition of [StateStoreAwareZipPartitionsRDD](../join/StateStoreAwareZipPartitionsRDD.md).
 
-`processPartitions`...FIXME
+`processPartitions` uses the following [performance metrics](#performance-metrics):
+
+* [numOutputRows](StateStoreWriter.md#numOutputRows)
+* [numUpdatedStateRows](StateStoreWriter.md#numUpdatedStateRows)
+* [number of total state rows](StateStoreWriter.md#numTotalStateRows)
+* [time to update](StateStoreWriter.md#allUpdatesTimeMs)
+* [numRemovedStateRows](StateStoreWriter.md#numRemovedStateRows)
+* [time to remove](StateStoreWriter.md#allRemovalsTimeMs)
+* [time to commit changes](StateStoreWriter.md#commitTimeMs)
+* [stateMemory](StateStoreWriter.md#stateMemory)
+
+`processPartitions` creates the following:
+
+* `postJoinFilter` predicate
+* [OneSideHashJoiner](../join/OneSideHashJoiner.md)s for the [left](#left) and [right](#right) side of the join
+
+`processPartitions` requests the `OneSideHashJoiner` of the [left](#left) side to [storeAndJoinWithOtherSide](../join/OneSideHashJoiner.md#storeAndJoinWithOtherSide) with the one of the [right](#right) side.
+
+`processPartitions` does the opposite with the [right](#right) side (i.e., requests the `OneSideHashJoiner` of the [right](#right) side to [storeAndJoinWithOtherSide](../join/OneSideHashJoiner.md#storeAndJoinWithOtherSide) with the one of the [left](#left) side).
+
+!!! note
+    Executing [storeAndJoinWithOtherSide](../join/OneSideHashJoiner.md#storeAndJoinWithOtherSide) updates an internal `JoinedRow` variable.
+
+`processPartitions` creates a `CompletionIterator` as a composition of all the joined rows (iterators) from the [left](#left) side first followed by the [right](#right) side.
+
+`processPartitions` creates an output iterator with the joined rows based on [JoinType](#joinType):
+
+* For `Inner` or `LeftSemi` join types, there are no changes to the `CompletionIterator`
+* For...FIXME
+
+`processPartitions` updates the [numOutputRows](StateStoreWriter.md#numOutputRows) metric with the number of joined rows in the output iterator.
+
+In the end, `processPartitions` updates the metrics:
+
+* [allRemovalsTimeMs](StateStoreWriter.md#allRemovalsTimeMs) to be the time of [removeOldState](../join/OneSideHashJoiner.md#removeOldState) on the left and/or right sides of the join (based on the [JoinType](#joinType))
+* _others_
+
+---
+
+`processPartitions` throws an `IllegalStateException` when the [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md) has not been defined:
+
+```text
+Cannot execute join as state info was not specified
+[this]
+```
 
 ## <span id="shortName"> Short Name
 
