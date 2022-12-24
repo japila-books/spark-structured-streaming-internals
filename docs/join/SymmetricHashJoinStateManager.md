@@ -1,24 +1,165 @@
 # SymmetricHashJoinStateManager
 
-<!---
-## Review Me
+`SymmetricHashJoinStateManager` is used for the left and right [OneSideHashJoiner](OneSideHashJoiner.md#joinStateManager)s of a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to [process partitions of the left and right sides of a stream-stream join](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions)).
 
-`SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right [OneSideHashJoiners](OneSideHashJoiner.md#joinStateManager) of a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to [process partitions of the left and right sides of a stream-stream join](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions)).
+`SymmetricHashJoinStateManager` is created and used exclusively by [OneSideHashJoiner](OneSideHashJoiner.md#joinStateManager) (and reflects the arguments of the owning `OneSideHashJoiner`, e.g., [joinSide](#joinSide), [inputValueAttributes](#inputValueAttributes), [joinKeys](#joinKeys), [stateInfo](#stateInfo), [partitionId](#partitionId)).
+
+`SymmetricHashJoinStateManager` manages join state using the [KeyToNumValuesStore](#keyToNumValues) and [KeyWithIndexToValueStore](#keyWithIndexToValue) state store handlers (and acts like their facade).
 
 ![SymmetricHashJoinStateManager and Stream-Stream Join](../images/SymmetricHashJoinStateManager.png)
-
-`SymmetricHashJoinStateManager` manages join state using the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>> state store handlers (and simply acts like their facade).
 
 ## Creating Instance
 
 `SymmetricHashJoinStateManager` takes the following to be created:
 
-* [[joinSide]] [JoinSide](#joinSide-internals)
-* [[inputValueAttributes]] Attributes of input values
-* [[joinKeys]] Join keys (`Seq[Expression]`)
-* [[stateInfo]] [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
-* [[storeConf]] [StateStoreConf](../stateful-stream-processing/StateStoreConf.md)
-* [[hadoopConf]] Hadoop [Configuration]({{ hadoop.api }}/org/apache/hadoop/conf/Configuration.html)
+* [JoinSide](#joinSide)
+* <span id="inputValueAttributes"> Input Value `Attribute`s
+* <span id="joinKeys"> Join Keys (`Seq[Expression]`)
+* <span id="stateInfo"> [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
+* <span id="storeConf"> [StateStoreConf](../stateful-stream-processing/StateStoreConf.md)
+* <span id="hadoopConf"> Hadoop [Configuration]({{ hadoop.api }}/org/apache/hadoop/conf/Configuration.html)
+* <span id="partitionId"> Partition ID
+* <span id="stateFormatVersion"> State Format Version
+
+`SymmetricHashJoinStateManager` is created when:
+
+* `OneSideHashJoiner` is [created](OneSideHashJoiner.md#joinStateManager)
+
+### <span id="joinSide"><span id="LeftSide"><span id="RightSide"> JoinSide
+
+`SymmetricHashJoinStateManager` is given a `JoinSide` marker when [created](#creating-instance) that indicates the join side (of the parent [OneSideHashJoiner](OneSideHashJoiner.md#joinSide)).
+
+JoinSide | Alias
+---------|------
+ `LeftSide` | `left`
+ `RightSide` | `right`
+
+### <span id="keyToNumValues"> KeyToNumValuesStore
+
+`SymmetricHashJoinStateManager` creates a [KeyToNumValuesStore](KeyToNumValuesStore.md) when [created](#creating-instance).
+
+### <span id="keyWithIndexToValue"> KeyWithIndexToValueStore
+
+`SymmetricHashJoinStateManager` creates a [KeyWithIndexToValueStore](KeyWithIndexToValueStore.md) (for the [stateFormatVersion](#stateFormatVersion)) when [created](#creating-instance).
+
+## <span id="getJoinedRows"> getJoinedRows
+
+```scala
+getJoinedRows(
+  key: UnsafeRow,
+  generateJoinedRow: InternalRow => JoinedRow,
+  predicate: JoinedRow => Boolean,
+  excludeRowsAlreadyMatched: Boolean = false): Iterator[JoinedRow]
+```
+
+`getJoinedRows`...FIXME
+
+---
+
+`getJoinedRows` is used when:
+
+* `OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](OneSideHashJoiner.md#storeAndJoinWithOtherSide)
+
+## <span id="append"> append
+
+```scala
+append(
+  key: UnsafeRow,
+  value: UnsafeRow,
+  matched: Boolean): Unit
+```
+
+`append`...FIXME
+
+---
+
+`append` is used when:
+
+* `OneSideHashJoiner` is requested to [storeAndJoinWithOtherSide](OneSideHashJoiner.md#storeAndJoinWithOtherSide)
+
+## <span id="removeByKeyCondition"> removeByKeyCondition
+
+```scala
+removeByKeyCondition(
+  removalCondition: UnsafeRow => Boolean): Iterator[KeyToValuePair]
+```
+
+`removeByKeyCondition`...FIXME
+
+---
+
+`removeByKeyCondition` is used when:
+
+* `OneSideHashJoiner` is requested to [removeOldState](OneSideHashJoiner.md#removeOldState) (for `JoinStateKeyWatermarkPredicate`)
+
+## <span id="removeByValueCondition"> removeByValueCondition
+
+```scala
+removeByValueCondition(
+  removalCondition: UnsafeRow => Boolean): Iterator[KeyToValuePair]
+```
+
+`removeByValueCondition`...FIXME
+
+---
+
+`removeByValueCondition` is used when:
+
+* `OneSideHashJoiner` is requested to [removeOldState](OneSideHashJoiner.md#removeOldState) (for `JoinStateValueWatermarkPredicate`)
+
+## <span id="get"> get
+
+```scala
+get(
+  key: UnsafeRow): Iterator[UnsafeRow]
+```
+
+`get`...FIXME
+
+---
+
+`get` is used when:
+
+* `OneSideHashJoiner` is requested to [get](OneSideHashJoiner.md#get)
+
+## <span id="commit"> Committing (State) Changes
+
+```scala
+commit(): Unit
+```
+
+`commit` requests the [keyToNumValues](#keyToNumValues) and [keyWithIndexToValue](#keyWithIndexToValue) to [commit](StateStoreHandler.md#commit).
+
+---
+
+`commit` is used when:
+
+* `OneSideHashJoiner` is requested to [commitStateAndGetMetrics](OneSideHashJoiner.md#commitStateAndGetMetrics)
+
+## <span id="metrics"> Performance Metrics
+
+```scala
+metrics: StateStoreMetrics
+```
+
+`metrics` requests the [keyToNumValues](#keyToNumValues) and [keyWithIndexToValue](#keyWithIndexToValue) for the [metrics](StateStoreHandler.md#metrics).
+
+`metrics` creates a [StateStoreMetrics](../stateful-stream-processing/StateStoreMetrics.md):
+
+Metric | Value
+-------|------
+ [Number of Keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) | [Number of Keys](../stateful-stream-processing/StateStoreMetrics.md#numKeys) of the [keyWithIndexToValue](#keyWithIndexToValue)
+ [Memory used (in bytes)](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) | Total of the [Memory used (in bytes)](../stateful-stream-processing/StateStoreMetrics.md#memoryUsedBytes) of the [keyToNumValues](#keyToNumValues) and [keyWithIndexToValue](#keyWithIndexToValue)
+ [Custom Metrics](../stateful-stream-processing/StateStoreMetrics.md#customMetrics) | The description of all the [Custom Metrics](../stateful-stream-processing/StateStoreMetrics.md#customMetrics) of the [keyWithIndexToValue](#keyWithIndexToValue) prefixed with the [JoinSide](#joinSide)
+
+---
+
+`metrics` is used when:
+
+* `OneSideHashJoiner` is requested to [commitStateAndGetMetrics](OneSideHashJoiner.md#commitStateAndGetMetrics)
+
+<!---
+## Review Me
 
 === [[keyToNumValues]][[keyWithIndexToValue]] KeyToNumValuesStore and KeyWithIndexToValueStore State Store Handlers -- `keyToNumValues` and `keyWithIndexToValue` Internal Properties
 
@@ -39,27 +180,6 @@
 * <<abortIfNeeded, Abort state changes>>
 
 * <<metrics, Performance metrics>>
-
-=== [[joinSide-internals]] Join Side Marker -- `JoinSide` Internal Enum
-
-`JoinSide` can be one of the two possible values:
-
-* [[LeftSide]][[left]] `LeftSide` (alias: `left`)
-
-* [[RightSide]][[right]] `RightSide` (alias: `right`)
-
-They are both used exclusively when `StreamingSymmetricHashJoinExec` binary physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute>> (and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>> with an [OneSideHashJoiner](OneSideHashJoiner.md)).
-
-=== [[metrics]] Performance Metrics -- `metrics` Method
-
-[source, scala]
-----
-metrics: StateStoreMetrics
-----
-
-`metrics` returns the combined [StateStoreMetrics](../stateful-stream-processing/StateStoreMetrics.md) of the <<keyToNumValues, KeyToNumValuesStore>> and the <<keyWithIndexToValue, KeyWithIndexToValueStore>> state store handlers.
-
-`metrics` is used when `OneSideHashJoiner` is requested to [commitStateAndGetMetrics](OneSideHashJoiner.md#commitStateAndGetMetrics).
 
 === [[removeByKeyCondition]] `removeByKeyCondition` Method
 
@@ -96,15 +216,6 @@ removeByValueCondition(
 `removeByValueCondition` creates an `Iterator` of `UnsafeRowPairs` that <<removeByValueCondition-getNext, removes values (and associated keys if needed)>> for which the given `removalCondition` predicate holds.
 
 `removeByValueCondition` is used when `OneSideHashJoiner` is requested to [remove an old state](OneSideHashJoiner.md#removeOldState) (when [JoinStateValueWatermarkPredicate](JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate) is used).
-
-==== [[removeByValueCondition-getNext]] `getNext` Internal Method (of `removeByValueCondition` Method)
-
-[source, scala]
-----
-getNext(): UnsafeRowPair
-----
-
-`getNext`...FIXME
 
 === [[append]] Appending New Value Row to Key -- `append` Method
 
@@ -149,17 +260,6 @@ commit(): Unit
 
 `commit` is used when `OneSideHashJoiner` is requested to [commit state changes and get performance metrics](OneSideHashJoiner.md#commitStateAndGetMetrics).
 
-=== [[abortIfNeeded]] Aborting State (Changes) -- `abortIfNeeded` Method
-
-[source, scala]
-----
-abortIfNeeded(): Unit
-----
-
-`abortIfNeeded`...FIXME
-
-NOTE: `abortIfNeeded` is used when...FIXME
-
 === [[allStateStoreNames]] `allStateStoreNames` Object Method
 
 [source, scala]
@@ -194,17 +294,6 @@ getStateStoreName(
 
 * `SymmetricHashJoinStateManager` utility is requested for <<allStateStoreNames, allStateStoreNames>> (for `StreamingSymmetricHashJoinExec` physical operator to <<physical-operators/StreamingSymmetricHashJoinExec.md#doExecute, execute and generate the runtime representation>>)
 ====
-
-=== [[updateNumValueForCurrentKey]] `updateNumValueForCurrentKey` Internal Method
-
-[source, scala]
-----
-updateNumValueForCurrentKey(): Unit
-----
-
-`updateNumValueForCurrentKey`...FIXME
-
-NOTE: `updateNumValueForCurrentKey` is used exclusively when `SymmetricHashJoinStateManager` is requested to <<removeByValueCondition, removeByValueCondition>>.
 
 === [[internal-properties]] Internal Properties
 

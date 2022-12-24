@@ -27,7 +27,7 @@ There will be twice as many `OneSideHashJoiner`s as there are join partitions, e
 
 ## <span id="joinStateManager"> SymmetricHashJoinStateManager
 
-`OneSideHashJoiner` creates a [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md) when...FIXME
+`OneSideHashJoiner` creates a [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md) when [created](#creating-instance).
 
 ## <span id="removeOldState"> removeOldState
 
@@ -47,6 +47,21 @@ For all other cases, `removeOldState` returns an empty iterator.
 `removeOldState` is used when:
 
 * `StreamingSymmetricHashJoinExec` physical operator is [executed](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions)
+
+## <span id="get"> Looking Up Value Rows for Key
+
+```scala
+get(
+  key: UnsafeRow): Iterator[UnsafeRow]
+```
+
+`get` requests the [SymmetricHashJoinStateManager](#joinStateManager) to [retrieve value rows](SymmetricHashJoinStateManager.md#get) for the given `key`.
+
+---
+
+`get` is used when:
+
+* `StreamingSymmetricHashJoinExec` physical operator is requested to [process partitions](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions)
 
 <!---
 ## Review Me
@@ -175,17 +190,6 @@ removeOldState(): Iterator[UnsafeRowPair]
 
 NOTE: `removeOldState` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
 
-=== [[get]] Retrieving Value Rows For Key -- `get` Method
-
-[source, scala]
-----
-get(key: UnsafeRow): Iterator[UnsafeRow]
-----
-
-`get` simply requests the <<joinStateManager, SymmetricHashJoinStateManager>> to [retrieve value rows for the key](SymmetricHashJoinStateManager.md#get).
-
-NOTE: `get` is used exclusively when `StreamingSymmetricHashJoinExec` physical operator is requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>.
-
 === [[commitStateAndGetMetrics]] Committing State (Changes) and Requesting Performance Metrics -- `commitStateAndGetMetrics` Method
 
 [source, scala]
@@ -203,28 +207,6 @@ commitStateAndGetMetrics(): StateStoreMetrics
 |===
 | Name
 | Description
-
-| keyGenerator
-a| [[keyGenerator]]
-
-[source, scala]
-----
-keyGenerator: UnsafeProjection
-----
-
-Function to project (_extract_) join keys from an input row
-
-Used when...FIXME
-
-| preJoinFilter
-a| [[preJoinFilter]]
-
-[source, scala]
-----
-preJoinFilter: InternalRow => Boolean
-----
-
-Used when...FIXME
 
 | stateKeyWatermarkPredicateFunc
 a| [[stateKeyWatermarkPredicateFunc]]
