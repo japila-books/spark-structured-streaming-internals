@@ -1,5 +1,8 @@
 # SymmetricHashJoinStateManager
 
+<!---
+## Review Me
+
 `SymmetricHashJoinStateManager` is <<creating-instance, created>> for the left and right [OneSideHashJoiners](OneSideHashJoiner.md#joinStateManager) of a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator (one for each side when `StreamingSymmetricHashJoinExec` is requested to [process partitions of the left and right sides of a stream-stream join](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions)).
 
 ![SymmetricHashJoinStateManager and Stream-Stream Join](../images/SymmetricHashJoinStateManager.png)
@@ -227,3 +230,4 @@ Used when:
 * `KeyWithIndexToValueStore` is requested for the <<KeyWithIndexToValueStore.md#keyWithIndexSchema, keyWithIndexSchema>> (for the internal <<KeyWithIndexToValueStore.md#stateStore, state store>>)
 
 |===
+-->

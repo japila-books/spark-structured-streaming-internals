@@ -1,6 +1,52 @@
 # OneSideHashJoiner
 
+`OneSideHashJoiner` is used by [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator when requested to [process partitions](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions) and creates two `OneSideHashJoiner`s for the left and right side of the join.
+
+There will be twice as many `OneSideHashJoiner`s as there are join partitions, each with [JoinStateWatermarkPredicate](#stateWatermarkPredicate) to manage join state.
+
 ![OneSideHashJoiner and StreamingSymmetricHashJoinExec](../images/OneSideHashJoiner.png)
+
+`OneSideHashJoiner` is a private class of [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator.
+
+## Creating Instance
+
+`OneSideHashJoiner` takes the following to be created:
+
+* <span id="joinSide"> `JoinSide`
+* <span id="inputAttributes"> Input `Attribute`s
+* <span id="joinKeys"> Join Keys (`Expression`s)
+* <span id="inputIter"> Input (Iterator of) `InternalRow`s
+* <span id="preJoinFilterExpr"> Pre-Join Filter `Expression`
+* <span id="postJoinFilter"> Post-Join Filter Function (`(InternalRow) => Boolean`)
+* <span id="stateWatermarkPredicate"> [JoinStateWatermarkPredicate](JoinStateWatermarkPredicate.md)
+* <span id="partitionId"> Partition ID
+
+`OneSideHashJoiner` is created when:
+
+* `StreamingSymmetricHashJoinExec` physical operator is requested to [processPartitions](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions) (and creates two `OneSideHashJoiner`s for the left and right side of the join)
+
+## <span id="joinStateManager"> SymmetricHashJoinStateManager
+
+`OneSideHashJoiner` creates a [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md) when...FIXME
+
+## <span id="removeOldState"> removeOldState
+
+```scala
+removeOldState(): Iterator[KeyToValuePair]
+```
+
+`removeOldState` requests the [SymmetricHashJoinStateManager](#joinStateManager) for the following (based on the optional [JoinStateWatermarkPredicate](#stateWatermarkPredicate)):
+
+* [removeByKeyCondition](SymmetricHashJoinStateManager.md#removeByKeyCondition) for `JoinStateKeyWatermarkPredicate` with the [stateKeyWatermarkPredicateFunc](#stateKeyWatermarkPredicateFunc)
+* [removeByValueCondition](SymmetricHashJoinStateManager.md#removeByValueCondition) for `JoinStateValueWatermarkPredicate` with the [stateValueWatermarkPredicateFunc](#stateValueWatermarkPredicateFunc)
+
+For all other cases, `removeOldState` returns an empty iterator.
+
+---
+
+`removeOldState` is used when:
+
+* `StreamingSymmetricHashJoinExec` physical operator is [executed](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions)
 
 <!---
 ## Review Me
