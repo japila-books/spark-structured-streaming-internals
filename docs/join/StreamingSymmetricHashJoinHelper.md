@@ -4,14 +4,9 @@ title: StreamingSymmetricHashJoinHelper
 
 # StreamingSymmetricHashJoinHelper Utility
 
-`StreamingSymmetricHashJoinHelper` is a Scala object with the following utility methods:
+## <span id="getStateWatermarkPredicates"> Join State Watermark Predicates
 
-* [getStateWatermarkPredicates](#getStateWatermarkPredicates)
-
-=== [[getStateWatermarkPredicates]] Creating JoinStateWatermarkPredicates -- `getStateWatermarkPredicates` Object Method
-
-[source, scala]
-----
+```scala
 getStateWatermarkPredicates(
   leftAttributes: Seq[Attribute],
   rightAttributes: Seq[Attribute],
@@ -19,35 +14,50 @@ getStateWatermarkPredicates(
   rightKeys: Seq[Expression],
   condition: Option[Expression],
   eventTimeWatermark: Option[Long]): JoinStateWatermarkPredicates
-----
+```
 
-[[getStateWatermarkPredicates-joinKeyOrdinalForWatermark]]
-`getStateWatermarkPredicates` tries to find the index of the [watermark attribute](../logical-operators/EventTimeWatermark.md#delayKey) among the left keys first, and if not found, the right keys.
+`getStateWatermarkPredicates` creates a [JoinStateWatermarkPredicates](JoinStateWatermarkPredicates.md) with the [JoinStateWatermarkPredicate](JoinStateWatermarkPredicate.md)s for the left and right side of a join (if defined).
 
-`getStateWatermarkPredicates` <<getOneSideStateWatermarkPredicate, determines the state watermark predicate>> for the left side of a join (for the given `leftAttributes`, the `leftKeys` and the `rightAttributes`).
+---
 
-`getStateWatermarkPredicates` <<getOneSideStateWatermarkPredicate, determines the state watermark predicate>> for the right side of a join (for the given `rightAttributes`, the `rightKeys` and the `leftAttributes`).
+`getStateWatermarkPredicates` finds the index of the first column (attribute) with the [watermark delay metadata marker](../logical-operators/EventTimeWatermark.md#delayKey) among the given `leftKeys` first, and if not found, among the given `rightKeys`. `getStateWatermarkPredicates` may find no column.
 
-In the end, `getStateWatermarkPredicates` creates a [JoinStateWatermarkPredicates](JoinStateWatermarkPredicates.md) with the left- and right-side state watermark predicates.
+`getStateWatermarkPredicates` [determines the state watermark predicate](#getOneSideStateWatermarkPredicate) (a [JoinStateWatermarkPredicate](JoinStateWatermarkPredicate.md)) for the `leftStateWatermarkPredicate` and `rightStateWatermarkPredicate` sides of a join.
 
-NOTE: `getStateWatermarkPredicates` is used exclusively when `IncrementalExecution` is requested to [apply the state preparation rule for batch-specific configuration](../IncrementalExecution.md#state) (while optimizing query plans with [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operators).
+JoinStateWatermarkPredicate | oneSideInputAttributes | oneSideJoinKeys | otherSideInputAttributes
+----------------------------|------------------------|-----------------|-------------------------
+ `leftStateWatermarkPredicate`  | `leftAttributes`  | `leftKeys`  | `rightAttributes`
+ `rightStateWatermarkPredicate` | `rightAttributes` | `rightKeys` | `leftAttributes`
 
-==== [[getOneSideStateWatermarkPredicate]] Join State Watermark Predicate (for One Side of Join) -- `getOneSideStateWatermarkPredicate` Internal Method
+---
 
-[source, scala]
-----
+`getStateWatermarkPredicates` is used when:
+
+* `IncrementalExecution` is requested for the [state preparations rules](../IncrementalExecution.md#state) (while optimizing query plans with [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operators)
+
+## <span id="getOneSideStateWatermarkPredicate"> Join State Watermark Predicate (for One Side of Join)
+
+```scala
 getOneSideStateWatermarkPredicate(
   oneSideInputAttributes: Seq[Attribute],
   oneSideJoinKeys: Seq[Expression],
   otherSideInputAttributes: Seq[Attribute]): Option[JoinStateWatermarkPredicate]
-----
+```
 
-`getOneSideStateWatermarkPredicate` finds what attributes were used to define the [watermark attribute](../logical-operators/EventTimeWatermark.md#delayKey) (the `oneSideInputAttributes` attributes, the <<getStateWatermarkPredicates-joinKeyOrdinalForWatermark, left or right join keys>>) and creates a <<JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> as follows:
+### <span id="getOneSideStateWatermarkPredicate-isWatermarkDefinedOnJoinKey"> Watermark on Join Keys
 
-* <<JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate, JoinStateKeyWatermarkPredicate>> if the watermark was defined on a join key (with the watermark expression for the index of the join key expression)
+With a watermark defined on one of the join keys (`leftKeys` or `rightKeys` of [getStateWatermarkPredicates](#getStateWatermarkPredicates)), `getOneSideStateWatermarkPredicate` creates a [JoinStateKeyWatermarkPredicate](../join/JoinStateWatermarkPredicate.md#JoinStateKeyWatermarkPredicate) with a [watermark (eviction) expression](../physical-operators/WatermarkSupport.md#watermarkExpression) for the following:
 
-* <<JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate, JoinStateValueWatermarkPredicate>> if the watermark was defined among the `oneSideInputAttributes` (with the [state value watermark](StreamingJoinHelper.md#getStateValueWatermark) based on the given `oneSideInputAttributes` and `otherSideInputAttributes`)
+* A `BoundReference` ([Spark SQL]({{ book.spark_sql }}/expressions/BoundReference)) for the key with watermark
+* The given `eventTimeWatermark` (of [getStateWatermarkPredicates](#getStateWatermarkPredicates))
 
-NOTE: `getOneSideStateWatermarkPredicate` creates no <<JoinStateWatermarkPredicate.md#, JoinStateWatermarkPredicate>> (`None`) for no watermark found.
+### <span id="getOneSideStateWatermarkPredicate-isWatermarkDefinedOnInput"> Watermark on Input
 
-NOTE: `getStateWatermarkPredicates` is used exclusively to <<getStateWatermarkPredicates, create a JoinStateWatermarkPredicates>>.
+With a watermark defined on the given `oneSideInputAttributes`, `getOneSideStateWatermarkPredicate` creates a [JoinStateValueWatermarkPredicate](../join/JoinStateWatermarkPredicate.md#JoinStateValueWatermarkPredicate) with a [watermark (eviction) expression](../physical-operators/WatermarkSupport.md#watermarkExpression) for the following:
+
+* The `Attribute` among the given `oneSideInputAttributes` with the [watermark delay metadata marker](../logical-operators/EventTimeWatermark.md#delayKey)
+* [getStateValueWatermark](StreamingJoinHelper.md#getStateValueWatermark)
+
+### <span id="getOneSideStateWatermarkPredicate-no-watermark"> No Watermark
+
+`getOneSideStateWatermarkPredicate` creates no [JoinStateWatermarkPredicate](JoinStateWatermarkPredicate.md) (`None`) when no watermark was found.
