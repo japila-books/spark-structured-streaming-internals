@@ -1,12 +1,17 @@
 # OneSideHashJoiner
 
+`OneSideHashJoiner` is used to manage a join state of one side of a [Stream-Stream Join](index.md#stream-stream-joins) (using [SymmetricHashJoinStateManager](#joinStateManager)).
+
 `OneSideHashJoiner` is used by [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator when requested to [process partitions](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions) and creates two `OneSideHashJoiner`s for the left and right side of the join.
 
 There will be twice as many `OneSideHashJoiner`s as there are join partitions, each with [JoinStateWatermarkPredicate](#stateWatermarkPredicate) to manage join state.
 
 ![OneSideHashJoiner and StreamingSymmetricHashJoinExec](../images/OneSideHashJoiner.png)
 
-`OneSideHashJoiner` is a private class of [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator.
+`OneSideHashJoiner` can be given a [JoinStateWatermarkPredicate](#stateWatermarkPredicate) to [remove old state](#removeOldState).
+
+??? note "Scala private class"
+    `OneSideHashJoiner` is a private class of [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator (with full access to `StreamingSymmetricHashJoinExec`'s properties).
 
 ## Creating Instance
 
@@ -18,18 +23,26 @@ There will be twice as many `OneSideHashJoiner`s as there are join partitions, e
 * <span id="inputIter"> Input (Iterator of) `InternalRow`s
 * <span id="preJoinFilterExpr"> Pre-Join Filter `Expression`
 * <span id="postJoinFilter"> Post-Join Filter Function (`(InternalRow) => Boolean`)
-* <span id="stateWatermarkPredicate"> [JoinStateWatermarkPredicate](JoinStateWatermarkPredicate.md)
+* [JoinStateWatermarkPredicate](#stateWatermarkPredicate)
 * <span id="partitionId"> Partition ID
 
 `OneSideHashJoiner` is created when:
 
 * `StreamingSymmetricHashJoinExec` physical operator is requested to [processPartitions](../physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions) (and creates two `OneSideHashJoiner`s for the left and right side of the join)
 
+### <span id="stateWatermarkPredicate"> Join State Watermark Predicate
+
+`OneSideHashJoiner` can be given a [JoinStateWatermarkPredicate](JoinStateWatermarkPredicate.md) when [created](#creating-instance).
+
+The `JoinStateWatermarkPredicate` is used to [remove old state](#removeOldState).
+
+The `JoinStateWatermarkPredicate` is also used to create a [stateKeyWatermarkPredicateFunc](#stateKeyWatermarkPredicateFunc) and [stateValueWatermarkPredicateFunc](#stateValueWatermarkPredicateFunc).
+
 ## <span id="joinStateManager"> SymmetricHashJoinStateManager
 
 `OneSideHashJoiner` creates a [SymmetricHashJoinStateManager](SymmetricHashJoinStateManager.md) when [created](#creating-instance).
 
-## <span id="removeOldState"> removeOldState
+## <span id="removeOldState"> Removing Old State
 
 ```scala
 removeOldState(): Iterator[KeyToValuePair]
@@ -65,16 +78,6 @@ get(
 
 <!---
 ## Review Me
-
-`OneSideHashJoiner` manages join state of one side of a <<join/index.md#stream-stream-joins, stream-stream join>> (using <<joinStateManager, SymmetricHashJoinStateManager>>).
-
-`OneSideHashJoiner` is <<creating-instance, created>> exclusively for <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> physical operator (when requested to <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions, process partitions of the left and right sides of a stream-stream join>>).
-
-`StreamingSymmetricHashJoinExec` physical operator uses two `OneSideHashJoiners` per side of the stream-stream join (<<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions-leftSideJoiner, left>> and <<physical-operators/StreamingSymmetricHashJoinExec.md#processPartitions-rightSideJoiner, right>> sides).
-
-`OneSideHashJoiner` uses an <<stateWatermarkPredicate, optional join state watermark predicate>> to <<removeOldState, remove old state>>.
-
-NOTE: `OneSideHashJoiner` is a Scala private internal class of <<physical-operators/StreamingSymmetricHashJoinExec.md#, StreamingSymmetricHashJoinExec>> and so has full access to `StreamingSymmetricHashJoinExec` properties.
 
 ## Creating OneSideHashJoiner Instance
 
