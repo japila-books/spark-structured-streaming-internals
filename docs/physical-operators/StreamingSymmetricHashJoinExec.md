@@ -12,7 +12,7 @@
 * <span id="condition"> `JoinConditionSplitPredicates`
 * <span id="stateInfo"> [StatefulOperatorStateInfo](../stateful-stream-processing/StatefulOperatorStateInfo.md)
 * <span id="eventTimeWatermark"> [Event-Time Watermark](../watermark/index.md)
-* <span id="stateWatermarkPredicates"> [JoinStateWatermarkPredicates](../join/JoinStateWatermarkPredicates.md)
+* [JoinStateWatermarkPredicates](#stateWatermarkPredicates)
 * <span id="stateFormatVersion"> State Format Version
 * <span id="left"> Left Child Physical Operator
 * <span id="right"> Right Child Physical Operator
@@ -36,6 +36,14 @@
 * `LeftOuter`
 * `LeftSemi`
 * `RightOuter`
+
+### <span id="stateWatermarkPredicates"> JoinStateWatermarkPredicates
+
+`StreamingSymmetricHashJoinExec` is given a [JoinStateWatermarkPredicates](../join/JoinStateWatermarkPredicates.md) when [created](#creating-instance).
+
+`JoinStateWatermarkPredicates` is empty (i.e., undefined [JoinStateWatermarkPredicate](../join/JoinStateWatermarkPredicate.md)s) when [StreamingJoinStrategy](../execution-planning-strategies/StreamingJoinStrategy.md) execution planning strategy is executed (on a [stream-stream equi-join](../join/index.md)).
+
+`JoinStateWatermarkPredicates` can be assigned when `IncrementalExecution` is requested for the [preparations rules](../IncrementalExecution.md#preparations) to produce an `executedPlan` query plan (using [StreamingSymmetricHashJoinHelper](../join/StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates)).
 
 ## <span id="StateStoreWriter"> StateStoreWriter
 

@@ -1,74 +1,84 @@
 # JoinStateWatermarkPredicate
 
-`JoinStateWatermarkPredicate` is the <<contract, abstraction>> of <<implementations, join state watermark predicates>> that are described by a <<expr, Catalyst expression>> and <<desc, desc>>.
+`JoinStateWatermarkPredicate` is an [abstraction](#contract) of [join state watermark predicates](#implementations).
 
-`JoinStateWatermarkPredicate` is created using [StreamingSymmetricHashJoinHelper](StreamingSymmetricHashJoinHelper.md#getOneSideStateWatermarkPredicate) utility (for [planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration](../IncrementalExecution.md#state))
+A [concrete JoinStateWatermarkPredicate](#implementations) is created using [StreamingSymmetricHashJoinHelper](StreamingSymmetricHashJoinHelper.md#getOneSideStateWatermarkPredicate) utility (for [planning a StreamingSymmetricHashJoinExec physical operator for execution with execution-specific configuration](../IncrementalExecution.md#state)).
 
-`JoinStateWatermarkPredicate` is used to create a [OneSideHashJoiner](OneSideHashJoiner.md) (and [JoinStateWatermarkPredicates](JoinStateWatermarkPredicates.md)).
+`JoinStateWatermarkPredicate` can be used to create a [OneSideHashJoiner](OneSideHashJoiner.md#stateWatermarkPredicate) (and [JoinStateWatermarkPredicates](JoinStateWatermarkPredicates.md)).
 
-[[contract]]
-.JoinStateWatermarkPredicate Contract
-[cols="30m,70",options="header",width="100%"]
-|===
-| Method
-| Description
+??? note "Sealed Trait"
+    `JoinStateWatermarkPredicate` is a Scala **sealed trait** which means that all of the implementations are in the same compilation unit (a single file).
 
-| desc
-a| [[desc]]
+    Learn more in the [Scala Language Specification]({{ scala.spec }}/05-classes-and-objects.html#sealed).
 
-[source, scala]
-----
+## Contract
+
+### <span id="desc"> Description
+
+```scala
 desc: String
-----
-
-Used exclusively for the <<toString, textual representation>>
-
-| expr
-a| [[expr]]
-
-[source, scala]
-----
-expr: Expression
-----
-
-A Catalyst `Expression`
-
-Used for the <<toString, textual representation>> and a [JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) (for [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator)
-
-|===
-
-[[implementations]]
-.JoinStateWatermarkPredicates
-[cols="30,70",options="header",width="100%"]
-|===
-| JoinStateWatermarkPredicate
-| Description
-
-| JoinStateKeyWatermarkPredicate
-a| [[JoinStateKeyWatermarkPredicate]] Watermark predicate on state keys (i.e. when the [streaming watermark](../watermark/index.md) is defined either on the [left](../physical-operators/StreamingSymmetricHashJoinExec.md#leftKeys) or [right](../physical-operators/StreamingSymmetricHashJoinExec.md#rightKeys) join keys)
-
-Created when `StreamingSymmetricHashJoinHelper` utility is requested for a [JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator)
-
-Used when `OneSideHashJoiner` is requested for the [stateKeyWatermarkPredicateFunc](OneSideHashJoiner.md#stateKeyWatermarkPredicateFunc) and then to [remove an old state](OneSideHashJoiner.md#removeOldState)
-
-| JoinStateValueWatermarkPredicate
-| [[JoinStateValueWatermarkPredicate]] Watermark predicate on state values
-
-|===
-
-NOTE: `JoinStateWatermarkPredicate` is a Scala *sealed trait* which means that all the <<implementations, implementations>> are in the same compilation unit (a single file).
-
-=== [[toString]] Textual Representation -- `toString` Method
-
-[source, scala]
-----
-toString: String
-----
-
-NOTE: `toString` is part of the ++https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--++[java.lang.Object] contract for the string representation of the object.
-
-`toString` uses the <<desc, desc>> and <<expr, expr>> for the string representation:
-
 ```
+
+JoinStateWatermarkPredicate | Description
+----------------------------|------------
+ [JoinStateKeyWatermarkPredicate](#JoinStateKeyWatermarkPredicate) | key predicate
+ [JoinStateValueWatermarkPredicate](#JoinStateValueWatermarkPredicate) | value predicate
+
+Used when:
+
+* `JoinStateWatermarkPredicate` is requested for [string representation](#toString)
+
+### <span id="expr"> Watermark Expression
+
+```scala
+expr: Expression
+```
+
+A Catalyst `Expression` ([Spark SQL]({{ book.spark_sql }}/expressions/Expression))
+
+Used when:
+
+* `JoinStateWatermarkPredicate` is requested for [string representation](#toString)
+* `OneSideHashJoiner` is [created](OneSideHashJoiner.md#stateKeyWatermarkPredicateFunc)
+
+## Implementations
+
+### <span id="JoinStateKeyWatermarkPredicate"> JoinStateKeyWatermarkPredicate
+
+Watermark predicate on state keys (i.e., when the [streaming watermark](../watermark/index.md) is defined either on the [left](../physical-operators/StreamingSymmetricHashJoinExec.md#leftKeys) or [right](../physical-operators/StreamingSymmetricHashJoinExec.md#rightKeys) join keys)
+
+Created with a watermark expression (on left or right join keys) when:
+
+* `StreamingSymmetricHashJoinHelper` is requested for a [JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator)
+
+Used when:
+
+* `OneSideHashJoiner` is requested for the [stateKeyWatermarkPredicateFunc](OneSideHashJoiner.md#stateKeyWatermarkPredicateFunc) (to [remove an old state](OneSideHashJoiner.md#removeOldState))
+
+### <span id="JoinStateValueWatermarkPredicate"> JoinStateValueWatermarkPredicate
+
+Watermark predicate on state values
+
+Created with a watermark expression (on left or right join keys) when:
+
+* `StreamingSymmetricHashJoinHelper` is requested for a [JoinStateWatermarkPredicates](StreamingSymmetricHashJoinHelper.md#getStateWatermarkPredicates) for the left and right side of a stream-stream join (when `IncrementalExecution` is requested to optimize a query plan with a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator)
+
+Used when:
+
+* `OneSideHashJoiner` is requested for the [stateValueWatermarkPredicateFunc](OneSideHashJoiner.md#stateValueWatermarkPredicateFunc) (to [remove an old state](OneSideHashJoiner.md#removeOldState))
+
+## <span id="toString"> String Representation
+
+```scala
+toString: String
+```
+
+`toString` is part of the `java.lang.Object` abstraction.
+
+---
+
+`toString` uses the [desc](#desc) and [expr](#expr) to build the following string representation:
+
+```text
 [desc]: [expr]
 ```
