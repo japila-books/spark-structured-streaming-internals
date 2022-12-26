@@ -146,9 +146,6 @@ clear(): Unit
 
 ## Demo
 
-!!! tip
-    Review `MemorySinkSuite` and `FileStreamSourceSuite` test suites.
-
 ### Creating MemorySink Directly
 
 ```scala

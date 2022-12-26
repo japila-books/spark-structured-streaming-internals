@@ -290,6 +290,7 @@ nav:
       - PartitionOffset: PartitionOffset.md
       - ContinuousWriteRDD: ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
+    - testing.md
     - Web UI: webui/index.md
   - High-Level APIs:
     - AcceptsLatestSeenOffset: AcceptsLatestSeenOffset.md
