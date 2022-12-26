@@ -16,6 +16,7 @@ hide:
 * [Kafka Data Source](kafka-data-source.md)
 * [Streaming Windowed Aggregation](streaming-windowed-aggregation.md)
 * [RocksDB State Store for Streaming Aggregation](rocksdb-state-store-for-streaming-aggregation.md)
+* [Stream-Stream Inner Join](stream-stream-inner-join.md)
 * [Streaming Query for Running Counts (Socket Source and Complete Output Mode)](groupBy-running-count-complete.md)
 * [Streaming Watermark](streaming-watermark.md)
 * [Streaming Watermark with Aggregation in Append Output Mode](watermark-aggregation-append.md)

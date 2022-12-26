@@ -26,6 +26,8 @@ Spark Structured Streaming supports **stream-stream joins** with the following:
 
 Stream-stream equi-joins are planned as [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operators of two `ShuffleExchangeExec` physical operators (per [Required Partition Requirements](../physical-operators/StreamingSymmetricHashJoinExec.md#requiredChildDistribution)).
 
+Learn more in [Demo: Stream-Stream Inner Join](../demo/stream-stream-inner-join.md).
+
 ## Join State Watermark
 
 Stream-stream joins may have an optional **Join State Watermark** defined for state removal (cf. [Watermark Predicates for State Removal](../physical-operators/StreamingSymmetricHashJoinExec.md#stateWatermarkPredicates)).
@@ -45,10 +47,6 @@ Under the covers, the [high-level operators](../operators/index.md) create a log
 Spark Structured Streaming uses [IncrementalExecution](../IncrementalExecution.md) for planning streaming queries for execution.
 
 At [query planning](../IncrementalExecution.md#executedPlan), `IncrementalExecution` uses the [StreamingJoinStrategy](../execution-planning-strategies/StreamingJoinStrategy.md) execution planning strategy for planning [stream-stream joins](#stream-stream-joins) as [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operators.
-
-## Demo
-
-* [StreamStreamJoinApp](https://github.com/jaceklaskowski/spark-examples/#streamstreamjoindemo)
 
 ## Further Reading Or Watching
 
