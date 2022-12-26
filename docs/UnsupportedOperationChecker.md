@@ -125,23 +125,19 @@ isStatefulOperationPossiblyEmitLateRows(
 
 Otherwise, `isStatefulOperationPossiblyEmitLateRows` is negative (`false`).
 
-### <span id="checkStreamingQueryGlobalWatermarkLimit-demo"> Demo
+## <span id="UnsupportedOperationsSuite"> UnsupportedOperationsSuite
 
-!!! tip
-    Review `org.apache.spark.sql.catalyst.analysis.UnsupportedOperationsSuite.testGlobalWatermarkLimit`
+Review [UnsupportedOperationsSuite]({{ spark.github }}/sql/catalyst/src/test/scala/org/apache/spark/sql/catalyst/analysis/UnsupportedOperationsSuite.scala) in the source code of Apache Spark.
 
-    ```console
-    SBT_MAVEN_PROFILES="-Pyarn,kubernetes,hive,hive-thriftserver,scala-2.13,hadoop-cloud" \
-      sbt sql/testOnly org.apache.spark.sql.catalyst.analysis.UnsupportedOperationsSuite
-    ```
-
-```scala
-import org.apache.spark.sql.catalyst.analysis.UnsupportedOperationChecker
-
-// Streaming Aggregate with Append output mode over streaming join with non-Inner join type
-val plan = ???
-
-import org.apache.spark.sql.streaming.OutputMode
-val outputMode = OutputMode.Append
-UnsupportedOperationChecker.checkForStreaming(plan, outputMode)
+```console
+$ SBT_MAVEN_PROFILES="-Pyarn,kubernetes,hive,hive-thriftserver,scala-2.13,hadoop-cloud" \
+  sbt "catalyst/testOnly org.apache.spark.sql.catalyst.analysis.UnsupportedOperationsSuite"
+...
+[info] Run completed in 4 seconds, 27 milliseconds.
+[info] Total number of tests run: 183
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 183, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
 ```
+
+Learn more in the [official documentation of Apache Spark](https://spark.apache.org/developer-tools.html#running-individual-tests).
