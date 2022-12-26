@@ -1,14 +1,194 @@
 # MemorySink
 
+`MemorySink` is a `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table)) that `SupportsWrite` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsWrite)) with [STREAMING_WRITE](#capabilities) capability for [Memory Data Source](index.md).
+
+`MemorySink` is used for `memory` format and requires a [query name](#queryName).
+
+## Creating Instance
+
+`MemorySink` takes no arguments to be created.
+
+`MemorySink` is created when:
+
+* `DataStreamWriter` is requested to [start a streaming query](../../DataStreamWriter.md#startInternal) (with `memory` sink)
+
+## <span id="queryName"> Query Name
+
+[DataStreamWriter](../../DataStreamWriter.md#startInternal) makes sure that the query name of a streaming query with `memory` sink is specified (or throws an `AnalysisException`).
+
+The `queryName` is used as a temporary view to query for data written into.
+
+The `queryName` can be specified using [DataStreamWriter.queryName](../../DataStreamWriter.md#queryName) or `queryName` write option.
+
+## <span id="batches"> Batches Registry
+
+```scala
+batches: ArrayBuffer[AddedData]
+```
+
+`MemorySink` creates an empty `ArrayBuffer` ([Scala]({{ scala.api }}/scala/collection/mutable/ArrayBuffer.html)) of [AddedData](#AddedData) when [created](#creating-instance).
+
+`batches` is an in-memory buffer of streaming batches.
+
+`batches` holds data from streaming batches that have been [added](#addBatch) (_written_) to this sink:
+
+* All batches for [Append](../../OutputMode.md#Append) and [Update](../../OutputMode.md#Update) output modes
+* The last batch only for [Complete](../../OutputMode.md#Complete) output mode
+
+`batches` can be cleared (_emptied_) using [clear](#clear).
+
+### <span id="AddedData"> AddedData
+
+```scala
+case class AddedData(
+  batchId: Long,
+  data: Array[Row])
+```
+
+`MemorySink` defines `AddedData` case class to store rows (_data_) per batch (_batchId_) in the [batches](#batches) registry.
+
+The `AddedData` is used when:
+
+* [toDebugString](#toDebugString)
+* [write](#write)
+
+## <span id="name"> Name
+
+```scala
+name(): String
+```
+
+`name` is part of the `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table#name)) abstraction.
+
+---
+
+`name` is `MemorySink`.
+
+## <span id="capabilities"> Table Capabilities
+
+```scala
+capabilities(): String
+```
+
+`capabilities` is part of the `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table#capabilities)) abstraction.
+
+---
+
+`capabilities` is `STREAMING_WRITE` ([Spark SQL]({{ book.spark_sql }}/connector/TableCapability/#STREAMING_WRITE)).
+
+## <span id="allData"> allData
+
+```scala
+allData: Seq[Row]
+```
+
+`allData` returns all the rows that were added to the [batches](#batches) registry.
+
+---
+
+`allData` is used when:
+
+* `BasicOperators` execution planning strategy is executed (to plan a [MemoryPlan](MemoryPlan.md) to `LocalTableScanExec` physical operator)
+* `MemoryPlan` is requested for the [stats](MemoryPlan.md#computeStats)
+
+## <span id="write"> write
+
+```scala
+write(
+  batchId: Long,
+  needTruncate: Boolean,
+  newRows: Array[Row]): Unit
+```
+
+`write`...FIXME
+
+---
+
+`write` is used when:
+
+* `MemoryStreamingWrite` is requested to [commit](MemoryStreamingWrite.md#commit)
+
+## <span id="latestBatchData"> latestBatchData
+
+```scala
+latestBatchData: Seq[Row]
+```
+
+`latestBatchData` returns the rows in the last element in the [batches](#batches) registry (that are the rows of the last batch).
+
+---
+
+`latestBatchData` is intended for tests.
+
+## <span id="toDebugString"> toDebugString
+
+```scala
+toDebugString: String
+```
+
+`toDebugString`...FIXME
+
+---
+
+`toDebugString` is intended for tests.
+
+## <span id="clear"> Clearing Up Batches
+
+```scala
+clear(): Unit
+```
+
+`clear` removes (_clears_) all data in the [batches](#batches) registry.
+
+---
+
+`clear` is intended for tests.
+
+## Demo
+
+!!! tip
+    Review `MemorySinkSuite` and `FileStreamSourceSuite` test suites.
+
+### Creating MemorySink Directly
+
+```scala
+import org.apache.spark.sql.execution.streaming.sources.MemorySink
+val sink = new MemorySink()
+```
+
+### Using MemorySink For Testing
+
+```scala
+val q = df
+  .writeStream
+  .format("memory")
+  .queryName("file_data")
+  .start()
+  .asInstanceOf[StreamingQueryWrapper]
+  .streamingQuery
+q.processAllAvailable()
+val memorySink = q.sink.asInstanceOf[MemorySink]
+memorySink.allData
+```
+
+## Logging
+
+Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MemorySink` logger to see what happens inside.
+
+Add the following line to `conf/log4j.properties`:
+
+```text
+log4j.logger.org.apache.spark.sql.execution.streaming.MemorySink=ALL
+```
+
+Refer to [Logging](../../spark-logging.md)
+
+<!---
+## Review Me
+
 `MemorySink` is a [streaming sink](../../Sink.md) that <<addBatch, stores batches (records) in memory>>.
 
-`MemorySink` is intended only for testing or demos.
-
-`MemorySink` is used for `memory` format and requires a query name (by `queryName` method or `queryName` option).
-
 NOTE: `MemorySink` was introduced in the https://github.com/apache/spark/pull/12119[pull request for [SPARK-14288\][SQL\] Memory Sink for streaming].
-
-Use `toDebugString` to see the batches.
 
 Its aim is to allow users to test streaming applications in the Spark shell or other local tests.
 
@@ -25,46 +205,6 @@ It creates `MemorySink` instance based on the schema of the DataFrame it operate
 It creates a new DataFrame using `MemoryPlan` with `MemorySink` instance created earlier and registers it as a temporary table (using spark-sql-dataframe.md#registerTempTable[DataFrame.registerTempTable] method).
 
 NOTE: At this point you can query the table as if it were a regular non-streaming table using spark-sql-sqlcontext.md#sql[sql] method.
-
-A new StreamingQuery.md[StreamingQuery] is started (using [StreamingQueryManager.startQuery](../../StreamingQueryManager.md#startQuery)) and returned.
-
-[[logging]]
-[TIP]
-====
-Enable `ALL` logging level for `org.apache.spark.sql.execution.streaming.MemorySink` logger to see what happens inside.
-
-Add the following line to `conf/log4j.properties`:
-
-```
-log4j.logger.org.apache.spark.sql.execution.streaming.MemorySink=ALL
-```
-
-Refer to <<spark-sql-streaming-spark-logging.md#, Logging>>.
-====
-
-=== [[creating-instance]] Creating MemorySink Instance
-
-`MemorySink` takes the following to be created:
-
-* [[schema]] Output schema
-* [[outputMode]] [OutputMode](../../OutputMode.md)
-
-`MemorySink` initializes the <<batches, batches>> internal property.
-
-=== [[batches]] In-Memory Buffer of Streaming Batches -- `batches` Internal Property
-
-[source, scala]
-----
-batches: ArrayBuffer[AddedData]
-----
-
-`batches` holds data from streaming batches that have been <<addBatch, added>> (_written_) to this sink.
-
-For [Append](../../OutputMode.md#Append) and [Update](../../OutputMode.md#Update) output modes, `batches` holds rows from all batches.
-
-For [Complete](../../OutputMode.md#Complete) output mode, `batches` holds rows from the last batch only.
-
-`batches` can be cleared (_emptied_) using <<clear, clear>>.
 
 === [[addBatch]] Adding Batch of Data to Sink -- `addBatch` Method
 
@@ -110,14 +250,4 @@ With the `batchId` committed, `addBatch` simply prints out the following DEBUG m
 ```
 Skipping already committed batch: [batchId]
 ```
-
-=== [[clear]] Clearing Up Internal Batch Buffer -- `clear` Method
-
-[source, scala]
-----
-clear(): Unit
-----
-
-`clear` simply removes (_clears_) all data from the <<batches, batches>> internal registry.
-
-NOTE: `clear` is used exclusively in tests.
+-->

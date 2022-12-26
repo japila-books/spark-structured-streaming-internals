@@ -2,8 +2,10 @@
 
 **Memory Data Source** supports [Micro-Batch](../../micro-batch-execution/index.md) and [Continuous](../../continuous-execution/index.md) stream processing modes using [MemoryStreamBase](MemoryStreamBase.md) abstraction.
 
-!!! note "Not for Production Deployments"
-    Memory Data Source is designed primarily for unit tests, tutorials and debugging.
+!!! danger "Not for Production Deployments"
+    Memory Data Source is designed with unit tests, tutorials and debugging in mind.
+
+Memory Data Source uses [MemorySink](MemorySink.md) for streaming writes.
 
 <!---
 ## Review Me

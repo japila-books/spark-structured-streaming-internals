@@ -389,6 +389,7 @@ nav:
       - MemorySink: datasources/memory/MemorySink.md
       - MemoryStream: datasources/memory/MemoryStream.md
       - MemoryStreamBase: datasources/memory/MemoryStreamBase.md
+      - MemoryStreamingWrite: datasources/memory/MemoryStreamingWrite.md
     - Rate:
       - datasources/rate/index.md
       - RateStreamProvider: datasources/rate/RateStreamProvider.md
