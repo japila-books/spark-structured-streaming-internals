@@ -7,7 +7,7 @@ repo_name: spark-structured-streaming-internals
 repo_url: https://github.com/japila-books/spark-structured-streaming-internals
 edit_uri: edit/main/docs/
 
-copyright: Copyright &copy; 2022 Jacek Laskowski
+copyright: Copyright &copy; 2025 Jacek Laskowski
 
 theme:
   name: material
@@ -18,8 +18,13 @@ theme:
   features:
     # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#adding-annotations
     - content.code.annotate
+    # https://squidfunk.github.io/mkdocs-material/upgrade/#contentcodecopy
+    - content.code.copy
+    - content.tooltips
     - navigation.indexes
     - navigation.instant
+    # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-path
+    - navigation.path
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.top
@@ -43,6 +48,7 @@ theme:
 
 markdown_extensions:
   - admonition
+  - attr_list
   - footnotes
   - md_in_html
   - toc:
@@ -54,8 +60,8 @@ markdown_extensions:
   - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.inlinehilite
   - pymdownx.magiclink
   - pymdownx.mark
@@ -68,13 +74,21 @@ markdown_extensions:
   - pymdownx.tilde
 
 plugins:
-  - search
-  - minify:
-      minify_html: true
   - awesome-pages
   - macros
   # https://squidfunk.github.io/mkdocs-material/reference/#built-in-meta-plugin
   - meta
+  - minify:
+      minify_html: true
+  - search
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-tags/
+  - tags:
+      enabled: !ENV [CI, false]
+      tags_extra_files:
+        developer-api.md:
+          - DeveloperApi
+  # https://squidfunk.github.io/mkdocs-material/reference/#built-in-typeset-plugin
+  - typeset
 
 extra:
   analytics:
@@ -85,42 +99,55 @@ extra:
     spark_core: https://books.japila.pl/apache-spark-internals
     spark_sql: https://books.japila.pl/spark-sql-internals
   hadoop:
-    version: 3.3.2
-    docs: https://hadoop.apache.org/docs/r3.3.2
-    api: https://hadoop.apache.org/docs/r3.3.2/api
+    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L126
+    version: 3.4.1
+    docs: https://hadoop.apache.org/docs/r3.4.1
+    api: https://hadoop.apache.org/docs/r3.4.1/api
   java:
-    docs: https://docs.oracle.com/en/java/javase/11/docs
-    api: https://docs.oracle.com/en/java/javase/11/docs/api/java.base
+    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L117
+    version: 17
+    api: https://docs.oracle.com/en/java/javase/17/docs/api/java.base
+    spec: https://docs.oracle.com/javase/specs/jls/se17/html
   kafka:
-    version: 2.8.1
-    api: https://kafka.apache.org/28/javadoc
+    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L137
+    version: 3.9.1
+    api: https://kafka.apache.org/39/javadoc
   rocksdb:
-    version: 6.20.3
-    api: https://javadoc.io/static/org.rocksdb/rocksdbjni/6.20.3
+    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L754-L758
+    version: 9.8.4
+    api: https://javadoc.io/static/org.rocksdb/rocksdbjni/9.8.4
   scala:
-    version: 2.13.8
+    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L173
+    version: 2.13.16
     binary_version: 2.13
-    api: https://www.scala-lang.org/api/2.13.8
+    api: https://www.scala-lang.org/api/2.13.16
     docs: https://docs.scala-lang.org/
     spec: https://www.scala-lang.org/files/archive/spec/2.13
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/jaceklaskowski
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/books.japila.pl
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/jaceklaskowski
     - icon: fontawesome/brands/linkedin
       link: https://linkedin.com/in/jaceklaskowski
     - icon: fontawesome/brands/medium
       link: https://jaceklaskowski.medium.com
+    - icon: fontawesome/brands/mastodon
+      link: https://fosstodon.org/@jaceklaskowski
   spark:
-    version: 3.3.1
+    version: 4.0.1
     commit: https://github.com/apache/spark/commit
-    docs: https://spark.apache.org/docs/3.3.1
-    github: https://github.com/apache/spark/tree/v3.3.1
+    docs: https://spark.apache.org/docs/4.0.1
+    github: https://github.com/apache/spark/tree/v4.0.1
     jira: https://issues.apache.org/jira/browse
 
+# Sections with ... under awesome-pages plugin's control
+# https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
+# Review corresponding .pages for setup
 nav:
-  - Home: index.md
+  - index.md
   - Internals:
     - Overview:
       - Overview: overview.md
