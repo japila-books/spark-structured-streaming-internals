@@ -15,28 +15,42 @@
 
 * `RatePerMicroBatchProvider` is requested for the [table](RatePerMicroBatchProvider.md#getTable)
 
-## <span id="schema"> schema
+## Table Capabilities { #capabilities }
 
-```scala
-schema(): StructType
-```
+??? note "Table"
+
+    ```scala
+    capabilities(): Set[TableCapability]
+    ```
+
+    `capabilities` is part of the `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table#capabilities)) abstraction.
+
+`capabilities` is exactly `MICRO_BATCH_READ` table capability.
+
+## Schema { #schema }
+
+??? note "Table"
+
+    ```scala
+    schema(): StructType
+    ```
+
+    `schema` is part of the `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table#schema)) abstraction.
 
 Name | Data Type
 -----|----------
-timestamp | TimestampType
-value | LongType
+`timestamp` | `TimestampType`
+`value` | `LongType`
 
-`schema` is part of the `Table` ([Spark SQL]({{ book.spark_sql }}/connector/Table#schema)) abstraction.
+## Create ScanBuilder { #newScanBuilder }
 
-## <span id="newScanBuilder"> Creating ScanBuilder
+??? note "SupportsRead"
 
-```scala
-newScanBuilder(
-  options: CaseInsensitiveStringMap): ScanBuilder
-```
+    ```scala
+    newScanBuilder(
+      options: CaseInsensitiveStringMap): ScanBuilder
+    ```
 
-`newScanBuilder` is part of the `SupportsRead` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsRead#newScanBuilder)) abstraction.
-
----
+    `newScanBuilder` is part of the `SupportsRead` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsRead#newScanBuilder)) abstraction.
 
 `newScanBuilder` creates a new `Scan` ([Spark SQL]({{ book.spark_sql }}/connector/Scan)) that creates a [RatePerMicroBatchStream](RatePerMicroBatchStream.md) when requested for a `MicroBatchStream` ([Spark SQL]({{ book.spark_sql }}/connector/Scan#toMicroBatchStream)).

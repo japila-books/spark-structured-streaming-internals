@@ -1,17 +1,25 @@
 # Options
 
-## <span id="advanceMillisPerBatch"><span id="ADVANCE_MILLIS_PER_BATCH"> advanceMillisPerBatch
+## <span id="ADVANCE_MILLIS_PER_BATCH"> advanceMillisPerBatch { #advanceMillisPerBatch }
 
 default: `1000`
 
-## <span id="numPartitions"><span id="NUM_PARTITIONS"> numPartitions
+Must be non-negative
 
-default: `SparkSession.active.sparkContext.defaultParallelism`
+## <span id="NUM_PARTITIONS"> numPartitions { #numPartitions }
 
-## <span id="rowsPerBatch"><span id="ROWS_PER_BATCH"> rowsPerBatch
+default: `SparkContext.defaultParallelism`
+
+Must be non-zero and positive
+
+## <span id="ROWS_PER_BATCH"> rowsPerBatch { #rowsPerBatch }
 
 default: `0`
 
-## <span id="startTimestamp"><span id="START_TIMESTAMP"> startTimestamp
+Must be non-zero and positive
+
+## <span id="START_TIMESTAMP"> startTimestamp { #startTimestamp }
 
 default: `0`
+
+Must be non-negative

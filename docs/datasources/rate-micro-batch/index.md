@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # Rate Per Micro-Batch Data Source
 
 **Rate Per Micro-Batch Data Source** provides a consistent number of rows per microbatch.
