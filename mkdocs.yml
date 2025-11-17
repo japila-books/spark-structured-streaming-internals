@@ -231,6 +231,7 @@ nav:
       - StreamingQueryWrapper: StreamingQueryWrapper.md
   - Features:
     - features/index.md
+    - Arbitrary State API v2: arbitrary-state-api-v2.md
     - Data Sources: datasources/index.md
     - Micro-Batch Execution:
       - micro-batch-execution/index.md
@@ -428,6 +429,8 @@ nav:
       - RatePerMicroBatchProvider: datasources/rate-micro-batch/RatePerMicroBatchProvider.md
       - RatePerMicroBatchStream: datasources/rate-micro-batch/RatePerMicroBatchStream.md
       - RatePerMicroBatchTable: datasources/rate-micro-batch/RatePerMicroBatchTable.md
+    - State:
+      - datasources/state/index.md
     - Text Socket:
       - datasources/socket/index.md
       - TextSocketSourceProvider: datasources/socket/TextSocketSourceProvider.md
