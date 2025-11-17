@@ -20,6 +20,8 @@ theme:
     - content.code.annotate
     # https://squidfunk.github.io/mkdocs-material/upgrade/#contentcodecopy
     - content.code.copy
+    # https://squidfunk.github.io/mkdocs-material/reference/content-tabs/#linked-content-tabs
+    - content.tabs.link
     - content.tooltips
     - navigation.indexes
     - navigation.instant
@@ -32,19 +34,22 @@ theme:
     - search.highlight
     - search.share
     - search.suggest
+    - toc.follow
   palette:
-    - scheme: default
-      primary: indigo
-      accent: indigo
+    - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/toggle-switch-off-outline
-        name: Switch to dark mode
-    - scheme: slate
-      primary: blue
-      accent: blue
-      toggle:
-        icon: material/toggle-switch
+        icon: material/brightness-auto
         name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
 
 markdown_extensions:
   - admonition
@@ -142,6 +147,11 @@ extra:
     docs: https://spark.apache.org/docs/4.0.1
     github: https://github.com/apache/spark/tree/v4.0.1
     jira: https://issues.apache.org/jira/browse
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
 
 # Sections with ... under awesome-pages plugin's control
 # https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
