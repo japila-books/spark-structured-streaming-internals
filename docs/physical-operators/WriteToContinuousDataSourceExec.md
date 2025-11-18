@@ -1,3 +1,7 @@
+---
+title: WriteToContinuousDataSourceExec
+---
+
 # WriteToContinuousDataSourceExec Physical Operator
 
 `WriteToContinuousDataSourceExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that <<doExecute, creates a ContinuousWriteRDD for continuous write>>.

@@ -1,3 +1,7 @@
+---
+title: StatefulOperator
+---
+
 # StatefulOperator Physical Operators
 
 `StatefulOperator` is the <<contract, base>> of <<extensions, physical operators>> that <<StateStoreReader, read>> or <<StateStoreWriter, write>> state (described by <<stateInfo, stateInfo>>).

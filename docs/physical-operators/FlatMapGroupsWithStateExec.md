@@ -1,3 +1,7 @@
+---
+title: FlatMapGroupsWithStateExec
+---
+
 # FlatMapGroupsWithStateExec Physical Operator
 
 `FlatMapGroupsWithStateExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators#BinaryExecNode)) that represents [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operator at execution time.

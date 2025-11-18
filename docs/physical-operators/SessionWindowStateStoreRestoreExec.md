@@ -1,3 +1,7 @@
+---
+title: SessionWindowStateStoreRestoreExec
+---
+
 # SessionWindowStateStoreRestoreExec Physical Operator
 
 ## <span id="requiredChildDistribution"> Required Child Output Distribution

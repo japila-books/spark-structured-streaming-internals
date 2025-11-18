@@ -1,3 +1,7 @@
+---
+title: WatermarkSupport
+---
+
 # WatermarkSupport Physical Operators
 
 `WatermarkSupport` is an [extension](#contract) of the `SparkPlan` ([Spark SQL]({{ book.spark_sql }}/physical-operators/SparkPlan)) abstraction for [physical operators](#implementations) with support for [streaming watermark](../watermark/index.md).

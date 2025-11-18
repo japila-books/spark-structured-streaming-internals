@@ -1,3 +1,7 @@
+---
+title: StateStoreWriter
+---
+
 # StateStoreWriter Physical Operators
 
 `StateStoreWriter` is an [extension](#contract) of the [StatefulOperator](StatefulOperator.md) abstraction for [stateful physical operators](#implementations) that write to a state store.

@@ -1,3 +1,7 @@
+---
+title: StreamingDeduplicateExec
+---
+
 # StreamingDeduplicateExec Physical Operator
 
 `StreamingDeduplicateExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [writes state to StateStore](StateStoreWriter.md) with [support for streaming watermark](WatermarkSupport.md).

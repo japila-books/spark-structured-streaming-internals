@@ -1,3 +1,3 @@
-== Streaming Deduplication
+# Streaming Deduplication
 
-*Streaming Deduplication* is...FIXME
+**Streaming Deduplication** is...FIXME

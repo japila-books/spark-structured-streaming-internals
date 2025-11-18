@@ -1,3 +1,7 @@
+---
+title: MicroBatchScanExec
+---
+
 # MicroBatchScanExec Physical Operator
 
 `MicroBatchScanExec` is a `DataSourceV2ScanExecBase` ([Spark SQL]({{ book.spark_sql }}/physical-operators/DataSourceV2ScanExecBase)) that represents [StreamingDataSourceV2Relation](../logical-operators/StreamingDataSourceV2Relation.md) logical operator at execution.

@@ -1,3 +1,7 @@
+---
+title: StreamingSymmetricHashJoinExec
+---
+
 # StreamingSymmetricHashJoinExec Physical Operator
 
 `StreamingSymmetricHashJoinExec` is a binary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/#BinaryExecNode)) for executing [stream-stream equi-join](../join/index.md).

@@ -1,3 +1,7 @@
+---
+title: SessionWindowStateStoreSaveExec
+---
+
 # SessionWindowStateStoreSaveExec Physical Operator
 
 `SessionWindowStateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode/)).

@@ -1,3 +1,3 @@
-== [[StateStoreReader]] StateStoreReader
+# StateStoreReader
 
 `StateStoreReader` is...FIXME

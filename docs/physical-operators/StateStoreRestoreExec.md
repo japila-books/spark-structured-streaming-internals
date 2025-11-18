@@ -1,3 +1,7 @@
+---
+title: StateStoreRestoreExec
+---
+
 # StateStoreRestoreExec Physical Operator
 
 `StateStoreRestoreExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) to [restore (read) a streaming state (from a state store)](StateStoreReader.md) (for the keys from the [child](#child) physical operator).

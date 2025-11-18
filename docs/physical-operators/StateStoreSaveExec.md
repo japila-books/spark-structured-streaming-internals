@@ -1,3 +1,7 @@
+---
+title: StateStoreSaveExec
+---
+
 # StateStoreSaveExec Physical Operator
 
 `StateStoreSaveExec` is a unary physical operator ([Spark SQL]({{ book.spark_sql }}/physical-operators/UnaryExecNode)) that [saves (writes) a streaming state](StateStoreWriter.md) (to a [state store](../stateful-stream-processing/StateStore.md)) with [support for streaming watermark](WatermarkSupport.md).

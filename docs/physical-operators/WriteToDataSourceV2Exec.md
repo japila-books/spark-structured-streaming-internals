@@ -1,3 +1,7 @@
+---
+title: WriteToDataSourceV2Exec
+---
+
 # WriteToDataSourceV2Exec Physical Operator
 
 `WriteToDataSourceV2Exec` is a `V2TableWriteExec` ([Spark SQL]({{ book.spark_sql }}/physical-operators/V2TableWriteExec)) that represents [WriteToDataSourceV2](../logical-operators/WriteToDataSourceV2.md) logical operator at execution time.

@@ -1,3 +1,7 @@
+---
+title: StreamingRelationExec
+---
+
 # StreamingRelationExec Leaf Physical Operator
 
 `StreamingRelationExec` is a leaf physical operator (i.e. `LeafExecNode`) that...FIXME
