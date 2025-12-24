@@ -104,28 +104,28 @@ extra:
     spark_core: https://books.japila.pl/apache-spark-internals
     spark_sql: https://books.japila.pl/spark-sql-internals
   hadoop:
-    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L126
-    version: 3.4.1
-    docs: https://hadoop.apache.org/docs/r3.4.1
-    api: https://hadoop.apache.org/docs/r3.4.1/api
+    # https://github.com/apache/spark/blob/v4.1.0/pom.xml#L126
+    version: 3.4.2
+    docs: https://hadoop.apache.org/docs/r3.4.2
+    api: https://hadoop.apache.org/docs/r3.4.2/api
   java:
-    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L117
+    # https://github.com/apache/spark/blob/v4.1.0/pom.xml#L120
     version: 17
     api: https://docs.oracle.com/en/java/javase/17/docs/api/java.base
     spec: https://docs.oracle.com/javase/specs/jls/se17/html
   kafka:
-    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L137
+    # https://github.com/apache/spark/blob/v4.1.0/pom.xml#L141
     version: 3.9.1
     api: https://kafka.apache.org/39/javadoc
   rocksdb:
-    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L754-L758
+    # https://github.com/apache/spark/blob/v4.1.0/pom.xml#L765-L769
     version: 9.8.4
     api: https://javadoc.io/static/org.rocksdb/rocksdbjni/9.8.4
   scala:
-    # https://github.com/apache/spark/blob/v4.0.1/pom.xml#L173
-    version: 2.13.16
+    # https://github.com/apache/spark/blob/v4.1.0/pom.xml#L176
+    version: 2.13.17
     binary_version: 2.13
-    api: https://www.scala-lang.org/api/2.13.16
+    api: https://www.scala-lang.org/api/2.13.17
     docs: https://docs.scala-lang.org/
     spec: https://www.scala-lang.org/files/archive/spec/2.13
   social:
@@ -142,10 +142,10 @@ extra:
     - icon: fontawesome/brands/mastodon
       link: https://fosstodon.org/@jaceklaskowski
   spark:
-    version: 4.0.1
+    version: 4.1.0
     commit: https://github.com/apache/spark/commit
-    docs: https://spark.apache.org/docs/4.0.1
-    github: https://github.com/apache/spark/tree/v4.0.1
+    docs: https://spark.apache.org/docs/4.1.0
+    github: https://github.com/apache/spark/tree/v4.1.0
     jira: https://issues.apache.org/jira/browse
 
 validation:
