@@ -41,7 +41,7 @@ a| [[metricStateOnCurrentVersionSizeBytes]][[stateOnCurrentVersionSizeBytes]] Es
 baseDir: Path
 ----
 
-`baseDir` is the base directory (as a Hadoop [Path](https://hadoop.apache.org/docs/r3.4.1/api/org/apache/hadoop/fs/Path.html)) for [state checkpointing](../offsets-and-metadata-checkpointing.md) (for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files).
+`baseDir` is the base directory (as a Hadoop [Path](https://hadoop.apache.org/docs/r3.4.2/api/org/apache/hadoop/fs/Path.html)) for [state checkpointing](../offsets-and-metadata-checkpointing.md) (for <<deltaFile, delta>> and <<snapshotFile, snapshot>> state files).
 
 `baseDir` is initialized lazily since it is not yet known when `HDFSBackedStateStoreProvider` is <<creating-instance, created>>.
 
