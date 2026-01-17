@@ -1,0 +1,3 @@
+# SupportsRealTimeMode
+
+`SupportsRealTimeMode` is...FIXME

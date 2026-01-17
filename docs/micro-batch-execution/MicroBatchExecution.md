@@ -864,6 +864,37 @@ Upon [re-starting a streaming query from a checkpoint](../HDFSMetadataLog.md#get
 
 Used in [finishTrigger](#finishTrigger).
 
+## getTrigger { #getTrigger }
+
+```scala
+getTrigger(): TriggerExecutor
+```
+
+??? note "Streaming Sources"
+    `getTrigger` asserts that the [sources](#sources) have already been retrieved from the plan.
+
+`getTrigger` creates a [TriggerExecutor](../TriggerExecutor.md) for this [Trigger](#trigger).
+
+Trigger | TriggerExecutor
+-|-
+ [ProcessingTimeTrigger](../Trigger.md#ProcessingTimeTrigger) | [ProcessingTimeExecutor](../ProcessingTimeExecutor.md)
+ [OneTimeTrigger](../Trigger.md#OneTimeTrigger) | [SingleBatchExecutor](../TriggerExecutor.md#SingleBatchExecutor)
+ [OneTimeTrigger](../real-time-mode/RealTimeTrigger.md) | [ProcessingTimeExecutor](../ProcessingTimeExecutor.md)
+ [AvailableNowTrigger](../Trigger.md#AvailableNowTrigger) | &nbsp;
+
+??? warning "IllegalStateException"
+    `getTrigger` reports `IllegalStateException` for an unknown [Trigger](#trigger).
+
+    ```text
+    Unknown type of trigger: [trigger]
+    ```
+
+---
+
+`getTrigger` is used when:
+
+* `MicroBatchExecution` is requested for the [LogicalPlan](#logicalPlan)
+
 ## Demo
 
 ```text

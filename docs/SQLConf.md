@@ -47,6 +47,14 @@ Used when:
 
 * `ProgressReporter` is [created](ProgressReporter.md#noDataProgressEventInterval)
 
+## STREAMING_REAL_TIME_MODE_MIN_BATCH_DURATION { #STREAMING_REAL_TIME_MODE_MIN_BATCH_DURATION }
+
+[spark.sql.streaming.realTimeMode.minBatchDuration](configuration-properties.md#spark.sql.streaming.realTimeMode.minBatchDuration)
+
+Used when:
+
+* `StreamingQueryManager` is requested to [create a streaming query](StreamingQueryManager.md#createQuery)
+
 ## <span id="fileSinkLogCleanupDelay"><span id="FILE_SINK_LOG_CLEANUP_DELAY"> fileSinkLogCleanupDelay
 
 [spark.sql.streaming.fileSink.log.cleanupDelay](configuration-properties.md#spark.sql.streaming.fileSink.log.cleanupDelay) configuration property

@@ -290,6 +290,14 @@ Use [SQLConf.streamingProgressRetention](SQLConf.md#streamingProgressRetention) 
 
 Default: `10` (milliseconds)
 
+## <span id="STREAMING_REAL_TIME_MODE_MIN_BATCH_DURATION"> realTimeMode.minBatchDuration { #spark.sql.streaming.realTimeMode.minBatchDuration }
+
+**spark.sql.streaming.realTimeMode.minBatchDuration**
+
+The minimum long-running batch duration (in milliseconds) for [Real-Time Mode](./real-time-mode/index.md).
+
+Default: 5000 ms
+
 ## <span id="spark.sql.streaming.statefulOperator.useStrictDistribution"><span id="STATEFUL_OPERATOR_USE_STRICT_DISTRIBUTION"> statefulOperator.useStrictDistribution
 
 **spark.sql.streaming.statefulOperator.useStrictDistribution**

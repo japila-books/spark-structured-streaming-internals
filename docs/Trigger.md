@@ -4,16 +4,17 @@
 
 `Trigger` is used to determine a [TriggerExecutor](TriggerExecutor.md) in [MicroBatchExecution](micro-batch-execution/MicroBatchExecution.md#triggerExecutor) and [ContinuousExecution](continuous-execution/ContinuousExecution.md#triggerExecutor).
 
-Trigger  | TriggerExecutor | Factory Method
----------|-----------------|---------------
- [AvailableNowTrigger](#AvailableNowTrigger) | [MultiBatchExecutor](TriggerExecutor.md#MultiBatchExecutor) | [Trigger.AvailableNow](#AvailableNow)
- [ContinuousTrigger](#ContinuousTrigger) | [ProcessingTimeExecutor](ProcessingTimeExecutor.md) | [Trigger.Continuous](#Continuous)
- [OneTimeTrigger](#OneTimeTrigger) | [SingleBatchExecutor](TriggerExecutor.md#SingleBatchExecutor) | [Trigger.Once](#Once)
- [ProcessingTimeTrigger](#ProcessingTimeTrigger) | [ProcessingTimeExecutor](ProcessingTimeExecutor.md) | [Trigger.ProcessingTime](#ProcessingTime)
+| Trigger | TriggerExecutor | Factory Method |
+|-|-|-|
+| [AvailableNowTrigger](#AvailableNowTrigger) | [MultiBatchExecutor](TriggerExecutor.md#MultiBatchExecutor) | [Trigger.AvailableNow](#AvailableNow) |
+| [ContinuousTrigger](#ContinuousTrigger) | [ProcessingTimeExecutor](ProcessingTimeExecutor.md) | [Trigger.Continuous](#Continuous) |
+| [OneTimeTrigger](#OneTimeTrigger) | [SingleBatchExecutor](TriggerExecutor.md#SingleBatchExecutor) | [Trigger.Once](#Once) |
+| [ProcessingTimeTrigger](#ProcessingTimeTrigger) | [ProcessingTimeExecutor](ProcessingTimeExecutor.md) | [Trigger.ProcessingTime](#ProcessingTime) |
+| [RealTimeTrigger](#RealTimeTrigger) | [ProcessingTimeExecutor](ProcessingTimeExecutor.md) | [Trigger.RealTime](#RealTime) |
 
 ## Implementations
 
-### <span id="AvailableNowTrigger"> AvailableNowTrigger
+### AvailableNowTrigger { #AvailableNowTrigger }
 
 Processes all available data in multiple batches then terminates a query. Best for streaming sources that are [SupportsTriggerAvailableNow](SupportsTriggerAvailableNow.md).
 
@@ -22,19 +23,23 @@ Created by [Trigger.AvailableNow](#AvailableNow)
 !!! note "SPARK-36533"
     `AvailableNowTrigger` is a new feature in [3.3.0]({{ spark.commit }}/e33cdfb317498b04e077c4d6356fc3848cd78da0) (tracked under [SPARK-36533](https://issues.apache.org/jira/browse/SPARK-36533)).
 
-### <span id="ContinuousTrigger"> ContinuousTrigger
+### ContinuousTrigger { #ContinuousTrigger }
 
 Continuously processes streaming data, asynchronously checkpointing at the specified interval
 
-### <span id="OneTimeTrigger"> OneTimeTrigger
+### OneTimeTrigger { #OneTimeTrigger }
 
 Processes all available data in one batch then terminates the query
 
-### <span id="ProcessingTimeTrigger"> ProcessingTimeTrigger
+### ProcessingTimeTrigger { #ProcessingTimeTrigger }
 
 Created by [Trigger.ProcessingTime](#ProcessingTime) (or directly using `ProcessingTimeTrigger.apply`)
 
 The only supported `Trigger` in [Continuous Stream Processing](continuous-execution/index.md)
+
+### RealTimeTrigger { #RealTimeTrigger }
+
+[RealTimeTrigger](real-time-mode/RealTimeTrigger.md)
 
 ## Static Methods
 
@@ -44,7 +49,7 @@ The only supported `Trigger` in [Continuous Stream Processing](continuous-execut
 import org.apache.spark.sql.streaming.Trigger
 ```
 
-### <span id="AvailableNow"> AvailableNow
+### AvailableNow { #AvailableNow }
 
 ```java
 Trigger AvailableNow()
@@ -54,7 +59,7 @@ Creates an [AvailableNowTrigger](#AvailableNowTrigger)
 
 Supported by [SupportsTriggerAvailableNow](SupportsTriggerAvailableNow.md#implementations) data sources (e.g., [files](datasources/file/index.md#AvailableNow), [kafka](kafka/index.md#AvailableNow) and [rate-micro-batch](datasources/rate-micro-batch/index.md#AvailableNow))
 
-### <span id="Continuous"> Continuous
+### Continuous { #Continuous }
 
 ```java
 Trigger Continuous(
@@ -70,7 +75,7 @@ Trigger Continuous(
 
 Creates a [ContinuousTrigger](#ContinuousTrigger)
 
-### <span id="Once"> Once
+### Once { #Once }
 
 ```java
 Trigger Once()
@@ -78,7 +83,7 @@ Trigger Once()
 
 Creates a [OneTimeTrigger](#OneTimeTrigger)
 
-### <span id="ProcessingTime"> ProcessingTime
+### ProcessingTime { #ProcessingTime }
 
 ```java
 Trigger ProcessingTime(
@@ -94,24 +99,41 @@ Trigger ProcessingTime(
 
 Creates a [ProcessingTimeTrigger](#ProcessingTimeTrigger)
 
-## <span id="DataStreamWriter"> DataStreamWriter
+### RealTime { #RealTime }
 
-A `Trigger` of a streaming query is defined using [DataStreamWriter.trigger](DataStreamWriter.md#trigger).
+```java
+Trigger RealTime()
+Trigger RealTime(
+  Duration batchDuration)
+Trigger RealTime(
+  long batchDurationMs)
+Trigger RealTime(
+  long batchDuration,
+  TimeUnit timeUnit)
+Trigger RealTime(
+  String batchDuration)
+```
+
+Creates a [RealTimeTrigger](#RealTimeTrigger)
+
+## DataStreamWriter { #DataStreamWriter }
+
+A `Trigger` of a streaming query is specified using [DataStreamWriter.trigger](DataStreamWriter.md#trigger) operator.
 
 ## Demo: Trigger.Once
 
 ```text
 import org.apache.spark.sql.streaming.Trigger
-val query = spark.
-  readStream.
-  format("rate").
-  load.
-  writeStream.
-  format("console").
-  option("truncate", false).
-  trigger(Trigger.Once). // <-- execute once and stop
-  queryName("rate-once").
-  start
+val query = spark
+  .readStream
+  .format("rate")
+  .load
+  .writeStream
+  .format("console")
+  .option("truncate", false)
+  .trigger(Trigger.Once) // <-- execute once and stop
+  .queryName("rate-once")
+  .start
 assert(query.isActive == false)
 println(query.lastProgress)
 ```

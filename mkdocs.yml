@@ -223,6 +223,9 @@ nav:
       - StreamingQueryWrapper: StreamingQueryWrapper.md
   - Features:
     - features/index.md
+    # Uses awesome-pages plugin
+    # https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
+    - ... | real-time-mode/**.md
     - Arbitrary State API v2: arbitrary-state-api-v2.md
     - Data Sources: datasources/index.md
     - Micro-Batch Execution:
