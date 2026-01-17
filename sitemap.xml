@@ -401,6 +401,10 @@
          <lastmod>2026-01-17</lastmod>
     </url>
     <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/LowLatencyMemoryStream/</loc>
+         <lastmod>2026-01-17</lastmod>
+    </url>
+    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/datasources/memory/MemoryPlan/</loc>
          <lastmod>2026-01-17</lastmod>
     </url>
