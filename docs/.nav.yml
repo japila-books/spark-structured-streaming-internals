@@ -1,0 +1,294 @@
+# https://lukasgeiter.github.io/mkdocs-awesome-nav/
+nav:
+  - index.md
+  - Internals:
+    - Overview:
+      - Overview: overview.md
+      - Internals of Streaming Queries: internals.md
+    - Configuration Properties: configuration-properties.md
+    - DataSource: DataSource.md
+    - Execution Planning Strategies:
+      - execution-planning-strategies/index.md
+      - FlatMapGroupsWithStateStrategy: execution-planning-strategies/FlatMapGroupsWithStateStrategy.md
+      - StatefulAggregationStrategy: execution-planning-strategies/StatefulAggregationStrategy.md
+      - StreamingDeduplicationStrategy: execution-planning-strategies/StreamingDeduplicationStrategy.md
+      - StreamingGlobalLimitStrategy: execution-planning-strategies/StreamingGlobalLimitStrategy.md
+      - StreamingJoinStrategy: execution-planning-strategies/StreamingJoinStrategy.md
+      - StreamingRelationStrategy: execution-planning-strategies/StreamingRelationStrategy.md
+    - IncrementalExecution: IncrementalExecution.md
+    - Logical Analysis Rules:
+      - ResolveWriteToStream: logical-analysis-rules/ResolveWriteToStream.md
+    - Logical Operators:
+      - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
+      - Deduplicate: logical-operators/Deduplicate.md
+      - EventTimeWatermark: logical-operators/EventTimeWatermark.md
+      - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
+      - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md
+      - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
+      - StreamingRelation: logical-operators/StreamingRelation.md
+      - StreamingRelationV2: logical-operators/StreamingRelationV2.md
+      - WriteToContinuousDataSource: logical-operators/WriteToContinuousDataSource.md
+      - WriteToDataSourceV2: logical-operators/WriteToDataSourceV2.md
+      - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
+      - WriteToStream: logical-operators/WriteToStream.md
+      - WriteToStreamStatement: logical-operators/WriteToStreamStatement.md
+    - Offsets and Metadata Checkpointing:
+      - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
+      - MetadataLog: MetadataLog.md
+      - HDFSMetadataLog: HDFSMetadataLog.md
+      - CommitLog:
+        - CommitLog: CommitLog.md
+        - CommitMetadata: CommitMetadata.md
+      - OffsetSeqLog:
+        - OffsetSeqLog: OffsetSeqLog.md
+        - OffsetSeq: OffsetSeq.md
+      - OffsetSeqMetadata: OffsetSeqMetadata.md
+      - CheckpointFileManager:
+        - CheckpointFileManager: CheckpointFileManager.md
+        - FileContextBasedCheckpointFileManager: FileContextBasedCheckpointFileManager.md
+        - FileSystemBasedCheckpointFileManager: FileSystemBasedCheckpointFileManager.md
+        - Offset: Offset.md
+        - StreamProgress: StreamProgress.md
+    - physical-operators
+    - ProgressReporter: ProgressReporter.md
+    - SQLConf: SQLConf.md
+    - StreamExecution: StreamExecution.md
+    - StreamingDataWriterFactory: StreamingDataWriterFactory.md
+    - StreamingQueryListenerBus: StreamingQueryListenerBus.md
+    - StreamMetadata: StreamMetadata.md
+    - TriggerExecutors:
+      - ProcessingTimeExecutor: ProcessingTimeExecutor.md
+      - TriggerExecutor: TriggerExecutor.md
+    - UnsupportedOperationChecker: UnsupportedOperationChecker.md
+    - Misc:
+      - AcceptsLatestSeenOffsetHandler: AcceptsLatestSeenOffsetHandler.md
+      - AvailableNowDataStreamWrapper: AvailableNowDataStreamWrapper.md
+      - StreamingQueryWrapper: StreamingQueryWrapper.md
+  - Features:
+    - features/index.md
+    # Uses awesome-pages plugin
+    # https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
+    - Real-Time Mode: real-time-mode
+    - Arbitrary State API v2: arbitrary-state-api-v2.md
+    - Data Sources: datasources/index.md
+    - Micro-Batch Execution:
+      - micro-batch-execution/index.md
+      - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
+      - MicroBatchWrite: micro-batch-execution/MicroBatchWrite.md
+      - MicroBatchWriterFactory: micro-batch-execution/MicroBatchWriterFactory.md
+    - RocksDB State Store:
+      - rocksdb/index.md
+      - RocksDB: rocksdb/RocksDB.md
+      - RocksDBConf: rocksdb/RocksDBConf.md
+      - RocksDBFileManager: rocksdb/RocksDBFileManager.md
+      - RocksDBMetrics: rocksdb/RocksDBMetrics.md
+      - RocksDBStateStore: rocksdb/RocksDBStateStore.md
+      - RocksDBStateStoreProvider: rocksdb/RocksDBStateStoreProvider.md
+    - Arbitrary Stateful Streaming Aggregation:
+      - arbitrary-stateful-streaming-aggregation/index.md
+      - FlatMapGroupsWithStateExecHelper: arbitrary-stateful-streaming-aggregation/FlatMapGroupsWithStateExecHelper.md
+      - GroupState:
+        - GroupState: GroupState.md
+        - GroupStateImpl: GroupStateImpl.md
+      - GroupStateTimeout: GroupStateTimeout.md
+      - InputProcessor: arbitrary-stateful-streaming-aggregation/InputProcessor.md
+      - StateManager:
+        - StateManager: arbitrary-stateful-streaming-aggregation/StateManager.md
+        - StateManagerImplBase: arbitrary-stateful-streaming-aggregation/StateManagerImplBase.md
+        - StateManagerImplV1: arbitrary-stateful-streaming-aggregation/StateManagerImplV1.md
+        - StateManagerImplV2: arbitrary-stateful-streaming-aggregation/StateManagerImplV2.md
+    - Batch Processing Time: batch-processing-time.md
+    - Streaming Aggregation: streaming-aggregation
+    - Streaming Deduplication: streaming-deduplication
+    - Streaming Join: join
+    - Streaming Limit: streaming-limit
+    - Streaming Watermark: watermark
+    - Stateful Stream Processing:
+      - stateful-stream-processing/index.md
+      - BaseStateStoreRDD: stateful-stream-processing/BaseStateStoreRDD.md
+      - ReadStateStoreRDD: stateful-stream-processing/ReadStateStoreRDD.md
+      - StatefulOperatorPartitioning: stateful-stream-processing/StatefulOperatorPartitioning.md
+      - StatefulOperatorStateInfo: stateful-stream-processing/StatefulOperatorStateInfo.md
+      - StateSchemaCompatibilityChecker: stateful-stream-processing/StateSchemaCompatibilityChecker.md
+      - StateStore:
+        - HDFSBackedStateStore: stateful-stream-processing/HDFSBackedStateStore.md
+        - ReadStateStore: stateful-stream-processing/ReadStateStore.md
+        - StateStore: stateful-stream-processing/StateStore.md
+        - StateStoreId: stateful-stream-processing/StateStoreId.md
+      - StateStoreConf: stateful-stream-processing/StateStoreConf.md
+      - StateStoreCoordinator:
+        - StateStoreCoordinator: stateful-stream-processing/StateStoreCoordinator.md
+        - StateStoreCoordinatorRef: stateful-stream-processing/StateStoreCoordinatorRef.md
+      - StateStoreCustomMetric: stateful-stream-processing/StateStoreCustomMetric.md
+      - StateStoreMetrics: stateful-stream-processing/StateStoreMetrics.md
+      - StateStoreOps: stateful-stream-processing/StateStoreOps.md
+      - StateStoreProvider:
+        - HDFSBackedStateStoreProvider: stateful-stream-processing/HDFSBackedStateStoreProvider.md
+        - StateStoreProvider: stateful-stream-processing/StateStoreProvider.md
+        - StateStoreProviderId: stateful-stream-processing/StateStoreProviderId.md
+      - StateStoreRDD: stateful-stream-processing/StateStoreRDD.md
+      - StreamingSessionWindowStateManager: stateful-stream-processing/StreamingSessionWindowStateManager.md
+    - Continuous Execution:
+      - continuous-execution/index.md
+      - ContinuousExecution: continuous-execution/ContinuousExecution.md
+      - ContinuousReadSupport: continuous-execution/ContinuousReadSupport.md
+      - ContinuousReader: continuous-execution/ContinuousReader.md
+      - EpochCoordinator:
+        - EpochCoordinator RPC Endpoint: EpochCoordinator.md
+        - EpochCoordinatorRef: EpochCoordinatorRef.md
+        - EpochTracker: EpochTracker.md
+      - ContinuousQueuedDataReader:
+        - ContinuousQueuedDataReader: ContinuousQueuedDataReader.md
+        - DataReaderThread: DataReaderThread.md
+        - EpochMarkerGenerator: EpochMarkerGenerator.md
+      - PartitionOffset: PartitionOffset.md
+      - ContinuousWriteRDD: ContinuousWriteRDD.md
+      - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
+    - testing.md
+    - Web UI: webui/index.md
+  - High-Level APIs:
+    - AcceptsLatestSeenOffset: AcceptsLatestSeenOffset.md
+    - ContinuousStream: ContinuousStream.md
+    - DataStreamReader: DataStreamReader.md
+    - DataStreamWriter: DataStreamWriter.md
+    - MicroBatchStream: MicroBatchStream.md
+    - OutputMode: OutputMode.md
+    - ReadLimit: ReadLimit.md
+    - ReportsSourceMetrics: ReportsSourceMetrics.md
+    - Sink: Sink.md
+    - Source: Source.md
+    - SparkDataStream: SparkDataStream.md
+    - StreamingQuery: StreamingQuery.md
+    - StreamingQueryManager: StreamingQueryManager.md
+    - StreamingWrite: StreamingWrite.md
+    - StreamSinkProvider: StreamSinkProvider.md
+    - StreamSourceProvider: StreamSourceProvider.md
+    - SupportsAdmissionControl: SupportsAdmissionControl.md
+    - SupportsTriggerAvailableNow: SupportsTriggerAvailableNow.md
+    - Trigger: Trigger.md
+  - Streaming Operators:
+    - operators/index.md
+    - crossJoin: operators/crossJoin.md
+    - dropDuplicates: operators/dropDuplicates.md
+    - explain: operators/explain.md
+    - flatMapGroupsWithState: operators/flatMapGroupsWithState.md
+    - groupBy: operators/groupBy.md
+    - groupByKey: operators/groupByKey.md
+    - join: operators/join.md
+    - joinWith: operators/joinWith.md
+    - mapGroupsWithState: operators/mapGroupsWithState.md
+    - window: operators/window.md
+    - withWatermark: operators/withWatermark.md
+    - writeStream: operators/writeStream.md
+  - Data Sources:
+    - datasources/index.md
+    - Console:
+      - datasources/console/index.md
+      - ConsoleSinkProvider: datasources/console/ConsoleSinkProvider.md
+      - ConsoleWriter: datasources/console/ConsoleWriter.md
+    - File:
+      - datasources/file/index.md
+      - FileStreamSource: datasources/file/FileStreamSource.md
+      - FileStreamSink: datasources/file/FileStreamSink.md
+      - CompactibleFileStreamLog: datasources/file/CompactibleFileStreamLog.md
+      - SinkFileStatus: datasources/file/SinkFileStatus.md
+      - ManifestFileCommitProtocol: datasources/file/ManifestFileCommitProtocol.md
+      - MetadataLogFileIndex: datasources/file/MetadataLogFileIndex.md
+      - FileStreamSourceCleaner: datasources/file/FileStreamSourceCleaner.md
+      - FileStreamSourceLog: datasources/file/FileStreamSourceLog.md
+      - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
+    - Foreach:
+      - datasources/foreach/index.md
+      - ForeachSink: datasources/foreach/ForeachSink.md
+      - ForeachWriter: datasources/foreach/ForeachWriter.md
+      - ForeachWriterProvider: datasources/foreach/ForeachWriterProvider.md
+      - ForeachWriterTable: datasources/foreach/ForeachWriterTable.md
+    - ForeachBatch:
+      - ForeachBatchSink: datasources/ForeachBatchSink.md
+    - Kafka:
+      - kafka/index.md
+      - CachedKafkaConsumer: kafka/CachedKafkaConsumer.md
+      - Consumer Strategies:
+        - ConsumerStrategy: kafka/ConsumerStrategy.md
+        - SubscribeStrategy: kafka/SubscribeStrategy.md
+      - KafkaBatch: kafka/KafkaBatch.md
+      - KafkaBatchInputPartition: kafka/KafkaBatchInputPartition.md
+      - KafkaContinuousInputPartition: kafka/KafkaContinuousInputPartition.md
+      - KafkaContinuousStream: kafka/KafkaContinuousStream.md
+      - KafkaDataConsumer: kafka/KafkaDataConsumer.md
+      - KafkaMicroBatchInputPartition: kafka/KafkaMicroBatchInputPartition.md
+      - KafkaMicroBatchInputPartitionReader: kafka/KafkaMicroBatchInputPartitionReader.md
+      - KafkaMicroBatchStream: kafka/KafkaMicroBatchStream.md
+      - KafkaOffsetRangeCalculator: kafka/KafkaOffsetRangeCalculator.md
+      - KafkaOffsetRangeLimit: kafka/KafkaOffsetRangeLimit.md
+      - KafkaOffsetReaders:
+        - KafkaOffsetReader: kafka/KafkaOffsetReader.md
+        - KafkaOffsetReaderAdmin: kafka/KafkaOffsetReaderAdmin.md
+        - KafkaOffsetReaderConsumer: kafka/KafkaOffsetReaderConsumer.md
+      - KafkaRelation: kafka/KafkaRelation.md
+      - KafkaScan: kafka/KafkaScan.md
+      - KafkaSink: kafka/KafkaSink.md
+      - KafkaSource: kafka/KafkaSource.md
+      - KafkaSourceInitialOffsetWriter: kafka/KafkaSourceInitialOffsetWriter.md
+      - KafkaSourceOffset: kafka/KafkaSourceOffset.md
+      - KafkaSourceProvider: kafka/KafkaSourceProvider.md
+      - KafkaSourceRDD: kafka/KafkaSourceRDD.md
+      - KafkaStreamingWrite: kafka/KafkaStreamingWrite.md
+      - KafkaStreamWriterFactory: kafka/KafkaStreamWriterFactory.md
+      - KafkaTable: kafka/KafkaTable.md
+      - Options: kafka/options.md
+    - datasources/memory
+    - Rate:
+      - datasources/rate/index.md
+      - RateStreamProvider: datasources/rate/RateStreamProvider.md
+      - RateStreamContinuousReader: datasources/rate/RateStreamContinuousReader.md
+    - Rate Per Micro-Batch:
+      - datasources/rate-micro-batch/index.md
+      - Options: datasources/rate-micro-batch/options.md
+      - RatePerMicroBatchProvider: datasources/rate-micro-batch/RatePerMicroBatchProvider.md
+      - RatePerMicroBatchStream: datasources/rate-micro-batch/RatePerMicroBatchStream.md
+      - RatePerMicroBatchTable: datasources/rate-micro-batch/RatePerMicroBatchTable.md
+    - State:
+      - datasources/state/index.md
+    - Text Socket:
+      - datasources/socket/index.md
+      - TextSocketSourceProvider: datasources/socket/TextSocketSourceProvider.md
+      - TextSocketSource: datasources/socket/TextSocketSource.md
+  - Monitoring:
+    - StreamingQueryListener: monitoring/StreamingQueryListener.md
+    - StreamingQueryProgress:
+      - StreamingQueryProgress: monitoring/StreamingQueryProgress.md
+      - StateOperatorProgress: monitoring/StateOperatorProgress.md
+      - ExecutionStats: monitoring/ExecutionStats.md
+      - SourceProgress: monitoring/SourceProgress.md
+      - SinkProgress: monitoring/SinkProgress.md
+    - StreamingQueryStatus: monitoring/StreamingQueryStatus.md
+    - MetricsReporter: monitoring/MetricsReporter.md
+    - Logging: spark-logging.md
+  - Web UI:
+    - webui/index.md
+    - StreamingQueryPage: webui/StreamingQueryPage.md
+    - StreamingQueryStatisticsPage: webui/StreamingQueryStatisticsPage.md
+    - StreamingQueryStatusListener: webui/StreamingQueryStatusListener.md
+    - StreamingQueryStatusStore: webui/StreamingQueryStatusStore.md
+    - StreamingQueryTab: webui/StreamingQueryTab.md
+  - Demo:
+    - demo/index.md
+    - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md
+    - current_timestamp Function For Processing Time in Streaming Queries: demo/current_timestamp.md
+    - Custom Streaming Sink (and Monitoring SQL Queries in web UI): demo/custom-sink-webui.md
+    - Deep Dive into FileStreamSink: demo/deep-dive-into-filestreamsink.md
+    - Exploring Checkpointed State: demo/exploring-checkpointed-state.md
+    - groupByKey Streaming Aggregation in Update Mode: demo/groupByKey-count-Update.md
+    - Internals of FlatMapGroupsWithStateExec Physical Operator: demo/spark-sql-streaming-demo-FlatMapGroupsWithStateExec.md
+    - Kafka Data Source: demo/kafka-data-source.md
+    - Streaming Windowed Aggregation: demo/streaming-windowed-aggregation.md
+    - RocksDB State Store for Streaming Aggregation: demo/rocksdb-state-store-for-streaming-aggregation.md
+    - Stream-Stream Inner Join: demo/stream-stream-inner-join.md
+    - Streaming Query for Running Counts (Socket Source and Complete Output Mode): demo/groupBy-running-count-complete.md
+    - Streaming Watermark: demo/streaming-watermark.md
+    - Streaming Watermark with Aggregation in Append Output Mode: demo/watermark-aggregation-append.md
+    - StateStoreSaveExec with Complete Output Mode: demo/StateStoreSaveExec-Complete.md
+    - StateStoreSaveExec with Update Output Mode: demo/StateStoreSaveExec-Update.md
+    - Using StreamingQueryManager for Query Termination Management: demo/StreamingQueryManager-awaitAnyTermination-resetTerminated.md
+    - Using File Streaming Source: demo/using-file-streaming-source.md

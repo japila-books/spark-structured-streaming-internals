@@ -29,3 +29,7 @@ Real-Time Mode supports [Update](../OutputMode.md#Update) output mode only (that
 ## RealTimeTrigger
 
 [Trigger.RealTimeTrigger](RealTimeTrigger.md)
+
+## Learning Resources
+
+* [Introducing Real-Time Mode in Apache Spark™ Structured Streaming](https://www.databricks.com/blog/introducing-real-time-mode-apache-sparktm-structured-streaming)
