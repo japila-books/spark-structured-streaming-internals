@@ -1,3 +1,0 @@
-# AsyncProgressTrackingMicroBatchExecution
-
-`AsyncProgressTrackingMicroBatchExecution` is...FIXME

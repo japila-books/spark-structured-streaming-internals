@@ -19,7 +19,7 @@
 
 ![StreamingQueryManager](images/StreamingQueryManager.png)
 
-## <span id="active"> All Active Streaming Queries
+## All Active Streaming Queries { #active }
 
 ```scala
 active: Array[StreamingQuery]
@@ -27,7 +27,7 @@ active: Array[StreamingQuery]
 
 [Active streaming queries](#activeQueries)
 
-## <span id="addListener"> Registering StreamingQueryListener
+## Registering StreamingQueryListener { #addListener }
 
 ```scala
 addListener(
@@ -36,7 +36,7 @@ addListener(
 
 Registers (_adds_) a [StreamingQueryListener](monitoring/StreamingQueryListener.md)
 
-## <span id="awaitAnyTermination"> Awaiting Any Termination
+## Awaiting Any Termination { #awaitAnyTermination }
 
 ```scala
 awaitAnyTermination(): Unit
@@ -46,7 +46,7 @@ awaitAnyTermination(
 
 Waits until any streaming query terminates or `timeoutMs` elapses
 
-## <span id="get"> Getting Active StreamingQuery by ID
+## Getting Active StreamingQuery by ID { #get }
 
 ```scala
 
@@ -58,7 +58,7 @@ get(
 
 Gets the [StreamingQuery](StreamingQuery.md) by [id](StreamingQuery.md#id)
 
-## <span id="removeListener"> Deregistering StreamingQueryListener
+## Deregistering StreamingQueryListener { #removeListener }
 
 ```scala
 removeListener(
@@ -67,7 +67,7 @@ removeListener(
 
 De-registers (_removes_) the [StreamingQueryListener](monitoring/StreamingQueryListener.md)
 
-## <span id="resetTerminated"> Resetting Terminated Queries
+## Resetting Terminated Queries { #resetTerminated }
 
 ```scala
 resetTerminated(): Unit
@@ -87,7 +87,7 @@ scala> :type spark.streams
 org.apache.spark.sql.streaming.StreamingQueryManager
 ```
 
-## <span id="listenerBus"> StreamingQueryListenerBus
+## StreamingQueryListenerBus { #listenerBus }
 
 ```scala
 listenerBus: StreamingQueryListenerBus
@@ -101,7 +101,7 @@ listenerBus: StreamingQueryListenerBus
 
 * [Post a streaming event](#postListenerEvent) (and notify [registered StreamingQueryListeners about the event](#addListener))
 
-## <span id="addListener"> Registering StreamingQueryListener
+## Registering StreamingQueryListener { #addListener }
 
 ```scala
 addListener(
@@ -110,7 +110,7 @@ addListener(
 
 `addListener` requests the [StreamingQueryListenerBus](#listenerBus) to [add](StreamingQueryListenerBus.md#addListener) the input [StreamingQueryListener](monitoring/StreamingQueryListener.md).
 
-## <span id="removeListener"> De-Registering StreamingQueryListener
+## De-Registering StreamingQueryListener { #removeListener }
 
 ```scala
 removeListener(
@@ -119,7 +119,7 @@ removeListener(
 
 `removeListener` requests [StreamingQueryListenerBus](#listenerBus) to [remove](StreamingQueryListenerBus.md#removeListener) the input [StreamingQueryListener](monitoring/StreamingQueryListener.md).
 
-## <span id="createQuery"> Creating Streaming Query
+## Creating Streaming Query { #createQuery }
 
 ```scala
 createQuery(
@@ -170,7 +170,7 @@ In the end, `createQuery` creates a [StreamingQueryWrapper](StreamingQueryWrappe
 
 `createQuery` is used when `StreamingQueryManager` is requested to [start a streaming query](#startQuery) (when `DataStreamWriter` is requested to [start an execution of a streaming query](DataStreamWriter.md#start)).
 
-### <span id="recoverFromCheckpointLocation"> recoverFromCheckpointLocation
+### recoverFromCheckpointLocation { #recoverFromCheckpointLocation }
 
 `recoverFromCheckpointLocation` flag corresponds to `recoverFromCheckpointLocation` flag that `StreamingQueryManager` uses to [start a streaming query](#startQuery) and which is enabled by default (and is in fact the only place where `createQuery` is used).
 
@@ -182,11 +182,28 @@ In the end, `createQuery` creates a [StreamingQueryWrapper](StreamingQueryWrappe
 
 * all other sinks have the flag always enabled
 
-### <span id="userSpecifiedName"> userSpecifiedName
+### userSpecifiedName { #userSpecifiedName }
 
 `userSpecifiedName` corresponds to `queryName` option (that can be defined using ``DataStreamWriter``'s [queryName](DataStreamWriter.md#queryName) method) while `userSpecifiedCheckpointLocation` is `checkpointLocation` option.
 
-## <span id="startQuery"> Starting Streaming Query Execution
+### useAsyncProgressTracking { #useAsyncProgressTracking }
+
+```scala
+useAsyncProgressTracking(
+  extraOptions: Map[String, String]): Boolean
+```
+
+`useAsyncProgressTracking` is the value of [asyncProgressTrackingEnabled](./async-progress-tracking/AsyncProgressTrackingMicroBatchExecution.md#ASYNC_PROGRESS_TRACKING_ENABLED) option in the given `extraOptions`, if specified, or `false`.
+
+??? warning "Real-Time Mode Unsupported"
+    [Real-Time Mode](./real-time-mode/index.md) is not supported and `StreamingQueryManager` reports a `SparkIllegalArgumentException`:
+
+    ```text
+    Async progress tracking is not supported in real-time mode.
+    Set option asyncProgressTrackingEnabled to false and retry your query.
+    ```
+
+## Starting Streaming Query Execution { #startQuery }
 
 ```scala
 startQuery(
@@ -222,7 +239,7 @@ Cannot start query with id [id] as another query with same id is already active.
 
 `startQuery` is used when `DataStreamWriter` is requested to [start an execution of the streaming query](DataStreamWriter.md#start).
 
-## <span id="postListenerEvent"> Posting StreamingQueryListener Event to StreamingQueryListenerBus
+## Posting StreamingQueryListener Event to StreamingQueryListenerBus { #postListenerEvent }
 
 ```scala
 postListenerEvent(
@@ -235,7 +252,7 @@ postListenerEvent(
 
 `postListenerEvent` is used when `StreamExecution` is requested to [post a streaming event](StreamExecution.md#postEvent).
 
-## <span id="notifyQueryTermination"> Handling Termination of Streaming Query (and Deactivating Query in StateStoreCoordinator)
+## Handling Termination of Streaming Query (and Deactivating Query in StateStoreCoordinator) { #notifyQueryTermination }
 
 ```scala
 notifyQueryTermination(
@@ -254,13 +271,13 @@ In the end, `notifyQueryTermination` requests [StateStoreCoordinator](#stateStor
 
 `notifyQueryTermination` is used when `StreamExecution` is requested to [run a streaming query](StreamExecution.md#runStream) and the query [has finished (running streaming batches)](StreamExecution.md#runStream-finally) (with or without an exception).
 
-## <span id="activeQueries"> Active Streaming Queries by ID
+## Active Streaming Queries by ID { #activeQueries }
 
 Registry of [StreamingQuery](StreamingQuery.md)s per `UUID`
 
 Used when `StreamingQueryManager` is requested for [active streaming queries](#active), [get a streaming query by id](#get), [starts a streaming query](#startQuery) and [is notified that a streaming query has terminated](#notifyQueryTermination).
 
-## <span id="lastTerminatedQuery"> Last-Terminated Streaming Query
+## Last-Terminated Streaming Query { #lastTerminatedQuery }
 
 [StreamingQuery](StreamingQuery.md) that has recently been terminated (i.e. [stopped](StreamingQuery.md#stop) or [due to an exception](StreamingQuery.md#exception)).
 
@@ -270,7 +287,7 @@ Used when `StreamingQueryManager` is requested for [active streaming queries](#a
 
 * Set when `StreamingQueryManager` [is notified that a streaming query has terminated](#notifyQueryTermination)
 
-## <span id="stateStoreCoordinator"> StateStoreCoordinatorRef
+## StateStoreCoordinatorRef { #stateStoreCoordinator }
 
 [StateStoreCoordinatorRef](stateful-stream-processing/StateStoreCoordinatorRef.md) to the `StateStoreCoordinator` RPC Endpoint
 

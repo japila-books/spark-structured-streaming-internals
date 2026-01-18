@@ -8,7 +8,7 @@ Stateless tasks can hit single-digit millisecond latency.
 
 The goal of Real-Time Mode is to enable Apache Spark to power real-time applications (like instant anomaly alerts or live personalization) that today cannot meet their latency requirements with Spark's current streaming engine.
 
-Real-Time Mode is not supported in [AsyncProgressTrackingMicroBatchExecution](../AsyncProgressTrackingMicroBatchExecution.md).
+Real-Time Mode is not supported with [Asynchronous Progress Tracking](../async-progress-tracking/index.md).
 
 [Adaptive Query Execution]({{ book.spark_sql }}/adaptive-query-execution/) is not supported in Real-time Mode.
 

@@ -69,6 +69,7 @@ nav:
     # Uses awesome-pages plugin
     # https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
     - Real-Time Mode: real-time-mode
+    - Async Progress Tracking: async-progress-tracking
     - Arbitrary State API v2: arbitrary-state-api-v2.md
     - Data Sources: datasources/index.md
     - Micro-Batch Execution:
