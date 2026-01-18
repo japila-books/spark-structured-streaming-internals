@@ -13,10 +13,6 @@
          <lastmod>2026-01-18</lastmod>
     </url>
     <url>
-         <loc>https://books.japila.pl/spark-structured-streaming-internals/AsyncProgressTrackingMicroBatchExecution/</loc>
-         <lastmod>2026-01-18</lastmod>
-    </url>
-    <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/AvailableNowDataStreamWrapper/</loc>
          <lastmod>2026-01-18</lastmod>
     </url>
@@ -294,6 +290,14 @@
     </url>
     <url>
          <loc>https://books.japila.pl/spark-structured-streaming-internals/arbitrary-stateful-streaming-aggregation/StateManagerImplV2/</loc>
+         <lastmod>2026-01-18</lastmod>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/async-progress-tracking/</loc>
+         <lastmod>2026-01-18</lastmod>
+    </url>
+    <url>
+         <loc>https://books.japila.pl/spark-structured-streaming-internals/async-progress-tracking/AsyncProgressTrackingMicroBatchExecution/</loc>
          <lastmod>2026-01-18</lastmod>
     </url>
     <url>
