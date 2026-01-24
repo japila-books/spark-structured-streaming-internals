@@ -2,6 +2,8 @@
 
 `KafkaMicroBatchStream` is a [MicroBatchStream](../MicroBatchStream.md) for [Kafka Data Source](index.md) for [Micro-Batch Stream Processing](../micro-batch-execution/index.md).
 
+`KafkaMicroBatchStream` supports [Real-Time Mode](../real-time-mode/index.md).
+
 ## Creating Instance
 
 `KafkaMicroBatchStream` takes the following to be created:

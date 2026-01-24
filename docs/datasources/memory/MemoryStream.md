@@ -1,6 +1,6 @@
 # MemoryStream
 
-`MemoryStream` is a [MemoryStreamBase](MemoryStreamBase.md) and a [MicroBatchStream](../../MicroBatchStream.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
+`MemoryStream` is a [MemoryStreamBaseClass](MemoryStreamBaseClass.md) for [Micro-Batch Stream Processing](../../micro-batch-execution/index.md).
 
 ## Demo
 
@@ -44,18 +44,18 @@ assert(sq.isActive == false)
 `MemoryStream` takes the following to be created:
 
 * <span id="id"> ID
-* <span id="sqlContext"> `SQLContext` ([Spark SQL]({{ book.spark_sql }}/SQLContext))
+* <span id="sparkSession"> `SparkSession` ([Spark SQL]({{ book.spark_sql }}/SparkSession))
 * [Number of partitions](#numPartitions)
 
 `MemoryStream` is created using [apply](#apply) factory.
 
-### <span id="numPartitions"> Number of Partitions
+### Number of Partitions { #numPartitions }
 
 `MemoryStream` can be given the number of partitions when [created](#creating-instance). It is undefined (`None`) by default.
 
 When specified, `MemoryStream` uses the number of partition in [planInputPartitions](#planInputPartitions) to redistribute rows into the given number of partition, via round-robin manner.
 
-## <span id="apply"> Creating MemoryStream
+## Creating MemoryStream { #apply }
 
 ```scala
 apply[A : Encoder](
@@ -67,7 +67,7 @@ apply[A : Encoder](
 
 `apply` creates a [MemoryStream](#creating-instance) with a unique [id](#id) (using an internal `AtomicInteger` counter).
 
-## <span id="planInputPartitions"> Input Partitions
+## Input Partitions { #planInputPartitions }
 
 ```scala
 planInputPartitions(
@@ -81,7 +81,7 @@ planInputPartitions(
 
 `planInputPartitions`...FIXME
 
-## <span id="addData"> Adding Data
+## Adding Data { #addData }
 
 ```scala
 addData(
