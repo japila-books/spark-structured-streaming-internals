@@ -1,3 +1,7 @@
+---
+title: joinWith
+---
+
 # joinWith Operator &mdash; Streaming Join
 
 ```scala

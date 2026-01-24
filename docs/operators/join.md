@@ -1,3 +1,7 @@
+---
+title: join
+---
+
 # join Operator
 
 `join` is part of `Dataset` API for [Streaming Join](../join/index.md).

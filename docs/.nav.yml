@@ -146,7 +146,6 @@ nav:
       - ContinuousWriteRDD: ContinuousWriteRDD.md
       - ContinuousDataSourceRDD: ContinuousDataSourceRDD.md
     - testing.md
-    - Web UI: webui/index.md
   - High-Level APIs:
     - AcceptsLatestSeenOffset: AcceptsLatestSeenOffset.md
     - ContinuousStream: ContinuousStream.md
@@ -167,94 +166,27 @@ nav:
     - SupportsAdmissionControl: SupportsAdmissionControl.md
     - SupportsTriggerAvailableNow: SupportsTriggerAvailableNow.md
     - Trigger: Trigger.md
-  - Streaming Operators:
-    - operators/index.md
-    - crossJoin: operators/crossJoin.md
-    - dropDuplicates: operators/dropDuplicates.md
-    - explain: operators/explain.md
-    - flatMapGroupsWithState: operators/flatMapGroupsWithState.md
-    - groupBy: operators/groupBy.md
-    - groupByKey: operators/groupByKey.md
-    - join: operators/join.md
-    - joinWith: operators/joinWith.md
-    - mapGroupsWithState: operators/mapGroupsWithState.md
-    - window: operators/window.md
-    - withWatermark: operators/withWatermark.md
-    - writeStream: operators/writeStream.md
+  - Streaming Operators: operators
   - Data Sources:
     - datasources/index.md
-    - Console:
-      - datasources/console/index.md
-      - ConsoleSinkProvider: datasources/console/ConsoleSinkProvider.md
-      - ConsoleWriter: datasources/console/ConsoleWriter.md
-    - File:
-      - datasources/file/index.md
-      - FileStreamSource: datasources/file/FileStreamSource.md
-      - FileStreamSink: datasources/file/FileStreamSink.md
-      - CompactibleFileStreamLog: datasources/file/CompactibleFileStreamLog.md
-      - SinkFileStatus: datasources/file/SinkFileStatus.md
-      - ManifestFileCommitProtocol: datasources/file/ManifestFileCommitProtocol.md
-      - MetadataLogFileIndex: datasources/file/MetadataLogFileIndex.md
-      - FileStreamSourceCleaner: datasources/file/FileStreamSourceCleaner.md
-      - FileStreamSourceLog: datasources/file/FileStreamSourceLog.md
-      - FileStreamSinkLog: datasources/file/FileStreamSinkLog.md
-    - Foreach:
-      - datasources/foreach/index.md
-      - ForeachSink: datasources/foreach/ForeachSink.md
-      - ForeachWriter: datasources/foreach/ForeachWriter.md
-      - ForeachWriterProvider: datasources/foreach/ForeachWriterProvider.md
-      - ForeachWriterTable: datasources/foreach/ForeachWriterTable.md
+    - datasources/console
+    - datasources/file
+    - datasources/foreach
     - ForeachBatch:
       - ForeachBatchSink: datasources/ForeachBatchSink.md
     - Kafka:
       - kafka/index.md
-      - CachedKafkaConsumer: kafka/CachedKafkaConsumer.md
-      - Consumer Strategies:
-        - ConsumerStrategy: kafka/ConsumerStrategy.md
-        - SubscribeStrategy: kafka/SubscribeStrategy.md
-      - KafkaBatch: kafka/KafkaBatch.md
-      - KafkaBatchInputPartition: kafka/KafkaBatchInputPartition.md
-      - KafkaContinuousInputPartition: kafka/KafkaContinuousInputPartition.md
-      - KafkaContinuousStream: kafka/KafkaContinuousStream.md
-      - KafkaDataConsumer: kafka/KafkaDataConsumer.md
-      - KafkaMicroBatchInputPartition: kafka/KafkaMicroBatchInputPartition.md
-      - KafkaMicroBatchInputPartitionReader: kafka/KafkaMicroBatchInputPartitionReader.md
-      - KafkaMicroBatchStream: kafka/KafkaMicroBatchStream.md
-      - KafkaOffsetRangeCalculator: kafka/KafkaOffsetRangeCalculator.md
-      - KafkaOffsetRangeLimit: kafka/KafkaOffsetRangeLimit.md
-      - KafkaOffsetReaders:
-        - KafkaOffsetReader: kafka/KafkaOffsetReader.md
-        - KafkaOffsetReaderAdmin: kafka/KafkaOffsetReaderAdmin.md
-        - KafkaOffsetReaderConsumer: kafka/KafkaOffsetReaderConsumer.md
-      - KafkaRelation: kafka/KafkaRelation.md
-      - KafkaScan: kafka/KafkaScan.md
-      - KafkaSink: kafka/KafkaSink.md
-      - KafkaSource: kafka/KafkaSource.md
-      - KafkaSourceInitialOffsetWriter: kafka/KafkaSourceInitialOffsetWriter.md
-      - KafkaSourceOffset: kafka/KafkaSourceOffset.md
-      - KafkaSourceProvider: kafka/KafkaSourceProvider.md
-      - KafkaSourceRDD: kafka/KafkaSourceRDD.md
-      - KafkaStreamingWrite: kafka/KafkaStreamingWrite.md
-      - KafkaStreamWriterFactory: kafka/KafkaStreamWriterFactory.md
-      - KafkaTable: kafka/KafkaTable.md
       - Options: kafka/options.md
+      - Consumer Strategies:
+        - "kafka/*Strategy.md"
+      - KafkaOffsetReaders:
+        - "kafka/KafkaOffsetReader*.md"
+      - "kafka/*"
     - datasources/memory
-    - Rate:
-      - datasources/rate/index.md
-      - RateStreamProvider: datasources/rate/RateStreamProvider.md
-      - RateStreamContinuousReader: datasources/rate/RateStreamContinuousReader.md
-    - Rate Per Micro-Batch:
-      - datasources/rate-micro-batch/index.md
-      - Options: datasources/rate-micro-batch/options.md
-      - RatePerMicroBatchProvider: datasources/rate-micro-batch/RatePerMicroBatchProvider.md
-      - RatePerMicroBatchStream: datasources/rate-micro-batch/RatePerMicroBatchStream.md
-      - RatePerMicroBatchTable: datasources/rate-micro-batch/RatePerMicroBatchTable.md
-    - State:
-      - datasources/state/index.md
-    - Text Socket:
-      - datasources/socket/index.md
-      - TextSocketSourceProvider: datasources/socket/TextSocketSourceProvider.md
-      - TextSocketSource: datasources/socket/TextSocketSource.md
+    - datasources/rate
+    - Rate Per Micro-Batch: datasources/rate-micro-batch
+    - datasources/state
+    - datasources/socket
   - Monitoring:
     - StreamingQueryListener: monitoring/StreamingQueryListener.md
     - StreamingQueryProgress:
@@ -266,13 +198,7 @@ nav:
     - StreamingQueryStatus: monitoring/StreamingQueryStatus.md
     - MetricsReporter: monitoring/MetricsReporter.md
     - Logging: spark-logging.md
-  - Web UI:
-    - webui/index.md
-    - StreamingQueryPage: webui/StreamingQueryPage.md
-    - StreamingQueryStatisticsPage: webui/StreamingQueryStatisticsPage.md
-    - StreamingQueryStatusListener: webui/StreamingQueryStatusListener.md
-    - StreamingQueryStatusStore: webui/StreamingQueryStatusStore.md
-    - StreamingQueryTab: webui/StreamingQueryTab.md
+  - Web UI: webui
   - Demo:
     - demo/index.md
     - Arbitrary Stateful Streaming Aggregation with KeyValueGroupedDataset.flatMapGroupsWithState Operator: demo/arbitrary-stateful-streaming-aggregation-flatMapGroupsWithState.md

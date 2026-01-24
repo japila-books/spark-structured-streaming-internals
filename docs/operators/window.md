@@ -1,32 +1,34 @@
-== [[window]] window Function -- Stream Time Windows
+---
+title: window
+---
 
-`window` is a standard function that generates *tumbling*, *sliding* or *delayed* stream time window ranges (on a timestamp column).
+# window Function &mdash; Stream Time Windows
 
-[source, scala]
-----
+`window` is a standard function that generates **tumbling**, **sliding** or **delayed** stream time window ranges (on a timestamp column).
+
+```scala
 window(
   timeColumn: Column,
-  windowDuration: String): Column  // <1>
+  windowDuration: String): Column  // (1)!
 window(
   timeColumn: Column,
   windowDuration: String,
-  slideDuration: String): Column   // <2>
+  slideDuration: String): Column   // (2)!
 window(
   timeColumn: Column,
   windowDuration: String,
   slideDuration: String,
-  startTime: String): Column       // <3>
-----
-<1> Creates a tumbling time window with `slideDuration` as `windowDuration` and `0 second` for `startTime`
-<2> Creates a sliding time window with `0 second` for `startTime`
-<3> Creates a delayed time window
+  startTime: String): Column       // (3)!
+```
 
-[NOTE]
-====
-From https://msdn.microsoft.com/en-us/library/azure/dn835055.aspx[Tumbling Window (Azure Stream Analytics)]:
+1. Creates a tumbling time window with `slideDuration` as `windowDuration` and `0 second` for `startTime`
+2. Creates a sliding time window with `0 second` for `startTime`
+3. Creates a delayed time window
 
-> *Tumbling windows* are a series of fixed-sized, non-overlapping and contiguous time intervals.
-====
+!!! note "Tumbling Window"
+    From [Tumbling Window](https://learn.microsoft.com/en-gb/stream-analytics-query/tumbling-window-azure-stream-analytics):
+
+    > **Tumbling windows** are a series of fixed-sized, non-overlapping and contiguous time intervals.
 
 [NOTE]
 ====

@@ -1,0 +1,3 @@
+# MemoryStreamBaseClass
+
+`MemoryStreamBaseClass` is...FIXME

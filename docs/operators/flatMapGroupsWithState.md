@@ -1,3 +1,7 @@
+---
+title: flatMapGroupsWithState
+---
+
 # flatMapGroupsWithState Operator
 
 `flatMapGroupsWithState` is part of `KeyValueGroupedDataset` ([Spark SQL]({{ book.spark_sql }}/basic-aggregation/KeyValueGroupedDataset)) API for [Arbitrary Stateful Streaming Aggregation](../arbitrary-stateful-streaming-aggregation/index.md) with an explicit state logic.

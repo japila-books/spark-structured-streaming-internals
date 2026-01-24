@@ -1,3 +1,7 @@
+---
+title: crossJoin
+---
+
 # crossJoin Operator &mdash; Streaming Join
 
 ```scala

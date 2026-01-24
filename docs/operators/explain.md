@@ -1,3 +1,7 @@
+---
+title: explain
+---
+
 # Dataset.explain Operator &mdash; Explaining Streaming Queries
 
 ```scala

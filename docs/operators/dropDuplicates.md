@@ -1,3 +1,7 @@
+---
+title: dropDuplicates
+---
+
 # dropDuplicates Operator &mdash; Streaming Deduplication
 
 ```scala

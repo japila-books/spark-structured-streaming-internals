@@ -1,3 +1,7 @@
+---
+title: groupBy
+---
+
 # groupBy Operator &mdash; Streaming Aggregation
 
 ```scala

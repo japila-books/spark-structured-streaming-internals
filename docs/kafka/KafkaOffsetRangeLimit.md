@@ -1,3 +1,7 @@
+---
+title: KafkaOffsetRangeLimit
+---
+
 # KafkaOffsetRangeLimit &mdash; Desired Offset Range Limits
 
 `KafkaOffsetRangeLimit` represents the desired offset range limits for starting, ending, and specific offsets in [Kafka Data Source](index.md).

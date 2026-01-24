@@ -1,3 +1,7 @@
+---
+title: groupByKey
+---
+
 # groupByKey Operator &mdash; Streaming Aggregation
 
 ```scala
