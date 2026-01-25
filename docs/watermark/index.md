@@ -49,6 +49,39 @@ Use the following demos to learn more:
 
 Under the covers, [Dataset.withWatermark](../operators/withWatermark.md) high-level operator creates a logical query plan with [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) logical operator.
 
+```scala
+// Input stream with rates
+val ratesStream = spark
+  .readStream
+  .format("rate-micro-batch")
+  .option("rowsPerBatch", 1)
+  .load()
+
+// Specify how long to wait for late data
+val sq = ratesStream
+  .withWatermark(eventTime="timestamp", delayThreshold="interval 1 minute")
+```
+
+```text
+scala> sq.explain(extended=true)
+== Parsed Logical Plan ==
+'EventTimeWatermark bb3ccc0c-b68d-41a5-8c67-672d18f850dd, 'timestamp, 1 minutes
++- ~StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RatePerMicroBatchProvider@60ea912b, rate-micro-batch, org.apache.spark.sql.execution.streaming.sources.RatePerMicroBatchTable@2479d01b, [rowsPerBatch=1], [timestamp#2, value#3L]
+
+== Analyzed Logical Plan ==
+timestamp: timestamp, value: bigint
+~EventTimeWatermark bb3ccc0c-b68d-41a5-8c67-672d18f850dd, timestamp#2: timestamp, 1 minutes
++- ~StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RatePerMicroBatchProvider@60ea912b, rate-micro-batch, org.apache.spark.sql.execution.streaming.sources.RatePerMicroBatchTable@2479d01b, [rowsPerBatch=1], [timestamp#2, value#3L]
+
+== Optimized Logical Plan ==
+~EventTimeWatermark bb3ccc0c-b68d-41a5-8c67-672d18f850dd, timestamp#2: timestamp, 1 minutes
++- ~StreamingRelationV2 org.apache.spark.sql.execution.streaming.sources.RatePerMicroBatchProvider@60ea912b, rate-micro-batch, org.apache.spark.sql.execution.streaming.sources.RatePerMicroBatchTable@2479d01b, [rowsPerBatch=1], [timestamp#2, value#3L]
+
+== Physical Plan ==
+EventTimeWatermark bb3ccc0c-b68d-41a5-8c67-672d18f850dd, timestamp#2: timestamp, 1 minutes
++- StreamingRelation rate-micro-batch, [timestamp#2, value#3L]
+```
+
 `EventTimeWatermark` logical operator is planned to [EventTimeWatermarkExec](../physical-operators/EventTimeWatermarkExec.md) physical operator that extracts the event time values (from the rows processed) and adds them to an accumulator.
 
 Since the execution (data processing) happens on Spark executors, using the accumulator is the only _Spark-approved way_ for communication between the tasks (on the executors) and the driver. Using accumulator updates the driver with the current event-time watermark.
@@ -58,4 +91,4 @@ During the query planning phase (in [MicroBatchExecution](../micro-batch-executi
 ## Learning Resources
 
 * [SPARK-18124 Observed delay based event time watermarks]({{ spark.jira }}/SPARK-18124)
-* [Official documentation of Apache Spark]({{ spark.docs }}/structured-streaming-programming-guide.html#handling-late-data-and-watermarking)
+* [Official documentation of Apache Spark]({{ spark.docs }}/streaming/getting-started.html#handling-event-time-and-late-data)
