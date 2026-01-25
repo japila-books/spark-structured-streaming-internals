@@ -1,3 +1,7 @@
+---
+title: StreamingRelationV2
+---
+
 # StreamingRelationV2 Leaf Logical Operator
 
 `StreamingRelationV2` is a leaf logical operator that represents `SupportsRead` streaming tables (with `MICRO_BATCH_READ` or `CONTINUOUS_READ` capabilities) in a logical plan of a streaming query.

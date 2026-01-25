@@ -1,3 +1,7 @@
+---
+title: WriteToMicroBatchDataSource
+---
+
 # WriteToMicroBatchDataSource Logical Operator
 
 `WriteToMicroBatchDataSource` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that is a top-level operator in the [analyzed logical query plan](../micro-batch-execution/MicroBatchExecution.md#logicalPlan) of a streaming query with a [sink](../StreamExecution.md#sink) that `SupportsWrite` ([Spark SQL]({{ book.spark_sql }}/connector/SupportsWrite)).

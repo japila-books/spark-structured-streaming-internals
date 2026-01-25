@@ -1,3 +1,7 @@
+---
+title: WriteToStreamStatement
+---
+
 # WriteToStreamStatement Logical Operator
 
 `WriteToStreamStatement` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)).

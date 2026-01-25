@@ -1,3 +1,7 @@
+---
+title: StreamingGlobalLimitStrategy
+---
+
 # StreamingGlobalLimitStrategy Execution Planning Strategy
 
 `StreamingGlobalLimitStrategy` is an execution planning strategy that can plan streaming queries with `ReturnAnswer` and `Limit` logical operators (over streaming queries) with the [Append](#outputMode) output mode to [StreamingGlobalLimitExec](../physical-operators/StreamingGlobalLimitExec.md) physical operator.

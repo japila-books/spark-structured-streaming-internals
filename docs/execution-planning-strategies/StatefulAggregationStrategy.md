@@ -1,3 +1,7 @@
+---
+title: StatefulAggregationStrategy
+---
+
 # StatefulAggregationStrategy Execution Planning Strategy
 
 `StatefulAggregationStrategy` is an execution planning strategy ([Spark SQL]({{ book.spark_sql }}/execution-planning-strategies/SparkStrategy)) to plan streaming queries with [EventTimeWatermark](../logical-operators/EventTimeWatermark.md) and `Aggregate` ([Spark SQL]({{ book.spark_sql }}/logical-operators/Aggregate)) logical operators.

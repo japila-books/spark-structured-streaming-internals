@@ -1,3 +1,7 @@
+---
+title: Deduplicate
+---
+
 # Deduplicate Unary Logical Operator
 
 `Deduplicate` is a unary logical operator that represents [dropDuplicates](../operators/dropDuplicates.md) operator.

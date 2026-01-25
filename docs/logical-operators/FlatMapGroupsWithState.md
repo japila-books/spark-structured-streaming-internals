@@ -1,3 +1,7 @@
+---
+title: FlatMapGroupsWithState
+---
+
 # FlatMapGroupsWithState Logical Operator
 
 `FlatMapGroupsWithState` is a binary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#BinaryNode)) that represents the following high-level operators in (a logical query plan of) a structured query:

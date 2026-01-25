@@ -1,3 +1,7 @@
+---
+title: StreamingDataSourceV2Relation
+---
+
 # StreamingDataSourceV2Relation Logical Operator
 
 `StreamingDataSourceV2Relation` is a leaf logical operator that represents [StreamingRelationV2](StreamingRelationV2.md) logical operator (with tables with a `SupportsRead` and `MICRO_BATCH_READ` or `CONTINUOUS_READ` capabilities) at execution time.

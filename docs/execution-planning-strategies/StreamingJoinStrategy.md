@@ -1,3 +1,7 @@
+---
+title: StreamingJoinStrategy
+---
+
 # StreamingJoinStrategy Execution Planning Strategy &mdash; Stream-Stream Equi-Joins
 
 `StreamingJoinStrategy` is an execution planning strategy that can plan streaming queries with `Join` logical operators of two streaming queries to a [StreamingSymmetricHashJoinExec](../physical-operators/StreamingSymmetricHashJoinExec.md) physical operator.

@@ -1,3 +1,7 @@
+---
+title: StreamingRelation
+---
+
 # StreamingRelation Leaf Logical Operator
 
 `StreamingRelation` is a leaf logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LeafNode)) that represents a [streaming source](../Source.md) in a logical plan.

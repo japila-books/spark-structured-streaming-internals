@@ -2,36 +2,15 @@
 nav:
   - index.md
   - Internals:
-    - Overview:
-      - Overview: overview.md
-      - Internals of Streaming Queries: internals.md
-    - Configuration Properties: configuration-properties.md
-    - DataSource: DataSource.md
-    - Execution Planning Strategies:
-      - execution-planning-strategies/index.md
-      - FlatMapGroupsWithStateStrategy: execution-planning-strategies/FlatMapGroupsWithStateStrategy.md
-      - StatefulAggregationStrategy: execution-planning-strategies/StatefulAggregationStrategy.md
-      - StreamingDeduplicationStrategy: execution-planning-strategies/StreamingDeduplicationStrategy.md
-      - StreamingGlobalLimitStrategy: execution-planning-strategies/StreamingGlobalLimitStrategy.md
-      - StreamingJoinStrategy: execution-planning-strategies/StreamingJoinStrategy.md
-      - StreamingRelationStrategy: execution-planning-strategies/StreamingRelationStrategy.md
+    - Overview: overview.md
+    - Internals of Streaming Queries: internals.md
+    - configuration-properties.md
+    - DataSource.md
+    - Execution Planning Strategies: execution-planning-strategies
     - IncrementalExecution: IncrementalExecution.md
     - Logical Analysis Rules:
       - ResolveWriteToStream: logical-analysis-rules/ResolveWriteToStream.md
-    - Logical Operators:
-      - ContinuousExecutionRelation: logical-operators/ContinuousExecutionRelation.md
-      - Deduplicate: logical-operators/Deduplicate.md
-      - EventTimeWatermark: logical-operators/EventTimeWatermark.md
-      - FlatMapGroupsWithState: logical-operators/FlatMapGroupsWithState.md
-      - StreamingDataSourceV2Relation: logical-operators/StreamingDataSourceV2Relation.md
-      - StreamingExecutionRelation: logical-operators/StreamingExecutionRelation.md
-      - StreamingRelation: logical-operators/StreamingRelation.md
-      - StreamingRelationV2: logical-operators/StreamingRelationV2.md
-      - WriteToContinuousDataSource: logical-operators/WriteToContinuousDataSource.md
-      - WriteToDataSourceV2: logical-operators/WriteToDataSourceV2.md
-      - WriteToMicroBatchDataSource: logical-operators/WriteToMicroBatchDataSource.md
-      - WriteToStream: logical-operators/WriteToStream.md
-      - WriteToStreamStatement: logical-operators/WriteToStreamStatement.md
+    - Logical Operators: logical-operators
     - Offsets and Metadata Checkpointing:
       - Offsets and Metadata Checkpointing: offsets-and-metadata-checkpointing.md
       - MetadataLog: MetadataLog.md
@@ -72,19 +51,8 @@ nav:
     - Async Progress Tracking: async-progress-tracking
     - Arbitrary State API v2: arbitrary-state-api-v2.md
     - Data Sources: datasources/index.md
-    - Micro-Batch Execution:
-      - micro-batch-execution/index.md
-      - MicroBatchExecution: micro-batch-execution/MicroBatchExecution.md
-      - MicroBatchWrite: micro-batch-execution/MicroBatchWrite.md
-      - MicroBatchWriterFactory: micro-batch-execution/MicroBatchWriterFactory.md
-    - RocksDB State Store:
-      - rocksdb/index.md
-      - RocksDB: rocksdb/RocksDB.md
-      - RocksDBConf: rocksdb/RocksDBConf.md
-      - RocksDBFileManager: rocksdb/RocksDBFileManager.md
-      - RocksDBMetrics: rocksdb/RocksDBMetrics.md
-      - RocksDBStateStore: rocksdb/RocksDBStateStore.md
-      - RocksDBStateStoreProvider: rocksdb/RocksDBStateStoreProvider.md
+    - Micro-Batch Execution: micro-batch-execution
+    - RocksDB State Store: rocksdb
     - Arbitrary Stateful Streaming Aggregation:
       - arbitrary-stateful-streaming-aggregation/index.md
       - FlatMapGroupsWithStateExecHelper: arbitrary-stateful-streaming-aggregation/FlatMapGroupsWithStateExecHelper.md

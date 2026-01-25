@@ -1,3 +1,7 @@
+---
+title: EventTimeWatermark
+---
+
 # EventTimeWatermark Logical Operator
 
 `EventTimeWatermark` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that represents [Dataset.withWatermark](../operators/withWatermark.md) operator (in a logical query plan of a streaming query).

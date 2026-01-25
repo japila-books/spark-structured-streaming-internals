@@ -1,4 +1,11 @@
+---
+title: WriteToDataSourceV2
+---
+
 # WriteToDataSourceV2 Logical Operator
+
+!!! warning "Deprecated"
+    `WriteToDataSourceV2` is deprecated and replaced by more specific logical plans (e.g., `AppendData` ([Spark SQL]({{ book.spark_sql }}/logical-operators/AppendData))).
 
 `WriteToDataSourceV2` is a unary logical operator ([Spark SQL]({{ book.spark_sql }}/logical-operators/LogicalPlan#UnaryNode)) that represents [WriteToMicroBatchDataSource](WriteToMicroBatchDataSource.md) unary logical operator at logical optimization time for writing data in Spark Structured Streaming.
 

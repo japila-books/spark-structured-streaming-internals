@@ -1,3 +1,7 @@
+---
+title: FlatMapGroupsWithStateStrategy
+---
+
 # FlatMapGroupsWithStateStrategy Execution Planning Strategy
 
 `FlatMapGroupsWithStateStrategy` is an execution planning strategy ([Spark SQL]({{ book.spark_sql }}/execution-planning-strategies/SparkStrategy)) that plans streaming queries with [FlatMapGroupsWithState](../logical-operators/FlatMapGroupsWithState.md) logical operators to [FlatMapGroupsWithStateExec](../physical-operators/FlatMapGroupsWithStateExec.md) physical operator (with undefined `StatefulOperatorStateInfo`, `batchTimestampMs`, and `eventTimeWatermark`).

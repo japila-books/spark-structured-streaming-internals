@@ -1,3 +1,7 @@
+---
+title: WriteToContinuousDataSource
+---
+
 # WriteToContinuousDataSource Unary Logical Operator
 
 `WriteToContinuousDataSource` is a unary logical operator (`LogicalPlan`) that is created when `ContinuousExecution` is requested to [run a streaming query in continuous mode](../continuous-execution/ContinuousExecution.md#runContinuous) (to create an [IncrementalExecution](../IncrementalExecution.md)).
