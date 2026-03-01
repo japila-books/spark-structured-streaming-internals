@@ -124,9 +124,9 @@ extra:
     api: https://javadoc.io/static/org.rocksdb/rocksdbjni/9.8.4
   scala:
     # https://github.com/apache/spark/blob/v4.1.1/pom.xml#L176
-    version: 2.13.17
+    version: 2.13.18
     binary_version: 2.13
-    api: https://www.scala-lang.org/api/2.13.17
+    api: https://www.scala-lang.org/api/2.13.18
     docs: https://docs.scala-lang.org/
     spec: https://www.scala-lang.org/files/archive/spec/2.13
   social:
@@ -143,10 +143,10 @@ extra:
     - icon: fontawesome/brands/mastodon
       link: https://fosstodon.org/@jaceklaskowski
   spark:
-    version: 4.1.1
+    version: 4.2.0-preview2
     commit: https://github.com/apache/spark/commit
-    docs: https://spark.apache.org/docs/4.1.1
-    github: https://github.com/apache/spark/blob/v4.1.1
+    docs: https://spark.apache.org/docs/4.2.0-preview2
+    github: https://github.com/apache/spark/blob/v4.2.0-preview2
     jira: https://issues.apache.org/jira/browse
 
 validation:
