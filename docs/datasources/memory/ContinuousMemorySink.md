@@ -1,0 +1,3 @@
+# ContinuousMemorySink
+
+`ContinuousMemorySink` is...FIXME
