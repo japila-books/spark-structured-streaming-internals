@@ -4,8 +4,8 @@
 
 ```scala
 checkAllowedSink(
-    sink: Table,
-    throwException: Boolean): Unit
+  sink: Table,
+  throwException: Boolean): Unit
 ```
 
 `checkAllowedSink`...FIXME
