@@ -290,6 +290,19 @@ Use [SQLConf.streamingProgressRetention](SQLConf.md#streamingProgressRetention) 
 
 Default: `10` (milliseconds)
 
+## <span id="STREAMING_REAL_TIME_MODE_ALLOWLIST_CHECK"> realTimeMode.allowlistCheck { #spark.sql.streaming.realTimeMode.allowlistCheck }
+
+**spark.sql.streaming.realTimeMode.allowlistCheck**
+
+Whether to enforce allowlist for the operators and sinks used in [Real-Time Mode](./real-time-mode/index.md).
+
+Default: `true`
+
+Used when:
+
+* `DataStreamWriter` is requested to [start a streaming query](DataStreamWriter.md#startQuery) (with [RealTimeTrigger](real-time-mode/RealTimeTrigger.md))
+* `MicroBatchExecution` is requested to [run a batch](./micro-batch-execution/MicroBatchExecution.md#runBatch) (with [RealTimeTrigger](real-time-mode/RealTimeTrigger.md))
+
 ## <span id="STREAMING_REAL_TIME_MODE_MIN_BATCH_DURATION"> realTimeMode.minBatchDuration { #spark.sql.streaming.realTimeMode.minBatchDuration }
 
 **spark.sql.streaming.realTimeMode.minBatchDuration**

@@ -194,7 +194,10 @@ startQuery(
   catalogTable: Option[CatalogTable] = None): StreamingQuery
 ```
 
-`startQuery`...FIXME
+??? note "Assert that sink allowed with RealTimeTrigger"
+    When this [Trigger](#trigger) is [RealTimeTrigger](real-time-mode/RealTimeTrigger.md), `startQuery` asserts that the given `sink` is among the [allowed sinks](real-time-mode/RealTimeModeAllowlist.md#checkAllowedSink) (subject to [spark.sql.streaming.realTimeMode.allowlistCheck](configuration-properties.md#spark.sql.streaming.realTimeMode.allowlistCheck)).
+
+`startQuery` requests the [StreamingQueryManager](StreamingQueryManager.md) to [start a streaming query](StreamingQueryManager.md#startQuery).
 
 ---
 

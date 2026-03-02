@@ -47,6 +47,10 @@ Used when:
 
 * `ProgressReporter` is [created](ProgressReporter.md#noDataProgressEventInterval)
 
+## STREAMING_REAL_TIME_MODE_ALLOWLIST_CHECK { #STREAMING_REAL_TIME_MODE_ALLOWLIST_CHECK }
+
+[spark.sql.streaming.realTimeMode.allowlistCheck](configuration-properties.md#spark.sql.streaming.realTimeMode.allowlistCheck)
+
 ## STREAMING_REAL_TIME_MODE_MIN_BATCH_DURATION { #STREAMING_REAL_TIME_MODE_MIN_BATCH_DURATION }
 
 [spark.sql.streaming.realTimeMode.minBatchDuration](configuration-properties.md#spark.sql.streaming.realTimeMode.minBatchDuration)
